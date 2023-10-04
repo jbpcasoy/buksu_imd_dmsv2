@@ -4,7 +4,9 @@ import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session } = useSession({
+    required: true
+  });
 
   useEffect(() => {
     console.log({ session });
