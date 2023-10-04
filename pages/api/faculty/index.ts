@@ -1,3 +1,4 @@
+import prisma from "@/prisma/client";
 import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -16,7 +17,6 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
-    const prisma = new PrismaClient();
     const { userId } = validator.cast(req.body);
     try {
       const faculty = await prisma.faculty.create({
@@ -29,10 +29,8 @@ export default async function handler(
         },
       });
 
-      await prisma.$disconnect();
       return res.json({ faculty });
     } catch (error) {
-      await prisma.$disconnect();
       return res.status(400).json({ error });
     }
   };
@@ -49,7 +47,6 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
-    const prisma = new PrismaClient();
     const { skip, take } = validator.cast(req.query);
     try {
       const faculties = await prisma.faculty.findMany({
@@ -58,10 +55,8 @@ export default async function handler(
       });
       const count = await prisma.faculty.count();
 
-      await prisma.$disconnect();
       return res.json({ faculties, count });
     } catch (error) {
-      await prisma.$disconnect();
       return res.status(400).json({ error });
     }
   };

@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import prisma from "@/prisma/client";
 import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -17,7 +18,6 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
-    const prisma = new PrismaClient();
     const { id } = validator.cast(req.query);
     try {
       const user = await prisma.user.findFirstOrThrow({
@@ -28,10 +28,8 @@ export default async function handler(
         },
       });
 
-      await prisma.$disconnect();
       return res.json(user);
     } catch (error) {
-      await prisma.$disconnect();
       return res.status(400).json({ error });
     }
   };
