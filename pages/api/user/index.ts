@@ -12,27 +12,25 @@ export default async function handler(
       skip: Yup.number().required(),
       take: Yup.number().required(),
     });
-    const query = validator.cast(req.query);
     try {
-      await validator.validate(query);
+      await validator.validate(req.query);
     } catch (error) {
-      return res.status(400).json(error);
+      return res.status(400).json({ error });
     }
-
+    const { skip, take } = validator.cast(req.query);
     const prisma = new PrismaClient();
-    const { skip, take } = query;
     try {
       const users = await prisma.user.findMany({
         skip,
         take,
       });
-      const count = await prisma.user.count()
+      const count = await prisma.user.count();
 
       await prisma.$disconnect();
-      return res.json({users, count});
+      return res.json({ users, count });
     } catch (error) {
       await prisma.$disconnect();
-      return res.status(400).json(error);
+      return res.status(400).json({ error });
     }
   };
 

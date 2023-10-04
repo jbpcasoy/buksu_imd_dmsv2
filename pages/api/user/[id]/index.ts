@@ -11,15 +11,14 @@ export default async function handler(
     const validator = Yup.object({
       id: Yup.string().required(),
     });
-    const query = validator.cast(req.query);
     try {
-      await validator.validate(query);
+      await validator.validate(req.query);
     } catch (error) {
-      return res.status(400).json(error);
+      return res.status(400).json({ error });
     }
 
     const prisma = new PrismaClient();
-    const { id } = query;
+    const { id } = validator.cast(req.query);
     try {
       const user = await prisma.user.findFirstOrThrow({
         where: {
@@ -33,7 +32,7 @@ export default async function handler(
       return res.json(user);
     } catch (error) {
       await prisma.$disconnect();
-      return res.status(400).json(error);
+      return res.status(400).json({ error });
     }
   };
 

@@ -1,13 +1,23 @@
 import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const postHandler = async () => {
-    const { userId } = req.body;
+    const validator = Yup.object({
+      userId: Yup.string().required(),
+    });
+    try {
+      await validator.validate(req.body);
+    } catch (error) {
+      return res.status(400).json({ error });
+    }
+
     const prisma = new PrismaClient();
+    const { userId } = validator.cast(req.body);
     try {
       const faculty = await prisma.faculty.create({
         data: {
@@ -23,7 +33,7 @@ export default async function handler(
       return res.json({ faculty });
     } catch (error) {
       await prisma.$disconnect();
-      return res.status(400).json(error);
+      return res.status(400).json({ error });
     }
   };
 
