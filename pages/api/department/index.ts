@@ -10,6 +10,7 @@ export default async function handler(
   const postHandler = async () => {
     const validator = Yup.object({
       name: Yup.string().required(),
+      collegeId: Yup.string().required(),
     });
     try {
       await validator.validate(req.body);
@@ -17,15 +18,27 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
-    const { name } = validator.cast(req.body);
+    const { name, collegeId } = validator.cast(req.body);
     try {
-      const college = await prisma.college.create({
+      const college = await prisma.college.findFirstOrThrow({
+        where: {
+          id: {
+            equals: collegeId,
+          },
+        },
+      });
+      const department = await prisma.department.create({
         data: {
           name,
+          College: {
+            connect: {
+              id: college.id,
+            },
+          },
         },
       });
 
-      return res.json(college);
+      return res.json(department);
     } catch (error) {
       return res.status(400).json({ error });
     }
@@ -45,11 +58,11 @@ export default async function handler(
 
     const { skip, take } = validator.cast(req.query);
     try {
-      const faculties = await prisma.college.findMany({
+      const faculties = await prisma.department.findMany({
         skip,
         take,
       });
-      const count = await prisma.college.count();
+      const count = await prisma.department.count();
 
       return res.json({ faculties, count });
     } catch (error) {
