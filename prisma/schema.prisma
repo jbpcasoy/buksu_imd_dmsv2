@@ -79,10 +79,39 @@ model Faculty {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User         User       @relation(fields: [userId], references: [id])
-    userId       String
-    Department   Department @relation(fields: [departmentId], references: [id])
-    departmentId String
+    User          User           @relation(fields: [userId], references: [id])
+    userId        String
+    Department    Department     @relation(fields: [departmentId], references: [id])
+    departmentId  String
+    IM            IM[]
+    ActiveFaculty ActiveFaculty?
 
     @@unique([departmentId, userId])
+}
+
+model ActiveFaculty {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Faculty   Faculty @relation(fields: [facultyId], references: [id])
+    facultyId String  @unique
+}
+
+enum IMType {
+    MODULE
+    COURSE_FILE
+    WORKTEXT
+    TEXTBOOK
+}
+
+model IM {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Faculty   Faculty @relation(fields: [facultyId], references: [id])
+    facultyId String
+    title     String
+    type      IMType
 }
