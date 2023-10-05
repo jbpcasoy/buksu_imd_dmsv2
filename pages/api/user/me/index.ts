@@ -16,26 +16,10 @@ export default async function handler(
   } catch (error) {
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-
+  
   const getHandler = async () => {
-    const validator = Yup.object({
-      skip: Yup.number().required(),
-      take: Yup.number().required(),
-    });
     try {
-      await validator.validate(req.query);
-    } catch (error) {
-      return res.status(400).json({ error });
-    }
-    const { skip, take } = validator.cast(req.query);
-    try {
-      const users = await prisma.user.findMany({
-        skip,
-        take,
-      });
-      const count = await prisma.user.count();
-
-      return res.json({ users, count });
+      return res.json(user);
     } catch (error) {
       return res.status(400).json({ error });
     }

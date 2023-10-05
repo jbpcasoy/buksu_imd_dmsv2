@@ -1,4 +1,8 @@
 import prisma from "@/prisma/client";
+import iMAbility from "@/services/ability/iMAbility";
+import getServerUser from "@/services/getServerUser";
+import { accessibleBy } from "@casl/prisma";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -6,6 +10,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  let user: User;
+
+  try {
+    user = await getServerUser(req, res);
+  } catch (error) {
+    return res.status(401).json({ error: { message: "Unauthorized" } });
+  }
+  
+  const ability = await iMAbility(user as User);
+
   const getHandler = async () => {
     const validator = Yup.object({
       id: Yup.string().required(),
@@ -21,9 +35,14 @@ export default async function handler(
     try {
       const iM = await prisma.iM.findFirstOrThrow({
         where: {
-          id: {
-            equals: id,
-          },
+          AND: [
+            accessibleBy(ability).IM,
+            {
+              id: {
+                equals: id,
+              },
+            },
+          ],
         },
       });
 
@@ -91,8 +110,8 @@ export default async function handler(
           id,
         },
         data: {
-            title,
-            type
+          title,
+          type,
         },
       });
 

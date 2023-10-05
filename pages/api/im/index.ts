@@ -1,12 +1,28 @@
 import prisma from "@/prisma/client";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 import * as Yup from "yup";
+import { authOptions } from "../auth/[...nextauth]";
+import getServerUser from "@/services/getServerUser";
+import iMAbility from "@/services/ability/iMAbility";
+import { accessibleBy } from "@casl/prisma";
+import { ForbiddenError, subject } from "@casl/ability";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  let user: User;
+
+  try {
+    user = await getServerUser(req, res);
+  } catch (error) {
+    return res.status(401).json({ error: { message: "Unauthorized" } });
+  }
+  
+  const ability = await iMAbility(user);
+
   const postHandler = async () => {
     const validator = Yup.object({
       title: Yup.string().required(),
@@ -30,12 +46,26 @@ export default async function handler(
           },
         },
       });
+
+      const faculty = await prisma.faculty.findFirstOrThrow({
+        where: {
+          id: {
+            equals: activeFaculty.facultyId,
+          },
+        },
+      });
+
+      ForbiddenError.from(ability).throwUnlessCan(
+        "connectToIm",
+        subject("Faculty", faculty)
+      );
+      
       const iM = await prisma.iM.create({
         data: {
           title,
           Faculty: {
             connect: {
-              id: activeFaculty.facultyId,
+              id: faculty.id,
             },
           },
           type,
@@ -65,8 +95,11 @@ export default async function handler(
       const faculties = await prisma.iM.findMany({
         skip,
         take,
+        where: accessibleBy(ability).IM,
       });
-      const count = await prisma.iM.count();
+      const count = await prisma.iM.count({
+        where: accessibleBy(ability).IM,
+      });
 
       return res.json({ faculties, count });
     } catch (error) {

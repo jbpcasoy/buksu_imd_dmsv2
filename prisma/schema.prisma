@@ -43,6 +43,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
+    isAdmin Boolean @default(false) // changed in auth route, not modified in database
     Faculty Faculty[]
 }
 
