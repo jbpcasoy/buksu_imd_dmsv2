@@ -10,6 +10,7 @@ export default async function handler(
   const postHandler = async () => {
     const validator = Yup.object({
       userId: Yup.string().required(),
+      departmentId: Yup.string().required(),
     });
     try {
       await validator.validate(req.body);
@@ -17,7 +18,7 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
-    const { userId } = validator.cast(req.body);
+    const { userId, departmentId } = validator.cast(req.body);
     try {
       const faculty = await prisma.faculty.create({
         data: {
@@ -26,6 +27,11 @@ export default async function handler(
               id: userId,
             },
           },
+          Department:{
+            connect: {
+              id: departmentId
+            }
+          }
         },
       });
 

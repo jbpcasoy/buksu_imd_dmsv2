@@ -43,7 +43,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    Faculty Faculty?
+    Faculty Faculty[]
 }
 
 model VerificationToken {
@@ -68,9 +68,10 @@ model Department {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    College   College @relation(fields: [collegeId], references: [id])
-    name      String  @unique
+    College   College   @relation(fields: [collegeId], references: [id])
+    name      String    @unique
     collegeId String
+    Faculty   Faculty[]
 }
 
 model Faculty {
@@ -78,6 +79,10 @@ model Faculty {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User   User   @relation(fields: [userId], references: [id])
-    userId String @unique
+    User         User       @relation(fields: [userId], references: [id])
+    userId       String
+    Department   Department @relation(fields: [departmentId], references: [id])
+    departmentId String
+
+    @@unique([departmentId, userId])
 }
