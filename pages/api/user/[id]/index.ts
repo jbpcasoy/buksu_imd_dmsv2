@@ -1,6 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import prisma from "@/prisma/client";
+import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
+import { accessibleBy } from "@casl/prisma";
 import { PrismaClient, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -28,12 +30,18 @@ export default async function handler(
     }
 
     const { id } = validator.cast(req.query);
+    const ability = await userAbility(user)
     try {
       const user = await prisma.user.findFirstOrThrow({
         where: {
-          id: {
-            equals: id,
-          },
+          AND: [
+            accessibleBy(ability).User,
+            {
+              id: {
+                equals: id,
+              },
+            },
+          ],
         },
       });
 

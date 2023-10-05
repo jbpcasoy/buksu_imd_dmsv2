@@ -22,25 +22,6 @@ export default async function facultyAbility(user: User) {
     });
 
     const ability = await abilityBuilder((can, cannot) => {
-      //   can("read", "IM", {
-      //     Faculty: {
-      //       departmentId: {
-      //         equals: faculty.departmentId,
-      //       },
-      //     },
-      //   });
-
-      //   can("update", "IM", {
-      //     facultyId: {
-      //       equals: faculty.userId,
-      //     },
-      //   });
-
-      //   can("delete", "IM", {
-      //     facultyId: {
-      //       equals: faculty.userId,
-      //     },
-      //   });
       can("connectToIM", "Faculty", {
         ActiveFaculty: {
           isNot: null,
