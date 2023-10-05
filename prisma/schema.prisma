@@ -42,8 +42,8 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    
-    Faculty       Faculty?
+
+    Faculty Faculty?
 }
 
 model VerificationToken {
@@ -52,6 +52,25 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model College {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    name       String       @unique
+    Department Department[]
+}
+
+model Department {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    College   College @relation(fields: [collegeId], references: [id])
+    name      String  @unique
+    collegeId String
 }
 
 model Faculty {

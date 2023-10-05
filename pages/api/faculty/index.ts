@@ -29,7 +29,7 @@ export default async function handler(
         },
       });
 
-      return res.json({ faculty });
+      return res.json(faculty);
     } catch (error) {
       return res.status(400).json({ error });
     }
