@@ -58,11 +58,53 @@ export default async function handler(
     }
   };
 
+  const putHandler = async () => {
+    const queryValidator = Yup.object({
+      id: Yup.string().required(),
+    });
+
+    try {
+      await queryValidator.validate(req.query);
+    } catch (error) {
+      return res.status(400).json({ error });
+    }
+
+    const bodyValidator = Yup.object({
+      name: Yup.string().required(),
+    });
+
+    try {
+      await bodyValidator.validate(req.body);
+    } catch (error) {
+      return res.status(400).json({ error });
+    }
+
+    const { id } = queryValidator.cast(req.query);
+    const { name } = bodyValidator.cast(req.body);
+
+    try {
+      const college = await prisma.college.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+        },
+      });
+
+      return res.json(college);
+    } catch (error) {
+      return res.status(400).json({ error });
+    }
+  };
+
   switch (req.method) {
     case "DELETE":
       return await deleteHandler();
     case "GET":
       return await getHandler();
+    case "PUT":
+      return await putHandler();
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
