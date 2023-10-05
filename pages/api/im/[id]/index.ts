@@ -1,4 +1,5 @@
 import prisma from "@/prisma/client";
+import { AppAbility } from "@/services/ability/abilityBuilder";
 import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError, subject } from "@casl/ability";
@@ -19,7 +20,24 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = await iMAbility(user as User);
+  let ability: AppAbility;
+  try {
+    const faculty = await prisma.faculty.findFirstOrThrow({
+      where: {
+        ActiveFaculty: {
+          Faculty: {
+            userId: {
+              equals: user.id,
+            },
+          },
+        },
+      },
+    });
+    
+    ability = await iMAbility(user, faculty);
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
 
   const getHandler = async () => {
     const validator = Yup.object({

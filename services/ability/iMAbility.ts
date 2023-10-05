@@ -1,26 +1,9 @@
-import { User } from "@prisma/client";
+import { ActiveFaculty, Faculty, User } from "@prisma/client";
 import abilityBuilder from "./abilityBuilder";
 import prisma from "@/prisma/client";
 
-export default async function iMAbility(user: User) {
+export default async function iMAbility(user: User, faculty: Faculty) {
   try {
-    const activeFaculty = await prisma.activeFaculty.findFirstOrThrow({
-      where: {
-        Faculty: {
-          userId: {
-            equals: user.id,
-          },
-        },
-      },
-    });
-    const faculty = await prisma.faculty.findFirstOrThrow({
-      where: {
-        id: {
-          equals: activeFaculty.facultyId,
-        },
-      },
-    });
-
     const ability = await abilityBuilder((can, cannot) => {
       can("read", "IM", {
         Faculty: {
