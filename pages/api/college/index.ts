@@ -31,37 +31,37 @@ export default async function handler(
     }
   };
 
-  //   const getHandler = async () => {
-  //     const validator = Yup.object({
-  //       take: Yup.number().required(),
-  //       skip: Yup.number().required(),
-  //     });
+    const getHandler = async () => {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+      });
 
-  //     try {
-  //       await validator.validate(req.query);
-  //     } catch (error) {
-  //       return res.status(400).json({ error });
-  //     }
+      try {
+        await validator.validate(req.query);
+      } catch (error) {
+        return res.status(400).json({ error });
+      }
 
-  //     const { skip, take } = validator.cast(req.query);
-  //     try {
-  //       const faculties = await prisma.faculty.findMany({
-  //         skip,
-  //         take,
-  //       });
-  //       const count = await prisma.faculty.count();
+      const { skip, take } = validator.cast(req.query);
+      try {
+        const faculties = await prisma.college.findMany({
+          skip,
+          take,
+        });
+        const count = await prisma.college.count();
 
-  //       return res.json({ faculties, count });
-  //     } catch (error) {
-  //       return res.status(400).json({ error });
-  //     }
-  //   };
+        return res.json({ faculties, count });
+      } catch (error) {
+        return res.status(400).json({ error });
+      }
+    };
 
   switch (req.method) {
     case "POST":
       return await postHandler();
-    // case "GET":
-    //   return await getHandler();
+    case "GET":
+      return await getHandler();
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
