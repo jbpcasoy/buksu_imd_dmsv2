@@ -1,5 +1,9 @@
 import prisma from "@/prisma/client";
+import collegeAbility from "@/services/ability/collegeAbility";
+import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
+import { ForbiddenError } from "@casl/ability";
+import { accessibleBy } from "@casl/prisma";
 import { PrismaClient, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -15,6 +19,7 @@ export default async function handler(
   } catch (error) {
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
+  const ability = await collegeAbility(user);
 
   const postHandler = async () => {
     const validator = Yup.object({
@@ -24,6 +29,12 @@ export default async function handler(
       await validator.validate(req.body);
     } catch (error) {
       return res.status(400).json({ error });
+    }
+
+    try {
+      ForbiddenError.from(ability).throwUnlessCan("create", "College");
+    } catch (error) {
+      return res.status(403).json({ error });
     }
 
     const { name } = validator.cast(req.body);
@@ -57,8 +68,15 @@ export default async function handler(
       const faculties = await prisma.college.findMany({
         skip,
         take,
+        where: {
+          AND: [accessibleBy(ability).College],
+        },
       });
-      const count = await prisma.college.count();
+      const count = await prisma.college.count({
+        where: {
+          AND: [accessibleBy(ability).College],
+        },
+      });
 
       return res.json({ faculties, count });
     } catch (error) {

@@ -18,6 +18,7 @@ export default async function handler(
   } catch (error) {
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
+  const ability = await userAbility(user);
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -30,7 +31,6 @@ export default async function handler(
     }
 
     const { id } = validator.cast(req.query);
-    const ability = await userAbility(user)
     try {
       const user = await prisma.user.findFirstOrThrow({
         where: {

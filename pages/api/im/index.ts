@@ -20,7 +20,7 @@ export default async function handler(
   } catch (error) {
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  
+
   const ability = await iMAbility(user);
 
   const postHandler = async () => {
@@ -55,11 +55,15 @@ export default async function handler(
         },
       });
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToIm",
-        subject("Faculty", faculty)
-      );
-      
+      try {
+        ForbiddenError.from(ability).throwUnlessCan(
+          "connectToIm",
+          subject("Faculty", faculty)
+        );
+      } catch (error) {
+        return res.status(403).json({ error });
+      }
+
       const iM = await prisma.iM.create({
         data: {
           title,

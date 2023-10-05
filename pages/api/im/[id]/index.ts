@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
+import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -17,7 +18,7 @@ export default async function handler(
   } catch (error) {
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  
+
   const ability = await iMAbility(user as User);
 
   const getHandler = async () => {
@@ -64,6 +65,21 @@ export default async function handler(
     }
 
     const { id } = validator.cast(req.query);
+
+    const iM = await prisma.iM.findFirstOrThrow({
+      where: {
+        id: {
+          equals: id,
+        },
+      },
+    });
+
+    try {
+      ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iM));
+    } catch (error) {
+      return res.status(403).json({ error });
+    }
+
     try {
       const iM = await prisma.iM.delete({
         where: {

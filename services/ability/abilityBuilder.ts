@@ -1,8 +1,24 @@
-import { User, Prisma, IM, Faculty } from "@prisma/client";
-import { PureAbility, AbilityBuilder, subject } from "@casl/ability";
-import { createPrismaAbility, PrismaQuery, Subjects } from "@casl/prisma";
+import { AbilityBuilder, PureAbility } from "@casl/ability";
+import { PrismaQuery, Subjects, createPrismaAbility } from "@casl/prisma";
+import {
+  ActiveFaculty,
+  College,
+  Department,
+  Faculty,
+  IM,
+  User
+} from "@prisma/client";
 
-type AppSubjects = "all" | Subjects<{ User: User, IM: IM, Faculty: Faculty }>;
+type AppSubjects =
+  | "all"
+  | Subjects<{
+      User: User;
+      IM: IM;
+      Faculty: Faculty;
+      College: College;
+      ActiveFaculty: ActiveFaculty;
+      Department: Department;
+    }>;
 type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
 export default async function abilityBuilder(
