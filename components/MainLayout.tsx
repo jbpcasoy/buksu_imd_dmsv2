@@ -1,12 +1,16 @@
-import React, { useContext, useEffect } from "react";
+import React, { ReactNode, useContext, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
+import { useSession } from "next-auth/react";
 
 export interface MainLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 export default function MainLayout({ children }: MainLayoutProps) {
+  const {data: session} = useSession({
+    required: true
+  })
   const activeFaculty = useContext(ActiveFacultyContext);
 
   useEffect(() => {

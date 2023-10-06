@@ -9,6 +9,7 @@ import iMAbility from "@/services/ability/iMAbility";
 import { accessibleBy } from "@casl/prisma";
 import { ForbiddenError, subject } from "@casl/ability";
 import { AppAbility } from "@/services/ability/abilityBuilder";
+import facultyAbility from "@/services/ability/facultyAbility";
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,7 +24,8 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability: AppAbility;
+  let abilityFaculty = facultyAbility(user)
+  let abilityIM: AppAbility;
 
   try {
     const faculty = await prisma.faculty.findFirstOrThrow({
@@ -37,7 +39,7 @@ export default async function handler(
         },
       },
     });
-    ability = iMAbility(user, faculty);
+    abilityIM = iMAbility(user, faculty);
   } catch (error) {
     console.error(error);
     return res.status(400).json({ error });
@@ -75,10 +77,12 @@ export default async function handler(
           },
         },
       });
+      
+      console.log({faculty, user});
 
       try {
-        ForbiddenError.from(ability).throwUnlessCan(
-          "connectToIm",
+        ForbiddenError.from(abilityFaculty).throwUnlessCan(
+          "connectToIM",
           subject("Faculty", faculty)
         );
       } catch (error) {
@@ -123,10 +127,10 @@ export default async function handler(
       const faculties = await prisma.iM.findMany({
         skip,
         take,
-        where: { AND: [accessibleBy(ability).IM] },
+        where: { AND: [accessibleBy(abilityIM).IM] },
       });
       const count = await prisma.iM.count({
-        where: { AND: [accessibleBy(ability).IM] },
+        where: { AND: [accessibleBy(abilityIM).IM] },
       });
 
       return res.json({ faculties, count });

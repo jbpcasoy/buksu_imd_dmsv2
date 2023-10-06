@@ -1,4 +1,5 @@
 import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
+import Link from "next/link";
 import { useContext } from "react";
 
 export default function Sidebar() {
@@ -6,7 +7,7 @@ export default function Sidebar() {
 
   return (
     <div>
-      {activeFaculty && <a href="/my_ims">My IM's</a>}
+      {activeFaculty && <Link href="/my_ims">My IM's</Link>}
     </div>
   );
 }

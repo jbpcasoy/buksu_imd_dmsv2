@@ -1,10 +1,10 @@
 import { ActiveFaculty } from "@prisma/client";
 import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 
 const ActiveFacultyContext = createContext<ActiveFaculty|null|undefined>(null);
 export interface ActiveFacultyContextProviderProps {
-    children: React.ReactNode
+    children: ReactNode
 }
 
 export function ActiveFacultyContextProvider({children}: ActiveFacultyContextProviderProps) {
