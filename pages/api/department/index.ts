@@ -90,7 +90,11 @@ export default async function handler(
           AND: [accessibleBy(ability).Department],
         },
       });
-      const count = await prisma.department.count();
+      const count = await prisma.department.count({
+        where: {
+          AND: [accessibleBy(ability).Department],
+        },
+      });
 
       return res.json({ department, count });
     } catch (error) {

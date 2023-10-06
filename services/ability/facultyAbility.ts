@@ -7,19 +7,16 @@ export default function facultyAbility(user: User) {
     const ability = abilityBuilder((can, cannot) => {
       // FIXME ActiveFaculty will be equal to null if ActiveFaculty is not included
       can("connectToIM", "Faculty", {
-        ActiveFaculty: {
-          isNot: null,
-        },
         userId: {
           equals: user.id,
         },
       });
-
       can("read", "Faculty");
 
       if (user.isAdmin) {
         can("create", "Faculty");
         can("delete", "Faculty");
+        can("connectToIM", "Faculty");
       }
     });
 

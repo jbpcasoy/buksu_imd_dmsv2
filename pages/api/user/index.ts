@@ -42,7 +42,11 @@ export default async function handler(
           AND: [accessibleBy(ability).User],
         },
       });
-      const count = await prisma.user.count();
+      const count = await prisma.user.count({
+        where: {
+          AND: [accessibleBy(ability).User],
+        },
+      });
 
       return res.json({ users, count });
     } catch (error) {
