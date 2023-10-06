@@ -27,6 +27,7 @@ export default function iMAbility(user: User, faculty: Faculty) {
 
     return ability;
   } catch (error) {
+    console.error(error);
     const ability = abilityBuilder((can, cannot) => {});
     return ability;
   }

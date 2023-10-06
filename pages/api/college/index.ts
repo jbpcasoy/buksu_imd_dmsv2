@@ -17,6 +17,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
+    console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
   const ability = collegeAbility(user);
@@ -28,12 +29,14 @@ export default async function handler(
     try {
       await validator.validate(req.body);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
 
     try {
       ForbiddenError.from(ability).throwUnlessCan("create", "College");
     } catch (error) {
+      console.error(error);
       return res.status(403).json({ error });
     }
 
@@ -47,6 +50,7 @@ export default async function handler(
 
       return res.json(college);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };
@@ -60,6 +64,7 @@ export default async function handler(
     try {
       await validator.validate(req.query);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
 
@@ -80,6 +85,7 @@ export default async function handler(
 
       return res.json({ faculties, count });
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };

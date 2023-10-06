@@ -19,6 +19,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
+console.error(error)
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
@@ -38,6 +39,7 @@ export default async function handler(
     });
     ability = iMAbility(user, faculty);
   } catch (error) {
+console.error(error)
     return res.status(400).json({ error });
   }
 
@@ -52,6 +54,7 @@ export default async function handler(
     try {
       await validator.validate(req.body);
     } catch (error) {
+console.error(error)
       return res.status(400).json({ error });
     }
 
@@ -79,6 +82,7 @@ export default async function handler(
           subject("Faculty", faculty)
         );
       } catch (error) {
+console.error(error)
         return res.status(403).json({ error });
       }
 
@@ -96,6 +100,7 @@ export default async function handler(
 
       return res.json(iM);
     } catch (error) {
+console.error(error)
       return res.status(400).json({ error });
     }
   };
@@ -109,6 +114,7 @@ export default async function handler(
     try {
       await validator.validate(req.query);
     } catch (error) {
+console.error(error)
       return res.status(400).json({ error });
     }
 
@@ -125,6 +131,7 @@ export default async function handler(
 
       return res.json({ faculties, count });
     } catch (error) {
+console.error(error)
       return res.status(400).json({ error });
     }
   };

@@ -16,6 +16,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
+    console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
   const ability = userAbility(user);
@@ -29,6 +30,7 @@ export default async function handler(
     try {
       await validator.validate(req.query);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
     const { skip, take } = validator.cast(req.query);
@@ -44,6 +46,7 @@ export default async function handler(
 
       return res.json({ users, count });
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };

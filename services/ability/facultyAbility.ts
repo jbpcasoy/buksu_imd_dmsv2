@@ -14,10 +14,18 @@ export default function facultyAbility(user: User) {
           equals: user.id,
         },
       });
+
+      can("read", "Faculty");
+
+      if (user.isAdmin) {
+        can("create", "Faculty");
+        can("delete", "Faculty");
+      }
     });
 
     return ability;
   } catch (error) {
+    console.error(error);
     const ability = abilityBuilder((can, cannot) => {});
     return ability;
   }

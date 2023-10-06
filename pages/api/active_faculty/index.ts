@@ -13,6 +13,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
+    console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
@@ -23,6 +24,7 @@ export default async function handler(
     try {
       await validator.validate(req.body);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
 
@@ -49,11 +51,9 @@ export default async function handler(
       });
 
       if (userActiveFacultyCount > 0) {
-        return res
-          .status(409)
-          .json({
-            error: { message: "User can only have one active faculty" },
-          });
+        return res.status(409).json({
+          error: { message: "User can only have one active faculty" },
+        });
       }
 
       const activeFaculty = await prisma.activeFaculty.create({
@@ -68,6 +68,7 @@ export default async function handler(
 
       return res.json(activeFaculty);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };
@@ -81,6 +82,7 @@ export default async function handler(
     try {
       await validator.validate(req.query);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
 
@@ -94,6 +96,7 @@ export default async function handler(
 
       return res.json({ activeFaculties, count });
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };

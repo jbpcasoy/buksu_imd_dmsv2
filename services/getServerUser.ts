@@ -8,8 +8,9 @@ export default async function getServerUser(
   res: NextApiResponse
 ): Promise<User> {
   const session = await getServerSession(req, res, authOptions);
-  if(!session?.user) {
-    throw new Error("Unauthorized")
+  console.log({ session });
+  if (!session?.user) {
+    throw new Error("Unauthorized");
   }
 
   return session.user;

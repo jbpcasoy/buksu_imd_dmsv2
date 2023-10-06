@@ -14,13 +14,15 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
+    console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  
+
   const getHandler = async () => {
     try {
       return res.json(user);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };

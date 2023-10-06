@@ -1,5 +1,8 @@
 import prisma from "@/prisma/client";
+import facultyAbility from "@/services/ability/facultyAbility";
 import getServerUser from "@/services/getServerUser";
+import { ForbiddenError } from "@casl/ability";
+import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -13,8 +16,11 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
+    console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
+
+  const ability = facultyAbility(user);
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -24,6 +30,7 @@ export default async function handler(
     try {
       await validator.validate(req.query);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
 
@@ -31,14 +38,20 @@ export default async function handler(
     try {
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {
-          id: {
-            equals: id,
-          },
+          AND: [
+            accessibleBy(ability).Faculty,
+            {
+              id: {
+                equals: id,
+              },
+            },
+          ],
         },
       });
 
       return res.json(faculty);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };
@@ -51,7 +64,15 @@ export default async function handler(
     try {
       await validator.validate(req.query);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
+    }
+
+    try {
+      ForbiddenError.from(ability).throwUnlessCan("delete", "Faculty");
+    } catch (error) {
+      console.error(error);
+      return res.status(403).json({ error });
     }
 
     const { id } = validator.cast(req.query);
@@ -64,6 +85,7 @@ export default async function handler(
 
       return res.json(faculty);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };

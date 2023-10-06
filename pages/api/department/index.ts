@@ -16,6 +16,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
+    console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
@@ -29,12 +30,14 @@ export default async function handler(
     try {
       await validator.validate(req.body);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
 
     try {
       ForbiddenError.from(ability).throwUnlessCan("create", "Department");
     } catch (error) {
+      console.error(error);
       return res.status(403).json({ error });
     }
 
@@ -60,6 +63,7 @@ export default async function handler(
 
       return res.json(department);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };
@@ -73,6 +77,7 @@ export default async function handler(
     try {
       await validator.validate(req.query);
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
 
@@ -87,8 +92,9 @@ export default async function handler(
       });
       const count = await prisma.department.count();
 
-      return res.json({ faculties: department, count });
+      return res.json({ department, count });
     } catch (error) {
+      console.error(error);
       return res.status(400).json({ error });
     }
   };
