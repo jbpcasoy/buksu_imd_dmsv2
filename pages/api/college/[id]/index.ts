@@ -64,7 +64,7 @@ export default async function handler(
     }
 
     try {
-      ForbiddenError.from(ability).throwUnlessCan("create", "College");
+      ForbiddenError.from(ability).throwUnlessCan("delete", "College");
     } catch (error) {
       return res.status(403).json({ error });
     }
@@ -104,6 +104,11 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
+    try {
+      ForbiddenError.from(ability).throwUnlessCan("update", "College");
+    } catch (error) {
+      return res.status(403).json({ error });
+    }
     const { id } = queryValidator.cast(req.query);
     const { name } = bodyValidator.cast(req.body);
 

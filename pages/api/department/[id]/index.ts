@@ -1,5 +1,8 @@
 import prisma from "@/prisma/client";
+import departmentAbility from "@/services/ability/departmentAbility";
 import getServerUser from "@/services/getServerUser";
+import { ForbiddenError } from "@casl/ability";
+import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -16,6 +19,8 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
+  const ability = await departmentAbility(user);
+
   const getHandler = async () => {
     const validator = Yup.object({
       id: Yup.string().required(),
@@ -31,9 +36,14 @@ export default async function handler(
     try {
       const department = await prisma.department.findFirstOrThrow({
         where: {
-          id: {
-            equals: id,
-          },
+          AND: [
+            accessibleBy(ability).Department,
+            {
+              id: {
+                equals: id,
+              },
+            },
+          ],
         },
       });
 
@@ -52,6 +62,12 @@ export default async function handler(
       await validator.validate(req.query);
     } catch (error) {
       return res.status(400).json({ error });
+    }
+
+    try {
+      ForbiddenError.from(ability).throwUnlessCan("delete", "Department");
+    } catch (error) {
+      return res.status(403).json({ error });
     }
 
     const { id } = validator.cast(req.query);
@@ -87,6 +103,12 @@ export default async function handler(
       await bodyValidator.validate(req.body);
     } catch (error) {
       return res.status(400).json({ error });
+    }
+
+    try {
+      ForbiddenError.from(ability).throwUnlessCan("update", "Department");
+    } catch (error) {
+      return res.status(403).json({ error });
     }
 
     const { id } = queryValidator.cast(req.query);

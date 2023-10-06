@@ -4,24 +4,8 @@ import prisma from "@/prisma/client";
 
 export default async function facultyAbility(user: User) {
   try {
-    const activeFaculty = await prisma.activeFaculty.findFirstOrThrow({
-      where: {
-        Faculty: {
-          userId: {
-            equals: user.id,
-          },
-        },
-      },
-    });
-    const faculty = await prisma.faculty.findFirstOrThrow({
-      where: {
-        id: {
-          equals: activeFaculty.facultyId,
-        },
-      },
-    });
-
     const ability = await abilityBuilder((can, cannot) => {
+      // FIXME ActiveFaculty will be equal to null if ActiveFaculty is not included
       can("connectToIM", "Faculty", {
         ActiveFaculty: {
           isNot: null,

@@ -6,10 +6,10 @@ import {
   Department,
   Faculty,
   IM,
-  User
+  User,
 } from "@prisma/client";
 
-type AppSubjects =
+export type AppSubjects =
   | "all"
   | Subjects<{
       User: User;
@@ -19,7 +19,7 @@ type AppSubjects =
       ActiveFaculty: ActiveFaculty;
       Department: Department;
     }>;
-type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
+export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
 export default async function abilityBuilder(
   checker: (
