@@ -3,7 +3,7 @@ import abilityBuilder from "./abilityBuilder";
 
 export default async function departmentAbility(user: User) {
   try {
-    const ability = await abilityBuilder((can, cannot) => {
+    const ability = abilityBuilder((can, cannot) => {
       can("read", "Department");
       if (user.isAdmin) {
         can("create", "Department");
@@ -14,7 +14,7 @@ export default async function departmentAbility(user: User) {
 
     return ability;
   } catch (error) {
-    const ability = await abilityBuilder((can, cannot) => {});
+    const ability = abilityBuilder((can, cannot) => {});
     return ability;
   }
 }

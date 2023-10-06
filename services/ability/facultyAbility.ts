@@ -2,9 +2,9 @@ import { User } from "@prisma/client";
 import abilityBuilder from "./abilityBuilder";
 import prisma from "@/prisma/client";
 
-export default async function facultyAbility(user: User) {
+export default function facultyAbility(user: User) {
   try {
-    const ability = await abilityBuilder((can, cannot) => {
+    const ability = abilityBuilder((can, cannot) => {
       // FIXME ActiveFaculty will be equal to null if ActiveFaculty is not included
       can("connectToIM", "Faculty", {
         ActiveFaculty: {
@@ -18,7 +18,7 @@ export default async function facultyAbility(user: User) {
 
     return ability;
   } catch (error) {
-    const ability = await abilityBuilder((can, cannot) => {});
+    const ability = abilityBuilder((can, cannot) => {});
     return ability;
   }
 }

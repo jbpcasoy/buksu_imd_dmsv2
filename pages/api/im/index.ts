@@ -36,7 +36,7 @@ export default async function handler(
         },
       },
     });
-    ability = await iMAbility(user, faculty);
+    ability = iMAbility(user, faculty);
   } catch (error) {
     return res.status(400).json({ error });
   }

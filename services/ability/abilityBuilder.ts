@@ -21,7 +21,7 @@ export type AppSubjects =
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
-export default async function abilityBuilder(
+export default function abilityBuilder(
   checker: (
     can: AbilityBuilder<AppAbility>["can"],
     cannot: AbilityBuilder<AppAbility>["cannot"]
@@ -31,7 +31,7 @@ export default async function abilityBuilder(
     createPrismaAbility
   );
 
-  await checker(can, cannot);
+  checker(can, cannot);
 
   const ability = build();
   return ability;
