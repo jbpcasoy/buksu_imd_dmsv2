@@ -28,18 +28,13 @@ export default function MyIMsPage() {
     });
   };
 
-  const deleteHandler = (id: string) => {
-    axios.delete(`/api/im/${id}`).then(() => {
-      alert("IM deleted successfully");
-      setState((prev => ({...prev})))
-    });
-  };
-
   return (
     <MainLayout>
       <div className='flex'>
         <h2 className='flex-1'>My IMs</h2>
-        <Link href='im/add' className="border rounded">Add</Link>
+        <Link href='im/add' className='border rounded'>
+          Add
+        </Link>
       </div>
       <table className='table-auto w-full'>
         <thead>
@@ -64,10 +59,9 @@ export default function MyIMsPage() {
                 <td>{iM.title}</td>
                 <td>{iM.type}</td>
                 <td>
-                  <Link href={`/im/${iM.id}/edit`} className="border rounded">edit</Link>
-                </td>
-                <td>
-                  <button onClick={() => deleteHandler(iM.id)} className="border rounded">delete</button>
+                  <Link href={`/im/${iM.id}/view`} className='border rounded'>
+                    view
+                  </Link>
                 </td>
               </tr>
             );
