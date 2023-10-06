@@ -1,23 +1,29 @@
-import { signOut } from "next-auth/react";
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import Sidebar from "./Sidebar";
+import Header from "./Header";
+import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
 
 export interface MainLayoutProps {
   children: React.ReactNode;
 }
 export default function MainLayout({ children }: MainLayoutProps) {
-  const onLogout = () => {
-    return signOut();
-  };
+  const activeFaculty = useContext(ActiveFacultyContext);
+
+  useEffect(() => {
+    console.log({ activeFaculty });
+  }, [activeFaculty]);
+
   return (
     <div>
-      <div className='min-h-screen'>
-        <div className='flex justify-between p-1'>
-          <h1>Header</h1>
-          <button onClick={onLogout} className="bg-palette_blue text-white px-1 rounded">LOGOUT</button>
+      <div className='flex flex-col min-h-screen'>
+        <Header />
+        <div className='flex-1 flex h-full'>
+          <div className='w-40'>
+            <Sidebar />
+          </div>
+          <div className='flex-1'>{children}</div>
         </div>
-        <div>{children}</div>
       </div>
-      <div>Footer</div>
     </div>
   );
 }
