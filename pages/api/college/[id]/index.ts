@@ -101,6 +101,12 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
+    try {
+      ForbiddenError.from(ability).throwUnlessCan("update", "College");
+    } catch (error) {
+      return res.status(403).json({ error });
+    }
+
     const bodyValidator = Yup.object({
       name: Yup.string().required(),
     });

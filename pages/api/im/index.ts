@@ -76,8 +76,8 @@ export default async function handler(
           },
         },
       });
-      
-      console.log({faculty, user});
+
+      console.log({ faculty, user });
 
       try {
         ForbiddenError.from(ability).throwUnlessCan(
