@@ -5,7 +5,6 @@ import prisma from "@/prisma/client";
 export default function facultyAbility(user: User) {
   try {
     const ability = abilityBuilder((can, cannot) => {
-      // FIXME ActiveFaculty will be equal to null if ActiveFaculty is not included
       can("connectToIM", "Faculty", {
         userId: {
           equals: user.id,
