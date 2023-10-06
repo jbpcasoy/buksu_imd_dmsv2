@@ -70,7 +70,7 @@ export default async function handler(
 
     const { skip, take } = validator.cast(req.query);
     try {
-      const faculties = await prisma.college.findMany({
+      const colleges = await prisma.college.findMany({
         skip,
         take,
         where: {
@@ -83,7 +83,7 @@ export default async function handler(
         },
       });
 
-      return res.json({ faculties, count });
+      return res.json({ colleges, count });
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });

@@ -7,7 +7,7 @@ export default function Sidebar() {
 
   return (
     <div>
-      {activeFaculty && <Link href="/my_ims">My IM's</Link>}
+      {activeFaculty && <Link href="/my_ims" className="underline">My IM's</Link>}
     </div>
   );
 }

@@ -12,17 +12,29 @@ export default function iMAbility(user: User, faculty: Faculty) {
         },
       });
 
+      can("createIM", "Faculty", {
+        userId: {
+          equals: user.id,
+        },
+      });
+
       can("update", "IM", {
         facultyId: {
-          equals: faculty.userId,
+          equals: faculty.id,
         },
       });
 
       can("delete", "IM", {
         facultyId: {
-          equals: faculty.userId,
+          equals: faculty.id,
         },
       });
+
+      if (user.isAdmin) {
+        can("read", "IM");
+        can("update", "IM");
+        can("update", "IM");
+      }
     });
 
     return ability;

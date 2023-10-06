@@ -24,8 +24,7 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let abilityFaculty = facultyAbility(user)
-  let abilityIM: AppAbility;
+  let ability: AppAbility;
 
   try {
     const faculty = await prisma.faculty.findFirstOrThrow({
@@ -39,10 +38,10 @@ export default async function handler(
         },
       },
     });
-    abilityIM = iMAbility(user, faculty);
+    ability = iMAbility(user, faculty);
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ error });
+    return res.status(404).json({ error });
   }
 
   const postHandler = async () => {
@@ -81,8 +80,8 @@ export default async function handler(
       console.log({faculty, user});
 
       try {
-        ForbiddenError.from(abilityFaculty).throwUnlessCan(
-          "connectToIM",
+        ForbiddenError.from(ability).throwUnlessCan(
+          "createIM",
           subject("Faculty", faculty)
         );
       } catch (error) {
@@ -124,16 +123,16 @@ export default async function handler(
 
     const { skip, take } = validator.cast(req.query);
     try {
-      const faculties = await prisma.iM.findMany({
+      const iM = await prisma.iM.findMany({
         skip,
         take,
-        where: { AND: [accessibleBy(abilityIM).IM] },
+        where: { AND: [accessibleBy(ability).IM] },
       });
       const count = await prisma.iM.count({
-        where: { AND: [accessibleBy(abilityIM).IM] },
+        where: { AND: [accessibleBy(ability).IM] },
       });
 
-      return res.json({ faculties, count });
+      return res.json({ iM, count });
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });

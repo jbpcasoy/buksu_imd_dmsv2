@@ -44,7 +44,7 @@ export default function AddIM() {
           <option value='WORKTEXT'>Worktext</option>
           <option value='TEXTBOOK'>Textbook</option>
         </select>
-        <input type='submit' value='Submit' disabled={!formik.isValid} />
+        <input type='submit' value='Submit' disabled={!formik.isValid} className="border rounded" />
       </form>
     </MainLayout>
   );

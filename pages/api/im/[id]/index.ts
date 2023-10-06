@@ -4,7 +4,7 @@ import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { User } from "@prisma/client";
+import { Faculty, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -22,8 +22,9 @@ export default async function handler(
   }
 
   let ability: AppAbility;
+  let faculty: Faculty;
   try {
-    const faculty = await prisma.faculty.findFirstOrThrow({
+    faculty = await prisma.faculty.findFirstOrThrow({
       where: {
         ActiveFaculty: {
           Faculty: {
@@ -38,7 +39,7 @@ export default async function handler(
     ability = iMAbility(user, faculty);
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ error });
+    return res.status(404).json({ error });
   }
 
   const getHandler = async () => {
@@ -96,6 +97,8 @@ export default async function handler(
         },
       },
     });
+
+    console.log({ iM, faculty });
 
     try {
       ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iM));

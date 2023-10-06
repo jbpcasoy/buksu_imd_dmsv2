@@ -5,11 +5,6 @@ import prisma from "@/prisma/client";
 export default function facultyAbility(user: User) {
   try {
     const ability = abilityBuilder((can, cannot) => {
-      can("connectToIM", "Faculty", {
-        userId: {
-          equals: user.id,
-        },
-      });
       can("read", "Faculty");
 
       if (user.isAdmin) {
