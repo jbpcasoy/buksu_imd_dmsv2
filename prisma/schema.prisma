@@ -43,7 +43,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    isAdmin Boolean @default(false) // changed in auth route, not modified in database
+    isAdmin Boolean   @default(false) // changed in auth route, not modified in database
     Faculty Faculty[]
 }
 
@@ -111,8 +111,32 @@ model IM {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty   Faculty @relation(fields: [facultyId], references: [id])
+    Faculty   Faculty  @relation(fields: [facultyId], references: [id])
     facultyId String
     title     String
     type      IMType
+    IMFile    IMFile[]
+}
+
+model IMFile {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IM         IM            @relation(fields: [iMId], references: [id])
+    iMId       String
+    filename   String
+    ActiveFile ActiveIMFile?
+}
+
+model ActiveIMFile {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IMFile           IMFile @relation(fields: [fileId], references: [id])
+    fileId           String @unique
+    size             Int
+    mimetype         String
+    originalFilename String
 }

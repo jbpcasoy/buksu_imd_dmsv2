@@ -1,0 +1,26 @@
+-- CreateTable
+CREATE TABLE "IMFile" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "iMId" TEXT NOT NULL,
+    "filename" TEXT NOT NULL,
+
+    CONSTRAINT "IMFile_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ActiveIMFile" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "fileId" TEXT NOT NULL,
+
+    CONSTRAINT "ActiveIMFile_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "IMFile" ADD CONSTRAINT "IMFile_iMId_fkey" FOREIGN KEY ("iMId") REFERENCES "IM"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ActiveIMFile" ADD CONSTRAINT "ActiveIMFile_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES "IMFile"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
