@@ -1,46 +1,43 @@
-import { Faculty, User } from "@prisma/client";
+import { Department, Faculty, IM, User } from "@prisma/client";
 import abilityBuilder from "./abilityBuilder";
 
-export default function iMAbility(user: User, faculty: Faculty) {
-  try {
-    const ability = abilityBuilder((can, cannot) => {
-      can("read", "IM", {
-        Faculty: {
-          departmentId: {
-            equals: faculty.departmentId,
-          },
-        },
-      });
-
-      can("createIM", "Faculty", {
-        userId: {
-          equals: user.id,
-        },
-      });
-
-      can("update", "IM", {
-        facultyId: {
-          equals: faculty.id,
-        },
-      });
-
-      can("delete", "IM", {
-        facultyId: {
-          equals: faculty.id,
-        },
-      });
-
-      if (user.isAdmin) {
-        can("read", "IM");
-        can("update", "IM");
-        can("update", "IM");
-      }
+export default function iMAbility({
+  user,
+  userFaculty,
+  iM,
+}: {
+  user: User;
+  userFaculty?: Faculty | null;
+  iM?: IM | null;
+}) {
+  const ability = abilityBuilder((can, cannot) => {
+    //  User create IM for themselves
+    if (userFaculty?.userId === user.id) {
+      can("create", "IM");
+    }
+    //  User can read own IMs
+    can("read", "IM", {
+      facultyId: {
+        equals: userFaculty?.id,
+      },
     });
 
-    return ability;
-  } catch (error) {
-    console.error(error);
-    const ability = abilityBuilder((can, cannot) => {});
-    return ability;
-  }
+    //  User update own IM's
+    if (iM?.facultyId === userFaculty?.id) {
+      can("update", "IM");
+    }
+    //  User delete own IM's
+    if (iM?.facultyId === userFaculty?.id) {
+      can("delete", "IM");
+    }
+
+    if (user.isAdmin) {
+      can("create", "IM");
+      can("read", "IM");
+      can("update", "IM");
+      can("delete", "IM");
+    }
+  });
+
+  return ability;
 }

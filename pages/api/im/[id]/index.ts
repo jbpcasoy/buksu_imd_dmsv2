@@ -4,7 +4,7 @@ import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { Faculty, User } from "@prisma/client";
+import { Faculty, IM, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -22,25 +22,6 @@ export default async function handler(
   }
 
   let ability: AppAbility;
-  let faculty: Faculty;
-  try {
-    faculty = await prisma.faculty.findFirstOrThrow({
-      where: {
-        ActiveFaculty: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      },
-    });
-
-    ability = iMAbility(user, faculty);
-  } catch (error) {
-    console.error(error);
-    return res.status(404).json({ error });
-  }
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -55,6 +36,20 @@ export default async function handler(
     }
 
     const { id } = validator.cast(req.query);
+
+    const userFaculty = await prisma.faculty.findFirst({
+      where: {
+        ActiveFaculty: {
+          Faculty: {
+            userId: {
+              equals: user.id,
+            },
+          },
+        },
+      },
+    });
+    ability = iMAbility({ user, userFaculty });
+
     try {
       const iM = await prisma.iM.findFirstOrThrow({
         where: {
@@ -90,15 +85,30 @@ export default async function handler(
 
     const { id } = validator.cast(req.query);
 
-    const iM = await prisma.iM.findFirstOrThrow({
+    let iM: IM | null;
+    try {
+      iM = await prisma.iM.findFirstOrThrow({
+        where: {
+          id: {
+            equals: id,
+          },
+        },
+      });
+    } catch (error) {
+      return res.status(404).json({ error });
+    }
+    const userFaculty = await prisma.faculty.findFirst({
       where: {
-        id: {
-          equals: id,
+        ActiveFaculty: {
+          Faculty: {
+            userId: {
+              equals: user.id,
+            },
+          },
         },
       },
     });
-
-    console.log({ iM, faculty });
+    ability = iMAbility({ user, userFaculty, iM });
 
     try {
       ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iM));
@@ -149,6 +159,38 @@ export default async function handler(
 
     const { id } = queryValidator.cast(req.query);
     const { title, type } = bodyValidator.cast(req.body);
+
+    let iM: IM | null;
+    try {
+      iM = await prisma.iM.findFirstOrThrow({
+        where: {
+          id: {
+            equals: id,
+          },
+        },
+      });
+    } catch (error) {
+      return res.status(404).json({ error });
+    }
+    const userFaculty = await prisma.faculty.findFirst({
+      where: {
+        ActiveFaculty: {
+          Faculty: {
+            userId: {
+              equals: user.id,
+            },
+          },
+        },
+      },
+    });
+    ability = iMAbility({ user, userFaculty, iM });
+
+    try {
+      ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iM));
+    } catch (error) {
+      console.error(error);
+      return res.status(403).json({ error });
+    }
 
     try {
       const iM = await prisma.iM.update({

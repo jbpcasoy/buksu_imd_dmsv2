@@ -21,10 +21,10 @@ export default async function handler(
   }
 
   let abilityIM: AppAbility;
-  let faculty: Faculty;
+  let userFaculty: Faculty;
 
   try {
-    faculty = await prisma.faculty.findFirstOrThrow({
+    userFaculty = await prisma.faculty.findFirstOrThrow({
       where: {
         ActiveFaculty: {
           Faculty: {
@@ -35,7 +35,7 @@ export default async function handler(
         },
       },
     });
-    abilityIM = iMAbility(user, faculty);
+    abilityIM = iMAbility({user, userFaculty});
   } catch (error) {
     console.error(error);
     return res.status(404).json({ error });
@@ -65,11 +65,11 @@ export default async function handler(
             {
               Faculty: {
                 id: {
-                  equals: faculty.id,
+                  equals: userFaculty.id,
                 },
                 Department: {
                   id: {
-                    equals: faculty.departmentId,
+                    equals: userFaculty.departmentId,
                   },
                 },
               },
@@ -84,11 +84,11 @@ export default async function handler(
             {
               Faculty: {
                 id: {
-                  equals: faculty.id,
+                  equals: userFaculty.id,
                 },
                 Department: {
                   id: {
-                    equals: faculty.departmentId,
+                    equals: userFaculty.departmentId,
                   },
                 },
               },

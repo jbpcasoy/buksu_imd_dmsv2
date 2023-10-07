@@ -25,9 +25,8 @@ export default async function handler(
   }
 
   let ability: AppAbility;
-
   try {
-    const faculty = await prisma.faculty.findFirstOrThrow({
+    const userFaculty = await prisma.faculty.findFirst({
       where: {
         ActiveFaculty: {
           Faculty: {
@@ -38,7 +37,7 @@ export default async function handler(
         },
       },
     });
-    ability = iMAbility(user, faculty);
+    ability = iMAbility({ user, userFaculty });
   } catch (error) {
     console.error(error);
     return res.status(404).json({ error });
@@ -64,8 +63,8 @@ export default async function handler(
     /**
      * Possible scenarios:
      * returns status 400 because active faculty is not found
-     * 
-     * 
+     *
+     *
      * Notes:
      * validation if faculty is active must be in abilities
      */
@@ -75,10 +74,10 @@ export default async function handler(
      * admin access with only user data and no other else
      * user with invalid access (as many as necessary)
      * user with valid access (as many as necessary)
-     * 
+     *
      * Danger zones:
      * parts with "findFirstOrThrow"
-     * 
+     *
      * Libraries to use:
      * Mocha
      * Chai
@@ -103,8 +102,8 @@ export default async function handler(
 
       try {
         ForbiddenError.from(ability).throwUnlessCan(
-          "createIM",
-          subject("Faculty", faculty)
+          "create",
+          "IM"
         );
       } catch (error) {
         console.error(error);
