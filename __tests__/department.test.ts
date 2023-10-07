@@ -17,7 +17,7 @@ describe("Department Permissions", () => {
         isAdmin: true,
         name: null,
       };
-      ability = departmentAbility(user);
+      ability = departmentAbility({user});
     });
 
     it("can read department", () => {
@@ -44,7 +44,7 @@ describe("Department Permissions", () => {
         isAdmin: false,
         name: null,
       };
-      ability = departmentAbility(user);
+      ability = departmentAbility({user});
     });
 
     it("can read department", () => {
