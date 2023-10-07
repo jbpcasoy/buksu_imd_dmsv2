@@ -1,22 +1,18 @@
 import prisma from "@/prisma/client";
-import { ActiveFaculty, Faculty, PrismaClient, User } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import * as Yup from "yup";
-import { authOptions } from "../auth/[...nextauth]";
-import getServerUser from "@/services/getServerUser";
-import iMAbility from "@/services/ability/iMAbility";
-import { accessibleBy } from "@casl/prisma";
-import { ForbiddenError, subject } from "@casl/ability";
-import { AppAbility } from "@/services/ability/abilityBuilder";
 import facultyAbility from "@/services/ability/facultyAbility";
+import iMAbility from "@/services/ability/iMAbility";
+import getServerUser from "@/services/getServerUser";
+import { ForbiddenError, subject } from "@casl/ability";
+import { accessibleBy } from "@casl/prisma";
+import { ActiveFaculty, Faculty, User } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
+import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   let user: User;
-
   try {
     user = await getServerUser(req, res);
   } catch (error) {
@@ -38,23 +34,18 @@ export default async function handler(
       console.error(error);
       return res.status(400).json({ error });
     }
-
     const { activeFacultyId, title, type } = validator.cast(req.body);
-    let activeFaculty: ActiveFaculty;
-    let iMFaculty: Faculty | null;
-    try {
-      activeFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          id: {
-            equals: activeFacultyId,
-          },
-        },
-      });
 
-      iMFaculty = await prisma.faculty.findFirstOrThrow({
+    let faculty: Faculty;
+    try {
+      faculty = await prisma.faculty.findFirstOrThrow({
         where: {
-          id: {
-            equals: activeFaculty?.facultyId,
+          ActiveFaculty: {
+            Faculty: {
+              id: {
+                equals: activeFacultyId,
+              },
+            },
           },
         },
       });
@@ -62,21 +53,12 @@ export default async function handler(
       return res.status(404).json({ error });
     }
 
-    const userFaculty = await prisma.faculty.findFirst({
-      where: {
-        ActiveFaculty: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      },
-    });
-    const ability = iMAbility({ user, userFaculty, iMFaculty });
-
+    const ability = facultyAbility({ user });
     try {
-      ForbiddenError.from(ability).throwUnlessCan("create", "IM");
+      ForbiddenError.from(ability).throwUnlessCan(
+        "connectToIM",
+        subject("Faculty", faculty)
+      );
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });
@@ -87,7 +69,7 @@ export default async function handler(
         title,
         Faculty: {
           connect: {
-            id: iMFaculty.id,
+            id: faculty.id,
           },
         },
         type,
@@ -102,28 +84,24 @@ export default async function handler(
       take: Yup.number().required(),
       skip: Yup.number().required(),
     });
-
     try {
       await validator.validate(req.query);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
     }
-
     const { skip, take } = validator.cast(req.query);
 
-    const userFaculty = await prisma.faculty.findFirst({
+    const userActiveFaculty = await prisma.activeFaculty.findFirst({
       where: {
-        ActiveFaculty: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
+        Faculty: {
+          userId: {
+            equals: user.id,
           },
         },
       },
     });
-    const ability = iMAbility({user, userFaculty})
+    const ability = iMAbility({ user, userActiveFaculty });
 
     try {
       const iMs = await prisma.iM.findMany({
@@ -134,7 +112,6 @@ export default async function handler(
       const count = await prisma.iM.count({
         where: { AND: [accessibleBy(ability).IM] },
       });
-
       return res.json({ iMs, count });
     } catch (error) {
       console.error(error);

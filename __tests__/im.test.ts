@@ -1,7 +1,7 @@
 import { AppAbility } from "@/services/ability/abilityBuilder";
 import iMAbility from "@/services/ability/iMAbility";
 import { subject } from "@casl/ability";
-import { Faculty, IM, User } from "@prisma/client";
+import { ActiveFaculty, Faculty, IM, User } from "@prisma/client";
 import "@testing-library/jest-dom";
 
 describe("IM Permissions", () => {
@@ -28,18 +28,24 @@ describe("IM Permissions", () => {
   const nonAdminFaculty: Faculty = {
     createdAt: new Date(),
     updatedAt: new Date(),
-    id: "f04cb29d-2282-5dad-8bde-2c109cee9f81",
-    departmentId: "0f5a97aa-fbd7-5f63-9177-21343086df2b",
-    userId: nonAdminUser.id,
-  };
+    id: "969aced6-0585-5387-a9f1-b5ca79ce3cc6",
+    departmentId: "2a0723f8-d7f2-5074-a59b-e527df7c2bc1",
+    userId: nonAdminUser.id
+  }
 
-  const notOwnedFaculty: Faculty = {
+  const nonAdminActiveFaculty: ActiveFaculty = {
     createdAt: new Date(),
     updatedAt: new Date(),
-    id: "e6ecd1ea-c3d6-54bc-9e1e-9274aa90ee6f",
-    departmentId: "0f5a97aa-fbd7-5f63-9177-21343086df2b",
-    userId: "154cd3db-4498-58bc-a9ef-ec6f4accc516",
+    id: "f04cb29d-2282-5dad-8bde-2c109cee9f81",
+    facultyId: nonAdminFaculty.id,
   };
+
+  const nonOwnerActiveFaculty: ActiveFaculty = {
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    id: "b0939081-a91f-5af9-b22b-084409b27142",
+    facultyId: "22505759-566b-503b-b244-23ee2eac8e44"
+  }
 
   const iM: IM = {
     createdAt: new Date(),
@@ -50,22 +56,11 @@ describe("IM Permissions", () => {
     type: "MODULE",
   };
 
-  const nonIMOwnerFaculty = {
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    id: "c48efd2e-4ced-57c7-b5c0-fb3f9999c41e",
-    departmentId: "0f5a97aa-fbd7-5f63-9177-21343086df2b",
-    userId: "1dc57fc6-3567-5448-a1f4-9adeb6e4e65f",
-  };
-
   describe("when user is an admin", () => {
     beforeEach(() => {
       ability = iMAbility({ user: adminUser });
     });
 
-    it("can create iM", () => {
-      expect(ability.can("create", "IM")).toBe(true);
-    });
     it("can read iM", () => {
       expect(ability.can("read", "IM")).toBe(true);
     });
@@ -78,60 +73,11 @@ describe("IM Permissions", () => {
   });
 
   describe("when user is not an admin", () => {
-    describe("when user is not Faculty owner", () => {
+    describe("when user is IM owner", () => {
       beforeEach(() => {
         ability = iMAbility({
           user: nonAdminUser,
-          userFaculty: nonAdminFaculty,
-          iMFaculty: notOwnedFaculty,
-        });
-      });
-
-      it("can create iM", () => {
-        expect(ability.can("create", "IM")).toBe(false);
-      });
-    });
-
-    describe("when user is Faculty owner", () => {
-      beforeEach(() => {
-        ability = iMAbility({
-          user: nonAdminUser,
-          userFaculty: nonAdminFaculty,
-          iMFaculty: nonAdminFaculty,
-        });
-      });
-
-      it("can create iM", () => {
-        expect(ability.can("create", "IM")).toBe(true);
-      });
-    });
-
-    describe("when user is not the IM owner", () => {
-      beforeEach(() => {
-        ability = iMAbility({
-          user: nonAdminUser,
-          userFaculty: nonIMOwnerFaculty,
-          iM,
-        });
-      });
-
-      it("can read iM", () => {
-        expect(ability.can("read", subject("IM", iM))).toBe(false);
-      });
-      it("can update iM", () => {
-        expect(ability.can("update", "IM")).toBe(false);
-      });
-      it("can delete iM", () => {
-        expect(ability.can("delete", "IM")).toBe(false);
-      });
-    });
-
-    describe("when user is the IM owner", () => {
-      beforeEach(() => {
-        ability = iMAbility({
-          user: nonAdminUser,
-          userFaculty: nonAdminFaculty,
-          iM,
+          userActiveFaculty: nonAdminActiveFaculty
         });
       });
 
@@ -139,10 +85,28 @@ describe("IM Permissions", () => {
         expect(ability.can("read", subject("IM", iM))).toBe(true);
       });
       it("can update iM", () => {
-        expect(ability.can("update", "IM")).toBe(true);
+        expect(ability.can("update", subject("IM", iM))).toBe(true);
       });
-      it("can delete iM", () => {
-        expect(ability.can("delete", "IM")).toBe(true);
+      it("can read iM", () => {
+        expect(ability.can("delete", subject("IM", iM))).toBe(true);
+      });
+    });
+    describe("when user is not IM owner", () => {
+      beforeEach(() => {
+        ability = iMAbility({
+          user: nonAdminUser,
+          userActiveFaculty: nonOwnerActiveFaculty
+        });
+      });
+
+      it("can't read iM", () => {
+        expect(ability.can("read", subject("IM", iM))).toBe(false);
+      });
+      it("can't update iM", () => {
+        expect(ability.can("update", subject("IM", iM))).toBe(false);
+      });
+      it("can't read iM", () => {
+        expect(ability.can("delete", subject("IM", iM))).toBe(false);
       });
     });
   });

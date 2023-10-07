@@ -40,5 +40,3 @@ export default function abilityBuilder(
   const ability = build();
   return ability;
 }
-
-// TODO implement testing

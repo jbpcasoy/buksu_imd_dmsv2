@@ -4,7 +4,7 @@ import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
 import { accessibleBy } from "@casl/prisma";
 import { ForbiddenError, subject } from "@casl/ability";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 

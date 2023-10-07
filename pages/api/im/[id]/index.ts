@@ -21,34 +21,19 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability: AppAbility;
-
-  const getHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
-    try {
-      await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
-
-    const { id } = validator.cast(req.query);
-
-    const userFaculty = await prisma.faculty.findFirst({
-      where: {
-        ActiveFaculty: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
+  const userActiveFaculty = await prisma.activeFaculty.findFirst({
+    where: {
+      Faculty: {
+        userId: {
+          equals: user.id,
         },
       },
-    });
-    ability = iMAbility({ user, userFaculty });
+    },
+  });
+  const ability = iMAbility({ user, userActiveFaculty });
+
+  const getHandler = async () => {
+    const { id } = req.query;
 
     try {
       const iM = await prisma.iM.findFirstOrThrow({
@@ -57,7 +42,7 @@ export default async function handler(
             accessibleBy(ability).IM,
             {
               id: {
-                equals: id,
+                equals: id as string,
               },
             },
           ],
@@ -72,46 +57,22 @@ export default async function handler(
   };
 
   const deleteHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
+    const { id } = req.query;
 
+    let iMToDelete: IM | null;
     try {
-      await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
-
-    const { id } = validator.cast(req.query);
-
-    let iM: IM | null;
-    try {
-      iM = await prisma.iM.findFirstOrThrow({
+      iMToDelete = await prisma.iM.findFirstOrThrow({
         where: {
           id: {
-            equals: id,
+            equals: id as string,
           },
         },
       });
     } catch (error) {
       return res.status(404).json({ error });
     }
-    const userFaculty = await prisma.faculty.findFirst({
-      where: {
-        ActiveFaculty: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      },
-    });
-    ability = iMAbility({ user, userFaculty, iM });
-
     try {
-      ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iM));
+      ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iMToDelete));
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });
@@ -120,10 +81,9 @@ export default async function handler(
     try {
       const iM = await prisma.iM.delete({
         where: {
-          id,
+          id: id as string,
         },
       });
-
       return res.json(iM);
     } catch (error) {
       console.error(error);
@@ -132,61 +92,35 @@ export default async function handler(
   };
 
   const putHandler = async () => {
-    const queryValidator = Yup.object({
-      id: Yup.string().required(),
-    });
-
-    try {
-      await queryValidator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
-
-    const bodyValidator = Yup.object({
+    const validator = Yup.object({
       title: Yup.string().required(),
       type: Yup.string()
         .oneOf(["MODULE", "COURSE_FILE", "WORKTEXT", "TEXTBOOK"])
         .required(),
     });
-
     try {
-      await bodyValidator.validate(req.body);
+      await validator.validate(req.body);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
     }
+    const { title, type } = validator.cast(req.body);
 
-    const { id } = queryValidator.cast(req.query);
-    const { title, type } = bodyValidator.cast(req.body);
-
-    let iM: IM | null;
+    const { id } = req.query;
+    let iMToUpdate: IM | null;
     try {
-      iM = await prisma.iM.findFirstOrThrow({
+      iMToUpdate = await prisma.iM.findFirstOrThrow({
         where: {
           id: {
-            equals: id,
+            equals: id as string,
           },
         },
       });
     } catch (error) {
       return res.status(404).json({ error });
     }
-    const userFaculty = await prisma.faculty.findFirst({
-      where: {
-        ActiveFaculty: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      },
-    });
-    ability = iMAbility({ user, userFaculty, iM });
-
     try {
-      ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iM));
+      ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iMToUpdate));
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });
@@ -195,7 +129,7 @@ export default async function handler(
     try {
       const iM = await prisma.iM.update({
         where: {
-          id,
+          id: id as string,
         },
         data: {
           title,
