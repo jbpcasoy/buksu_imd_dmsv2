@@ -40,30 +40,6 @@ export default async function handler(
     }
 
     const { activeFacultyId, title, type } = validator.cast(req.body);
-    // TODO test on admins case
-    /**
-     * Possible scenarios:
-     * returns status 400 because active faculty is not found
-     *
-     *
-     * Notes:
-     * validation if faculty is active must be in abilities
-     */
-    // TODO create mocha test for all abilities
-    /**
-     * scenarios:
-     * admin access with only user data and no other else
-     * user with invalid access (as many as necessary)
-     * user with valid access (as many as necessary)
-     *
-     * Danger zones:
-     * parts with "findFirstOrThrow"
-     *
-     * Libraries to use:
-     * Mocha
-     * Chai
-     * faker
-     */
     let activeFaculty: ActiveFaculty;
     let iMFaculty: Faculty | null;
     try {

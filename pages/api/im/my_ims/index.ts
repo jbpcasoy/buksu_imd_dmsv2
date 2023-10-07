@@ -67,11 +67,6 @@ export default async function handler(
                 id: {
                   equals: userFaculty.id,
                 },
-                Department: {
-                  id: {
-                    equals: userFaculty.departmentId,
-                  },
-                },
               },
             },
           ],
@@ -85,11 +80,6 @@ export default async function handler(
               Faculty: {
                 id: {
                   equals: userFaculty.id,
-                },
-                Department: {
-                  id: {
-                    equals: userFaculty.departmentId,
-                  },
                 },
               },
             },
