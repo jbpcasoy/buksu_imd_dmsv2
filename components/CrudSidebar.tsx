@@ -8,6 +8,9 @@ export default function CrudSidebar() {
       <Link href='/crud' className='underline'>
         Home
       </Link>
+      <Link href='/crud/user' className='underline'>
+        User
+      </Link>
       <Link href='/crud/college' className='underline'>
         College
       </Link>
@@ -17,8 +20,14 @@ export default function CrudSidebar() {
       <Link href='/crud/faculty' className='underline'>
         Faculty
       </Link>
+      <Link href='/crud/active_faculty' className='underline'>
+        Active Faculty
+      </Link>
       <Link href='/crud/im' className='underline'>
         IM
+      </Link>
+      <Link href='/crud/im_file' className='underline'>
+        IM File
       </Link>
     </div>
   );

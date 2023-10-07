@@ -93,9 +93,6 @@ export default async function handler(
           AND: [
             accessibleBy(ability).Faculty,
             {
-              ActiveFaculty: {
-                isNot: null,
-              },
               User: {
                 name: {
                   contains: filterName,
