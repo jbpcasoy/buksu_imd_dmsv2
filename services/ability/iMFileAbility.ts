@@ -1,22 +1,28 @@
 import { Faculty, IM, User } from "@prisma/client";
 import abilityBuilder from "./abilityBuilder";
 
-export default function iMFileAbility(user: User, faculty: Faculty, iM: IM) {
-  try {
-    const ability = abilityBuilder((can, cannot) => {
-      if (iM.facultyId === faculty.id && faculty.userId === user.id) {
-        can("createIMFile", "Faculty");
-      }
+export default function iMFileAbility({
+  userFaculty,
+  iM,
+  user,
+}: {
+  user: User;
+  userFaculty?: Faculty | null;
+  iM?: IM | null;
+}) {
+  const ability = abilityBuilder((can, cannot) => {
+    if (iM?.facultyId === userFaculty?.id && userFaculty?.userId === user.id) {
+      can("create", "IMFile");
+      can("read", "IMFile");
+      can("delete", "IMFile");
+    }
 
-      if (user.isAdmin) {
-        can("createIMFile", "Faculty");
-      }
-    });
+    if (user.isAdmin) {
+      can("create", "IMFile");
+      can("read", "IMFile");
+      can("delete", "IMFile");
+    }
+  });
 
-    return ability;
-  } catch (error) {
-    console.error(error);
-    const ability = abilityBuilder((can, cannot) => {});
-    return ability;
-  }
+  return ability;
 }

@@ -6,9 +6,6 @@ import "@testing-library/jest-dom";
 
 describe("IM Permissions", () => {
   let ability: AppAbility;
-  let user: User;
-  let userFaculty: Faculty | null;
-  let iMFaculty: Faculty | null;
 
   const adminUser: User = {
     email: null,
@@ -33,19 +30,27 @@ describe("IM Permissions", () => {
     updatedAt: new Date(),
     id: "f04cb29d-2282-5dad-8bde-2c109cee9f81",
     departmentId: "0f5a97aa-fbd7-5f63-9177-21343086df2b",
-    userId: "1dc57fc6-3567-5448-a1f4-9adeb6e4e65f",
+    userId: nonAdminUser.id,
+  };
+
+  const notOwnedFaculty: Faculty = {
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    id: "e6ecd1ea-c3d6-54bc-9e1e-9274aa90ee6f",
+    departmentId: "0f5a97aa-fbd7-5f63-9177-21343086df2b",
+    userId: "154cd3db-4498-58bc-a9ef-ec6f4accc516",
   };
 
   const iM: IM = {
     createdAt: new Date(),
     updatedAt: new Date(),
     id: "1b212a10-4e34-593e-96d9-41ec7a4337af",
-    facultyId: "f04cb29d-2282-5dad-8bde-2c109cee9f81",
+    facultyId: nonAdminFaculty.id,
     title: "Test IM Title",
     type: "MODULE",
   };
 
-  const nonOwnerFaculty = {
+  const nonIMOwnerFaculty = {
     createdAt: new Date(),
     updatedAt: new Date(),
     id: "c48efd2e-4ced-57c7-b5c0-fb3f9999c41e",
@@ -73,20 +78,40 @@ describe("IM Permissions", () => {
   });
 
   describe("when user is not an admin", () => {
-    beforeEach(() => {
-      ability = iMAbility({ user: nonAdminUser, userFaculty: nonAdminFaculty });
+    describe("when user is not Faculty owner", () => {
+      beforeEach(() => {
+        ability = iMAbility({
+          user: nonAdminUser,
+          userFaculty: nonAdminFaculty,
+          iMFaculty: notOwnedFaculty,
+        });
+      });
+
+      it("can create iM", () => {
+        expect(ability.can("create", "IM")).toBe(false);
+      });
     });
 
-    it("can create iM", () => {
-      expect(ability.can("create", "IM")).toBe(true);
+    describe("when user is Faculty owner", () => {
+      beforeEach(() => {
+        ability = iMAbility({
+          user: nonAdminUser,
+          userFaculty: nonAdminFaculty,
+          iMFaculty: nonAdminFaculty,
+        });
+      });
+
+      it("can create iM", () => {
+        expect(ability.can("create", "IM")).toBe(true);
+      });
     });
 
     describe("when user is not the IM owner", () => {
       beforeEach(() => {
         ability = iMAbility({
           user: nonAdminUser,
-          userFaculty: nonOwnerFaculty,
-          iM
+          userFaculty: nonIMOwnerFaculty,
+          iM,
         });
       });
 
@@ -106,7 +131,7 @@ describe("IM Permissions", () => {
         ability = iMAbility({
           user: nonAdminUser,
           userFaculty: nonAdminFaculty,
-          iM
+          iM,
         });
       });
 

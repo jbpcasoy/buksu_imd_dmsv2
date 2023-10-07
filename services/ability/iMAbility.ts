@@ -5,14 +5,16 @@ export default function iMAbility({
   user,
   userFaculty,
   iM,
+  iMFaculty,
 }: {
   user: User;
   userFaculty?: Faculty | null;
   iM?: IM | null;
+  iMFaculty?: Faculty | null;
 }) {
   const ability = abilityBuilder((can, cannot) => {
     //  User create IM for themselves
-    if (userFaculty?.userId === user.id) {
+    if (iMFaculty?.id === userFaculty?.id) {
       can("create", "IM");
     }
     //  User can read own IMs

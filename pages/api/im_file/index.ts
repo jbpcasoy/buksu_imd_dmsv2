@@ -58,40 +58,31 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Check if user can create im file
     let ability;
-    let iM;
-    let faculty;
-    try {
-      iM = await prisma.iM.findFirstOrThrow({
-        where: {
-          id: {
-            equals: iMId,
-          },
+    const iM = await prisma.iM.findFirst({
+      where: {
+        id: {
+          equals: iMId,
         },
-      });
+      },
+    });
 
-      faculty = await prisma.faculty.findFirstOrThrow({
-        where: {
-          ActiveFaculty: {
-            Faculty: {
-              userId: {
-                equals: user.id,
-              },
+    const userFaculty = await prisma.faculty.findFirst({
+      where: {
+        ActiveFaculty: {
+          Faculty: {
+            userId: {
+              equals: user.id,
             },
           },
         },
-      });
-      // console.log({user, faculty, iM})
+      },
+    });
+    // console.log({user, faculty, iM})
 
-      ability = iMFileAbility(user, faculty, iM);
-    } catch (error) {
-      return res.status(404).json({ error });
-    }
+    ability = iMFileAbility({ user, userFaculty, iM});
 
     try {
-      ForbiddenError.from(ability).throwUnlessCan(
-        "createIMFile",
-        subject("Faculty", faculty)
-      );
+      ForbiddenError.from(ability).throwUnlessCan("create", "IMFile");
     } catch (error) {
       return res.status(403).json({ error });
     }

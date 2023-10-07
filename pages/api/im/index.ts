@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import { PrismaClient, User } from "@prisma/client";
+import { ActiveFaculty, Faculty, PrismaClient, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import * as Yup from "yup";
@@ -22,25 +22,6 @@ export default async function handler(
   } catch (error) {
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
-  }
-
-  let ability: AppAbility;
-  try {
-    const userFaculty = await prisma.faculty.findFirst({
-      where: {
-        ActiveFaculty: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      },
-    });
-    ability = iMAbility({ user, userFaculty });
-  } catch (error) {
-    console.error(error);
-    return res.status(404).json({ error });
   }
 
   const postHandler = async () => {
@@ -83,8 +64,10 @@ export default async function handler(
      * Chai
      * faker
      */
+    let activeFaculty: ActiveFaculty;
+    let iMFaculty: Faculty | null;
     try {
-      const activeFaculty = await prisma.activeFaculty.findFirstOrThrow({
+      activeFaculty = await prisma.activeFaculty.findFirstOrThrow({
         where: {
           id: {
             equals: activeFacultyId,
@@ -92,41 +75,50 @@ export default async function handler(
         },
       });
 
-      const faculty = await prisma.faculty.findFirstOrThrow({
+      iMFaculty = await prisma.faculty.findFirstOrThrow({
         where: {
           id: {
-            equals: activeFaculty.facultyId,
+            equals: activeFaculty?.facultyId,
           },
         },
       });
+    } catch (error) {
+      return res.status(404).json({ error });
+    }
 
-      try {
-        ForbiddenError.from(ability).throwUnlessCan(
-          "create",
-          "IM"
-        );
-      } catch (error) {
-        console.error(error);
-        return res.status(403).json({ error });
-      }
-
-      const iM = await prisma.iM.create({
-        data: {
-          title,
+    const userFaculty = await prisma.faculty.findFirst({
+      where: {
+        ActiveFaculty: {
           Faculty: {
-            connect: {
-              id: faculty.id,
+            userId: {
+              equals: user.id,
             },
           },
-          type,
         },
-      });
+      },
+    });
+    const ability = iMAbility({ user, userFaculty, iMFaculty });
 
-      return res.json(iM);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan("create", "IM");
     } catch (error) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res.status(403).json({ error });
     }
+
+    const iM = await prisma.iM.create({
+      data: {
+        title,
+        Faculty: {
+          connect: {
+            id: iMFaculty.id,
+          },
+        },
+        type,
+      },
+    });
+
+    return res.json(iM);
   };
 
   const getHandler = async () => {
@@ -143,6 +135,20 @@ export default async function handler(
     }
 
     const { skip, take } = validator.cast(req.query);
+
+    const userFaculty = await prisma.faculty.findFirst({
+      where: {
+        ActiveFaculty: {
+          Faculty: {
+            userId: {
+              equals: user.id,
+            },
+          },
+        },
+      },
+    });
+    const ability = iMAbility({user, userFaculty})
+
     try {
       const iM = await prisma.iM.findMany({
         skip,
