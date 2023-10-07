@@ -69,8 +69,12 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
-    const { skip, take, "filter[name]": filterName} = validator.cast(req.query);
-    console.log({filterName})
+    const {
+      skip,
+      take,
+      "filter[name]": filterName,
+    } = validator.cast(req.query);
+    console.log({ filterName });
     try {
       const colleges = await prisma.college.findMany({
         skip,
@@ -81,7 +85,7 @@ export default async function handler(
             {
               name: {
                 contains: filterName,
-                mode: "insensitive"
+                mode: "insensitive",
               },
             },
           ],
@@ -89,7 +93,15 @@ export default async function handler(
       });
       const count = await prisma.college.count({
         where: {
-          AND: [accessibleBy(ability).College],
+          AND: [
+            accessibleBy(ability).College,
+            {
+              name: {
+                contains: filterName,
+                mode: "insensitive",
+              },
+            },
+          ],
         },
       });
 

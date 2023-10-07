@@ -35,6 +35,7 @@ export default function DepartmentsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
+              <th>collegeId</th>
               <th>name</th>
               <th>action</th>
             </tr>
@@ -46,6 +47,7 @@ export default function DepartmentsPage() {
                   <td>{department.id}</td>
                   <td>{new Date(department.createdAt).toLocaleString()}</td>
                   <td>{new Date(department.updatedAt).toLocaleString()}</td>
+                  <td>{department.collegeId}</td>
                   <td>{department.name}</td>
                   <td>
                     <Link

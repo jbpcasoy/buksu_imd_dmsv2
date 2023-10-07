@@ -1,28 +1,28 @@
-import { Department } from "@prisma/client";
+import { User } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export interface useDepartmentsParams {
+export interface useUsersParams {
   skip: number;
   take: number;
   filter?: object;
 }
-export default function useDepartments({
+export default function useUsers({
   skip,
   take,
   filter,
-}: useDepartmentsParams) {
+}: useUsersParams) {
   const [state, setState] = useState<{
-    departments: Department[];
+    users: User[];
     count: number;
   }>({
     count: 0,
-    departments: [],
+    users: [],
   });
 
   useEffect(() => {
     axios
-      .get("/api/department", {
+      .get("/api/user", {
         params: {
           skip,
           take,
