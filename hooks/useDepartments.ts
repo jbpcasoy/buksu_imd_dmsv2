@@ -1,25 +1,23 @@
-import { College } from "@prisma/client";
+import { Department } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export interface useCollegesParams {
+export interface useDepartmentsParams {
   skip: number;
   take: number;
-  filter?: object
 }
-export default function useColleges({ skip, take, filter }: useCollegesParams) {
-  const [state, setState] = useState<{colleges: College[], count: number}>({
+export default function useDepartments({ skip, take }: useDepartmentsParams) {
+  const [state, setState] = useState<{departments: Department[], count: number}>({
     count: 0,
-    colleges: []
+    departments: []
   });
 
   useEffect(() => {
     axios
-      .get("/api/college", {
+      .get("/api/department", {
         params: {
           skip,
           take,
-          filter
         },
       })
       .then((res) => {
@@ -28,7 +26,7 @@ export default function useColleges({ skip, take, filter }: useCollegesParams) {
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take]);
 
   return state;
 }
