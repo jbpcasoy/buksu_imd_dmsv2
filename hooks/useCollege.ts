@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { IM } from "@prisma/client";
+import { College, IM } from "@prisma/client";
 import axios from "axios";
 
-export interface useIMParams {
+export interface useCollegeParams {
   id: string;
 }
-export default function useIM({ id }: useIMParams) {
-  const [state, setState] = useState<IM | null>();
+export default function useCollege({ id }: useCollegeParams) {
+  const [state, setState] = useState<College | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -14,7 +14,7 @@ export default function useIM({ id }: useIMParams) {
     let subscribe = true;
 
     axios
-      .get(`/api/im/${id}`)
+      .get(`/api/college/${id}`)
       .then((res) => {
         if(!subscribe) return;
         setState(res.data);
