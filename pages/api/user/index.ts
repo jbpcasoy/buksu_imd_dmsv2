@@ -19,7 +19,7 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = userAbility({user});
+  const ability = userAbility({ user });
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -58,6 +58,7 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       return await getHandler();
+    default:
+      return res.status(405).send(`${req.method} Not Allowed`);
   }
-  res.status(200).json({ name: "John Doe" });
 }

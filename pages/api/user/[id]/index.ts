@@ -3,7 +3,8 @@ import prisma from "@/prisma/client";
 import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
 import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { ForbiddenError, subject } from "@casl/ability";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -19,7 +20,7 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = userAbility({user});
+  const ability = userAbility({ user });
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -54,9 +55,74 @@ export default async function handler(
     }
   };
 
+  const putHandler = async () => {
+    const queryValidator = Yup.object({
+      id: Yup.string().required(),
+    });
+    try {
+      await queryValidator.validate(req.query);
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({ error });
+    }
+
+    const bodyValidator = Yup.object({
+      name: Yup.string().required(),
+    });
+    try {
+      await bodyValidator.validate(req.body);
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({ error });
+    }
+    const { id } = queryValidator.cast(req.query);
+    const { name } = bodyValidator.cast(req.body);
+
+    let userToUpdate;
+    try {
+      userToUpdate = await prisma.user.findFirstOrThrow({
+        where: {
+          id: {
+            equals: id,
+          },
+        },
+      });
+    } catch (error) {
+      return res.status(404).json({ error });
+    }
+
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(
+        "update",
+        subject("User", userToUpdate)
+      );
+    } catch (error) {
+      return res.status(403).json({ error });
+    }
+
+    try {
+      const user = await prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+        },
+      });
+
+      return res.json(user);
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({ error });
+    }
+  };
+
   switch (req.method) {
     case "GET":
       return await getHandler();
+    case "PUT":
+      return await putHandler();
+    default:
+      return res.status(405).send(`${req.method} Not Allowed`);
   }
-  res.status(200).json({ name: "John Doe" });
 }

@@ -1,9 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,6 +28,7 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       return await getHandler();
+    default:
+      return res.status(405).send(`${req.method} Not Allowed`);
   }
-  res.status(200).json({ name: "John Doe" });
 }
