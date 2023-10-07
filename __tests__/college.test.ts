@@ -17,7 +17,7 @@ describe("College Permissions", () => {
         isAdmin: true,
         name: null,
       };
-      ability = collegeAbility(user);
+      ability = collegeAbility({user});
     });
 
     it("can read college", () => {
@@ -44,7 +44,7 @@ describe("College Permissions", () => {
         isAdmin: false,
         name: null,
       };
-      ability = collegeAbility(user);
+      ability = collegeAbility({user});
     });
 
     it("can read college", () => {
