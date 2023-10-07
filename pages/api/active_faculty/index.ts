@@ -88,6 +88,7 @@ export default async function handler(
     const validator = Yup.object({
       take: Yup.number().required(),
       skip: Yup.number().required(),
+      "filter[name]": Yup.string().optional()
     });
 
     try {
@@ -97,13 +98,22 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
-    const { skip, take } = validator.cast(req.query);
+    const { skip, take, "filter[name]": filterName } = validator.cast(req.query);
     try {
       const activeFaculties = await prisma.activeFaculty.findMany({
         skip,
         take,
         where: {
-          AND: [accessibleBy(ability).ActiveFaculty],
+          AND: [accessibleBy(ability).ActiveFaculty, {
+            Faculty: {
+              User: {
+                name: {
+                  contains: filterName,
+                  mode: "insensitive"
+                }
+              }
+            }
+          }],
         },
       });
       const count = await prisma.activeFaculty.count({

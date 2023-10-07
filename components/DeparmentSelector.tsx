@@ -21,7 +21,7 @@ export default function DepartmentSelector(props: FieldInputProps<any>) {
 
   return (
     <div>
-      <input type='text' onChange={onSearch} placeholder="search"/>
+      <input type='text' onChange={onSearch} placeholder="Search department"/>
       <select {...props}>
         <option value=''>Select</option>
         {departments.map((department) => {

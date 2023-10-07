@@ -1,4 +1,4 @@
-import { Faculty } from "@prisma/client";
+import { ActiveFaculty } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -7,15 +7,15 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useFaculties({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{faculties: Faculty[], count: number}>({
+export default function useActiveFaculties({ skip, take, filter }: useFacultiesParams) {
+  const [state, setState] = useState<{activeFaculties: ActiveFaculty[], count: number}>({
     count: 0,
-    faculties: []
+    activeFaculties: []
   });
 
   useEffect(() => {
     axios
-      .get("/api/faculty", {
+      .get("/api/active_faculty", {
         params: {
           skip,
           take,

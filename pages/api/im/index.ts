@@ -150,7 +150,7 @@ export default async function handler(
     const ability = iMAbility({user, userFaculty})
 
     try {
-      const iM = await prisma.iM.findMany({
+      const iMs = await prisma.iM.findMany({
         skip,
         take,
         where: { AND: [accessibleBy(ability).IM] },
@@ -159,7 +159,7 @@ export default async function handler(
         where: { AND: [accessibleBy(ability).IM] },
       });
 
-      return res.json({ iM, count });
+      return res.json({ iMs, count });
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });

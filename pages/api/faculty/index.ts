@@ -21,7 +21,7 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = facultyAbility({user});
+  let ability = facultyAbility({ user });
 
   const postHandler = async () => {
     const validator = Yup.object({
@@ -70,6 +70,7 @@ export default async function handler(
     const validator = Yup.object({
       take: Yup.number().required(),
       skip: Yup.number().required(),
+      "filter[name]": Yup.string().optional(),
     });
 
     try {
@@ -79,13 +80,30 @@ export default async function handler(
       return res.status(400).json({ error });
     }
 
-    const { skip, take } = validator.cast(req.query);
+    const {
+      skip,
+      take,
+      "filter[name]": filterName,
+    } = validator.cast(req.query);
     try {
       const faculties = await prisma.faculty.findMany({
         skip,
         take,
         where: {
-          AND: [accessibleBy(ability).Faculty],
+          AND: [
+            accessibleBy(ability).Faculty,
+            {
+              ActiveFaculty: {
+                isNot: null,
+              },
+              User: {
+                name: {
+                  contains: filterName,
+                  mode: "insensitive",
+                },
+              },
+            },
+          ],
         },
       });
       const count = await prisma.faculty.count({

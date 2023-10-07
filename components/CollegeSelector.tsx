@@ -21,7 +21,7 @@ export default function CollegeSelector(props: FieldInputProps<any>) {
 
   return (
     <div>
-      <input type='text' onChange={onSearch} placeholder="search"/>
+      <input type='text' onChange={onSearch} placeholder="College search"/>
       <select {...props}>
         <option value=''>Select</option>
         {colleges.map((college) => {

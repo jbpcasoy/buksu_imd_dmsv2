@@ -1,21 +1,28 @@
-import { Faculty } from "@prisma/client";
+import { IM } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export interface useFacultiesParams {
+export interface useIMsParams {
   skip: number;
   take: number;
   filter?: object;
 }
-export default function useFaculties({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{faculties: Faculty[], count: number}>({
+export default function useIMs({
+  skip,
+  take,
+  filter,
+}: useIMsParams) {
+  const [state, setState] = useState<{
+    iMs: IM[];
+    count: number;
+  }>({
     count: 0,
-    faculties: []
+    iMs: [],
   });
 
   useEffect(() => {
     axios
-      .get("/api/faculty", {
+      .get("/api/im", {
         params: {
           skip,
           take,
