@@ -4,15 +4,12 @@ import abilityBuilder from "./abilityBuilder";
 export default function iMFileAbility(user: User, faculty: Faculty, iM: IM) {
   try {
     const ability = abilityBuilder((can, cannot) => {
-      can("read", "IMFile");
-
-      if (iM.facultyId === faculty.id && faculty.userId === user.id)
+      if (iM.facultyId === faculty.id && faculty.userId === user.id) {
         can("createIMFile", "Faculty");
+      }
 
       if (user.isAdmin) {
         can("createIMFile", "Faculty");
-        can("update", "IMFile");
-        can("delete", "IMFile");
       }
     });
 
