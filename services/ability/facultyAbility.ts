@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 import abilityBuilder from "./abilityBuilder";
 import prisma from "@/prisma/client";
 
-export default function facultyAbility(user: User) {
+export default function facultyAbility({user}: {user: User}) {
   try {
     const ability = abilityBuilder((can, cannot) => {
       can("read", "Faculty");
