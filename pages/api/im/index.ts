@@ -91,16 +91,7 @@ export default async function handler(
     }
     const { skip, take } = validator.cast(req.query);
 
-    const userActiveFaculty = await prisma.activeFaculty.findFirst({
-      where: {
-        Faculty: {
-          userId: {
-            equals: user.id,
-          },
-        },
-      },
-    });
-    const ability = iMAbility({ user, userActiveFaculty });
+    const ability = iMAbility({ user });
 
     try {
       const iMs = await prisma.iM.findMany({

@@ -20,17 +20,7 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-
-  const userActiveFaculty = await prisma.activeFaculty.findFirst({
-    where: {
-      Faculty: {
-        userId: {
-          equals: user.id,
-        },
-      },
-    },
-  });
-  const ability = iMAbility({ user, userActiveFaculty });
+  const ability = iMAbility({ user });
 
   const getHandler = async () => {
     const { id } = req.query;
@@ -67,12 +57,30 @@ export default async function handler(
             equals: id as string,
           },
         },
+        include: {
+          Faculty: {
+            include: {
+              ActiveFaculty: {
+                include: {
+                  Faculty: {
+                    include: {
+                      User: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
     } catch (error) {
       return res.status(404).json({ error });
     }
     try {
-      ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iMToDelete));
+      ForbiddenError.from(ability).throwUnlessCan(
+        "delete",
+        subject("IM", iMToDelete)
+      );
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });
@@ -115,12 +123,32 @@ export default async function handler(
             equals: id as string,
           },
         },
+        include: {
+          Faculty: {
+            include: {
+              ActiveFaculty: {
+                include: {
+                  Faculty: {
+                    include: {
+                      User: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
+
+      console.log(JSON.stringify(iMToUpdate, null, 4));
     } catch (error) {
       return res.status(404).json({ error });
     }
     try {
-      ForbiddenError.from(ability).throwUnlessCan("delete", subject("IM", iMToUpdate));
+      ForbiddenError.from(ability).throwUnlessCan(
+        "delete",
+        subject("IM", iMToUpdate)
+      );
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });

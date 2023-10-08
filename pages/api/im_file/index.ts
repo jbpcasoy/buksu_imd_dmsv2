@@ -63,24 +63,32 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               equals: iMId,
             },
           },
+          include: {
+            Faculty: {
+              include: {
+                ActiveFaculty: {
+                  include: {
+                    Faculty: {
+                      include: {
+                        User: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         });
       } catch (error) {
         return res.status(403).json({ error });
       }
 
-      const userActiveFaculty = await prisma.activeFaculty.findFirst({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-
-      const ability = iMAbility({ user, userActiveFaculty });
+      const ability = iMAbility({ user });
       try {
-        ForbiddenError.from(ability).throwUnlessCan("connectToIMFile", subject("IM", iM));
+        ForbiddenError.from(ability).throwUnlessCan(
+          "connectToIMFile",
+          subject("IM", iM)
+        );
       } catch (error) {
         console.error(error);
         return res.status(403).json({ error });
