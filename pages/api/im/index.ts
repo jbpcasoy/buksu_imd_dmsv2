@@ -41,15 +41,14 @@ export default async function handler(
       faculty = await prisma.faculty.findFirstOrThrow({
         where: {
           ActiveFaculty: {
-            Faculty: {
-              id: {
-                equals: activeFacultyId,
-              },
+            id: {
+              equals: activeFacultyId,
             },
           },
         },
       });
     } catch (error) {
+      console.error(error)
       return res.status(404).json({ error });
     }
 
