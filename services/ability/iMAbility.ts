@@ -1,4 +1,4 @@
-import { ActiveFaculty, Department, Faculty, IM, Prisma, User } from "@prisma/client";
+import { ActiveFaculty, User } from "@prisma/client";
 import abilityBuilder from "./abilityBuilder";
 
 export default function iMAbility({
@@ -9,6 +9,11 @@ export default function iMAbility({
   userActiveFaculty?: ActiveFaculty | null;
 }) {
   const ability = abilityBuilder((can, cannot) => {
+    can("connectToIMFile", "IM", {
+      facultyId: {
+        equals: userActiveFaculty?.facultyId,
+      },
+    });
     can("read", "IM", {
       facultyId: {
         equals: userActiveFaculty?.facultyId,
@@ -25,6 +30,7 @@ export default function iMAbility({
       },
     });
     if (user.isAdmin) {
+      can("connectToIMFile", "IM");
       can("read", "IM");
       can("update", "IM");
       can("delete", "IM");

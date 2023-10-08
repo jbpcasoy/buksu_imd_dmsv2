@@ -2,12 +2,14 @@ import prisma from "@/prisma/client";
 import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
 import { accessibleBy } from "@casl/prisma";
-import { User } from "@prisma/client";
+import { ActiveFaculty, IM, User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import * as Yup from "yup";
+import { ForbiddenError, subject } from "@casl/ability";
+import iMAbility from "@/services/ability/iMAbility";
 
 // TODO add ability validation
 // connectToIM on iMAbility
@@ -27,7 +29,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iMFileAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -36,8 +37,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const form = new Formidable();
         form.parse(req, (err, fields, files) => {
           if (err) {
-            // reject({ err });
-            throw err;
+            reject({ err });
           }
           resolve({ err, fields, files });
         });
@@ -55,13 +55,36 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const { iMId } = validator.cast(body);
 
       // Find IM
-      const iM = await prisma.iM.findFirstOrThrow({
+      let iM: IM;
+      try {
+        iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            id: {
+              equals: iMId,
+            },
+          },
+        });
+      } catch (error) {
+        return res.status(403).json({ error });
+      }
+
+      const userActiveFaculty = await prisma.activeFaculty.findFirst({
         where: {
-          id: {
-            equals: iMId,
+          Faculty: {
+            userId: {
+              equals: user.id,
+            },
           },
         },
       });
+
+      const ability = iMAbility({ user, userActiveFaculty });
+      try {
+        ForbiddenError.from(ability).throwUnlessCan("connectToIMFile", subject("IM", iM));
+      } catch (error) {
+        console.error(error);
+        return res.status(403).json({ error });
+      }
 
       // Save file to server
       // TODO try if this implementation still works with linux, our deployment server will most likely be linux
@@ -104,20 +127,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       await validator.validate(req.query);
       const { skip, take } = validator.cast(req.query);
 
+      const ability = iMFileAbility({ user });
+
       const iMFiles = await prisma.iMFile.findMany({
         skip,
         take,
         where: {
-          AND: [
-            accessibleBy(ability).IMFile,
-          ],
+          AND: [accessibleBy(ability).IMFile],
         },
       });
       const count = await prisma.iMFile.count({
         where: {
-          AND: [
-            accessibleBy(ability).IMFile,
-          ],
+          AND: [accessibleBy(ability).IMFile],
         },
       });
 
