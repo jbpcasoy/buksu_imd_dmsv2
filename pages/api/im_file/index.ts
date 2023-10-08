@@ -113,6 +113,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             },
           },
           filename,
+          mimetype: file.mimetype,
+          size: file.size,
+          originalFilename: file.originalFilename,
         },
       });
       res.status(200).json(iMFile);

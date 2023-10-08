@@ -123,10 +123,13 @@ model IMFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM         IM            @relation(fields: [iMId], references: [id])
-    iMId       String
-    filename   String
-    ActiveFile ActiveIMFile?
+    IM               IM            @relation(fields: [iMId], references: [id])
+    iMId             String
+    filename         String
+    size             Int
+    mimetype         String
+    originalFilename String
+    ActiveFile       ActiveIMFile?
 }
 
 model ActiveIMFile {
@@ -134,9 +137,6 @@ model ActiveIMFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IMFile           IMFile @relation(fields: [fileId], references: [id])
-    fileId           String @unique
-    size             Int
-    mimetype         String
-    originalFilename String
+    IMFile   IMFile @relation(fields: [iMFileId], references: [id])
+    iMFileId String @unique
 }
