@@ -66,7 +66,19 @@ export default async function handler(
           include: {
             IM: {
               include: {
-                Faculty: true,
+                Faculty: {
+                  include: {
+                    ActiveFaculty: {
+                      include: {
+                        Faculty: {
+                          include: {
+                            User: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
               },
             },
           },

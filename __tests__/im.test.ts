@@ -61,6 +61,9 @@ describe("IM Permissions", () => {
       ability = iMAbility({ user: adminUser });
     });
 
+    it("can connect iM to IMFile", () => {
+      expect(ability.can("connectToIMFile", "IM")).toBe(true);
+    });
     it("can read iM", () => {
       expect(ability.can("read", "IM")).toBe(true);
     });
@@ -81,6 +84,9 @@ describe("IM Permissions", () => {
         });
       });
 
+      it("can connect iM to IMFile", () => {
+        expect(ability.can("connectToIMFile", subject("IM", iM))).toBe(true);
+      });
       it("can read iM", () => {
         expect(ability.can("read", subject("IM", iM))).toBe(true);
       });
@@ -99,6 +105,9 @@ describe("IM Permissions", () => {
         });
       });
 
+      it("can't connect iM to IMFile", () => {
+        expect(ability.can("connectToIMFile", subject("IM", iM))).toBe(false);
+      });
       it("can't read iM", () => {
         expect(ability.can("read", subject("IM", iM))).toBe(false);
       });
