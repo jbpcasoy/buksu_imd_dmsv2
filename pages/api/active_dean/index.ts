@@ -33,10 +33,7 @@ export default async function handler(
     }
 
     try {
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ActiveDean"
-      );
+      ForbiddenError.from(ability).throwUnlessCan("create", "ActiveDean");
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });
@@ -71,6 +68,47 @@ export default async function handler(
       if (userActiveDeanCount > 0) {
         return res.status(409).json({
           error: { message: "User can only have one active dean" },
+        });
+      }
+
+      const college = await prisma.college.findFirstOrThrow({
+        where: {
+          Department: {
+            some: {
+              Faculty: {
+                some: {
+                  Dean: {
+                    id: {
+                      equals: dean.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const collegeActiveDeanCount =
+        await prisma.activeDean.count({
+          where: {
+            Dean: {
+              Faculty: {
+                Department: {
+                  College: {
+                    id: {
+                      equals: college.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (collegeActiveDeanCount > 0) {
+        return res.status(409).json({
+          error: { message: "College can only have one active dean" },
         });
       }
 

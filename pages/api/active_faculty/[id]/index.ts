@@ -19,7 +19,7 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeFacultyAbility({user});
+  let ability = activeFacultyAbility({ user });
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -75,6 +75,64 @@ export default async function handler(
     }
 
     const { id } = validator.cast(req.query);
+
+    const activeCoordinator = await prisma.activeCoordinator.findFirst({
+      where: {
+        Coordinator: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: id,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (activeCoordinator) {
+      return res
+        .status(400)
+        .json({ error: { message: "Faculty is an Active Coordinator" } });
+    }
+
+    const activeChairperson = await prisma.activeChairperson.findFirst({
+      where: {
+        Chairperson: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: id,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (activeChairperson) {
+      return res
+        .status(400)
+        .json({ error: { message: "Faculty is an Active Chairperson" } });
+    }
+
+    const activeDean = await prisma.activeDean.findFirst({
+      where: {
+        Dean: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: id,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (activeDean) {
+      return res
+        .status(400)
+        .json({ error: { message: "Faculty is an Active Dean" } });
+    }
+
     try {
       const activeFaculty = await prisma.activeFaculty.delete({
         where: {

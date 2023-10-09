@@ -201,14 +201,10 @@ model ActiveDean {
     deanId String @unique
 }
 
-//ActiveCoordinator
-//ActiveChairperson
-//ActiveDean
-
-//DepartmentApproval
 //PeerApproval 
 //CoordinatorApproval
 //ChairpersonApproval
+
 //Attachment 
 //IMReviewSection
 //IMReviewQuestion

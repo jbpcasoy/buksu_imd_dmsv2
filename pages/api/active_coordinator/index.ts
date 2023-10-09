@@ -74,6 +74,41 @@ export default async function handler(
         });
       }
 
+      const department = await prisma.department.findFirstOrThrow({
+        where: {
+          Faculty: {
+            some: {
+              Coordinator: {
+                id: {
+                  equals: coordinator.id,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const departmentActiveCoordinatorCount =
+        await prisma.activeCoordinator.count({
+          where: {
+            Coordinator: {
+              Faculty: {
+                Department: {
+                  id: {
+                    equals: department.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (departmentActiveCoordinatorCount > 0) {
+        return res.status(409).json({
+          error: { message: "Department can only have one active coordinator" },
+        });
+      }
+
       const activeCoordinator = await prisma.activeCoordinator.create({
         data: {
           Coordinator: {

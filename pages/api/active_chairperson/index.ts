@@ -74,6 +74,41 @@ export default async function handler(
         });
       }
 
+      const department = await prisma.department.findFirstOrThrow({
+        where: {
+          Faculty: {
+            some: {
+              Chairperson: {
+                id: {
+                  equals: chairperson.id,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const departmentActiveChairpersonCount =
+        await prisma.activeChairperson.count({
+          where: {
+            Chairperson: {
+              Faculty: {
+                Department: {
+                  id: {
+                    equals: department.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (departmentActiveChairpersonCount > 0) {
+        return res.status(409).json({
+          error: { message: "Department can only have one active chairperson" },
+        });
+      }
+
       const activeChairperson = await prisma.activeChairperson.create({
         data: {
           Chairperson: {
