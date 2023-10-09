@@ -1,6 +1,9 @@
 import { AbilityBuilder, PureAbility } from "@casl/ability";
 import { PrismaQuery, Subjects, createPrismaAbility } from "@casl/prisma";
 import {
+  ActiveChairperson,
+  ActiveCoordinator,
+  ActiveDean,
   ActiveFaculty,
   ActiveIMFile,
   Chairperson,
@@ -28,6 +31,9 @@ export type AppSubjects =
       Chairperson: Chairperson;
       Coordinator: Coordinator;
       Dean: Dean;
+      ActiveCoordinator: ActiveCoordinator;
+      ActiveChairperson: ActiveChairperson;
+      ActiveDean: ActiveDean;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

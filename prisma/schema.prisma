@@ -132,7 +132,7 @@ model IMFile {
     size             Int
     mimetype         String
     originalFilename String
-    ActiveFile       ActiveIMFile?
+    ActiveIMFile     ActiveIMFile?
 }
 
 model ActiveIMFile {
@@ -149,8 +149,9 @@ model Chairperson {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty   Faculty @relation(fields: [facultyId], references: [id])
-    facultyId String  @unique
+    Faculty           Faculty            @relation(fields: [facultyId], references: [id])
+    facultyId         String             @unique
+    ActiveChairperson ActiveChairperson?
 }
 
 model Coordinator {
@@ -158,8 +159,9 @@ model Coordinator {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty   Faculty @relation(fields: [facultyId], references: [id])
-    facultyId String  @unique
+    Faculty           Faculty            @relation(fields: [facultyId], references: [id])
+    facultyId         String             @unique
+    ActiveCoordinator ActiveCoordinator?
 }
 
 model Dean {
@@ -167,6 +169,85 @@ model Dean {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty   Faculty @relation(fields: [facultyId], references: [id])
-    facultyId String  @unique
+    Faculty    Faculty     @relation(fields: [facultyId], references: [id])
+    facultyId  String      @unique
+    ActiveDean ActiveDean?
 }
+
+model ActiveCoordinator {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Coordinator   Coordinator @relation(fields: [coordinatorId], references: [id])
+    coordinatorId String      @unique
+}
+
+model ActiveChairperson {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Chairperson   Chairperson @relation(fields: [chairpersonId], references: [id])
+    chairpersonId String      @unique
+}
+
+model ActiveDean {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Dean   Dean   @relation(fields: [deanId], references: [id])
+    deanId String @unique
+}
+
+//ActiveCoordinator
+//ActiveChairperson
+//ActiveDean
+
+//DepartmentApproval
+//PeerApproval 
+//CoordinatorApproval
+//ChairpersonApproval
+//Attachment 
+//IMReviewSection
+//IMReviewQuestion
+//PeerReview
+//PeerReviewItem
+//SubmittedPeerReview
+//ChairpersonReview
+//ChairpersonReviewItem
+//SubmittedChairpersonReview
+//CoordinatorReview 
+//CoordinatorReviewItem 
+//SubmittedCoordinatorReview 
+//PeerSuggestion 
+//PeerSuggestionItem
+//ChairpersonSuggestion
+//ChairpersonSuggestionItem 
+//CoordinatorSuggestion 
+//CoordinatorSuggestionItem 
+//Notification 
+//ReadNotification
+//Admin
+//LoginRole 
+//SubmittedPeerSuggestion
+//SubmittedCoordinatorSuggestion
+//SubmittedChairpersonSuggestion
+//CoordinatorEndorsement
+//DeanEndorsement
+//IMDCoordinator
+//ActiveIMDCoordinator
+//CITLDirector 
+//ActiveCITLDirector 
+//IMDCoordinatorSuggestion 
+//IMDCoordinatorSuggestionItem 
+//SubmittedIMDCoordinatorSuggestion
+//IMDCoordinatorEndorsement
+//CITLDirectorEndorsement 
+//IMEvent
+//Announcement
+//Settings
+//QamisSuggestion
+//QamisSuggestionItem
+//SubmittedQamisSuggestion

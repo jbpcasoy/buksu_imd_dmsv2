@@ -3,44 +3,78 @@ import Link from "next/link";
 import { useContext } from "react";
 
 export default function CrudSidebar() {
+  const items: {
+    link: string;
+    label: string;
+  }[] = [
+    {
+      link: "/crud",
+      label: "Home",
+    },
+    {
+      link: "/crud/user",
+      label: "User",
+    },
+    {
+      link: "/crud/college",
+      label: "College",
+    },
+    {
+      link: "/crud/department",
+      label: "Department",
+    },
+    {
+      link: "/crud/faculty",
+      label: "Faculty",
+    },
+    {
+      link: "/crud/active_faculty",
+      label: "Active Faculty",
+    },
+    {
+      link: "/crud/im",
+      label: "IM",
+    },
+    {
+      link: "/crud/im_file",
+      label: "IM File",
+    },
+    {
+      link: "/crud/active_im_file",
+      label: "Active IM File",
+    },
+    {
+      link: "/crud/chairperson",
+      label: "Chairperson",
+    },
+    {
+      link: "/crud/coordinator",
+      label: "Coordinator",
+    },
+    {
+      link: "/crud/dean",
+      label: "Dean",
+    },
+    {
+      link: "/crud/active_coordinator",
+      label: "Active Coordinator",
+    },
+    {
+      link: "/crud/active_chairperson",
+      label: "Active Chairperson",
+    },
+    {
+      link: "/crud/active_dean",
+      label: "Active Dean",
+    },
+  ];
   return (
     <div className='flex flex-col'>
-      <Link href='/crud' className='underline'>
-        Home
-      </Link>
-      <Link href='/crud/user' className='underline'>
-        User
-      </Link>
-      <Link href='/crud/college' className='underline'>
-        College
-      </Link>
-      <Link href='/crud/department' className='underline'>
-        Department
-      </Link>
-      <Link href='/crud/faculty' className='underline'>
-        Faculty
-      </Link>
-      <Link href='/crud/active_faculty' className='underline'>
-        Active Faculty
-      </Link>
-      <Link href='/crud/im' className='underline'>
-        IM
-      </Link>
-      <Link href='/crud/im_file' className='underline'>
-        IM File
-      </Link>
-      <Link href='/crud/active_im_file' className='underline'>
-        Active IM File
-      </Link>
-      <Link href='/crud/chairperson' className='underline'>
-        Chairperson
-      </Link>
-      <Link href='/crud/coordinator' className='underline'>
-        Coordinator
-      </Link>
-      <Link href='/crud/dean' className='underline'>
-        Dean
-      </Link>
+      {items.map((item) => (
+        <Link href={item.link} className='underline'>
+          {item.label}
+        </Link>
+      ))}
     </div>
   );
 }
