@@ -20,7 +20,9 @@ export default function AddIMFile() {
     const formData = new FormData();
     formData.append("file", state.file);
     formData.append("iMId", state.iMId as string);
-    axios.post("/api/im_file", formData);
+    axios.post("/api/im_file", formData).then(() => {
+      alert("IMFile created successfully")
+    });
   };
 
   return (

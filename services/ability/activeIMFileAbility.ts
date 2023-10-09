@@ -1,13 +1,13 @@
 import { User } from "@prisma/client";
 import abilityBuilder from "./abilityBuilder";
 
-export default function collegeAbility({ user }: { user: User }) {
+export default function aciveIMFileAbility({ user }: { user: User }) {
   const ability = abilityBuilder((can, cannot) => {
     // implement security 
-    can("read", "College");
-    can("create", "College");
-    can("update", "College");
-    can("delete", "College");
+    can("read", "ActiveIMFile");
+    can("create", "ActiveIMFile");
+    can("update", "ActiveIMFile");
+    can("delete", "ActiveIMFile");
   });
 
   return ability;

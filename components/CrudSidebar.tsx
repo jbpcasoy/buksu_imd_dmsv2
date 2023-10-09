@@ -29,6 +29,9 @@ export default function CrudSidebar() {
       <Link href='/crud/im_file' className='underline'>
         IM File
       </Link>
+      <Link href='/crud/active_im_file' className='underline'>
+        Active IM File
+      </Link>
     </div>
   );
 }
