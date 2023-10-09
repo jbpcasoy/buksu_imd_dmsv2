@@ -23,9 +23,11 @@ export default function DepartmentsPage() {
 
   return (
     <CrudLayout>
-      <div className="flex justify-between">
+      <div className='flex justify-between'>
         <h2>Department</h2>
-        <Link className="border rounded" href={`/crud/department/add`}>Add</Link>
+        <Link className='border rounded' href={`/crud/department/add`}>
+          Add
+        </Link>
       </div>
 
       <div>
@@ -47,8 +49,14 @@ export default function DepartmentsPage() {
                   <td>{department.id}</td>
                   <td>{new Date(department.createdAt).toLocaleString()}</td>
                   <td>{new Date(department.updatedAt).toLocaleString()}</td>
-                  <td>{department.collegeId}</td>
-                  <td>{department.name}</td>
+                  <td>
+                    <Link
+                      href={`/crud/college/${department.collegeId}`}
+                      className='underline'
+                    >
+                      {department.collegeId}
+                    </Link>
+                  </td>
                   <td>
                     <Link
                       href={`/crud/department/${department.id}`}

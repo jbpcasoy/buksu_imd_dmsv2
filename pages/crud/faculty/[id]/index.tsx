@@ -41,7 +41,15 @@ export default function FacultyPage() {
       <p>id: {faculty.id}</p>
       <p>createdAt: {new Date(faculty.createdAt).toLocaleString()}</p>
       <p>updatedAt: {new Date(faculty.updatedAt).toLocaleString()}</p>
-      <p>userId: {faculty.userId}</p>
+      <p>
+        userId:{" "}
+        <Link
+          href={`/crud/user/${faculty.userId}`}
+          className='underline'
+        >
+          {faculty.userId}
+        </Link>
+      </p>
       <p>
         departmentId:{" "}
         <Link

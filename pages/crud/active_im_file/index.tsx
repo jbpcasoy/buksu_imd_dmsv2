@@ -48,7 +48,14 @@ export default function ActiveIMFilesPage() {
                   <td>{activeIMFile.id}</td>
                   <td>{new Date(activeIMFile.createdAt).toLocaleString()}</td>
                   <td>{new Date(activeIMFile.updatedAt).toLocaleString()}</td>
-                  <td>{activeIMFile.iMFileId}</td>
+                  <td>
+                    <Link
+                      href={`/crud/im_file/${activeIMFile.iMFileId}`}
+                      className='underline'
+                    >
+                      {activeIMFile.iMFileId}
+                    </Link>
+                  </td>
                   <td>
                     <Link
                       href={`/crud/active_im_file/${activeIMFile.id}`}

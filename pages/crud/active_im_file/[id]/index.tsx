@@ -16,11 +16,14 @@ export default function ActiveIMFilePage() {
       return;
     }
 
-    axios.delete(`/api/active_im_file/${activeIMFileId}`).then(() => {
-      alert("ActiveIMFile deleted successfully.");
-    }).catch(error => {
-      alert(error.message)
-    });
+    axios
+      .delete(`/api/active_im_file/${activeIMFileId}`)
+      .then(() => {
+        alert("ActiveIMFile deleted successfully.");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
   };
 
   if (!activeIMFile) return null;
@@ -38,7 +41,15 @@ export default function ActiveIMFilePage() {
       <p>id: {activeIMFile.id}</p>
       <p>createdAt: {new Date(activeIMFile.createdAt).toLocaleString()}</p>
       <p>updatedAt: {new Date(activeIMFile.updatedAt).toLocaleString()}</p>
-      <p>name: {activeIMFile.iMFileId}</p>
+      <p>
+        iMFileId:{" "}
+        <Link
+          href={`/crud/im_file/${activeIMFile.iMFileId}`}
+          className='underline'
+        >
+          {activeIMFile.iMFileId}
+        </Link>
+      </p>
     </CrudLayout>
   );
 }

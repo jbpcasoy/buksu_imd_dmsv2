@@ -16,11 +16,14 @@ export default function IMFilePage() {
       return;
     }
 
-    axios.delete(`/api/im_file/${iMFileId}`).then(() => {
-      alert("IMFile deleted successfully.");
-    }).catch(error => {
-      alert(error.message)
-    });
+    axios
+      .delete(`/api/im_file/${iMFileId}`)
+      .then(() => {
+        alert("IMFile deleted successfully.");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
   };
 
   if (!iMFile) return null;
@@ -38,7 +41,12 @@ export default function IMFilePage() {
       <p>id: {iMFile.id}</p>
       <p>createdAt: {new Date(iMFile.createdAt).toLocaleString()}</p>
       <p>updatedAt: {new Date(iMFile.updatedAt).toLocaleString()}</p>
-      <p>iMId: {iMFile.iMId}</p>
+      <p>
+        iMId:{" "}
+        <Link href={`/crud/im/${iMFile.iMId}`} className='underline'>
+          {iMFile.iMId}
+        </Link>
+      </p>
       <p>filename: {iMFile.filename}</p>
       <p>mimetype: {iMFile.mimetype}</p>
       <p>originalFilename: {iMFile.originalFilename}</p>

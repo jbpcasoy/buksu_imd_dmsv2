@@ -38,6 +38,9 @@ export default function IMFilesPage() {
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>filename</th>
+              <th>mimetype</th>
+              <th>size</th>
+              <th>originalFilename</th>
               <th>iMId</th>
               <th>action</th>
             </tr>
@@ -50,6 +53,9 @@ export default function IMFilesPage() {
                   <td>{new Date(iMFile.createdAt).toLocaleString()}</td>
                   <td>{new Date(iMFile.updatedAt).toLocaleString()}</td>
                   <td>{iMFile.filename}</td>
+                  <td>{iMFile.mimetype}</td>
+                  <td>{iMFile.size}</td>
+                  <td>{iMFile.originalFilename}</td>
                   <td>
                     <Link
                       href={`/crud/im/${iMFile.iMId}`}

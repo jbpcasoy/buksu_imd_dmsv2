@@ -49,7 +49,7 @@ export default function FacultiesPage() {
                   <td>{faculty.id}</td>
                   <td>{new Date(faculty.createdAt).toLocaleString()}</td>
                   <td>{new Date(faculty.updatedAt).toLocaleString()}</td>
-                  <td>{faculty.userId}</td>
+                  <td><Link href={`/crud/user/${faculty.userId}`} className="underline">{faculty.userId}</Link></td>
                   <td><Link href={`/crud/department/${faculty.departmentId}`} className="underline">{faculty.departmentId}</Link></td>
                   <td>
                     <Link
