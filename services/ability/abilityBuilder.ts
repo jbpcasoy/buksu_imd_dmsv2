@@ -3,7 +3,10 @@ import { PrismaQuery, Subjects, createPrismaAbility } from "@casl/prisma";
 import {
   ActiveFaculty,
   ActiveIMFile,
+  Chairperson,
   College,
+  Coordinator,
+  Dean,
   Department,
   Faculty,
   IM,
@@ -22,6 +25,9 @@ export type AppSubjects =
       Department: Department;
       IMFile: IMFile;
       ActiveIMFile: ActiveIMFile;
+      Chairperson: Chairperson;
+      Coordinator: Coordinator;
+      Dean: Dean;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

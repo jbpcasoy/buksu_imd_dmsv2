@@ -86,6 +86,9 @@ model Faculty {
     departmentId  String
     IM            IM[]
     ActiveFaculty ActiveFaculty?
+    Chairperson   Chairperson?
+    Coordinator   Coordinator?
+    Dean          Dean?
 
     @@unique([departmentId, userId])
 }
@@ -139,4 +142,31 @@ model ActiveIMFile {
 
     IMFile   IMFile @relation(fields: [iMFileId], references: [id])
     iMFileId String @unique
+}
+
+model Chairperson {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Faculty   Faculty @relation(fields: [facultyId], references: [id])
+    facultyId String  @unique
+}
+
+model Coordinator {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Faculty   Faculty @relation(fields: [facultyId], references: [id])
+    facultyId String  @unique
+}
+
+model Dean {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Faculty   Faculty @relation(fields: [facultyId], references: [id])
+    facultyId String  @unique
 }

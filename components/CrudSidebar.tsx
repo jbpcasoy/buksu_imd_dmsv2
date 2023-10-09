@@ -32,6 +32,15 @@ export default function CrudSidebar() {
       <Link href='/crud/active_im_file' className='underline'>
         Active IM File
       </Link>
+      <Link href='/crud/chairperson' className='underline'>
+        Chairperson
+      </Link>
+      <Link href='/crud/coordinator' className='underline'>
+        Coordinator
+      </Link>
+      <Link href='/crud/dean' className='underline'>
+        Dean
+      </Link>
     </div>
   );
 }

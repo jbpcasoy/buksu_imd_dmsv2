@@ -1,23 +1,22 @@
+import ActiveFacultySelector from "@/components/ActiveFacultySelector";
 import CrudLayout from "@/components/CrudLayout";
-import DepartmentSelector from "@/components/DepartmentSelector";
-import FacultySelector from "@/components/FacultySelector";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddActiveFacultyPage() {
+export default function AddChairpersonPage() {
   const formik = useFormik({
     initialValues: {
-      facultyId: "",
+      activeFacultyId: "",
     },
     validationSchema: Yup.object({
-      facultyId: Yup.string().required(),
+      activeFacultyId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
-        .post("/api/active_faculty", values)
+        .post("/api/chairperson", values)
         .then(() => {
-          alert("ActiveFaculty Added Successfully");
+          alert("Chairperson Added Successfully");
         })
         .catch((error) => {
           alert(error.message);
@@ -26,10 +25,10 @@ export default function AddActiveFacultyPage() {
   });
   return (
     <CrudLayout>
-      <h2>Add ActiveFaculty</h2>
+      <h2>Add Chairperson</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <FacultySelector {...formik.getFieldProps("facultyId")} />
+        <ActiveFacultySelector {...formik.getFieldProps("activeFacultyId")} />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </CrudLayout>
