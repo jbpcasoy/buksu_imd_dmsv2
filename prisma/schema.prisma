@@ -277,8 +277,8 @@ model PeerSuggestionItem {
     updatedAt DateTime @updatedAt
 
     suggestion       String
-    actionTaken      String
-    remarks          String
+    actionTaken      String?
+    remarks          String?
     PeerSuggestion   PeerSuggestion @relation(fields: [peerSuggestionId], references: [id])
     peerSuggestionId String
 }

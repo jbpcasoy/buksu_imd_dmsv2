@@ -79,11 +79,15 @@ export default function CrudSidebar() {
       link: "/crud/peer_suggestion",
       label: "Peer Suggestion",
     },
+    {
+      link: "/crud/peer_suggestion_item",
+      label: "Peer Suggestion Item",
+    },
   ];
   return (
     <div className='flex flex-col'>
       {items.map((item) => (
-        <Link href={item.link} className='underline'>
+        <Link href={item.link} className='underline' key={item.link}>
           {item.label}
         </Link>
       ))}
