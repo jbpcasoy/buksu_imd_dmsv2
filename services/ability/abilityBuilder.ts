@@ -15,6 +15,7 @@ import {
   Faculty,
   IM,
   IMFile,
+  PeerReview,
   User,
 } from "@prisma/client";
 
@@ -36,6 +37,7 @@ export type AppSubjects =
       ActiveChairperson: ActiveChairperson;
       ActiveDean: ActiveDean;
       DepartmentReview: DepartmentReview;
+      PeerReview: PeerReview;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
