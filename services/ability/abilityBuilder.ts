@@ -11,6 +11,7 @@ import {
   Coordinator,
   Dean,
   Department,
+  DepartmentReview,
   Faculty,
   IM,
   IMFile,
@@ -34,6 +35,7 @@ export type AppSubjects =
       ActiveCoordinator: ActiveCoordinator;
       ActiveChairperson: ActiveChairperson;
       ActiveDean: ActiveDean;
+      DepartmentReview: DepartmentReview;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

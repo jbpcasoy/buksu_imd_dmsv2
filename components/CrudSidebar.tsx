@@ -67,6 +67,10 @@ export default function CrudSidebar() {
       link: "/crud/active_dean",
       label: "Active Dean",
     },
+    {
+      link: "/crud/department_review",
+      label: "Department Review",
+    },
   ];
   return (
     <div className='flex flex-col'>

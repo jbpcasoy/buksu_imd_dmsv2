@@ -1,8 +1,5 @@
 {
-    "cSpell.words": [
-        "casl",
-        "formik",
-        "signin",
-        "Worktext"
-    ]
+  "cSpell.words": ["casl", "formik", "signin", "Worktext"],
+
+  "typescript.disableAutomaticTypeAcquisition": true
 }

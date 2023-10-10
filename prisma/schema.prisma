@@ -114,12 +114,11 @@ model IM {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty          Faculty           @relation(fields: [facultyId], references: [id])
-    facultyId        String
-    title            String
-    type             IMType
-    IMFile           IMFile[]
-    DepartmentReview DepartmentReview?
+    Faculty   Faculty  @relation(fields: [facultyId], references: [id])
+    facultyId String
+    title     String
+    type      IMType
+    IMFile    IMFile[]
 }
 
 model IMFile {
@@ -137,6 +136,7 @@ model IMFile {
     DepartmentReview DepartmentReview?
 }
 
+// TODO remove active im file for it will not be needed in the new structure
 model ActiveIMFile {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
@@ -208,8 +208,6 @@ model DepartmentReview {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM         IM          @relation(fields: [iMId], references: [id])
-    iMId       String      @unique
     IMFile     IMFile      @relation(fields: [iMFileId], references: [id])
     iMFileId   String      @unique
     PeerReview PeerReview?
