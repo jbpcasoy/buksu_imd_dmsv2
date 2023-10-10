@@ -75,6 +75,10 @@ export default function CrudSidebar() {
       link: "/crud/peer_review",
       label: "Peer Review",
     },
+    {
+      link: "/crud/peer_suggestion",
+      label: "Peer Suggestion",
+    },
   ];
   return (
     <div className='flex flex-col'>
