@@ -114,11 +114,12 @@ model IM {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty   Faculty  @relation(fields: [facultyId], references: [id])
-    facultyId String
-    title     String
-    type      IMType
-    IMFile    IMFile[]
+    Faculty          Faculty           @relation(fields: [facultyId], references: [id])
+    facultyId        String
+    title            String
+    type             IMType
+    IMFile           IMFile[]
+    DepartmentReview DepartmentReview?
 }
 
 model IMFile {
@@ -126,13 +127,14 @@ model IMFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM               IM            @relation(fields: [iMId], references: [id])
+    IM               IM                @relation(fields: [iMId], references: [id])
     iMId             String
     filename         String
     size             Int
     mimetype         String
     originalFilename String
     ActiveIMFile     ActiveIMFile?
+    DepartmentReview DepartmentReview?
 }
 
 model ActiveIMFile {
@@ -201,11 +203,101 @@ model ActiveDean {
     deanId String @unique
 }
 
+model DepartmentReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IM         IM          @relation(fields: [iMId], references: [id])
+    iMId       String      @unique
+    IMFile     IMFile      @relation(fields: [iMFileId], references: [id])
+    iMFileId   String      @unique
+    PeerReview PeerReview?
+}
+
+enum Rating {
+    VM
+    M
+    JE
+    NM
+    NAA
+}
+
+// ratings are optional in the database
+// ratings will be validated on the api only to allow adjustments on questions
+// see corresponding questions on readme file
+model PeerReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    q1_1               Rating?
+    q1_2               Rating?
+    q2_1               Rating?
+    q2_2               Rating?
+    q2_3               Rating?
+    q2_4               Rating?
+    q3_1               Rating?
+    q4_1               Rating?
+    q4_2               Rating?
+    q4_3               Rating?
+    q5_1               Rating?
+    q5_2               Rating?
+    q5_3               Rating?
+    q6_1               Rating?
+    q6_2               Rating?
+    q6_3               Rating?
+    q6_4               Rating?
+    q6_5               Rating?
+    q7_1               Rating?
+    q7_2               Rating?
+    q7_3               Rating?
+    q7_4               Rating?
+    q7_5               Rating?
+    q8_1               Rating?
+    q8_2               Rating?
+    q8_3               Rating?
+    PeerSuggestion     PeerSuggestion?
+    DepartmentReview   DepartmentReview @relation(fields: [departmentReviewId], references: [id])
+    departmentReviewId String           @unique
+}
+
+model PeerSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    PeerReview          PeerReview           @relation(fields: [peerReviewId], references: [id])
+    peerReviewId        String               @unique
+    PeerSuggestionItem  PeerSuggestionItem[]
+    SubmittedPeerReview SubmittedPeerReview?
+}
+
+model PeerSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    suggestion       String
+    actionTaken      String
+    remarks          String
+    PeerSuggestion   PeerSuggestion @relation(fields: [peerSuggestionId], references: [id])
+    peerSuggestionId String
+}
+
+model SubmittedPeerReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    PeerSuggestion   PeerSuggestion @relation(fields: [peerSuggestionId], references: [id])
+    peerSuggestionId String         @unique
+}
+
 //PeerApproval 
 //CoordinatorApproval
 //ChairpersonApproval
 
-//Attachment 
 //IMReviewSection
 //IMReviewQuestion
 //PeerReview

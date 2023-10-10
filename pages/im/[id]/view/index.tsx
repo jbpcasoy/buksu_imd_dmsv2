@@ -58,7 +58,7 @@ export default function ViewIM() {
       <p>type: {iM.type}</p>
       <input type='file' onChange={onFileChange} />
       <button className='border rounded' onClick={uploadFileHandler}>
-        Upload file
+        Submit for review
       </button>
     </MainLayout>
   );
