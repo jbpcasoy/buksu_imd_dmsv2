@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import submittedPeerSuggestionAbility from "@/services/ability/submittedPeerSuggestionAbility";
+import submittedChairpersonSuggestionAbility from "@/services/ability/submittedChairpersonSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
@@ -19,11 +19,11 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedPeerSuggestionAbility({ user });
+  const ability = submittedChairpersonSuggestionAbility({ user });
 
   const postHandler = async () => {
     const validator = Yup.object({
-      peerSuggestionId: Yup.string().required(),
+      chairpersonSuggestionId: Yup.string().required(),
     });
     try {
       await validator.validate(req.body);
@@ -35,26 +35,26 @@ export default async function handler(
     try {
       ForbiddenError.from(ability).throwUnlessCan(
         "create",
-        "SubmittedPeerSuggestion"
+        "SubmittedChairpersonSuggestion"
       );
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });
     }
 
-    const { peerSuggestionId } = validator.cast(req.body);
+    const { chairpersonSuggestionId } = validator.cast(req.body);
     try {
-      const submittedPeerSuggestion = await prisma.submittedPeerSuggestion.create({
+      const submittedChairpersonSuggestion = await prisma.submittedChairpersonSuggestion.create({
         data: {
-          PeerSuggestion: {
+          ChairpersonSuggestion: {
             connect: {
-              id: peerSuggestionId as string,
+              id: chairpersonSuggestionId as string,
             },
           },
         },
       });
 
-      return res.json(submittedPeerSuggestion);
+      return res.json(submittedChairpersonSuggestion);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -82,20 +82,20 @@ export default async function handler(
     } = validator.cast(req.query);
     console.log({ filterName });
     try {
-      const submittedPeerSuggestions = await prisma.submittedPeerSuggestion.findMany({
+      const submittedChairpersonSuggestions = await prisma.submittedChairpersonSuggestion.findMany({
         skip,
         take,
         where: {
-          AND: [accessibleBy(ability).SubmittedPeerSuggestion],
+          AND: [accessibleBy(ability).SubmittedChairpersonSuggestion],
         },
       });
-      const count = await prisma.submittedPeerSuggestion.count({
+      const count = await prisma.submittedChairpersonSuggestion.count({
         where: {
-          AND: [accessibleBy(ability).SubmittedPeerSuggestion],
+          AND: [accessibleBy(ability).SubmittedChairpersonSuggestion],
         },
       });
 
-      return res.json({ submittedPeerSuggestions, count });
+      return res.json({ submittedChairpersonSuggestions, count });
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });

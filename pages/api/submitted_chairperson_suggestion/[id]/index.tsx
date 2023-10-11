@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import submittedPeerSuggestionAbility from "@/services/ability/submittedPeerSuggestionAbility";
+import submittedChairpersonSuggestionAbility from "@/services/ability/submittedChairpersonSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
@@ -20,7 +20,7 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedPeerSuggestionAbility({ user });
+  const ability = submittedChairpersonSuggestionAbility({ user });
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -36,11 +36,11 @@ export default async function handler(
 
     const { id } = validator.cast(req.query);
     try {
-      const submittedPeerSuggestion =
-        await prisma.submittedPeerSuggestion.findFirstOrThrow({
+      const submittedChairpersonSuggestion =
+        await prisma.submittedChairpersonSuggestion.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).SubmittedPeerSuggestion,
+              accessibleBy(ability).SubmittedChairpersonSuggestion,
               {
                 id: {
                   equals: id,
@@ -50,7 +50,7 @@ export default async function handler(
           },
         });
 
-      return res.json(submittedPeerSuggestion);
+      return res.json(submittedChairpersonSuggestion);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -72,7 +72,7 @@ export default async function handler(
     try {
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
-        "SubmittedPeerSuggestion"
+        "SubmittedChairpersonSuggestion"
       );
     } catch (error) {
       console.error(error);
@@ -81,13 +81,13 @@ export default async function handler(
 
     const { id } = validator.cast(req.query);
     try {
-      const submittedPeerSuggestion = await prisma.submittedPeerSuggestion.delete({
+      const submittedChairpersonSuggestion = await prisma.submittedChairpersonSuggestion.delete({
         where: {
           id,
         },
       });
 
-      return res.json(submittedPeerSuggestion);
+      return res.json(submittedChairpersonSuggestion);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
