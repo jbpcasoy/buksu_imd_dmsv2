@@ -31,6 +31,31 @@ export default async function handler(
       ForbiddenError.from(ability).throwUnlessCan("create", "DepartmentReview");
 
       const { iMFileId } = validator.cast(req.body);
+      const iMFile = await prisma.iMFile.findFirstOrThrow({
+        where: {
+          id: {
+            equals: iMFileId,
+          },
+        },
+      });
+
+      const existingDepartmentReview = await prisma.departmentReview.findFirst({
+        where: {
+          IMFile: {
+            IM: {
+              id: {
+                equals: iMFile.iMId,
+              },
+            },
+          },
+        },
+      });
+
+      if (existingDepartmentReview) {
+        return res.status(400).json({
+          error: { message: "IM has already been submitted for review" },
+        });
+      }
 
       const departmentReview = await prisma.departmentReview.create({
         data: {

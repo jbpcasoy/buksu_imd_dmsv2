@@ -59,7 +59,7 @@ export default function MyIMsPage() {
                 <td>{iM.title}</td>
                 <td>{iM.type}</td>
                 <td>
-                  <Link href={`/im/${iM.id}/view`} className='border rounded'>
+                  <Link href={`/im/${iM.id}`} className='border rounded'>
                     view
                   </Link>
                 </td>

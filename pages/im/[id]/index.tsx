@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import { ChangeEventHandler, useState } from "react";
+import { DepartmentReview, IMFile } from "@prisma/client";
 
 export default function ViewIM() {
   const router = useRouter();
@@ -21,13 +22,26 @@ export default function ViewIM() {
     setState(e.target.files?.item(0));
   };
 
-  const uploadFileHandler = () => {
+  const uploadFileHandler = async () => {
     if (!state || !iMId) return;
 
     const formData = new FormData();
     formData.append("file", state);
     formData.append("iMId", iMId as string);
-    axios.post("/api/im_file", formData);
+    return axios
+      .post<IMFile>("/api/im_file", formData)
+      .then(async (res) => {
+        return axios
+          .post<DepartmentReview>("/api/department_review/", {
+            iMFileId: res.data.id,
+          })
+          .then(() => {
+            alert("IM has been submitted for review");
+          });
+      })
+      .catch((err) => {
+        alert(err?.response?.data?.error?.message ?? err.message);
+      });
   };
 
   if (!iM) return null;
@@ -38,16 +52,15 @@ export default function ViewIM() {
         <h2 className='flex-1'>View IM</h2>
 
         <div>
+          <Link href={`/im/${iM.id}/edit`} className='border rounded'>
+            edit
+          </Link>
           <button
             onClick={() => deleteHandler(iM.id)}
             className='border rounded'
           >
             delete
           </button>
-
-          <Link href={`/im/${iM.id}/edit`} className='border rounded'>
-            edit
-          </Link>
         </div>
       </div>
       <p>id: {iM.id}</p>
