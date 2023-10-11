@@ -340,6 +340,7 @@ model ChairpersonSuggestion {
     SubmittedChairpersonSuggestion SubmittedChairpersonSuggestion?
 }
 
+// TODO add pageNumber property
 model ChairpersonSuggestionItem {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())

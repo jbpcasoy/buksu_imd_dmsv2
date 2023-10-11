@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import peerSuggestionItemAbility from "@/services/ability/peerSuggestionItemAbility";
+import chairpersonSuggestionItemAbility from "@/services/ability/chairpersonSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
@@ -19,7 +19,7 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerSuggestionItemAbility({ user });
+  const ability = chairpersonSuggestionItemAbility({ user });
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -35,11 +35,11 @@ export default async function handler(
 
     const { id } = validator.cast(req.query);
     try {
-      const peerSuggestionItem =
-        await prisma.peerSuggestionItem.findFirstOrThrow({
+      const chairpersonSuggestionItem =
+        await prisma.chairpersonSuggestionItem.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).PeerSuggestionItem,
+              accessibleBy(ability).ChairpersonSuggestionItem,
               {
                 id: {
                   equals: id,
@@ -49,7 +49,7 @@ export default async function handler(
           },
         });
 
-      return res.json(peerSuggestionItem);
+      return res.json(chairpersonSuggestionItem);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -71,7 +71,7 @@ export default async function handler(
     try {
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
-        "PeerSuggestionItem"
+        "ChairpersonSuggestionItem"
       );
     } catch (error) {
       console.error(error);
@@ -80,13 +80,13 @@ export default async function handler(
 
     const { id } = validator.cast(req.query);
     try {
-      const peerSuggestionItem = await prisma.peerSuggestionItem.delete({
+      const chairpersonSuggestionItem = await prisma.chairpersonSuggestionItem.delete({
         where: {
           id,
         },
       });
 
-      return res.json(peerSuggestionItem);
+      return res.json(chairpersonSuggestionItem);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -95,9 +95,9 @@ export default async function handler(
 
   const putHandler = async () => {
     const validator = Yup.object({
+      suggestion: Yup.string().required(),
       actionTaken: Yup.string().optional(),
       remarks: Yup.string().optional(),
-      suggestion: Yup.string().required(),
     });
 
     try {
@@ -110,7 +110,7 @@ export default async function handler(
     try {
       ForbiddenError.from(ability).throwUnlessCan(
         "update",
-        "PeerSuggestionItem"
+        "ChairpersonSuggestionItem"
       );
     } catch (error) {
       console.error(error);
@@ -120,7 +120,7 @@ export default async function handler(
     const { actionTaken, remarks, suggestion } = validator.cast(req.body);
 
     try {
-      const peerSuggestionItem = await prisma.peerSuggestionItem.update({
+      const chairpersonSuggestionItem = await prisma.chairpersonSuggestionItem.update({
         where: {
           id: id as string,
         },
@@ -131,7 +131,7 @@ export default async function handler(
         },
       });
 
-      return res.json(peerSuggestionItem);
+      return res.json(chairpersonSuggestionItem);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });

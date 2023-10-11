@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import chairpersonSuggestionAbility from "@/services/ability/chairpersonSuggestionAbility";
+import chairpersonSuggestionItemAbility from "@/services/ability/chairpersonSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
@@ -19,11 +19,14 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = chairpersonSuggestionAbility({ user });
+  const ability = chairpersonSuggestionItemAbility({ user });
 
   const postHandler = async () => {
     const validator = Yup.object({
-      chairpersonReviewId: Yup.string().required(),
+      chairpersonSuggestionId: Yup.string().required(),
+      suggestion: Yup.string().required(),
+      actionTaken: Yup.string().optional(),
+      remarks: Yup.string().optional(),
     });
     try {
       await validator.validate(req.body);
@@ -33,25 +36,32 @@ export default async function handler(
     }
 
     try {
-      ForbiddenError.from(ability).throwUnlessCan("create", "ChairpersonSuggestion");
+      ForbiddenError.from(ability).throwUnlessCan(
+        "create",
+        "ChairpersonSuggestionItem"
+      );
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });
     }
 
-    const { chairpersonReviewId } = validator.cast(req.body);
+    const { actionTaken, chairpersonSuggestionId, remarks, suggestion } =
+      validator.cast(req.body);
     try {
-      const chairpersonSuggestion = await prisma.chairpersonSuggestion.create({
+      const chairpersonSuggestionItem = await prisma.chairpersonSuggestionItem.create({
         data: {
-          ChairpersonReview: {
+          actionTaken,
+          remarks,
+          suggestion,
+          ChairpersonSuggestion: {
             connect: {
-              id: chairpersonReviewId,
+              id: chairpersonSuggestionId,
             },
           },
         },
       });
 
-      return res.json(chairpersonSuggestion);
+      return res.json(chairpersonSuggestionItem);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -79,20 +89,20 @@ export default async function handler(
     } = validator.cast(req.query);
     console.log({ filterName });
     try {
-      const chairpersonSuggestions = await prisma.chairpersonSuggestion.findMany({
+      const chairpersonSuggestionItems = await prisma.chairpersonSuggestionItem.findMany({
         skip,
         take,
         where: {
-          AND: [accessibleBy(ability).ChairpersonSuggestion],
+          AND: [accessibleBy(ability).ChairpersonSuggestionItem],
         },
       });
-      const count = await prisma.chairpersonSuggestion.count({
+      const count = await prisma.chairpersonSuggestionItem.count({
         where: {
-          AND: [accessibleBy(ability).ChairpersonSuggestion],
+          AND: [accessibleBy(ability).ChairpersonSuggestionItem],
         },
       });
 
-      return res.json({ chairpersonSuggestions, count });
+      return res.json({ chairpersonSuggestionItems, count });
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });

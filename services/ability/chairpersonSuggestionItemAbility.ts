@@ -1,13 +1,13 @@
 import { User } from "@prisma/client";
 import abilityBuilder from "./abilityBuilder";
 
-export default function chairpersonSuggestionAbility({ user }: { user: User }) {
+export default function chairpersonSuggestionItemAbility({ user }: { user: User }) {
   const ability = abilityBuilder((can, cannot) => {
-    can("read", "ChairpersonSuggestion");
+    can("read", "ChairpersonSuggestionItem");
     if (user.isAdmin) {
-      can("create", "ChairpersonSuggestion");
-      can("update", "ChairpersonSuggestion");
-      can("delete", "ChairpersonSuggestion");
+      can("create", "ChairpersonSuggestionItem");
+      can("update", "ChairpersonSuggestionItem");
+      can("delete", "ChairpersonSuggestionItem");
     }
   });
 
