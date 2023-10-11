@@ -23,9 +23,9 @@ export default async function handler(
   const ability = iMAbility({ user });
 
   const getHandler = async () => {
-    const { id } = req.query;
-
     try {
+      const { id } = req.query;
+
       const iM = await prisma.iM.findFirstOrThrow({
         where: {
           AND: [
@@ -40,17 +40,19 @@ export default async function handler(
       });
 
       return res.json(iM);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const deleteHandler = async () => {
-    const { id } = req.query;
-
-    let iMToDelete: IM | null;
     try {
+      const { id } = req.query;
+
+      let iMToDelete: IM | null;
       iMToDelete = await prisma.iM.findFirstOrThrow({
         where: {
           id: {
@@ -73,50 +75,39 @@ export default async function handler(
           },
         },
       });
-    } catch (error) {
-      return res.status(404).json({ error });
-    }
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
         subject("IM", iMToDelete)
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    try {
       const iM = await prisma.iM.delete({
         where: {
           id: id as string,
         },
       });
       return res.json(iM);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const putHandler = async () => {
-    const validator = Yup.object({
-      title: Yup.string().required(),
-      type: Yup.string()
-        .oneOf(["MODULE", "COURSE_FILE", "WORKTEXT", "TEXTBOOK"])
-        .required(),
-    });
     try {
+      const validator = Yup.object({
+        title: Yup.string().required(),
+        type: Yup.string()
+          .oneOf(["MODULE", "COURSE_FILE", "WORKTEXT", "TEXTBOOK"])
+          .required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
-    const { title, type } = validator.cast(req.body);
 
-    const { id } = req.query;
-    let iMToUpdate: IM | null;
-    try {
+      const { title, type } = validator.cast(req.body);
+
+      const { id } = req.query;
+      let iMToUpdate: IM | null;
       iMToUpdate = await prisma.iM.findFirstOrThrow({
         where: {
           id: {
@@ -141,20 +132,12 @@ export default async function handler(
       });
 
       console.log(JSON.stringify(iMToUpdate, null, 4));
-    } catch (error) {
-      return res.status(404).json({ error });
-    }
-    try {
+
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
         subject("IM", iMToUpdate)
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    try {
       const iM = await prisma.iM.update({
         where: {
           id: id as string,
@@ -166,9 +149,11 @@ export default async function handler(
       });
 
       return res.json(iM);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

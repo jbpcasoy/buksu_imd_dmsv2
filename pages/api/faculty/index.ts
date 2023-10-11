@@ -24,26 +24,17 @@ export default async function handler(
   let ability = facultyAbility({ user });
 
   const postHandler = async () => {
-    const validator = Yup.object({
-      userId: Yup.string().required(),
-      departmentId: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        userId: Yup.string().required(),
+        departmentId: Yup.string().required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan("create", "Faculty");
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { userId, departmentId } = validator.cast(req.body);
-    try {
+      const { userId, departmentId } = validator.cast(req.body);
+
       const faculty = await prisma.faculty.create({
         data: {
           User: {
@@ -60,32 +51,29 @@ export default async function handler(
       });
 
       return res.json(faculty);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-      "filter[name]": Yup.string().optional(),
-    });
-
     try {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+        "filter[name]": Yup.string().optional(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const {
-      skip,
-      take,
-      "filter[name]": filterName,
-    } = validator.cast(req.query);
-    try {
+      const {
+        skip,
+        take,
+        "filter[name]": filterName,
+      } = validator.cast(req.query);
       const faculties = await prisma.faculty.findMany({
         skip,
         take,
@@ -110,9 +98,11 @@ export default async function handler(
       });
 
       return res.json({ faculties, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

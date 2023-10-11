@@ -22,73 +22,61 @@ export default async function handler(
   const ability = submittedPeerSuggestionAbility({ user });
 
   const postHandler = async () => {
-    const validator = Yup.object({
-      peerSuggestionId: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        peerSuggestionId: Yup.string().required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "create",
         "SubmittedPeerSuggestion"
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
-
-    const { peerSuggestionId } = validator.cast(req.body);
-    try {
-      const submittedPeerSuggestion = await prisma.submittedPeerSuggestion.create({
-        data: {
-          PeerSuggestion: {
-            connect: {
-              id: peerSuggestionId as string,
+      const { peerSuggestionId } = validator.cast(req.body);
+      const submittedPeerSuggestion =
+        await prisma.submittedPeerSuggestion.create({
+          data: {
+            PeerSuggestion: {
+              connect: {
+                id: peerSuggestionId as string,
+              },
             },
           },
-        },
-      });
+        });
 
       return res.json(submittedPeerSuggestion);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-      "filter[name]": Yup.string().optional(),
-    });
-
     try {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+        "filter[name]": Yup.string().optional(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const {
-      skip,
-      take,
-      "filter[name]": filterName,
-    } = validator.cast(req.query);
-    console.log({ filterName });
-    try {
-      const submittedPeerSuggestions = await prisma.submittedPeerSuggestion.findMany({
+      const {
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).SubmittedPeerSuggestion],
-        },
-      });
+        "filter[name]": filterName,
+      } = validator.cast(req.query);
+
+      const submittedPeerSuggestions =
+        await prisma.submittedPeerSuggestion.findMany({
+          skip,
+          take,
+          where: {
+            AND: [accessibleBy(ability).SubmittedPeerSuggestion],
+          },
+        });
       const count = await prisma.submittedPeerSuggestion.count({
         where: {
           AND: [accessibleBy(ability).SubmittedPeerSuggestion],
@@ -96,9 +84,11 @@ export default async function handler(
       });
 
       return res.json({ submittedPeerSuggestions, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

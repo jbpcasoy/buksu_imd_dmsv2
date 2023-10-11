@@ -19,22 +19,18 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = deanAbility({user});
+  let ability = deanAbility({ user });
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
+
       const dean = await prisma.dean.findFirstOrThrow({
         where: {
           AND: [
@@ -49,33 +45,26 @@ export default async function handler(
       });
 
       return res.json(dean);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const deleteHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan("delete", "Dean");
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
+
       const dean = await prisma.dean.delete({
         where: {
           id,
@@ -83,9 +72,11 @@ export default async function handler(
       });
 
       return res.json(dean);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

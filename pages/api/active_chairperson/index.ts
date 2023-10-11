@@ -22,28 +22,18 @@ export default async function handler(
   let ability = activeChairpersonAbility({ user });
 
   const postHandler = async () => {
-    const validator = Yup.object({
-      activeFacultyId: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        activeFacultyId: Yup.string().required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "create",
         "ActiveChairperson"
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { activeFacultyId } = validator.cast(req.body);
-    try {
+      const { activeFacultyId } = validator.cast(req.body);
       const chairperson = await prisma.chairperson.findFirstOrThrow({
         where: {
           Faculty: {
@@ -120,32 +110,29 @@ export default async function handler(
       });
 
       return res.json(activeChairperson);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-      "filter[name]": Yup.string().optional(),
-    });
-
     try {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+        "filter[name]": Yup.string().optional(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const {
-      skip,
-      take,
-      "filter[name]": filterName,
-    } = validator.cast(req.query);
-    try {
+      const {
+        skip,
+        take,
+        "filter[name]": filterName,
+      } = validator.cast(req.query);
       const activeChairpersons = await prisma.activeChairperson.findMany({
         skip,
         take,
@@ -174,9 +161,11 @@ export default async function handler(
       });
 
       return res.json({ activeChairpersons, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

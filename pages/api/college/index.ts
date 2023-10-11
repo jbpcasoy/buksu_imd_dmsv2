@@ -23,25 +23,16 @@ export default async function handler(
   const ability = collegeAbility({ user });
 
   const postHandler = async () => {
-    const validator = Yup.object({
-      name: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        name: Yup.string().required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan("create", "College");
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { name } = validator.cast(req.body);
-    try {
+      const { name } = validator.cast(req.body);
+
       const college = await prisma.college.create({
         data: {
           name,
@@ -49,33 +40,30 @@ export default async function handler(
       });
 
       return res.json(college);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-      "filter[name]": Yup.string().optional(),
-    });
-
     try {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+        "filter[name]": Yup.string().optional(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const {
-      skip,
-      take,
-      "filter[name]": filterName,
-    } = validator.cast(req.query);
-    console.log({ filterName });
-    try {
+      const {
+        skip,
+        take,
+        "filter[name]": filterName,
+      } = validator.cast(req.query);
+      console.log({ filterName });
       const colleges = await prisma.college.findMany({
         skip,
         take,
@@ -106,9 +94,11 @@ export default async function handler(
       });
 
       return res.json({ colleges, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

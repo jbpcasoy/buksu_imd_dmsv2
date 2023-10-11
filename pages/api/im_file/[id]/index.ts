@@ -24,8 +24,8 @@ export default async function handler(
   const ability = iMFileAbility({ user });
 
   const getHandler = async () => {
-    const { id } = req.query;
     try {
+      const { id } = req.query;
       const iMFile = await prisma.iMFile.findFirstOrThrow({
         where: {
           AND: [
@@ -40,9 +40,11 @@ export default async function handler(
       });
 
       return res.json(iMFile);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
@@ -51,29 +53,27 @@ export default async function handler(
       const { id } = req.query;
 
       let iMFileToDelete;
-      try {
-        iMFileToDelete = await prisma.iMFile.findFirstOrThrow({
-          where: {
-            AND: [
-              accessibleBy(ability).IMFile,
-              {
-                id: {
-                  equals: id as string,
-                },
+      iMFileToDelete = await prisma.iMFile.findFirstOrThrow({
+        where: {
+          AND: [
+            accessibleBy(ability).IMFile,
+            {
+              id: {
+                equals: id as string,
               },
-            ],
-          },
-          include: {
-            IM: {
-              include: {
-                Faculty: {
-                  include: {
-                    ActiveFaculty: {
-                      include: {
-                        Faculty: {
-                          include: {
-                            User: true,
-                          },
+            },
+          ],
+        },
+        include: {
+          IM: {
+            include: {
+              Faculty: {
+                include: {
+                  ActiveFaculty: {
+                    include: {
+                      Faculty: {
+                        include: {
+                          User: true,
                         },
                       },
                     },
@@ -82,20 +82,13 @@ export default async function handler(
               },
             },
           },
-        });
-      } catch (error) {
-        return res.status(404).json({ error });
-      }
+        },
+      });
 
-      try {
-        ForbiddenError.from(ability).throwUnlessCan(
-          "delete",
-          subject("IMFile", iMFileToDelete)
-        );
-      } catch (error) {
-        console.error(error);
-        return res.status(403).json({ error });
-      }
+      ForbiddenError.from(ability).throwUnlessCan(
+        "delete",
+        subject("IMFile", iMFileToDelete)
+      );
 
       const filePath = path.join(
         process.cwd(),
@@ -114,13 +107,10 @@ export default async function handler(
 
       return res.json(iMFile);
     } catch (error: any) {
-      // TODO replace all return *.*.json({ error }); to *.*.json({ error: { message: error.message } });
       console.error(error);
-      return res.status(400).json({
-        error: {
-          message: error.message,
-        },
-      });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

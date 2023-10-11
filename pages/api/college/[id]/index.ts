@@ -22,19 +22,14 @@ export default async function handler(
   const ability = collegeAbility({ user });
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
       const college = await prisma.college.findFirstOrThrow({
         where: {
           AND: [
@@ -49,33 +44,26 @@ export default async function handler(
       });
 
       return res.json(college);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const deleteHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan("delete", "College");
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
+
       const college = await prisma.college.delete({
         where: {
           id,
@@ -83,43 +71,30 @@ export default async function handler(
       });
 
       return res.json(college);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const putHandler = async () => {
     try {
-      ForbiddenError.from(ability).throwUnlessCan("update", "College");
-    } catch (error) {
-      return res.status(403).json({ error });
-    }
+      const validator = Yup.object({
+        name: Yup.string().required(),
+      });
 
-    const validator = Yup.object({
-      name: Yup.string().required(),
-    });
-
-    try {
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan("update", "College");
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
-    const { id } = req.query;
-    const { name } = validator.cast(req.body);
 
-    try {
+      const { id } = req.query;
+      const { name } = validator.cast(req.body);
+
       const college = await prisma.college.update({
         where: {
-          id: id as string
+          id: id as string,
         },
         data: {
           name,
@@ -127,9 +102,11 @@ export default async function handler(
       });
 
       return res.json(college);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

@@ -38,9 +38,11 @@ export default async function handler(
       });
 
       return res.json(activeFaculty);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

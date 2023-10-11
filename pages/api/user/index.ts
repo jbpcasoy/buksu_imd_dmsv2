@@ -22,19 +22,16 @@ export default async function handler(
   const ability = userAbility({ user });
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      skip: Yup.number().required(),
-      take: Yup.number().required(),
-    });
+    try {
+      const validator = Yup.object({
+        skip: Yup.number().required(),
+        take: Yup.number().required(),
+      });
 
-    try {
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
-    const { skip, take } = validator.cast(req.query);
-    try {
+
+      const { skip, take } = validator.cast(req.query);
+
       const users = await prisma.user.findMany({
         skip,
         take,
@@ -49,9 +46,11 @@ export default async function handler(
       });
 
       return res.json({ users, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

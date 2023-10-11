@@ -22,19 +22,14 @@ export default async function handler(
   let ability = activeFacultyAbility({ user });
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
       const activeFaculty = await prisma.activeFaculty.findFirstOrThrow({
         where: {
           AND: [
@@ -49,91 +44,83 @@ export default async function handler(
       });
 
       return res.json(activeFaculty);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const deleteHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan("delete", "ActiveFaculty");
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
+      const { id } = validator.cast(req.query);
 
-    const activeCoordinator = await prisma.activeCoordinator.findFirst({
-      where: {
-        Coordinator: {
-          Faculty: {
-            ActiveFaculty: {
-              id: {
-                equals: id,
+      const activeCoordinator = await prisma.activeCoordinator.findFirst({
+        where: {
+          Coordinator: {
+            Faculty: {
+              ActiveFaculty: {
+                id: {
+                  equals: id,
+                },
               },
             },
           },
         },
-      },
-    });
-    if (activeCoordinator) {
-      return res
-        .status(400)
-        .json({ error: { message: "Faculty is an Active Coordinator" } });
-    }
+      });
+      if (activeCoordinator) {
+        return res
+          .status(400)
+          .json({ error: { message: "Faculty is an Active Coordinator" } });
+      }
 
-    const activeChairperson = await prisma.activeChairperson.findFirst({
-      where: {
-        Chairperson: {
-          Faculty: {
-            ActiveFaculty: {
-              id: {
-                equals: id,
+      const activeChairperson = await prisma.activeChairperson.findFirst({
+        where: {
+          Chairperson: {
+            Faculty: {
+              ActiveFaculty: {
+                id: {
+                  equals: id,
+                },
               },
             },
           },
         },
-      },
-    });
-    if (activeChairperson) {
-      return res
-        .status(400)
-        .json({ error: { message: "Faculty is an Active Chairperson" } });
-    }
+      });
+      if (activeChairperson) {
+        return res
+          .status(400)
+          .json({ error: { message: "Faculty is an Active Chairperson" } });
+      }
 
-    const activeDean = await prisma.activeDean.findFirst({
-      where: {
-        Dean: {
-          Faculty: {
-            ActiveFaculty: {
-              id: {
-                equals: id,
+      const activeDean = await prisma.activeDean.findFirst({
+        where: {
+          Dean: {
+            Faculty: {
+              ActiveFaculty: {
+                id: {
+                  equals: id,
+                },
               },
             },
           },
         },
-      },
-    });
-    if (activeDean) {
-      return res
-        .status(400)
-        .json({ error: { message: "Faculty is an Active Dean" } });
-    }
+      });
+      if (activeDean) {
+        return res
+          .status(400)
+          .json({ error: { message: "Faculty is an Active Dean" } });
+      }
 
-    try {
       const activeFaculty = await prisma.activeFaculty.delete({
         where: {
           id,
@@ -141,9 +128,11 @@ export default async function handler(
       });
 
       return res.json(activeFaculty);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

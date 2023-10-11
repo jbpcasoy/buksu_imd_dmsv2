@@ -22,19 +22,14 @@ export default async function handler(
   const ability = coordinatorSuggestionItemAbility({ user });
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
       const coordinatorSuggestionItem =
         await prisma.coordinatorSuggestionItem.findFirstOrThrow({
           where: {
@@ -50,91 +45,80 @@ export default async function handler(
         });
 
       return res.json(coordinatorSuggestionItem);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const deleteHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
         "CoordinatorSuggestionItem"
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
-      const coordinatorSuggestionItem = await prisma.coordinatorSuggestionItem.delete({
-        where: {
-          id,
-        },
-      });
+      const { id } = validator.cast(req.query);
+      const coordinatorSuggestionItem =
+        await prisma.coordinatorSuggestionItem.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(coordinatorSuggestionItem);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const putHandler = async () => {
-    const validator = Yup.object({
-      actionTaken: Yup.string().optional(),
-      remarks: Yup.string().optional(),
-      suggestion: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        actionTaken: Yup.string().optional(),
+        remarks: Yup.string().optional(),
+        suggestion: Yup.string().required(),
+      });
+
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "update",
         "CoordinatorSuggestionItem"
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
-    const { id } = req.query;
-    const { actionTaken, remarks, suggestion } = validator.cast(req.body);
 
-    try {
-      const coordinatorSuggestionItem = await prisma.coordinatorSuggestionItem.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          actionTaken,
-          remarks,
-          suggestion,
-        },
-      });
+      const { id } = req.query;
+      const { actionTaken, remarks, suggestion } = validator.cast(req.body);
+
+      const coordinatorSuggestionItem =
+        await prisma.coordinatorSuggestionItem.update({
+          where: {
+            id: id as string,
+          },
+          data: {
+            actionTaken,
+            remarks,
+            suggestion,
+          },
+        });
 
       return res.json(coordinatorSuggestionItem);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

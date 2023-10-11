@@ -21,23 +21,19 @@ export default async function handler(
   }
 
   const postHandler = async () => {
-    const validator = Yup.object({
-      title: Yup.string().required(),
-      activeFacultyId: Yup.string().required(),
-      type: Yup.string()
-        .oneOf(["MODULE", "COURSE_FILE", "WORKTEXT", "TEXTBOOK"])
-        .required(),
-    });
     try {
+      const validator = Yup.object({
+        title: Yup.string().required(),
+        activeFacultyId: Yup.string().required(),
+        type: Yup.string()
+          .oneOf(["MODULE", "COURSE_FILE", "WORKTEXT", "TEXTBOOK"])
+          .required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
-    const { activeFacultyId, title, type } = validator.cast(req.body);
 
-    let faculty: Faculty;
-    try {
+      const { activeFacultyId, title, type } = validator.cast(req.body);
+
+      let faculty: Faculty;
       faculty = await prisma.faculty.findFirstOrThrow({
         where: {
           ActiveFaculty: {
@@ -47,53 +43,47 @@ export default async function handler(
           },
         },
       });
-    } catch (error) {
-      console.error(error)
-      return res.status(404).json({ error });
-    }
 
-    const ability = facultyAbility({ user });
-    try {
+      const ability = facultyAbility({ user });
+
       ForbiddenError.from(ability).throwUnlessCan(
         "connectToIM",
         subject("Faculty", faculty)
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const iM = await prisma.iM.create({
-      data: {
-        title,
-        Faculty: {
-          connect: {
-            id: faculty.id,
+      const iM = await prisma.iM.create({
+        data: {
+          title,
+          Faculty: {
+            connect: {
+              id: faculty.id,
+            },
           },
+          type,
         },
-        type,
-      },
-    });
+      });
 
-    return res.json(iM);
+      return res.json(iM);
+    } catch (error: any) {
+      console.error(error);
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
+    }
   };
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-    });
     try {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+      });
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
-    const { skip, take } = validator.cast(req.query);
 
-    const ability = iMAbility({ user });
+      const { skip, take } = validator.cast(req.query);
 
-    try {
+      const ability = iMAbility({ user });
+
       const iMs = await prisma.iM.findMany({
         skip,
         take,
@@ -103,9 +93,11 @@ export default async function handler(
         where: { AND: [accessibleBy(ability).IM] },
       });
       return res.json({ iMs, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

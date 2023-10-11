@@ -22,25 +22,16 @@ export default async function handler(
   let ability = deanAbility({ user });
 
   const postHandler = async () => {
-    const validator = Yup.object({
-      activeFacultyId: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        activeFacultyId: Yup.string().required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan("create", "Dean");
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { activeFacultyId } = validator.cast(req.body);
-    try {
+      const { activeFacultyId } = validator.cast(req.body);
+
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {
           ActiveFaculty: {
@@ -62,32 +53,30 @@ export default async function handler(
       });
 
       return res.json(dean);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-      "filter[name]": Yup.string().optional(),
-    });
-
     try {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+        "filter[name]": Yup.string().optional(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const {
-      skip,
-      take,
-      "filter[name]": filterName,
-    } = validator.cast(req.query);
-    try {
+      const {
+        skip,
+        take,
+        "filter[name]": filterName,
+      } = validator.cast(req.query);
+
       const deans = await prisma.dean.findMany({
         skip,
         take,
@@ -114,9 +103,11 @@ export default async function handler(
       });
 
       return res.json({ deans, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

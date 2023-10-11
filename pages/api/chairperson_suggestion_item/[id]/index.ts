@@ -22,19 +22,15 @@ export default async function handler(
   const ability = chairpersonSuggestionItemAbility({ user });
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
+
       const chairpersonSuggestionItem =
         await prisma.chairpersonSuggestionItem.findFirstOrThrow({
           where: {
@@ -50,91 +46,81 @@ export default async function handler(
         });
 
       return res.json(chairpersonSuggestionItem);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const deleteHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
         "ChairpersonSuggestionItem"
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
-      const chairpersonSuggestionItem = await prisma.chairpersonSuggestionItem.delete({
-        where: {
-          id,
-        },
-      });
+      const { id } = validator.cast(req.query);
+
+      const chairpersonSuggestionItem =
+        await prisma.chairpersonSuggestionItem.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(chairpersonSuggestionItem);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const putHandler = async () => {
-    const validator = Yup.object({
-      suggestion: Yup.string().required(),
-      actionTaken: Yup.string().optional(),
-      remarks: Yup.string().optional(),
-    });
-
     try {
+      const validator = Yup.object({
+        suggestion: Yup.string().required(),
+        actionTaken: Yup.string().optional(),
+        remarks: Yup.string().optional(),
+      });
+
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "update",
         "ChairpersonSuggestionItem"
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
-    const { id } = req.query;
-    const { actionTaken, remarks, suggestion } = validator.cast(req.body);
 
-    try {
-      const chairpersonSuggestionItem = await prisma.chairpersonSuggestionItem.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          actionTaken,
-          remarks,
-          suggestion,
-        },
-      });
+      const { id } = req.query;
+      const { actionTaken, remarks, suggestion } = validator.cast(req.body);
+
+      const chairpersonSuggestionItem =
+        await prisma.chairpersonSuggestionItem.update({
+          where: {
+            id: id as string,
+          },
+          data: {
+            actionTaken,
+            remarks,
+            suggestion,
+          },
+        });
 
       return res.json(chairpersonSuggestionItem);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

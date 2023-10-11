@@ -11,7 +11,6 @@ import * as Yup from "yup";
 import { ForbiddenError, subject } from "@casl/ability";
 import iMAbility from "@/services/ability/iMAbility";
 
-
 //set bodyParser
 export const config = {
   api: {
@@ -19,7 +18,10 @@ export const config = {
   },
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   let user: User;
   try {
     user = await getServerUser(req, res);
@@ -54,43 +56,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Find IM
       let iM: IM;
-      try {
-        iM = await prisma.iM.findFirstOrThrow({
-          where: {
-            id: {
-              equals: iMId,
-            },
+      iM = await prisma.iM.findFirstOrThrow({
+        where: {
+          id: {
+            equals: iMId,
           },
-          include: {
-            Faculty: {
-              include: {
-                ActiveFaculty: {
-                  include: {
-                    Faculty: {
-                      include: {
-                        User: true,
-                      },
+        },
+        include: {
+          Faculty: {
+            include: {
+              ActiveFaculty: {
+                include: {
+                  Faculty: {
+                    include: {
+                      User: true,
                     },
                   },
                 },
               },
             },
           },
-        });
-      } catch (error) {
-        return res.status(403).json({ error });
-      }
+        },
+      });
 
       const ability = iMAbility({ user });
-      try {
-        ForbiddenError.from(ability).throwUnlessCan(
-          "connectToIMFile",
-          subject("IM", iM)
-        );
-      } catch (error) {
-        console.error(error);
-        return res.status(403).json({ error });
-      }
+      ForbiddenError.from(ability).throwUnlessCan(
+        "connectToIMFile",
+        subject("IM", iM)
+      );
 
       // Save file to server
       const file = data.files.file[0];
@@ -118,11 +111,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json(iMFile);
     } catch (error: any) {
       console.error(error);
-      return res.status(400).json({
-        error: {
-          message: error.message,
-        },
-      });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
@@ -151,8 +142,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       return res.json({ iMFiles, count });
-    } catch (error) {
-      return res.status(400).json({ error });
+    } catch (error: any) {
+      console.error(error);
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
@@ -164,4 +158,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
-};
+}

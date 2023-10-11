@@ -21,21 +21,16 @@ export default async function handler(
   }
 
   const getHandler = async () => {
+    try {
     const validator = Yup.object({
       take: Yup.number().required(),
       skip: Yup.number().required(),
     });
 
-    try {
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
     let ability: AppAbility;
     let userActiveFaculty: ActiveFaculty;
-    try {
       userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
         where: {
           Faculty: {
@@ -45,14 +40,9 @@ export default async function handler(
           },
         },
       });
-      ability = iMAbility({ user, userActiveFaculty });
-    } catch (error) {
-      console.error(error);
-      return res.status(404).json({ error });
-    }
+      ability = iMAbility({ user });
 
     const { skip, take } = validator.cast(req.query);
-    try {
       const iMs = await prisma.iM.findMany({
         skip,
         take,
@@ -84,11 +74,12 @@ export default async function handler(
         },
       });
 
-      return res.json({ iMs, count });
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
+      return res.json({ iMs, count });} catch (error: any) {
+        console.error(error);
+        return res
+          .status(400)
+          .json({ error: { message: error?.message ?? "Server Error" } });
+      }
   };
 
   switch (req.method) {

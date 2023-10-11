@@ -22,73 +22,62 @@ export default async function handler(
   const ability = submittedChairpersonSuggestionAbility({ user });
 
   const postHandler = async () => {
-    const validator = Yup.object({
-      chairpersonSuggestionId: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        chairpersonSuggestionId: Yup.string().required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "create",
         "SubmittedChairpersonSuggestion"
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { chairpersonSuggestionId } = validator.cast(req.body);
-    try {
-      const submittedChairpersonSuggestion = await prisma.submittedChairpersonSuggestion.create({
-        data: {
-          ChairpersonSuggestion: {
-            connect: {
-              id: chairpersonSuggestionId as string,
+      const { chairpersonSuggestionId } = validator.cast(req.body);
+
+      const submittedChairpersonSuggestion =
+        await prisma.submittedChairpersonSuggestion.create({
+          data: {
+            ChairpersonSuggestion: {
+              connect: {
+                id: chairpersonSuggestionId as string,
+              },
             },
           },
-        },
-      });
+        });
 
       return res.json(submittedChairpersonSuggestion);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-      "filter[name]": Yup.string().optional(),
-    });
-
     try {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+        "filter[name]": Yup.string().optional(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const {
-      skip,
-      take,
-      "filter[name]": filterName,
-    } = validator.cast(req.query);
-    console.log({ filterName });
-    try {
-      const submittedChairpersonSuggestions = await prisma.submittedChairpersonSuggestion.findMany({
+      const {
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).SubmittedChairpersonSuggestion],
-        },
-      });
+        "filter[name]": filterName,
+      } = validator.cast(req.query);
+      const submittedChairpersonSuggestions =
+        await prisma.submittedChairpersonSuggestion.findMany({
+          skip,
+          take,
+          where: {
+            AND: [accessibleBy(ability).SubmittedChairpersonSuggestion],
+          },
+        });
       const count = await prisma.submittedChairpersonSuggestion.count({
         where: {
           AND: [accessibleBy(ability).SubmittedChairpersonSuggestion],
@@ -96,9 +85,11 @@ export default async function handler(
       });
 
       return res.json({ submittedChairpersonSuggestions, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

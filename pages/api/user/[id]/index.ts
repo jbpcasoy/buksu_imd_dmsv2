@@ -23,18 +23,14 @@ export default async function handler(
   const ability = userAbility({ user });
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
+
       const user = await prisma.user.findFirstOrThrow({
         where: {
           AND: [
@@ -49,27 +45,25 @@ export default async function handler(
       });
 
       return res.json(user);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const putHandler = async () => {
-    const validator = Yup.object({
-      name: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        name: Yup.string().required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
-    const { id } = req.query;
-    const { name } = validator.cast(req.body);
 
-    let userToUpdate;
-    try {
+      const { id } = req.query;
+      const { name } = validator.cast(req.body);
+
+      let userToUpdate;
       userToUpdate = await prisma.user.findFirstOrThrow({
         where: {
           id: {
@@ -77,20 +71,12 @@ export default async function handler(
           },
         },
       });
-    } catch (error) {
-      return res.status(404).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "update",
         subject("User", userToUpdate)
       );
-    } catch (error) {
-      return res.status(403).json({ error });
-    }
 
-    try {
       const user = await prisma.user.update({
         where: {
           id: id as string,
@@ -101,9 +87,11 @@ export default async function handler(
       });
 
       return res.json(user);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

@@ -22,25 +22,16 @@ export default async function handler(
   const ability = departmentReviewAbility({ user });
 
   const postHandler = async () => {
-    const validator = Yup.object({
-      iMFileId: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        iMFileId: Yup.string().required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan("create", "DepartmentReview");
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { iMFileId } = validator.cast(req.body);
-    try {
+      const { iMFileId } = validator.cast(req.body);
+
       const departmentReview = await prisma.departmentReview.create({
         data: {
           IMFile: {
@@ -52,33 +43,29 @@ export default async function handler(
       });
 
       return res.json(departmentReview);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-      "filter[name]": Yup.string().optional(),
-    });
-
     try {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+        "filter[name]": Yup.string().optional(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const {
-      skip,
-      take,
-      "filter[name]": filterName,
-    } = validator.cast(req.query);
-    console.log({ filterName });
-    try {
+      const {
+        skip,
+        take,
+        "filter[name]": filterName,
+      } = validator.cast(req.query);
       const departmentReviews = await prisma.departmentReview.findMany({
         skip,
         take,
@@ -93,9 +80,11 @@ export default async function handler(
       });
 
       return res.json({ departmentReviews, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

@@ -23,19 +23,14 @@ export default async function handler(
   const ability = submittedCoordinatorSuggestionAbility({ user });
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
       const submittedCoordinatorSuggestion =
         await prisma.submittedCoordinatorSuggestion.findFirstOrThrow({
           where: {
@@ -51,46 +46,41 @@ export default async function handler(
         });
 
       return res.json(submittedCoordinatorSuggestion);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const deleteHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
         "SubmittedCoordinatorSuggestion"
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
-      const submittedCoordinatorSuggestion = await prisma.submittedCoordinatorSuggestion.delete({
-        where: {
-          id,
-        },
-      });
+      const { id } = validator.cast(req.query);
+      const submittedCoordinatorSuggestion =
+        await prisma.submittedCoordinatorSuggestion.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(submittedCoordinatorSuggestion);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

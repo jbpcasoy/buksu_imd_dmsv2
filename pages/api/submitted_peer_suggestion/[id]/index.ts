@@ -23,19 +23,15 @@ export default async function handler(
   const ability = submittedPeerSuggestionAbility({ user });
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
+      const { id } = validator.cast(req.query);
+
       const submittedPeerSuggestion =
         await prisma.submittedPeerSuggestion.findFirstOrThrow({
           where: {
@@ -51,46 +47,42 @@ export default async function handler(
         });
 
       return res.json(submittedPeerSuggestion);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const deleteHandler = async () => {
-    const validator = Yup.object({
-      id: Yup.string().required(),
-    });
-
     try {
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
         "SubmittedPeerSuggestion"
       );
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
 
-    const { id } = validator.cast(req.query);
-    try {
-      const submittedPeerSuggestion = await prisma.submittedPeerSuggestion.delete({
-        where: {
-          id,
-        },
-      });
+      const { id } = validator.cast(req.query);
+
+      const submittedPeerSuggestion =
+        await prisma.submittedPeerSuggestion.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(submittedPeerSuggestion);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 

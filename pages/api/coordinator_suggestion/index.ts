@@ -22,25 +22,19 @@ export default async function handler(
   const ability = coordinatorSuggestionAbility({ user });
 
   const postHandler = async () => {
-    const validator = Yup.object({
-      coordinatorReviewId: Yup.string().required(),
-    });
     try {
+      const validator = Yup.object({
+        coordinatorReviewId: Yup.string().required(),
+      });
       await validator.validate(req.body);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    try {
-      ForbiddenError.from(ability).throwUnlessCan("create", "CoordinatorSuggestion");
-    } catch (error) {
-      console.error(error);
-      return res.status(403).json({ error });
-    }
+      ForbiddenError.from(ability).throwUnlessCan(
+        "create",
+        "CoordinatorSuggestion"
+      );
 
-    const { coordinatorReviewId } = validator.cast(req.body);
-    try {
+      const { coordinatorReviewId } = validator.cast(req.body);
+
       const coordinatorSuggestion = await prisma.coordinatorSuggestion.create({
         data: {
           CoordinatorReview: {
@@ -52,40 +46,38 @@ export default async function handler(
       });
 
       return res.json(coordinatorSuggestion);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
   const getHandler = async () => {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-      "filter[name]": Yup.string().optional(),
-    });
-
     try {
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+        "filter[name]": Yup.string().optional(),
+      });
+
       await validator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
 
-    const {
-      skip,
-      take,
-      "filter[name]": filterName,
-    } = validator.cast(req.query);
-    console.log({ filterName });
-    try {
-      const coordinatorSuggestions = await prisma.coordinatorSuggestion.findMany({
+      const {
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).CoordinatorSuggestion],
-        },
-      });
+        "filter[name]": filterName,
+      } = validator.cast(req.query);
+      console.log({ filterName });
+      const coordinatorSuggestions =
+        await prisma.coordinatorSuggestion.findMany({
+          skip,
+          take,
+          where: {
+            AND: [accessibleBy(ability).CoordinatorSuggestion],
+          },
+        });
       const count = await prisma.coordinatorSuggestion.count({
         where: {
           AND: [accessibleBy(ability).CoordinatorSuggestion],
@@ -93,9 +85,11 @@ export default async function handler(
       });
 
       return res.json({ coordinatorSuggestions, count });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return res.status(400).json({ error });
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
 
