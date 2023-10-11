@@ -5,7 +5,6 @@ import {
   ActiveCoordinator,
   ActiveDean,
   ActiveFaculty,
-  ActiveIMFile,
   Chairperson,
   ChairpersonReview,
   ChairpersonSuggestion,
@@ -40,7 +39,6 @@ export type AppSubjects =
       ActiveFaculty: ActiveFaculty;
       Department: Department;
       IMFile: IMFile;
-      ActiveIMFile: ActiveIMFile;
       Chairperson: Chairperson;
       Coordinator: Coordinator;
       Dean: Dean;

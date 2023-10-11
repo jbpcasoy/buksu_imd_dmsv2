@@ -132,18 +132,7 @@ model IMFile {
     size             Int
     mimetype         String
     originalFilename String
-    ActiveIMFile     ActiveIMFile?
     DepartmentReview DepartmentReview?
-}
-
-// TODO remove active im file for it will not be needed in the new structure
-model ActiveIMFile {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    IMFile   IMFile @relation(fields: [iMFileId], references: [id])
-    iMFileId String @unique
 }
 
 model Chairperson {

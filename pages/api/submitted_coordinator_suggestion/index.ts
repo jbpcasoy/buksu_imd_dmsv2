@@ -1,9 +1,9 @@
 import prisma from "@/prisma/client";
-import activeIMFileAbility from "@/services/ability/activeIMFileAbility";
+import submittedCoordinatorSuggestionAbility from "@/services/ability/submittedCoordinatorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -12,18 +12,18 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let user: User;
+
   try {
     user = await getServerUser(req, res);
   } catch (error) {
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-
-  let ability = activeIMFileAbility({ user });
+  const ability = submittedCoordinatorSuggestionAbility({ user });
 
   const postHandler = async () => {
     const validator = Yup.object({
-      iMFileId: Yup.string().required(),
+      coordinatorSuggestionId: Yup.string().required(),
     });
     try {
       await validator.validate(req.body);
@@ -33,51 +33,28 @@ export default async function handler(
     }
 
     try {
-      ForbiddenError.from(ability).throwUnlessCan("create", "ActiveIMFile");
+      ForbiddenError.from(ability).throwUnlessCan(
+        "create",
+        "SubmittedCoordinatorSuggestion"
+      );
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });
     }
 
-    const { iMFileId } = validator.cast(req.body);
+    const { coordinatorSuggestionId } = validator.cast(req.body);
     try {
-      const iMFile = await prisma.iMFile.findFirstOrThrow({
-        where: {
-          id: {
-            equals: iMFileId,
-          },
-        },
-      });
-
-      const userActiveIMFileCount = await prisma.activeIMFile.count({
-        where: {
-          IMFile: {
-            IM: {
-              id: {
-                equals: iMFile.id,
-              },
-            },
-          },
-        },
-      });
-
-      if (userActiveIMFileCount > 0) {
-        return res.status(409).json({
-          error: { message: "User can only have one active iMFile" },
-        });
-      }
-
-      const activeIMFile = await prisma.activeIMFile.create({
+      const submittedCoordinatorSuggestion = await prisma.submittedCoordinatorSuggestion.create({
         data: {
-          IMFile: {
+          CoordinatorSuggestion: {
             connect: {
-              id: iMFile.id,
+              id: coordinatorSuggestionId as string,
             },
           },
         },
       });
 
-      return res.json(activeIMFile);
+      return res.json(submittedCoordinatorSuggestion);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -103,23 +80,22 @@ export default async function handler(
       take,
       "filter[name]": filterName,
     } = validator.cast(req.query);
+    console.log({ filterName });
     try {
-      const activeIMFiles = await prisma.activeIMFile.findMany({
+      const submittedCoordinatorSuggestions = await prisma.submittedCoordinatorSuggestion.findMany({
         skip,
         take,
         where: {
-          AND: [
-            accessibleBy(ability).ActiveIMFile,
-          ],
+          AND: [accessibleBy(ability).SubmittedCoordinatorSuggestion],
         },
       });
-      const count = await prisma.activeIMFile.count({
+      const count = await prisma.submittedCoordinatorSuggestion.count({
         where: {
-          AND: [accessibleBy(ability).ActiveIMFile],
+          AND: [accessibleBy(ability).SubmittedCoordinatorSuggestion],
         },
       });
 
-      return res.json({ activeIMFiles, count });
+      return res.json({ submittedCoordinatorSuggestions, count });
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });

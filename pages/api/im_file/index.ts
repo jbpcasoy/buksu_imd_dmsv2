@@ -11,8 +11,6 @@ import * as Yup from "yup";
 import { ForbiddenError, subject } from "@casl/ability";
 import iMAbility from "@/services/ability/iMAbility";
 
-// TODO add ability validation
-// connectToIM on iMAbility
 
 //set bodyParser
 export const config = {
@@ -95,7 +93,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       // Save file to server
-      // TODO try if this implementation still works with linux, our deployment server will most likely be linux
       const file = data.files.file[0];
       const filename = `${file.newFilename}.pdf`;
       const filePath = file.filepath;

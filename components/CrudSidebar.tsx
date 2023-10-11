@@ -40,10 +40,6 @@ export default function CrudSidebar() {
       label: "IM File",
     },
     {
-      link: "/crud/active_im_file",
-      label: "Active IM File",
-    },
-    {
       link: "/crud/chairperson",
       label: "Chairperson",
     },

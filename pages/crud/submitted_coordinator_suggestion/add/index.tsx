@@ -3,19 +3,19 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddActiveIMFilePage() {
+export default function AddSubmittedCoordinatorSuggestionPage() {
   const formik = useFormik({
     initialValues: {
-      iMFileId: "",
+      coordinatorSuggestionId: "",
     },
     validationSchema: Yup.object({
-        iMFileId: Yup.string().required(),
+      coordinatorSuggestionId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
-        .post("/api/active_im_file", values)
+        .post("/api/submitted_coordinator_suggestion", values)
         .then(() => {
-          alert("ActiveIMFile Added Successfully");
+          alert("SubmittedCoordinatorSuggestion Added Successfully");
         })
         .catch((error) => {
           alert(error.message);
@@ -24,13 +24,13 @@ export default function AddActiveIMFilePage() {
   });
   return (
     <CrudLayout>
-      <h2>Add ActiveIMFile</h2>
+      <h2>Add SubmittedCoordinatorSuggestion</h2>
 
       <form onSubmit={formik.handleSubmit}>
         <input
           type='text'
-          placeholder='name'
-          {...formik.getFieldProps("iMFileId")}
+          placeholder='coordinatorSuggestionId'
+          {...formik.getFieldProps("coordinatorSuggestionId")}
         />
         <input type='submit' value='Submit' className='rounded border' />
       </form>

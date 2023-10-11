@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import activeIMFileAbility from "@/services/ability/activeIMFileAbility";
+import submittedCoordinatorSuggestionAbility from "@/services/ability/submittedCoordinatorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
@@ -15,11 +15,12 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
+    981;
   } catch (error) {
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = activeIMFileAbility({user});
+  const ability = submittedCoordinatorSuggestionAbility({ user });
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -35,20 +36,21 @@ export default async function handler(
 
     const { id } = validator.cast(req.query);
     try {
-      const activeIMFile = await prisma.activeIMFile.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).ActiveIMFile,
-            {
-              id: {
-                equals: id,
+      const submittedCoordinatorSuggestion =
+        await prisma.submittedCoordinatorSuggestion.findFirstOrThrow({
+          where: {
+            AND: [
+              accessibleBy(ability).SubmittedCoordinatorSuggestion,
+              {
+                id: {
+                  equals: id,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
-      return res.json(activeIMFile);
+      return res.json(submittedCoordinatorSuggestion);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -68,7 +70,10 @@ export default async function handler(
     }
 
     try {
-      ForbiddenError.from(ability).throwUnlessCan("delete", "ActiveIMFile");
+      ForbiddenError.from(ability).throwUnlessCan(
+        "delete",
+        "SubmittedCoordinatorSuggestion"
+      );
     } catch (error) {
       console.error(error);
       return res.status(403).json({ error });
@@ -76,13 +81,13 @@ export default async function handler(
 
     const { id } = validator.cast(req.query);
     try {
-      const activeIMFile = await prisma.activeIMFile.delete({
+      const submittedCoordinatorSuggestion = await prisma.submittedCoordinatorSuggestion.delete({
         where: {
           id,
         },
       });
 
-      return res.json(activeIMFile);
+      return res.json(submittedCoordinatorSuggestion);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });

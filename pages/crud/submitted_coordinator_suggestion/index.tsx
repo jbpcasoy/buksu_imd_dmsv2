@@ -1,11 +1,12 @@
 import CrudLayout from "@/components/CrudLayout";
-import useActiveIMFiles from "@/hooks/useActiveIMFiles";
+import useSubmittedCoordinatorSuggestions from "@/hooks/useSubmittedCoordinatorSuggestions";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function ActiveIMFilesPage() {
+export default function SubmittedCoordinatorSuggestionsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { activeIMFiles, count } = useActiveIMFiles(state);
+  const { submittedCoordinatorSuggestions, count } =
+    useSubmittedCoordinatorSuggestions(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -24,8 +25,11 @@ export default function ActiveIMFilesPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>ActiveIMFile</h2>
-        <Link className='border rounded' href={`/crud/active_im_file/add`}>
+        <h2>SubmittedCoordinatorSuggestion</h2>
+        <Link
+          className='border rounded'
+          href={`/crud/submitted_coordinator_suggestion/add`}
+        >
           Add
         </Link>
       </div>
@@ -37,28 +41,36 @@ export default function ActiveIMFilesPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>iMFileId</th>
+              <th>coordinatorSuggestionId</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {activeIMFiles.map((activeIMFile) => {
+            {submittedCoordinatorSuggestions.map((submittedCoordinatorSuggestion) => {
               return (
-                <tr key={activeIMFile.id}>
-                  <td>{activeIMFile.id}</td>
-                  <td>{new Date(activeIMFile.createdAt).toLocaleString()}</td>
-                  <td>{new Date(activeIMFile.updatedAt).toLocaleString()}</td>
+                <tr key={submittedCoordinatorSuggestion.id}>
+                  <td>{submittedCoordinatorSuggestion.id}</td>
+                  <td>
+                    {new Date(
+                      submittedCoordinatorSuggestion.createdAt
+                    ).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(
+                      submittedCoordinatorSuggestion.updatedAt
+                    ).toLocaleString()}
+                  </td>
                   <td>
                     <Link
-                      href={`/crud/im_file/${activeIMFile.iMFileId}`}
+                      href={`/crud/coordinator_suggestion/${submittedCoordinatorSuggestion.coordinatorSuggestionId}`}
                       className='underline'
                     >
-                      {activeIMFile.iMFileId}
+                      {submittedCoordinatorSuggestion.coordinatorSuggestionId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/active_im_file/${activeIMFile.id}`}
+                      href={`/crud/submitted_coordinator_suggestion/${submittedCoordinatorSuggestion.id}`}
                       className='border rounded'
                     >
                       view
