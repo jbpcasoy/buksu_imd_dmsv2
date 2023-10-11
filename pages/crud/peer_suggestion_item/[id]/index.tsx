@@ -63,6 +63,7 @@ export default function PeerSuggestionItemPage() {
         </Link>
       </p>
       <p>suggestion: {peerSuggestionItem.suggestion}</p>
+      <p>pageNumber: {peerSuggestionItem.pageNumber}</p>
       <p>actionTaken: {peerSuggestionItem.actionTaken}</p>
       <p>remarks: {peerSuggestionItem.remarks}</p>
     </CrudLayout>

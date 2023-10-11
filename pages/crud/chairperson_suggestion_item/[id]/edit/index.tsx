@@ -18,11 +18,13 @@ export default function EditChairpersonSuggestionItemPage() {
       suggestion: "",
       actionTaken: "",
       remarks: "",
+      pageNumber: 0,
     },
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
       actionTaken: Yup.string(),
       remarks: Yup.string(),
+      pageNumber: Yup.number().min(0).required()
     }),
     onSubmit: (values) => {
       axios
@@ -44,6 +46,7 @@ export default function EditChairpersonSuggestionItemPage() {
     let subscribe = true;
 
     formik.setValues({
+      pageNumber: chairpersonSuggestionItem.pageNumber,
       suggestion: chairpersonSuggestionItem.suggestion,
       actionTaken: chairpersonSuggestionItem?.actionTaken ?? "",
       remarks: chairpersonSuggestionItem?.remarks ?? "",
@@ -65,6 +68,11 @@ export default function EditChairpersonSuggestionItemPage() {
           type='text'
           placeholder='suggestion'
           {...formik.getFieldProps("suggestion")}
+        />
+        <input
+          type='text'
+          placeholder='pageNumber'
+          {...formik.getFieldProps("pageNumber")}
         />
         <input
           type='text'

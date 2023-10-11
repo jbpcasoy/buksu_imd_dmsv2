@@ -6,12 +6,14 @@ import * as Yup from "yup";
 export default function AddChairpersonSuggestionItemPage() {
   const formik = useFormik({
     initialValues: {
+      pageNumber: 0,
       chairpersonSuggestionId: "",
       suggestion: "",
       actionTaken: "",
       remarks: "",
     },
     validationSchema: Yup.object({
+      pageNumber: Yup.number().min(0).required(),
       chairpersonSuggestionId: Yup.string().required(),
       suggestion: Yup.string().required(),
       actionTaken: Yup.string(),
@@ -42,6 +44,11 @@ export default function AddChairpersonSuggestionItemPage() {
           type='text'
           placeholder='suggestion'
           {...formik.getFieldProps("suggestion")}
+        />
+        <input
+          type='text'
+          placeholder='pageNumber'
+          {...formik.getFieldProps("pageNumber")}
         />
         <input
           type='text'

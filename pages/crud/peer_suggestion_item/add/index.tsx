@@ -6,12 +6,14 @@ import * as Yup from "yup";
 export default function AddPeerSuggestionItemPage() {
   const formik = useFormik({
     initialValues: {
+      pageNumber: 0,
       peerSuggestionId: "",
       suggestion: "",
       actionTaken: "",
       remarks: "",
     },
     validationSchema: Yup.object({
+      pageNumber: Yup.number().min(0).required(),
       peerSuggestionId: Yup.string().required(),
       suggestion: Yup.string().required(),
       actionTaken: Yup.string(),
@@ -42,6 +44,11 @@ export default function AddPeerSuggestionItemPage() {
           type='text'
           placeholder='suggestion'
           {...formik.getFieldProps("suggestion")}
+        />
+        <input
+          type='text'
+          placeholder='pageNumber'
+          {...formik.getFieldProps("pageNumber")}
         />
         <input
           type='text'

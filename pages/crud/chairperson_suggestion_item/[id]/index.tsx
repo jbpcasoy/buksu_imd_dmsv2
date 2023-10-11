@@ -63,6 +63,7 @@ export default function ChairpersonSuggestionItemPage() {
         </Link>
       </p>
       <p>suggestion: {chairpersonSuggestionItem.suggestion}</p>
+      <p>pageNumber: {chairpersonSuggestionItem.pageNumber}</p>
       <p>actionTaken: {chairpersonSuggestionItem.actionTaken}</p>
       <p>remarks: {chairpersonSuggestionItem.remarks}</p>
     </CrudLayout>

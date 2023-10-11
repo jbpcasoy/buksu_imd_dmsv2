@@ -90,6 +90,7 @@ export default async function handler(
         actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
         suggestion: Yup.string().required(),
+        pageNumber: Yup.number().min(0).required(),
       });
 
       await validator.validate(req.body);
@@ -99,7 +100,9 @@ export default async function handler(
         "PeerSuggestionItem"
       );
       const { id } = req.query;
-      const { actionTaken, remarks, suggestion } = validator.cast(req.body);
+      const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
+        req.body
+      );
 
       const peerSuggestionItem = await prisma.peerSuggestionItem.update({
         where: {
@@ -109,6 +112,7 @@ export default async function handler(
           actionTaken,
           remarks,
           suggestion,
+          pageNumber,
         },
       });
 

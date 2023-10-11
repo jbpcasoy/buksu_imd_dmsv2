@@ -25,6 +25,7 @@ export default async function handler(
     try {
       const validator = Yup.object({
         coordinatorSuggestionId: Yup.string().required(),
+        pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
         actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
@@ -36,7 +37,7 @@ export default async function handler(
         "CoordinatorSuggestionItem"
       );
 
-      const { actionTaken, coordinatorSuggestionId, remarks, suggestion } =
+      const { actionTaken, coordinatorSuggestionId, remarks, suggestion, pageNumber } =
         validator.cast(req.body);
 
       const coordinatorSuggestionItem =
@@ -45,6 +46,7 @@ export default async function handler(
             actionTaken,
             remarks,
             suggestion,
+            pageNumber,
             CoordinatorSuggestion: {
               connect: {
                 id: coordinatorSuggestionId,

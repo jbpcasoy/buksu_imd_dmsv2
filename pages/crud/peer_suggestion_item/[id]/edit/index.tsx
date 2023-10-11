@@ -18,15 +18,20 @@ export default function EditPeerSuggestionItemPage() {
       suggestion: "",
       actionTaken: "",
       remarks: "",
+      pageNumber: 0,
     },
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
       actionTaken: Yup.string(),
       remarks: Yup.string(),
+      pageNumber: Yup.number().min(0).required()
     }),
     onSubmit: (values) => {
       axios
-        .put(`/api/peer_suggestion_item/${peerSuggestionItemId}`, values)
+        .put(
+          `/api/peer_suggestion_item/${peerSuggestionItemId}`,
+          values
+        )
         .then(() => {
           alert("PeerSuggestionItem Updated Successfully");
         })
@@ -41,6 +46,7 @@ export default function EditPeerSuggestionItemPage() {
     let subscribe = true;
 
     formik.setValues({
+      pageNumber: peerSuggestionItem.pageNumber,
       suggestion: peerSuggestionItem.suggestion,
       actionTaken: peerSuggestionItem?.actionTaken ?? "",
       remarks: peerSuggestionItem?.remarks ?? "",
@@ -62,6 +68,11 @@ export default function EditPeerSuggestionItemPage() {
           type='text'
           placeholder='suggestion'
           {...formik.getFieldProps("suggestion")}
+        />
+        <input
+          type='text'
+          placeholder='pageNumber'
+          {...formik.getFieldProps("pageNumber")}
         />
         <input
           type='text'

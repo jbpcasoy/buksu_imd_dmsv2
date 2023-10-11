@@ -88,6 +88,7 @@ export default async function handler(
   const putHandler = async () => {
     try {
       const validator = Yup.object({
+        pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
         actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
@@ -101,7 +102,9 @@ export default async function handler(
       );
 
       const { id } = req.query;
-      const { actionTaken, remarks, suggestion } = validator.cast(req.body);
+      const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
+        req.body
+      );
 
       const chairpersonSuggestionItem =
         await prisma.chairpersonSuggestionItem.update({
@@ -112,6 +115,7 @@ export default async function handler(
             actionTaken,
             remarks,
             suggestion,
+            pageNumber,
           },
         });
 

@@ -63,6 +63,7 @@ export default function CoordinatorSuggestionItemPage() {
         </Link>
       </p>
       <p>suggestion: {coordinatorSuggestionItem.suggestion}</p>
+      <p>pageNumber: {coordinatorSuggestionItem.pageNumber}</p>
       <p>actionTaken: {coordinatorSuggestionItem.actionTaken}</p>
       <p>remarks: {coordinatorSuggestionItem.remarks}</p>
     </CrudLayout>

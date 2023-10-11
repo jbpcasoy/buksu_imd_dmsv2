@@ -87,6 +87,7 @@ export default async function handler(
     try {
       const validator = Yup.object({
         actionTaken: Yup.string().optional(),
+        pageNumber: Yup.number().min(0).required(),
         remarks: Yup.string().optional(),
         suggestion: Yup.string().required(),
       });
@@ -99,7 +100,9 @@ export default async function handler(
       );
 
       const { id } = req.query;
-      const { actionTaken, remarks, suggestion } = validator.cast(req.body);
+      const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
+        req.body
+      );
 
       const coordinatorSuggestionItem =
         await prisma.coordinatorSuggestionItem.update({
@@ -110,6 +113,7 @@ export default async function handler(
             actionTaken,
             remarks,
             suggestion,
+            pageNumber,
           },
         });
 

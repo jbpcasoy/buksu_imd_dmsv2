@@ -25,6 +25,7 @@ export default async function handler(
     try {
       const validator = Yup.object({
         chairpersonSuggestionId: Yup.string().required(),
+        pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
         actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
@@ -36,14 +37,20 @@ export default async function handler(
         "ChairpersonSuggestionItem"
       );
 
-      const { actionTaken, chairpersonSuggestionId, remarks, suggestion } =
-        validator.cast(req.body);
+      const {
+        actionTaken,
+        chairpersonSuggestionId,
+        remarks,
+        suggestion,
+        pageNumber,
+      } = validator.cast(req.body);
       const chairpersonSuggestionItem =
         await prisma.chairpersonSuggestionItem.create({
           data: {
             actionTaken,
             remarks,
             suggestion,
+            pageNumber,
             ChairpersonSuggestion: {
               connect: {
                 id: chairpersonSuggestionId,

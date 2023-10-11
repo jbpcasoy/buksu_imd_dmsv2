@@ -272,6 +272,7 @@ model PeerSuggestionItem {
     remarks          String?
     PeerSuggestion   PeerSuggestion @relation(fields: [peerSuggestionId], references: [id])
     peerSuggestionId String
+    pageNumber       Int
 }
 
 model SubmittedPeerSuggestion {
@@ -330,7 +331,6 @@ model ChairpersonSuggestion {
     SubmittedChairpersonSuggestion SubmittedChairpersonSuggestion?
 }
 
-// TODO add pageNumber property
 model ChairpersonSuggestionItem {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
@@ -341,6 +341,7 @@ model ChairpersonSuggestionItem {
     remarks                 String?
     ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [chairpersonSuggestionId], references: [id])
     chairpersonSuggestionId String
+    pageNumber              Int
 }
 
 model SubmittedChairpersonSuggestion {
@@ -409,6 +410,7 @@ model CoordinatorSuggestionItem {
     remarks                 String?
     CoordinatorSuggestion   CoordinatorSuggestion @relation(fields: [coordinatorSuggestionId], references: [id])
     coordinatorSuggestionId String
+    pageNumber              Int
 }
 
 model SubmittedCoordinatorSuggestion {
