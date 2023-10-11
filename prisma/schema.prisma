@@ -212,6 +212,7 @@ model DepartmentReview {
     iMFileId          String             @unique
     PeerReview        PeerReview?
     ChairpersonReview ChairpersonReview?
+    CoordinatorReview CoordinatorReview?
 }
 
 enum Rating {
@@ -360,6 +361,74 @@ model SubmittedChairpersonSuggestion {
 
     ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [chairpersonSuggestionId], references: [id])
     chairpersonSuggestionId String                @unique
+}
+
+model CoordinatorReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    q1_1                  Rating?
+    q1_2                  Rating?
+    q2_1                  Rating?
+    q2_2                  Rating?
+    q2_3                  Rating?
+    q2_4                  Rating?
+    q3_1                  Rating?
+    q4_1                  Rating?
+    q4_2                  Rating?
+    q4_3                  Rating?
+    q5_1                  Rating?
+    q5_2                  Rating?
+    q5_3                  Rating?
+    q6_1                  Rating?
+    q6_2                  Rating?
+    q6_3                  Rating?
+    q6_4                  Rating?
+    q6_5                  Rating?
+    q7_1                  Rating?
+    q7_2                  Rating?
+    q7_3                  Rating?
+    q7_4                  Rating?
+    q7_5                  Rating?
+    q8_1                  Rating?
+    q8_2                  Rating?
+    q8_3                  Rating?
+    CoordinatorSuggestion CoordinatorSuggestion?
+    DepartmentReview      DepartmentReview       @relation(fields: [departmentReviewId], references: [id])
+    departmentReviewId    String                 @unique
+}
+
+model CoordinatorSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CoordinatorReview              CoordinatorReview               @relation(fields: [coordinatorReviewId], references: [id])
+    coordinatorReviewId            String                          @unique
+    CoordinatorSuggestionItem      CoordinatorSuggestionItem[]
+    SubmittedCoordinatorSuggestion SubmittedCoordinatorSuggestion?
+}
+
+model CoordinatorSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    suggestion              String
+    actionTaken             String?
+    remarks                 String?
+    CoordinatorSuggestion   CoordinatorSuggestion @relation(fields: [coordinatorSuggestionId], references: [id])
+    coordinatorSuggestionId String
+}
+
+model SubmittedCoordinatorSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CoordinatorSuggestion   CoordinatorSuggestion @relation(fields: [coordinatorSuggestionId], references: [id])
+    coordinatorSuggestionId String                @unique
 }
 
 //PeerApproval 

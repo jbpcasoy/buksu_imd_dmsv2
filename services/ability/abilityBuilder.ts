@@ -24,6 +24,10 @@ import {
   SubmittedChairpersonSuggestion,
   SubmittedPeerSuggestion,
   User,
+  CoordinatorReview,
+  CoordinatorSuggestion,
+  CoordinatorSuggestionItem,
+  SubmittedCoordinatorSuggestion
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -52,6 +56,10 @@ export type AppSubjects =
       ChairpersonSuggestion: ChairpersonSuggestion;
       ChairpersonSuggestionItem: ChairpersonSuggestionItem;
       SubmittedChairpersonSuggestion: SubmittedChairpersonSuggestion;
+      CoordinatorReview: CoordinatorReview;
+      CoordinatorSuggestion: CoordinatorSuggestion;
+      CoordinatorSuggestionItem: CoordinatorSuggestionItem;
+      SubmittedCoordinatorSuggestion: SubmittedCoordinatorSuggestion;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

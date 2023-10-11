@@ -103,6 +103,22 @@ export default function CrudSidebar() {
       link: "/crud/submitted_chairperson_suggestion",
       label: "Submitted Chairperson Suggestion",
     },
+    {
+      link: "/crud/coordinator_review",
+      label: "Coordinator Review",
+    },
+    {
+      link: "/crud/coordinator_suggestion",
+      label: "Coordinator Suggestion",
+    },
+    {
+      link: "/crud/coordinator_suggestion_item",
+      label: "Coordinator Suggestion Item",
+    },
+    {
+      link: "/crud/submitted_coordinator_suggestion",
+      label: "Submitted Coordinator Suggestion",
+    },
   ];
   return (
     <div className="h-full overflow-y-auto">
