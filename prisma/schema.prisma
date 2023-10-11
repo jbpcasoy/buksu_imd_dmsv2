@@ -334,8 +334,8 @@ model ChairpersonSuggestion {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ChairpersonReview              ChairpersonReview               @relation(fields: [ChairpersonReviewId], references: [id])
-    ChairpersonReviewId            String                          @unique
+    ChairpersonReview              ChairpersonReview               @relation(fields: [chairpersonReviewId], references: [id])
+    chairpersonReviewId            String                          @unique
     ChairpersonSuggestionItem      ChairpersonSuggestionItem[]
     SubmittedChairpersonSuggestion SubmittedChairpersonSuggestion?
 }
@@ -348,8 +348,8 @@ model ChairpersonSuggestionItem {
     suggestion              String
     actionTaken             String?
     remarks                 String?
-    ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [ChairpersonSuggestionId], references: [id])
-    ChairpersonSuggestionId String
+    ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [chairpersonSuggestionId], references: [id])
+    chairpersonSuggestionId String
 }
 
 model SubmittedChairpersonSuggestion {
@@ -357,8 +357,8 @@ model SubmittedChairpersonSuggestion {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [ChairpersonSuggestionId], references: [id])
-    ChairpersonSuggestionId String                @unique
+    ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [chairpersonSuggestionId], references: [id])
+    chairpersonSuggestionId String                @unique
 }
 
 //PeerApproval 
