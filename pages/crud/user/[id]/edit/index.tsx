@@ -25,7 +25,7 @@ export default function EditUserPage() {
           alert("User updated successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

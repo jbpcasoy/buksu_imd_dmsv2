@@ -24,7 +24,7 @@ export default function PeerSuggestionItemPage() {
         alert("PeerSuggestionItem deleted successfully.");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error?.response?.data?.error?.message);
       });
   };
 

@@ -25,7 +25,7 @@ export default function EditDepartmentPage() {
           alert("Department updated successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

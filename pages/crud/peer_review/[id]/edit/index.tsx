@@ -77,7 +77,7 @@ export default function EditPeerReviewPage() {
           alert("PeerReview Updated Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

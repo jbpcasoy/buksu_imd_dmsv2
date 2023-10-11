@@ -18,7 +18,7 @@ export default function AddChairpersonSuggestionPage() {
           alert("ChairpersonSuggestion Added Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

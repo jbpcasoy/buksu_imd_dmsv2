@@ -24,7 +24,7 @@ export default function AddPeerSuggestionItemPage() {
           alert("PeerSuggestionItem Added Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

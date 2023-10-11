@@ -22,7 +22,7 @@ export default function FacultyPage() {
         alert("Faculty deleted successfully.");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error?.response?.data?.error?.message);
       });
   };
 
@@ -43,10 +43,7 @@ export default function FacultyPage() {
       <p>updatedAt: {new Date(faculty.updatedAt).toLocaleString()}</p>
       <p>
         userId:{" "}
-        <Link
-          href={`/crud/user/${faculty.userId}`}
-          className='underline'
-        >
+        <Link href={`/crud/user/${faculty.userId}`} className='underline'>
           {faculty.userId}
         </Link>
       </p>

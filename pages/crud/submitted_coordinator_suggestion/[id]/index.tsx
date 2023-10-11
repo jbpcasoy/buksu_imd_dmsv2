@@ -24,7 +24,7 @@ export default function SubmittedCoordinatorSuggestionPage() {
         alert("SubmittedCoordinatorSuggestion deleted successfully.");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error?.response?.data?.error?.message);
       });
   };
 

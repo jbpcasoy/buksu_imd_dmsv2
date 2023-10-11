@@ -79,7 +79,7 @@ export default function EditCoordinatorReviewPage() {
           alert("CoordinatorReview Updated Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

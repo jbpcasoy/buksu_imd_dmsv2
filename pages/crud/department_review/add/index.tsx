@@ -18,7 +18,7 @@ export default function AddDepartmentReviewPage() {
           alert("DepartmentReview Added Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

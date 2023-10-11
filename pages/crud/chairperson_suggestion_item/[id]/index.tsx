@@ -24,7 +24,7 @@ export default function ChairpersonSuggestionItemPage() {
         alert("ChairpersonSuggestionItem deleted successfully.");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error?.response?.data?.error?.message);
       });
   };
 

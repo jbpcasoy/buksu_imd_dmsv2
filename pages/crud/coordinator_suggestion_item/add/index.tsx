@@ -24,7 +24,7 @@ export default function AddCoordinatorSuggestionItemPage() {
           alert("CoordinatorSuggestionItem Added Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

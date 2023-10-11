@@ -22,7 +22,7 @@ export default function ActiveFacultyPage() {
         alert("ActiveFaculty deleted successfully.");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error?.response?.data?.error?.message);
       });
   };
 

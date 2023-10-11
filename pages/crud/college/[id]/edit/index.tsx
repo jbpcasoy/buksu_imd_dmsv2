@@ -25,7 +25,7 @@ export default function EditCollegePage() {
           alert("College updated successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

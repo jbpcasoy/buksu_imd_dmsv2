@@ -73,7 +73,7 @@ export default function AddPeerReviewPage() {
           alert("PeerReview Added Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

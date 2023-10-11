@@ -23,7 +23,7 @@ export default function CoordinatorPage() {
         alert("Coordinator deleted successfully.");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error?.response?.data?.error?.message);
       });
   };
 

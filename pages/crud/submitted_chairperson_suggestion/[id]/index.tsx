@@ -26,7 +26,7 @@ export default function SubmittedChairpersonSuggestionPage() {
         alert("SubmittedChairpersonSuggestion deleted successfully.");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error?.response?.data?.error?.message);
       });
   };
 

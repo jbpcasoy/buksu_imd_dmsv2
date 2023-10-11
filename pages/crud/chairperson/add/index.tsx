@@ -19,7 +19,7 @@ export default function AddChairpersonPage() {
           alert("Chairperson Added Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

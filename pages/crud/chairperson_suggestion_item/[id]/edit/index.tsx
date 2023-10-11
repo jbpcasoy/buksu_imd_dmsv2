@@ -34,7 +34,7 @@ export default function EditChairpersonSuggestionItemPage() {
           alert("ChairpersonSuggestionItem Updated Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

@@ -31,7 +31,7 @@ export default function EditPeerSuggestionItemPage() {
           alert("PeerSuggestionItem Updated Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

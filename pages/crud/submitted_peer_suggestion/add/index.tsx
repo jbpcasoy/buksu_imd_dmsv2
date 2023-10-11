@@ -18,7 +18,7 @@ export default function AddSubmittedPeerSuggestionPage() {
           alert("SubmittedPeerSuggestion Added Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });

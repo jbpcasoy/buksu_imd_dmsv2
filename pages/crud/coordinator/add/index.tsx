@@ -19,7 +19,7 @@ export default function AddCoordinatorPage() {
           alert("Coordinator Added Successfully");
         })
         .catch((error) => {
-          alert(error.message);
+          alert(error?.response?.data?.error?.message);
         });
     },
   });
