@@ -208,9 +208,10 @@ model DepartmentReview {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IMFile     IMFile      @relation(fields: [iMFileId], references: [id])
-    iMFileId   String      @unique
-    PeerReview PeerReview?
+    IMFile            IMFile             @relation(fields: [iMFileId], references: [id])
+    iMFileId          String             @unique
+    PeerReview        PeerReview?
+    ChairpersonReview ChairpersonReview?
 }
 
 enum Rating {
@@ -265,9 +266,9 @@ model PeerSuggestion {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    PeerReview          PeerReview           @relation(fields: [peerReviewId], references: [id])
-    peerReviewId        String               @unique
-    PeerSuggestionItem  PeerSuggestionItem[]
+    PeerReview              PeerReview               @relation(fields: [peerReviewId], references: [id])
+    peerReviewId            String                   @unique
+    PeerSuggestionItem      PeerSuggestionItem[]
     SubmittedPeerSuggestion SubmittedPeerSuggestion?
 }
 
@@ -290,6 +291,74 @@ model SubmittedPeerSuggestion {
 
     PeerSuggestion   PeerSuggestion @relation(fields: [peerSuggestionId], references: [id])
     peerSuggestionId String         @unique
+}
+
+model ChairpersonReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    q1_1                  Rating?
+    q1_2                  Rating?
+    q2_1                  Rating?
+    q2_2                  Rating?
+    q2_3                  Rating?
+    q2_4                  Rating?
+    q3_1                  Rating?
+    q4_1                  Rating?
+    q4_2                  Rating?
+    q4_3                  Rating?
+    q5_1                  Rating?
+    q5_2                  Rating?
+    q5_3                  Rating?
+    q6_1                  Rating?
+    q6_2                  Rating?
+    q6_3                  Rating?
+    q6_4                  Rating?
+    q6_5                  Rating?
+    q7_1                  Rating?
+    q7_2                  Rating?
+    q7_3                  Rating?
+    q7_4                  Rating?
+    q7_5                  Rating?
+    q8_1                  Rating?
+    q8_2                  Rating?
+    q8_3                  Rating?
+    ChairpersonSuggestion ChairpersonSuggestion?
+    DepartmentReview      DepartmentReview       @relation(fields: [departmentReviewId], references: [id])
+    departmentReviewId    String                 @unique
+}
+
+model ChairpersonSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ChairpersonReview              ChairpersonReview               @relation(fields: [ChairpersonReviewId], references: [id])
+    ChairpersonReviewId            String                          @unique
+    ChairpersonSuggestionItem      ChairpersonSuggestionItem[]
+    SubmittedChairpersonSuggestion SubmittedChairpersonSuggestion?
+}
+
+model ChairpersonSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    suggestion              String
+    actionTaken             String?
+    remarks                 String?
+    ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [ChairpersonSuggestionId], references: [id])
+    ChairpersonSuggestionId String
+}
+
+model SubmittedChairpersonSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [ChairpersonSuggestionId], references: [id])
+    ChairpersonSuggestionId String                @unique
 }
 
 //PeerApproval 

@@ -6,8 +6,7 @@ export default function Header() {
   };
 
   return (
-    <div className='flex justify-between p-1'>
-      <h1>BUKSU IMD DMS</h1>
+    <div className='flex justify-end p-1'>
       <button
         onClick={onLogout}
         className='bg-palette_blue text-white px-1 rounded'

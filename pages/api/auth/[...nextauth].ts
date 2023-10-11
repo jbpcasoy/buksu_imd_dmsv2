@@ -40,11 +40,16 @@ export const authOptions: AuthOptions = {
 
         const adminEmails = process.env.ADMIN_EMAILS?.split(", ");
 
-        if(adminEmails?.includes(user.email)) {
+        if (adminEmails?.includes(user.email)) {
           session.user = {
             ...session.user,
-            isAdmin: true
-          }
+            isAdmin: true,
+          };
+        } else {
+          session.user = {
+            ...session.user,
+            isAdmin: false,
+          };
         }
       }
       return session;

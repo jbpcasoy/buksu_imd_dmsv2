@@ -7,6 +7,9 @@ import {
   ActiveFaculty,
   ActiveIMFile,
   Chairperson,
+  ChairpersonReview,
+  ChairpersonSuggestion,
+  ChairpersonSuggestionItem,
   College,
   Coordinator,
   Dean,
@@ -18,6 +21,7 @@ import {
   PeerReview,
   PeerSuggestion,
   PeerSuggestionItem,
+  SubmittedChairpersonSuggestion,
   SubmittedPeerSuggestion,
   User,
 } from "@prisma/client";
@@ -44,6 +48,10 @@ export type AppSubjects =
       PeerSuggestion: PeerSuggestion;
       PeerSuggestionItem: PeerSuggestionItem;
       SubmittedPeerSuggestion: SubmittedPeerSuggestion;
+      ChairpersonReview: ChairpersonReview;
+      ChairpersonSuggestion: ChairpersonSuggestion;
+      ChairpersonSuggestionItem: ChairpersonSuggestionItem;
+      SubmittedChairpersonSuggestion: SubmittedChairpersonSuggestion;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

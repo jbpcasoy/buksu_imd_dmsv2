@@ -1,20 +1,15 @@
 import CrudLayout from "@/components/CrudLayout";
-import usePeerReview from "@/hooks/usePeerReview";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
-import { useRouter } from "next/router";
-import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
+import { DetailedHTMLProps, SelectHTMLAttributes } from "react";
 import * as Yup from "yup";
 
-export default function EditPeerReviewPage() {
-  const router = useRouter();
-  const peerReviewId = router.query.id;
-  const peerReview = usePeerReview({ id: peerReviewId as string });
-
+export default function AddChairpersonReviewPage() {
   const formik = useFormik({
     initialValues: {
+      departmentReviewId: "",
       q1_1: "",
       q1_2: "",
       q2_1: "",
@@ -43,6 +38,7 @@ export default function EditPeerReviewPage() {
       q8_3: "",
     },
     validationSchema: Yup.object({
+      departmentReviewId: Yup.string().required(),
       q1_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q1_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q2_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
@@ -72,54 +68,25 @@ export default function EditPeerReviewPage() {
     }),
     onSubmit: (values) => {
       axios
-        .put(`/api/peer_review/${peerReviewId}`, values)
+        .post("/api/chairperson_review", values)
         .then(() => {
-          alert("PeerReview Updated Successfully");
+          alert("ChairpersonReview Added Successfully");
         })
         .catch((error) => {
           alert(error.message);
         });
     },
   });
-
-  useEffect(() => {
-    if (!peerReview) return;
-
-    formik.setValues({
-      q1_1: peerReview.q1_1 as string,
-      q1_2: peerReview.q1_2 as string,
-      q2_1: peerReview.q2_1 as string,
-      q2_2: peerReview.q2_2 as string,
-      q2_3: peerReview.q2_3 as string,
-      q2_4: peerReview.q2_4 as string,
-      q3_1: peerReview.q3_1 as string,
-      q4_1: peerReview.q4_1 as string,
-      q4_2: peerReview.q4_2 as string,
-      q4_3: peerReview.q4_3 as string,
-      q5_1: peerReview.q5_1 as string,
-      q5_2: peerReview.q5_2 as string,
-      q5_3: peerReview.q5_3 as string,
-      q6_1: peerReview.q6_1 as string,
-      q6_2: peerReview.q6_2 as string,
-      q6_3: peerReview.q6_3 as string,
-      q6_4: peerReview.q6_4 as string,
-      q6_5: peerReview.q6_5 as string,
-      q7_1: peerReview.q7_1 as string,
-      q7_2: peerReview.q7_2 as string,
-      q7_3: peerReview.q7_3 as string,
-      q7_4: peerReview.q7_4 as string,
-      q7_5: peerReview.q7_5 as string,
-      q8_1: peerReview.q8_1 as string,
-      q8_2: peerReview.q8_2 as string,
-      q8_3: peerReview.q8_3 as string,
-    });
-  }, [peerReview]);
-
   return (
     <CrudLayout>
-      <h2>Add PeerReview</h2>
+      <h2>Add ChairpersonReview</h2>
 
       <form onSubmit={formik.handleSubmit}>
+        <input
+          type='text'
+          placeholder='departmentReviewId'
+          {...formik.getFieldProps("departmentReviewId")}
+        />
         <div>
           <p className='font-bold'>{ReviewSections.s1}</p>
           <p>{ReviewQuestions.q1_1}</p>

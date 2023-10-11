@@ -6,8 +6,14 @@ export default function Sidebar() {
   const activeFaculty = useContext(ActiveFacultyContext);
 
   return (
-    <div>
-      {activeFaculty && <Link href="/my_ims" className="underline">My IM's</Link>}
+    <div className='h-full overflow-y-auto'>
+      <h1 className='py-2 sticky top-0 bg-white shadow'>BUKSU IMD DMS</h1>
+
+      {activeFaculty && (
+        <Link href='/my_ims' className='underline'>
+          My IM's
+        </Link>
+      )}
     </div>
   );
 }

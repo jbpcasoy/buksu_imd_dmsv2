@@ -1,5 +1,5 @@
 import CrudLayout from "@/components/CrudLayout";
-import usePeerReview from "@/hooks/usePeerReview";
+import useChairpersonReview from "@/hooks/useChairpersonReview";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
@@ -8,10 +8,10 @@ import { useRouter } from "next/router";
 import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
 
-export default function EditPeerReviewPage() {
+export default function EditChairpersonReviewPage() {
   const router = useRouter();
-  const peerReviewId = router.query.id;
-  const peerReview = usePeerReview({ id: peerReviewId as string });
+  const chairpersonReviewId = router.query.id;
+  const chairpersonReview = useChairpersonReview({ id: chairpersonReviewId as string });
 
   const formik = useFormik({
     initialValues: {
@@ -72,9 +72,9 @@ export default function EditPeerReviewPage() {
     }),
     onSubmit: (values) => {
       axios
-        .put(`/api/peer_review/${peerReviewId}`, values)
+        .put(`/api/chairperson_review/${chairpersonReviewId}`, values)
         .then(() => {
-          alert("PeerReview Updated Successfully");
+          alert("ChairpersonReview Updated Successfully");
         })
         .catch((error) => {
           alert(error.message);
@@ -83,41 +83,41 @@ export default function EditPeerReviewPage() {
   });
 
   useEffect(() => {
-    if (!peerReview) return;
+    if (!chairpersonReview) return;
 
     formik.setValues({
-      q1_1: peerReview.q1_1 as string,
-      q1_2: peerReview.q1_2 as string,
-      q2_1: peerReview.q2_1 as string,
-      q2_2: peerReview.q2_2 as string,
-      q2_3: peerReview.q2_3 as string,
-      q2_4: peerReview.q2_4 as string,
-      q3_1: peerReview.q3_1 as string,
-      q4_1: peerReview.q4_1 as string,
-      q4_2: peerReview.q4_2 as string,
-      q4_3: peerReview.q4_3 as string,
-      q5_1: peerReview.q5_1 as string,
-      q5_2: peerReview.q5_2 as string,
-      q5_3: peerReview.q5_3 as string,
-      q6_1: peerReview.q6_1 as string,
-      q6_2: peerReview.q6_2 as string,
-      q6_3: peerReview.q6_3 as string,
-      q6_4: peerReview.q6_4 as string,
-      q6_5: peerReview.q6_5 as string,
-      q7_1: peerReview.q7_1 as string,
-      q7_2: peerReview.q7_2 as string,
-      q7_3: peerReview.q7_3 as string,
-      q7_4: peerReview.q7_4 as string,
-      q7_5: peerReview.q7_5 as string,
-      q8_1: peerReview.q8_1 as string,
-      q8_2: peerReview.q8_2 as string,
-      q8_3: peerReview.q8_3 as string,
+      q1_1: chairpersonReview.q1_1 as string,
+      q1_2: chairpersonReview.q1_2 as string,
+      q2_1: chairpersonReview.q2_1 as string,
+      q2_2: chairpersonReview.q2_2 as string,
+      q2_3: chairpersonReview.q2_3 as string,
+      q2_4: chairpersonReview.q2_4 as string,
+      q3_1: chairpersonReview.q3_1 as string,
+      q4_1: chairpersonReview.q4_1 as string,
+      q4_2: chairpersonReview.q4_2 as string,
+      q4_3: chairpersonReview.q4_3 as string,
+      q5_1: chairpersonReview.q5_1 as string,
+      q5_2: chairpersonReview.q5_2 as string,
+      q5_3: chairpersonReview.q5_3 as string,
+      q6_1: chairpersonReview.q6_1 as string,
+      q6_2: chairpersonReview.q6_2 as string,
+      q6_3: chairpersonReview.q6_3 as string,
+      q6_4: chairpersonReview.q6_4 as string,
+      q6_5: chairpersonReview.q6_5 as string,
+      q7_1: chairpersonReview.q7_1 as string,
+      q7_2: chairpersonReview.q7_2 as string,
+      q7_3: chairpersonReview.q7_3 as string,
+      q7_4: chairpersonReview.q7_4 as string,
+      q7_5: chairpersonReview.q7_5 as string,
+      q8_1: chairpersonReview.q8_1 as string,
+      q8_2: chairpersonReview.q8_2 as string,
+      q8_3: chairpersonReview.q8_3 as string,
     });
-  }, [peerReview]);
+  }, [chairpersonReview]);
 
   return (
     <CrudLayout>
-      <h2>Add PeerReview</h2>
+      <h2>Add ChairpersonReview</h2>
 
       <form onSubmit={formik.handleSubmit}>
         <div>

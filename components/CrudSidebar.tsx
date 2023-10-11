@@ -87,14 +87,34 @@ export default function CrudSidebar() {
       link: "/crud/submitted_peer_suggestion",
       label: "Submitted Peer Suggestion",
     },
+    {
+      link: "/crud/chairperson_review",
+      label: "Chairperson Review",
+    },
+    {
+      link: "/crud/chairperson_suggestion",
+      label: "Chairperson Suggestion",
+    },
+    {
+      link: "/crud/chairperson_suggestion_item",
+      label: "Chairperson Suggestion Item",
+    },
+    {
+      link: "/crud/submitted_chairperson_suggestion",
+      label: "Submitted Chairperson Suggestion",
+    },
   ];
   return (
-    <div className='flex flex-col'>
-      {items.map((item) => (
-        <Link href={item.link} className='underline' key={item.link}>
-          {item.label}
-        </Link>
-      ))}
+    <div className="h-full overflow-y-auto">
+      <h1 className="py-2 sticky top-0 bg-white shadow">BUKSU IMD DMS</h1>
+
+      <div className='flex flex-col'>
+        {items.map((item) => (
+          <Link href={item.link} className='underline' key={item.link}>
+            {item.label}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
