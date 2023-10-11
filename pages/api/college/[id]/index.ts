@@ -19,7 +19,7 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = collegeAbility({user});
+  const ability = collegeAbility({ user });
 
   const getHandler = async () => {
     const validator = Yup.object({
@@ -90,29 +90,18 @@ export default async function handler(
   };
 
   const putHandler = async () => {
-    const queryValidator = Yup.object({
-      id: Yup.string().required(),
-    });
-
-    try {
-      await queryValidator.validate(req.query);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error });
-    }
-
     try {
       ForbiddenError.from(ability).throwUnlessCan("update", "College");
     } catch (error) {
       return res.status(403).json({ error });
     }
 
-    const bodyValidator = Yup.object({
+    const validator = Yup.object({
       name: Yup.string().required(),
     });
 
     try {
-      await bodyValidator.validate(req.body);
+      await validator.validate(req.body);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -124,13 +113,13 @@ export default async function handler(
       console.error(error);
       return res.status(403).json({ error });
     }
-    const { id } = queryValidator.cast(req.query);
-    const { name } = bodyValidator.cast(req.body);
+    const { id } = req.query;
+    const { name } = validator.cast(req.body);
 
     try {
       const college = await prisma.college.update({
         where: {
-          id,
+          id: id as string
         },
         data: {
           name,

@@ -18,6 +18,7 @@ import {
   PeerReview,
   PeerSuggestion,
   PeerSuggestionItem,
+  SubmittedPeerSuggestion,
   User,
 } from "@prisma/client";
 
@@ -42,6 +43,7 @@ export type AppSubjects =
       PeerReview: PeerReview;
       PeerSuggestion: PeerSuggestion;
       PeerSuggestionItem: PeerSuggestionItem;
+      SubmittedPeerSuggestion: SubmittedPeerSuggestion;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

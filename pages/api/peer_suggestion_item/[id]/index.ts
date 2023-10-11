@@ -94,14 +94,14 @@ export default async function handler(
   };
 
   const putHandler = async () => {
-    const bodyValidator = Yup.object({
+    const validator = Yup.object({
       actionTaken: Yup.string().required(),
       remarks: Yup.string().optional(),
       suggestion: Yup.string().optional(),
     });
 
     try {
-      await bodyValidator.validate(req.body);
+      await validator.validate(req.body);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -117,7 +117,7 @@ export default async function handler(
       return res.status(403).json({ error });
     }
     const { id } = req.query;
-    const { actionTaken, remarks, suggestion } = bodyValidator.cast(req.body);
+    const { actionTaken, remarks, suggestion } = validator.cast(req.body);
 
     try {
       const peerSuggestionItem = await prisma.peerSuggestionItem.update({

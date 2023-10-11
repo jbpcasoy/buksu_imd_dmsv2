@@ -1,10 +1,9 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import prisma from "@/prisma/client";
-import userAbility from "@/services/ability/userAbility";
+import submittedPeerSuggestionAbility from "@/services/ability/submittedPeerReviewAbility";
 import getServerUser from "@/services/getServerUser";
+import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { ForbiddenError, subject } from "@casl/ability";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -16,16 +15,18 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
+    981;
   } catch (error) {
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = userAbility({ user });
+  const ability = submittedPeerSuggestionAbility({ user });
 
   const getHandler = async () => {
     const validator = Yup.object({
       id: Yup.string().required(),
     });
+
     try {
       await validator.validate(req.query);
     } catch (error) {
@@ -35,72 +36,58 @@ export default async function handler(
 
     const { id } = validator.cast(req.query);
     try {
-      const user = await prisma.user.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).User,
-            {
-              id: {
-                equals: id,
+      const submittedPeerSuggestion =
+        await prisma.submittedPeerSuggestion.findFirstOrThrow({
+          where: {
+            AND: [
+              accessibleBy(ability).SubmittedPeerSuggestion,
+              {
+                id: {
+                  equals: id,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
-      return res.json(user);
+      return res.json(submittedPeerSuggestion);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
     }
   };
 
-  const putHandler = async () => {
+  const deleteHandler = async () => {
     const validator = Yup.object({
-      name: Yup.string().required(),
+      id: Yup.string().required(),
     });
+
     try {
-      await validator.validate(req.body);
+      await validator.validate(req.query);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
     }
-    const { id } = req.query;
-    const { name } = validator.cast(req.body);
-
-    let userToUpdate;
-    try {
-      userToUpdate = await prisma.user.findFirstOrThrow({
-        where: {
-          id: {
-            equals: id as string,
-          },
-        },
-      });
-    } catch (error) {
-      return res.status(404).json({ error });
-    }
 
     try {
       ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        subject("User", userToUpdate)
+        "delete",
+        "SubmittedPeerSuggestion"
       );
     } catch (error) {
+      console.error(error);
       return res.status(403).json({ error });
     }
 
+    const { id } = validator.cast(req.query);
     try {
-      const user = await prisma.user.update({
+      const submittedPeerSuggestion = await prisma.submittedPeerSuggestion.delete({
         where: {
-          id: id as string,
-        },
-        data: {
-          name,
+          id,
         },
       });
 
-      return res.json(user);
+      return res.json(submittedPeerSuggestion);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -108,10 +95,10 @@ export default async function handler(
   };
 
   switch (req.method) {
+    case "DELETE":
+      return await deleteHandler();
     case "GET":
       return await getHandler();
-    case "PUT":
-      return await putHandler();
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }

@@ -268,7 +268,7 @@ model PeerSuggestion {
     PeerReview          PeerReview           @relation(fields: [peerReviewId], references: [id])
     peerReviewId        String               @unique
     PeerSuggestionItem  PeerSuggestionItem[]
-    SubmittedPeerReview SubmittedPeerReview?
+    SubmittedPeerSuggestion SubmittedPeerSuggestion?
 }
 
 model PeerSuggestionItem {
@@ -283,7 +283,7 @@ model PeerSuggestionItem {
     peerSuggestionId String
 }
 
-model SubmittedPeerReview {
+model SubmittedPeerSuggestion {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

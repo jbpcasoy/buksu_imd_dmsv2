@@ -90,7 +90,7 @@ export default async function handler(
   };
 
   const putHandler = async () => {
-    const bodyValidator = Yup.object({
+    const validator = Yup.object({
       q1_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q1_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q2_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
@@ -120,7 +120,7 @@ export default async function handler(
     });
 
     try {
-      await bodyValidator.validate(req.body);
+      await validator.validate(req.body);
     } catch (error) {
       console.error(error);
       return res.status(400).json({ error });
@@ -160,7 +160,7 @@ export default async function handler(
       q8_1,
       q8_2,
       q8_3,
-    } = bodyValidator.cast(req.body);
+    } = validator.cast(req.body);
 
     try {
       const peerReview = await prisma.peerReview.update({
