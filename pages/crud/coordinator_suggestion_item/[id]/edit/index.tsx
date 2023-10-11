@@ -26,7 +26,10 @@ export default function EditCoordinatorSuggestionItemPage() {
     }),
     onSubmit: (values) => {
       axios
-        .put(`/api/coordinator_suggestion_item/${coordinatorSuggestionItemId}`, values)
+        .put(
+          `/api/coordinator_suggestion_item/${coordinatorSuggestionItemId}`,
+          values
+        )
         .then(() => {
           alert("CoordinatorSuggestionItem Updated Successfully");
         })
@@ -49,6 +52,8 @@ export default function EditCoordinatorSuggestionItemPage() {
     return () => {
       subscribe = false;
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinatorSuggestionItem]);
 
   return (

@@ -113,6 +113,8 @@ export default function EditPeerReviewPage() {
       q8_2: peerReview.q8_2 as string,
       q8_3: peerReview.q8_3 as string,
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [peerReview]);
 
   return (

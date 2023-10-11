@@ -37,6 +37,8 @@ export default function IMEdit() {
       title: iM.title,
       type: iM.type,
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iM]);
 
   useEffect(() => {

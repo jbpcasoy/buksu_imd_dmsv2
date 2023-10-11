@@ -52,6 +52,8 @@ export default function EditChairpersonSuggestionItemPage() {
     return () => {
       subscribe = false;
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chairpersonSuggestionItem]);
 
   return (

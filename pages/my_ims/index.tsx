@@ -51,7 +51,7 @@ export default function MyIMsPage() {
         <tbody>
           {iMs.map((iM) => {
             return (
-              <tr>
+              <tr key={iM.id}>
                 <td>{iM.id}</td>
                 <td>{new Date(iM.createdAt).toLocaleString()}</td>
                 <td>{new Date(iM.updatedAt).toLocaleString()}</td>

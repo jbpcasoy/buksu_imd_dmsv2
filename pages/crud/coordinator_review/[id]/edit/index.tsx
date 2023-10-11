@@ -11,7 +11,9 @@ import * as Yup from "yup";
 export default function EditCoordinatorReviewPage() {
   const router = useRouter();
   const coordinatorReviewId = router.query.id;
-  const coordinatorReview = useCoordinatorReview({ id: coordinatorReviewId as string });
+  const coordinatorReview = useCoordinatorReview({
+    id: coordinatorReviewId as string,
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -113,6 +115,8 @@ export default function EditCoordinatorReviewPage() {
       q8_2: coordinatorReview.q8_2 as string,
       q8_3: coordinatorReview.q8_3 as string,
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinatorReview]);
 
   return (

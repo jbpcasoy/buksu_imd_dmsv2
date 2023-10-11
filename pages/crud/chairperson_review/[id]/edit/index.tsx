@@ -113,6 +113,8 @@ export default function EditChairpersonReviewPage() {
       q8_2: chairpersonReview.q8_2 as string,
       q8_3: chairpersonReview.q8_3 as string,
     });
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chairpersonReview]);
 
   return (

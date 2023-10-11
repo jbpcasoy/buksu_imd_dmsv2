@@ -19,7 +19,7 @@ export const config = {
   },
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   let user: User;
   try {
     user = await getServerUser(req, res);

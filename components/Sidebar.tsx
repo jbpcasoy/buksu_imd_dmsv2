@@ -11,7 +11,7 @@ export default function Sidebar() {
 
       {activeFaculty && (
         <Link href='/my_ims' className='underline'>
-          My IM's
+          My IM&apos;s
         </Link>
       )}
     </div>

@@ -42,6 +42,8 @@ export default function EditCollegePage() {
     return () => {
       subscribe = false;
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [college])
 
 

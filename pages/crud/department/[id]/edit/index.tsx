@@ -9,7 +9,7 @@ import * as Yup from "yup";
 export default function EditDepartmentPage() {
   const router = useRouter();
   const departmentId = router.query.id;
-  const department = useDepartment({id: departmentId as string})
+  const department = useDepartment({ id: departmentId as string });
 
   const formik = useFormik({
     initialValues: {
@@ -30,20 +30,20 @@ export default function EditDepartmentPage() {
     },
   });
 
-  
   useEffect(() => {
-    if(!department) return;
+    if (!department) return;
     let subscribe = true;
-    
+
     formik.setValues({
-      name: department.name
-    })
+      name: department.name,
+    });
 
     return () => {
       subscribe = false;
-    }
-  }, [department])
+    };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [department]);
 
   return (
     <CrudLayout>
