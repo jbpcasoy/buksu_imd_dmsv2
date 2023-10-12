@@ -51,6 +51,7 @@ export default async function handler(
         q8_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q8_3: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         departmentReviewId: Yup.string().required(),
+        activeCoordinatorId: Yup.string().required(),
       });
       await validator.validate(req.body);
 
@@ -87,7 +88,19 @@ export default async function handler(
         q8_2,
         q8_3,
         departmentReviewId,
+        activeCoordinatorId,
       } = validator.cast(req.body);
+
+      const coordinator = await prisma.coordinator.findFirstOrThrow({
+        where: {
+          ActiveCoordinator: {
+            id: {
+              equals: activeCoordinatorId,
+            },
+          },
+        },
+      });
+
       const coordinatorReview = await prisma.coordinatorReview.create({
         data: {
           q1_1,
@@ -119,6 +132,11 @@ export default async function handler(
           DepartmentReview: {
             connect: {
               id: departmentReviewId,
+            },
+          },
+          Coordinator: {
+            connect: {
+              id: coordinator.id,
             },
           },
         },

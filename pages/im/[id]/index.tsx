@@ -5,12 +5,14 @@ import Link from "next/link";
 import axios from "axios";
 import { ChangeEventHandler, useState } from "react";
 import { DepartmentReview, IMFile } from "@prisma/client";
+import useIMStatus from "@/hooks/useIMStatus";
 
 export default function ViewIM() {
   const router = useRouter();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
   const [state, setState] = useState<File | null>();
+  const iMStatus = useIMStatus({ id: iMId as string });
 
   const deleteHandler = (id: string) => {
     axios.delete(`/api/im/${id}`).then(() => {
@@ -41,6 +43,9 @@ export default function ViewIM() {
       })
       .catch((err) => {
         alert(err?.response?.data?.error?.message ?? err.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -69,10 +74,46 @@ export default function ViewIM() {
       <p>facultyId: {iM.facultyId}</p>
       <p>title: {iM.title}</p>
       <p>type: {iM.type}</p>
-      <input type='file' onChange={onFileChange} />
-      <button className='border rounded' onClick={uploadFileHandler}>
-        Submit for review
-      </button>
+      {iMStatus === "IMPLEMENTATION_DRAFT" && (
+        <div>
+          <input type='file' onChange={onFileChange} />
+          <button className='border rounded' onClick={uploadFileHandler}>
+            Submit for review
+          </button>
+        </div>
+      )}
+
+      <div className="space-x-2">
+        {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
+          <Link
+            href={`/im/${iM.id}/peer_review`}
+            className='border rounded'
+            onClick={uploadFileHandler}
+          >
+            Peer Review
+          </Link>
+        )}
+
+        {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
+          <Link
+            href={`/im/${iM.id}/coordinator_review`}
+            className='border rounded'
+            onClick={uploadFileHandler}
+          >
+            Coordinator Review
+          </Link>
+        )}
+
+        {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
+          <Link
+            href={`/im/${iM.id}/chairperson_review`}
+            className='border rounded'
+            onClick={uploadFileHandler}
+          >
+            Chairperson Review
+          </Link>
+        )}
+      </div>
     </MainLayout>
   );
 }

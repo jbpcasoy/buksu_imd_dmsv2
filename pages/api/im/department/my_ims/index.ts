@@ -22,15 +22,15 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-    const validator = Yup.object({
-      take: Yup.number().required(),
-      skip: Yup.number().required(),
-    });
+      const validator = Yup.object({
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
+      });
 
       await validator.validate(req.query);
 
-    let ability: AppAbility;
-    let userActiveFaculty: ActiveFaculty;
+      let ability: AppAbility;
+      let userActiveFaculty: ActiveFaculty;
       userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
         where: {
           Faculty: {
@@ -42,7 +42,7 @@ export default async function handler(
       });
       ability = iMAbility({ user });
 
-    const { skip, take } = validator.cast(req.query);
+      const { skip, take } = validator.cast(req.query);
       const iMs = await prisma.iM.findMany({
         skip,
         take,
@@ -53,6 +53,15 @@ export default async function handler(
               Faculty: {
                 id: {
                   equals: userActiveFaculty.facultyId,
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  DepartmentReview: {
+                    isNot: null,
+                  },
                 },
               },
             },
@@ -70,16 +79,26 @@ export default async function handler(
                 },
               },
             },
+            {
+              IMFile: {
+                none: {
+                  DepartmentReview: {
+                    isNot: null,
+                  },
+                },
+              },
+            },
           ],
         },
       });
 
-      return res.json({ iMs, count });} catch (error: any) {
-        console.error(error);
-        return res
-          .status(400)
-          .json({ error: { message: error?.message ?? "Server Error" } });
-      }
+      return res.json({ iMs, count });
+    } catch (error: any) {
+      console.error(error);
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
+    }
   };
 
   switch (req.method) {

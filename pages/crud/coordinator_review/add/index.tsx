@@ -9,6 +9,7 @@ import * as Yup from "yup";
 export default function AddCoordinatorReviewPage() {
   const formik = useFormik({
     initialValues: {
+      activeCoordinatorId: "",
       departmentReviewId: "",
       q1_1: "",
       q1_2: "",
@@ -38,6 +39,7 @@ export default function AddCoordinatorReviewPage() {
       q8_3: "",
     },
     validationSchema: Yup.object({
+      activeCoordinatorId: Yup.string().required(),
       departmentReviewId: Yup.string().required(),
       q1_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q1_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
@@ -82,6 +84,11 @@ export default function AddCoordinatorReviewPage() {
       <h2>Add CoordinatorReview</h2>
 
       <form onSubmit={formik.handleSubmit}>
+        <input
+          type='text'
+          placeholder='activeCoordinatorId'
+          {...formik.getFieldProps("activeCoordinatorId")}
+        />
         <input
           type='text'
           placeholder='departmentReviewId'

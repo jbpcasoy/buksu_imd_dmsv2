@@ -38,6 +38,7 @@ export default function PeerReviewsPage() {
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>departmentReviewId</th>
+              <th>facultyId</th>
               <th>action</th>
             </tr>
           </thead>
@@ -54,6 +55,14 @@ export default function PeerReviewsPage() {
                       className='underline'
                     >
                       {peerReview.departmentReviewId}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/crud/faculty/${peerReview.facultyId}`}
+                      className='underline'
+                    >
+                      {peerReview.facultyId}
                     </Link>
                   </td>
                   <td>

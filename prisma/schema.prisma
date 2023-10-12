@@ -89,6 +89,7 @@ model Faculty {
     Chairperson   Chairperson?
     Coordinator   Coordinator?
     Dean          Dean?
+    PeerReview    PeerReview[]
 
     @@unique([departmentId, userId])
 }
@@ -140,9 +141,10 @@ model Chairperson {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty           Faculty            @relation(fields: [facultyId], references: [id])
-    facultyId         String             @unique
+    Faculty           Faculty             @relation(fields: [facultyId], references: [id])
+    facultyId         String              @unique
     ActiveChairperson ActiveChairperson?
+    ChairpersonReview ChairpersonReview[]
 }
 
 model Coordinator {
@@ -150,9 +152,10 @@ model Coordinator {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty           Faculty            @relation(fields: [facultyId], references: [id])
-    facultyId         String             @unique
+    Faculty           Faculty             @relation(fields: [facultyId], references: [id])
+    facultyId         String              @unique
     ActiveCoordinator ActiveCoordinator?
+    CoordinatorReview CoordinatorReview[]
 }
 
 model Dean {
@@ -249,6 +252,8 @@ model PeerReview {
     PeerSuggestion     PeerSuggestion?
     DepartmentReview   DepartmentReview @relation(fields: [departmentReviewId], references: [id])
     departmentReviewId String           @unique
+    Faculty            Faculty          @relation(fields: [facultyId], references: [id])
+    facultyId          String
 }
 
 model PeerSuggestion {
@@ -318,6 +323,8 @@ model ChairpersonReview {
     ChairpersonSuggestion ChairpersonSuggestion?
     DepartmentReview      DepartmentReview       @relation(fields: [departmentReviewId], references: [id])
     departmentReviewId    String                 @unique
+    Chairperson           Chairperson            @relation(fields: [chairpersonId], references: [id])
+    chairpersonId         String
 }
 
 model ChairpersonSuggestion {
@@ -387,6 +394,8 @@ model CoordinatorReview {
     CoordinatorSuggestion CoordinatorSuggestion?
     DepartmentReview      DepartmentReview       @relation(fields: [departmentReviewId], references: [id])
     departmentReviewId    String                 @unique
+    Coordinator           Coordinator            @relation(fields: [coordinatorId], references: [id])
+    coordinatorId         String
 }
 
 model CoordinatorSuggestion {

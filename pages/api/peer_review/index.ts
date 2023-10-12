@@ -51,6 +51,7 @@ export default async function handler(
         q8_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q8_3: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         departmentReviewId: Yup.string().required(),
+        activeFacultyId: Yup.string().required(),
       });
       await validator.validate(req.body);
 
@@ -84,7 +85,19 @@ export default async function handler(
         q8_2,
         q8_3,
         departmentReviewId,
+        activeFacultyId,
       } = validator.cast(req.body);
+
+      const faculty = await prisma.faculty.findFirstOrThrow({
+        where: {
+          ActiveFaculty: {
+            id: {
+              equals: activeFacultyId,
+            },
+          },
+        },
+      });
+
       const peerReview = await prisma.peerReview.create({
         data: {
           q1_1,
@@ -116,6 +129,11 @@ export default async function handler(
           DepartmentReview: {
             connect: {
               id: departmentReviewId,
+            },
+          },
+          Faculty: {
+            connect: {
+              id: faculty.id,
             },
           },
         },

@@ -9,6 +9,7 @@ import * as Yup from "yup";
 export default function AddPeerReviewPage() {
   const formik = useFormik({
     initialValues: {
+      activeFacultyId: "",
       departmentReviewId: "",
       q1_1: "",
       q1_2: "",
@@ -38,6 +39,7 @@ export default function AddPeerReviewPage() {
       q8_3: "",
     },
     validationSchema: Yup.object({
+      activeFacultyId: Yup.string().required(),
       departmentReviewId: Yup.string().required(),
       q1_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q1_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
@@ -82,6 +84,11 @@ export default function AddPeerReviewPage() {
       <h2>Add PeerReview</h2>
 
       <form onSubmit={formik.handleSubmit}>
+        <input
+          type='text'
+          placeholder='activeFacultyId'
+          {...formik.getFieldProps("activeFacultyId")}
+        />
         <input
           type='text'
           placeholder='departmentReviewId'

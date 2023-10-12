@@ -38,6 +38,7 @@ export default function ChairpersonReviewsPage() {
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>departmentReviewId</th>
+              <th>chairpersonId</th>
               <th>action</th>
             </tr>
           </thead>
@@ -54,6 +55,13 @@ export default function ChairpersonReviewsPage() {
                       className='underline'
                     >
                       {chairpersonReview.departmentReviewId}
+                    </Link>
+                  </td><td>
+                    <Link
+                      href={`/crud/chairperson/${chairpersonReview.chairpersonId}`}
+                      className='underline'
+                    >
+                      {chairpersonReview.chairpersonId}
                     </Link>
                   </td>
                   <td>

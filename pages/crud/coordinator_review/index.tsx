@@ -38,6 +38,7 @@ export default function CoordinatorReviewsPage() {
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>departmentReviewId</th>
+              <th>coordinatorId</th>
               <th>action</th>
             </tr>
           </thead>
@@ -54,6 +55,14 @@ export default function CoordinatorReviewsPage() {
                       className='underline'
                     >
                       {coordinatorReview.departmentReviewId}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/crud/coordinator/${coordinatorReview.coordinatorId}`}
+                      className='underline'
+                    >
+                      {coordinatorReview.coordinatorId}
                     </Link>
                   </td>
                   <td>

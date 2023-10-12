@@ -6,12 +6,18 @@ export default function Sidebar() {
   const activeFaculty = useContext(ActiveFacultyContext);
 
   return (
-    <div className='h-full overflow-y-auto'>
+    <div className='h-full overflow-y-auto flex flex-col'>
       <h1 className='py-2 sticky top-0 bg-white shadow'>BUKSU IMD DMS</h1>
 
+      <p className='font-bold'>Department</p>
       {activeFaculty && (
-        <Link href='/my_ims' className='underline'>
+        <Link href='/department/my_ims' className='underline'>
           My IM&apos;s
+        </Link>
+      )}
+      {activeFaculty && (
+        <Link href='/department/to_review' className='underline'>
+          To Review
         </Link>
       )}
     </div>

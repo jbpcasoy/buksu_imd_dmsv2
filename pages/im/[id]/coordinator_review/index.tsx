@@ -1,16 +1,21 @@
-import CrudLayout from "@/components/CrudLayout";
+import MainLayout from "@/components/MainLayout";
+import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
+import useDepartmentReviewByIM from "@/hooks/useDepartmentReviewByIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import { DetailedHTMLProps, SelectHTMLAttributes } from "react";
 import * as Yup from "yup";
 
-export default function AddChairpersonReviewPage() {
+export default function AddCoordinatorReviewPage() {
+  const router = useRouter();
+  const iMId = router.query.id;
+  const departmentReview = useDepartmentReviewByIM({ id: iMId as string });
+  const activeCoordinator = useActiveCoordinatorMe();
   const formik = useFormik({
     initialValues: {
-      activeChairpersonId: "",
-      departmentReviewId: "",
       q1_1: "",
       q1_2: "",
       q2_1: "",
@@ -39,8 +44,6 @@ export default function AddChairpersonReviewPage() {
       q8_3: "",
     },
     validationSchema: Yup.object({
-      activeChairpersonId: Yup.string().required(),
-      departmentReviewId: Yup.string().required(),
       q1_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q1_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q2_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
@@ -69,31 +72,34 @@ export default function AddChairpersonReviewPage() {
       q8_3: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
     }),
     onSubmit: (values) => {
+      if (!departmentReview || !activeCoordinator) {
+        return;
+      }
+
       axios
-        .post("/api/chairperson_review", values)
+        .post("/api/coordinator_review", {
+          ...values,
+          departmentReviewId: departmentReview.id,
+          activeCoordinatorId: activeCoordinator.id,
+        })
         .then(() => {
-          alert("ChairpersonReview Added Successfully");
+          alert("CoordinatorReview Added Successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
         });
     },
   });
+
+  if (!departmentReview || !activeCoordinator) {
+    return null;
+  }
+
   return (
-    <CrudLayout>
-      <h2>Add ChairpersonReview</h2>
+    <MainLayout>
+      <h2>Coordinator Review</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='activeChairpersonId'
-          {...formik.getFieldProps("activeChairpersonId")}
-        />
-        <input
-          type='text'
-          placeholder='departmentReviewId'
-          {...formik.getFieldProps("departmentReviewId")}
-        />
         <div>
           <p className='font-bold'>{ReviewSections.s1}</p>
           <p>{ReviewQuestions.q1_1}</p>
@@ -165,7 +171,7 @@ export default function AddChairpersonReviewPage() {
         </div>
         <input type='submit' value='Submit' className='rounded border' />
       </form>
-    </CrudLayout>
+    </MainLayout>
   );
 }
 
