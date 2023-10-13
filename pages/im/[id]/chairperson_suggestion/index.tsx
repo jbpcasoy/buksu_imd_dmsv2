@@ -8,11 +8,14 @@ import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import ChairpersonSuggestionItem from "@/components/ChairpersonSuggestionItem";
 
 export default function ChairpersonSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const chairpersonSuggestion = useChairpersonSuggestionMe({ id: iMId as string });
+  const chairpersonSuggestion = useChairpersonSuggestionMe({
+    id: iMId as string,
+  });
   const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
   const [state, setState] = useState<useChairpersonSuggestionItemsParams>({
     skip: 0,
@@ -53,7 +56,7 @@ export default function ChairpersonSuggestionPage() {
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
       remarks: Yup.string(),
-      pageNumber: Yup.number().required(),
+      pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
       if (!chairpersonSuggestion) {
@@ -111,17 +114,20 @@ export default function ChairpersonSuggestionPage() {
       </form>
       <div>
         <h3>Suggestions</h3>
-        {chairpersonSuggestionItems.chairpersonSuggestionItems.map((chairpersonSuggestionItem) => {
-          return (
-            <div className='border rounded'>
-              <p>suggestion: {chairpersonSuggestionItem.suggestion}</p>
-              <p>pageNumber: {chairpersonSuggestionItem.pageNumber}</p>
-              <p>remarks: {chairpersonSuggestionItem.remarks}</p>
-            </div>
-          );
-        })}
+        {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
+          (chairpersonSuggestionItem) => {
+            return (
+              <ChairpersonSuggestionItem
+                chairpersonSuggestionItem={chairpersonSuggestionItem}
+                key={chairpersonSuggestionItem.id}
+              />
+            );
+          }
+        )}
       </div>
-      <button className='rounded border' onClick={handleSubmitReview}>Submit Review</button>
+      <button className='rounded border' onClick={handleSubmitReview}>
+        Submit Review
+      </button>
     </div>
   );
 }

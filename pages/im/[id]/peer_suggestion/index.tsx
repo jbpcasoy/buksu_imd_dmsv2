@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import PeerSuggestionItem from "@/components/PeerSuggestionItem";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
@@ -53,7 +54,7 @@ export default function PeerSuggestionPage() {
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
       remarks: Yup.string(),
-      pageNumber: Yup.number().required(),
+      pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
       if (!peerSuggestion) {
@@ -113,15 +114,16 @@ export default function PeerSuggestionPage() {
         <h3>Suggestions</h3>
         {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
           return (
-            <div className='border rounded'>
-              <p>suggestion: {peerSuggestionItem.suggestion}</p>
-              <p>pageNumber: {peerSuggestionItem.pageNumber}</p>
-              <p>remarks: {peerSuggestionItem.remarks}</p>
-            </div>
+            <PeerSuggestionItem
+              peerSuggestionItem={peerSuggestionItem}
+              key={peerSuggestionItem.id}
+            />
           );
         })}
       </div>
-      <button className='rounded border' onClick={handleSubmitReview}>Submit Review</button>
+      <button className='rounded border' onClick={handleSubmitReview}>
+        Submit Review
+      </button>
     </div>
   );
 }

@@ -98,7 +98,7 @@ export default function AddCoordinatorReviewPage() {
       return;
     }
 
-    router.replace(`/im/${iMId}/coordinator_suggestion`)
+    router.replace(`/im/${iMId}/chairperson_suggestion`)
   }, [coordinatorReview]);
 
   if (!departmentReview || !activeFaculty) {
