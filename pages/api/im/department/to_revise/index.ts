@@ -40,15 +40,6 @@ export default async function handler(
           },
         },
       });
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              id: userActiveFaculty.facultyId,
-            },
-          },
-        },
-      });
       ability = iMAbility({ user });
 
       const { skip, take } = validator.cast(req.query);
@@ -60,10 +51,8 @@ export default async function handler(
             accessibleBy(ability).IM,
             {
               Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
+                id: {
+                  equals: userActiveFaculty.facultyId,
                 },
               },
             },
@@ -85,6 +74,51 @@ export default async function handler(
                 },
               },
             },
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    PeerReview: {
+                      PeerSuggestion: {
+                        SubmittedPeerSuggestion: {
+                          isNot: null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    ChairpersonReview: {
+                      ChairpersonSuggestion: {
+                        SubmittedChairpersonSuggestion: {
+                          isNot: null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    CoordinatorReview: {
+                      CoordinatorSuggestion: {
+                        SubmittedCoordinatorSuggestion: {
+                          isNot: null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           ],
         },
       });
@@ -94,17 +128,15 @@ export default async function handler(
             accessibleBy(ability).IM,
             {
               Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
+                id: {
+                  equals: userActiveFaculty.facultyId,
                 },
               },
             },
             {
               IMFile: {
                 some: {
-                  DepartmentReview: {
+                  DepartmentRevision: {
                     isNot: null,
                   },
                 },
@@ -119,6 +151,51 @@ export default async function handler(
                 },
               },
             },
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    PeerReview: {
+                      PeerSuggestion: {
+                        SubmittedPeerSuggestion: {
+                          isNot: null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    ChairpersonReview: {
+                      ChairpersonSuggestion: {
+                        SubmittedChairpersonSuggestion: {
+                          isNot: null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    CoordinatorReview: {
+                      CoordinatorSuggestion: {
+                        SubmittedCoordinatorSuggestion: {
+                          isNot: null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           ],
         },
       });

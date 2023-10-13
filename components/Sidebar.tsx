@@ -20,6 +20,11 @@ export default function Sidebar() {
           To Review
         </Link>
       )}
+      {activeFaculty && (
+        <Link href='/department/to_revise' className='underline'>
+          To Revise
+        </Link>
+      )}
     </div>
   );
 }

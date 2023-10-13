@@ -49,7 +49,7 @@ export default async function handler(
         },
       });
 
-      const SubmittedPeerSuggestion =
+      const submittedPeerSuggestion =
         await prisma.submittedPeerSuggestion.findFirst({
           where: {
             PeerSuggestion: {
@@ -64,7 +64,7 @@ export default async function handler(
           },
         });
 
-      const SubmittedCoordinatorSuggestion =
+      const submittedCoordinatorSuggestion =
         await prisma.submittedCoordinatorSuggestion.findFirst({
           where: {
             CoordinatorSuggestion: {
@@ -79,7 +79,7 @@ export default async function handler(
           },
         });
 
-      const SubmittedChairpersonSuggestion =
+      const submittedChairpersonSuggestion =
         await prisma.submittedChairpersonSuggestion.findFirst({
           where: {
             ChairpersonSuggestion: {
@@ -101,10 +101,19 @@ export default async function handler(
        * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator, and suggestion
        */
 
+      console.log({
+        iM,
+        departmentReview,
+        submittedChairpersonSuggestion,
+        submittedCoordinatorSuggestion,
+        submittedPeerSuggestion,
+      });
+
       if (
-        SubmittedPeerSuggestion &&
-        SubmittedCoordinatorSuggestion &&
-        SubmittedChairpersonSuggestion
+        departmentReview &&
+        submittedPeerSuggestion &&
+        submittedCoordinatorSuggestion &&
+        submittedChairpersonSuggestion
       ) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVIEWED");
       } else if (departmentReview) {

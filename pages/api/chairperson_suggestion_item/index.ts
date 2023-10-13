@@ -68,12 +68,13 @@ export default async function handler(
     }
   };
 
+ 
   const getHandler = async () => {
     try {
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
-        "filter[name]": Yup.string().optional(),
+        "filter[chairpersonSuggestionId]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -81,19 +82,36 @@ export default async function handler(
       const {
         skip,
         take,
-        "filter[name]": filterName,
+        "filter[chairpersonSuggestionId]": filterChairpersonSuggestionId,
       } = validator.cast(req.query);
-      const chairpersonSuggestionItems =
-        await prisma.chairpersonSuggestionItem.findMany({
-          skip,
-          take,
-          where: {
-            AND: [accessibleBy(ability).ChairpersonSuggestionItem],
-          },
-        });
+      const chairpersonSuggestionItems = await prisma.chairpersonSuggestionItem.findMany({
+        skip,
+        take,
+        where: {
+          AND: [
+            accessibleBy(ability).ChairpersonSuggestionItem,
+            {
+              ChairpersonSuggestion: {
+                id: {
+                  equals: filterChairpersonSuggestionId,
+                },
+              },
+            },
+          ],
+        },
+      });
       const count = await prisma.chairpersonSuggestionItem.count({
         where: {
-          AND: [accessibleBy(ability).ChairpersonSuggestionItem],
+          AND: [
+            accessibleBy(ability).ChairpersonSuggestionItem,
+            {
+              ChairpersonSuggestion: {
+                id: {
+                  equals: filterChairpersonSuggestionId,
+                },
+              },
+            },
+          ],
         },
       });
 

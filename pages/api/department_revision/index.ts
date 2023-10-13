@@ -96,11 +96,6 @@ export default async function handler(
 
       const departmentRevision = await prisma.departmentRevision.create({
         data: {
-          DepartmentReview: {
-            connect: {
-              id: departmentReview.id,
-            },
-          },
           IMFile: {
             connect: {
               id: iMFileId,

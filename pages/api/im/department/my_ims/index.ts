@@ -56,15 +56,6 @@ export default async function handler(
                 },
               },
             },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    isNot: null,
-                  },
-                },
-              },
-            },
           ],
         },
       });
@@ -76,15 +67,6 @@ export default async function handler(
               Faculty: {
                 id: {
                   equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    isNot: null,
-                  },
                 },
               },
             },

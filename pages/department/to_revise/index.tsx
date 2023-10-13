@@ -1,15 +1,15 @@
 import MainLayout from "@/components/MainLayout";
-import useMyIMs from "@/hooks/useMyIMs";
+import useToRevise from "@/hooks/useToRevise";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function MyIMsPage() {
+export default function ToReviewPage() {
   const [state, setState] = useState({
     take: 10,
     skip: 0,
   });
 
-  const { iMs, count } = useMyIMs(state);
+  const { iMs, count } = useToRevise(state);
 
   const nextHandler = () => {
     setState((prev) => {
@@ -30,10 +30,7 @@ export default function MyIMsPage() {
   return (
     <MainLayout>
       <div className='flex'>
-        <h2 className='flex-1'>My IMs</h2>
-        <Link href='/im/add' className='border rounded'>
-          Add
-        </Link>
+        <h2 className='flex-1'>To Revise</h2>
       </div>
       <table className='table-auto w-full'>
         <thead>

@@ -86,6 +86,7 @@ export default function AddPeerReviewPage() {
         })
         .then(() => {
           alert("PeerReview Added Successfully");
+          router.push(`/im/${iMId}/peer_suggestion`)
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

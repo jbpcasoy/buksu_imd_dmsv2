@@ -49,6 +49,31 @@ export default function ViewIM() {
       });
   };
 
+  const submitForEndorsementHandler = async () => {
+    if (!state || !iMId) return;
+
+    const formData = new FormData();
+    formData.append("file", state);
+    formData.append("iMId", iMId as string);
+    return axios
+      .post<IMFile>("/api/im_file", formData)
+      .then(async (res) => {
+        return axios
+          .post<DepartmentReview>("/api/department_revision/", {
+            iMFileId: res.data.id,
+          })
+          .then(() => {
+            alert("IM has been submitted for review");
+          });
+      })
+      .catch((err) => {
+        alert(err?.response?.data?.error?.message ?? err.message);
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
   if (!iM) return null;
 
   return (
@@ -114,7 +139,10 @@ export default function ViewIM() {
       {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" && (
         <div>
           <input type='file' onChange={onFileChange} />
-          <button className='border rounded'>
+          <button
+            className='border rounded'
+            onClick={submitForEndorsementHandler}
+          >
             Submit for endorsement
           </button>
         </div>

@@ -68,7 +68,7 @@ export default async function handler(
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
-        "filter[name]": Yup.string().optional(),
+        "filter[peerSuggestionId]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -76,18 +76,36 @@ export default async function handler(
       const {
         skip,
         take,
-        "filter[name]": filterName,
+        "filter[peerSuggestionId]": filterPeerSuggestionId,
       } = validator.cast(req.query);
       const peerSuggestionItems = await prisma.peerSuggestionItem.findMany({
         skip,
         take,
         where: {
-          AND: [accessibleBy(ability).PeerSuggestionItem],
+          AND: [
+            accessibleBy(ability).PeerSuggestionItem,
+            {
+              PeerSuggestion: {
+                id: {
+                  equals: filterPeerSuggestionId,
+                },
+              },
+            },
+          ],
         },
       });
       const count = await prisma.peerSuggestionItem.count({
         where: {
-          AND: [accessibleBy(ability).PeerSuggestionItem],
+          AND: [
+            accessibleBy(ability).PeerSuggestionItem,
+            {
+              PeerSuggestion: {
+                id: {
+                  equals: filterPeerSuggestionId,
+                },
+              },
+            },
+          ],
         },
       });
 

@@ -9,19 +9,21 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import ChairpersonSuggestionItem from "@/components/ChairpersonSuggestionItem";
+import useChairpersonSuggestionItemsOwn, {
+  useChairpersonSuggestionItemsOwnParams,
+} from "@/hooks/useChairpersonSuggestionItemsOwn";
+import MainLayout from "@/components/MainLayout";
 
 export default function ChairpersonSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const chairpersonSuggestion = useChairpersonSuggestionMe({
-    id: iMId as string,
-  });
+  const chairpersonSuggestion = useChairpersonSuggestionMe({ id: iMId as string });
   const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
-  const [state, setState] = useState<useChairpersonSuggestionItemsParams>({
+  const [state, setState] = useState<useChairpersonSuggestionItemsOwnParams>({
     skip: 0,
     take: 10,
   });
-  const chairpersonSuggestionItems = useChairpersonSuggestionItems(state);
+  const chairpersonSuggestionItems = useChairpersonSuggestionItemsOwn(state);
   const handleSubmitReview = () => {
     if (!chairpersonSuggestion) return;
     axios
@@ -41,9 +43,7 @@ export default function ChairpersonSuggestionPage() {
 
     setState((prev) => ({
       ...prev,
-      filter: {
-        chairpersonSuggestionId: chairpersonSuggestion.id,
-      },
+      id: chairpersonSuggestion.id,
     }));
   }, [chairpersonSuggestion]);
 
@@ -94,40 +94,43 @@ export default function ChairpersonSuggestionPage() {
   }, [chairpersonReview, chairpersonSuggestion]);
 
   return (
-    <div>
-      <h2>Chairperson Review</h2>
-      <form noValidate onSubmit={formik.handleSubmit}>
-        <textarea
-          placeholder='suggestion'
-          {...formik.getFieldProps("suggestion")}
-        />
-        <br />
-        <input
-          type='number'
-          placeholder='pageNumber'
-          {...formik.getFieldProps("pageNumber")}
-        />
-        <br />
-        <textarea placeholder='remarks' {...formik.getFieldProps("remarks")} />
-        <br />
-        <input type='submit' value='Submit' className='border rounded' />
-      </form>
+    <MainLayout>
       <div>
-        <h3>Suggestions</h3>
-        {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
-          (chairpersonSuggestionItem) => {
+        <h2>Chairperson Review</h2>
+        <form noValidate onSubmit={formik.handleSubmit}>
+          <textarea
+            placeholder='suggestion'
+            {...formik.getFieldProps("suggestion")}
+          />
+          <br />
+          <input
+            type='number'
+            placeholder='pageNumber'
+            {...formik.getFieldProps("pageNumber")}
+          />
+          <br />
+          <textarea
+            placeholder='remarks'
+            {...formik.getFieldProps("remarks")}
+          />
+          <br />
+          <input type='submit' value='Submit' className='border rounded' />
+        </form>
+        <div>
+          <h3>Suggestions</h3>
+          {chairpersonSuggestionItems.chairpersonSuggestionItems.map((chairpersonSuggestionItem) => {
             return (
               <ChairpersonSuggestionItem
                 chairpersonSuggestionItem={chairpersonSuggestionItem}
                 key={chairpersonSuggestionItem.id}
               />
             );
-          }
-        )}
+          })}
+        </div>
+        <button className='rounded border' onClick={handleSubmitReview}>
+          Submit Review
+        </button>
       </div>
-      <button className='rounded border' onClick={handleSubmitReview}>
-        Submit Review
-      </button>
-    </div>
+    </MainLayout>
   );
 }

@@ -64,12 +64,13 @@ export default async function handler(
     }
   };
 
+
   const getHandler = async () => {
     try {
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
-        "filter[name]": Yup.string().optional(),
+        "filter[coordinatorSuggestionId]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -77,19 +78,36 @@ export default async function handler(
       const {
         skip,
         take,
-        "filter[name]": filterName,
+        "filter[coordinatorSuggestionId]": filterCoordinatorSuggestionId,
       } = validator.cast(req.query);
-      const coordinatorSuggestionItems =
-        await prisma.coordinatorSuggestionItem.findMany({
-          skip,
-          take,
-          where: {
-            AND: [accessibleBy(ability).CoordinatorSuggestionItem],
-          },
-        });
+      const coordinatorSuggestionItems = await prisma.coordinatorSuggestionItem.findMany({
+        skip,
+        take,
+        where: {
+          AND: [
+            accessibleBy(ability).CoordinatorSuggestionItem,
+            {
+              CoordinatorSuggestion: {
+                id: {
+                  equals: filterCoordinatorSuggestionId,
+                },
+              },
+            },
+          ],
+        },
+      });
       const count = await prisma.coordinatorSuggestionItem.count({
         where: {
-          AND: [accessibleBy(ability).CoordinatorSuggestionItem],
+          AND: [
+            accessibleBy(ability).CoordinatorSuggestionItem,
+            {
+              CoordinatorSuggestion: {
+                id: {
+                  equals: filterCoordinatorSuggestionId,
+                },
+              },
+            },
+          ],
         },
       });
 

@@ -24,8 +24,8 @@ export default function iMAbility({ user }: { user: User }) {
         },
       },
     };
+    can("read", "IM");
     can("connectToIMFile", "IM", where);
-    can("read", "IM", where);
     can("update", "IM", where);
     can("delete", "IM", where);
 

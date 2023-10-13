@@ -9,17 +9,21 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import PeerSuggestionItem from "@/components/PeerSuggestionItem";
+import usePeerSuggestionItemsOwn, {
+  usePeerSuggestionItemsOwnParams,
+} from "@/hooks/usePeerSuggestionItemsOwn";
+import MainLayout from "@/components/MainLayout";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
   const peerSuggestion = usePeerSuggestionMe({ id: iMId as string });
   const peerReview = usePeerReviewMe({ id: iMId as string });
-  const [state, setState] = useState<usePeerSuggestionItemsParams>({
+  const [state, setState] = useState<usePeerSuggestionItemsOwnParams>({
     skip: 0,
     take: 10,
   });
-  const peerSuggestionItems = usePeerSuggestionItems(state);
+  const peerSuggestionItems = usePeerSuggestionItemsOwn(state);
   const handleSubmitReview = () => {
     if (!peerSuggestion) return;
     axios
@@ -39,9 +43,7 @@ export default function PeerSuggestionPage() {
 
     setState((prev) => ({
       ...prev,
-      filter: {
-        peerSuggestionId: peerSuggestion.id,
-      },
+      id: peerSuggestion.id,
     }));
   }, [peerSuggestion]);
 
@@ -92,38 +94,43 @@ export default function PeerSuggestionPage() {
   }, [peerReview, peerSuggestion]);
 
   return (
-    <div>
-      <h2>Peer Review</h2>
-      <form noValidate onSubmit={formik.handleSubmit}>
-        <textarea
-          placeholder='suggestion'
-          {...formik.getFieldProps("suggestion")}
-        />
-        <br />
-        <input
-          type='number'
-          placeholder='pageNumber'
-          {...formik.getFieldProps("pageNumber")}
-        />
-        <br />
-        <textarea placeholder='remarks' {...formik.getFieldProps("remarks")} />
-        <br />
-        <input type='submit' value='Submit' className='border rounded' />
-      </form>
+    <MainLayout>
       <div>
-        <h3>Suggestions</h3>
-        {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
-          return (
-            <PeerSuggestionItem
-              peerSuggestionItem={peerSuggestionItem}
-              key={peerSuggestionItem.id}
-            />
-          );
-        })}
+        <h2>Peer Review</h2>
+        <form noValidate onSubmit={formik.handleSubmit}>
+          <textarea
+            placeholder='suggestion'
+            {...formik.getFieldProps("suggestion")}
+          />
+          <br />
+          <input
+            type='number'
+            placeholder='pageNumber'
+            {...formik.getFieldProps("pageNumber")}
+          />
+          <br />
+          <textarea
+            placeholder='remarks'
+            {...formik.getFieldProps("remarks")}
+          />
+          <br />
+          <input type='submit' value='Submit' className='border rounded' />
+        </form>
+        <div>
+          <h3>Suggestions</h3>
+          {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
+            return (
+              <PeerSuggestionItem
+                peerSuggestionItem={peerSuggestionItem}
+                key={peerSuggestionItem.id}
+              />
+            );
+          })}
+        </div>
+        <button className='rounded border' onClick={handleSubmitReview}>
+          Submit Review
+        </button>
       </div>
-      <button className='rounded border' onClick={handleSubmitReview}>
-        Submit Review
-      </button>
-    </div>
+    </MainLayout>
   );
 }

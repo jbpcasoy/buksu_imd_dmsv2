@@ -203,12 +203,11 @@ model DepartmentReview {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IMFile             IMFile               @relation(fields: [iMFileId], references: [id])
-    iMFileId           String               @unique
-    PeerReview         PeerReview?
-    ChairpersonReview  ChairpersonReview?
-    CoordinatorReview  CoordinatorReview?
-    DepartmentRevision DepartmentRevision[]
+    IMFile            IMFile             @relation(fields: [iMFileId], references: [id])
+    iMFileId          String             @unique
+    PeerReview        PeerReview?
+    ChairpersonReview ChairpersonReview?
+    CoordinatorReview CoordinatorReview?
 }
 
 enum Rating {
@@ -289,8 +288,9 @@ model SubmittedPeerSuggestion {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    PeerSuggestion   PeerSuggestion @relation(fields: [peerSuggestionId], references: [id])
-    peerSuggestionId String         @unique
+    PeerSuggestion    PeerSuggestion     @relation(fields: [peerSuggestionId], references: [id])
+    peerSuggestionId  String             @unique
+    DepartmentRevised DepartmentRevised?
 }
 
 model ChairpersonReview {
@@ -362,6 +362,7 @@ model SubmittedChairpersonSuggestion {
 
     ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [chairpersonSuggestionId], references: [id])
     chairpersonSuggestionId String                @unique
+    DepartmentRevised       DepartmentRevised?
 }
 
 model CoordinatorReview {
@@ -433,6 +434,20 @@ model SubmittedCoordinatorSuggestion {
 
     CoordinatorSuggestion   CoordinatorSuggestion @relation(fields: [coordinatorSuggestionId], references: [id])
     coordinatorSuggestionId String                @unique
+    DepartmentRevised       DepartmentRevised?
+}
+
+model DepartmentRevised {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SubmittedCoordinatorSuggestion   SubmittedCoordinatorSuggestion @relation(fields: [submittedCoordinatorSuggestionId], references: [id])
+    submittedCoordinatorSuggestionId String                         @unique
+    SubmittedChairpersonSuggestion   SubmittedChairpersonSuggestion @relation(fields: [submittedChairpersonSuggestionId], references: [id])
+    submittedChairpersonSuggestionId String                         @unique
+    SubmittedPeerSuggestion          SubmittedPeerSuggestion        @relation(fields: [submittedPeerSuggestionId], references: [id])
+    submittedPeerSuggestionId        String                         @unique
 }
 
 model DepartmentRevision {
@@ -440,8 +455,6 @@ model DepartmentRevision {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    DepartmentReview       DepartmentReview        @relation(fields: [departmentReviewId], references: [id])
-    departmentReviewId     String
     IMFile                 IMFile                  @relation(fields: [iMFileId], references: [id])
     iMFileId               String                  @unique
     returned               Boolean                 @default(false)

@@ -1,7 +1,7 @@
 import MainLayout from "@/components/MainLayout";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useDepartmentReviewByIM from "@/hooks/useDepartmentReviewByIM";
-import useCoordinatorReviewMe from "@/hooks/useCoordinatorReviewMe";
+import useChairpersonReviewMe from "@/hooks/useChairpersonReviewMe";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
@@ -9,13 +9,14 @@ import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
+import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
 
-export default function AddCoordinatorReviewPage() {
+export default function AddChairpersonReviewPage() {
   const router = useRouter();
   const iMId = router.query.id;
   const departmentReview = useDepartmentReviewByIM({ id: iMId as string });
-  const coordinatorReview = useCoordinatorReviewMe({ id: iMId as string });
-  const activeFaculty = useActiveFacultyMe();
+  const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
+  const activeFaculty = useActiveChairpersonMe();
   const formik = useFormik({
     initialValues: {
       q1_1: "",
@@ -79,13 +80,13 @@ export default function AddCoordinatorReviewPage() {
       }
 
       axios
-        .post("/api/coordinator_review", {
+        .post("/api/chairperson_review", {
           ...values,
           departmentReviewId: departmentReview.id,
-          activeFacultyId: activeFaculty.id,
+          activeChairpersonId: activeFaculty.id,
         })
         .then(() => {
-          alert("CoordinatorReview Added Successfully");
+          router.push(`/im/${iMId}/chairperson_suggestion`)
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -94,12 +95,12 @@ export default function AddCoordinatorReviewPage() {
   });
 
   useEffect(() => {
-    if (!coordinatorReview) {
+    if (!chairpersonReview) {
       return;
     }
 
     router.replace(`/im/${iMId}/chairperson_suggestion`)
-  }, [coordinatorReview]);
+  }, [chairpersonReview]);
 
   if (!departmentReview || !activeFaculty) {
     return null;
@@ -107,7 +108,7 @@ export default function AddCoordinatorReviewPage() {
 
   return (
     <MainLayout>
-      <h2>Coordinator Review</h2>
+      <h2>Chairperson Review</h2>
 
       <form onSubmit={formik.handleSubmit}>
         <div>
