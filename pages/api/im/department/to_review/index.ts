@@ -77,12 +77,60 @@ export default async function handler(
               },
             },
             {
-              IMFile: {
-                every: {
-                  DepartmentRevision: {
-                    is: null,
+              NOT: {
+                AND: [
+                  {
+                    IMFile: {
+                      some: {
+                        DepartmentReview: {
+                          CoordinatorReview: {
+                            CoordinatorSuggestion: {
+                              SubmittedCoordinatorSuggestion: {
+                                DepartmentReviewed: {
+                                  isNot: null,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
                   },
-                },
+                  {
+                    IMFile: {
+                      some: {
+                        DepartmentReview: {
+                          ChairpersonReview: {
+                            ChairpersonSuggestion: {
+                              SubmittedChairpersonSuggestion: {
+                                DepartmentReviewed: {
+                                  isNot: null,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    IMFile: {
+                      some: {
+                        DepartmentReview: {
+                          PeerReview: {
+                            PeerSuggestion: {
+                              SubmittedPeerSuggestion: {
+                                DepartmentReviewed: {
+                                  isNot: null,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                ],
               },
             },
           ],
@@ -110,15 +158,57 @@ export default async function handler(
                 },
               },
             },
-            {
-              IMFile: {
-                every: {
-                  DepartmentRevision: {
-                    is: null,
-                  },
-                },
-              },
-            },
+            // {
+            //   IMFile: {
+            //     every: {
+            //       DepartmentReview: {
+            //         CoordinatorReview: {
+            //           CoordinatorSuggestion: {
+            //             SubmittedCoordinatorSuggestion: {
+            //               DepartmentReviewed: {
+            //                 is: null,
+            //               },
+            //             },
+            //           },
+            //         },
+            //       },
+            //     },
+            //   },
+            // },
+            // {
+            //   IMFile: {
+            //     every: {
+            //       DepartmentReview: {
+            //         ChairpersonReview: {
+            //           ChairpersonSuggestion: {
+            //             SubmittedChairpersonSuggestion: {
+            //               DepartmentReviewed: {
+            //                 is: null,
+            //               },
+            //             },
+            //           },
+            //         },
+            //       },
+            //     },
+            //   },
+            // },
+            // {
+            //   IMFile: {
+            //     every: {
+            //       DepartmentReview: {
+            //         PeerReview: {
+            //           PeerSuggestion: {
+            //             SubmittedPeerSuggestion: {
+            //               DepartmentReviewed: {
+            //                 is: null,
+            //               },
+            //             },
+            //           },
+            //         },
+            //       },
+            //     },
+            //   },
+            // },
           ],
         },
       });

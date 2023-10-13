@@ -49,72 +49,60 @@ export default async function handler(
         },
       });
 
-      const submittedPeerSuggestion =
-        await prisma.submittedPeerSuggestion.findFirst({
-          where: {
-            PeerSuggestion: {
-              PeerReview: {
-                DepartmentReview: {
-                  id: {
-                    equals: departmentReview?.id,
+      const departmentReviewed = await prisma.departmentReviewed.findFirst({
+        where: {
+          AND: [
+            {
+              SubmittedChairpersonSuggestion: {
+                ChairpersonSuggestion: {
+                  ChairpersonReview: {
+                    DepartmentReview: {
+                      id: {
+                        equals: departmentReview?.id ?? "undefined",
+                      },
+                    },
                   },
                 },
               },
             },
-          },
-        });
-
-      const submittedCoordinatorSuggestion =
-        await prisma.submittedCoordinatorSuggestion.findFirst({
-          where: {
-            CoordinatorSuggestion: {
-              CoordinatorReview: {
-                DepartmentReview: {
-                  id: {
-                    equals: departmentReview?.id,
+            {
+              SubmittedCoordinatorSuggestion: {
+                CoordinatorSuggestion: {
+                  CoordinatorReview: {
+                    DepartmentReview: {
+                      id: {
+                        equals: departmentReview?.id ?? "undefined",
+                      },
+                    },
                   },
                 },
               },
             },
-          },
-        });
-
-      const submittedChairpersonSuggestion =
-        await prisma.submittedChairpersonSuggestion.findFirst({
-          where: {
-            ChairpersonSuggestion: {
-              ChairpersonReview: {
-                DepartmentReview: {
-                  id: {
-                    equals: departmentReview?.id,
+            {
+              SubmittedPeerSuggestion: {
+                PeerSuggestion: {
+                  PeerReview: {
+                    DepartmentReview: {
+                      id: {
+                        equals: departmentReview?.id ?? "undefined",
+                      },
+                    },
                   },
                 },
               },
             },
-          },
-        });
+          ],
+        },
+      });
 
       /**
        * Status list:
        * IMPLEMENTATION_DRAFT - IM is created but not yet submitted for review.
        * IMPLEMENTATION_DEPARTMENT_REVIEW - IM is submitted for department review
-       * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator, and suggestion
+       * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator and coordinator
        */
 
-      console.log({
-        iM,
-        departmentReview,
-        submittedChairpersonSuggestion,
-        submittedCoordinatorSuggestion,
-        submittedPeerSuggestion,
-      });
-
-      if (
-        departmentReview &&
-        submittedPeerSuggestion &&
-        submittedCoordinatorSuggestion &&
-        submittedChairpersonSuggestion
-      ) {
+      if (departmentReviewed) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVIEWED");
       } else if (departmentReview) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVIEW");

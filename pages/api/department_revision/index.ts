@@ -36,6 +36,14 @@ export default async function handler(
 
       const { iMFileId } = validator.cast(req.body);
 
+      const iMFile = await prisma.iMFile.findFirstOrThrow({
+        where: {
+          id: {
+            equals: iMFileId,
+          },
+        },
+      });
+
       const departmentReview = await prisma.departmentReview.findFirstOrThrow({
         where: {
           IMFile: {
@@ -43,7 +51,7 @@ export default async function handler(
               IMFile: {
                 some: {
                   id: {
-                    equals: iMFileId,
+                    equals: iMFile.id,
                   },
                 },
               },
@@ -93,6 +101,24 @@ export default async function handler(
           },
         },
       });
+
+      const existingDepartmentRevision = await prisma.departmentRevision.findFirst({
+        where: {
+          IMFile: {
+            IM: {
+              id: {
+                equals: iMFile.iMId,
+              },
+            },
+          },
+        },
+      });
+
+      if (existingDepartmentRevision) {
+        return res.status(400).json({
+          error: { message: "IM has already been submitted for endorsement" },
+        });
+      }
 
       const departmentRevision = await prisma.departmentRevision.create({
         data: {

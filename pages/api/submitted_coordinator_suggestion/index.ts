@@ -46,6 +46,74 @@ export default async function handler(
           },
         });
 
+      const submittedPeerSuggestion =
+        await prisma.submittedPeerSuggestion.findFirst({
+          where: {
+            PeerSuggestion: {
+              PeerReview: {
+                DepartmentReview: {
+                  CoordinatorReview: {
+                    CoordinatorSuggestion: {
+                      SubmittedCoordinatorSuggestion: {
+                        id: {
+                          equals: submittedCoordinatorSuggestion.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      const submittedChairpersonSuggestion =
+        await prisma.submittedChairpersonSuggestion.findFirst({
+          where: {
+            ChairpersonSuggestion: {
+              ChairpersonReview: {
+                DepartmentReview: {
+                  CoordinatorReview: {
+                    CoordinatorSuggestion: {
+                      SubmittedCoordinatorSuggestion: {
+                        id: {
+                          equals: submittedCoordinatorSuggestion.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (
+        submittedChairpersonSuggestion &&
+        submittedPeerSuggestion &&
+        submittedCoordinatorSuggestion
+      ) {
+        await prisma.departmentReviewed.create({
+          data: {
+            SubmittedChairpersonSuggestion: {
+              connect: {
+                id: submittedChairpersonSuggestion.id,
+              },
+            },
+            SubmittedCoordinatorSuggestion: {
+              connect: {
+                id: submittedCoordinatorSuggestion.id,
+              },
+            },
+            SubmittedPeerSuggestion: {
+              connect: {
+                id: submittedPeerSuggestion.id,
+              },
+            },
+          },
+        });
+      }
+
       return res.json(submittedCoordinatorSuggestion);
     } catch (error: any) {
       console.error(error);

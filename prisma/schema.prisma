@@ -290,7 +290,7 @@ model SubmittedPeerSuggestion {
 
     PeerSuggestion    PeerSuggestion     @relation(fields: [peerSuggestionId], references: [id])
     peerSuggestionId  String             @unique
-    DepartmentRevised DepartmentRevised?
+    DepartmentReviewed DepartmentReviewed?
 }
 
 model ChairpersonReview {
@@ -362,7 +362,7 @@ model SubmittedChairpersonSuggestion {
 
     ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [chairpersonSuggestionId], references: [id])
     chairpersonSuggestionId String                @unique
-    DepartmentRevised       DepartmentRevised?
+    DepartmentReviewed       DepartmentReviewed?
 }
 
 model CoordinatorReview {
@@ -434,10 +434,10 @@ model SubmittedCoordinatorSuggestion {
 
     CoordinatorSuggestion   CoordinatorSuggestion @relation(fields: [coordinatorSuggestionId], references: [id])
     coordinatorSuggestionId String                @unique
-    DepartmentRevised       DepartmentRevised?
+    DepartmentReviewed       DepartmentReviewed?
 }
 
-model DepartmentRevised {
+model DepartmentReviewed {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

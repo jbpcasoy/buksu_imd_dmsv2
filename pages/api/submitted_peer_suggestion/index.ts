@@ -43,6 +43,73 @@ export default async function handler(
             },
           },
         });
+      const submittedCoordinatorSuggestion =
+        await prisma.submittedCoordinatorSuggestion.findFirst({
+          where: {
+            CoordinatorSuggestion: {
+              CoordinatorReview: {
+                DepartmentReview: {
+                  PeerReview: {
+                    PeerSuggestion: {
+                      SubmittedPeerSuggestion: {
+                        id: {
+                          equals: submittedPeerSuggestion.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      const submittedChairpersonSuggestion =
+        await prisma.submittedChairpersonSuggestion.findFirst({
+          where: {
+            ChairpersonSuggestion: {
+              ChairpersonReview: {
+                DepartmentReview: {
+                  PeerReview: {
+                    PeerSuggestion: {
+                      SubmittedPeerSuggestion: {
+                        id: {
+                          equals: submittedPeerSuggestion.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (
+        submittedChairpersonSuggestion &&
+        submittedPeerSuggestion &&
+        submittedCoordinatorSuggestion
+      ) {
+        await prisma.departmentReviewed.create({
+          data: {
+            SubmittedChairpersonSuggestion: {
+              connect: {
+                id: submittedChairpersonSuggestion.id,
+              },
+            },
+            SubmittedCoordinatorSuggestion: {
+              connect: {
+                id: submittedCoordinatorSuggestion.id,
+              },
+            },
+            SubmittedPeerSuggestion: {
+              connect: {
+                id: submittedPeerSuggestion.id,
+              },
+            },
+          },
+        });
+      }
 
       return res.json(submittedPeerSuggestion);
     } catch (error: any) {

@@ -78,16 +78,18 @@ export default async function handler(
               IMFile: {
                 some: {
                   DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          isNot: null
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+                    CoordinatorReview: {
+                      CoordinatorSuggestion: {
+                        SubmittedCoordinatorSuggestion: {
+                          DepartmentReviewed: {
+                            isNot: null,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
             {
               IMFile: {
@@ -96,29 +98,33 @@ export default async function handler(
                     ChairpersonReview: {
                       ChairpersonSuggestion: {
                         SubmittedChairpersonSuggestion: {
-                          isNot: null
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+                          DepartmentReviewed: {
+                            isNot: null,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
             {
               IMFile: {
                 some: {
                   DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          isNot: null
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+                    PeerReview: {
+                      PeerSuggestion: {
+                        SubmittedPeerSuggestion: {
+                          DepartmentReviewed: {
+                            isNot: null,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           ],
         },
       });
@@ -143,10 +149,46 @@ export default async function handler(
               },
             },
             {
+              NOT: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      isNot: null,
+                    },
+                  },
+                },
+              },
+            },
+            {
               IMFile: {
-                every: {
-                  DepartmentRevision: {
-                    is: null,
+                some: {
+                  DepartmentReview: {
+                    CoordinatorReview: {
+                      CoordinatorSuggestion: {
+                        SubmittedCoordinatorSuggestion: {
+                          DepartmentReviewed: {
+                            isNot: null,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    ChairpersonReview: {
+                      ChairpersonSuggestion: {
+                        SubmittedChairpersonSuggestion: {
+                          DepartmentReviewed: {
+                            isNot: null,
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -158,44 +200,16 @@ export default async function handler(
                     PeerReview: {
                       PeerSuggestion: {
                         SubmittedPeerSuggestion: {
-                          isNot: null
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+                          DepartmentReviewed: {
+                            isNot: null,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          isNot: null
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          isNot: null
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
           ],
         },
       });
