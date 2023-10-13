@@ -153,10 +153,11 @@ model Coordinator {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty           Faculty             @relation(fields: [facultyId], references: [id])
-    facultyId         String              @unique
-    ActiveCoordinator ActiveCoordinator?
-    CoordinatorReview CoordinatorReview[]
+    Faculty                Faculty                  @relation(fields: [facultyId], references: [id])
+    facultyId              String                   @unique
+    ActiveCoordinator      ActiveCoordinator?
+    CoordinatorReview      CoordinatorReview[]
+    CoordinatorEndorsement CoordinatorEndorsement[]
 }
 
 model Dean {
@@ -453,6 +454,8 @@ model CoordinatorEndorsement {
 
     DepartmentRevision   DepartmentRevision @relation(fields: [departmentRevisionId], references: [id])
     departmentRevisionId String             @unique
+    Coordinator          Coordinator        @relation(fields: [coordinatorId], references: [id])
+    coordinatorId        String
     DeanEndorsement      DeanEndorsement?
 }
 
