@@ -100,7 +100,8 @@ export default async function handler(
           },
         },
       });
-
+      
+      // TODO rubrics questions are optional
       const chairpersonReview = await prisma.chairpersonReview.create({
         data: {
           q1_1,

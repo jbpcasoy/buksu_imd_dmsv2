@@ -1,19 +1,20 @@
 import MainLayout from "@/components/MainLayout";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useDepartmentReviewByIM from "@/hooks/useDepartmentReviewByIM";
+import usePeerReviewMe from "@/hooks/usePeerReviewMe";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { DetailedHTMLProps, SelectHTMLAttributes } from "react";
+import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
 
 export default function AddPeerReviewPage() {
   const router = useRouter();
   const iMId = router.query.id;
   const departmentReview = useDepartmentReviewByIM({ id: iMId as string });
+  const peerReview = usePeerReviewMe({ id: iMId as string });
   const activeFaculty = useActiveFacultyMe();
   const formik = useFormik({
     initialValues: {
@@ -81,7 +82,7 @@ export default function AddPeerReviewPage() {
         .post("/api/peer_review", {
           ...values,
           departmentReviewId: departmentReview.id,
-          activeFacultyId: activeFaculty.id
+          activeFacultyId: activeFaculty.id,
         })
         .then(() => {
           alert("PeerReview Added Successfully");
@@ -91,6 +92,14 @@ export default function AddPeerReviewPage() {
         });
     },
   });
+
+  useEffect(() => {
+    if (!peerReview) {
+      return;
+    }
+
+    router.replace(`/im/${iMId}/peer_suggestion`)
+  }, [peerReview]);
 
   if (!departmentReview || !activeFaculty) {
     return null;
@@ -170,7 +179,7 @@ export default function AddPeerReviewPage() {
           <p>{ReviewQuestions.q8_3}</p>
           <RateSelector {...formik.getFieldProps("q8_3")} />
         </div>
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type='submit' value='Next' className='rounded border' />
       </form>
     </MainLayout>
   );

@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import peerSuggestionAbility from "@/services/ability/peerSuggestionAbility";
+import coordinatorSuggestionAbility from "@/services/ability/coordinatorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
@@ -19,45 +19,54 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerSuggestionAbility({ user });
+  const ability = coordinatorSuggestionAbility({ user });
 
   const getHandler = async () => {
     try {
-      const { id } = req.query;
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
 
-      const peerSuggestion = await prisma.peerSuggestion.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).PeerSuggestion,
-            {
-              PeerReview: {
-                DepartmentReview: {
-                  IMFile: {
-                    IM: {
-                      id: {
-                        equals: id as string,
+      await validator.validate(req.query);
+
+      const { id } = validator.cast(req.query);
+
+      const coordinatorSuggestion =
+        await prisma.coordinatorSuggestion.findFirstOrThrow({
+          where: {
+            AND: [
+              accessibleBy(ability).CoordinatorSuggestion,
+              {
+                CoordinatorReview: {
+                  DepartmentReview: {
+                    IMFile: {
+                      IM: {
+                        id: {
+                          equals: id,
+                        },
                       },
                     },
                   },
                 },
               },
-            },
-            {
-              PeerReview: {
-                Faculty: {
-                  User: {
-                    id: {
-                      equals: user.id,
+              {
+                CoordinatorReview: {
+                  Coordinator: {
+                    Faculty: {
+                      User: {
+                        id: {
+                          equals: user.id,
+                        },
+                      },
                     },
                   },
                 },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
-      return res.json(peerSuggestion);
+      return res.json(coordinatorSuggestion);
     } catch (error: any) {
       console.error(error);
       return res

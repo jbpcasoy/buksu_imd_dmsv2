@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import peerSuggestionAbility from "@/services/ability/peerSuggestionAbility";
+import chairpersonSuggestionAbility from "@/services/ability/chairpersonSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
@@ -19,45 +19,54 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerSuggestionAbility({ user });
+  const ability = chairpersonSuggestionAbility({ user });
 
   const getHandler = async () => {
     try {
-      const { id } = req.query;
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
 
-      const peerSuggestion = await prisma.peerSuggestion.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).PeerSuggestion,
-            {
-              PeerReview: {
-                DepartmentReview: {
-                  IMFile: {
-                    IM: {
-                      id: {
-                        equals: id as string,
+      await validator.validate(req.query);
+
+      const { id } = validator.cast(req.query);
+
+      const chairpersonSuggestion =
+        await prisma.chairpersonSuggestion.findFirstOrThrow({
+          where: {
+            AND: [
+              accessibleBy(ability).ChairpersonSuggestion,
+              {
+                ChairpersonReview: {
+                  DepartmentReview: {
+                    IMFile: {
+                      IM: {
+                        id: {
+                          equals: id,
+                        },
                       },
                     },
                   },
                 },
               },
-            },
-            {
-              PeerReview: {
-                Faculty: {
-                  User: {
-                    id: {
-                      equals: user.id,
+              {
+                ChairpersonReview: {
+                  Chairperson: {
+                    Faculty: {
+                      User: {
+                        id: {
+                          equals: user.id,
+                        },
+                      },
                     },
                   },
                 },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
-      return res.json(peerSuggestion);
+      return res.json(chairpersonSuggestion);
     } catch (error: any) {
       console.error(error);
       return res

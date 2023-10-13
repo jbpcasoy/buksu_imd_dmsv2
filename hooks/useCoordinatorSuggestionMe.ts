@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react";
-import { PeerSuggestion, IM } from "@prisma/client";
+import { CoordinatorSuggestion, IM } from "@prisma/client";
 import axios from "axios";
 
-export interface usePeerSuggestionParams {
+export interface useCoordinatorSuggestionMeParams {
   id: string;
 }
-export default function usePeerSuggestion({ id }: usePeerSuggestionParams) {
-  const [state, setState] = useState<PeerSuggestion | null | undefined>(undefined);
+export default function useCoordinatorSuggestionMe({ id }: useCoordinatorSuggestionMeParams) {
+  const [state, setState] = useState<CoordinatorSuggestion | null>();
 
   useEffect(() => {
+    console.log({id})
     if (!id) return;
 
     let subscribe = true;
 
     axios
-      .get(`/api/peer_suggestion/${id}`)
+      .get(`/api/coordinator_suggestion/im/${id}/me`)
       .then((res) => {
         if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {
+        if (!subscribe) return;
         console.error(error);
         setState(null);
       });

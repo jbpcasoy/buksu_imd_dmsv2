@@ -1,19 +1,21 @@
 import MainLayout from "@/components/MainLayout";
-import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
+import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useDepartmentReviewByIM from "@/hooks/useDepartmentReviewByIM";
+import useCoordinatorReviewMe from "@/hooks/useCoordinatorReviewMe";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { DetailedHTMLProps, SelectHTMLAttributes } from "react";
+import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
 
 export default function AddCoordinatorReviewPage() {
   const router = useRouter();
   const iMId = router.query.id;
   const departmentReview = useDepartmentReviewByIM({ id: iMId as string });
-  const activeCoordinator = useActiveCoordinatorMe();
+  const coordinatorReview = useCoordinatorReviewMe({ id: iMId as string });
+  const activeFaculty = useActiveFacultyMe();
   const formik = useFormik({
     initialValues: {
       q1_1: "",
@@ -72,7 +74,7 @@ export default function AddCoordinatorReviewPage() {
       q8_3: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
     }),
     onSubmit: (values) => {
-      if (!departmentReview || !activeCoordinator) {
+      if (!departmentReview || !activeFaculty) {
         return;
       }
 
@@ -80,7 +82,7 @@ export default function AddCoordinatorReviewPage() {
         .post("/api/coordinator_review", {
           ...values,
           departmentReviewId: departmentReview.id,
-          activeCoordinatorId: activeCoordinator.id,
+          activeFacultyId: activeFaculty.id,
         })
         .then(() => {
           alert("CoordinatorReview Added Successfully");
@@ -91,7 +93,15 @@ export default function AddCoordinatorReviewPage() {
     },
   });
 
-  if (!departmentReview || !activeCoordinator) {
+  useEffect(() => {
+    if (!coordinatorReview) {
+      return;
+    }
+
+    router.replace(`/im/${iMId}/coordinator_suggestion`)
+  }, [coordinatorReview]);
+
+  if (!departmentReview || !activeFaculty) {
     return null;
   }
 
@@ -169,7 +179,7 @@ export default function AddCoordinatorReviewPage() {
           <p>{ReviewQuestions.q8_3}</p>
           <RateSelector {...formik.getFieldProps("q8_3")} />
         </div>
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type='submit' value='Next' className='rounded border' />
       </form>
     </MainLayout>
   );

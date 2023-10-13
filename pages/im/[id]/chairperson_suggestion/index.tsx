@@ -1,29 +1,29 @@
-import usePeerReviewMe from "@/hooks/usePeerReviewMe";
-import usePeerSuggestionItems, {
-  usePeerSuggestionItemsParams,
-} from "@/hooks/usePeerSuggestionItems";
-import usePeerSuggestionMe from "@/hooks/usePeerSuggestionMe";
+import useChairpersonReviewMe from "@/hooks/useChairpersonReviewMe";
+import useChairpersonSuggestionItems, {
+  useChairpersonSuggestionItemsParams,
+} from "@/hooks/useChairpersonSuggestionItems";
+import useChairpersonSuggestionMe from "@/hooks/useChairpersonSuggestionMe";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 
-export default function PeerSuggestionPage() {
+export default function ChairpersonSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const peerSuggestion = usePeerSuggestionMe({ id: iMId as string });
-  const peerReview = usePeerReviewMe({ id: iMId as string });
-  const [state, setState] = useState<usePeerSuggestionItemsParams>({
+  const chairpersonSuggestion = useChairpersonSuggestionMe({ id: iMId as string });
+  const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
+  const [state, setState] = useState<useChairpersonSuggestionItemsParams>({
     skip: 0,
     take: 10,
   });
-  const peerSuggestionItems = usePeerSuggestionItems(state);
+  const chairpersonSuggestionItems = useChairpersonSuggestionItems(state);
   const handleSubmitReview = () => {
-    if (!peerSuggestion) return;
+    if (!chairpersonSuggestion) return;
     axios
-      .post(`/api/submitted_peer_suggestion`, {
-        peerSuggestionId: peerSuggestion.id,
+      .post(`/api/submitted_chairperson_suggestion`, {
+        chairpersonSuggestionId: chairpersonSuggestion.id,
       })
       .then(() => {
         alert("Review Submitted Successfully");
@@ -34,15 +34,15 @@ export default function PeerSuggestionPage() {
   };
 
   useEffect(() => {
-    if (!peerSuggestion) return;
+    if (!chairpersonSuggestion) return;
 
     setState((prev) => ({
       ...prev,
       filter: {
-        peerSuggestionId: peerSuggestion.id,
+        chairpersonSuggestionId: chairpersonSuggestion.id,
       },
     }));
-  }, [peerSuggestion]);
+  }, [chairpersonSuggestion]);
 
   const formik = useFormik({
     initialValues: {
@@ -56,14 +56,14 @@ export default function PeerSuggestionPage() {
       pageNumber: Yup.number().required(),
     }),
     onSubmit: (values) => {
-      if (!peerSuggestion) {
+      if (!chairpersonSuggestion) {
         return;
       }
 
       axios
-        .post(`/api/peer_suggestion_item`, {
+        .post(`/api/chairperson_suggestion_item`, {
           ...values,
-          peerSuggestionId: peerSuggestion.id,
+          chairpersonSuggestionId: chairpersonSuggestion.id,
         })
         .then(() => {
           alert("Suggestion added successfully.");
@@ -73,13 +73,13 @@ export default function PeerSuggestionPage() {
   });
 
   useEffect(() => {
-    if (!peerReview) {
+    if (!chairpersonReview) {
       return;
     }
-    if (!peerSuggestion) {
+    if (!chairpersonSuggestion) {
       axios
-        .post(`/api/peer_suggestion/`, {
-          peerReviewId: peerReview.id,
+        .post(`/api/chairperson_suggestion/`, {
+          chairpersonReviewId: chairpersonReview.id,
         })
         .then((res) => {
           router.reload();
@@ -88,11 +88,11 @@ export default function PeerSuggestionPage() {
           console.error(error);
         });
     }
-  }, [peerReview, peerSuggestion]);
+  }, [chairpersonReview, chairpersonSuggestion]);
 
   return (
     <div>
-      <h2>Peer Review</h2>
+      <h2>Chairperson Review</h2>
       <form noValidate onSubmit={formik.handleSubmit}>
         <textarea
           placeholder='suggestion'
@@ -111,12 +111,12 @@ export default function PeerSuggestionPage() {
       </form>
       <div>
         <h3>Suggestions</h3>
-        {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
+        {chairpersonSuggestionItems.chairpersonSuggestionItems.map((chairpersonSuggestionItem) => {
           return (
             <div className='border rounded'>
-              <p>suggestion: {peerSuggestionItem.suggestion}</p>
-              <p>pageNumber: {peerSuggestionItem.pageNumber}</p>
-              <p>remarks: {peerSuggestionItem.remarks}</p>
+              <p>suggestion: {chairpersonSuggestionItem.suggestion}</p>
+              <p>pageNumber: {chairpersonSuggestionItem.pageNumber}</p>
+              <p>remarks: {chairpersonSuggestionItem.remarks}</p>
             </div>
           );
         })}

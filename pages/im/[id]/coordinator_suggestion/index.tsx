@@ -1,29 +1,31 @@
-import usePeerReviewMe from "@/hooks/usePeerReviewMe";
-import usePeerSuggestionItems, {
-  usePeerSuggestionItemsParams,
-} from "@/hooks/usePeerSuggestionItems";
-import usePeerSuggestionMe from "@/hooks/usePeerSuggestionMe";
+import useCoordinatorReviewMe from "@/hooks/useCoordinatorReviewMe";
+import useCoordinatorSuggestionItems, {
+  useCoordinatorSuggestionItemsParams,
+} from "@/hooks/useCoordinatorSuggestionItems";
+import useCoordinatorSuggestionMe from "@/hooks/useCoordinatorSuggestionMe";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 
-export default function PeerSuggestionPage() {
+export default function CoordinatorSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const peerSuggestion = usePeerSuggestionMe({ id: iMId as string });
-  const peerReview = usePeerReviewMe({ id: iMId as string });
-  const [state, setState] = useState<usePeerSuggestionItemsParams>({
+  const coordinatorSuggestion = useCoordinatorSuggestionMe({
+    id: iMId as string,
+  });
+  const coordinatorReview = useCoordinatorReviewMe({ id: iMId as string });
+  const [state, setState] = useState<useCoordinatorSuggestionItemsParams>({
     skip: 0,
     take: 10,
   });
-  const peerSuggestionItems = usePeerSuggestionItems(state);
+  const coordinatorSuggestionItems = useCoordinatorSuggestionItems(state);
   const handleSubmitReview = () => {
-    if (!peerSuggestion) return;
+    if (!coordinatorSuggestion) return;
     axios
-      .post(`/api/submitted_peer_suggestion`, {
-        peerSuggestionId: peerSuggestion.id,
+      .post(`/api/submitted_coordinator_suggestion`, {
+        coordinatorSuggestionId: coordinatorSuggestion.id,
       })
       .then(() => {
         alert("Review Submitted Successfully");
@@ -34,15 +36,15 @@ export default function PeerSuggestionPage() {
   };
 
   useEffect(() => {
-    if (!peerSuggestion) return;
+    if (!coordinatorSuggestion) return;
 
     setState((prev) => ({
       ...prev,
       filter: {
-        peerSuggestionId: peerSuggestion.id,
+        coordinatorSuggestionId: coordinatorSuggestion.id,
       },
     }));
-  }, [peerSuggestion]);
+  }, [coordinatorSuggestion]);
 
   const formik = useFormik({
     initialValues: {
@@ -56,14 +58,14 @@ export default function PeerSuggestionPage() {
       pageNumber: Yup.number().required(),
     }),
     onSubmit: (values) => {
-      if (!peerSuggestion) {
+      if (!coordinatorSuggestion) {
         return;
       }
 
       axios
-        .post(`/api/peer_suggestion_item`, {
+        .post(`/api/coordinator_suggestion_item`, {
           ...values,
-          peerSuggestionId: peerSuggestion.id,
+          coordinatorSuggestionId: coordinatorSuggestion.id,
         })
         .then(() => {
           alert("Suggestion added successfully.");
@@ -73,13 +75,13 @@ export default function PeerSuggestionPage() {
   });
 
   useEffect(() => {
-    if (!peerReview) {
+    if (!coordinatorReview) {
       return;
     }
-    if (!peerSuggestion) {
+    if (!coordinatorSuggestion) {
       axios
-        .post(`/api/peer_suggestion/`, {
-          peerReviewId: peerReview.id,
+        .post(`/api/coordinator_suggestion/`, {
+          coordinatorReviewId: coordinatorReview.id,
         })
         .then((res) => {
           router.reload();
@@ -88,11 +90,11 @@ export default function PeerSuggestionPage() {
           console.error(error);
         });
     }
-  }, [peerReview, peerSuggestion]);
+  }, [coordinatorReview, coordinatorSuggestion]);
 
   return (
     <div>
-      <h2>Peer Review</h2>
+      <h2>Coordinator Review</h2>
       <form noValidate onSubmit={formik.handleSubmit}>
         <textarea
           placeholder='suggestion'
@@ -111,17 +113,21 @@ export default function PeerSuggestionPage() {
       </form>
       <div>
         <h3>Suggestions</h3>
-        {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
-          return (
-            <div className='border rounded'>
-              <p>suggestion: {peerSuggestionItem.suggestion}</p>
-              <p>pageNumber: {peerSuggestionItem.pageNumber}</p>
-              <p>remarks: {peerSuggestionItem.remarks}</p>
-            </div>
-          );
-        })}
+        {coordinatorSuggestionItems.coordinatorSuggestionItems.map(
+          (coordinatorSuggestionItem) => {
+            return (
+              <div className='border rounded'>
+                <p>suggestion: {coordinatorSuggestionItem.suggestion}</p>
+                <p>pageNumber: {coordinatorSuggestionItem.pageNumber}</p>
+                <p>remarks: {coordinatorSuggestionItem.remarks}</p>
+              </div>
+            );
+          }
+        )}
       </div>
-      <button className='rounded border' onClick={handleSubmitReview}>Submit Review</button>
+      <button className='rounded border' onClick={handleSubmitReview}>
+        Submit Review
+      </button>
     </div>
   );
 }

@@ -83,8 +83,8 @@ export default function ViewIM() {
         </div>
       )}
 
-      <div className="space-x-2">
-        {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
+      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
+        <div className='space-x-2'>
           <Link
             href={`/im/${iM.id}/peer_review`}
             className='border rounded'
@@ -92,9 +92,7 @@ export default function ViewIM() {
           >
             Peer Review
           </Link>
-        )}
 
-        {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
           <Link
             href={`/im/${iM.id}/coordinator_review`}
             className='border rounded'
@@ -102,9 +100,7 @@ export default function ViewIM() {
           >
             Coordinator Review
           </Link>
-        )}
 
-        {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
           <Link
             href={`/im/${iM.id}/chairperson_review`}
             className='border rounded'
@@ -112,8 +108,8 @@ export default function ViewIM() {
           >
             Chairperson Review
           </Link>
-        )}
-      </div>
+        </div>
+      )}
     </MainLayout>
   );
 }
