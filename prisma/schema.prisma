@@ -127,13 +127,14 @@ model IMFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM               IM                @relation(fields: [iMId], references: [id])
-    iMId             String
-    filename         String
-    size             Int
-    mimetype         String
-    originalFilename String
-    DepartmentReview DepartmentReview?
+    IM                 IM                  @relation(fields: [iMId], references: [id])
+    iMId               String
+    filename           String
+    size               Int
+    mimetype           String
+    originalFilename   String
+    DepartmentReview   DepartmentReview?
+    DepartmentRevision DepartmentRevision?
 }
 
 model Chairperson {
@@ -200,11 +201,12 @@ model DepartmentReview {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IMFile            IMFile             @relation(fields: [iMFileId], references: [id])
-    iMFileId          String             @unique
-    PeerReview        PeerReview?
-    ChairpersonReview ChairpersonReview?
-    CoordinatorReview CoordinatorReview?
+    IMFile             IMFile               @relation(fields: [iMFileId], references: [id])
+    iMFileId           String               @unique
+    PeerReview         PeerReview?
+    ChairpersonReview  ChairpersonReview?
+    CoordinatorReview  CoordinatorReview?
+    DepartmentRevision DepartmentRevision[]
 }
 
 enum Rating {
@@ -429,6 +431,38 @@ model SubmittedCoordinatorSuggestion {
 
     CoordinatorSuggestion   CoordinatorSuggestion @relation(fields: [coordinatorSuggestionId], references: [id])
     coordinatorSuggestionId String                @unique
+}
+
+model DepartmentRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    DepartmentReview       DepartmentReview        @relation(fields: [departmentReviewId], references: [id])
+    departmentReviewId     String
+    IMFile                 IMFile                  @relation(fields: [iMFileId], references: [id])
+    iMFileId               String                  @unique
+    returned               Boolean                 @default(false)
+    CoordinatorEndorsement CoordinatorEndorsement?
+}
+
+model CoordinatorEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    DepartmentRevision   DepartmentRevision @relation(fields: [departmentRevisionId], references: [id])
+    departmentRevisionId String             @unique
+    DeanEndorsement      DeanEndorsement?
+}
+
+model DeanEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CoordinatorEndorsement   CoordinatorEndorsement @relation(fields: [coordinatorEndorsementId], references: [id])
+    coordinatorEndorsementId String                 @unique
 }
 
 //PeerApproval 

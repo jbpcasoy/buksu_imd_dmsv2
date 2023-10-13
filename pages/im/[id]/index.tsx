@@ -24,7 +24,7 @@ export default function ViewIM() {
     setState(e.target.files?.item(0));
   };
 
-  const uploadFileHandler = async () => {
+  const submitForReviewHandler = async () => {
     if (!state || !iMId) return;
 
     const formData = new FormData();
@@ -77,7 +77,7 @@ export default function ViewIM() {
       {iMStatus === "IMPLEMENTATION_DRAFT" && (
         <div>
           <input type='file' onChange={onFileChange} />
-          <button className='border rounded' onClick={uploadFileHandler}>
+          <button className='border rounded' onClick={submitForReviewHandler}>
             Submit for review
           </button>
         </div>
@@ -88,7 +88,7 @@ export default function ViewIM() {
           <Link
             href={`/im/${iM.id}/peer_review`}
             className='border rounded'
-            onClick={uploadFileHandler}
+            onClick={submitForReviewHandler}
           >
             Peer Review
           </Link>
@@ -96,7 +96,7 @@ export default function ViewIM() {
           <Link
             href={`/im/${iM.id}/coordinator_review`}
             className='border rounded'
-            onClick={uploadFileHandler}
+            onClick={submitForReviewHandler}
           >
             Coordinator Review
           </Link>
@@ -104,10 +104,19 @@ export default function ViewIM() {
           <Link
             href={`/im/${iM.id}/chairperson_review`}
             className='border rounded'
-            onClick={uploadFileHandler}
+            onClick={submitForReviewHandler}
           >
             Chairperson Review
           </Link>
+        </div>
+      )}
+
+      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" && (
+        <div>
+          <input type='file' onChange={onFileChange} />
+          <button className='border rounded'>
+            Submit for endorsement
+          </button>
         </div>
       )}
     </MainLayout>

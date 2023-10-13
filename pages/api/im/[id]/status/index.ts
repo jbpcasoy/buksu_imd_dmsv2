@@ -49,13 +49,65 @@ export default async function handler(
         },
       });
 
+      const SubmittedPeerSuggestion =
+        await prisma.submittedPeerSuggestion.findFirst({
+          where: {
+            PeerSuggestion: {
+              PeerReview: {
+                DepartmentReview: {
+                  id: {
+                    equals: departmentReview?.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      const SubmittedCoordinatorSuggestion =
+        await prisma.submittedCoordinatorSuggestion.findFirst({
+          where: {
+            CoordinatorSuggestion: {
+              CoordinatorReview: {
+                DepartmentReview: {
+                  id: {
+                    equals: departmentReview?.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      const SubmittedChairpersonSuggestion =
+        await prisma.submittedChairpersonSuggestion.findFirst({
+          where: {
+            ChairpersonSuggestion: {
+              ChairpersonReview: {
+                DepartmentReview: {
+                  id: {
+                    equals: departmentReview?.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
       /**
        * Status list:
        * IMPLEMENTATION_DRAFT - IM is created but not yet submitted for review.
        * IMPLEMENTATION_DEPARTMENT_REVIEW - IM is submitted for department review
+       * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator, and suggestion
        */
 
-      if (departmentReview) {
+      if (
+        SubmittedPeerSuggestion &&
+        SubmittedCoordinatorSuggestion &&
+        SubmittedChairpersonSuggestion
+      ) {
+        return res.send("IMPLEMENTATION_DEPARTMENT_REVIEWED");
+      } else if (departmentReview) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVIEW");
       } else {
         return res.send("IMPLEMENTATION_DRAFT");

@@ -52,7 +52,7 @@ export default function PeerReviewPage() {
       <p>updatedAt: {new Date(peerReview.updatedAt).toLocaleString()}</p>
       <p>
         departmentReviewId:{" "}
-        <Link href={`/crud/department_review`} className='underline'>
+        <Link href={`/crud/department_review/${peerReview.departmentReviewId}`} className='underline'>
           {peerReview.departmentReviewId}
         </Link>
       </p>

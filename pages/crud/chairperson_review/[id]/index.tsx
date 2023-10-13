@@ -53,7 +53,10 @@ export default function ChairpersonReviewPage() {
       <p>updatedAt: {new Date(chairpersonReview.updatedAt).toLocaleString()}</p>
       <p>
         departmentReviewId:{" "}
-        <Link href={`/crud/department_review`} className='underline'>
+        <Link
+          href={`/crud/department_review/${chairpersonReview.departmentReviewId}`}
+          className='underline'
+        >
           {chairpersonReview.departmentReviewId}
         </Link>
       </p>

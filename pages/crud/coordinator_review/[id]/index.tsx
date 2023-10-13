@@ -52,7 +52,7 @@ export default function CoordinatorReviewPage() {
       <p>updatedAt: {new Date(coordinatorReview.updatedAt).toLocaleString()}</p>
       <p>
         departmentReviewId:{" "}
-        <Link href={`/crud/department_review`} className='underline'>
+        <Link href={`/crud/department_review/${coordinatorReview.departmentReviewId}`} className='underline'>
           {coordinatorReview.departmentReviewId}
         </Link>
       </p>
