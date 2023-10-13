@@ -165,9 +165,10 @@ model Dean {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty    Faculty     @relation(fields: [facultyId], references: [id])
-    facultyId  String      @unique
-    ActiveDean ActiveDean?
+    Faculty         Faculty           @relation(fields: [facultyId], references: [id])
+    facultyId       String            @unique
+    ActiveDean      ActiveDean?
+    DeanEndorsement DeanEndorsement[]
 }
 
 model ActiveCoordinator {
@@ -466,6 +467,8 @@ model DeanEndorsement {
 
     CoordinatorEndorsement   CoordinatorEndorsement @relation(fields: [coordinatorEndorsementId], references: [id])
     coordinatorEndorsementId String                 @unique
+    Dean                     Dean                   @relation(fields: [deanId], references: [id])
+    deanId                   String
 }
 
 //PeerApproval 
