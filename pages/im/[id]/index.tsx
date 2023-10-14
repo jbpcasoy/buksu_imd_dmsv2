@@ -4,8 +4,14 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import { ChangeEventHandler, useState } from "react";
-import { DepartmentReview, IMFile } from "@prisma/client";
+import {
+  CoordinatorEndorsement,
+  DepartmentReview,
+  DepartmentRevision,
+  IMFile,
+} from "@prisma/client";
 import useIMStatus from "@/hooks/useIMStatus";
+import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 
 export default function ViewIM() {
   const router = useRouter();
@@ -13,6 +19,7 @@ export default function ViewIM() {
   const iM = useIM({ id: iMId as string });
   const [state, setState] = useState<File | null>();
   const iMStatus = useIMStatus({ id: iMId as string });
+  const activeCoordinator = useActiveCoordinatorMe();
 
   const deleteHandler = (id: string) => {
     axios.delete(`/api/im/${id}`).then(() => {
@@ -71,6 +78,26 @@ export default function ViewIM() {
       })
       .finally(() => {
         router.reload();
+      });
+  };
+
+  const coordinatorEndorsementHandler = async () => {
+    if (!activeCoordinator) return;
+
+    return axios
+      .get<DepartmentRevision>(`/api/department_revision/im/${iMId}`)
+      .then((res) => {
+        const departmentRevision = res.data;
+        if (!departmentRevision) return;
+
+        return axios
+          .post<CoordinatorEndorsement>(`/api/coordinator_endorsement`, {
+            departmentRevisionId: departmentRevision.id,
+            activeCoordinatorId: activeCoordinator.id,
+          })
+          .then(() => {
+            alert("IM endorsed successfully");
+          });
       });
   };
 
@@ -144,6 +171,17 @@ export default function ViewIM() {
             onClick={submitForEndorsementHandler}
           >
             Submit for endorsement
+          </button>
+        </div>
+      )}
+
+      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" && (
+        <div>
+          <button
+            className='border rounded'
+            onClick={coordinatorEndorsementHandler}
+          >
+            Endorse IM
           </button>
         </div>
       )}

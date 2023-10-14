@@ -95,6 +95,17 @@ export default async function handler(
         },
       });
 
+      const departmentRevision =
+        await prisma.departmentRevision.findFirst({
+          where: {
+            DepartmentReviewed: {
+              id: {
+                equals: departmentReviewed?.id ?? "undefined",
+              },
+            },
+          },
+        });
+
       /**
        * Status list:
        * IMPLEMENTATION_DRAFT - IM is created but not yet submitted for review.
@@ -102,7 +113,9 @@ export default async function handler(
        * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator and coordinator
        */
 
-      if (departmentReviewed) {
+      if (departmentRevision) {
+        return res.send("IMPLEMENTATION_DEPARTMENT_REVISED");
+      } else if (departmentReviewed) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVIEWED");
       } else if (departmentReview) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVIEW");

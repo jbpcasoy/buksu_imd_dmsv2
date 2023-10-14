@@ -108,34 +108,51 @@ export default async function handler(
       const departmentReviewed =
         await prisma.departmentReviewed.findFirstOrThrow({
           where: {
-            SubmittedChairpersonSuggestion: {
-              id: {
-                equals: submittedChairpersonSuggestion.id,
+            AND: [
+              {
+                SubmittedChairpersonSuggestion: {
+                  id: {
+                    equals: submittedChairpersonSuggestion.id,
+                  },
+                },
               },
-            },
-            SubmittedCoordinatorSuggestion: {
-              id: {
-                equals: submittedCoordinatorSuggestion.id,
+              {
+                SubmittedCoordinatorSuggestion: {
+                  id: {
+                    equals: submittedCoordinatorSuggestion.id,
+                  },
+                },
               },
-            },
-            SubmittedPeerSuggestion: {
-              id: {
-                equals: submittedPeerSuggestion.id,
+              {
+                SubmittedPeerSuggestion: {
+                  id: {
+                    equals: submittedPeerSuggestion.id,
+                  },
+                },
               },
-            },
+            ],
           },
         });
 
       const existingDepartmentRevision =
         await prisma.departmentRevision.findFirst({
           where: {
-            IMFile: {
-              IM: {
-                id: {
-                  equals: iMFile.iMId,
+            AND: [
+              {
+                IMFile: {
+                  IM: {
+                    id: {
+                      equals: iMFile.iMId,
+                    },
+                  },
                 },
               },
-            },
+              {
+                returned: {
+                  equals: false,
+                },
+              },
+            ],
           },
         });
 

@@ -25,6 +25,11 @@ export default function Sidebar() {
           To Revise
         </Link>
       )}
+      {activeFaculty && (
+        <Link href='/department/to_endorse' className='underline'>
+          To Endorse
+        </Link>
+      )}
     </div>
   );
 }
