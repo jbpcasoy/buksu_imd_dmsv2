@@ -83,6 +83,31 @@ export default function ViewIM() {
       });
   };
 
+  const submitForCITLEndorsementHandler = async () => {
+    if (!state || !iMId) return;
+
+    const formData = new FormData();
+    formData.append("file", state);
+    formData.append("iMId", iMId as string);
+    return axios
+      .post<IMFile>("/api/im_file", formData)
+      .then(async (res) => {
+        return axios
+          .post<DepartmentReview>("/api/citl_revision/", {
+            iMFileId: res.data.id,
+          })
+          .then(() => {
+            alert("IM has been submitted for review");
+          });
+      })
+      .catch((err) => {
+        alert(err?.response?.data?.error?.message ?? err.message);
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
   const coordinatorEndorsementHandler = async () => {
     if (!activeCoordinator) return;
 
@@ -119,8 +144,9 @@ export default function ViewIM() {
           })
           .then(() => {
             alert("IM endorsed successfully");
-          }).catch((error) => {
-            alert(error.response.data.error.message)
+          })
+          .catch((error) => {
+            alert(error.response.data.error.message);
           });
       });
   };
@@ -161,18 +187,13 @@ export default function ViewIM() {
 
       {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
         <div className='space-x-2'>
-          <Link
-            href={`/im/${iM.id}/peer_review`}
-            className='border rounded'
-            onClick={submitForReviewHandler}
-          >
+          <Link href={`/im/${iM.id}/peer_review`} className='border rounded'>
             Peer Review
           </Link>
 
           <Link
             href={`/im/${iM.id}/coordinator_review`}
             className='border rounded'
-            onClick={submitForReviewHandler}
           >
             Coordinator Review
           </Link>
@@ -180,7 +201,6 @@ export default function ViewIM() {
           <Link
             href={`/im/${iM.id}/chairperson_review`}
             className='border rounded'
-            onClick={submitForReviewHandler}
           >
             Chairperson Review
           </Link>
@@ -214,6 +234,29 @@ export default function ViewIM() {
         <div>
           <button className='border rounded' onClick={deanEndorsementHandler}>
             Endorse IM
+          </button>
+        </div>
+      )}
+
+      {iMStatus === "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED" && (
+        <div>
+          <Link
+            href={`/im/${iM.id}/idd_coordinator_suggestion`}
+            className='border rounded'
+          >
+            IDD Coordinator Suggestion
+          </Link>
+        </div>
+      )}
+
+      {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" && (
+        <div>
+          <input type='file' onChange={onFileChange} />
+          <button
+            className='border rounded'
+            onClick={submitForCITLEndorsementHandler}
+          >
+            Submit for endorsement
           </button>
         </div>
       )}

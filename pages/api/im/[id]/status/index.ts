@@ -116,14 +116,39 @@ export default async function handler(
           },
         });
 
+      const deanEndorsement = await prisma.deanEndorsement.findFirst({
+        where: {
+          CoordinatorEndorsement: {
+            id: {
+              equals: coordinatorEndorsement?.id ?? "undefined",
+            },
+          },
+        },
+      });
+      const submittedChairpersonSuggestion =
+        await prisma.submittedIDDCoordinatorSuggestion.findFirst({
+          where: {
+            IDDCoordinatorSuggestion: {
+              DeanEndorsement: {
+                id: {
+                  equals: deanEndorsement?.id ?? "undefined",
+                },
+              },
+            },
+          },
+        });
+
       /**
        * Status list:
        * IMPLEMENTATION_DRAFT - IM is created but not yet submitted for review.
        * IMPLEMENTATION_DEPARTMENT_REVIEW - IM is submitted for department review
        * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator and coordinator
        */
-
-      if (coordinatorEndorsement) {
+      if (submittedChairpersonSuggestion) {
+        return res.send("IMPLEMENTATION_CITL_REVIEWED");
+      } else if (deanEndorsement) {
+        return res.send("IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED");
+      } else if (coordinatorEndorsement) {
         return res.send("IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED");
       } else if (departmentRevision) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVISED");

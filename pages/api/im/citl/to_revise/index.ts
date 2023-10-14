@@ -68,29 +68,11 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  DepartmentReview: {
-                    isNot: null,
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                every: {
                   DepartmentRevision: {
-                    is: null,
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          DepartmentReviewed: {
+                    CoordinatorEndorsement: {
+                      DeanEndorsement: {
+                        IDDCoordinatorSuggestion: {
+                          SubmittedIDDCoordinatorSuggestion: {
                             isNot: null,
                           },
                         },
@@ -101,31 +83,20 @@ export default async function handler(
               },
             },
             {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
+              NOT: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      CoordinatorEndorsement: {
+                        DeanEndorsement: {
+                          IDDCoordinatorSuggestion: {
+                            SubmittedIDDCoordinatorSuggestion: {
+                              CITLRevision: {
+                                some: {
+                                  returned: false,
+                                },
+                              },
+                            },
                           },
                         },
                       },
@@ -151,29 +122,11 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  DepartmentReview: {
-                    isNot: null,
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                every: {
                   DepartmentRevision: {
-                    is: null,
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          DepartmentReviewed: {
+                    CoordinatorEndorsement: {
+                      DeanEndorsement: {
+                        IDDCoordinatorSuggestion: {
+                          SubmittedIDDCoordinatorSuggestion: {
                             isNot: null,
                           },
                         },
@@ -186,29 +139,16 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
+                  DepartmentRevision: {
+                    CoordinatorEndorsement: {
+                      DeanEndorsement: {
+                        IDDCoordinatorSuggestion: {
+                          SubmittedIDDCoordinatorSuggestion: {
+                            CITLRevision: {
+                              some: {
+                                returned: true,
+                              },
+                            },
                           },
                         },
                       },
