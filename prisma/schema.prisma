@@ -138,6 +138,7 @@ model IMFile {
     DepartmentReview   DepartmentReview?
     DepartmentRevision DepartmentRevision?
     CITLRevision       CITLRevision?
+    QAMISRevision      QAMISRevision[]
 }
 
 model Chairperson {
@@ -666,6 +667,8 @@ model QAMISRevision {
     qAMISFileId                 String                       @unique
     SubmittedQAMISSuggestion    SubmittedQAMISSuggestion     @relation(fields: [submittedQAMISSuggestionId], references: [id])
     submittedQAMISSuggestionId  String                       @unique
+    IMFile                      IMFile                       @relation(fields: [iMFileId], references: [id])
+    iMFileId                    String                       @unique
     QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement?
     QAMISChairpersonEndorsement QAMISChairpersonEndorsement?
     QAMISDeanEndorsement        QAMISDeanEndorsement?
