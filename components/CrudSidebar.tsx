@@ -131,10 +131,14 @@ export default function CrudSidebar() {
       link: "/crud/department_reviewed",
       label: "Department Reviewed",
     },
+    {
+      link: "/crud/idd_coordinator",
+      label: "IDD Coordinator",
+    },
   ];
   return (
-    <div className="h-full overflow-y-auto">
-      <h1 className="py-2 sticky top-0 bg-white shadow">BUKSU IMD DMS</h1>
+    <div className='h-full overflow-y-auto'>
+      <h1 className='py-2 sticky top-0 bg-white shadow'>BUKSU IMD DMS</h1>
 
       <div className='flex flex-col'>
         {items.map((item) => (

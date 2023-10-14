@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import facultyAbility from "@/services/ability/facultyAbility";
+import iDDCoordinatorAbility from "@/services/ability/iDDCoordinatorAbility";
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
@@ -20,36 +20,30 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = facultyAbility({ user });
+  let ability = iDDCoordinatorAbility({ user });
 
   const postHandler = async () => {
     try {
       const validator = Yup.object({
         userId: Yup.string().required(),
-        departmentId: Yup.string().required(),
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "Faculty");
+      ForbiddenError.from(ability).throwUnlessCan("create", "IDDCoordinator");
 
-      const { userId, departmentId } = validator.cast(req.body);
+      const { userId } = validator.cast(req.body);
 
-      const faculty = await prisma.faculty.create({
+      const iDDCoordinator = await prisma.iDDCoordinator.create({
         data: {
           User: {
             connect: {
               id: userId,
             },
           },
-          Department: {
-            connect: {
-              id: departmentId,
-            },
-          },
         },
       });
 
-      return res.json(faculty);
+      return res.json(iDDCoordinator);
     } catch (error: any) {
       console.error(error);
       return res
@@ -73,12 +67,12 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      const faculties = await prisma.faculty.findMany({
+      const iDDCoordinators = await prisma.iDDCoordinator.findMany({
         skip,
         take,
         where: {
           AND: [
-            accessibleBy(ability).Faculty,
+            accessibleBy(ability).IDDCoordinator,
             {
               User: {
                 name: {
@@ -90,13 +84,13 @@ export default async function handler(
           ],
         },
       });
-      const count = await prisma.faculty.count({
+      const count = await prisma.iDDCoordinator.count({
         where: {
-          AND: [accessibleBy(ability).Faculty],
+          AND: [accessibleBy(ability).IDDCoordinator],
         },
       });
 
-      return res.json({ faculties, count });
+      return res.json({ iDDCoordinators, count });
     } catch (error: any) {
       console.error(error);
       return res

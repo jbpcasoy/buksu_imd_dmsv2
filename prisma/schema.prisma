@@ -43,8 +43,10 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    isAdmin Boolean   @default(false) // changed in auth route, not modified in database
-    Faculty Faculty[]
+    isAdmin        Boolean         @default(false) // changed in auth route, not modified in database
+    Faculty        Faculty[]
+    IDDCoordinator IDDCoordinator?
+    CITLDirector   CITLDirector?
 }
 
 model VerificationToken {
@@ -487,48 +489,40 @@ model DeanEndorsement {
     deanId                   String
 }
 
-//PeerApproval 
-//CoordinatorApproval
-//ChairpersonApproval
+model IDDCoordinator {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-//IMReviewSection
-//IMReviewQuestion
-//PeerReview
-//PeerReviewItem
-//SubmittedPeerReview
-//ChairpersonReview
-//ChairpersonReviewItem
-//SubmittedChairpersonReview
-//CoordinatorReview 
-//CoordinatorReviewItem 
-//SubmittedCoordinatorReview 
-//PeerSuggestion 
-//PeerSuggestionItem
-//ChairpersonSuggestion
-//ChairpersonSuggestionItem 
-//CoordinatorSuggestion 
-//CoordinatorSuggestionItem 
-//Notification 
-//ReadNotification
-//Admin
-//LoginRole 
-//SubmittedPeerSuggestion
-//SubmittedCoordinatorSuggestion
-//SubmittedChairpersonSuggestion
-//CoordinatorEndorsement
-//DeanEndorsement
-//IMDCoordinator
-//ActiveIMDCoordinator
-//CITLDirector 
-//ActiveCITLDirector 
-//IMDCoordinatorSuggestion 
-//IMDCoordinatorSuggestionItem 
-//SubmittedIMDCoordinatorSuggestion
-//IMDCoordinatorEndorsement
-//CITLDirectorEndorsement 
-//IMEvent
-//Announcement
-//Settings
-//QamisSuggestion
-//QamisSuggestionItem
-//SubmittedQamisSuggestion
+    User                 User                  @relation(fields: [userId], references: [id])
+    userId               String                @unique
+    ActiveIDDCoordinator ActiveIDDCoordinator?
+}
+
+model ActiveIDDCoordinator {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IDDCoordinator   IDDCoordinator @relation(fields: [iDDCoordinatorId], references: [id])
+    iDDCoordinatorId String         @unique
+}
+
+model CITLDirector {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    User               User                @relation(fields: [userId], references: [id])
+    userId             String              @unique
+    ActiveCITLDirector ActiveCITLDirector?
+}
+
+model ActiveCITLDirector {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CITLDirector   CITLDirector @relation(fields: [cITLDirectorId], references: [id])
+    cITLDirectorId String       @unique
+}
