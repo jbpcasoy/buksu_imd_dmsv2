@@ -1,9 +1,14 @@
 import { User } from "@prisma/client";
 import abilityBuilder from "./abilityBuilder";
 
-export default function submittedQAMISSuggestionAbility({ user }: { user: User }) {
+export default function submittedQAMISSuggestionAbility({
+  user,
+}: {
+  user: User;
+}) {
   const ability = abilityBuilder((can, cannot) => {
-    // implement security 
+    // implement security
+    can("connectToQAMISFile", "SubmittedQAMISSuggestion");
     can("read", "SubmittedQAMISSuggestion");
     can("create", "SubmittedQAMISSuggestion");
     can("update", "SubmittedQAMISSuggestion");

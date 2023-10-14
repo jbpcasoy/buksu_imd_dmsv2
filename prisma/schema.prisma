@@ -617,7 +617,6 @@ model QAMISSuggestion {
     cITLDirectorEndorsementId String                    @unique
     QAMISSuggestionItem       QAMISSuggestionItem[]
     SubmittedQAMISSuggestion  SubmittedQAMISSuggestion?
-    QAMISFile                 QAMISFile[]
 }
 
 model QAMISSuggestionItem {
@@ -641,6 +640,7 @@ model SubmittedQAMISSuggestion {
     QAMISSuggestion   QAMISSuggestion @relation(fields: [qAMISSuggestionId], references: [id])
     qAMISSuggestionId String          @unique
     QAMISRevision     QAMISRevision?
+    QAMISFile         QAMISFile[]
 }
 
 model QAMISFile {
@@ -648,13 +648,13 @@ model QAMISFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    filename          String
-    size              Int
-    mimetype          String
-    originalFilename  String
-    QAMISSuggestion   QAMISSuggestion @relation(fields: [qAMISSuggestionId], references: [id])
-    qAMISSuggestionId String
-    QAMISRevision     QAMISRevision?
+    filename                   String
+    size                       Int
+    mimetype                   String
+    originalFilename           String
+    SubmittedQAMISSuggestion   SubmittedQAMISSuggestion @relation(fields: [submittedQAMISSuggestionId], references: [id])
+    submittedQAMISSuggestionId String
+    QAMISRevision              QAMISRevision?
 }
 
 model QAMISRevision {
