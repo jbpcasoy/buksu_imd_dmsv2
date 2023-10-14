@@ -550,6 +550,10 @@ model IDDCoordinatorSuggestionItem {
 
     IDDCoordinatorSuggestion   IDDCoordinatorSuggestion @relation(fields: [iDDCoordinatorSuggestionId], references: [id])
     iDDCoordinatorSuggestionId String
+    suggestion                 String
+    actionTaken                String?
+    remarks                    String?
+    pageNumber                 Int
 }
 
 model SubmittedIDDCoordinatorSuggestion {
