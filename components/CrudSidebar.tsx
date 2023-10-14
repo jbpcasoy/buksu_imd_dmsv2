@@ -171,6 +171,42 @@ export default function CrudSidebar() {
       link: "/crud/citl_director_endorsement",
       label: "CITL Director Endorsement",
     },
+    {
+      link: "/crud/qamis_suggestion",
+      label: "QAMIS Suggestion",
+    },
+    {
+      link: "/crud/qamis_suggestion_item",
+      label: "QAMIS Suggestion Item",
+    },
+    {
+      link: "/crud/submitted_qamis_suggestion",
+      label: "Submitted QAMIS Suggestion",
+    },
+    {
+      link: "/crud/qamis_file",
+      label: "QAMIS File",
+    },
+    {
+      link: "/crud/qamis_revision",
+      label: "QAMIS Revision",
+    },
+    {
+      link: "/crud/qamis_coordinator_endorsement",
+      label: "QAMIS Coordinator Endorsement",
+    },
+    {
+      link: "/crud/qamis_chairperson_endorsement",
+      label: "QAMIS Chairperson Endorsement",
+    },
+    {
+      link: "/crud/qamis_dean_endorsement",
+      label: "QAMIS Dean Endorsement",
+    },
+    {
+      link: "/crud/qamis_department_endorsement",
+      label: "QAMIS Department Endorsement",
+    },
   ];
   return (
     <div className='h-full overflow-y-auto'>

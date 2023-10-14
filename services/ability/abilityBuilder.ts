@@ -39,8 +39,17 @@ import {
   IDDCoordinatorSuggestionItem,
   SubmittedIDDCoordinatorSuggestion,
   CITLRevision,
-  iDDCoordinatorEndorsement,
+  IDDCoordinatorEndorsement,
   CITLDirectorEndorsement,
+  QAMISSuggestion,
+  QAMISSuggestionItem,
+  SubmittedQAMISSuggestion,
+  QAMISFile,
+  QAMISRevision,
+  QAMISCoordinatorEndorsement,
+  QAMISChairpersonEndorsement,
+  QAMISDeanEndorsement,
+  QamisDepartmentEndorsement,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -84,8 +93,17 @@ export type AppSubjects =
       IDDCoordinatorSuggestionItem: IDDCoordinatorSuggestionItem;
       SubmittedIDDCoordinatorSuggestion: SubmittedIDDCoordinatorSuggestion;
       CITLRevision: CITLRevision;
-      iDDCoordinatorEndorsement: iDDCoordinatorEndorsement;
+      IDDCoordinatorEndorsement: IDDCoordinatorEndorsement;
       CITLDirectorEndorsement: CITLDirectorEndorsement;
+      QAMISSuggestion: QAMISSuggestion;
+      QAMISSuggestionItem: QAMISSuggestionItem;
+      SubmittedQAMISSuggestion: SubmittedQAMISSuggestion;
+      QAMISFile: QAMISFile;
+      QAMISRevision: QAMISRevision;
+      QAMISCoordinatorEndorsement: QAMISCoordinatorEndorsement;
+      QAMISChairpersonEndorsement: QAMISChairpersonEndorsement;
+      QAMISDeanEndorsement: QAMISDeanEndorsement;
+      QamisDepartmentEndorsement: QamisDepartmentEndorsement;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

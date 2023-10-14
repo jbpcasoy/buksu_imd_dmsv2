@@ -145,10 +145,11 @@ model Chairperson {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty           Faculty             @relation(fields: [facultyId], references: [id])
-    facultyId         String              @unique
-    ActiveChairperson ActiveChairperson?
-    ChairpersonReview ChairpersonReview[]
+    Faculty                     Faculty                       @relation(fields: [facultyId], references: [id])
+    facultyId                   String                        @unique
+    ActiveChairperson           ActiveChairperson?
+    ChairpersonReview           ChairpersonReview[]
+    QAMISChairpersonEndorsement QAMISChairpersonEndorsement[]
 }
 
 model Coordinator {
@@ -156,11 +157,12 @@ model Coordinator {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty                Faculty                  @relation(fields: [facultyId], references: [id])
-    facultyId              String                   @unique
-    ActiveCoordinator      ActiveCoordinator?
-    CoordinatorReview      CoordinatorReview[]
-    CoordinatorEndorsement CoordinatorEndorsement[]
+    Faculty                     Faculty                       @relation(fields: [facultyId], references: [id])
+    facultyId                   String                        @unique
+    ActiveCoordinator           ActiveCoordinator?
+    CoordinatorReview           CoordinatorReview[]
+    CoordinatorEndorsement      CoordinatorEndorsement[]
+    QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement[]
 }
 
 model Dean {
@@ -168,10 +170,11 @@ model Dean {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty         Faculty           @relation(fields: [facultyId], references: [id])
-    facultyId       String            @unique
-    ActiveDean      ActiveDean?
-    DeanEndorsement DeanEndorsement[]
+    Faculty              Faculty                @relation(fields: [facultyId], references: [id])
+    facultyId            String                 @unique
+    ActiveDean           ActiveDean?
+    DeanEndorsement      DeanEndorsement[]
+    QAMISDeanEndorsement QAMISDeanEndorsement[]
 }
 
 model ActiveCoordinator {
@@ -602,4 +605,117 @@ model CITLDirectorEndorsement {
     iDDCoordinatorEndorsementId String                    @unique
     CITLDirector                CITLDirector              @relation(fields: [cITLDirectorId], references: [id])
     cITLDirectorId              String
+    QAMISSuggestion             QAMISSuggestion?
+}
+
+model QAMISSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CITLDirectorEndorsement   CITLDirectorEndorsement   @relation(fields: [cITLDirectorEndorsementId], references: [id])
+    cITLDirectorEndorsementId String                    @unique
+    QAMISSuggestionItem       QAMISSuggestionItem[]
+    SubmittedQAMISSuggestion  SubmittedQAMISSuggestion?
+    QAMISFile                 QAMISFile[]
+}
+
+model QAMISSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    QAMISSuggestion   QAMISSuggestion @relation(fields: [qAMISSuggestionId], references: [id])
+    qAMISSuggestionId String
+    suggestion        String
+    actionTaken       String?
+    remarks           String?
+    pageNumber        Int
+}
+
+model SubmittedQAMISSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    QAMISSuggestion   QAMISSuggestion @relation(fields: [qAMISSuggestionId], references: [id])
+    qAMISSuggestionId String          @unique
+    QAMISRevision     QAMISRevision?
+}
+
+model QAMISFile {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    filename          String
+    size              Int
+    mimetype          String
+    originalFilename  String
+    QAMISSuggestion   QAMISSuggestion @relation(fields: [qAMISSuggestionId], references: [id])
+    qAMISSuggestionId String
+    QAMISRevision     QAMISRevision?
+}
+
+model QAMISRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    QAMISFile                   QAMISFile                    @relation(fields: [qAMISFileId], references: [id])
+    qAMISFileId                 String                       @unique
+    SubmittedQAMISSuggestion    SubmittedQAMISSuggestion     @relation(fields: [submittedQAMISSuggestionId], references: [id])
+    submittedQAMISSuggestionId  String                       @unique
+    QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement?
+    QAMISChairpersonEndorsement QAMISChairpersonEndorsement?
+    QAMISDeanEndorsement        QAMISDeanEndorsement?
+}
+
+model QAMISCoordinatorEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    QAMISRevision              QAMISRevision                @relation(fields: [qAMISRevisionId], references: [id])
+    qAMISRevisionId            String                       @unique
+    Coordinator                Coordinator                  @relation(fields: [coordinatorId], references: [id])
+    coordinatorId              String
+    QamisDepartmentEndorsement QamisDepartmentEndorsement[]
+}
+
+model QAMISChairpersonEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    QAMISRevision              QAMISRevision               @relation(fields: [qAMISRevisionId], references: [id])
+    qAMISRevisionId            String                      @unique
+    Chairperson                Chairperson                 @relation(fields: [chairpersonId], references: [id])
+    chairpersonId              String
+    QamisDepartmentEndorsement QamisDepartmentEndorsement?
+}
+
+model QAMISDeanEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    QAMISRevision              QAMISRevision               @relation(fields: [qAMISRevisionId], references: [id])
+    qAMISRevisionId            String                      @unique
+    Dean                       Dean                        @relation(fields: [deanId], references: [id])
+    deanId                     String
+    QamisDepartmentEndorsement QamisDepartmentEndorsement?
+}
+
+model QamisDepartmentEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    QAMISDeanEndorsement          QAMISDeanEndorsement        @relation(fields: [qAMISDeanEndorsementId], references: [id])
+    qAMISDeanEndorsementId        String                      @unique
+    QAMISChairpersonEndorsement   QAMISChairpersonEndorsement @relation(fields: [qAMISChairpersonEndorsementId], references: [id])
+    qAMISChairpersonEndorsementId String                      @unique
+    QAMISCoordinatorEndorsement   QAMISCoordinatorEndorsement @relation(fields: [qAMISCoordinatorEndorsementId], references: [id])
+    qAMISCoordinatorEndorsementId String                      @unique
 }
