@@ -60,59 +60,84 @@ export default async function handler(
         },
       });
 
-      await prisma.submittedPeerSuggestion.findFirstOrThrow({
-        where: {
-          PeerSuggestion: {
-            PeerReview: {
-              DepartmentReview: {
-                id: {
-                  equals: departmentReview.id,
+      const submittedPeerSuggestion =
+        await prisma.submittedPeerSuggestion.findFirstOrThrow({
+          where: {
+            PeerSuggestion: {
+              PeerReview: {
+                DepartmentReview: {
+                  id: {
+                    equals: departmentReview.id,
+                  },
                 },
               },
             },
           },
-        },
-      });
+        });
 
-      await prisma.submittedChairpersonSuggestion.findFirstOrThrow({
-        where: {
-          ChairpersonSuggestion: {
-            ChairpersonReview: {
-              DepartmentReview: {
-                id: {
-                  equals: departmentReview.id,
+      const submittedChairpersonSuggestion =
+        await prisma.submittedChairpersonSuggestion.findFirstOrThrow({
+          where: {
+            ChairpersonSuggestion: {
+              ChairpersonReview: {
+                DepartmentReview: {
+                  id: {
+                    equals: departmentReview.id,
+                  },
                 },
               },
             },
           },
-        },
-      });
+        });
 
-      await prisma.submittedCoordinatorSuggestion.findFirstOrThrow({
-        where: {
-          CoordinatorSuggestion: {
-            CoordinatorReview: {
-              DepartmentReview: {
-                id: {
-                  equals: departmentReview.id,
+      const submittedCoordinatorSuggestion =
+        await prisma.submittedCoordinatorSuggestion.findFirstOrThrow({
+          where: {
+            CoordinatorSuggestion: {
+              CoordinatorReview: {
+                DepartmentReview: {
+                  id: {
+                    equals: departmentReview.id,
+                  },
                 },
               },
             },
           },
-        },
-      });
+        });
 
-      const existingDepartmentRevision = await prisma.departmentRevision.findFirst({
-        where: {
-          IMFile: {
-            IM: {
+      const departmentReviewed =
+        await prisma.departmentReviewed.findFirstOrThrow({
+          where: {
+            SubmittedChairpersonSuggestion: {
               id: {
-                equals: iMFile.iMId,
+                equals: submittedChairpersonSuggestion.id,
+              },
+            },
+            SubmittedCoordinatorSuggestion: {
+              id: {
+                equals: submittedCoordinatorSuggestion.id,
+              },
+            },
+            SubmittedPeerSuggestion: {
+              id: {
+                equals: submittedPeerSuggestion.id,
               },
             },
           },
-        },
-      });
+        });
+
+      const existingDepartmentRevision =
+        await prisma.departmentRevision.findFirst({
+          where: {
+            IMFile: {
+              IM: {
+                id: {
+                  equals: iMFile.iMId,
+                },
+              },
+            },
+          },
+        });
 
       if (existingDepartmentRevision) {
         return res.status(400).json({
@@ -125,6 +150,11 @@ export default async function handler(
           IMFile: {
             connect: {
               id: iMFileId,
+            },
+          },
+          DepartmentReviewed: {
+            connect: {
+              id: departmentReviewed.id,
             },
           },
         },

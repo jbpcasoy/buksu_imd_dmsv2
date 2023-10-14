@@ -35,7 +35,12 @@ export default function DepartmentRevisionPage() {
       <div className='flex'>
         <h2 className='flex-1'>DepartmentRevision</h2>
         <div className='space-x-1'>
-          <Link href={`/crud/department_revision/${departmentRevision.id}/edit`} className="rounded border">edit</Link>
+          <Link
+            href={`/crud/department_revision/${departmentRevision.id}/edit`}
+            className='rounded border'
+          >
+            edit
+          </Link>
           <button className='border rounded' onClick={deleteHandler}>
             delete
           </button>
@@ -58,12 +63,12 @@ export default function DepartmentRevisionPage() {
         </Link>
       </p>
       <p>
-        departmentReviewId:{" "}
+        departmentReviewedId:{" "}
         <Link
-          href={`/crud/im_file/${departmentRevision.departmentReviewId}`}
+          href={`/crud/department_reviewed/${departmentRevision.departmentReviewedId}`}
           className='underline'
         >
-          {departmentRevision.departmentReviewId}
+          {departmentRevision.departmentReviewedId}
         </Link>
       </p>
       <p>returned: {departmentRevision.returned ? "Yes" : "No"}</p>

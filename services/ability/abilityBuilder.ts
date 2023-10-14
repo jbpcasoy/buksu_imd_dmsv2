@@ -30,6 +30,7 @@ import {
   DepartmentRevision,
   CoordinatorEndorsement,
   DeanEndorsement,
+  DepartmentReviewed,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -64,6 +65,7 @@ export type AppSubjects =
       DepartmentRevision: DepartmentRevision;
       CoordinatorEndorsement: CoordinatorEndorsement;
       DeanEndorsement: DeanEndorsement;
+      DepartmentReviewed: DepartmentReviewed;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

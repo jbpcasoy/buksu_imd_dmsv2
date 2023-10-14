@@ -1,11 +1,11 @@
 import CrudLayout from "@/components/CrudLayout";
-import useDepartmentRevisions from "@/hooks/useDepartmentRevisions";
+import useDepartmentRevieweds from "@/hooks/useDepartmentRevieweds";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function DepartmentRevisionsPage() {
+export default function DepartmentReviewedsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { departmentRevisions, count } = useDepartmentRevisions(state);
+  const { departmentRevieweds, count } = useDepartmentRevieweds(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -24,10 +24,7 @@ export default function DepartmentRevisionsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>DepartmentRevision</h2>
-        <Link className='border rounded' href={`/crud/department_revision/add`}>
-          Add
-        </Link>
+        <h2>DepartmentReviewed Reviewed</h2>
       </div>
 
       <div>
@@ -37,43 +34,46 @@ export default function DepartmentRevisionsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>iMFileId</th>
-              <th>departmentReviewedId</th>
-              <th>returned</th>
+              <th>submittedChairpersonSuggestionId</th>
+              <th>submittedCoordinatorSuggestionId</th>
+              <th>submittedPeerSuggestionId</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {departmentRevisions.map((departmentRevision) => {
+            {departmentRevieweds.map((departmentReviewed) => {
               return (
-                <tr key={departmentRevision.id}>
-                  <td>{departmentRevision.id}</td>
-                  <td>
-                    {new Date(departmentRevision.createdAt).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(departmentRevision.updatedAt).toLocaleString()}
-                  </td>
+                <tr key={departmentReviewed.id}>
+                  <td>{departmentReviewed.id}</td>
+                  <td>{new Date(departmentReviewed.createdAt).toLocaleString()}</td>
+                  <td>{new Date(departmentReviewed.updatedAt).toLocaleString()}</td>
                   <td>
                     <Link
-                      href={`/crud/im_file/${departmentRevision.iMFileId}`}
+                      href={`/crud/submitted_chairperson_suggestion/${departmentReviewed.submittedChairpersonSuggestionId}`}
                       className='underline'
                     >
-                      {departmentRevision.iMFileId}
+                      {departmentReviewed.submittedChairpersonSuggestionId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/department_review/${departmentRevision.departmentReviewedId}`}
+                      href={`/crud/submitted_coordinator_suggestion/${departmentReviewed.submittedCoordinatorSuggestionId}`}
                       className='underline'
                     >
-                      {departmentRevision.departmentReviewedId}
+                      {departmentReviewed.submittedCoordinatorSuggestionId}
                     </Link>
                   </td>
-                  <td>{departmentRevision.returned ? "Yes" : "No"}</td>
                   <td>
                     <Link
-                      href={`/crud/department_revision/${departmentRevision.id}`}
+                      href={`/crud/submitted_peer_suggestion/${departmentReviewed.submittedPeerSuggestionId}`}
+                      className='underline'
+                    >
+                      {departmentReviewed.submittedPeerSuggestionId}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/crud/department_reviewed/${departmentReviewed.id}`}
                       className='border rounded'
                     >
                       view

@@ -127,6 +127,10 @@ export default function CrudSidebar() {
       link: "/crud/dean_endorsement",
       label: "Dean Endorsement",
     },
+    {
+      link: "/crud/department_reviewed",
+      label: "Department Reviewed",
+    },
   ];
   return (
     <div className="h-full overflow-y-auto">
