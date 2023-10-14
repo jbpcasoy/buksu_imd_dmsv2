@@ -17,7 +17,7 @@ export default function ActiveIDDCoordinatorPage() {
     }
 
     axios
-      .delete(`/api/active_iDDCoordinator/${activeIDDCoordinatorId}`)
+      .delete(`/api/active_idd_coordinator/${activeIDDCoordinatorId}`)
       .then(() => {
         alert("ActiveIDDCoordinator deleted successfully.");
       })
