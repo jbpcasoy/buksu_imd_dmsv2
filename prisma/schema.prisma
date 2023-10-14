@@ -683,7 +683,7 @@ model QAMISCoordinatorEndorsement {
     qAMISRevisionId            String                       @unique
     Coordinator                Coordinator                  @relation(fields: [coordinatorId], references: [id])
     coordinatorId              String
-    QamisDepartmentEndorsement QamisDepartmentEndorsement[]
+    QamisDepartmentEndorsement QamisDepartmentEndorsement?
 }
 
 model QAMISChairpersonEndorsement {

@@ -1,11 +1,11 @@
 import CrudLayout from "@/components/CrudLayout";
-import useCoordinatorEndorsements from "@/hooks/useCoordinatorEndorsements";
+import useQAMISCoordinatorEndorsements from "@/hooks/useQAMISCoordinatorEndorsements";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function CoordinatorEndorsementsPage() {
+export default function QAMISCoordinatorEndorsementsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { coordinatorEndorsements, count } = useCoordinatorEndorsements(state);
+  const { qAMISCoordinatorEndorsements, count } = useQAMISCoordinatorEndorsements(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -24,10 +24,10 @@ export default function CoordinatorEndorsementsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>CoordinatorEndorsement</h2>
+        <h2>QAMISCoordinatorEndorsement</h2>
         <Link
           className='border rounded'
-          href={`/crud/coordinator_endorsement/add`}
+          href={`/crud/qamis_coordinator_endorsement/add`}
         >
           Add
         </Link>
@@ -40,45 +40,45 @@ export default function CoordinatorEndorsementsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>departmentRevisionId</th>
+              <th>qAMISRevisionId</th>
               <th>coordinatorId</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {coordinatorEndorsements.map((coordinatorEndorsement) => {
+            {qAMISCoordinatorEndorsements.map((qAMISCoordinatorEndorsement) => {
               return (
-                <tr key={coordinatorEndorsement.id}>
-                  <td>{coordinatorEndorsement.id}</td>
+                <tr key={qAMISCoordinatorEndorsement.id}>
+                  <td>{qAMISCoordinatorEndorsement.id}</td>
                   <td>
                     {new Date(
-                      coordinatorEndorsement.createdAt
+                      qAMISCoordinatorEndorsement.createdAt
                     ).toLocaleString()}
                   </td>
                   <td>
                     {new Date(
-                      coordinatorEndorsement.updatedAt
+                      qAMISCoordinatorEndorsement.updatedAt
                     ).toLocaleString()}
                   </td>
                   <td>
                     <Link
-                      href={`/crud/department_revision/${coordinatorEndorsement.departmentRevisionId}`}
+                      href={`/crud/qamis_revision/${qAMISCoordinatorEndorsement.qAMISRevisionId}`}
                       className='underline'
                     >
-                      {coordinatorEndorsement.departmentRevisionId}
+                      {qAMISCoordinatorEndorsement.qAMISRevisionId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/coordinator/${coordinatorEndorsement.coordinatorId}`}
+                      href={`/crud/coordinator/${qAMISCoordinatorEndorsement.coordinatorId}`}
                       className='underline'
                     >
-                      {coordinatorEndorsement.coordinatorId}
+                      {qAMISCoordinatorEndorsement.coordinatorId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/coordinator_endorsement/${coordinatorEndorsement.id}`}
+                      href={`/crud/qamis_coordinator_endorsement/${qAMISCoordinatorEndorsement.id}`}
                       className='border rounded'
                     >
                       view
