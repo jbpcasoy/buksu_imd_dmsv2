@@ -95,12 +95,22 @@ export default async function handler(
         },
       });
 
-      const departmentRevision =
-        await prisma.departmentRevision.findFirst({
+      const departmentRevision = await prisma.departmentRevision.findFirst({
+        where: {
+          DepartmentReviewed: {
+            id: {
+              equals: departmentReviewed?.id ?? "undefined",
+            },
+          },
+        },
+      });
+
+      const coordinatorEndorsement =
+        await prisma.coordinatorEndorsement.findFirst({
           where: {
-            DepartmentReviewed: {
+            DepartmentRevision: {
               id: {
-                equals: departmentReviewed?.id ?? "undefined",
+                equals: departmentRevision?.id ?? "undefined",
               },
             },
           },
@@ -113,7 +123,9 @@ export default async function handler(
        * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator and coordinator
        */
 
-      if (departmentRevision) {
+      if (coordinatorEndorsement) {
+        return res.send("IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED");
+      } else if (departmentRevision) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVISED");
       } else if (departmentReviewed) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVIEWED");

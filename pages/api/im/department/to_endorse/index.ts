@@ -40,6 +40,15 @@ export default async function handler(
           },
         },
       });
+      const department = await prisma.department.findFirstOrThrow({
+        where: {
+          Faculty: {
+            some: {
+              id: userActiveFaculty.facultyId,
+            },
+          },
+        },
+      });
       ability = iMAbility({ user });
 
       const { skip, take } = validator.cast(req.query);
@@ -51,16 +60,9 @@ export default async function handler(
             accessibleBy(ability).IM,
             {
               Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    isNot: null,
+                Department: {
+                  id: {
+                    equals: department.id,
                   },
                 },
               },
@@ -96,16 +98,9 @@ export default async function handler(
             accessibleBy(ability).IM,
             {
               Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    isNot: null,
+                Department: {
+                  id: {
+                    equals: department.id,
                   },
                 },
               },

@@ -6,6 +6,7 @@ import getServerUser from "@/services/getServerUser";
 import iMAbility from "@/services/ability/iMAbility";
 import { accessibleBy } from "@casl/prisma";
 import { AppAbility } from "@/services/ability/abilityBuilder";
+import useActiveDean from "@/hooks/useActiveDean";
 
 export default async function handler(
   req: NextApiRequest,
@@ -40,11 +41,30 @@ export default async function handler(
           },
         },
       });
-      const department = await prisma.department.findFirstOrThrow({
+      const userActiveDean = await prisma.activeDean.findFirstOrThrow({
         where: {
-          Faculty: {
-            some: {
-              id: userActiveFaculty.facultyId,
+          Dean: {
+            Faculty: {
+              ActiveFaculty: {
+                id: {
+                  equals: userActiveFaculty.id,
+                },
+              },
+            },
+          },
+        },
+        include: {
+          Dean: {
+            include: {
+              Faculty: {
+                include: {
+                  Department: {
+                    include: {
+                      College: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -61,8 +81,8 @@ export default async function handler(
             {
               Faculty: {
                 Department: {
-                  id: {
-                    equals: department.id,
+                  College: {
+                    id: userActiveDean.Dean.Faculty.Department.College.id,
                   },
                 },
               },
@@ -78,9 +98,9 @@ export default async function handler(
             },
             {
               IMFile: {
-                every: {
+                some: {
                   DepartmentRevision: {
-                    is: null,
+                    isNot: null,
                   },
                 },
               },
@@ -88,47 +108,22 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
+                  DepartmentRevision: {
+                    CoordinatorEndorsement: {
+                      isNot: null,
                     },
                   },
                 },
               },
             },
             {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
+              NOT: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      CoordinatorEndorsement: {
+                        DeanEndorsement: {
+                          isNot: null,
                         },
                       },
                     },
@@ -146,8 +141,8 @@ export default async function handler(
             {
               Faculty: {
                 Department: {
-                  id: {
-                    equals: department.id,
+                  College: {
+                    id: userActiveDean.Dean.Faculty.Department.College.id,
                   },
                 },
               },
@@ -163,7 +158,7 @@ export default async function handler(
             },
             {
               IMFile: {
-                none: {
+                some: {
                   DepartmentRevision: {
                     isNot: null,
                   },
@@ -173,47 +168,22 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
+                  DepartmentRevision: {
+                    CoordinatorEndorsement: {
+                      isNot: null,
                     },
                   },
                 },
               },
             },
             {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
+              NOT: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      CoordinatorEndorsement: {
+                        DeanEndorsement: {
+                          isNot: null,
                         },
                       },
                     },

@@ -12,6 +12,7 @@ import {
 } from "@prisma/client";
 import useIMStatus from "@/hooks/useIMStatus";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
+import useActiveDeanMe from "@/hooks/useActiveDeanMe";
 
 export default function ViewIM() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function ViewIM() {
   const [state, setState] = useState<File | null>();
   const iMStatus = useIMStatus({ id: iMId as string });
   const activeCoordinator = useActiveCoordinatorMe();
+  const activeDean = useActiveDeanMe();
 
   const deleteHandler = (id: string) => {
     axios.delete(`/api/im/${id}`).then(() => {
@@ -97,6 +99,28 @@ export default function ViewIM() {
           })
           .then(() => {
             alert("IM endorsed successfully");
+          });
+      });
+  };
+
+  const deanEndorsementHandler = async () => {
+    if (!activeDean) return;
+
+    return axios
+      .get<DepartmentRevision>(`/api/coordinator_endorsement/im/${iMId}`)
+      .then((res) => {
+        const coordinatorEndorsement = res.data;
+        if (!coordinatorEndorsement) return;
+
+        return axios
+          .post<CoordinatorEndorsement>(`/api/dean_endorsement`, {
+            coordinatorEndorsementId: coordinatorEndorsement.id,
+            activeDeanId: activeDean.id,
+          })
+          .then(() => {
+            alert("IM endorsed successfully");
+          }).catch((error) => {
+            alert(error.response.data.error.message)
           });
       });
   };
@@ -181,6 +205,14 @@ export default function ViewIM() {
             className='border rounded'
             onClick={coordinatorEndorsementHandler}
           >
+            Endorse IM
+          </button>
+        </div>
+      )}
+
+      {iMStatus === "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED" && (
+        <div>
+          <button className='border rounded' onClick={deanEndorsementHandler}>
             Endorse IM
           </button>
         </div>

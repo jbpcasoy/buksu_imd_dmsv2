@@ -2,11 +2,11 @@ import { IM } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export interface useToEndorseParams {
+export interface useCoordinatorToEndorseParams {
   skip: number;
   take: number;
 }
-export default function useToEndorse({ skip, take }: useToEndorseParams) {
+export default function useCoordinatorToEndorse({ skip, take }: useCoordinatorToEndorseParams) {
   const [state, setState] = useState<{iMs: IM[], count: number}>({
     count: 0,
     iMs: []

@@ -1,5 +1,5 @@
 import MainLayout from "@/components/MainLayout";
-import useCoordinatorToEndorse from "@/hooks/useCoordinatorToEndorse";
+import useDeanToEndorse from "@/hooks/useDeanToEndorse";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -9,7 +9,7 @@ export default function ToEndorsePage() {
     skip: 0,
   });
 
-  const { iMs, count } = useCoordinatorToEndorse(state);
+  const { iMs, count } = useDeanToEndorse(state);
 
   const nextHandler = () => {
     setState((prev) => {

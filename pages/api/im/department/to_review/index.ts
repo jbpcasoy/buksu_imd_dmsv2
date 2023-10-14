@@ -77,18 +77,16 @@ export default async function handler(
               },
             },
             {
-              NOT: {
-                AND: [
-                  {
-                    IMFile: {
-                      some: {
-                        DepartmentReview: {
-                          CoordinatorReview: {
-                            CoordinatorSuggestion: {
-                              SubmittedCoordinatorSuggestion: {
-                                DepartmentReviewed: {
-                                  isNot: null,
-                                },
+              AND: [
+                {
+                  IMFile: {
+                    none: {
+                      DepartmentReview: {
+                        CoordinatorReview: {
+                          CoordinatorSuggestion: {
+                            SubmittedCoordinatorSuggestion: {
+                              DepartmentReviewed: {
+                                isNot: null,
                               },
                             },
                           },
@@ -96,16 +94,16 @@ export default async function handler(
                       },
                     },
                   },
-                  {
-                    IMFile: {
-                      some: {
-                        DepartmentReview: {
-                          ChairpersonReview: {
-                            ChairpersonSuggestion: {
-                              SubmittedChairpersonSuggestion: {
-                                DepartmentReviewed: {
-                                  isNot: null,
-                                },
+                },
+                {
+                  IMFile: {
+                    none: {
+                      DepartmentReview: {
+                        ChairpersonReview: {
+                          ChairpersonSuggestion: {
+                            SubmittedChairpersonSuggestion: {
+                              DepartmentReviewed: {
+                                isNot: null,
                               },
                             },
                           },
@@ -113,16 +111,16 @@ export default async function handler(
                       },
                     },
                   },
-                  {
-                    IMFile: {
-                      some: {
-                        DepartmentReview: {
-                          PeerReview: {
-                            PeerSuggestion: {
-                              SubmittedPeerSuggestion: {
-                                DepartmentReviewed: {
-                                  isNot: null,
-                                },
+                },
+                {
+                  IMFile: {
+                    none: {
+                      DepartmentReview: {
+                        PeerReview: {
+                          PeerSuggestion: {
+                            SubmittedPeerSuggestion: {
+                              DepartmentReviewed: {
+                                isNot: null,
                               },
                             },
                           },
@@ -130,8 +128,8 @@ export default async function handler(
                       },
                     },
                   },
-                ],
-              },
+                },
+              ],
             },
           ],
         },
@@ -159,18 +157,16 @@ export default async function handler(
               },
             },
             {
-              NOT: {
-                AND: [
-                  {
-                    IMFile: {
-                      some: {
-                        DepartmentReview: {
-                          CoordinatorReview: {
-                            CoordinatorSuggestion: {
-                              SubmittedCoordinatorSuggestion: {
-                                DepartmentReviewed: {
-                                  isNot: null,
-                                },
+              AND: [
+                {
+                  IMFile: {
+                    none: {
+                      DepartmentReview: {
+                        CoordinatorReview: {
+                          CoordinatorSuggestion: {
+                            SubmittedCoordinatorSuggestion: {
+                              DepartmentReviewed: {
+                                isNot: null,
                               },
                             },
                           },
@@ -178,16 +174,16 @@ export default async function handler(
                       },
                     },
                   },
-                  {
-                    IMFile: {
-                      some: {
-                        DepartmentReview: {
-                          ChairpersonReview: {
-                            ChairpersonSuggestion: {
-                              SubmittedChairpersonSuggestion: {
-                                DepartmentReviewed: {
-                                  isNot: null,
-                                },
+                },
+                {
+                  IMFile: {
+                    none: {
+                      DepartmentReview: {
+                        ChairpersonReview: {
+                          ChairpersonSuggestion: {
+                            SubmittedChairpersonSuggestion: {
+                              DepartmentReviewed: {
+                                isNot: null,
                               },
                             },
                           },
@@ -195,16 +191,16 @@ export default async function handler(
                       },
                     },
                   },
-                  {
-                    IMFile: {
-                      some: {
-                        DepartmentReview: {
-                          PeerReview: {
-                            PeerSuggestion: {
-                              SubmittedPeerSuggestion: {
-                                DepartmentReviewed: {
-                                  isNot: null,
-                                },
+                },
+                {
+                  IMFile: {
+                    none: {
+                      DepartmentReview: {
+                        PeerReview: {
+                          PeerSuggestion: {
+                            SubmittedPeerSuggestion: {
+                              DepartmentReviewed: {
+                                isNot: null,
                               },
                             },
                           },
@@ -212,8 +208,8 @@ export default async function handler(
                       },
                     },
                   },
-                ],
-              },
+                },
+              ],
             },
           ],
         },
