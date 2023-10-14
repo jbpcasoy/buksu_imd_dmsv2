@@ -42,13 +42,13 @@ CREATE TABLE "CITLRevision" (
 );
 
 -- CreateTable
-CREATE TABLE "IDDEndorsement" (
+CREATE TABLE "iDDCoordinatorEndorsement" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "cITLRevisionId" TEXT NOT NULL,
 
-    CONSTRAINT "IDDEndorsement_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "iDDCoordinatorEndorsement_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -56,7 +56,7 @@ CREATE TABLE "CITLDirectorEndorsement" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "iDDEndorsementId" TEXT NOT NULL,
+    "iDDCoordinatorEndorsementId" TEXT NOT NULL,
 
     CONSTRAINT "CITLDirectorEndorsement_pkey" PRIMARY KEY ("id")
 );
@@ -71,10 +71,10 @@ CREATE UNIQUE INDEX "SubmittedIDDCoordinatorSuggestion_iDDCoordinatorSuggestionI
 CREATE UNIQUE INDEX "CITLRevision_iMFileId_key" ON "CITLRevision"("iMFileId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "IDDEndorsement_cITLRevisionId_key" ON "IDDEndorsement"("cITLRevisionId");
+CREATE UNIQUE INDEX "iDDCoordinatorEndorsement_cITLRevisionId_key" ON "iDDCoordinatorEndorsement"("cITLRevisionId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CITLDirectorEndorsement_iDDEndorsementId_key" ON "CITLDirectorEndorsement"("iDDEndorsementId");
+CREATE UNIQUE INDEX "CITLDirectorEndorsement_iDDCoordinatorEndorsementId_key" ON "CITLDirectorEndorsement"("iDDCoordinatorEndorsementId");
 
 -- AddForeignKey
 ALTER TABLE "IDDCoordinatorSuggestion" ADD CONSTRAINT "IDDCoordinatorSuggestion_deanEndorsementId_fkey" FOREIGN KEY ("deanEndorsementId") REFERENCES "DeanEndorsement"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -95,7 +95,7 @@ ALTER TABLE "CITLRevision" ADD CONSTRAINT "CITLRevision_submittedIDDCoordinatorS
 ALTER TABLE "CITLRevision" ADD CONSTRAINT "CITLRevision_iMFileId_fkey" FOREIGN KEY ("iMFileId") REFERENCES "IMFile"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "IDDEndorsement" ADD CONSTRAINT "IDDEndorsement_cITLRevisionId_fkey" FOREIGN KEY ("cITLRevisionId") REFERENCES "CITLRevision"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "iDDCoordinatorEndorsement" ADD CONSTRAINT "iDDCoordinatorEndorsement_cITLRevisionId_fkey" FOREIGN KEY ("cITLRevisionId") REFERENCES "CITLRevision"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CITLDirectorEndorsement" ADD CONSTRAINT "CITLDirectorEndorsement_iDDEndorsementId_fkey" FOREIGN KEY ("iDDEndorsementId") REFERENCES "IDDEndorsement"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CITLDirectorEndorsement" ADD CONSTRAINT "CITLDirectorEndorsement_iDDCoordinatorEndorsementId_fkey" FOREIGN KEY ("iDDCoordinatorEndorsementId") REFERENCES "iDDCoordinatorEndorsement"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

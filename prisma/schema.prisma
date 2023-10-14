@@ -496,10 +496,11 @@ model IDDCoordinator {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User                     User                       @relation(fields: [userId], references: [id])
-    userId                   String                     @unique
-    ActiveIDDCoordinator     ActiveIDDCoordinator?
-    IDDCoordinatorSuggestion IDDCoordinatorSuggestion[]
+    User                      User                        @relation(fields: [userId], references: [id])
+    userId                    String                      @unique
+    ActiveIDDCoordinator      ActiveIDDCoordinator?
+    IDDCoordinatorSuggestion  IDDCoordinatorSuggestion[]
+    IDDCoordinatorEndorsement IDDCoordinatorEndorsement[]
 }
 
 model ActiveIDDCoordinator {
@@ -576,14 +577,16 @@ model CITLRevision {
     returned                            Boolean                           @default(false)
     IMFile                              IMFile                            @relation(fields: [iMFileId], references: [id])
     iMFileId                            String                            @unique
-    IDDEndorsement                      IDDEndorsement?
+    IDDCoordinatorEndorsement           IDDCoordinatorEndorsement?
 }
 
-model IDDEndorsement {
+model IDDCoordinatorEndorsement {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    IDDCoordinator          IDDCoordinator           @relation(fields: [iDDCoordinatorId], references: [id])
+    iDDCoordinatorId        String
     CITLRevision            CITLRevision             @relation(fields: [cITLRevisionId], references: [id])
     cITLRevisionId          String                   @unique
     CITLDirectorEndorsement CITLDirectorEndorsement?
@@ -594,6 +597,6 @@ model CITLDirectorEndorsement {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IDDEndorsement   IDDEndorsement @relation(fields: [iDDEndorsementId], references: [id])
-    iDDEndorsementId String         @unique
+    IDDCoordinatorEndorsement   IDDCoordinatorEndorsement @relation(fields: [iDDCoordinatorEndorsementId], references: [id])
+    iDDCoordinatorEndorsementId String                    @unique
 }

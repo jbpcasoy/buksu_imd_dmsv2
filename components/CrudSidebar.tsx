@@ -164,8 +164,8 @@ export default function CrudSidebar() {
       label: "CITL Revision",
     },
     {
-      link: "/crud/idd_endorsement",
-      label: "IDD Endorsement",
+      link: "/crud/idd_coordinator_endorsement",
+      label: "IDD Coordinator Endorsement",
     },
     {
       link: "/crud/citl_director_endorsement",

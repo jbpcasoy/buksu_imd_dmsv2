@@ -39,7 +39,7 @@ import {
   IDDCoordinatorSuggestionItem,
   SubmittedIDDCoordinatorSuggestion,
   CITLRevision,
-  IDDEndorsement,
+  iDDCoordinatorEndorsement,
   CITLDirectorEndorsement,
 } from "@prisma/client";
 
@@ -84,7 +84,7 @@ export type AppSubjects =
       IDDCoordinatorSuggestionItem: IDDCoordinatorSuggestionItem;
       SubmittedIDDCoordinatorSuggestion: SubmittedIDDCoordinatorSuggestion;
       CITLRevision: CITLRevision;
-      IDDEndorsement: IDDEndorsement;
+      iDDCoordinatorEndorsement: iDDCoordinatorEndorsement;
       CITLDirectorEndorsement: CITLDirectorEndorsement;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;

@@ -56,6 +56,48 @@ export default async function handler(
                   },
                 },
               },
+              {
+                DepartmentRevision: {
+                  DepartmentReviewed: {
+                    SubmittedCoordinatorSuggestion: {
+                      CoordinatorSuggestion: {
+                        CoordinatorReview: {
+                          DepartmentReview: {
+                            IMFile: {
+                              IM: {
+                                id: {
+                                  equals: id,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                DepartmentRevision: {
+                  DepartmentReviewed: {
+                    SubmittedPeerSuggestion: {
+                      PeerSuggestion: {
+                        PeerReview: {
+                          DepartmentReview: {
+                            IMFile: {
+                              IM: {
+                                id: {
+                                  equals: id,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             ],
           },
         });
