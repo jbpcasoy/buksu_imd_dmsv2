@@ -517,9 +517,10 @@ model CITLDirector {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User               User                @relation(fields: [userId], references: [id])
-    userId             String              @unique
-    ActiveCITLDirector ActiveCITLDirector?
+    User                    User                      @relation(fields: [userId], references: [id])
+    userId                  String                    @unique
+    ActiveCITLDirector      ActiveCITLDirector?
+    CITLDirectorEndorsement CITLDirectorEndorsement[]
 }
 
 model ActiveCITLDirector {
@@ -599,4 +600,6 @@ model CITLDirectorEndorsement {
 
     IDDCoordinatorEndorsement   IDDCoordinatorEndorsement @relation(fields: [iDDCoordinatorEndorsementId], references: [id])
     iDDCoordinatorEndorsementId String                    @unique
+    CITLDirector                CITLDirector              @relation(fields: [cITLDirectorId], references: [id])
+    cITLDirectorId              String
 }
