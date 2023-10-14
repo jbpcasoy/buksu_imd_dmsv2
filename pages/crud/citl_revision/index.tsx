@@ -1,11 +1,11 @@
 import CrudLayout from "@/components/CrudLayout";
-import useIDDCoordinatorSuggestionItems from "@/hooks/useIDDCoordinatorSuggestionItems";
+import useCITLRevisions from "@/hooks/useCITLRevisions";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function IDDCoordinatorSuggestionItemsPage() {
+export default function CITLRevisionsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { iDDCoordinatorSuggestionItems, count } = useIDDCoordinatorSuggestionItems(state);
+  const { cITLRevisions, count } = useCITLRevisions(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -24,11 +24,8 @@ export default function IDDCoordinatorSuggestionItemsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>IDDCoordinatorSuggestionItem</h2>
-        <Link
-          className='border rounded'
-          href={`/crud/idd_coordinator_suggestion_item/add`}
-        >
+        <h2>CITLRevision</h2>
+        <Link className='border rounded' href={`/crud/citl_revision/add`}>
           Add
         </Link>
       </div>
@@ -40,32 +37,43 @@ export default function IDDCoordinatorSuggestionItemsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>iDDCoordinatorSuggestionId</th>
+              <th>iMFileId</th>
+              <th>submittedIDDCoordinatorSuggestionId</th>
+              <th>returned</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {iDDCoordinatorSuggestionItems.map((iDDCoordinatorSuggestionItem) => {
+            {cITLRevisions.map((cITLRevision) => {
               return (
-                <tr key={iDDCoordinatorSuggestionItem.id}>
-                  <td>{iDDCoordinatorSuggestionItem.id}</td>
+                <tr key={cITLRevision.id}>
+                  <td>{cITLRevision.id}</td>
                   <td>
-                    {new Date(iDDCoordinatorSuggestionItem.createdAt).toLocaleString()}
+                    {new Date(cITLRevision.createdAt).toLocaleString()}
                   </td>
                   <td>
-                    {new Date(iDDCoordinatorSuggestionItem.updatedAt).toLocaleString()}
+                    {new Date(cITLRevision.updatedAt).toLocaleString()}
                   </td>
                   <td>
                     <Link
-                      href={`/crud/idd_coordinator_suggestion/${iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}`}
+                      href={`/crud/im_file/${cITLRevision.iMFileId}`}
                       className='underline'
                     >
-                      {iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}
+                      {cITLRevision.iMFileId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}`}
+                      href={`/crud/submitted_idd_coordinator_suggestion/${cITLRevision.submittedIDDCoordinatorSuggestionId}`}
+                      className='underline'
+                    >
+                      {cITLRevision.submittedIDDCoordinatorSuggestionId}
+                    </Link>
+                  </td>
+                  <td>{cITLRevision.returned ? "Yes" : "No"}</td>
+                  <td>
+                    <Link
+                      href={`/crud/citl_revision/${cITLRevision.id}`}
                       className='border rounded'
                     >
                       view

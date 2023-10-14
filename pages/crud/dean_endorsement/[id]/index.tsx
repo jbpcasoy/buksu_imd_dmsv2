@@ -44,7 +44,7 @@ export default function DeanEndorsementPage() {
       <p>
       coordinatorEndorsementId:{" "}
         <Link
-          href={`/crud/department_revision/${deanEndorsement.coordinatorEndorsementId}`}
+          href={`/crud/coordinator_endorsement/${deanEndorsement.coordinatorEndorsementId}`}
           className='underline'
         >
           {deanEndorsement.coordinatorEndorsementId}

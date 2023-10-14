@@ -54,7 +54,7 @@ export default function SubmittedIDDCoordinatorSuggestionPage() {
       <p>
         iDDCoordinatorSuggestionId:{" "}
         <Link
-          href={`/crud/iDDCoordinator_suggestion/${submittedIDDCoordinatorSuggestion.iDDCoordinatorSuggestionId}`}
+          href={`/crud/idd_coordinator_suggestion/${submittedIDDCoordinatorSuggestion.iDDCoordinatorSuggestionId}`}
           className='underline'
         >
           {submittedIDDCoordinatorSuggestion.iDDCoordinatorSuggestionId}
