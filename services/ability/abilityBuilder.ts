@@ -35,6 +35,12 @@ import {
   ActiveIDDCoordinator,
   CITLDirector,
   ActiveCITLDirector,
+  IDDCoordinatorSuggestion,
+  IDDCoordinatorSuggestionItem,
+  SubmittedIDDCoordinatorSuggestion,
+  CITLRevision,
+  IDDEndorsement,
+  CITLDirectorEndorsement,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -74,6 +80,12 @@ export type AppSubjects =
       ActiveIDDCoordinator: ActiveIDDCoordinator;
       CITLDirector: CITLDirector;
       ActiveCITLDirector: ActiveCITLDirector;
+      IDDCoordinatorSuggestion: IDDCoordinatorSuggestion;
+      IDDCoordinatorSuggestionItem: IDDCoordinatorSuggestionItem;
+      SubmittedIDDCoordinatorSuggestion: SubmittedIDDCoordinatorSuggestion;
+      CITLRevision: CITLRevision;
+      IDDEndorsement: IDDEndorsement;
+      CITLDirectorEndorsement: CITLDirectorEndorsement;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

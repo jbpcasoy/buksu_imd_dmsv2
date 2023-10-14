@@ -147,6 +147,30 @@ export default function CrudSidebar() {
       link: "/crud/active_citl_director",
       label: "Active CITL Director",
     },
+    {
+      link: "/crud/idd_coordinator_suggestion",
+      label: "IDD Coordinator Suggestion",
+    },
+    {
+      link: "/crud/idd_coordinator_suggestion_item",
+      label: "IDD Coordinator Suggestion Item",
+    },
+    {
+      link: "/crud/submitted_idd_coordinator_suggestion",
+      label: "Submitted IDD Coordinator Suggestion",
+    },
+    {
+      link: "/crud/citl_revision",
+      label: "CITL Revision",
+    },
+    {
+      link: "/crud/idd_endorsement",
+      label: "IDD Endorsement",
+    },
+    {
+      link: "/crud/citl_director_endorsement",
+      label: "CITL Director Endorsement",
+    },
   ];
   return (
     <div className='h-full overflow-y-auto'>

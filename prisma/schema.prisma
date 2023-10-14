@@ -137,6 +137,7 @@ model IMFile {
     originalFilename   String
     DepartmentReview   DepartmentReview?
     DepartmentRevision DepartmentRevision?
+    CITLRevision       CITLRevision?
 }
 
 model Chairperson {
@@ -483,10 +484,11 @@ model DeanEndorsement {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    CoordinatorEndorsement   CoordinatorEndorsement @relation(fields: [coordinatorEndorsementId], references: [id])
-    coordinatorEndorsementId String                 @unique
-    Dean                     Dean                   @relation(fields: [deanId], references: [id])
+    CoordinatorEndorsement   CoordinatorEndorsement    @relation(fields: [coordinatorEndorsementId], references: [id])
+    coordinatorEndorsementId String                    @unique
+    Dean                     Dean                      @relation(fields: [deanId], references: [id])
     deanId                   String
+    IDDCoordinatorSuggestion IDDCoordinatorSuggestion?
 }
 
 model IDDCoordinator {
@@ -494,9 +496,10 @@ model IDDCoordinator {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User                 User                  @relation(fields: [userId], references: [id])
-    userId               String                @unique
-    ActiveIDDCoordinator ActiveIDDCoordinator?
+    User                     User                       @relation(fields: [userId], references: [id])
+    userId                   String                     @unique
+    ActiveIDDCoordinator     ActiveIDDCoordinator?
+    IDDCoordinatorSuggestion IDDCoordinatorSuggestion[]
 }
 
 model ActiveIDDCoordinator {
@@ -525,4 +528,68 @@ model ActiveCITLDirector {
 
     CITLDirector   CITLDirector @relation(fields: [cITLDirectorId], references: [id])
     cITLDirectorId String       @unique
+}
+
+model IDDCoordinatorSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    DeanEndorsement                   DeanEndorsement                    @relation(fields: [deanEndorsementId], references: [id])
+    deanEndorsementId                 String                             @unique
+    IDDCoordinator                    IDDCoordinator                     @relation(fields: [iDDCoordinatorId], references: [id])
+    iDDCoordinatorId                  String
+    IDDCoordinatorSuggestionItem      IDDCoordinatorSuggestionItem[]
+    SubmittedIDDCoordinatorSuggestion SubmittedIDDCoordinatorSuggestion?
+}
+
+model IDDCoordinatorSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IDDCoordinatorSuggestion   IDDCoordinatorSuggestion @relation(fields: [iDDCoordinatorSuggestionId], references: [id])
+    iDDCoordinatorSuggestionId String
+}
+
+model SubmittedIDDCoordinatorSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IDDCoordinatorSuggestion   IDDCoordinatorSuggestion @relation(fields: [iDDCoordinatorSuggestionId], references: [id])
+    iDDCoordinatorSuggestionId String                   @unique
+    CITLRevision               CITLRevision[]
+}
+
+model CITLRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SubmittedIDDCoordinatorSuggestion   SubmittedIDDCoordinatorSuggestion @relation(fields: [submittedIDDCoordinatorSuggestionId], references: [id])
+    submittedIDDCoordinatorSuggestionId String
+    returned                            Boolean                           @default(false)
+    IMFile                              IMFile                            @relation(fields: [iMFileId], references: [id])
+    iMFileId                            String                            @unique
+    IDDEndorsement                      IDDEndorsement?
+}
+
+model IDDEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CITLRevision            CITLRevision             @relation(fields: [cITLRevisionId], references: [id])
+    cITLRevisionId          String                   @unique
+    CITLDirectorEndorsement CITLDirectorEndorsement?
+}
+
+model CITLDirectorEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IDDEndorsement   IDDEndorsement @relation(fields: [iDDEndorsementId], references: [id])
+    iDDEndorsementId String         @unique
 }
