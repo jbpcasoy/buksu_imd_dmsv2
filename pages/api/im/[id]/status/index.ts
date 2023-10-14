@@ -97,6 +97,7 @@ export default async function handler(
 
       const departmentRevision = await prisma.departmentRevision.findFirst({
         where: {
+          returned: false,
           DepartmentReviewed: {
             id: {
               equals: departmentReviewed?.id ?? "undefined",
@@ -125,7 +126,7 @@ export default async function handler(
           },
         },
       });
-      const submittedChairpersonSuggestion =
+      const submittedIDDCoordinatorSuggestion =
         await prisma.submittedIDDCoordinatorSuggestion.findFirst({
           where: {
             IDDCoordinatorSuggestion: {
@@ -138,13 +139,39 @@ export default async function handler(
           },
         });
 
+      const cITLRevision = await prisma.cITLRevision.findFirst({
+        where: {
+          returned: false,
+          SubmittedIDDCoordinatorSuggestion: {
+            id: {
+              equals: submittedIDDCoordinatorSuggestion?.id ?? "undefined",
+            },
+          },
+        },
+      });
+
+      const iDDCoordinatorEndorsement =
+        await prisma.iDDCoordinatorEndorsement.findFirst({
+          where: {
+            CITLRevision: {
+              id: {
+                equals: cITLRevision?.id ?? "undefined",
+              },
+            },
+          },
+        });
+
       /**
        * Status list:
        * IMPLEMENTATION_DRAFT - IM is created but not yet submitted for review.
        * IMPLEMENTATION_DEPARTMENT_REVIEW - IM is submitted for department review
        * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator and coordinator
        */
-      if (submittedChairpersonSuggestion) {
+      if (iDDCoordinatorEndorsement) {
+        return res.send("IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED");
+      } else if (cITLRevision) {
+        return res.send("IMPLEMENTATION_CITL_REVISED");
+      } else if (submittedIDDCoordinatorSuggestion) {
         return res.send("IMPLEMENTATION_CITL_REVIEWED");
       } else if (deanEndorsement) {
         return res.send("IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED");

@@ -10,7 +10,7 @@ export default function useActiveCITLDirectorMe() {
     let subscribe = true;
 
     axios
-      .get(`/api/active_idd_coordinator/me`)
+      .get(`/api/active_citl_director/me`)
       .then((res) => {
         if(!subscribe) return;
         setState(res.data);

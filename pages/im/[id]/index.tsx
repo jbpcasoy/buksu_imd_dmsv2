@@ -13,6 +13,8 @@ import {
 import useIMStatus from "@/hooks/useIMStatus";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 
 export default function ViewIM() {
   const router = useRouter();
@@ -22,6 +24,8 @@ export default function ViewIM() {
   const iMStatus = useIMStatus({ id: iMId as string });
   const activeCoordinator = useActiveCoordinatorMe();
   const activeDean = useActiveDeanMe();
+  const activeIDDCoordinator = useActiveIDDCoordinatorMe();
+  const activeCITLDirector = useActiveCITLDirectorMe();
 
   const deleteHandler = (id: string) => {
     axios.delete(`/api/im/${id}`).then(() => {
@@ -125,6 +129,9 @@ export default function ViewIM() {
           .then(() => {
             alert("IM endorsed successfully");
           });
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
       });
   };
 
@@ -144,10 +151,56 @@ export default function ViewIM() {
           })
           .then(() => {
             alert("IM endorsed successfully");
-          })
-          .catch((error) => {
-            alert(error.response.data.error.message);
           });
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
+      });
+  };
+
+  const iDDCoordinatorEndorsementHandler = async () => {
+    if (!activeIDDCoordinator) return;
+
+    return axios
+      .get<DepartmentRevision>(`/api/citl_revision/im/${iMId}`)
+      .then((res) => {
+        const cITLRevision = res.data;
+        if (!cITLRevision) return;
+
+        return axios
+          .post<CoordinatorEndorsement>(`/api/idd_coordinator_endorsement`, {
+            cITLRevisionId: cITLRevision.id,
+            activeIDDCoordinatorId: activeIDDCoordinator.id,
+          })
+          .then(() => {
+            alert("IM endorsed successfully");
+          });
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
+      });
+  };
+
+  const cITLDirectorEndorsementHandler = async () => {
+    if (!activeCITLDirector) return;
+
+    return axios
+      .get<DepartmentRevision>(`/api/idd_coordinator_endorsement/im/${iMId}`)
+      .then((res) => {
+        const iDDCoordinatorEndorsement = res.data;
+        if (!iDDCoordinatorEndorsement) return;
+
+        return axios
+          .post<CoordinatorEndorsement>(`/api/citl_director_endorsement`, {
+            iDDCoordinatorEndorsementId: iDDCoordinatorEndorsement.id,
+            activeCITLDirectorId: activeCITLDirector.id,
+          })
+          .then(() => {
+            alert("IM endorsed successfully");
+          });
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
       });
   };
 
@@ -257,6 +310,28 @@ export default function ViewIM() {
             onClick={submitForCITLEndorsementHandler}
           >
             Submit for endorsement
+          </button>
+        </div>
+      )}
+
+      {iMStatus === "IMPLEMENTATION_CITL_REVISED" && (
+        <div>
+          <button
+            className='border rounded'
+            onClick={iDDCoordinatorEndorsementHandler}
+          >
+            Endorse IM
+          </button>
+        </div>
+      )}
+
+      {iMStatus === "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" && (
+        <div>
+          <button
+            className='border rounded'
+            onClick={cITLDirectorEndorsementHandler}
+          >
+            Endorse IM
           </button>
         </div>
       )}

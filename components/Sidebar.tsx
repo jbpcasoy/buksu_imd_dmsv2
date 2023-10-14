@@ -53,14 +53,26 @@ export default function Sidebar() {
       <div className='flex flex-col'>
         <p className='font-bold'>CITL</p>
 
+        {activeFaculty && (
+          <Link href='/citl/to_revise' className='underline'>
+            To Revise
+          </Link>
+        )}
+        <p className='font-bold text-xs'>IDD Coordinator</p>
         {activeIDDCoordinator && (
           <Link href='/citl/to_review' className='underline'>
             To Review
           </Link>
         )}
-        {activeFaculty && (
-          <Link href='/citl/to_revise' className='underline'>
-            To Revise
+        {activeIDDCoordinator && (
+          <Link href='/citl/to_endorse' className='underline'>
+            To Endorse
+          </Link>
+        )}
+        <p className='font-bold text-xs'>CITL Director</p>
+        {activeCITLDirector && (
+          <Link href='/citl/citl_director_to_endorse' className='underline'>
+            To Endorse
           </Link>
         )}
       </div>
