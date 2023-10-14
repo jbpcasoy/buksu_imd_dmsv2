@@ -135,6 +135,18 @@ export default function CrudSidebar() {
       link: "/crud/idd_coordinator",
       label: "IDD Coordinator",
     },
+    {
+      link: "/crud/active_idd_coordinator",
+      label: "Active IDD Coordinator",
+    },
+    {
+      link: "/crud/citl_director",
+      label: "CITL Director",
+    },
+    {
+      link: "/crud/active_citl_director",
+      label: "Active CITL Director",
+    },
   ];
   return (
     <div className='h-full overflow-y-auto'>
