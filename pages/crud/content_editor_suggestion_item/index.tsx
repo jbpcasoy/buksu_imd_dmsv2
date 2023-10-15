@@ -1,11 +1,11 @@
 import CrudLayout from "@/components/CrudLayout";
-import useContentSpecialistSuggestionItems from "@/hooks/useContentSpecialistSuggestionItems";
+import useContentEditorSuggestionItems from "@/hooks/useContentEditorSuggestionItems";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function ContentSpecialistSuggestionItemsPage() {
+export default function ContentEditorSuggestionItemsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { contentSpecialistSuggestionItems, count } = useContentSpecialistSuggestionItems(state);
+  const { contentEditorSuggestionItems, count } = useContentEditorSuggestionItems(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -24,10 +24,10 @@ export default function ContentSpecialistSuggestionItemsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>ContentSpecialistSuggestionItem</h2>
+        <h2>ContentEditorSuggestionItem</h2>
         <Link
           className='border rounded'
-          href={`/crud/content_specialist_suggestion_item/add`}
+          href={`/crud/content_editor_suggestion_item/add`}
         >
           Add
         </Link>
@@ -40,32 +40,32 @@ export default function ContentSpecialistSuggestionItemsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>contentSpecialistSuggestionId</th>
+              <th>contentEditorSuggestionId</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {contentSpecialistSuggestionItems.map((contentSpecialistSuggestionItem) => {
+            {contentEditorSuggestionItems.map((contentEditorSuggestionItem) => {
               return (
-                <tr key={contentSpecialistSuggestionItem.id}>
-                  <td>{contentSpecialistSuggestionItem.id}</td>
+                <tr key={contentEditorSuggestionItem.id}>
+                  <td>{contentEditorSuggestionItem.id}</td>
                   <td>
-                    {new Date(contentSpecialistSuggestionItem.createdAt).toLocaleString()}
+                    {new Date(contentEditorSuggestionItem.createdAt).toLocaleString()}
                   </td>
                   <td>
-                    {new Date(contentSpecialistSuggestionItem.updatedAt).toLocaleString()}
+                    {new Date(contentEditorSuggestionItem.updatedAt).toLocaleString()}
                   </td>
                   <td>
                     <Link
-                      href={`/crud/content_specialist_suggestion/${contentSpecialistSuggestionItem.contentSpecialistSuggestionId}`}
+                      href={`/crud/content_editor_suggestion/${contentEditorSuggestionItem.contentEditorSuggestionId}`}
                       className='underline'
                     >
-                      {contentSpecialistSuggestionItem.contentSpecialistSuggestionId}
+                      {contentEditorSuggestionItem.contentEditorSuggestionId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/content_specialist_suggestion_item/${contentSpecialistSuggestionItem.id}`}
+                      href={`/crud/content_editor_suggestion_item/${contentEditorSuggestionItem.id}`}
                       className='border rounded'
                     >
                       view
