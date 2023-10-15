@@ -17,6 +17,7 @@ const ReviewQuestions = {
   q5_1: "The concepts are explicitly discussed.",
   q5_2: "All terms are understandable to the learners.",
   q5_3: "The content is free from gender-bias.",
+  q5_4: "The presentation facilitates comprehension.",
   q6_1: "Examples are provided to illustrate the concepts discussed.",
   q6_2: "The examples are consistent with the concepts discussed.",
   q6_3: "They relate to real-world situations.",

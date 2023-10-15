@@ -207,9 +207,13 @@ export default function CrudSidebar() {
       link: "/crud/qamis_department_endorsement",
       label: "QAMIS Department Endorsement",
     },
+    {
+      link: "/crud/content_specialist_review",
+      label: "Content Specialist Review",
+    },
   ];
   return (
-    <div className='h-full overflow-y-auto'>
+    <div className='h-full overflow-y-auto pb-10'>
       <h1 className='py-2 sticky top-0 bg-white shadow'>BUKSU IMD DMS</h1>
 
       <div className='flex flex-col'>

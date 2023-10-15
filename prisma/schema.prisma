@@ -82,16 +82,17 @@ model Faculty {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User          User           @relation(fields: [userId], references: [id])
-    userId        String
-    Department    Department     @relation(fields: [departmentId], references: [id])
-    departmentId  String
-    IM            IM[]
-    ActiveFaculty ActiveFaculty?
-    Chairperson   Chairperson?
-    Coordinator   Coordinator?
-    Dean          Dean?
-    PeerReview    PeerReview[]
+    User                    User                      @relation(fields: [userId], references: [id])
+    userId                  String
+    Department              Department                @relation(fields: [departmentId], references: [id])
+    departmentId            String
+    IM                      IM[]
+    ActiveFaculty           ActiveFaculty?
+    Chairperson             Chairperson?
+    Coordinator             Coordinator?
+    Dean                    Dean?
+    PeerReview              PeerReview[]
+    ContentSpecialistReview ContentSpecialistReview[]
 
     @@unique([departmentId, userId])
 }
@@ -139,6 +140,7 @@ model IMFile {
     DepartmentRevision DepartmentRevision?
     CITLRevision       CITLRevision?
     QAMISRevision      QAMISRevision[]
+    IMERCCITLRevision  IMERCCITLRevision?
 }
 
 model Chairperson {
@@ -455,7 +457,7 @@ model DepartmentReviewed {
     submittedChairpersonSuggestionId String                         @unique
     SubmittedPeerSuggestion          SubmittedPeerSuggestion        @relation(fields: [submittedPeerSuggestionId], references: [id])
     submittedPeerSuggestionId        String                         @unique
-    DepartmentRevision               DepartmentRevision?
+    DepartmentRevision               DepartmentRevision[]
 }
 
 model DepartmentRevision {
@@ -464,7 +466,7 @@ model DepartmentRevision {
     updatedAt DateTime @updatedAt
 
     DepartmentReviewed     DepartmentReviewed      @relation(fields: [departmentReviewedId], references: [id])
-    departmentReviewedId   String                  @unique
+    departmentReviewedId   String
     IMFile                 IMFile                  @relation(fields: [iMFileId], references: [id])
     iMFileId               String                  @unique
     returned               Boolean                 @default(false)
@@ -500,11 +502,13 @@ model IDDCoordinator {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User                      User                        @relation(fields: [userId], references: [id])
-    userId                    String                      @unique
-    ActiveIDDCoordinator      ActiveIDDCoordinator?
-    IDDCoordinatorSuggestion  IDDCoordinatorSuggestion[]
-    IDDCoordinatorEndorsement IDDCoordinatorEndorsement[]
+    User                           User                             @relation(fields: [userId], references: [id])
+    userId                         String                           @unique
+    ActiveIDDCoordinator           ActiveIDDCoordinator?
+    IDDCoordinatorSuggestion       IDDCoordinatorSuggestion[]
+    IDDCoordinatorEndorsement      IDDCoordinatorEndorsement[]
+    IDDSpecialistReview            IDDSpecialistReview[]
+    IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement[]
 }
 
 model ActiveIDDCoordinator {
@@ -521,10 +525,12 @@ model CITLDirector {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User                    User                      @relation(fields: [userId], references: [id])
-    userId                  String                    @unique
-    ActiveCITLDirector      ActiveCITLDirector?
-    CITLDirectorEndorsement CITLDirectorEndorsement[]
+    User                         User                           @relation(fields: [userId], references: [id])
+    userId                       String                         @unique
+    ActiveCITLDirector           ActiveCITLDirector?
+    CITLDirectorEndorsement      CITLDirectorEndorsement[]
+    ContentEditorReview          ContentEditorReview[]
+    IMERCCITLDirectorEndorsement IMERCCITLDirectorEndorsement[]
 }
 
 model ActiveCITLDirector {
@@ -679,9 +685,9 @@ model QAMISCoordinatorEndorsement {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    QAMISRevision              QAMISRevision                @relation(fields: [qAMISRevisionId], references: [id])
-    qAMISRevisionId            String                       @unique
-    Coordinator                Coordinator                  @relation(fields: [coordinatorId], references: [id])
+    QAMISRevision              QAMISRevision               @relation(fields: [qAMISRevisionId], references: [id])
+    qAMISRevisionId            String                      @unique
+    Coordinator                Coordinator                 @relation(fields: [coordinatorId], references: [id])
     coordinatorId              String
     QAMISDepartmentEndorsement QAMISDepartmentEndorsement?
 }
@@ -721,4 +727,275 @@ model QAMISDepartmentEndorsement {
     qAMISChairpersonEndorsementId String                      @unique
     QAMISCoordinatorEndorsement   QAMISCoordinatorEndorsement @relation(fields: [qAMISCoordinatorEndorsementId], references: [id])
     qAMISCoordinatorEndorsementId String                      @unique
+    ContentSpecialistReview       ContentSpecialistReview?
+    ContentEditorReview           ContentEditorReview?
+    IDDSpecialistReview           IDDSpecialistReview?
+}
+
+model ContentSpecialistReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    q1_1                         Rating?
+    q1_2                         Rating?
+    q2_1                         Rating?
+    q2_2                         Rating?
+    q2_3                         Rating?
+    q2_4                         Rating?
+    q3_1                         Rating?
+    q4_1                         Rating?
+    q4_2                         Rating?
+    q4_3                         Rating?
+    q5_1                         Rating?
+    q5_2                         Rating?
+    q5_3                         Rating?
+    q5_4                         Rating?
+    q6_1                         Rating?
+    q6_2                         Rating?
+    q6_3                         Rating?
+    q6_4                         Rating?
+    q6_5                         Rating?
+    q7_1                         Rating?
+    q7_2                         Rating?
+    q7_3                         Rating?
+    q7_4                         Rating?
+    q7_5                         Rating?
+    q8_1                         Rating?
+    q8_2                         Rating?
+    q8_3                         Rating?
+    Faculty                      Faculty                      @relation(fields: [facultyId], references: [id])
+    facultyId                    String
+    QAMISDepartmentEndorsement   QAMISDepartmentEndorsement   @relation(fields: [qAMISDepartmentEndorsementId], references: [id])
+    qAMISDepartmentEndorsementId String                       @unique
+    ContentSpecialistSuggestion  ContentSpecialistSuggestion?
+}
+
+model ContentSpecialistSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ContentSpecialistReview              ContentSpecialistReview               @relation(fields: [contentSpecialistReviewId], references: [id])
+    contentSpecialistReviewId            String                                @unique
+    ContentSpecialistSuggestionItem      ContentSpecialistSuggestionItem[]
+    SubmittedContentSpecialistSuggestion SubmittedContentSpecialistSuggestion?
+}
+
+model ContentSpecialistSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ContentSpecialistSuggestion   ContentSpecialistSuggestion @relation(fields: [contentSpecialistSuggestionId], references: [id])
+    contentSpecialistSuggestionId String
+    suggestion                    String
+    actionTaken                   String?
+    remarks                       String?
+    pageNumber                    Int
+}
+
+model SubmittedContentSpecialistSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ContentSpecialistSuggestion   ContentSpecialistSuggestion @relation(fields: [contentSpecialistSuggestionId], references: [id])
+    contentSpecialistSuggestionId String                      @unique
+    IMERCCITLReviewed             IMERCCITLReviewed?
+}
+
+model ContentEditorReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    q1_1                         Rating?
+    q1_2                         Rating?
+    q2_1                         Rating?
+    q2_2                         Rating?
+    q2_3                         Rating?
+    q2_4                         Rating?
+    q3_1                         Rating?
+    q4_1                         Rating?
+    q4_2                         Rating?
+    q4_3                         Rating?
+    q5_1                         Rating?
+    q5_2                         Rating?
+    q5_3                         Rating?
+    q5_4                         Rating?
+    q6_1                         Rating?
+    q6_2                         Rating?
+    q6_3                         Rating?
+    q6_4                         Rating?
+    q6_5                         Rating?
+    q7_1                         Rating?
+    q7_2                         Rating?
+    q7_3                         Rating?
+    q7_4                         Rating?
+    q7_5                         Rating?
+    q8_1                         Rating?
+    q8_2                         Rating?
+    q8_3                         Rating?
+    CITLDirector                 CITLDirector               @relation(fields: [cITLDirectorId], references: [id])
+    cITLDirectorId               String
+    QAMISDepartmentEndorsement   QAMISDepartmentEndorsement @relation(fields: [qAMISDepartmentEndorsementId], references: [id])
+    qAMISDepartmentEndorsementId String                     @unique
+    ContentEditorSuggestion      ContentEditorSuggestion?
+}
+
+model ContentEditorSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ContentEditorReview              ContentEditorReview               @relation(fields: [contentEditorReviewId], references: [id])
+    contentEditorReviewId            String                            @unique
+    ContentEditorSuggestionItem      ContentEditorSuggestionItem[]
+    SubmittedContentEditorSuggestion SubmittedContentEditorSuggestion?
+}
+
+model ContentEditorSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ContentEditorSuggestion   ContentEditorSuggestion @relation(fields: [contentEditorSuggestionId], references: [id])
+    contentEditorSuggestionId String
+    suggestion                String
+    actionTaken               String?
+    remarks                   String?
+    pageNumber                Int
+}
+
+model SubmittedContentEditorSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ContentEditorSuggestion   ContentEditorSuggestion @relation(fields: [contentEditorSuggestionId], references: [id])
+    contentEditorSuggestionId String                  @unique
+    IMERCCITLReviewed         IMERCCITLReviewed?
+}
+
+model IDDSpecialistReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    q1_1                         Rating?
+    q1_2                         Rating?
+    q2_1                         Rating?
+    q2_2                         Rating?
+    q2_3                         Rating?
+    q2_4                         Rating?
+    q3_1                         Rating?
+    q4_1                         Rating?
+    q4_2                         Rating?
+    q4_3                         Rating?
+    q5_1                         Rating?
+    q5_2                         Rating?
+    q5_3                         Rating?
+    q5_4                         Rating?
+    q6_1                         Rating?
+    q6_2                         Rating?
+    q6_3                         Rating?
+    q6_4                         Rating?
+    q6_5                         Rating?
+    q7_1                         Rating?
+    q7_2                         Rating?
+    q7_3                         Rating?
+    q7_4                         Rating?
+    q7_5                         Rating?
+    q8_1                         Rating?
+    q8_2                         Rating?
+    q8_3                         Rating?
+    IDDCoordinator               IDDCoordinator             @relation(fields: [iDDCoordinatorId], references: [id])
+    iDDCoordinatorId             String
+    QAMISDepartmentEndorsement   QAMISDepartmentEndorsement @relation(fields: [qAMISDepartmentEndorsementId], references: [id])
+    qAMISDepartmentEndorsementId String                     @unique
+    IDDSpecialistSuggestion      IDDSpecialistSuggestion?
+}
+
+model IDDSpecialistSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IDDSpecialistReview              IDDSpecialistReview               @relation(fields: [iDDSpecialistReviewId], references: [id])
+    iDDSpecialistReviewId            String                            @unique
+    SubmittedIDDSpecialistSuggestion SubmittedIDDSpecialistSuggestion?
+}
+
+model IDDSpecialistSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    contentEditorSuggestionId String
+    suggestion                String
+    actionTaken               String?
+    remarks                   String?
+    pageNumber                Int
+}
+
+model SubmittedIDDSpecialistSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IDDSpecialistSuggestion   IDDSpecialistSuggestion @relation(fields: [iDDSpecialistSuggestionId], references: [id])
+    iDDSpecialistSuggestionId String                  @unique
+    IMERCCITLReviewed         IMERCCITLReviewed?
+}
+
+model IMERCCITLReviewed {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SubmittedIDDSpecialistSuggestion       SubmittedIDDSpecialistSuggestion     @relation(fields: [submittedIDDSpecialistSuggestionId], references: [id])
+    submittedIDDSpecialistSuggestionId     String                               @unique
+    SubmittedContentEditorSuggestion       SubmittedContentEditorSuggestion     @relation(fields: [submittedContentEditorSuggestionId], references: [id])
+    submittedContentEditorSuggestionId     String                               @unique
+    SubmittedContentSpecialistSuggestion   SubmittedContentSpecialistSuggestion @relation(fields: [submittedContentSpecialistSuggestionId], references: [id])
+    submittedContentSpecialistSuggestionId String                               @unique
+    IMERCCITLRevision                      IMERCCITLRevision[]
+}
+
+model IMERCCITLRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // CoordinatorEndorsement CoordinatorEndorsement?
+    IMERCCITLReviewed              IMERCCITLReviewed               @relation(fields: [iMERCCITLReviewedId], references: [id])
+    iMERCCITLReviewedId            String
+    IMFile                         IMFile                          @relation(fields: [iMFileId], references: [id])
+    iMFileId                       String                          @unique
+    returned                       Boolean                         @default(false)
+    IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement?
+}
+
+model IMERCIDDCoordinatorEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IDDCoordinator               IDDCoordinator                @relation(fields: [iDDCoordinatorId], references: [id])
+    iDDCoordinatorId             String
+    IMERCCITLRevision            IMERCCITLRevision             @relation(fields: [iMERCCITLRevisionId], references: [id])
+    iMERCCITLRevisionId          String                        @unique
+    IMERCCITLDirectorEndorsement IMERCCITLDirectorEndorsement?
+}
+
+model IMERCCITLDirectorEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CITLDirector                     CITLDirector                   @relation(fields: [cITLDirectorId], references: [id])
+    cITLDirectorId                   String
+    IMERCIDDCoordinatorEndorsement   IMERCIDDCoordinatorEndorsement @relation(fields: [iMERCIDDCoordinatorEndorsementId], references: [id])
+    iMERCIDDCoordinatorEndorsementId String                         @unique
 }
