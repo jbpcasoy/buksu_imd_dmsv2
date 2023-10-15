@@ -65,6 +65,57 @@ export default async function handler(
         }
       );
 
+      const qAMISChairpersonEndorsement =
+        await prisma.qAMISChairpersonEndorsement.findFirst({
+          where: {
+            QAMISRevision: {
+              QAMISCoordinatorEndorsement: {
+                id: {
+                  equals: qAMISCoordinatorEndorsement.id,
+                },
+              },
+            },
+          },
+        });
+
+      const qAMISDeanEndorsement = await prisma.qAMISDeanEndorsement.findFirst({
+        where: {
+          QAMISRevision: {
+            QAMISCoordinatorEndorsement: {
+              id: {
+                equals: qAMISCoordinatorEndorsement.id,
+              },
+            },
+          },
+        },
+      });
+
+      if (
+        qAMISChairpersonEndorsement &&
+        qAMISCoordinatorEndorsement &&
+        qAMISDeanEndorsement
+      ) {
+        await prisma.qAMISDepartmentEndorsement.create({
+          data: {
+            QAMISChairpersonEndorsement: {
+              connect: {
+                id: qAMISChairpersonEndorsement.id,
+              },
+            },
+            QAMISCoordinatorEndorsement: {
+              connect: {
+                id: qAMISCoordinatorEndorsement.id,
+              },
+            },
+            QAMISDeanEndorsement: {
+              connect: {
+                id: qAMISDeanEndorsement.id,
+              },
+            },
+          },
+        });
+      }
+
       return res.json(qAMISCoordinatorEndorsement);
     } catch (error: any) {
       console.error(error);

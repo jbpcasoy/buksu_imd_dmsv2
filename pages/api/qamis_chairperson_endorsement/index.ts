@@ -34,9 +34,7 @@ export default async function handler(
         "QAMISChairpersonEndorsement"
       );
 
-      const { qAMISRevisionId, activeChairpersonId } = validator.cast(
-        req.body
-      );
+      const { qAMISRevisionId, activeChairpersonId } = validator.cast(req.body);
 
       const chairperson = await prisma.chairperson.findFirstOrThrow({
         where: {
@@ -48,8 +46,8 @@ export default async function handler(
         },
       });
 
-      const qAMISChairpersonEndorsement = await prisma.qAMISChairpersonEndorsement.create(
-        {
+      const qAMISChairpersonEndorsement =
+        await prisma.qAMISChairpersonEndorsement.create({
           data: {
             Chairperson: {
               connect: {
@@ -62,8 +60,58 @@ export default async function handler(
               },
             },
           },
-        }
-      );
+        });
+
+      const qAMISCoordinatorEndorsement =
+        await prisma.qAMISCoordinatorEndorsement.findFirst({
+          where: {
+            QAMISRevision: {
+              QAMISChairpersonEndorsement: {
+                id: {
+                  equals: qAMISChairpersonEndorsement.id,
+                },
+              },
+            },
+          },
+        });
+
+      const qAMISDeanEndorsement = await prisma.qAMISDeanEndorsement.findFirst({
+        where: {
+          QAMISRevision: {
+            QAMISChairpersonEndorsement: {
+              id: {
+                equals: qAMISChairpersonEndorsement.id,
+              },
+            },
+          },
+        },
+      });
+
+      if (
+        qAMISChairpersonEndorsement &&
+        qAMISCoordinatorEndorsement &&
+        qAMISDeanEndorsement
+      ) {
+        await prisma.qAMISDepartmentEndorsement.create({
+          data: {
+            QAMISChairpersonEndorsement: {
+              connect: {
+                id: qAMISChairpersonEndorsement.id,
+              },
+            },
+            QAMISCoordinatorEndorsement: {
+              connect: {
+                id: qAMISCoordinatorEndorsement.id,
+              },
+            },
+            QAMISDeanEndorsement: {
+              connect: {
+                id: qAMISDeanEndorsement.id,
+              },
+            },
+          },
+        });
+      }
 
       return res.json(qAMISChairpersonEndorsement);
     } catch (error: any) {

@@ -34,9 +34,7 @@ export default async function handler(
         "QAMISDeanEndorsement"
       );
 
-      const { qAMISRevisionId, activeDeanId } = validator.cast(
-        req.body
-      );
+      const { qAMISRevisionId, activeDeanId } = validator.cast(req.body);
 
       const dean = await prisma.dean.findFirstOrThrow({
         where: {
@@ -48,22 +46,72 @@ export default async function handler(
         },
       });
 
-      const qAMISDeanEndorsement = await prisma.qAMISDeanEndorsement.create(
-        {
-          data: {
-            Dean: {
-              connect: {
-                id: dean.id,
-              },
+      const qAMISDeanEndorsement = await prisma.qAMISDeanEndorsement.create({
+        data: {
+          Dean: {
+            connect: {
+              id: dean.id,
             },
+          },
+          QAMISRevision: {
+            connect: {
+              id: qAMISRevisionId,
+            },
+          },
+        },
+      });
+
+      const qAMISChairpersonEndorsement =
+        await prisma.qAMISChairpersonEndorsement.findFirst({
+          where: {
             QAMISRevision: {
-              connect: {
-                id: qAMISRevisionId,
+              QAMISDeanEndorsement: {
+                id: {
+                  equals: qAMISDeanEndorsement.id,
+                },
               },
             },
           },
-        }
-      );
+        });
+
+      const qAMISCoordinatorEndorsement =
+        await prisma.qAMISCoordinatorEndorsement.findFirst({
+          where: {
+            QAMISRevision: {
+              QAMISDeanEndorsement: {
+                id: {
+                  equals: qAMISDeanEndorsement.id,
+                },
+              },
+            },
+          },
+        });
+
+      if (
+        qAMISChairpersonEndorsement &&
+        qAMISCoordinatorEndorsement &&
+        qAMISDeanEndorsement
+      ) {
+        await prisma.qAMISDepartmentEndorsement.create({
+          data: {
+            QAMISChairpersonEndorsement: {
+              connect: {
+                id: qAMISChairpersonEndorsement.id,
+              },
+            },
+            QAMISCoordinatorEndorsement: {
+              connect: {
+                id: qAMISCoordinatorEndorsement.id,
+              },
+            },
+            QAMISDeanEndorsement: {
+              connect: {
+                id: qAMISDeanEndorsement.id,
+              },
+            },
+          },
+        });
+      }
 
       return res.json(qAMISDeanEndorsement);
     } catch (error: any) {
@@ -84,14 +132,13 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { skip, take } = validator.cast(req.query);
-      const qAMISDeanEndorsements =
-        await prisma.qAMISDeanEndorsement.findMany({
-          skip,
-          take,
-          where: {
-            AND: [accessibleBy(ability).QAMISDeanEndorsement],
-          },
-        });
+      const qAMISDeanEndorsements = await prisma.qAMISDeanEndorsement.findMany({
+        skip,
+        take,
+        where: {
+          AND: [accessibleBy(ability).QAMISDeanEndorsement],
+        },
+      });
       const count = await prisma.qAMISDeanEndorsement.count({
         where: {
           AND: [accessibleBy(ability).QAMISDeanEndorsement],

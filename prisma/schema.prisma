@@ -683,7 +683,7 @@ model QAMISCoordinatorEndorsement {
     qAMISRevisionId            String                       @unique
     Coordinator                Coordinator                  @relation(fields: [coordinatorId], references: [id])
     coordinatorId              String
-    QamisDepartmentEndorsement QamisDepartmentEndorsement?
+    QAMISDepartmentEndorsement QAMISDepartmentEndorsement?
 }
 
 model QAMISChairpersonEndorsement {
@@ -695,7 +695,7 @@ model QAMISChairpersonEndorsement {
     qAMISRevisionId            String                      @unique
     Chairperson                Chairperson                 @relation(fields: [chairpersonId], references: [id])
     chairpersonId              String
-    QamisDepartmentEndorsement QamisDepartmentEndorsement?
+    QAMISDepartmentEndorsement QAMISDepartmentEndorsement?
 }
 
 model QAMISDeanEndorsement {
@@ -707,10 +707,10 @@ model QAMISDeanEndorsement {
     qAMISRevisionId            String                      @unique
     Dean                       Dean                        @relation(fields: [deanId], references: [id])
     deanId                     String
-    QamisDepartmentEndorsement QamisDepartmentEndorsement?
+    QAMISDepartmentEndorsement QAMISDepartmentEndorsement?
 }
 
-model QamisDepartmentEndorsement {
+model QAMISDepartmentEndorsement {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
