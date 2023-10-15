@@ -1,11 +1,11 @@
 import CrudLayout from "@/components/CrudLayout";
-import useContentEditorReviews from "@/hooks/useContentEditorReviews";
+import useIDDSpecialistReviews from "@/hooks/useIDDSpecialistReviews";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function ContentEditorReviewsPage() {
+export default function IDDSpecialistReviewsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { contentEditorReviews, count } = useContentEditorReviews(state);
+  const { iDDSpecialistReviews, count } = useIDDSpecialistReviews(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -24,8 +24,8 @@ export default function ContentEditorReviewsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>ContentEditorReview</h2>
-        <Link className='border rounded' href={`/crud/content_editor_review/add`}>
+        <h2>IDDSpecialistReview</h2>
+        <Link className='border rounded' href={`/crud/idd_specialist_review/add`}>
           Add
         </Link>
       </div>
@@ -38,36 +38,36 @@ export default function ContentEditorReviewsPage() {
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>qAMISDepartmentEndorsementId</th>
-              <th>cITLDirectorId</th>
+              <th>iDDCoordinatorId</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {contentEditorReviews.map((contentEditorReview) => {
+            {iDDSpecialistReviews.map((iDDSpecialistReview) => {
               return (
-                <tr key={contentEditorReview.id}>
-                  <td>{contentEditorReview.id}</td>
-                  <td>{new Date(contentEditorReview.createdAt).toLocaleString()}</td>
-                  <td>{new Date(contentEditorReview.updatedAt).toLocaleString()}</td>
+                <tr key={iDDSpecialistReview.id}>
+                  <td>{iDDSpecialistReview.id}</td>
+                  <td>{new Date(iDDSpecialistReview.createdAt).toLocaleString()}</td>
+                  <td>{new Date(iDDSpecialistReview.updatedAt).toLocaleString()}</td>
                   <td>
                     <Link
-                      href={`/crud/qamis_department_endorsement/${contentEditorReview.qAMISDepartmentEndorsementId}`}
+                      href={`/crud/qamis_department_endorsement/${iDDSpecialistReview.qAMISDepartmentEndorsementId}`}
                       className='underline'
                     >
-                      {contentEditorReview.qAMISDepartmentEndorsementId}
+                      {iDDSpecialistReview.qAMISDepartmentEndorsementId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/citl_director/${contentEditorReview.cITLDirectorId}`}
+                      href={`/crud/idd_coordinator/${iDDSpecialistReview.iDDCoordinatorId}`}
                       className='underline'
                     >
-                      {contentEditorReview.cITLDirectorId}
+                      {iDDSpecialistReview.iDDCoordinatorId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/content_editor_review/${contentEditorReview.id}`}
+                      href={`/crud/idd_specialist_review/${iDDSpecialistReview.id}`}
                       className='border rounded'
                     >
                       view

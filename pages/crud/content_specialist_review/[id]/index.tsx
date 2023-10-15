@@ -61,7 +61,7 @@ export default function ContentSpecialistReviewPage() {
       <p>
         qAMISDepartmentEndorsementId:{" "}
         <Link
-          href={`/crud/qamis_department_endorsement_review/${contentSpecialistReview.qAMISDepartmentEndorsementId}`}
+          href={`/crud/qamis_department_endorsement/${contentSpecialistReview.qAMISDepartmentEndorsementId}`}
           className='underline'
         >
           {contentSpecialistReview.qAMISDepartmentEndorsementId}

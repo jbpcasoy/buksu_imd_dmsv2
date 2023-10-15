@@ -51,7 +51,7 @@ export default function ContentSpecialistReviewsPage() {
                   <td>{new Date(contentSpecialistReview.updatedAt).toLocaleString()}</td>
                   <td>
                     <Link
-                      href={`/crud/qamis_department_endorsement_review/${contentSpecialistReview.qAMISDepartmentEndorsementId}`}
+                      href={`/crud/qamis_department_endorsement/${contentSpecialistReview.qAMISDepartmentEndorsementId}`}
                       className='underline'
                     >
                       {contentSpecialistReview.qAMISDepartmentEndorsementId}

@@ -58,6 +58,10 @@ import {
   ContentEditorSuggestion,
   ContentEditorSuggestionItem,
   SubmittedContentEditorSuggestion,
+  IDDSpecialistReview,
+  IDDSpecialistSuggestion,
+  SubmittedIDDSpecialistSuggestion,
+  IDDSpecialistSuggestionItem,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -120,6 +124,10 @@ export type AppSubjects =
       ContentEditorSuggestion: ContentEditorSuggestion;
       ContentEditorSuggestionItem: ContentEditorSuggestionItem;
       SubmittedContentEditorSuggestion: SubmittedContentEditorSuggestion;
+      IDDSpecialistReview: IDDSpecialistReview;
+      IDDSpecialistSuggestion: IDDSpecialistSuggestion;
+      IDDSpecialistSuggestionItem: IDDSpecialistSuggestionItem;
+      SubmittedIDDSpecialistSuggestion: SubmittedIDDSpecialistSuggestion;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
