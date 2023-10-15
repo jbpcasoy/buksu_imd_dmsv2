@@ -925,6 +925,7 @@ model IDDSpecialistSuggestion {
     IDDSpecialistReview              IDDSpecialistReview               @relation(fields: [iDDSpecialistReviewId], references: [id])
     iDDSpecialistReviewId            String                            @unique
     SubmittedIDDSpecialistSuggestion SubmittedIDDSpecialistSuggestion?
+    IDDSpecialistSuggestionItem      IDDSpecialistSuggestionItem[]
 }
 
 model IDDSpecialistSuggestionItem {
@@ -932,7 +933,8 @@ model IDDSpecialistSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    contentEditorSuggestionId String
+    IDDSpecialistSuggestion   IDDSpecialistSuggestion @relation(fields: [iDDSpecialistSuggestionId], references: [id])
+    iDDSpecialistSuggestionId String
     suggestion                String
     actionTaken               String?
     remarks                   String?
