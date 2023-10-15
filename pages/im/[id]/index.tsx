@@ -335,6 +335,17 @@ export default function ViewIM() {
           </button>
         </div>
       )}
+
+      {iMStatus === "IMPLEMENTATION_CITL_CITL_DIRECTOR_ENDORSED" && (
+        <div>
+          <Link
+            href={`/im/${iM.id}/qamis_suggestion`}
+            className='border rounded'
+          >
+            QAMIS Suggestion
+          </Link>
+        </div>
+      )}
     </MainLayout>
   );
 }

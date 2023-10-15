@@ -1,6 +1,7 @@
 import IDDCoordinatorSuggestionItem from "@/components/IDDCoordinatorSuggestionItem";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useDeanEndorsementIM from "@/hooks/useDeanEndorsementIM";
 import useIDDCoordinatorSuggestionItemsOwn, {
   useIDDCoordinatorSuggestionItemsOwnParams,
@@ -27,7 +28,7 @@ export default function IDDCoordinatorSuggestionPage() {
   );
   const iDDCoordinatorSuggestionItems =
     useIDDCoordinatorSuggestionItemsOwn(state);
-  const activeIDDCoordinator = useActiveCITLDirectorMe();
+  const activeIDDCoordinator = useActiveIDDCoordinatorMe();
   const handleSubmitReview = () => {
     if (!iDDCoordinatorSuggestion) return;
     axios
@@ -98,7 +99,7 @@ export default function IDDCoordinatorSuggestionPage() {
   return (
     <MainLayout>
       <div>
-        <h2>IDDCoordinator Review</h2>
+        <h2>IDDCoordinator Suggestion</h2>
         <form noValidate onSubmit={formik.handleSubmit}>
           <textarea
             placeholder='suggestion'
