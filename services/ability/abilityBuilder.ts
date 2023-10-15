@@ -62,6 +62,7 @@ import {
   IDDSpecialistSuggestion,
   SubmittedIDDSpecialistSuggestion,
   IDDSpecialistSuggestionItem,
+  IMERCCITLReviewed,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -128,6 +129,7 @@ export type AppSubjects =
       IDDSpecialistSuggestion: IDDSpecialistSuggestion;
       IDDSpecialistSuggestionItem: IDDSpecialistSuggestionItem;
       SubmittedIDDSpecialistSuggestion: SubmittedIDDSpecialistSuggestion;
+      IMERCCITLReviewed: IMERCCITLReviewed;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

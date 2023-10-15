@@ -255,6 +255,10 @@ export default function CrudSidebar() {
       link: "/crud/submitted_idd_specialist_suggestion",
       label: "Submitted IDD Specialist Suggestion",
     },
+    {
+      link: "/crud/imerc_citl_reviewed",
+      label: "IMERC CITL Reviewed",
+    },
   ];
   return (
     <div className='h-full overflow-y-auto pb-10'>

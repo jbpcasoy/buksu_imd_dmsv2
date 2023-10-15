@@ -43,73 +43,73 @@ export default async function handler(
             },
           },
         });
-    //   const submittedCoordinatorSuggestion =
-    //     await prisma.submittedCoordinatorSuggestion.findFirst({
-    //       where: {
-    //         CoordinatorSuggestion: {
-    //           CoordinatorReview: {
-    //             DepartmentReview: {
-    //               PeerReview: {
-    //                 ContentEditorSuggestion: {
-    //                   SubmittedContentEditorSuggestion: {
-    //                     id: {
-    //                       equals: submittedContentEditorSuggestion.id,
-    //                     },
-    //                   },
-    //                 },
-    //               },
-    //             },
-    //           },
-    //         },
-    //       },
-    //     });
+      const submittedContentSpecialistSuggestion =
+        await prisma.submittedContentSpecialistSuggestion.findFirst({
+          where: {
+            ContentSpecialistSuggestion: {
+              ContentSpecialistReview: {
+                QAMISDepartmentEndorsement: {
+                  ContentEditorReview: {
+                    ContentEditorSuggestion: {
+                      SubmittedContentEditorSuggestion: {
+                        id: {
+                          equals: submittedContentEditorSuggestion.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
 
-    //   const submittedChairpersonSuggestion =
-    //     await prisma.submittedChairpersonSuggestion.findFirst({
-    //       where: {
-    //         ChairpersonSuggestion: {
-    //           ChairpersonReview: {
-    //             DepartmentReview: {
-    //               PeerReview: {
-    //                 ContentEditorSuggestion: {
-    //                   SubmittedContentEditorSuggestion: {
-    //                     id: {
-    //                       equals: submittedContentEditorSuggestion.id,
-    //                     },
-    //                   },
-    //                 },
-    //               },
-    //             },
-    //           },
-    //         },
-    //       },
-    //     });
+      const submittedIDDSpecialistSuggestion =
+        await prisma.submittedIDDSpecialistSuggestion.findFirst({
+          where: {
+            IDDSpecialistSuggestion: {
+              IDDSpecialistReview: {
+                QAMISDepartmentEndorsement: {
+                  ContentEditorReview: {
+                    ContentEditorSuggestion: {
+                      SubmittedContentEditorSuggestion: {
+                        id: {
+                          equals: submittedContentEditorSuggestion.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
 
-    //   if (
-    //     submittedChairpersonSuggestion &&
-    //     submittedContentEditorSuggestion &&
-    //     submittedCoordinatorSuggestion
-    //   ) {
-    //     await prisma.departmentReviewed.create({
-    //       data: {
-    //         SubmittedChairpersonSuggestion: {
-    //           connect: {
-    //             id: submittedChairpersonSuggestion.id,
-    //           },
-    //         },
-    //         SubmittedCoordinatorSuggestion: {
-    //           connect: {
-    //             id: submittedCoordinatorSuggestion.id,
-    //           },
-    //         },
-    //         SubmittedContentEditorSuggestion: {
-    //           connect: {
-    //             id: submittedContentEditorSuggestion.id,
-    //           },
-    //         },
-    //       },
-    //     });
-    //   }
+      if (
+        submittedContentEditorSuggestion &&
+        submittedContentSpecialistSuggestion &&
+        submittedIDDSpecialistSuggestion
+      ) {
+        await prisma.iMERCCITLReviewed.create({
+          data: {
+            SubmittedIDDSpecialistSuggestion: {
+              connect: {
+                id: submittedIDDSpecialistSuggestion.id,
+              },
+            },
+            SubmittedContentSpecialistSuggestion: {
+              connect: {
+                id: submittedContentSpecialistSuggestion.id,
+              },
+            },
+            SubmittedContentEditorSuggestion: {
+              connect: {
+                id: submittedContentEditorSuggestion.id,
+              },
+            },
+          },
+        });
+      }
 
       return res.json(submittedContentEditorSuggestion);
     } catch (error: any) {
