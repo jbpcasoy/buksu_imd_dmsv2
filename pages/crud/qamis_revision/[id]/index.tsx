@@ -46,14 +46,23 @@ export default function QAMISRevisionPage() {
       <p>
         qAMISFileId:{" "}
         <Link
-          href={`/crud/im_file/${qAMISRevision.qAMISFileId}`}
+          href={`/crud/qamis_file/${qAMISRevision.qAMISFileId}`}
           className='underline'
         >
           {qAMISRevision.qAMISFileId}
         </Link>
       </p>
       <p>
-      submittedQAMISSuggestionId:{" "}
+        iMFileId:{" "}
+        <Link
+          href={`/crud/qamis_file/${qAMISRevision.iMFileId}`}
+          className='underline'
+        >
+          {qAMISRevision.iMFileId}
+        </Link>
+      </p>
+      <p>
+        submittedQAMISSuggestionId:{" "}
         <Link
           href={`/crud/submitted_qamis_suggestion/${qAMISRevision.submittedQAMISSuggestionId}`}
           className='underline'

@@ -46,7 +46,7 @@ export default function IMERCCITLReviewedPage() {
       <p>
         submittedContentEditorSuggestionId:
         <Link
-          href={`/crud/submitted_peer_suggestion/${iMERCCITLReviewed.submittedContentEditorSuggestionId}`}
+          href={`/crud/submitted_content_editor_suggestion/${iMERCCITLReviewed.submittedContentEditorSuggestionId}`}
           className='underline'
         >
           {iMERCCITLReviewed.submittedContentEditorSuggestionId}
@@ -55,7 +55,7 @@ export default function IMERCCITLReviewedPage() {
       <p>
         submittedContentSpecialistSuggestionId:
         <Link
-          href={`/crud/submitted_peer_suggestion/${iMERCCITLReviewed.submittedContentSpecialistSuggestionId}`}
+          href={`/crud/submitted_content_specialist_suggestion/${iMERCCITLReviewed.submittedContentSpecialistSuggestionId}`}
           className='underline'
         >
           {iMERCCITLReviewed.submittedContentSpecialistSuggestionId}
@@ -64,7 +64,7 @@ export default function IMERCCITLReviewedPage() {
       <p>
         submittedIDDSpecialistSuggestionId:
         <Link
-          href={`/crud/submitted_peer_suggestion/${iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}`}
+          href={`/crud/submitted_idd_specialist_suggestion/${iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}`}
           className='underline'
         >
           {iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}

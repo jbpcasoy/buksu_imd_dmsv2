@@ -49,7 +49,7 @@ export default function IMERCCITLReviewedsPage() {
                   <td>{new Date(iMERCCITLReviewed.updatedAt).toLocaleString()}</td>
                   <td>
                     <Link
-                      href={`/crud/submitted_chairperson_suggestion/${iMERCCITLReviewed.submittedContentEditorSuggestionId}`}
+                      href={`/crud/submitted_content_editor_suggestion/${iMERCCITLReviewed.submittedContentEditorSuggestionId}`}
                       className='underline'
                     >
                       {iMERCCITLReviewed.submittedContentEditorSuggestionId}
@@ -57,7 +57,7 @@ export default function IMERCCITLReviewedsPage() {
                   </td>
                   <td>
                     <Link
-                      href={`/crud/submitted_coordinator_suggestion/${iMERCCITLReviewed.submittedContentSpecialistSuggestionId}`}
+                      href={`/crud/submitted_content_specialist_suggestion/${iMERCCITLReviewed.submittedContentSpecialistSuggestionId}`}
                       className='underline'
                     >
                       {iMERCCITLReviewed.submittedContentSpecialistSuggestionId}
@@ -65,7 +65,7 @@ export default function IMERCCITLReviewedsPage() {
                   </td>
                   <td>
                     <Link
-                      href={`/crud/submitted_peer_suggestion/${iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}`}
+                      href={`/crud/submitted_idd_specialist_suggestion/${iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}`}
                       className='underline'
                     >
                       {iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}

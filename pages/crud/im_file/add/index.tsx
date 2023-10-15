@@ -9,7 +9,7 @@ export default function AddIMFile() {
   const onFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setState((prev) => ({ ...prev, file: e.target.files?.item(0) as File }));
   };
-  const onIMChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+  const onIMChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setState((prev) => ({ ...prev, iMId: e.target.value }));
   };
 
@@ -30,7 +30,7 @@ export default function AddIMFile() {
       <div className='flex'>
         <h2 className='flex-1'>Add IMFile</h2>
       </div>
-      <IMSelector onChange={onIMChange} />
+      <input type="text" placeholder="iMId" onChange={onIMChange} />
       <input type='file' onChange={onFileChange} />
       <button className='border rounded' onClick={uploadFileHandler}>
         Upload file

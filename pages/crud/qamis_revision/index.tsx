@@ -38,6 +38,7 @@ export default function QAMISRevisionsPage() {
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>qAMISFileId</th>
+              <th>iMFileId</th>
               <th>submittedQAMISSuggestionId</th>
               <th>action</th>
             </tr>
@@ -59,6 +60,14 @@ export default function QAMISRevisionsPage() {
                       className='underline'
                     >
                       {qAMISRevision.qAMISFileId}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/crud/im_file/${qAMISRevision.iMFileId}`}
+                      className='underline'
+                    >
+                      {qAMISRevision.iMFileId}
                     </Link>
                   </td>
                   <td>

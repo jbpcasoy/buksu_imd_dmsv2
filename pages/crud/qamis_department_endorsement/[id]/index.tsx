@@ -52,7 +52,7 @@ export default function QAMISDepartmentEndorsementPage() {
       <p>
         qAMISChairpersonEndorsementId:
         <Link
-          href={`/crud/submitted_peer_suggestion/${qAMISDepartmentEndorsement.qAMISChairpersonEndorsementId}`}
+          href={`/crud/qamis_chairperson_endorsement/${qAMISDepartmentEndorsement.qAMISChairpersonEndorsementId}`}
           className='underline'
         >
           {qAMISDepartmentEndorsement.qAMISChairpersonEndorsementId}
@@ -61,7 +61,7 @@ export default function QAMISDepartmentEndorsementPage() {
       <p>
         qAMISCoordinatorEndorsementId:
         <Link
-          href={`/crud/submitted_peer_suggestion/${qAMISDepartmentEndorsement.qAMISCoordinatorEndorsementId}`}
+          href={`/crud/qamis_coordinator_endorsement/${qAMISDepartmentEndorsement.qAMISCoordinatorEndorsementId}`}
           className='underline'
         >
           {qAMISDepartmentEndorsement.qAMISCoordinatorEndorsementId}
@@ -70,7 +70,7 @@ export default function QAMISDepartmentEndorsementPage() {
       <p>
         qAMISDeanEndorsementId:
         <Link
-          href={`/crud/submitted_peer_suggestion/${qAMISDepartmentEndorsement.qAMISDeanEndorsementId}`}
+          href={`/crud/qamis_dean_endorsement/${qAMISDepartmentEndorsement.qAMISDeanEndorsementId}`}
           className='underline'
         >
           {qAMISDepartmentEndorsement.qAMISDeanEndorsementId}

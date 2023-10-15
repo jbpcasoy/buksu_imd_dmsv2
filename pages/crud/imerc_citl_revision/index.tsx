@@ -1,11 +1,11 @@
 import CrudLayout from "@/components/CrudLayout";
-import useQAMISDepartmentEndorsements from "@/hooks/useQAMISDepartmentEndorsements";
+import useIMERCCITLRevisions from "@/hooks/useIMERCCITLRevisions";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function QAMISDepartmentEndorsementsPage() {
+export default function IMERCCITLRevisionsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { qAMISDepartmentEndorsements, count } = useQAMISDepartmentEndorsements(state);
+  const { iMERCCITLRevisions, count } = useIMERCCITLRevisions(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -24,7 +24,10 @@ export default function QAMISDepartmentEndorsementsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>QAMISDepartmentEndorsement Reviewed</h2>
+        <h2>IMERCCITLRevision</h2>
+        <Link className='border rounded' href={`/crud/imerc_citl_revision/add`}>
+          Add
+        </Link>
       </div>
 
       <div>
@@ -34,46 +37,43 @@ export default function QAMISDepartmentEndorsementsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>qAMISChairpersonEndorsementId</th>
-              <th>qAMISCoordinatorEndorsementId</th>
-              <th>qAMISDeanEndorsementId</th>
+              <th>iMFileId</th>
+              <th>iMERCCITLReviewedId</th>
+              <th>returned</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {qAMISDepartmentEndorsements.map((qAMISDepartmentEndorsement) => {
+            {iMERCCITLRevisions.map((iMERCCITLRevision) => {
               return (
-                <tr key={qAMISDepartmentEndorsement.id}>
-                  <td>{qAMISDepartmentEndorsement.id}</td>
-                  <td>{new Date(qAMISDepartmentEndorsement.createdAt).toLocaleString()}</td>
-                  <td>{new Date(qAMISDepartmentEndorsement.updatedAt).toLocaleString()}</td>
+                <tr key={iMERCCITLRevision.id}>
+                  <td>{iMERCCITLRevision.id}</td>
+                  <td>
+                    {new Date(iMERCCITLRevision.createdAt).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(iMERCCITLRevision.updatedAt).toLocaleString()}
+                  </td>
                   <td>
                     <Link
-                      href={`/crud/qamis_chairperson_endorsement/${qAMISDepartmentEndorsement.qAMISChairpersonEndorsementId}`}
+                      href={`/crud/im_file/${iMERCCITLRevision.iMFileId}`}
                       className='underline'
                     >
-                      {qAMISDepartmentEndorsement.qAMISChairpersonEndorsementId}
+                      {iMERCCITLRevision.iMFileId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/qamis_coordinator_endorsement/${qAMISDepartmentEndorsement.qAMISCoordinatorEndorsementId}`}
+                      href={`/crud/imerc_citl_reviewed/${iMERCCITLRevision.iMERCCITLReviewedId}`}
                       className='underline'
                     >
-                      {qAMISDepartmentEndorsement.qAMISCoordinatorEndorsementId}
+                      {iMERCCITLRevision.iMERCCITLReviewedId}
                     </Link>
                   </td>
+                  <td>{iMERCCITLRevision.returned ? "Yes" : "No"}</td>
                   <td>
                     <Link
-                      href={`/crud/qamis_dean_endorsement/${qAMISDepartmentEndorsement.qAMISDeanEndorsementId}`}
-                      className='underline'
-                    >
-                      {qAMISDepartmentEndorsement.qAMISDeanEndorsementId}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/qamis_department_endorsement/${qAMISDepartmentEndorsement.id}`}
+                      href={`/crud/imerc_citl_revision/${iMERCCITLRevision.id}`}
                       className='border rounded'
                     >
                       view
