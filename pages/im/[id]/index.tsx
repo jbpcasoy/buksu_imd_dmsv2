@@ -1,20 +1,22 @@
 import MainLayout from "@/components/MainLayout";
+import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
+import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
+import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
+import useActiveDeanMe from "@/hooks/useActiveDeanMe";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useIM from "@/hooks/useIM";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import axios from "axios";
-import { ChangeEventHandler, useState } from "react";
+import useIMStatus from "@/hooks/useIMStatus";
+import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
 import {
   CoordinatorEndorsement,
   DepartmentReview,
   DepartmentRevision,
   IMFile,
 } from "@prisma/client";
-import useIMStatus from "@/hooks/useIMStatus";
-import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
-import useActiveDeanMe from "@/hooks/useActiveDeanMe";
-import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
-import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { ChangeEventHandler, useState } from "react";
 
 export default function ViewIM() {
   const router = useRouter();
@@ -23,9 +25,45 @@ export default function ViewIM() {
   const [state, setState] = useState<File | null>();
   const iMStatus = useIMStatus({ id: iMId as string });
   const activeCoordinator = useActiveCoordinatorMe();
+  const activeChairperson = useActiveChairpersonMe();
   const activeDean = useActiveDeanMe();
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();
   const activeCITLDirector = useActiveCITLDirectorMe();
+  const qAMISRevision = useQAMISRevisionIM({ id: iMId as string });
+
+  const onQAMISChairpersonEndorsement = () => {
+    axios
+      .post("/api/qamis_chairperson_endorsement", {
+        qAMISRevisionId: qAMISRevision?.id,
+        activeChairpersonId: activeChairperson?.id,
+      })
+      .then(() => alert("Successfully endorsed IM"))
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      });
+  };
+  const onQAMISCoordinatorEndorsement = () => {
+    axios
+      .post("/api/qamis_coordinator_endorsement", {
+        qAMISRevisionId: qAMISRevision?.id,
+        activeCoordinatorId: activeCoordinator?.id,
+      })
+      .then(() => alert("Successfully endorsed IM"))
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      });
+  };
+  const onQAMISDeanEndorsement = () => {
+    axios
+      .post("/api/qamis_dean_endorsement", {
+        qAMISRevisionId: qAMISRevision?.id,
+        activeDeanId: activeDean?.id,
+      })
+      .then(() => alert("Successfully endorsed IM"))
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      });
+  };
 
   const deleteHandler = (id: string) => {
     axios.delete(`/api/im/${id}`).then(() => {
@@ -336,7 +374,7 @@ export default function ViewIM() {
         </div>
       )}
 
-      {iMStatus === "IMPLEMENTATION_CITL_CITL_DIRECTOR_ENDORSED" && (
+      {iMStatus === "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED" && (
         <div>
           <Link
             href={`/im/${iM.id}/qamis_suggestion`}
@@ -344,6 +382,26 @@ export default function ViewIM() {
           >
             Input QAMIS suggestions
           </Link>
+        </div>
+      )}
+
+      {iMStatus === "IMERC_QAMIS_REVISED" && (
+        <div className='space-x-2'>
+          <button
+            className='border rounded'
+            onClick={onQAMISCoordinatorEndorsement}
+          >
+            Coordinator Endorsement
+          </button>
+          <button
+            className='border rounded'
+            onClick={onQAMISChairpersonEndorsement}
+          >
+            Chairperson Endorsement
+          </button>
+          <button className='border rounded' onClick={onQAMISDeanEndorsement}>
+            Dean Endorsement
+          </button>
         </div>
       )}
     </MainLayout>

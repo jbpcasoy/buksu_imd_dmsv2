@@ -172,15 +172,67 @@ export default async function handler(
           },
         });
 
+      const qAMISRevision = await prisma.qAMISRevision.findFirst({
+        where: {
+          SubmittedQAMISSuggestion: {
+            QAMISSuggestion: {
+              CITLDirectorEndorsement: {
+                id: {
+                  equals: cITLDirectorEndorsement?.id ?? "undefined",
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const qAMISDepartmentEndorsement =
+        await prisma.qAMISDepartmentEndorsement.findFirst({
+          where: {
+            AND: [
+              {
+                QAMISChairpersonEndorsement: {
+                  QAMISRevision: {
+                    id: {
+                      equals: qAMISRevision?.id ?? "undefined",
+                    },
+                  },
+                },
+              },
+              {
+                QAMISCoordinatorEndorsement: {
+                  QAMISRevision: {
+                    id: {
+                      equals: qAMISRevision?.id ?? "undefined",
+                    },
+                  },
+                },
+              },
+              {
+                QAMISDeanEndorsement: {
+                  QAMISRevision: {
+                    id: {
+                      equals: qAMISRevision?.id ?? "undefined",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        });
+
       /**
        * Status list:
        * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator and coordinator
        * IMPLEMENTATION_DEPARTMENT_REVIEW - IM is submitted for department review
        * IMPLEMENTATION_DRAFT - IM is created but not yet submitted for review.
        */
-
-      if (cITLDirectorEndorsement) {
-        return res.send("IMPLEMENTATION_CITL_CITL_DIRECTOR_ENDORSED");
+      if (qAMISDepartmentEndorsement) {
+        return res.send("IMERC_QAMIS_DEPARTMENT_ENDORSED");
+      } else if (qAMISRevision) {
+        return res.send("IMERC_QAMIS_REVISED");
+      } else if (cITLDirectorEndorsement) {
+        return res.send("IMPLEMENTATION_CITL_DIRECTOR_ENDORSED");
       } else if (iDDCoordinatorEndorsement) {
         return res.send("IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED");
       } else if (cITLRevision) {
