@@ -278,10 +278,42 @@ export default function ViewIM() {
         if (!iMERCCITLRevision) return;
 
         return axios
-          .post<CoordinatorEndorsement>(`/api/imerc_idd_coordinator_endorsement`, {
-            iMERCCITLRevisionId: iMERCCITLRevision.id,
-            activeIDDCoordinatorId: activeIDDCoordinator.id,
-          })
+          .post<CoordinatorEndorsement>(
+            `/api/imerc_idd_coordinator_endorsement`,
+            {
+              iMERCCITLRevisionId: iMERCCITLRevision.id,
+              activeIDDCoordinatorId: activeIDDCoordinator.id,
+            }
+          )
+          .then(() => {
+            alert("IM endorsed successfully");
+          });
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
+      });
+  };
+
+  const iMERCCITLDirectorEndorsementHandler = async () => {
+    if (!activeCITLDirector) return;
+
+    return axios
+      .get<DepartmentRevision>(
+        `/api/imerc_idd_coordinator_endorsement/im/${iMId}`
+      )
+      .then((res) => {
+        const iMERCIDDCoordinatorEndorsement = res.data;
+        if (!iMERCIDDCoordinatorEndorsement) return;
+
+        return axios
+          .post<CoordinatorEndorsement>(
+            `/api/imerc_citl_director_endorsement`,
+            {
+              iMERCIDDCoordinatorEndorsementId:
+                iMERCIDDCoordinatorEndorsement.id,
+              activeCITLDirectorId: activeCITLDirector.id,
+            }
+          )
           .then(() => {
             alert("IM endorsed successfully");
           });
@@ -499,6 +531,25 @@ export default function ViewIM() {
           >
             Endorse IM
           </button>
+        </div>
+      )}
+
+      {iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" && (
+        <div>
+          <button
+            className='border rounded'
+            onClick={iMERCCITLDirectorEndorsementHandler}
+          >
+            Endorse IM
+          </button>
+        </div>
+      )}
+
+      {iMStatus === "IMERC_CITL_DIRECTOR_ENDORSED" && (
+        <div>
+          <p className='text-lg font-bold'>
+            IM is endorsed to IPTTU for copyright application process.
+          </p>
         </div>
       )}
     </MainLayout>
