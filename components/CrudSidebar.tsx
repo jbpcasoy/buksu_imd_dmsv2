@@ -219,6 +219,10 @@ export default function CrudSidebar() {
       link: "/crud/content_specialist_suggestion_item",
       label: "Content Specialist Suggestion Item",
     },
+    {
+      link: "/crud/submitted_content_specialist_suggestion",
+      label: "Submitted Content Specialist Suggestion",
+    },
   ];
   return (
     <div className='h-full overflow-y-auto pb-10'>
