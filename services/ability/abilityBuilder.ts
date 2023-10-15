@@ -49,7 +49,10 @@ import {
   QAMISCoordinatorEndorsement,
   QAMISChairpersonEndorsement,
   QAMISDeanEndorsement,
-  QamisDepartmentEndorsement,
+  QAMISDepartmentEndorsement,
+  ContentSpecialistReview,
+  ContentSpecialistSuggestion,
+  ContentSpecialistSuggestionItem,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -103,7 +106,10 @@ export type AppSubjects =
       QAMISCoordinatorEndorsement: QAMISCoordinatorEndorsement;
       QAMISChairpersonEndorsement: QAMISChairpersonEndorsement;
       QAMISDeanEndorsement: QAMISDeanEndorsement;
-      QamisDepartmentEndorsement: QamisDepartmentEndorsement;
+      QAMISDepartmentEndorsement: QAMISDepartmentEndorsement;
+      ContentSpecialistReview: ContentSpecialistReview;
+      ContentSpecialistSuggestion: ContentSpecialistSuggestion;
+      ContentSpecialistSuggestionItem: ContentSpecialistSuggestionItem;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
