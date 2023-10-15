@@ -2,14 +2,17 @@ import QAMISSuggestionItem from "@/components/QAMISSuggestionItem";
 import MainLayout from "@/components/MainLayout";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useCITLDirectorEndorsementIM from "@/hooks/useCITLDirectorEndorsementIM";
-import useQAMISSuggestionItemsOwn, { useQAMISSuggestionItemsOwnParams } from "@/hooks/useQAMISSuggestionItemsOwn";
+import useQAMISSuggestionItemsOwn, {
+  useQAMISSuggestionItemsOwnParams,
+} from "@/hooks/useQAMISSuggestionItemsOwn";
 import useIM from "@/hooks/useIM";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 import * as Yup from "yup";
 import useQAMISSuggestionMe from "@/hooks/useQAMISSuggestionMe";
+import { SubmittedQAMISSuggestion } from "@prisma/client";
 
 export default function QAMISSuggestionPage() {
   const router = useRouter();
@@ -28,15 +31,63 @@ export default function QAMISSuggestionPage() {
     take: 10,
   });
   const qAMISSuggestionItems = useQAMISSuggestionItemsOwn(state);
+  const [files, setFiles] = useState<{ iMFile?: File; qAMISFile?: File }>({
+    iMFile: undefined,
+    qAMISFile: undefined,
+  });
+  useEffect(() => {
+    console.log({ files });
+  }, [files]);
+
+  const onIMFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setFiles((prev) => ({ ...prev, iMFile: e.target.files?.item(0) as File }));
+  };
+  const onQAMISFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setFiles((prev) => ({
+      ...prev,
+      qAMISFile: e.target.files?.item(0) as File,
+    }));
+  };
+
+  const uploadFiles = async (submittedQAMISSuggestionId: string) => {
+    console.log({ state });
+    if (!files?.iMFile || !files?.qAMISFile) return;
+
+    const iMFormData = new FormData();
+    iMFormData.append("file", files.iMFile);
+    iMFormData.append("iMId", iMId as string);
+    return axios.post("/api/im_file", iMFormData).then((res) => {
+      const iMFile = res.data;
+      if (!files?.qAMISFile) return;
+
+      const qAMISFormData = new FormData();
+      qAMISFormData.append("file", files.qAMISFile);
+      qAMISFormData.append(
+        "submittedQAMISSuggestionId",
+        submittedQAMISSuggestionId as string
+      );
+      return axios.post("/api/qamis_file", qAMISFormData).then((res) => {
+        const qAMISFile = res.data;
+        return axios.post("/api/qamis_revision", {
+          iMFileId: iMFile.id,
+          qAMISFileId: qAMISFile.id,
+        });
+      });
+    });
+  };
 
   const handleSubmitSuggestion = () => {
-    if (!qAMISSuggestion) return;
+    if (!qAMISSuggestion || !files?.iMFile || !files?.qAMISFile) return;
+
     axios
-      .post(`/api/submitted_qamis_suggestion`, {
+      .post<SubmittedQAMISSuggestion>(`/api/submitted_qamis_suggestion`, {
         qAMISSuggestionId: qAMISSuggestion.id,
       })
-      .then(() => {
-        alert("Review Submitted Successfully");
+      .then((res) => {
+        const submittedQAMISSuggestion = res.data;
+        uploadFiles(submittedQAMISSuggestion.id).then(() => {
+          alert("Review Submitted Successfully");
+        });
       })
       .catch((error: any) => {
         alert(error?.response?.data?.error?.message);
@@ -137,8 +188,14 @@ export default function QAMISSuggestionPage() {
             }
           )}
         </div>
+        <p>QAMIS File:</p>
+        <input type='file' onChange={onQAMISFileChange} />
+        <br />
+        <p>IM File:</p>
+        <input type='file' onChange={onIMFileChange} />
+        <br />
         <button className='rounded border' onClick={handleSubmitSuggestion}>
-          Submit Review
+          Submit for endorsement
         </button>
       </div>
     </MainLayout>

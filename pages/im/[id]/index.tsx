@@ -342,7 +342,7 @@ export default function ViewIM() {
             href={`/im/${iM.id}/qamis_suggestion`}
             className='border rounded'
           >
-            QAMIS Suggestion
+            Input QAMIS suggestions
           </Link>
         </div>
       )}
