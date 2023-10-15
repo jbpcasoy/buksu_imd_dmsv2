@@ -422,7 +422,7 @@ export default function ViewIM() {
           </Link>
 
           <Link
-            href={`/im/${iM.id}/idd_coordinator_review`}
+            href={`/im/${iM.id}/idd_specialist_review`}
             className='border rounded'
           >
             IDD Specialist Review
