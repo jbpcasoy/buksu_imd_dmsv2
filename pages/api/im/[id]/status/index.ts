@@ -267,12 +267,14 @@ export default async function handler(
         },
       });
 
-      console.log({
-        id,
-        iMERCCITLReviewed,
-        qAMISDepartmentEndorsement,
-        qAMISRevision,
-        cITLDirectorEndorsement,
+      const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirst({
+        where: {
+          IMERCCITLReviewed: {
+            id: {
+              equals: iMERCCITLReviewed?.id ?? "undefined",
+            },
+          },
+        },
       });
 
       /**
@@ -281,7 +283,9 @@ export default async function handler(
        * IMPLEMENTATION_DEPARTMENT_REVIEW - IM is submitted for department review
        * IMPLEMENTATION_DRAFT - IM is created but not yet submitted for review.
        */
-      if (iMERCCITLReviewed) {
+      if (iMERCCITLRevision) {
+        return res.send("IMERC_CITL_REVISED");
+      } else if (iMERCCITLReviewed) {
         return res.send("IMERC_CITL_REVIEWED");
       } else if (qAMISDepartmentEndorsement) {
         return res.send("IMERC_QAMIS_DEPARTMENT_ENDORSED");

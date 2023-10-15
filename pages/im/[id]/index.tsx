@@ -11,6 +11,7 @@ import {
   CoordinatorEndorsement,
   DepartmentReview,
   DepartmentRevision,
+  IMERCCITLRevision,
   IMFile,
 } from "@prisma/client";
 import axios from "axios";
@@ -136,6 +137,31 @@ export default function ViewIM() {
       .then(async (res) => {
         return axios
           .post<DepartmentReview>("/api/citl_revision/", {
+            iMFileId: res.data.id,
+          })
+          .then(() => {
+            alert("IM has been submitted for review");
+          });
+      })
+      .catch((err) => {
+        alert(err?.response?.data?.error?.message ?? err.message);
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+  
+  const submitForIMERCCITLEndorsementHandler = async () => {
+    if (!state || !iMId) return;
+
+    const formData = new FormData();
+    formData.append("file", state);
+    formData.append("iMId", iMId as string);
+    return axios
+      .post<IMFile>("/api/im_file", formData)
+      .then(async (res) => {
+        return axios
+          .post("/api/imerc_citl_revision/", {
             iMFileId: res.data.id,
           })
           .then(() => {
@@ -427,6 +453,18 @@ export default function ViewIM() {
           >
             IDD Specialist Review
           </Link>
+        </div>
+      )}
+      
+      {iMStatus === "IMERC_CITL_REVIEWED" && (
+        <div>
+          <input type='file' onChange={onFileChange} />
+          <button
+            className='border rounded'
+            onClick={submitForIMERCCITLEndorsementHandler}
+          >
+            Submit for endorsement
+          </button>
         </div>
       )}
     </MainLayout>

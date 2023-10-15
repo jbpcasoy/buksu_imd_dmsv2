@@ -117,6 +117,35 @@ export default async function handler(
                 },
               },
             },
+            {
+              NOT: {
+                IMFile: {
+                  some: {
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentSpecialistReview: {
+                            ContentSpecialistSuggestion: {
+                              SubmittedContentSpecialistSuggestion: {
+                                IMERCCITLReviewed: {
+                                  IMERCCITLRevision: {
+                                    some: {
+                                      returned: {
+                                        equals: false,
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           ],
         },
       });
