@@ -404,6 +404,31 @@ export default function ViewIM() {
           </button>
         </div>
       )}
+
+      {iMStatus === "IMERC_QAMIS_DEPARTMENT_ENDORSED" && (
+        <div className='space-x-2'>
+          <Link
+            href={`/im/${iM.id}/content_specialist_review`}
+            className='border rounded'
+          >
+            Content Specialist Review
+          </Link>
+
+          <Link
+            href={`/im/${iM.id}/content_editor_review`}
+            className='border rounded'
+          >
+            Content Editor Review
+          </Link>
+
+          <Link
+            href={`/im/${iM.id}/idd_coordinator_review`}
+            className='border rounded'
+          >
+            IDD Specialist Review
+          </Link>
+        </div>
+      )}
     </MainLayout>
   );
 }
