@@ -221,13 +221,69 @@ export default async function handler(
           },
         });
 
+      const iMERCCITLReviewed = await prisma.iMERCCITLReviewed.findFirst({
+        where: {
+          AND: [
+            {
+              SubmittedContentEditorSuggestion: {
+                ContentEditorSuggestion: {
+                  ContentEditorReview: {
+                    QAMISDepartmentEndorsement: {
+                      id: {
+                        equals: qAMISDepartmentEndorsement?.id ?? "undefined",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              SubmittedContentSpecialistSuggestion: {
+                ContentSpecialistSuggestion: {
+                  ContentSpecialistReview: {
+                    QAMISDepartmentEndorsement: {
+                      id: {
+                        equals: qAMISDepartmentEndorsement?.id ?? "undefined",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              SubmittedIDDSpecialistSuggestion: {
+                IDDSpecialistSuggestion: {
+                  IDDSpecialistReview: {
+                    QAMISDepartmentEndorsement: {
+                      id: {
+                        equals: qAMISDepartmentEndorsement?.id ?? "undefined",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      console.log({
+        id,
+        iMERCCITLReviewed,
+        qAMISDepartmentEndorsement,
+        qAMISRevision,
+        cITLDirectorEndorsement,
+      });
+
       /**
        * Status list:
        * IMPLEMENTATION_DEPARTMENT_REVIEWED - IM is submitted for department review and has been reviewed by peer, coordinator and coordinator
        * IMPLEMENTATION_DEPARTMENT_REVIEW - IM is submitted for department review
        * IMPLEMENTATION_DRAFT - IM is created but not yet submitted for review.
        */
-      if (qAMISDepartmentEndorsement) {
+      if (iMERCCITLReviewed) {
+        return res.send("IMERC_CITL_REVIEWED");
+      } else if (qAMISDepartmentEndorsement) {
         return res.send("IMERC_QAMIS_DEPARTMENT_ENDORSED");
       } else if (qAMISRevision) {
         return res.send("IMERC_QAMIS_REVISED");

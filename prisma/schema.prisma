@@ -139,7 +139,7 @@ model IMFile {
     DepartmentReview   DepartmentReview?
     DepartmentRevision DepartmentRevision?
     CITLRevision       CITLRevision?
-    QAMISRevision      QAMISRevision[]
+    QAMISRevision      QAMISRevision?
     IMERCCITLRevision  IMERCCITLRevision?
 }
 

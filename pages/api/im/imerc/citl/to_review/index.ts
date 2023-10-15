@@ -50,18 +50,21 @@ export default async function handler(
           AND: [
             accessibleBy(ability).IM,
             {
-              Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
-            {
               IMFile: {
                 some: {
-                  CITLRevision: {
-                    IDDCoordinatorEndorsement: {
-                      CITLDirectorEndorsement: {
+                  QAMISRevision: {
+                    QAMISChairpersonEndorsement: {
+                      QAMISDepartmentEndorsement: {
+                        isNot: null,
+                      },
+                    },
+                    QAMISCoordinatorEndorsement: {
+                      QAMISDepartmentEndorsement: {
+                        isNot: null,
+                      },
+                    },
+                    QAMISDeanEndorsement: {
+                      QAMISDepartmentEndorsement: {
                         isNot: null,
                       },
                     },
@@ -73,12 +76,16 @@ export default async function handler(
               NOT: {
                 IMFile: {
                   some: {
-                    CITLRevision: {
-                      IDDCoordinatorEndorsement: {
-                        CITLDirectorEndorsement: {
-                          QAMISSuggestion: {
-                            SubmittedQAMISSuggestion: {
-                              isNot: null,
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentSpecialistReview: {
+                            ContentSpecialistSuggestion: {
+                              SubmittedContentSpecialistSuggestion: {
+                                IMERCCITLReviewed: {
+                                  isNot: null,
+                                },
+                              },
                             },
                           },
                         },
@@ -96,18 +103,21 @@ export default async function handler(
           AND: [
             accessibleBy(ability).IM,
             {
-              Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
-            {
               IMFile: {
                 some: {
-                  CITLRevision: {
-                    IDDCoordinatorEndorsement: {
-                      CITLDirectorEndorsement: {
+                  QAMISRevision: {
+                    QAMISChairpersonEndorsement: {
+                      QAMISDepartmentEndorsement: {
+                        isNot: null,
+                      },
+                    },
+                    QAMISCoordinatorEndorsement: {
+                      QAMISDepartmentEndorsement: {
+                        isNot: null,
+                      },
+                    },
+                    QAMISDeanEndorsement: {
+                      QAMISDepartmentEndorsement: {
                         isNot: null,
                       },
                     },
@@ -119,12 +129,16 @@ export default async function handler(
               NOT: {
                 IMFile: {
                   some: {
-                    CITLRevision: {
-                      IDDCoordinatorEndorsement: {
-                        CITLDirectorEndorsement: {
-                          QAMISSuggestion: {
-                            SubmittedQAMISSuggestion: {
-                              isNot: null,
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentSpecialistReview: {
+                            ContentSpecialistSuggestion: {
+                              SubmittedContentSpecialistSuggestion: {
+                                IMERCCITLReviewed: {
+                                  isNot: null,
+                                },
+                              },
                             },
                           },
                         },

@@ -51,20 +51,36 @@ export default async function handler(
             accessibleBy(ability).IM,
             {
               Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
+                Department: {
+                  College: {
+                    Department: {
+                      some: {
+                        Faculty: {
+                          some: {
+                            User: {
+                              id: {
+                                equals: user.id,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
             {
               IMFile: {
                 some: {
-                  CITLRevision: {
-                    IDDCoordinatorEndorsement: {
-                      CITLDirectorEndorsement: {
-                        isNot: null,
+                  QAMISRevision: {
+                    OR: [
+                      {
+                        QAMISDeanEndorsement: {
+                          is: null,
+                        },
                       },
-                    },
+                    ],
                   },
                 },
               },
@@ -73,14 +89,20 @@ export default async function handler(
               NOT: {
                 IMFile: {
                   some: {
-                    CITLRevision: {
-                      IDDCoordinatorEndorsement: {
-                        CITLDirectorEndorsement: {
-                          QAMISSuggestion: {
-                            SubmittedQAMISSuggestion: {
-                              isNot: null,
-                            },
-                          },
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          isNot: null,
+                        },
+                      },
+                      QAMISCoordinatorEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          isNot: null,
+                        },
+                      },
+                      QAMISDeanEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          isNot: null,
                         },
                       },
                     },
@@ -97,20 +119,36 @@ export default async function handler(
             accessibleBy(ability).IM,
             {
               Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
+                Department: {
+                  College: {
+                    Department: {
+                      some: {
+                        Faculty: {
+                          some: {
+                            User: {
+                              id: {
+                                equals: user.id,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
             {
               IMFile: {
                 some: {
-                  CITLRevision: {
-                    IDDCoordinatorEndorsement: {
-                      CITLDirectorEndorsement: {
-                        isNot: null,
+                  QAMISRevision: {
+                    OR: [
+                      {
+                        QAMISDeanEndorsement: {
+                          is: null,
+                        },
                       },
-                    },
+                    ],
                   },
                 },
               },
@@ -119,14 +157,20 @@ export default async function handler(
               NOT: {
                 IMFile: {
                   some: {
-                    CITLRevision: {
-                      IDDCoordinatorEndorsement: {
-                        CITLDirectorEndorsement: {
-                          QAMISSuggestion: {
-                            SubmittedQAMISSuggestion: {
-                              isNot: null,
-                            },
-                          },
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          isNot: null,
+                        },
+                      },
+                      QAMISCoordinatorEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          isNot: null,
+                        },
+                      },
+                      QAMISDeanEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          isNot: null,
                         },
                       },
                     },
