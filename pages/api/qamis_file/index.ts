@@ -1,16 +1,15 @@
 import prisma from "@/prisma/client";
 import qAMISFileAbility from "@/services/ability/qAMISFileAbility";
+import submittedQAMISSuggestionAbility from "@/services/ability/submittedQAMISSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
+import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { ActiveFaculty, IM, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import * as Yup from "yup";
-import { ForbiddenError, subject } from "@casl/ability";
-import iMAbility from "@/services/ability/iMAbility";
-import submittedQAMISSuggestionAbility from "@/services/ability/submittedQAMISSuggestionAbility";
 
 //set bodyParser
 export const config = {
@@ -73,7 +72,7 @@ export default async function handler(
       const file = data.files.file[0];
       const filename = `${file.newFilename}.pdf`;
       const filePath = file.filepath;
-      const destination = path.join(process.cwd(), `/files/im/${filename}`);
+      const destination = path.join(process.cwd(), `/files/qamis/${filename}`);
       fs.copyFile(filePath, destination, (err) => {
         if (err) throw err;
       });

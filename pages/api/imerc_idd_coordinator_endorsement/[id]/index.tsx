@@ -1,12 +1,11 @@
 import prisma from "@/prisma/client";
-import qAMISFileAbility from "@/services/ability/qAMISFileAbility";
+import IMERCIDDCoordinatorEndorsementAbility from "@/services/ability/iMERCIDDCoordinatorEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
-import { ForbiddenError, subject } from "@casl/ability";
+import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
-import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
+import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,25 +19,31 @@ export default async function handler(
     console.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = qAMISFileAbility({ user });
+  const ability = IMERCIDDCoordinatorEndorsementAbility({ user });
 
   const getHandler = async () => {
     try {
-      const { id } = req.query;
-      const qAMISFile = await prisma.qAMISFile.findFirstOrThrow({
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
+      await validator.validate(req.query);
+
+      const { id } = validator.cast(req.query);
+      const IMERCIDDCoordinatorEndorsement = await prisma.iMERCIDDCoordinatorEndorsement.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).QAMISFile,
+            accessibleBy(ability).IMERCIDDCoordinatorEndorsement,
             {
               id: {
-                equals: id as string,
+                equals: id,
               },
             },
           ],
         },
       });
 
-      return res.json(qAMISFile);
+      return res.json(IMERCIDDCoordinatorEndorsement);
     } catch (error: any) {
       console.error(error);
       return res
@@ -49,43 +54,23 @@ export default async function handler(
 
   const deleteHandler = async () => {
     try {
-      const { id } = req.query;
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
 
-      let qAMISFileToDelete;
-      qAMISFileToDelete = await prisma.qAMISFile.findFirstOrThrow({
+      await validator.validate(req.query);
+
+      ForbiddenError.from(ability).throwUnlessCan("delete", "IMERCIDDCoordinatorEndorsement");
+
+      const { id } = validator.cast(req.query);
+
+      const IMERCIDDCoordinatorEndorsement = await prisma.iMERCIDDCoordinatorEndorsement.delete({
         where: {
-          AND: [
-            accessibleBy(ability).QAMISFile,
-            {
-              id: {
-                equals: id as string,
-              },
-            },
-          ],
+          id,
         },
       });
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        subject("QAMISFile", qAMISFileToDelete)
-      );
-
-      const filePath = path.join(
-        process.cwd(),
-        `/files/qamis/${qAMISFileToDelete.filename}`
-      );
-      fs.rm(filePath, (error) => {
-        console.error({ error });
-        throw error;
-      });
-
-      const qAMISFile = await prisma.qAMISFile.delete({
-        where: {
-          id: id as string,
-        },
-      });
-
-      return res.json(qAMISFile);
+      return res.json(IMERCIDDCoordinatorEndorsement);
     } catch (error: any) {
       console.error(error);
       return res
@@ -93,6 +78,7 @@ export default async function handler(
         .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
+
 
   switch (req.method) {
     case "DELETE":
