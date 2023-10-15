@@ -274,8 +274,20 @@ export default async function handler(
               equals: iMERCCITLReviewed?.id ?? "undefined",
             },
           },
+          returned: false,
         },
       });
+
+      const iMERCIDDCoordinatorEndorsement =
+        await prisma.iMERCIDDCoordinatorEndorsement.findFirst({
+          where: {
+            IMERCCITLRevision: {
+              id: {
+                equals: iMERCCITLRevision?.id ?? "undefined",
+              },
+            },
+          },
+        });
 
       /**
        * Status list:
@@ -283,7 +295,9 @@ export default async function handler(
        * IMPLEMENTATION_DEPARTMENT_REVIEW - IM is submitted for department review
        * IMPLEMENTATION_DRAFT - IM is created but not yet submitted for review.
        */
-      if (iMERCCITLRevision) {
+      if (iMERCIDDCoordinatorEndorsement) {
+        return res.send("IMERC_CITL_IDD_COORDINATOR_ENDORSED");
+      } else if (iMERCCITLRevision) {
         return res.send("IMERC_CITL_REVISED");
       } else if (iMERCCITLReviewed) {
         return res.send("IMERC_CITL_REVIEWED");

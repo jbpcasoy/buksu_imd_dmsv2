@@ -150,7 +150,7 @@ export default function ViewIM() {
         router.reload();
       });
   };
-  
+
   const submitForIMERCCITLEndorsementHandler = async () => {
     if (!state || !iMId) return;
 
@@ -258,6 +258,29 @@ export default function ViewIM() {
           .post<CoordinatorEndorsement>(`/api/citl_director_endorsement`, {
             iDDCoordinatorEndorsementId: iDDCoordinatorEndorsement.id,
             activeCITLDirectorId: activeCITLDirector.id,
+          })
+          .then(() => {
+            alert("IM endorsed successfully");
+          });
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
+      });
+  };
+
+  const iMERCIDDCoordinatorEndorsementHandler = async () => {
+    if (!activeIDDCoordinator) return;
+
+    return axios
+      .get<DepartmentRevision>(`/api/imerc_citl_revision/im/${iMId}`)
+      .then((res) => {
+        const iMERCCITLRevision = res.data;
+        if (!iMERCCITLRevision) return;
+
+        return axios
+          .post<CoordinatorEndorsement>(`/api/imerc_idd_coordinator_endorsement`, {
+            iMERCCITLRevisionId: iMERCCITLRevision.id,
+            activeIDDCoordinatorId: activeIDDCoordinator.id,
           })
           .then(() => {
             alert("IM endorsed successfully");
@@ -455,7 +478,7 @@ export default function ViewIM() {
           </Link>
         </div>
       )}
-      
+
       {iMStatus === "IMERC_CITL_REVIEWED" && (
         <div>
           <input type='file' onChange={onFileChange} />
@@ -464,6 +487,17 @@ export default function ViewIM() {
             onClick={submitForIMERCCITLEndorsementHandler}
           >
             Submit for endorsement
+          </button>
+        </div>
+      )}
+
+      {iMStatus === "IMERC_CITL_REVISED" && (
+        <div>
+          <button
+            className='border rounded'
+            onClick={iMERCIDDCoordinatorEndorsementHandler}
+          >
+            Endorse IM
           </button>
         </div>
       )}
