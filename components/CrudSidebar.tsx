@@ -267,6 +267,10 @@ export default function CrudSidebar() {
       link: "/crud/imerc_idd_coordinator_endorsement",
       label: "IMERC IDD Coordinator Endorsement",
     },
+    {
+      link: "/crud/imerc_citl_director_endorsement",
+      label: "IMERC CITL Director Endorsement",
+    },
   ];
   return (
     <div className='h-full overflow-y-auto pb-10'>
