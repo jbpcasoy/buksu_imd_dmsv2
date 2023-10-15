@@ -10,7 +10,9 @@ import { useEffect } from "react";
 export default function ContentSpecialistReviewPage() {
   const router = useRouter();
   const contentSpecialistReviewId = router.query.id;
-  const contentSpecialistReview = useContentSpecialistReview({ id: contentSpecialistReviewId as string });
+  const contentSpecialistReview = useContentSpecialistReview({
+    id: contentSpecialistReviewId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -48,12 +50,30 @@ export default function ContentSpecialistReviewPage() {
         </div>
       </div>
       <p>id: {contentSpecialistReview.id}</p>
-      <p>createdAt: {new Date(contentSpecialistReview.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(contentSpecialistReview.updatedAt).toLocaleString()}</p>
       <p>
-      qAMISDepartmentEndorsementId:{" "}
-        <Link href={`/crud/qamis_department_endorsement_review/${contentSpecialistReview.qAMISDepartmentEndorsementId}`} className='underline'>
+        createdAt:{" "}
+        {new Date(contentSpecialistReview.createdAt).toLocaleString()}
+      </p>
+      <p>
+        updatedAt:{" "}
+        {new Date(contentSpecialistReview.updatedAt).toLocaleString()}
+      </p>
+      <p>
+        qAMISDepartmentEndorsementId:{" "}
+        <Link
+          href={`/crud/qamis_department_endorsement_review/${contentSpecialistReview.qAMISDepartmentEndorsementId}`}
+          className='underline'
+        >
           {contentSpecialistReview.qAMISDepartmentEndorsementId}
+        </Link>
+      </p>
+      <p>
+        facultyId:{" "}
+        <Link
+          href={`/crud/faculty/${contentSpecialistReview.facultyId}`}
+          className='underline'
+        >
+          {contentSpecialistReview.facultyId}
         </Link>
       </p>
 
