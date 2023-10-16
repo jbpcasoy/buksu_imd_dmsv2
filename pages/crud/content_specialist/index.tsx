@@ -37,8 +37,7 @@ export default function ContentSpecialistsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>userId</th>
-              <th>departmentId</th>
+              <th>facultyId</th>
               <th>action</th>
             </tr>
           </thead>
@@ -49,8 +48,13 @@ export default function ContentSpecialistsPage() {
                   <td>{contentSpecialist.id}</td>
                   <td>{new Date(contentSpecialist.createdAt).toLocaleString()}</td>
                   <td>{new Date(contentSpecialist.updatedAt).toLocaleString()}</td>
-                  <td><Link href={`/crud/user/${contentSpecialist.userId}`} className="underline">{contentSpecialist.userId}</Link></td>
-                  <td><Link href={`/crud/department/${contentSpecialist.departmentId}`} className="underline">{contentSpecialist.departmentId}</Link></td>
+                  <td>
+                    <Link
+                      href={`/crud/faculty/${contentSpecialist.facultyId}`}
+                      className='underline'
+                    >
+                      {contentSpecialist.facultyId}
+                    </Link></td>
                   <td>
                     <Link
                       href={`/crud/content_specialist/${contentSpecialist.id}`}

@@ -3,6 +3,7 @@ import useContentSpecialist from "@/hooks/useContentSpecialist";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function ContentSpecialistPage() {
   const router = useRouter();
@@ -42,18 +43,12 @@ export default function ContentSpecialistPage() {
       <p>createdAt: {new Date(contentSpecialist.createdAt).toLocaleString()}</p>
       <p>updatedAt: {new Date(contentSpecialist.updatedAt).toLocaleString()}</p>
       <p>
-        userId:{" "}
-        <Link href={`/crud/user/${contentSpecialist.userId}`} className='underline'>
-          {contentSpecialist.userId}
-        </Link>
-      </p>
-      <p>
-        departmentId:{" "}
+        facultyId:{" "}
         <Link
-          href={`/crud/department/${contentSpecialist.departmentId}`}
+          href={`/crud/faculty/${contentSpecialist.facultyId}`}
           className='underline'
         >
-          {contentSpecialist.departmentId}
+          {contentSpecialist.facultyId}
         </Link>
       </p>
     </CrudLayout>

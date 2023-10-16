@@ -1,18 +1,15 @@
 import CrudLayout from "@/components/CrudLayout";
 import axios from "axios";
 import { useFormik } from "formik";
-import { useEffect } from "react";
 import * as Yup from "yup";
 
 export default function AddContentSpecialistPage() {
   const formik = useFormik({
     initialValues: {
-      userId: "",
-      departmentId: "",
+      activeFacultyId: "",
     },
     validationSchema: Yup.object({
-      userId: Yup.string().required(),
-      departmentId: Yup.string().required(),
+      activeFacultyId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -25,24 +22,12 @@ export default function AddContentSpecialistPage() {
         });
     },
   });
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <CrudLayout>
       <h2>Add ContentSpecialist</h2>
 
-      <form onSubmit={formik.handleSubmit} noValidate>
-        <input
-          type='text'
-          placeholder='departmentId'
-          {...formik.getFieldProps("departmentId")}
-        />
-        <input
-          type='text'
-          placeholder='userId'
-          {...formik.getFieldProps("userId")}
-        />
+      <form onSubmit={formik.handleSubmit}>
+        <input type="text" placeholder="activeFacultyId" {...formik.getFieldProps("activeFacultyId")} />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </CrudLayout>

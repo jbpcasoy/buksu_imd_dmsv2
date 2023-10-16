@@ -52,7 +52,7 @@ export default function ActiveContentSpecialistPage() {
       <p>
         contentSpecialistId:{" "}
         <Link
-          href={`/crud/content_specialist/${activeContentSpecialist.contentSpecialistId}`}
+          href={`/crud/active_content_specialist/${activeContentSpecialist.contentSpecialistId}`}
           className='underline'
         >
           {activeContentSpecialist.contentSpecialistId}

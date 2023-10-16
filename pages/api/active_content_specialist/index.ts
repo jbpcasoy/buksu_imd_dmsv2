@@ -3,7 +3,7 @@ import activeContentSpecialistAbility from "@/services/ability/activeContentSpec
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -24,18 +24,24 @@ export default async function handler(
   const postHandler = async () => {
     try {
       const validator = Yup.object({
-        contentSpecialistId: Yup.string().required(),
+        activeFacultyId: Yup.string().required(),
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "ActiveContentSpecialist");
+      ForbiddenError.from(ability).throwUnlessCan(
+        "create",
+        "ActiveContentSpecialist"
+      );
 
-      const { contentSpecialistId } = validator.cast(req.body);
-
+      const { activeFacultyId } = validator.cast(req.body);
       const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow({
         where: {
-          id: {
-            equals: contentSpecialistId,
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: activeFacultyId,
+              },
+            },
           },
         },
       });
@@ -43,9 +49,9 @@ export default async function handler(
       const userActiveContentSpecialistCount = await prisma.activeContentSpecialist.count({
         where: {
           ContentSpecialist: {
-            User: {
+            Faculty: {
               id: {
-                equals: contentSpecialist.userId,
+                equals: contentSpecialist.facultyId,
               },
             },
           },
@@ -55,6 +61,41 @@ export default async function handler(
       if (userActiveContentSpecialistCount > 0) {
         return res.status(409).json({
           error: { message: "User can only have one active contentSpecialist" },
+        });
+      }
+
+      const department = await prisma.department.findFirstOrThrow({
+        where: {
+          Faculty: {
+            some: {
+              ContentSpecialist: {
+                id: {
+                  equals: contentSpecialist.id,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const departmentActiveContentSpecialistCount =
+        await prisma.activeContentSpecialist.count({
+          where: {
+            ContentSpecialist: {
+              Faculty: {
+                Department: {
+                  id: {
+                    equals: department.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (departmentActiveContentSpecialistCount > 0) {
+        return res.status(409).json({
+          error: { message: "Department can only have one active contentSpecialist" },
         });
       }
 
@@ -92,7 +133,6 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-
       const activeContentSpecialists = await prisma.activeContentSpecialist.findMany({
         skip,
         take,
@@ -101,10 +141,12 @@ export default async function handler(
             accessibleBy(ability).ActiveContentSpecialist,
             {
               ContentSpecialist: {
-                User: {
-                  name: {
-                    contains: filterName,
-                    mode: "insensitive",
+                Faculty: {
+                  User: {
+                    name: {
+                      contains: filterName,
+                      mode: "insensitive",
+                    },
                   },
                 },
               },

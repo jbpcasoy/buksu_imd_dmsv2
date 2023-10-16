@@ -30,8 +30,8 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const activeContentSpecialist =
-        await prisma.activeContentSpecialist.findFirstOrThrow({
+      const activeContentSpecialist = await prisma.activeContentSpecialist.findFirstOrThrow(
+        {
           where: {
             AND: [
               accessibleBy(ability).ActiveContentSpecialist,
@@ -42,7 +42,8 @@ export default async function handler(
               },
             ],
           },
-        });
+        }
+      );
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {
@@ -67,13 +68,11 @@ export default async function handler(
       );
 
       const { id } = validator.cast(req.query);
-
-      const activeContentSpecialist =
-        await prisma.activeContentSpecialist.delete({
-          where: {
-            id,
-          },
-        });
+      const activeContentSpecialist = await prisma.activeContentSpecialist.delete({
+        where: {
+          id,
+        },
+      });
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {

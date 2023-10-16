@@ -17,24 +17,27 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeContentSpecialistAbility({user});
+  let ability = activeContentSpecialistAbility({ user });
 
   const getHandler = async () => {
     try {
-      const activeContentSpecialist = await prisma.activeContentSpecialist.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).ActiveContentSpecialist,
-            {
-              ContentSpecialist: {
-                userId: {
-                  equals: user.id,
+      const activeContentSpecialist =
+        await prisma.activeContentSpecialist.findFirstOrThrow({
+          where: {
+            AND: [
+              accessibleBy(ability).ActiveContentSpecialist,
+              {
+                ContentSpecialist: {
+                  Faculty: {
+                    User: {
+                      id: user.id,
+                    },
+                  },
                 },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {

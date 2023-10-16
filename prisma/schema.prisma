@@ -43,11 +43,10 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    isAdmin           Boolean             @default(false) // changed in auth route, not modified in database
-    Faculty           Faculty[]
-    IDDCoordinator    IDDCoordinator?
-    CITLDirector      CITLDirector?
-    ContentSpecialist ContentSpecialist[]
+    isAdmin        Boolean         @default(false) // changed in auth route, not modified in database
+    Faculty        Faculty[]
+    IDDCoordinator IDDCoordinator?
+    CITLDirector   CITLDirector?
 }
 
 model VerificationToken {
@@ -72,11 +71,10 @@ model Department {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    College           College             @relation(fields: [collegeId], references: [id])
-    name              String              @unique
-    collegeId         String
-    Faculty           Faculty[]
-    ContentSpecialist ContentSpecialist[]
+    College   College   @relation(fields: [collegeId], references: [id])
+    name      String    @unique
+    collegeId String
+    Faculty   Faculty[]
 }
 
 model Faculty {
@@ -95,6 +93,7 @@ model Faculty {
     Dean                    Dean?
     PeerReview              PeerReview[]
     ContentSpecialistReview ContentSpecialistReview[]
+    ContentSpecialist       ContentSpecialist?
 
     @@unique([departmentId, userId])
 }
@@ -1009,13 +1008,9 @@ model ContentSpecialist {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User                    User                      @relation(fields: [userId], references: [id])
-    userId                  String
-    Department              Department                @relation(fields: [departmentId], references: [id])
-    departmentId            String
+    Faculty                 Faculty                  @relation(fields: [facultyId], references: [id])
+    facultyId               String                   @unique
     ActiveContentSpecialist ActiveContentSpecialist?
-
-    @@unique([departmentId, userId])
 }
 
 model ActiveContentSpecialist {
@@ -1024,5 +1019,5 @@ model ActiveContentSpecialist {
     updatedAt DateTime @updatedAt
 
     ContentSpecialist   ContentSpecialist @relation(fields: [contentSpecialistId], references: [id])
-    contentSpecialistId String @unique
+    contentSpecialistId String            @unique
 }

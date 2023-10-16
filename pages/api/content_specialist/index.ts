@@ -3,7 +3,7 @@ import contentSpecialistAbility from "@/services/ability/contentSpecialistAbilit
 import getServerUser from "@/services/getServerUser";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { User } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -12,7 +12,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let user: User;
-
   try {
     user = await getServerUser(req, res);
   } catch (error) {
@@ -25,25 +24,29 @@ export default async function handler(
   const postHandler = async () => {
     try {
       const validator = Yup.object({
-        userId: Yup.string().required(),
-        departmentId: Yup.string().required(),
+        activeFacultyId: Yup.string().required(),
       });
       await validator.validate(req.body);
 
       ForbiddenError.from(ability).throwUnlessCan("create", "ContentSpecialist");
 
-      const { userId, departmentId } = validator.cast(req.body);
+      const { activeFacultyId } = validator.cast(req.body);
+
+      const faculty = await prisma.faculty.findFirstOrThrow({
+        where: {
+          ActiveFaculty: {
+            id: {
+              equals: activeFacultyId,
+            },
+          },
+        },
+      });
 
       const contentSpecialist = await prisma.contentSpecialist.create({
         data: {
-          User: {
+          Faculty: {
             connect: {
-              id: userId,
-            },
-          },
-          Department: {
-            connect: {
-              id: departmentId,
+              id: faculty.id,
             },
           },
         },
@@ -80,10 +83,12 @@ export default async function handler(
           AND: [
             accessibleBy(ability).ContentSpecialist,
             {
-              User: {
-                name: {
-                  contains: filterName,
-                  mode: "insensitive",
+              Faculty: {
+                User: {
+                  name: {
+                    contains: filterName,
+                    mode: "insensitive",
+                  },
                 },
               },
             },

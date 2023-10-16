@@ -3,34 +3,35 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddContentSpecialistPage() {
+export default function AddActiveContentSpecialistPage() {
   const formik = useFormik({
     initialValues: {
-      contentSpecialistId: "",
+      activeFacultyId: "",
     },
     validationSchema: Yup.object({
-      contentSpecialistId: Yup.string().required(),
+      activeFacultyId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
         .post("/api/active_content_specialist", values)
         .then(() => {
-          alert("ContentSpecialist Added Successfully");
+          alert("ActiveContentSpecialist Added Successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
         });
     },
   });
+
   return (
     <CrudLayout>
-      <h2>Add ContentSpecialist</h2>
+      <h2>Add ActiveContentSpecialist</h2>
 
       <form onSubmit={formik.handleSubmit}>
         <input
           type='text'
-          placeholder='contentSpecialistId'
-          {...formik.getFieldProps("contentSpecialistId")}
+          placeholder='activeFacultyId'
+          {...formik.getFieldProps("activeFacultyId")}
         />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
