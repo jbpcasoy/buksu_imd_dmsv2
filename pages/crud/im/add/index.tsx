@@ -1,6 +1,4 @@
-import CollegeSelector from "@/components/CollegeSelector";
 import CrudLayout from "@/components/CrudLayout";
-import ActiveFacultySelector from "@/components/ActiveFacultySelector";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useEffect } from "react";
@@ -39,17 +37,21 @@ export default function AddIMPage() {
       <h2>Add IM</h2>
 
       <form onSubmit={formik.handleSubmit} noValidate>
-        <ActiveFacultySelector {...formik.getFieldProps("activeFacultyId")} />
+        <input
+          type='text'
+          placeholder='activeFacultyId'
+          {...formik.getFieldProps("activeFacultyId")}
+        />
         <input
           type='text'
           placeholder='title'
           {...formik.getFieldProps("title")}
         />
         <select>
-            <option value="MODULE">MODULE</option>
-            <option value="COURSE_FILE">COURSE_FILE</option>
-            <option value="WORKTEXT">WORKTEXT</option>
-            <option value="TEXTBOOK">TEXTBOOK</option>
+          <option value='MODULE'>MODULE</option>
+          <option value='COURSE_FILE'>COURSE_FILE</option>
+          <option value='WORKTEXT'>WORKTEXT</option>
+          <option value='TEXTBOOK'>TEXTBOOK</option>
         </select>
         <input type='submit' value='Submit' className='rounded border' />
       </form>

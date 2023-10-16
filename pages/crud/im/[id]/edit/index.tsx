@@ -1,12 +1,10 @@
-import CollegeSelector from "@/components/CollegeSelector";
 import CrudLayout from "@/components/CrudLayout";
-import ActiveFacultySelector from "@/components/ActiveFacultySelector";
+import useIM from "@/hooks/useIM";
 import axios from "axios";
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import * as Yup from "yup";
-import useIM from "@/hooks/useIM";
-import { useRouter } from "next/router";
 
 export default function EditIMPage() {
   const router = useRouter();

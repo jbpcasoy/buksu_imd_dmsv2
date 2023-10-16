@@ -1,6 +1,4 @@
 import CrudLayout from "@/components/CrudLayout";
-import DepartmentSelector from "@/components/DepartmentSelector";
-import FacultySelector from "@/components/FacultySelector";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -29,7 +27,11 @@ export default function AddActiveFacultyPage() {
       <h2>Add ActiveFaculty</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <FacultySelector {...formik.getFieldProps("facultyId")} />
+        <input
+          type='text'
+          placeholder='facultyId'
+          {...formik.getFieldProps("facultyId")}
+        />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </CrudLayout>

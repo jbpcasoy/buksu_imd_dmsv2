@@ -1,4 +1,3 @@
-import ActiveFacultySelector from "@/components/ActiveFacultySelector";
 import CrudLayout from "@/components/CrudLayout";
 import axios from "axios";
 import { useFormik } from "formik";

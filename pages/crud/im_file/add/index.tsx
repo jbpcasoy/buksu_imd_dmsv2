@@ -1,5 +1,4 @@
 import CrudLayout from "@/components/CrudLayout";
-import IMSelector from "@/components/IMSelector";
 import axios from "axios";
 import { ChangeEventHandler, useState } from "react";
 

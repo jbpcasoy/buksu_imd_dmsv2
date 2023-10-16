@@ -1,4 +1,3 @@
-import ActiveFacultySelector from "@/components/ActiveFacultySelector";
 import CrudLayout from "@/components/CrudLayout";
 import axios from "axios";
 import { useFormik } from "formik";
@@ -28,7 +27,7 @@ export default function AddChairpersonPage() {
       <h2>Add Chairperson</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <ActiveFacultySelector {...formik.getFieldProps("activeFacultyId")} />
+        <input type="text" placeholder="activeFacultyId" {...formik.getFieldProps("activeFacultyId")} />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </CrudLayout>

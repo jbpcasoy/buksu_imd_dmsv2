@@ -1,7 +1,4 @@
-import CollegeSelector from "@/components/CollegeSelector";
 import CrudLayout from "@/components/CrudLayout";
-import DepartmentSelector from "@/components/DepartmentSelector";
-import UserSelector from "@/components/UserSelector";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useEffect } from "react";
@@ -36,8 +33,16 @@ export default function AddFacultyPage() {
       <h2>Add Faculty</h2>
 
       <form onSubmit={formik.handleSubmit} noValidate>
-        <DepartmentSelector {...formik.getFieldProps("departmentId")} />
-        <UserSelector {...formik.getFieldProps("userId")} />
+        <input
+          type='text'
+          placeholder='departmentId'
+          {...formik.getFieldProps("departmentId")}
+        />
+        <input
+          type='text'
+          placeholder='userId'
+          {...formik.getFieldProps("userId")}
+        />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </CrudLayout>

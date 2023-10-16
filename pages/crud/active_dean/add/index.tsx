@@ -2,7 +2,6 @@ import CrudLayout from "@/components/CrudLayout";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import ActiveFacultySelector from "@/components/ActiveFacultySelector";
 
 export default function AddActiveDeanPage() {
   const formik = useFormik({
@@ -23,13 +22,17 @@ export default function AddActiveDeanPage() {
         });
     },
   });
-  
+
   return (
     <CrudLayout>
       <h2>Add ActiveDean</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <ActiveFacultySelector {...formik.getFieldProps("activeFacultyId")} />
+        <input
+          type='text'
+          placeholder='activeFacultyId'
+          {...formik.getFieldProps("activeFacultyId")}
+        />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </CrudLayout>

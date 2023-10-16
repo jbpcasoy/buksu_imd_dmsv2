@@ -1,4 +1,3 @@
-import CollegeSelector from "@/components/CollegeSelector";
 import CrudLayout from "@/components/CrudLayout";
 import axios from "axios";
 import { useFormik } from "formik";
@@ -34,7 +33,11 @@ export default function AddDepartmentPage() {
       <h2>Add Department</h2>
 
       <form onSubmit={formik.handleSubmit} noValidate>
-        <CollegeSelector {...formik.getFieldProps("collegeId")} />
+        <input
+          type='text'
+          placeholder='collegeId'
+          {...formik.getFieldProps("collegeId")}
+        />
         <input
           type='text'
           placeholder='name'

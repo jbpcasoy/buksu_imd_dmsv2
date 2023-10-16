@@ -1,7 +1,4 @@
-import CollegeSelector from "@/components/CollegeSelector";
 import CrudLayout from "@/components/CrudLayout";
-import DepartmentSelector from "@/components/DepartmentSelector";
-import UserSelector from "@/components/UserSelector";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useEffect } from "react";
