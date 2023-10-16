@@ -66,6 +66,7 @@ import {
   IMERCCITLRevision,
   IMERCIDDCoordinatorEndorsement,
   IMERCCITLDirectorEndorsement,
+  ContentSpecialist,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -136,6 +137,7 @@ export type AppSubjects =
       IMERCCITLRevision: IMERCCITLRevision;
       IMERCIDDCoordinatorEndorsement: IMERCIDDCoordinatorEndorsement;
       IMERCCITLDirectorEndorsement: IMERCCITLDirectorEndorsement;
+      ContentSpecialist: ContentSpecialist;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

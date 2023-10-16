@@ -271,6 +271,14 @@ export default function CrudSidebar() {
       link: "/crud/imerc_citl_director_endorsement",
       label: "IMERC CITL Director Endorsement",
     },
+    {
+      link: "/crud/content_specialist",
+      label: "Content Specialist",
+    },
+    {
+      link: "/crud/active_content_specialist",
+      label: "Active Content Specialist",
+    },
   ];
   return (
     <div className='h-full overflow-y-auto pb-10'>
@@ -282,7 +290,7 @@ export default function CrudSidebar() {
       </Link>
 
       <div className='flex flex-col'>
-        {items.map((item) => (
+        {items.sort((a, b) => a.label.localeCompare(b.label)).map((item) => (
           <Link href={item.link} className='underline' key={item.link}>
             {item.label}
           </Link>

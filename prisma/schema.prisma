@@ -43,10 +43,11 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    isAdmin        Boolean         @default(false) // changed in auth route, not modified in database
-    Faculty        Faculty[]
-    IDDCoordinator IDDCoordinator?
-    CITLDirector   CITLDirector?
+    isAdmin           Boolean             @default(false) // changed in auth route, not modified in database
+    Faculty           Faculty[]
+    IDDCoordinator    IDDCoordinator?
+    CITLDirector      CITLDirector?
+    ContentSpecialist ContentSpecialist[]
 }
 
 model VerificationToken {
@@ -71,10 +72,11 @@ model Department {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    College   College   @relation(fields: [collegeId], references: [id])
-    name      String    @unique
-    collegeId String
-    Faculty   Faculty[]
+    College           College             @relation(fields: [collegeId], references: [id])
+    name              String              @unique
+    collegeId         String
+    Faculty           Faculty[]
+    ContentSpecialist ContentSpecialist[]
 }
 
 model Faculty {
@@ -1000,4 +1002,27 @@ model IMERCCITLDirectorEndorsement {
     cITLDirectorId                   String
     IMERCIDDCoordinatorEndorsement   IMERCIDDCoordinatorEndorsement @relation(fields: [iMERCIDDCoordinatorEndorsementId], references: [id])
     iMERCIDDCoordinatorEndorsementId String                         @unique
+}
+
+model ContentSpecialist {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    User                    User                      @relation(fields: [userId], references: [id])
+    userId                  String
+    Department              Department                @relation(fields: [departmentId], references: [id])
+    departmentId            String
+    ActiveContentSpecialist ActiveContentSpecialist?
+
+    @@unique([departmentId, userId])
+}
+
+model ActiveContentSpecialist {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ContentSpecialist   ContentSpecialist @relation(fields: [contentSpecialistId], references: [id])
+    contentSpecialistId String @unique
 }
