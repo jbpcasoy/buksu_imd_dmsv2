@@ -274,7 +274,12 @@ export default function CrudSidebar() {
   ];
   return (
     <div className='h-full overflow-y-auto pb-10'>
-      <h1 className='py-2 sticky top-0 bg-white shadow'>BUKSU IMD DMS</h1>
+      <Link
+        href='/crud'
+        className='py-2 sticky top-0 bg-white shadow text-lg block'
+      >
+        BUKSU IMD DMS <span className='text-sm text-gray-500'>CRUD</span>
+      </Link>
 
       <div className='flex flex-col'>
         {items.map((item) => (

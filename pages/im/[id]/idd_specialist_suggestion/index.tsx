@@ -2,7 +2,7 @@ import MainLayout from "@/components/MainLayout";
 import IDDSpecialistSuggestionItem from "@/components/IDDSpecialistSuggestionItem";
 import useIDDSpecialistReviewMe from "@/hooks/useIDDSpecialistReviewMe";
 import useIDDSpecialistSuggestionItemsOwn, {
-    useIDDSpecialistSuggestionItemsOwnParams,
+  useIDDSpecialistSuggestionItemsOwnParams,
 } from "@/hooks/useIDDSpecialistSuggestionItemsOwn";
 import useIDDSpecialistSuggestionMe from "@/hooks/useIDDSpecialistSuggestionMe";
 import axios from "axios";
@@ -10,17 +10,21 @@ import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { IDDSpecialistSuggestion } from "@prisma/client";
 
 export default function IDDSpecialistSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const iDDSpecialistSuggestion = useIDDSpecialistSuggestionMe({ id: iMId as string });
+  const iDDSpecialistSuggestion = useIDDSpecialistSuggestionMe({
+    id: iMId as string,
+  });
   const iDDSpecialistReview = useIDDSpecialistReviewMe({ id: iMId as string });
   const [state, setState] = useState<useIDDSpecialistSuggestionItemsOwnParams>({
     skip: 0,
     take: 10,
   });
-  const iDDSpecialistSuggestionItems = useIDDSpecialistSuggestionItemsOwn(state);
+  const iDDSpecialistSuggestionItems =
+    useIDDSpecialistSuggestionItemsOwn(state);
   const handleSubmitReview = () => {
     if (!iDDSpecialistSuggestion) return;
     axios
@@ -29,6 +33,7 @@ export default function IDDSpecialistSuggestionPage() {
       })
       .then(() => {
         alert("Review Submitted Successfully");
+        router.push(`/im/${iMId}`);
       })
       .catch((error: any) => {
         alert(error?.response?.data?.error?.message);
@@ -56,39 +61,41 @@ export default function IDDSpecialistSuggestionPage() {
       pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
-      if (!iDDSpecialistSuggestion) {
-        return;
-      }
+      const submitSuggestionItem = async (
+        iDDSpecialistSuggestionId: string
+      ) => {
+        return axios
+          .post(`/api/idd_specialist_suggestion_item`, {
+            ...values,
+            iDDSpecialistSuggestionId,
+          })
+          .then(() => {
+            alert("Suggestion added successfully.");
+            router.reload();
+          });
+      };
 
-      axios
-        .post(`/api/idd_specialist_suggestion_item`, {
-          ...values,
-          iDDSpecialistSuggestionId: iDDSpecialistSuggestion.id,
-        })
-        .then(() => {
-          alert("Suggestion added successfully.");
-          router.reload();
-        });
+      if (!iDDSpecialistSuggestion) {
+        if (!iDDSpecialistReview) {
+          return;
+        }
+        return axios
+          .post<IDDSpecialistSuggestion>(`/api/idd_specialist_suggestion/`, {
+            iDDSpecialistReviewId: iDDSpecialistReview.id,
+          })
+          .then((res) => {
+            const createdIDDSpecialistSuggestion = res.data;
+
+            return submitSuggestionItem(createdIDDSpecialistSuggestion.id);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        return submitSuggestionItem(iDDSpecialistSuggestion.id);
+      }
     },
   });
-
-  useEffect(() => {
-    if (!iDDSpecialistReview) {
-      return;
-    }
-    if (!iDDSpecialistSuggestion) {
-      axios
-        .post(`/api/idd_specialist_suggestion/`, {
-          iDDSpecialistReviewId: iDDSpecialistReview.id,
-        })
-        .then((res) => {
-          router.reload();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [iDDSpecialistReview, iDDSpecialistSuggestion]);
 
   return (
     <MainLayout>
@@ -115,14 +122,16 @@ export default function IDDSpecialistSuggestionPage() {
         </form>
         <div>
           <h3>Suggestions</h3>
-          {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map((iDDSpecialistSuggestionItem) => {
-            return (
-              <IDDSpecialistSuggestionItem
-                iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
-                key={iDDSpecialistSuggestionItem.id}
-              />
-            );
-          })}
+          {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map(
+            (iDDSpecialistSuggestionItem) => {
+              return (
+                <IDDSpecialistSuggestionItem
+                  iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
+                  key={iDDSpecialistSuggestionItem.id}
+                />
+              );
+            }
+          )}
         </div>
         <button className='rounded border' onClick={handleSubmitReview}>
           Submit Review

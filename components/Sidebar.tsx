@@ -14,9 +14,21 @@ export default function Sidebar() {
   const activeCoordinator = useActiveCoordinatorMe();
   const activeChairperson = useActiveChairpersonMe();
 
+  //   <div className='h-full overflow-y-auto pb-10'>
+  //   <h1 className='py-2 sticky top-0 bg-white shadow'>BUKSU IMD DMS</h1>
+
+  //   <div className='flex flex-col'>
+  //     {items.map((item) => (
+  //       <Link href={item.link} className='underline' key={item.link}>
+  //         {item.label}
+  //       </Link>
+  //     ))}
+  //   </div>
+  // </div>
+
   return (
-    <div className='h-full overflow-y-auto flex flex-col'>
-      <h1 className='py-2 sticky top-0 bg-white shadow'>BUKSU IMD DMS</h1>
+    <div className='h-full overflow-y-auto flex flex-col pb-10'>
+      <Link href="/" className='py-2 sticky top-0 bg-white shadow text-lg block'>BUKSU IMD DMS</Link>
       <p className='text-xs text-center'>IMPLEMENTATION PHASE</p>
       {activeFaculty && (
         <div className='flex flex-col'>

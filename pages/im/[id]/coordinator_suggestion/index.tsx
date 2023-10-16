@@ -5,6 +5,7 @@ import useCoordinatorSuggestionItemsOwn, {
   useCoordinatorSuggestionItemsOwnParams,
 } from "@/hooks/useCoordinatorSuggestionItemsOwn";
 import useCoordinatorSuggestionMe from "@/hooks/useCoordinatorSuggestionMe";
+import { CoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -14,7 +15,9 @@ import * as Yup from "yup";
 export default function CoordinatorSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const coordinatorSuggestion = useCoordinatorSuggestionMe({ id: iMId as string });
+  const coordinatorSuggestion = useCoordinatorSuggestionMe({
+    id: iMId as string,
+  });
   const coordinatorReview = useCoordinatorReviewMe({ id: iMId as string });
   const [state, setState] = useState<useCoordinatorSuggestionItemsOwnParams>({
     skip: 0,
@@ -29,6 +32,7 @@ export default function CoordinatorSuggestionPage() {
       })
       .then(() => {
         alert("Review Submitted Successfully");
+        router.push(`/im/${iMId}`);
       })
       .catch((error: any) => {
         alert(error?.response?.data?.error?.message);
@@ -56,39 +60,39 @@ export default function CoordinatorSuggestionPage() {
       pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
-      if (!coordinatorSuggestion) {
-        return;
-      }
+      const submitSuggestionItem = async (coordinatorSuggestionId: string) => {
+        return axios
+          .post(`/api/coordinator_suggestion_item`, {
+            ...values,
+            coordinatorSuggestionId,
+          })
+          .then(() => {
+            alert("Suggestion added successfully.");
+            router.reload();
+          });
+      };
 
-      axios
-        .post(`/api/coordinator_suggestion_item`, {
-          ...values,
-          coordinatorSuggestionId: coordinatorSuggestion.id,
-        })
-        .then(() => {
-          alert("Suggestion added successfully.");
-          router.reload();
-        });
+      if (!coordinatorSuggestion) {
+        if (!coordinatorReview) {
+          return;
+        }
+        return axios
+          .post<CoordinatorSuggestion>(`/api/coordinator_suggestion/`, {
+            coordinatorReviewId: coordinatorReview.id,
+          })
+          .then((res) => {
+            const createdCoordinatorSuggestion = res.data;
+
+            return submitSuggestionItem(createdCoordinatorSuggestion.id);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        return submitSuggestionItem(coordinatorSuggestion.id);
+      }
     },
   });
-
-  useEffect(() => {
-    if (!coordinatorReview) {
-      return;
-    }
-    if (!coordinatorSuggestion) {
-      axios
-        .post(`/api/coordinator_suggestion/`, {
-          coordinatorReviewId: coordinatorReview.id,
-        })
-        .then((res) => {
-          router.reload();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [coordinatorReview, coordinatorSuggestion]);
 
   return (
     <MainLayout>
@@ -115,14 +119,16 @@ export default function CoordinatorSuggestionPage() {
         </form>
         <div>
           <h3>Suggestions</h3>
-          {coordinatorSuggestionItems.coordinatorSuggestionItems.map((coordinatorSuggestionItem) => {
-            return (
-              <CoordinatorSuggestionItem
-                coordinatorSuggestionItem={coordinatorSuggestionItem}
-                key={coordinatorSuggestionItem.id}
-              />
-            );
-          })}
+          {coordinatorSuggestionItems.coordinatorSuggestionItems.map(
+            (coordinatorSuggestionItem) => {
+              return (
+                <CoordinatorSuggestionItem
+                  coordinatorSuggestionItem={coordinatorSuggestionItem}
+                  key={coordinatorSuggestionItem.id}
+                />
+              );
+            }
+          )}
         </div>
         <button className='rounded border' onClick={handleSubmitReview}>
           Submit Review

@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import * as Yup from "yup";
 import useQAMISSuggestionMe from "@/hooks/useQAMISSuggestionMe";
-import { SubmittedQAMISSuggestion } from "@prisma/client";
+import { QAMISSuggestion, SubmittedQAMISSuggestion } from "@prisma/client";
 
 export default function QAMISSuggestionPage() {
   const router = useRouter();
@@ -87,6 +87,7 @@ export default function QAMISSuggestionPage() {
         const submittedQAMISSuggestion = res.data;
         uploadFiles(submittedQAMISSuggestion.id).then(() => {
           alert("Review Submitted Successfully");
+          router.push(`/im/${iMId}`);
         });
       })
       .catch((error: any) => {
@@ -115,42 +116,39 @@ export default function QAMISSuggestionPage() {
       pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
-      if (!qAMISSuggestion) {
-        return;
-      }
+      const submitSuggestionItem = async (qAMISSuggestionId: string) => {
+        return axios
+          .post(`/api/qamis_suggestion_item`, {
+            ...values,
+            qAMISSuggestionId,
+          })
+          .then(() => {
+            alert("Suggestion added successfully.");
+            router.reload();
+          });
+      };
 
-      axios
-        .post(`/api/qamis_suggestion_item`, {
-          ...values,
-          qAMISSuggestionId: qAMISSuggestion.id,
-        })
-        .then(() => {
-          alert("Suggestion added successfully.");
-          router.reload();
-        });
+      if (!qAMISSuggestion) {
+        if (!cITLDirectorEndorsement) {
+          return;
+        }
+        return axios
+          .post<QAMISSuggestion>(`/api/qamis_suggestion/`, {
+            cITLDirectorEndorsementId: cITLDirectorEndorsement.id,
+          })
+          .then((res) => {
+            const createdQAMISSuggestion = res.data;
+
+            return submitSuggestionItem(createdQAMISSuggestion.id);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        return submitSuggestionItem(qAMISSuggestion.id);
+      }
     },
   });
-
-  useEffect(() => {
-    if (
-      !qAMISSuggestion &&
-      activeFaculty &&
-      iM &&
-      activeFaculty.facultyId === iM.facultyId &&
-      cITLDirectorEndorsement
-    ) {
-      axios
-        .post(`/api/qamis_suggestion/`, {
-          cITLDirectorEndorsementId: cITLDirectorEndorsement.id,
-        })
-        .then((res) => {
-          router.reload();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [qAMISSuggestion, activeFaculty, iM, cITLDirectorEndorsement]);
 
   return (
     <MainLayout>

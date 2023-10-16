@@ -1,23 +1,23 @@
+import ChairpersonSuggestionItem from "@/components/ChairpersonSuggestionItem";
+import MainLayout from "@/components/MainLayout";
 import useChairpersonReviewMe from "@/hooks/useChairpersonReviewMe";
-import useChairpersonSuggestionItems, {
-  useChairpersonSuggestionItemsParams,
-} from "@/hooks/useChairpersonSuggestionItems";
+import useChairpersonSuggestionItemsOwn, {
+  useChairpersonSuggestionItemsOwnParams,
+} from "@/hooks/useChairpersonSuggestionItemsOwn";
 import useChairpersonSuggestionMe from "@/hooks/useChairpersonSuggestionMe";
+import { ChairpersonSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
-import ChairpersonSuggestionItem from "@/components/ChairpersonSuggestionItem";
-import useChairpersonSuggestionItemsOwn, {
-  useChairpersonSuggestionItemsOwnParams,
-} from "@/hooks/useChairpersonSuggestionItemsOwn";
-import MainLayout from "@/components/MainLayout";
 
 export default function ChairpersonSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const chairpersonSuggestion = useChairpersonSuggestionMe({ id: iMId as string });
+  const chairpersonSuggestion = useChairpersonSuggestionMe({
+    id: iMId as string,
+  });
   const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
   const [state, setState] = useState<useChairpersonSuggestionItemsOwnParams>({
     skip: 0,
@@ -32,6 +32,7 @@ export default function ChairpersonSuggestionPage() {
       })
       .then(() => {
         alert("Review Submitted Successfully");
+        router.push(`/im/${iMId}`);
       })
       .catch((error: any) => {
         alert(error?.response?.data?.error?.message);
@@ -59,39 +60,39 @@ export default function ChairpersonSuggestionPage() {
       pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
-      if (!chairpersonSuggestion) {
-        return;
-      }
+      const submitSuggestionItem = async (chairpersonSuggestionId: string) => {
+        return axios
+          .post(`/api/chairperson_suggestion_item`, {
+            ...values,
+            chairpersonSuggestionId,
+          })
+          .then(() => {
+            alert("Suggestion added successfully.");
+            router.reload();
+          });
+      };
 
-      axios
-        .post(`/api/chairperson_suggestion_item`, {
-          ...values,
-          chairpersonSuggestionId: chairpersonSuggestion.id,
-        })
-        .then(() => {
-          alert("Suggestion added successfully.");
-          router.reload();
-        });
+      if (!chairpersonSuggestion) {
+        if (!chairpersonReview) {
+          return;
+        }
+        return axios
+          .post<ChairpersonSuggestion>(`/api/chairperson_suggestion/`, {
+            chairpersonReviewId: chairpersonReview.id,
+          })
+          .then((res) => {
+            const createdChairpersonSuggestion = res.data;
+
+            return submitSuggestionItem(createdChairpersonSuggestion.id);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        return submitSuggestionItem(chairpersonSuggestion.id);
+      }
     },
   });
-
-  useEffect(() => {
-    if (!chairpersonReview) {
-      return;
-    }
-    if (!chairpersonSuggestion) {
-      axios
-        .post(`/api/chairperson_suggestion/`, {
-          chairpersonReviewId: chairpersonReview.id,
-        })
-        .then((res) => {
-          router.reload();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [chairpersonReview, chairpersonSuggestion]);
 
   return (
     <MainLayout>
@@ -118,14 +119,16 @@ export default function ChairpersonSuggestionPage() {
         </form>
         <div>
           <h3>Suggestions</h3>
-          {chairpersonSuggestionItems.chairpersonSuggestionItems.map((chairpersonSuggestionItem) => {
-            return (
-              <ChairpersonSuggestionItem
-                chairpersonSuggestionItem={chairpersonSuggestionItem}
-                key={chairpersonSuggestionItem.id}
-              />
-            );
-          })}
+          {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
+            (chairpersonSuggestionItem) => {
+              return (
+                <ChairpersonSuggestionItem
+                  chairpersonSuggestionItem={chairpersonSuggestionItem}
+                  key={chairpersonSuggestionItem.id}
+                />
+              );
+            }
+          )}
         </div>
         <button className='rounded border' onClick={handleSubmitReview}>
           Submit Review

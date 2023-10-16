@@ -13,6 +13,7 @@ import usePeerSuggestionItemsOwn, {
   usePeerSuggestionItemsOwnParams,
 } from "@/hooks/usePeerSuggestionItemsOwn";
 import MainLayout from "@/components/MainLayout";
+import { PeerSuggestion } from "@prisma/client";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
@@ -32,6 +33,7 @@ export default function PeerSuggestionPage() {
       })
       .then(() => {
         alert("Review Submitted Successfully");
+        router.push(`/im/${iMId}`);
       })
       .catch((error: any) => {
         alert(error?.response?.data?.error?.message);
@@ -59,39 +61,39 @@ export default function PeerSuggestionPage() {
       pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
-      if (!peerSuggestion) {
-        return;
-      }
+      const submitSuggestionItem = async (peerSuggestionId: string) => {
+        return axios
+          .post(`/api/peer_suggestion_item`, {
+            ...values,
+            peerSuggestionId,
+          })
+          .then(() => {
+            alert("Suggestion added successfully.");
+            router.reload();
+          });
+      };
 
-      axios
-        .post(`/api/peer_suggestion_item`, {
-          ...values,
-          peerSuggestionId: peerSuggestion.id,
-        })
-        .then(() => {
-          alert("Suggestion added successfully.");
-          router.reload();
-        });
+      if (!peerSuggestion) {
+        if (!peerReview) {
+          return;
+        }
+        return axios
+          .post<PeerSuggestion>(`/api/peer_suggestion/`, {
+            peerReviewId: peerReview.id,
+          })
+          .then((res) => {
+            const createdPeerSuggestion = res.data;
+
+            return submitSuggestionItem(createdPeerSuggestion.id);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        return submitSuggestionItem(peerSuggestion.id);
+      }
     },
   });
-
-  useEffect(() => {
-    if (!peerReview) {
-      return;
-    }
-    if (!peerSuggestion) {
-      axios
-        .post(`/api/peer_suggestion/`, {
-          peerReviewId: peerReview.id,
-        })
-        .then((res) => {
-          router.reload();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [peerReview, peerSuggestion]);
 
   return (
     <MainLayout>

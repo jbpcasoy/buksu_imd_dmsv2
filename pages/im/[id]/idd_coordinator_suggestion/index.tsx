@@ -7,6 +7,7 @@ import useIDDCoordinatorSuggestionItemsOwn, {
   useIDDCoordinatorSuggestionItemsOwnParams,
 } from "@/hooks/useIDDCoordinatorSuggestionItemsOwn";
 import useIDDCoordinatorSuggestionMe from "@/hooks/useIDDCoordinatorSuggestionMe";
+import { IDDCoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -19,7 +20,7 @@ export default function IDDCoordinatorSuggestionPage() {
   const iDDCoordinatorSuggestion = useIDDCoordinatorSuggestionMe({
     id: iMId as string,
   });
-  const deanEndorsement = useDeanEndorsementIM({id: iMId as string});
+  const deanEndorsement = useDeanEndorsementIM({ id: iMId as string });
   const [state, setState] = useState<useIDDCoordinatorSuggestionItemsOwnParams>(
     {
       skip: 0,
@@ -37,6 +38,7 @@ export default function IDDCoordinatorSuggestionPage() {
       })
       .then(() => {
         alert("Review Submitted Successfully");
+        router.push(`/im/${iMId}`);
       })
       .catch((error: any) => {
         alert(error?.response?.data?.error?.message);
@@ -64,37 +66,42 @@ export default function IDDCoordinatorSuggestionPage() {
       pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
-      if (!iDDCoordinatorSuggestion) {
-        return;
-      }
+      const submitSuggestionItem = async (
+        iDDCoordinatorSuggestionId: string
+      ) => {
+        return axios
+          .post(`/api/idd_coordinator_suggestion_item`, {
+            ...values,
+            iDDCoordinatorSuggestionId,
+          })
+          .then(() => {
+            alert("Suggestion added successfully.");
+            router.reload();
+          });
+      };
 
-      axios
-        .post(`/api/idd_coordinator_suggestion_item`, {
-          ...values,
-          iDDCoordinatorSuggestionId: iDDCoordinatorSuggestion.id,
-        })
-        .then(() => {
-          alert("Suggestion added successfully.");
-          router.reload();
-        });
+      if (!iDDCoordinatorSuggestion) {
+        if (!activeIDDCoordinator || !deanEndorsement) {
+          return;
+        }
+        return axios
+          .post<IDDCoordinatorSuggestion>(`/api/idd_coordinator_suggestion/`, {
+            activeIDDCoordinatorId: activeIDDCoordinator.id,
+            deanEndorsementId: deanEndorsement.id,
+          })
+          .then((res) => {
+            const createdIDDCoordinatorSuggestion = res.data;
+
+            return submitSuggestionItem(createdIDDCoordinatorSuggestion.id);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        return submitSuggestionItem(iDDCoordinatorSuggestion.id);
+      }
     },
   });
-
-  useEffect(() => {
-    if (!iDDCoordinatorSuggestion && activeIDDCoordinator && deanEndorsement) {
-      axios
-        .post(`/api/idd_coordinator_suggestion/`, {
-          activeIDDCoordinatorId: activeIDDCoordinator.id,
-          deanEndorsementId: deanEndorsement.id
-        })
-        .then((res) => {
-          router.reload();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [iDDCoordinatorSuggestion, activeIDDCoordinator, deanEndorsement]);
 
   return (
     <MainLayout>
