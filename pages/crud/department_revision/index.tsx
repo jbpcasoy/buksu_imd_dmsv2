@@ -64,7 +64,7 @@ export default function DepartmentRevisionsPage() {
                   </td>
                   <td>
                     <Link
-                      href={`/crud/department_review/${departmentRevision.departmentReviewedId}`}
+                      href={`/crud/department_reviewed/${departmentRevision.departmentReviewedId}`}
                       className='underline'
                     >
                       {departmentRevision.departmentReviewedId}

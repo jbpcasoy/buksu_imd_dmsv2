@@ -113,6 +113,7 @@ export default async function handler(
               id: {
                 equals: departmentRevision?.id ?? "undefined",
               },
+              returned: false,
             },
           },
         });

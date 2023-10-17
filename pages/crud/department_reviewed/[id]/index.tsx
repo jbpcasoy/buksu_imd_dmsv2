@@ -52,7 +52,7 @@ export default function DepartmentReviewedPage() {
       <p>
         submittedChairpersonSuggestionId:
         <Link
-          href={`/crud/submitted_peer_suggestion/${departmentReviewed.submittedChairpersonSuggestionId}`}
+          href={`/crud/submitted_chairperson_suggestion/${departmentReviewed.submittedChairpersonSuggestionId}`}
           className='underline'
         >
           {departmentReviewed.submittedChairpersonSuggestionId}
@@ -61,7 +61,7 @@ export default function DepartmentReviewedPage() {
       <p>
         submittedCoordinatorSuggestionId:
         <Link
-          href={`/crud/submitted_peer_suggestion/${departmentReviewed.submittedCoordinatorSuggestionId}`}
+          href={`/crud/submitted_coordinator_suggestion/${departmentReviewed.submittedCoordinatorSuggestionId}`}
           className='underline'
         >
           {departmentReviewed.submittedCoordinatorSuggestionId}

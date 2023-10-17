@@ -38,15 +38,15 @@ export default function Sidebar() {
       </Link>
       {activeFaculty && (
         <>
+          {activeFaculty && (
+            <Link href='/department/my_ims' className='underline font-bold'>
+              My IM&apos;s
+            </Link>
+          )}
           <p className='text-xs text-center'>IMPLEMENTATION PHASE</p>
           {activeFaculty && (
             <div className='flex flex-col'>
               <p className='font-bold'>Department</p>
-              {activeFaculty && (
-                <Link href='/department/my_ims' className='underline'>
-                  My IM&apos;s
-                </Link>
-              )}
               {activeFaculty && (
                 <Link href='/department/to_review' className='underline'>
                   To Review

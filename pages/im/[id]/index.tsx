@@ -41,8 +41,12 @@ export default function ViewIM() {
       .then(() => alert("Successfully endorsed IM"))
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
+
   const onQAMISCoordinatorEndorsement = () => {
     axios
       .post("/api/qamis_coordinator_endorsement", {
@@ -52,8 +56,12 @@ export default function ViewIM() {
       .then(() => alert("Successfully endorsed IM"))
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
+
   const onQAMISDeanEndorsement = () => {
     axios
       .post("/api/qamis_dean_endorsement", {
@@ -63,13 +71,21 @@ export default function ViewIM() {
       .then(() => alert("Successfully endorsed IM"))
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
   const deleteHandler = (id: string) => {
-    axios.delete(`/api/im/${id}`).then(() => {
-      alert("IM deleted successfully");
-    });
+    axios
+      .delete(`/api/im/${id}`)
+      .then(() => {
+        alert("IM deleted successfully");
+      })
+      .finally(() => {
+        router.push("/my_ims");
+      });
   };
 
   const onFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -196,6 +212,38 @@ export default function ViewIM() {
       })
       .catch((error) => {
         alert(error.response.data.error.message);
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
+  const returnCoordinatorEndorsementHandler = async () => {
+    if (!activeCoordinator) return;
+
+    return axios
+      .get<DepartmentRevision>(`/api/department_revision/im/${iMId}`)
+      .then((res) => {
+        const departmentRevision = res.data;
+        if (!departmentRevision) return;
+
+        return axios
+          .put<DepartmentRevision>(
+            `/api/department_revision/${departmentRevision.id}`,
+            {
+              returned: true,
+            }
+          )
+          .then(() => {
+            alert("IM returned successfully");
+            router.reload();
+          });
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -219,6 +267,9 @@ export default function ViewIM() {
       })
       .catch((error) => {
         alert(error.response.data.error.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -242,6 +293,9 @@ export default function ViewIM() {
       })
       .catch((error) => {
         alert(error.response.data.error.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -265,6 +319,9 @@ export default function ViewIM() {
       })
       .catch((error) => {
         alert(error.response.data.error.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -291,6 +348,9 @@ export default function ViewIM() {
       })
       .catch((error) => {
         alert(error.response.data.error.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -320,6 +380,9 @@ export default function ViewIM() {
       })
       .catch((error) => {
         alert(error.response.data.error.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -392,12 +455,18 @@ export default function ViewIM() {
       )}
 
       {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" && (
-        <div>
+        <div className='space-x-1'>
           <button
             className='border rounded'
             onClick={coordinatorEndorsementHandler}
           >
             Endorse IM
+          </button>
+          <button
+            className='border rounded'
+            onClick={returnCoordinatorEndorsementHandler}
+          >
+            Return revision
           </button>
         </div>
       )}
