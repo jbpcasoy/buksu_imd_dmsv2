@@ -380,6 +380,35 @@ export default function ViewIM() {
       });
   };
 
+  const returnIMERCIDDCoordinatorEndorsementHandler = async () => {
+    if (!activeIDDCoordinator) return;
+
+    return axios
+      .get<IMERCCITLRevision>(`/api/imerc_citl_revision/im/${iMId}`)
+      .then((res) => {
+        const iMERCCITLRevision = res.data;
+        if (!iMERCCITLRevision) return;
+
+        return axios
+          .put<IMERCCITLRevision>(
+            `/api/imerc_citl_revision/${iMERCCITLRevision.id}`,
+            {
+              returned: true,
+            }
+          )
+          .then((res) => {
+            console.log({ data: res.data });
+            alert("IM returned successfully successfully");
+          });
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
   const iMERCCITLDirectorEndorsementHandler = async () => {
     if (!activeCITLDirector) return;
 
@@ -625,12 +654,18 @@ export default function ViewIM() {
       )}
 
       {iMStatus === "IMERC_CITL_REVISED" && (
-        <div>
+        <div className='space-x-1'>
           <button
             className='border rounded'
             onClick={iMERCIDDCoordinatorEndorsementHandler}
           >
             Endorse IM
+          </button>
+          <button
+            className='border rounded'
+            onClick={returnIMERCIDDCoordinatorEndorsementHandler}
+          >
+            Return revision
           </button>
         </div>
       )}

@@ -48,13 +48,13 @@ export default function Sidebar() {
             <div className='flex flex-col'>
               <p className='font-bold'>Department</p>
               {activeFaculty && (
-                <Link href='/department/to_review' className='underline'>
-                  To Review
+                <Link href='/department/to_revise' className='underline'>
+                  To Revise
                 </Link>
               )}
               {activeFaculty && (
-                <Link href='/department/to_revise' className='underline'>
-                  To Revise
+                <Link href='/department/to_review' className='underline'>
+                  To Review
                 </Link>
               )}
               {activeFaculty && (
@@ -111,14 +111,14 @@ export default function Sidebar() {
             <div className='flex flex-col'>
               <p className='font-bold'>Department</p>
 
-              {activeContentSpecialist && (
-                <Link href='/imerc/department/to_review' className='underline'>
-                  To Review
-                </Link>
-              )}
               {activeFaculty && (
                 <Link href='/imerc/department/to_revise' className='underline'>
                   To Revise
+                </Link>
+              )}
+              {activeContentSpecialist && (
+                <Link href='/imerc/department/to_review' className='underline'>
+                  To Review
                 </Link>
               )}
               {(activeCoordinator || activeChairperson) && (

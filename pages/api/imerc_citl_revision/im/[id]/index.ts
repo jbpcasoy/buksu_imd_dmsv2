@@ -44,6 +44,7 @@ export default async function handler(
                   },
                 },
               },
+              { returned: false },
             ],
           },
         }
