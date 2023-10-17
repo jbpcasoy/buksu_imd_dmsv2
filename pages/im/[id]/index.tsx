@@ -1,3 +1,5 @@
+import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
+import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
@@ -18,7 +20,7 @@ import {
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 
 export default function ViewIM() {
   const router = useRouter();
@@ -460,12 +462,15 @@ export default function ViewIM() {
           </button>
         </div>
       </div>
-      <p>id: {iM.id}</p>
-      <p>createdAt: {new Date(iM.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(iM.updatedAt).toLocaleString()}</p>
-      <p>facultyId: {iM.facultyId}</p>
-      <p>title: {iM.title}</p>
-      <p>type: {iM.type}</p>
+      <div>
+        <p>id: {iM.id}</p>
+        <p>createdAt: {new Date(iM.createdAt).toLocaleString()}</p>
+        <p>updatedAt: {new Date(iM.updatedAt).toLocaleString()}</p>
+        <p>facultyId: {iM.facultyId}</p>
+        <p>title: {iM.title}</p>
+        <p>type: {iM.type}</p>
+      </div>
+
       {iMStatus === "IMPLEMENTATION_DRAFT" && (
         <div>
           <input type='file' onChange={onFileChange} />
@@ -499,6 +504,8 @@ export default function ViewIM() {
 
       {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" && (
         <div>
+          <IMChairpersonSuggestionItems id={iM.id} />
+          <IMCoordinatorSuggestionItems id={iM.id} />
           <input type='file' onChange={onFileChange} />
           <button
             className='border rounded'
