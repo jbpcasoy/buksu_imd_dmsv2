@@ -36,10 +36,12 @@ export default async function handler(
               accessibleBy(ability).ContentSpecialistSuggestion,
               {
                 ContentSpecialistReview: {
-                  Faculty: {
-                    User: {
-                      id: {
-                        equals: user.id,
+                  ContentSpecialist: {
+                    Faculty: {
+                      User: {
+                        id: {
+                          equals: user.id,
+                        },
                       },
                     },
                   },

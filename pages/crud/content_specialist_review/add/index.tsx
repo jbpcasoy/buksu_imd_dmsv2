@@ -9,7 +9,7 @@ import * as Yup from "yup";
 export default function AddContentSpecialistReviewPage() {
   const formik = useFormik({
     initialValues: {
-      activeFacultyId: "",
+      activeContentSpecialistId: "",
       qAMISDepartmentEndorsementId: "",
       q1_1: "",
       q1_2: "",
@@ -40,7 +40,7 @@ export default function AddContentSpecialistReviewPage() {
       q8_3: "",
     },
     validationSchema: Yup.object({
-      activeFacultyId: Yup.string().required(),
+      activeContentSpecialistId: Yup.string().required(),
       qAMISDepartmentEndorsementId: Yup.string().required(),
       q1_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q1_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
@@ -88,8 +88,8 @@ export default function AddContentSpecialistReviewPage() {
       <form onSubmit={formik.handleSubmit}>
         <input
           type='text'
-          placeholder='activeFacultyId'
-          {...formik.getFieldProps("activeFacultyId")}
+          placeholder='activeContentSpecialistId'
+          {...formik.getFieldProps("activeContentSpecialistId")}
         />
         <input
           type='text'

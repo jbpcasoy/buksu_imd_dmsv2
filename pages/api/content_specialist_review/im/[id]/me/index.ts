@@ -81,10 +81,12 @@ export default async function handler(
                 },
               },
               {
-                Faculty: {
-                  User: {
-                    id: {
-                      equals: user.id,
+                ContentSpecialist: {
+                  Faculty: {
+                    User: {
+                      id: {
+                        equals: user.id,
+                      },
                     },
                   },
                 },

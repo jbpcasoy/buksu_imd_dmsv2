@@ -68,12 +68,12 @@ export default function ContentSpecialistReviewPage() {
         </Link>
       </p>
       <p>
-        facultyId:{" "}
+        contentSpecialistId:{" "}
         <Link
-          href={`/crud/faculty/${contentSpecialistReview.facultyId}`}
+          href={`/crud/content_specialist/${contentSpecialistReview.contentSpecialistId}`}
           className='underline'
         >
-          {contentSpecialistReview.facultyId}
+          {contentSpecialistReview.contentSpecialistId}
         </Link>
       </p>
 

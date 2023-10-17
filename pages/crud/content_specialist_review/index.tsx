@@ -38,7 +38,7 @@ export default function ContentSpecialistReviewsPage() {
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>qAMISDepartmentEndorsementId</th>
-              <th>facultyId</th>
+              <th>contentSpecialistId</th>
               <th>action</th>
             </tr>
           </thead>
@@ -59,10 +59,10 @@ export default function ContentSpecialistReviewsPage() {
                   </td>
                   <td>
                     <Link
-                      href={`/crud/faculty/${contentSpecialistReview.facultyId}`}
+                      href={`/crud/content_specialist/${contentSpecialistReview.contentSpecialistId}`}
                       className='underline'
                     >
-                      {contentSpecialistReview.facultyId}
+                      {contentSpecialistReview.contentSpecialistId}
                     </Link>
                   </td>
                   <td>

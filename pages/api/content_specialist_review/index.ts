@@ -52,7 +52,7 @@ export default async function handler(
         q8_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q8_3: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         qAMISDepartmentEndorsementId: Yup.string().required(),
-        activeFacultyId: Yup.string().required(),
+        activeContentSpecialistId: Yup.string().required(),
       });
       await validator.validate(req.body);
 
@@ -90,14 +90,14 @@ export default async function handler(
         q8_2,
         q8_3,
         qAMISDepartmentEndorsementId,
-        activeFacultyId,
+        activeContentSpecialistId,
       } = validator.cast(req.body);
 
-      const faculty = await prisma.faculty.findFirstOrThrow({
+      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow({
         where: {
-          ActiveFaculty: {
+          ActiveContentSpecialist: {
             id: {
-              equals: activeFacultyId,
+              equals: activeContentSpecialistId,
             },
           },
         },
@@ -138,11 +138,11 @@ export default async function handler(
                 id: qAMISDepartmentEndorsementId,
               },
             },
-            Faculty: {
+            ContentSpecialist: {
               connect: {
-                id: faculty.id,
-              },
-            },
+                id: contentSpecialist.id
+              }
+            }
           },
         });
 
