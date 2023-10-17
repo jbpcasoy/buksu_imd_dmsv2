@@ -1,5 +1,5 @@
 import MainLayout from "@/components/MainLayout";
-import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
+import useActiveContentSpecialistMe from "@/hooks/useActiveContentSpecialistMe";
 import useContentSpecialistReviewMe from "@/hooks/useContentSpecialistReviewMe";
 import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
@@ -19,7 +19,7 @@ export default function AddContentSpecialistReviewPage() {
   const contentSpecialistReview = useContentSpecialistReviewMe({
     id: iMId as string,
   });
-  const activeFaculty = useActiveFacultyMe();
+  const activeContentSpecialist = useActiveContentSpecialistMe();
   const formik = useFormik({
     initialValues: {
       q1_1: "",
@@ -80,7 +80,7 @@ export default function AddContentSpecialistReviewPage() {
       q8_3: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
     }),
     onSubmit: (values) => {
-      if (!qAMISDepartmentEndorsement || !activeFaculty) {
+      if (!qAMISDepartmentEndorsement || !activeContentSpecialist) {
         return;
       }
 
@@ -88,7 +88,7 @@ export default function AddContentSpecialistReviewPage() {
         .post("/api/content_specialist_review", {
           ...values,
           qAMISDepartmentEndorsementId: qAMISDepartmentEndorsement.id,
-          activeFacultyId: activeFaculty.id,
+          activeContentSpecialistId: activeContentSpecialist.id,
         })
         .then(() => {
           alert("ContentSpecialistReview Added Successfully");
@@ -108,7 +108,7 @@ export default function AddContentSpecialistReviewPage() {
     router.replace(`/im/${iMId}/content_specialist_suggestion`);
   }, [contentSpecialistReview]);
 
-  if (!qAMISDepartmentEndorsement || !activeFaculty) {
+  if (!qAMISDepartmentEndorsement || !activeContentSpecialist) {
     return null;
   }
 

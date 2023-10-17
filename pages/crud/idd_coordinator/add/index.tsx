@@ -31,8 +31,7 @@ export default function AddIDDCoordinatorPage() {
       <h2>Add IDDCoordinator</h2>
 
       <form onSubmit={formik.handleSubmit} noValidate>
-        <input type='text' placeholder='' {...formik.getFieldProps("userId")} />
-        <input type='text' placeholder='' {...formik.getFieldProps("userId")} />
+        <input type='text' placeholder='userId' {...formik.getFieldProps("userId")} />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </CrudLayout>

@@ -73,20 +73,16 @@ export default async function handler(
               },
             },
             {
-              OR: [
-                {
-                  NOT: {
-                    IMFile: {
-                      some: {
-                        QAMISRevision: {
-                          QAMISChairpersonEndorsement: {
-                            QAMISDepartmentEndorsement: {
-                              ContentEditorReview: {
-                                ContentEditorSuggestion: {
-                                  SubmittedContentEditorSuggestion: {
-                                    isNot: null,
-                                  },
-                                },
+              NOT: {
+                IMFile: {
+                  some: {
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentSpecialistReview: {
+                            ContentSpecialistSuggestion: {
+                              SubmittedContentSpecialistSuggestion: {
+                                isNot: null,
                               },
                             },
                           },
@@ -95,28 +91,7 @@ export default async function handler(
                     },
                   },
                 },
-                {
-                  NOT: {
-                    IMFile: {
-                      some: {
-                        QAMISRevision: {
-                          QAMISChairpersonEndorsement: {
-                            QAMISDepartmentEndorsement: {
-                              IDDSpecialistReview: {
-                                IDDSpecialistSuggestion: {
-                                  SubmittedIDDSpecialistSuggestion: {
-                                    isNot: null,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
+              },
             },
           ],
         },
@@ -149,20 +124,16 @@ export default async function handler(
               },
             },
             {
-              OR: [
-                {
-                  NOT: {
-                    IMFile: {
-                      some: {
-                        QAMISRevision: {
-                          QAMISChairpersonEndorsement: {
-                            QAMISDepartmentEndorsement: {
-                              ContentEditorReview: {
-                                ContentEditorSuggestion: {
-                                  SubmittedContentEditorSuggestion: {
-                                    isNot: null,
-                                  },
-                                },
+              NOT: {
+                IMFile: {
+                  some: {
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentSpecialistReview: {
+                            ContentSpecialistSuggestion: {
+                              SubmittedContentSpecialistSuggestion: {
+                                isNot: null,
                               },
                             },
                           },
@@ -171,28 +142,7 @@ export default async function handler(
                     },
                   },
                 },
-                {
-                  NOT: {
-                    IMFile: {
-                      some: {
-                        QAMISRevision: {
-                          QAMISChairpersonEndorsement: {
-                            QAMISDepartmentEndorsement: {
-                              IDDSpecialistReview: {
-                                IDDSpecialistSuggestion: {
-                                  SubmittedIDDSpecialistSuggestion: {
-                                    isNot: null,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
+              },
             },
           ],
         },

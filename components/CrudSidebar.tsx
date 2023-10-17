@@ -8,10 +8,6 @@ export default function CrudSidebar() {
     label: string;
   }[] = [
     {
-      link: "/crud",
-      label: "Home",
-    },
-    {
       link: "/crud/user",
       label: "User",
     },
@@ -280,6 +276,7 @@ export default function CrudSidebar() {
       label: "Active Content Specialist",
     },
   ];
+  
   return (
     <div className='h-full overflow-y-auto pb-10'>
       <Link

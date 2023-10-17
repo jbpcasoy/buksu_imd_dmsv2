@@ -174,6 +174,40 @@ export default async function handler(
                 },
               },
             },
+            {
+              NOT: {
+                IMFile: {
+                  some: {
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentSpecialistReview: {
+                            ContentSpecialistSuggestion: {
+                              SubmittedContentSpecialistSuggestion: {
+                                IMERCCITLReviewed: {
+                                  IMERCCITLRevision: {
+                                    some: {
+                                      returned: {
+                                        equals: false,
+                                      },
+                                      IMERCIDDCoordinatorEndorsement: {
+                                        IMERCCITLDirectorEndorsement: {
+                                          isNot: null,
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           ],
         },
       });
@@ -293,6 +327,40 @@ export default async function handler(
                                     },
                                     IMERCIDDCoordinatorEndorsement: {
                                       isNot: null,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              NOT: {
+                IMFile: {
+                  some: {
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentSpecialistReview: {
+                            ContentSpecialistSuggestion: {
+                              SubmittedContentSpecialistSuggestion: {
+                                IMERCCITLReviewed: {
+                                  IMERCCITLRevision: {
+                                    some: {
+                                      returned: {
+                                        equals: false,
+                                      },
+                                      IMERCIDDCoordinatorEndorsement: {
+                                        IMERCCITLDirectorEndorsement: {
+                                          isNot: null,
+                                        },
+                                      },
                                     },
                                   },
                                 },
