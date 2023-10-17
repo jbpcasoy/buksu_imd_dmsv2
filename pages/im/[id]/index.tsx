@@ -8,6 +8,7 @@ import useIM from "@/hooks/useIM";
 import useIMStatus from "@/hooks/useIMStatus";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
 import {
+  CITLRevision,
   CoordinatorEndorsement,
   DepartmentReview,
   DepartmentRevision,
@@ -299,6 +300,31 @@ export default function ViewIM() {
       });
   };
 
+  const returnIDDCoordinatorEndorsementHandler = async () => {
+    if (!activeIDDCoordinator) return;
+
+    return axios
+      .get<DepartmentRevision>(`/api/citl_revision/im/${iMId}`)
+      .then((res) => {
+        const cITLRevision = res.data;
+        if (!cITLRevision) return;
+
+        return axios
+          .put<CITLRevision>(`/api/citl_revision/${cITLRevision.id}`, {
+            returned: true,
+          })
+          .then(() => {
+            alert("IM returned successfully");
+          });
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
   const cITLDirectorEndorsementHandler = async () => {
     if (!activeCITLDirector) return;
 
@@ -503,12 +529,18 @@ export default function ViewIM() {
       )}
 
       {iMStatus === "IMPLEMENTATION_CITL_REVISED" && (
-        <div>
+        <div className='space-x-1'>
           <button
             className='border rounded'
             onClick={iDDCoordinatorEndorsementHandler}
           >
             Endorse IM
+          </button>
+          <button
+            className='border rounded'
+            onClick={returnIDDCoordinatorEndorsementHandler}
+          >
+            Return revision
           </button>
         </div>
       )}
