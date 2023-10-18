@@ -86,7 +86,7 @@ export default function QAMISSuggestionPage() {
       .then((res) => {
         const submittedQAMISSuggestion = res.data;
         uploadFiles(submittedQAMISSuggestion.id).then(() => {
-          alert("Review Submitted Successfully");
+          alert("IM has been submitted for review");
           router.push(`/im/${iMId}`);
         });
       })
@@ -107,11 +107,13 @@ export default function QAMISSuggestionPage() {
   const formik = useFormik({
     initialValues: {
       suggestion: "",
+      actionTaken: "",
       remarks: "",
       pageNumber: 0,
     },
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
+      actionTaken: Yup.string().required(),
       remarks: Yup.string(),
       pageNumber: Yup.number().min(0).required(),
     }),
@@ -158,6 +160,11 @@ export default function QAMISSuggestionPage() {
           <textarea
             placeholder='suggestion'
             {...formik.getFieldProps("suggestion")}
+          />
+          <br />
+          <textarea
+            placeholder='actionTaken'
+            {...formik.getFieldProps("actionTaken")}
           />
           <br />
           <input

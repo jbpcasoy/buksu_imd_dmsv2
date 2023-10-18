@@ -40,16 +40,12 @@ export default async function handler(
               accessibleBy(ability).ChairpersonSuggestionItem,
               {
                 ChairpersonSuggestion: {
-                  SubmittedChairpersonSuggestion: {
-                    DepartmentReviewed: {
-                      DepartmentRevision: {
-                        some: {
-                          IMFile: {
-                            IM: {
-                              id: {
-                                equals: req.query.id as string,
-                              },
-                            },
+                  ChairpersonReview: {
+                    DepartmentReview: {
+                      IMFile: {
+                        IM: {
+                          id: {
+                            equals: req.query.id as string,
                           },
                         },
                       },
@@ -66,16 +62,12 @@ export default async function handler(
             accessibleBy(ability).ChairpersonSuggestionItem,
             {
               ChairpersonSuggestion: {
-                SubmittedChairpersonSuggestion: {
-                  DepartmentReviewed: {
-                    DepartmentRevision: {
-                      some: {
-                        IMFile: {
-                          IM: {
-                            id: {
-                              equals: req.query.id as string,
-                            },
-                          },
+                ChairpersonReview: {
+                  DepartmentReview: {
+                    IMFile: {
+                      IM: {
+                        id: {
+                          equals: req.query.id as string,
                         },
                       },
                     },

@@ -39,9 +39,9 @@ export default async function handler(
               accessibleBy(ability).IDDCoordinatorSuggestionItem,
               {
                 IDDCoordinatorSuggestion: {
-                  SubmittedIDDCoordinatorSuggestion: {
-                    CITLRevision: {
-                      some: {
+                  DeanEndorsement: {
+                    CoordinatorEndorsement: {
+                      DepartmentRevision: {
                         IMFile: {
                           IM: {
                             id: {
@@ -63,9 +63,9 @@ export default async function handler(
             accessibleBy(ability).IDDCoordinatorSuggestionItem,
             {
               IDDCoordinatorSuggestion: {
-                SubmittedIDDCoordinatorSuggestion: {
-                  CITLRevision: {
-                    some: {
+                DeanEndorsement: {
+                  CoordinatorEndorsement: {
+                    DepartmentRevision: {
                       IMFile: {
                         IM: {
                           id: {

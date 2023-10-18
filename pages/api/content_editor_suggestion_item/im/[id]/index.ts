@@ -40,10 +40,10 @@ export default async function handler(
               accessibleBy(ability).ContentEditorSuggestionItem,
               {
                 ContentEditorSuggestion: {
-                  SubmittedContentEditorSuggestion: {
-                    IMERCCITLReviewed: {
-                      IMERCCITLRevision: {
-                        some: {
+                  ContentEditorReview: {
+                    QAMISDepartmentEndorsement: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISRevision: {
                           IMFile: {
                             IM: {
                               id: {
@@ -66,10 +66,10 @@ export default async function handler(
             accessibleBy(ability).ContentEditorSuggestionItem,
             {
               ContentEditorSuggestion: {
-                SubmittedContentEditorSuggestion: {
-                  IMERCCITLReviewed: {
-                    IMERCCITLRevision: {
-                      some: {
+                ContentEditorReview: {
+                  QAMISDepartmentEndorsement: {
+                    QAMISChairpersonEndorsement: {
+                      QAMISRevision: {
                         IMFile: {
                           IM: {
                             id: {

@@ -39,17 +39,11 @@ export default async function handler(
               accessibleBy(ability).CoordinatorSuggestionItem,
               {
                 CoordinatorSuggestion: {
-                  SubmittedCoordinatorSuggestion: {
-                    DepartmentReviewed: {
-                      DepartmentRevision: {
-                        some: {
-                          IMFile: {
-                            IM: {
-                              id: {
-                                equals: req.query.id as string,
-                              },
-                            },
-                          },
+                  CoordinatorReview: {
+                    DepartmentReview: {
+                      IMFile: {
+                        IM: {
+                          id: req.query.id as string,
                         },
                       },
                     },
@@ -65,17 +59,11 @@ export default async function handler(
             accessibleBy(ability).CoordinatorSuggestionItem,
             {
               CoordinatorSuggestion: {
-                SubmittedCoordinatorSuggestion: {
-                  DepartmentReviewed: {
-                    DepartmentRevision: {
-                      some: {
-                        IMFile: {
-                          IM: {
-                            id: {
-                              equals: req.query.id as string,
-                            },
-                          },
-                        },
+                CoordinatorReview: {
+                  DepartmentReview: {
+                    IMFile: {
+                      IM: {
+                        id: req.query.id as string,
                       },
                     },
                   },

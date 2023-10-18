@@ -30,51 +30,42 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { skip, take } = validator.cast(req.query);
-      const peerSuggestionItems =
-        await prisma.peerSuggestionItem.findMany({
-          skip,
-          take,
-          where: {
-            AND: [
-              accessibleBy(ability).PeerSuggestionItem,
-              {
-                PeerSuggestion: {
-                  SubmittedPeerSuggestion: {
-                    DepartmentReviewed: {
-                      DepartmentRevision: {
-                        some: {
-                          IMFile: {
-                            IM: {
-                              id: {
-                                equals: req.query.id as string,
-                              },
-                            },
-                          },
+      const peerSuggestionItems = await prisma.peerSuggestionItem.findMany({
+        skip,
+        take,
+        where: {
+          AND: [
+            accessibleBy(ability).PeerSuggestionItem,
+            {
+              PeerSuggestion: {
+                PeerReview: {
+                  DepartmentReview: {
+                    IMFile: {
+                      IM: {
+                        id: {
+                          equals: req.query.id as string,
                         },
                       },
                     },
                   },
                 },
               },
-            ],
-          },
-        });
+            },
+          ],
+        },
+      });
       const count = await prisma.peerSuggestionItem.count({
         where: {
           AND: [
             accessibleBy(ability).PeerSuggestionItem,
             {
               PeerSuggestion: {
-                SubmittedPeerSuggestion: {
-                  DepartmentReviewed: {
-                    DepartmentRevision: {
-                      some: {
-                        IMFile: {
-                          IM: {
-                            id: {
-                              equals: req.query.id as string,
-                            },
-                          },
+                PeerReview: {
+                  DepartmentReview: {
+                    IMFile: {
+                      IM: {
+                        id: {
+                          equals: req.query.id as string,
                         },
                       },
                     },

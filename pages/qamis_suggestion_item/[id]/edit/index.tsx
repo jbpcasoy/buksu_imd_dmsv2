@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import * as Yup from "yup";
 
-// TODO implement action taken
 export default function QAMISSuggestionItemEditPage() {
   const router = useRouter();
   const qAMISSuggestionItemId = router.query.id;
@@ -16,11 +15,13 @@ export default function QAMISSuggestionItemEditPage() {
   const formik = useFormik({
     initialValues: {
       suggestion: "",
+      actionTaken: "",
       pageNumber: 0,
       remarks: "",
     },
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
+      actionTaken: Yup.string().required(),
       pageNumber: Yup.number().min(0).required(),
       remarks: Yup.string(),
     }),
@@ -40,6 +41,7 @@ export default function QAMISSuggestionItemEditPage() {
     if (!qAMISSuggestionItem) return;
     formik.setValues({
       pageNumber: qAMISSuggestionItem.pageNumber,
+      actionTaken: qAMISSuggestionItem.actionTaken ?? "",
       remarks: qAMISSuggestionItem?.remarks ?? "",
       suggestion: qAMISSuggestionItem.suggestion,
     });
@@ -53,6 +55,11 @@ export default function QAMISSuggestionItemEditPage() {
           <textarea
             placeholder='suggestion'
             {...formik.getFieldProps("suggestion")}
+          />
+          <br />
+          <textarea
+            placeholder='actionTaken'
+            {...formik.getFieldProps("actionTaken")}
           />
           <br />
           <input

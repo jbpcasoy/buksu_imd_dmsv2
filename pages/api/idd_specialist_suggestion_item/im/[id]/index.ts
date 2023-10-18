@@ -40,13 +40,15 @@ export default async function handler(
               accessibleBy(ability).IDDSpecialistSuggestionItem,
               {
                 IDDSpecialistSuggestion: {
-                  SubmittedIDDSpecialistSuggestion: {
-                    IMERCCITLReviewed: {
-                      IMERCCITLRevision: {
-                        some: {
+                  IDDSpecialistReview: {
+                    QAMISDepartmentEndorsement: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISRevision: {
                           IMFile: {
                             IM: {
-                              id: req.query.id as string,
+                              id: {
+                                equals: req.query.id as string,
+                              },
                             },
                           },
                         },
@@ -64,13 +66,15 @@ export default async function handler(
             accessibleBy(ability).IDDSpecialistSuggestionItem,
             {
               IDDSpecialistSuggestion: {
-                SubmittedIDDSpecialistSuggestion: {
-                  IMERCCITLReviewed: {
-                    IMERCCITLRevision: {
-                      some: {
+                IDDSpecialistReview: {
+                  QAMISDepartmentEndorsement: {
+                    QAMISChairpersonEndorsement: {
+                      QAMISRevision: {
                         IMFile: {
                           IM: {
-                            id: req.query.id as string,
+                            id: {
+                              equals: req.query.id as string,
+                            },
                           },
                         },
                       },
