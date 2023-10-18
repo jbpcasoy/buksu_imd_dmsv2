@@ -71,7 +71,7 @@ export default async function handler(
               IMFile: {
                 some: {
                   DepartmentRevision: {
-                    isNot: null,
+                    returned: false,
                   },
                 },
               },
@@ -109,7 +109,7 @@ export default async function handler(
               IMFile: {
                 some: {
                   DepartmentRevision: {
-                    isNot: null,
+                    returned: false,
                   },
                 },
               },

@@ -1,5 +1,6 @@
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
+import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
@@ -506,6 +507,7 @@ export default function ViewIM() {
         <div>
           <IMChairpersonSuggestionItems id={iM.id} />
           <IMCoordinatorSuggestionItems id={iM.id} />
+          <IMPeerSuggestionItems id={iM.id} />
           <input type='file' onChange={onFileChange} />
           <button
             className='border rounded'

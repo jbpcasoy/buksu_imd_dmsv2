@@ -75,10 +75,12 @@ export default async function handler(
               },
             },
             {
-              IMFile: {
-                every: {
-                  DepartmentRevision: {
-                    is: null,
+              NOT: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      returned: false,
+                    },
                   },
                 },
               },
