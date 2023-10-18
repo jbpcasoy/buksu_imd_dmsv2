@@ -1,5 +1,6 @@
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
+import IMIDDCoordinatorSuggestionItems from "@/components/IMIDDCoordinatorSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
@@ -556,6 +557,7 @@ export default function ViewIM() {
 
       {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" && (
         <div>
+          <IMIDDCoordinatorSuggestionItems id={iM.id} />
           <input type='file' onChange={onFileChange} />
           <button
             className='border rounded'
