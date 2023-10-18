@@ -1,6 +1,9 @@
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
+import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
+import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 import IMIDDCoordinatorSuggestionItems from "@/components/IMIDDCoordinatorSuggestionItems";
+import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
@@ -402,7 +405,7 @@ export default function ViewIM() {
           )
           .then((res) => {
             console.log({ data: res.data });
-            alert("IM returned successfully successfully");
+            alert("IM returned successfully");
           });
       })
       .catch((error) => {
@@ -654,6 +657,9 @@ export default function ViewIM() {
 
       {iMStatus === "IMERC_CITL_REVIEWED" && (
         <div>
+          <IMContentSpecialistSuggestionItems id={iM.id} />
+          <IMIDDSpecialistSuggestionItems id={iM.id} />
+          <IMContentEditorSuggestionItems id={iM.id} />
           <input type='file' onChange={onFileChange} />
           <button
             className='border rounded'

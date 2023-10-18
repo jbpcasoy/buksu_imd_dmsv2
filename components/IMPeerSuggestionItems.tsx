@@ -20,7 +20,10 @@ export default function IMPeerSuggestionItems({
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
-      return { ...prev, skip: nextVal <= peerSuggestionItems.count ? nextVal : prev.skip };
+      return {
+        ...prev,
+        skip: nextVal <= peerSuggestionItems.count ? nextVal : prev.skip,
+      };
     });
   };
 
@@ -51,7 +54,7 @@ export default function IMPeerSuggestionItems({
         <tbody>
           {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
             return (
-              <tr>
+              <tr key={peerSuggestionItem.id}>
                 <td>{peerSuggestionItem.id}</td>
                 <td>
                   {new Date(peerSuggestionItem.createdAt).toLocaleString()}
@@ -79,7 +82,8 @@ export default function IMPeerSuggestionItems({
       </table>
       <div className='flex justify-end space-x-1'>
         <p>
-          {state.skip} - {state.skip + state.take} of {peerSuggestionItems.count}
+          {state.skip} - {state.skip + state.take} of{" "}
+          {peerSuggestionItems.count}
         </p>
         <button className='border rounded' onClick={handlePrev}>
           prev

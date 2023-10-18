@@ -37,7 +37,7 @@ export default function IMChairpersonSuggestionItems({
         {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
           (chairpersonSuggestionItem) => {
             return (
-              <tr>
+              <tr key={chairpersonSuggestionItem.id}>
                 <td>{chairpersonSuggestionItem.id}</td>
                 <td>
                   {new Date(

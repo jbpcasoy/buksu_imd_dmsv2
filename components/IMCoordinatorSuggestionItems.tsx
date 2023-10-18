@@ -37,7 +37,7 @@ export default function IMCoordinatorSuggestionItems({
         {coordinatorSuggestionItems.coordinatorSuggestionItems.map(
           (coordinatorSuggestionItem) => {
             return (
-              <tr>
+              <tr key={coordinatorSuggestionItem.id}>
                 <td>{coordinatorSuggestionItem.id}</td>
                 <td>
                   {new Date(

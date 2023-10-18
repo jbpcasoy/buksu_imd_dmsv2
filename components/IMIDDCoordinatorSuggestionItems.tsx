@@ -15,12 +15,17 @@ export default function IMIDDCoordinatorSuggestionItems({
     id,
   });
 
-  const iDDCoordinatorSuggestionItems = useIDDCoordinatorSuggestionItemsIM(state);
+  const iDDCoordinatorSuggestionItems =
+    useIDDCoordinatorSuggestionItemsIM(state);
 
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
-      return { ...prev, skip: nextVal <= iDDCoordinatorSuggestionItems.count ? nextVal : prev.skip };
+      return {
+        ...prev,
+        skip:
+          nextVal <= iDDCoordinatorSuggestionItems.count ? nextVal : prev.skip,
+      };
     });
   };
 
@@ -49,37 +54,46 @@ export default function IMIDDCoordinatorSuggestionItems({
           </tr>
         </thead>
         <tbody>
-          {iDDCoordinatorSuggestionItems.iDDCoordinatorSuggestionItems.map((iDDCoordinatorSuggestionItem) => {
-            return (
-              <tr>
-                <td>{iDDCoordinatorSuggestionItem.id}</td>
-                <td>
-                  {new Date(iDDCoordinatorSuggestionItem.createdAt).toLocaleString()}
-                </td>
-                <td>
-                  {new Date(iDDCoordinatorSuggestionItem.updatedAt).toLocaleString()}
-                </td>
-                <td>{iDDCoordinatorSuggestionItem.suggestion}</td>
-                <td>{iDDCoordinatorSuggestionItem.pageNumber}</td>
-                <td>{iDDCoordinatorSuggestionItem.actionTaken}</td>
-                <td>{iDDCoordinatorSuggestionItem.remarks}</td>
-                <td>{iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}</td>
-                <td>
-                  <Link
-                    href={`/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}/action_taken/edit`}
-                    className='border rounded'
-                  >
-                    edit
-                  </Link>
-                </td>
-              </tr>
-            );
-          })}
+          {iDDCoordinatorSuggestionItems.iDDCoordinatorSuggestionItems.map(
+            (iDDCoordinatorSuggestionItem) => {
+              return (
+                <tr key={iDDCoordinatorSuggestionItem.id}>
+                  <td>{iDDCoordinatorSuggestionItem.id}</td>
+                  <td>
+                    {new Date(
+                      iDDCoordinatorSuggestionItem.createdAt
+                    ).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(
+                      iDDCoordinatorSuggestionItem.updatedAt
+                    ).toLocaleString()}
+                  </td>
+                  <td>{iDDCoordinatorSuggestionItem.suggestion}</td>
+                  <td>{iDDCoordinatorSuggestionItem.pageNumber}</td>
+                  <td>{iDDCoordinatorSuggestionItem.actionTaken}</td>
+                  <td>{iDDCoordinatorSuggestionItem.remarks}</td>
+                  <td>
+                    {iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}
+                  </td>
+                  <td>
+                    <Link
+                      href={`/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}/action_taken/edit`}
+                      className='border rounded'
+                    >
+                      edit
+                    </Link>
+                  </td>
+                </tr>
+              );
+            }
+          )}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
         <p>
-          {state.skip} - {state.skip + state.take} of {iDDCoordinatorSuggestionItems.count}
+          {state.skip} - {state.skip + state.take} of{" "}
+          {iDDCoordinatorSuggestionItems.count}
         </p>
         <button className='border rounded' onClick={handlePrev}>
           prev

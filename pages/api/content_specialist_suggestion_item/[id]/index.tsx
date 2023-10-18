@@ -89,8 +89,8 @@ export default async function handler(
       const validator = Yup.object({
         actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
-        suggestion: Yup.string().required(),
-        pageNumber: Yup.number().min(0).required(),
+        suggestion: Yup.string().optional(),
+        pageNumber: Yup.number().min(0).optional(),
       });
 
       await validator.validate(req.body);
