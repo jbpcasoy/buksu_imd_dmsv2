@@ -6,6 +6,7 @@ import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
@@ -86,7 +87,7 @@ export default function AddPeerReviewPage() {
         })
         .then(() => {
           alert("PeerReview Added Successfully");
-          router.push(`/im/${iMId}/peer_suggestion`)
+          router.push(`/im/${iMId}/peer_suggestion`);
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -99,7 +100,7 @@ export default function AddPeerReviewPage() {
       return;
     }
 
-    router.replace(`/im/${iMId}/peer_suggestion`)
+    router.replace(`/im/${iMId}/peer_suggestion`);
   }, [peerReview]);
 
   if (!departmentReview || !activeFaculty) {
@@ -108,7 +109,10 @@ export default function AddPeerReviewPage() {
 
   return (
     <MainLayout>
-      <h2>Peer Review</h2>
+      <div className="flex justify-between">
+        <h2 className="inline">Peer Review</h2>
+        <Link href={`/api/im_file/im/${iMId}/pdf`} className="underline" target="_blank">View PDF</Link>
+      </div>
 
       <form onSubmit={formik.handleSubmit}>
         <div>

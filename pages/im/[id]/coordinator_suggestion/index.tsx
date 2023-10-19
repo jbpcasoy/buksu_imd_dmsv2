@@ -8,6 +8,7 @@ import useCoordinatorSuggestionMe from "@/hooks/useCoordinatorSuggestionMe";
 import { CoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -97,7 +98,16 @@ export default function CoordinatorSuggestionPage() {
   return (
     <MainLayout>
       <div>
-        <h2>Coordinator Review</h2>
+        <div className='flex justify-between'>
+          <h2 className='inline'>Coordinator Review</h2>
+          <Link
+            href={`/api/im_file/im/${iMId}/pdf`}
+            className='underline'
+            target='_blank'
+          >
+            View PDF
+          </Link>
+        </div>
         <form noValidate onSubmit={formik.handleSubmit}>
           <textarea
             placeholder='suggestion'

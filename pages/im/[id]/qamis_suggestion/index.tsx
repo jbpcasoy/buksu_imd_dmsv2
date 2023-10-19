@@ -13,6 +13,7 @@ import { ChangeEventHandler, useEffect, useState } from "react";
 import * as Yup from "yup";
 import useQAMISSuggestionMe from "@/hooks/useQAMISSuggestionMe";
 import { QAMISSuggestion, SubmittedQAMISSuggestion } from "@prisma/client";
+import Link from "next/link";
 
 export default function QAMISSuggestionPage() {
   const router = useRouter();
@@ -155,7 +156,16 @@ export default function QAMISSuggestionPage() {
   return (
     <MainLayout>
       <div>
-        <h2>QAMIS Suggestion</h2>
+        <div className="flex justify-between">
+          <h2 className='inline'>QAMIS Suggestion</h2>
+          <Link
+            href={`/api/im_file/im/${iMId}/pdf`}
+            className='underline'
+            target='_blank'
+          >
+            View PDF
+          </Link>
+        </div>
         <form noValidate onSubmit={formik.handleSubmit}>
           <textarea
             placeholder='suggestion'

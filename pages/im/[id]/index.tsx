@@ -12,6 +12,7 @@ import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useIM from "@/hooks/useIM";
+import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import useIMStatus from "@/hooks/useIMStatus";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
 import {
@@ -39,6 +40,7 @@ export default function ViewIM() {
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();
   const activeCITLDirector = useActiveCITLDirectorMe();
   const qAMISRevision = useQAMISRevisionIM({ id: iMId as string });
+  const iMFile = useIMLatestIMFile({ id: iMId as string });
 
   const onQAMISChairpersonEndorsement = () => {
     axios
@@ -705,6 +707,8 @@ export default function ViewIM() {
           </p>
         </div>
       )}
+
+      {iMFile && <iframe src={`/api/im_file/${iMFile.id}/pdf`}  title={iM.title} className="w-full h-screen"/>}
     </MainLayout>
   );
 }

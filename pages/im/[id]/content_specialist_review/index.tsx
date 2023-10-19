@@ -6,6 +6,7 @@ import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
@@ -114,7 +115,16 @@ export default function AddContentSpecialistReviewPage() {
 
   return (
     <MainLayout>
-      <h2>Content Specialist Review</h2>
+      <div className='flex justify-between'>
+        <h2 className='inline'>Content Specialist Review</h2>
+        <Link
+          href={`/api/im_file/im/${iMId}/pdf`}
+          className='underline'
+          target='_blank'
+        >
+          View PDF
+        </Link>
+      </div>
 
       <form onSubmit={formik.handleSubmit}>
         <div>

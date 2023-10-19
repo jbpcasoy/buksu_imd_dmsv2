@@ -27,6 +27,7 @@ export default function QAMISSuggestionItem({
   return (
     <div className='border rounded'>
       <p>suggestion: {qAMISSuggestionItem.suggestion}</p>
+      <p>actionTaken: {qAMISSuggestionItem.actionTaken}</p>
       <p>pageNumber: {qAMISSuggestionItem.pageNumber}</p>
       <p>remarks: {qAMISSuggestionItem.remarks}</p>
       <div className='space-x-1'>

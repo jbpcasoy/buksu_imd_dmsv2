@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ContentEditorSuggestion } from "@prisma/client";
+import Link from "next/link";
 
 export default function ContentEditorSuggestionPage() {
   const router = useRouter();
@@ -60,9 +61,11 @@ export default function ContentEditorSuggestionPage() {
       remarks: Yup.string(),
       pageNumber: Yup.number().min(0).required(),
     }),
-    
+
     onSubmit: (values) => {
-      const submitSuggestionItem = async (contentEditorSuggestionId: string) => {
+      const submitSuggestionItem = async (
+        contentEditorSuggestionId: string
+      ) => {
         return axios
           .post(`/api/content_editor_suggestion_item`, {
             ...values,
@@ -73,7 +76,7 @@ export default function ContentEditorSuggestionPage() {
             router.reload();
           });
       };
-      
+
       if (!contentEditorSuggestion) {
         if (!contentEditorReview) {
           return;
@@ -99,7 +102,16 @@ export default function ContentEditorSuggestionPage() {
   return (
     <MainLayout>
       <div>
-        <h2>Content Editor Review</h2>
+        <div className='flex justify-between'>
+          <h2 className='inline'>Content Editor Review</h2>
+          <Link
+            href={`/api/im_file/im/${iMId}/pdf`}
+            className='underline'
+            target='_blank'
+          >
+            View PDF
+          </Link>
+        </div>
         <form noValidate onSubmit={formik.handleSubmit}>
           <textarea
             placeholder='suggestion'

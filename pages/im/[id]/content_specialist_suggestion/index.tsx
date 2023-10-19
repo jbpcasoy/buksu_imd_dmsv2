@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ContentSpecialistSuggestion } from "@prisma/client";
+import Link from "next/link";
 
 export default function ContentSpecialistSuggestionPage() {
   const router = useRouter();
@@ -64,9 +65,10 @@ export default function ContentSpecialistSuggestionPage() {
       pageNumber: Yup.number().min(0).required(),
     }),
 
-    
     onSubmit: (values) => {
-      const submitSuggestionItem = async (contentSpecialistSuggestionId: string) => {
+      const submitSuggestionItem = async (
+        contentSpecialistSuggestionId: string
+      ) => {
         return axios
           .post(`/api/content_specialist_suggestion_item`, {
             ...values,
@@ -77,15 +79,18 @@ export default function ContentSpecialistSuggestionPage() {
             router.reload();
           });
       };
-      
+
       if (!contentSpecialistSuggestion) {
         if (!contentSpecialistReview) {
           return;
         }
         return axios
-          .post<ContentSpecialistSuggestion>(`/api/content_specialist_suggestion/`, {
-            contentSpecialistReviewId: contentSpecialistReview.id,
-          })
+          .post<ContentSpecialistSuggestion>(
+            `/api/content_specialist_suggestion/`,
+            {
+              contentSpecialistReviewId: contentSpecialistReview.id,
+            }
+          )
           .then((res) => {
             const createdContentSpecialistSuggestion = res.data;
 
@@ -103,7 +108,16 @@ export default function ContentSpecialistSuggestionPage() {
   return (
     <MainLayout>
       <div>
-        <h2>Content Specialist Review</h2>
+        <div className="flex justify-between">
+          <h2 className='inline'>Content Specialist Review</h2>
+          <Link
+            href={`/api/im_file/im/${iMId}/pdf`}
+            className='underline'
+            target='_blank'
+          >
+            View PDF
+          </Link>
+        </div>
         <form noValidate onSubmit={formik.handleSubmit}>
           <textarea
             placeholder='suggestion'

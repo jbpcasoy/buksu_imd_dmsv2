@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IDDSpecialistSuggestion } from "@prisma/client";
+import Link from "next/link";
 
 export default function IDDSpecialistSuggestionPage() {
   const router = useRouter();
@@ -100,7 +101,16 @@ export default function IDDSpecialistSuggestionPage() {
   return (
     <MainLayout>
       <div>
-        <h2>IDD Specialist Review</h2>
+        <div className="flex justify-between">
+          <h2 className='inline'>IDD Specialist Review</h2>
+          <Link
+            href={`/api/im_file/im/${iMId}/pdf`}
+            className='underline'
+            target='_blank'
+          >
+            View PDF
+          </Link>
+        </div>
         <form noValidate onSubmit={formik.handleSubmit}>
           <textarea
             placeholder='suggestion'

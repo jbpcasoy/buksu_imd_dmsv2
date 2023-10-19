@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
+import Link from "next/link";
 
 export default function AddChairpersonReviewPage() {
   const router = useRouter();
@@ -86,7 +87,7 @@ export default function AddChairpersonReviewPage() {
           activeChairpersonId: activeFaculty.id,
         })
         .then(() => {
-          router.push(`/im/${iMId}/chairperson_suggestion`)
+          router.push(`/im/${iMId}/chairperson_suggestion`);
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -99,7 +100,7 @@ export default function AddChairpersonReviewPage() {
       return;
     }
 
-    router.replace(`/im/${iMId}/chairperson_suggestion`)
+    router.replace(`/im/${iMId}/chairperson_suggestion`);
   }, [chairpersonReview]);
 
   if (!departmentReview || !activeFaculty) {
@@ -108,7 +109,16 @@ export default function AddChairpersonReviewPage() {
 
   return (
     <MainLayout>
-      <h2>Chairperson Review</h2>
+      <div className='flex justify-between'>
+        <h2 className='inline'>Chairperson Review</h2>
+        <Link
+          href={`/api/im_file/im/${iMId}/pdf`}
+          className='underline'
+          target='_blank'
+        >
+          View PDF
+        </Link>
+      </div>
 
       <form onSubmit={formik.handleSubmit}>
         <div>

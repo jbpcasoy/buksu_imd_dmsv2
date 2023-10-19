@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
+import Link from "next/link";
 
 export default function AddCoordinatorReviewPage() {
   const router = useRouter();
@@ -108,7 +109,16 @@ export default function AddCoordinatorReviewPage() {
 
   return (
     <MainLayout>
-      <h2>Coordinator Review</h2>
+      <div className='flex justify-between'>
+        <h2 className='inline'>Coordinator Review</h2>
+        <Link
+          href={`/api/im_file/im/${iMId}/pdf`}
+          className='underline'
+          target='_blank'
+        >
+          View PDF
+        </Link>
+      </div>
 
       <form onSubmit={formik.handleSubmit}>
         <div>

@@ -14,6 +14,7 @@ import usePeerSuggestionItemsOwn, {
 } from "@/hooks/usePeerSuggestionItemsOwn";
 import MainLayout from "@/components/MainLayout";
 import { PeerSuggestion } from "@prisma/client";
+import Link from "next/link";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
@@ -98,7 +99,16 @@ export default function PeerSuggestionPage() {
   return (
     <MainLayout>
       <div>
-        <h2>Peer Review</h2>
+        <div className='flex justify-between'>
+          <h2 className='inline'>Peer Review</h2>
+          <Link
+            href={`/api/im_file/im/${iMId}/pdf`}
+            className='underline'
+            target='_blank'
+          >
+            View PDF
+          </Link>
+        </div>
         <form noValidate onSubmit={formik.handleSubmit}>
           <textarea
             placeholder='suggestion'
