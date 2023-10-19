@@ -1,6 +1,6 @@
 import useIDDCoordinatorSuggestionItemsIM from "@/hooks/useIDDCoordinatorSuggestionItemsIM";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface IMIDDCoordinatorSuggestionItemsProps {
   id: string;
@@ -16,6 +16,10 @@ export default function IMIDDCoordinatorSuggestionItems({
     take: 10,
     id,
   });
+
+  useEffect(() => {
+    setState((prev) => ({ ...prev, id }));
+  }, [id]);
 
   const iDDCoordinatorSuggestionItems =
     useIDDCoordinatorSuggestionItemsIM(state);

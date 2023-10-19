@@ -25,11 +25,16 @@ export default function PeerSuggestionItem({
     }
   };
   return (
-    <div className='border rounded'>
-      <p>suggestion: {peerSuggestionItem.suggestion}</p>
-      <p>pageNumber: {peerSuggestionItem.pageNumber}</p>
-      <p>remarks: {peerSuggestionItem.remarks}</p>
-      <div className='space-x-1'>
+    <tr className=''>
+      <td>{peerSuggestionItem.id}</td>
+      <td>{new Date(peerSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(peerSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{peerSuggestionItem.suggestion}</td>
+      <td>{peerSuggestionItem.pageNumber}</td>
+      <td>{peerSuggestionItem.actionTaken}</td>
+      <td>{peerSuggestionItem.remarks}</td>
+      <td>{peerSuggestionItem.peerSuggestionId}</td>
+      <td className=''>
         <Link
           className='border rounded'
           href={`/peer_suggestion_item/${peerSuggestionItem.id}/edit`}
@@ -39,7 +44,7 @@ export default function PeerSuggestionItem({
         <button className='border rounded' onClick={handleDelete}>
           delete
         </button>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }

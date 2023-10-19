@@ -680,9 +680,9 @@ export default function ViewIM() {
 
       {iMStatus === "IMERC_CITL_REVISED" && (
         <div className='space-x-1'>
-          <IMContentSpecialistSuggestionItems id={iM.id} editable={false}/>
-          <IMIDDSpecialistSuggestionItems id={iM.id} editable={false}/>
-          <IMContentEditorSuggestionItems id={iM.id} editable={false}/>
+          <IMContentSpecialistSuggestionItems id={iM.id} editable={false} />
+          <IMIDDSpecialistSuggestionItems id={iM.id} editable={false} />
+          <IMContentEditorSuggestionItems id={iM.id} editable={false} />
           <button
             className='border rounded'
             onClick={iMERCIDDCoordinatorEndorsementHandler}
@@ -718,19 +718,25 @@ export default function ViewIM() {
       )}
 
       <div className='flex'>
-        {iMFile && (
-          <iframe
-            src={`/api/im_file/${iMFile.id}/pdf`}
-            title={iM.title}
-            className='w-full h-screen'
-          />
-        )}
         {qAMISFile && iMStatus === "IMERC_QAMIS_REVISED" && (
-          <iframe
-            src={`/api/qamis_file/${qAMISFile.id}/pdf`}
-            title={iM.title}
-            className='w-full h-screen'
-          />
+          <div className='flex flex-col w-full'>
+            <p className='text-sm font-bold text-center'>QAMIS FILE</p>
+            <iframe
+              src={`/api/qamis_file/${qAMISFile.id}/pdf`}
+              title='QAMIS File'
+              className='w-full h-screen'
+            />
+          </div>
+        )}
+        {iMFile && (
+          <div className='flex flex-col w-full'>
+            <p className='text-sm font-bold text-center'>IM FILE</p>
+            <iframe
+              src={`/api/im_file/${iMFile.id}/pdf`}
+              title={iM.title}
+              className='w-full h-screen'
+            />
+          </div>
         )}
       </div>
     </MainLayout>

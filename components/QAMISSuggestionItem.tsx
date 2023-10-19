@@ -25,12 +25,16 @@ export default function QAMISSuggestionItem({
     }
   };
   return (
-    <div className='border rounded'>
-      <p>suggestion: {qAMISSuggestionItem.suggestion}</p>
-      <p>actionTaken: {qAMISSuggestionItem.actionTaken}</p>
-      <p>pageNumber: {qAMISSuggestionItem.pageNumber}</p>
-      <p>remarks: {qAMISSuggestionItem.remarks}</p>
-      <div className='space-x-1'>
+    <tr className=''>
+      <td>{qAMISSuggestionItem.id}</td>
+      <td>{new Date(qAMISSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(qAMISSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{qAMISSuggestionItem.suggestion}</td>
+      <td>{qAMISSuggestionItem.pageNumber}</td>
+      <td>{qAMISSuggestionItem.actionTaken}</td>
+      <td>{qAMISSuggestionItem.remarks}</td>
+      <td>{qAMISSuggestionItem.qAMISSuggestionId}</td>
+      <td className=''>
         <Link
           className='border rounded'
           href={`/qamis_suggestion_item/${qAMISSuggestionItem.id}/edit`}
@@ -40,7 +44,7 @@ export default function QAMISSuggestionItem({
         <button className='border rounded' onClick={handleDelete}>
           delete
         </button>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }

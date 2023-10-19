@@ -15,6 +15,8 @@ import usePeerSuggestionItemsOwn, {
 import MainLayout from "@/components/MainLayout";
 import { PeerSuggestion } from "@prisma/client";
 import Link from "next/link";
+import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
+import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
@@ -129,15 +131,38 @@ export default function PeerSuggestionPage() {
           <input type='submit' value='Submit' className='border rounded' />
         </form>
         <div>
-          <h3>Suggestions</h3>
-          {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
-            return (
-              <PeerSuggestionItem
-                peerSuggestionItem={peerSuggestionItem}
-                key={peerSuggestionItem.id}
-              />
-            );
-          })}
+          <table>
+            <caption>Peer Suggestions</caption>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>createdAt</th>
+                <th>updatedAt</th>
+                <th>suggestion</th>
+                <th>pageNumber</th>
+                <th>actionTaken</th>
+                <th>remarks</th>
+                <th>peerSuggestionId</th>
+                <th>actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {peerSuggestionItems.peerSuggestionItems.map(
+                (peerSuggestionItem) => {
+                  return (
+                    <PeerSuggestionItem
+                      peerSuggestionItem={peerSuggestionItem}
+                      key={peerSuggestionItem.id}
+                    />
+                  );
+                }
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
+          <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
         </div>
         <button className='rounded border' onClick={handleSubmitReview}>
           Submit Review

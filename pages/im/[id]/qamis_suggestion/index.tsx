@@ -190,8 +190,24 @@ export default function QAMISSuggestionPage() {
           <br />
           <input type='submit' value='Submit' className='border rounded' />
         </form>
+
         <div>
-          <h3>Suggestions</h3>
+          <table>
+            <caption>QAMIS Suggestions</caption>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>createdAt</th>
+                <th>updatedAt</th>
+                <th>suggestion</th>
+                <th>pageNumber</th>
+                <th>actionTaken</th>
+                <th>remarks</th>
+                <th>qAMISSuggestionId</th>
+                <th>actions</th>
+              </tr>
+            </thead>
+            <tbody>
           {qAMISSuggestionItems.qAMISSuggestionItems.map(
             (qAMISSuggestionItem) => {
               return (
@@ -202,6 +218,8 @@ export default function QAMISSuggestionPage() {
               );
             }
           )}
+            </tbody>
+          </table>
         </div>
         <p>QAMIS File:</p>
         <input type='file' onChange={onQAMISFileChange} />

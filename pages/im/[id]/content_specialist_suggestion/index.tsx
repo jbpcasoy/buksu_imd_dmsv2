@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ContentSpecialistSuggestion } from "@prisma/client";
 import Link from "next/link";
+import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
+import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
 
 export default function ContentSpecialistSuggestionPage() {
   const router = useRouter();
@@ -108,7 +110,7 @@ export default function ContentSpecialistSuggestionPage() {
   return (
     <MainLayout>
       <div>
-        <div className="flex justify-between">
+        <div className='flex justify-between'>
           <h2 className='inline'>Content Specialist Review</h2>
           <Link
             href={`/api/im_file/im/${iMId}/pdf`}
@@ -137,20 +139,48 @@ export default function ContentSpecialistSuggestionPage() {
           <br />
           <input type='submit' value='Submit' className='border rounded' />
         </form>
+
         <div>
-          <h3>Suggestions</h3>
-          {contentSpecialistSuggestionItems.contentSpecialistSuggestionItems.map(
-            (contentSpecialistSuggestionItem) => {
-              return (
-                <ContentSpecialistSuggestionItem
-                  contentSpecialistSuggestionItem={
-                    contentSpecialistSuggestionItem
-                  }
-                  key={contentSpecialistSuggestionItem.id}
-                />
-              );
-            }
-          )}
+          <table>
+            <caption>Content Specialist Suggestions</caption>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>createdAt</th>
+                <th>updatedAt</th>
+                <th>suggestion</th>
+                <th>pageNumber</th>
+                <th>actionTaken</th>
+                <th>remarks</th>
+                <th>contentSpecialistSuggestionId</th>
+                <th>actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {contentSpecialistSuggestionItems.contentSpecialistSuggestionItems.map(
+                (contentSpecialistSuggestionItem) => {
+                  return (
+                    <ContentSpecialistSuggestionItem
+                      contentSpecialistSuggestionItem={
+                        contentSpecialistSuggestionItem
+                      }
+                      key={contentSpecialistSuggestionItem.id}
+                    />
+                  );
+                }
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <IMIDDSpecialistSuggestionItems
+            id={iMId as string}
+            editable={false}
+          />
+          <IMContentEditorSuggestionItems
+            id={iMId as string}
+            editable={false}
+          />
         </div>
         <button className='rounded border' onClick={handleSubmitReview}>
           Submit Review

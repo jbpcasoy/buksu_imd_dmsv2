@@ -13,7 +13,9 @@ export default function ContentEditorSuggestionItem({
   const handleDelete = () => {
     if (confirm("Are you sure? This action cannot be undone.")) {
       axios
-        .delete(`/api/content_editor_suggestion_item/${contentEditorSuggestionItem.id}`)
+        .delete(
+          `/api/content_editor_suggestion_item/${contentEditorSuggestionItem.id}`
+        )
         .then(() => {
           alert("Suggestion deleted successfully");
           router.reload();
@@ -25,11 +27,20 @@ export default function ContentEditorSuggestionItem({
     }
   };
   return (
-    <div className='border rounded'>
-      <p>suggestion: {contentEditorSuggestionItem.suggestion}</p>
-      <p>pageNumber: {contentEditorSuggestionItem.pageNumber}</p>
-      <p>remarks: {contentEditorSuggestionItem.remarks}</p>
-      <div className='space-x-1'>
+    <tr className=''>
+      <td>{contentEditorSuggestionItem.id}</td>
+      <td>
+        {new Date(contentEditorSuggestionItem.createdAt).toLocaleString()}
+      </td>
+      <td>
+        {new Date(contentEditorSuggestionItem.updatedAt).toLocaleString()}
+      </td>
+      <td>{contentEditorSuggestionItem.suggestion}</td>
+      <td>{contentEditorSuggestionItem.pageNumber}</td>
+      <td>{contentEditorSuggestionItem.actionTaken}</td>
+      <td>{contentEditorSuggestionItem.remarks}</td>
+      <td>{contentEditorSuggestionItem.contentEditorSuggestionId}</td>
+      <td className=''>
         <Link
           className='border rounded'
           href={`/content_editor_suggestion_item/${contentEditorSuggestionItem.id}/edit`}
@@ -39,7 +50,7 @@ export default function ContentEditorSuggestionItem({
         <button className='border rounded' onClick={handleDelete}>
           delete
         </button>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }

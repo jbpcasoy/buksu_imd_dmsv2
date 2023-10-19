@@ -1,6 +1,6 @@
 import usePeerSuggestionItemsIM from "@/hooks/usePeerSuggestionItemsIM";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface IMPeerSuggestionItemsProps {
   id: string;
@@ -18,6 +18,10 @@ export default function IMPeerSuggestionItems({
   });
 
   const peerSuggestionItems = usePeerSuggestionItemsIM(state);
+
+  useEffect(() => {
+    setState((prev) => ({ ...prev, id }));
+  }, [id]);
 
   const handleNext = () => {
     setState((prev) => {

@@ -13,7 +13,9 @@ export default function ContentSpecialistSuggestionItem({
   const handleDelete = () => {
     if (confirm("Are you sure? This action cannot be undone.")) {
       axios
-        .delete(`/api/content_specialist_suggestion_item/${contentSpecialistSuggestionItem.id}`)
+        .delete(
+          `/api/content_specialist_suggestion_item/${contentSpecialistSuggestionItem.id}`
+        )
         .then(() => {
           alert("Suggestion deleted successfully");
           router.reload();
@@ -25,11 +27,20 @@ export default function ContentSpecialistSuggestionItem({
     }
   };
   return (
-    <div className='border rounded'>
-      <p>suggestion: {contentSpecialistSuggestionItem.suggestion}</p>
-      <p>pageNumber: {contentSpecialistSuggestionItem.pageNumber}</p>
-      <p>remarks: {contentSpecialistSuggestionItem.remarks}</p>
-      <div className='space-x-1'>
+    <tr className=''>
+      <td>{contentSpecialistSuggestionItem.id}</td>
+      <td>
+        {new Date(contentSpecialistSuggestionItem.createdAt).toLocaleString()}
+      </td>
+      <td>
+        {new Date(contentSpecialistSuggestionItem.updatedAt).toLocaleString()}
+      </td>
+      <td>{contentSpecialistSuggestionItem.suggestion}</td>
+      <td>{contentSpecialistSuggestionItem.pageNumber}</td>
+      <td>{contentSpecialistSuggestionItem.actionTaken}</td>
+      <td>{contentSpecialistSuggestionItem.remarks}</td>
+      <td>{contentSpecialistSuggestionItem.contentSpecialistSuggestionId}</td>
+      <td className=''>
         <Link
           className='border rounded'
           href={`/content_specialist_suggestion_item/${contentSpecialistSuggestionItem.id}/edit`}
@@ -39,7 +50,7 @@ export default function ContentSpecialistSuggestionItem({
         <button className='border rounded' onClick={handleDelete}>
           delete
         </button>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }

@@ -1,6 +1,6 @@
 import useContentEditorSuggestionItemsIM from "@/hooks/useContentEditorSuggestionItemsIM";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface IMContentEditorSuggestionItemsProps {
   id: string;
@@ -16,6 +16,10 @@ export default function IMContentEditorSuggestionItems({
     take: 10,
     id,
   });
+  
+  useEffect(() => {
+    setState((prev) => ({ ...prev, id }));
+  }, [id]);
 
   const contentEditorSuggestionItems = useContentEditorSuggestionItemsIM(state);
 

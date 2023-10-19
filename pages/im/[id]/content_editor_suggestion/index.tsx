@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ContentEditorSuggestion } from "@prisma/client";
 import Link from "next/link";
+import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
+import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
 
 export default function ContentEditorSuggestionPage() {
   const router = useRouter();
@@ -131,18 +133,46 @@ export default function ContentEditorSuggestionPage() {
           <br />
           <input type='submit' value='Submit' className='border rounded' />
         </form>
+
         <div>
-          <h3>Suggestions</h3>
-          {contentEditorSuggestionItems.contentEditorSuggestionItems.map(
-            (contentEditorSuggestionItem) => {
-              return (
-                <ContentEditorSuggestionItem
-                  contentEditorSuggestionItem={contentEditorSuggestionItem}
-                  key={contentEditorSuggestionItem.id}
-                />
-              );
-            }
-          )}
+          <table>
+            <caption>Content Editor Suggestions</caption>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>createdAt</th>
+                <th>updatedAt</th>
+                <th>suggestion</th>
+                <th>pageNumber</th>
+                <th>actionTaken</th>
+                <th>remarks</th>
+                <th>contentEditorSuggestionId</th>
+                <th>actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {contentEditorSuggestionItems.contentEditorSuggestionItems.map(
+                (contentEditorSuggestionItem) => {
+                  return (
+                    <ContentEditorSuggestionItem
+                      contentEditorSuggestionItem={contentEditorSuggestionItem}
+                      key={contentEditorSuggestionItem.id}
+                    />
+                  );
+                }
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <IMIDDSpecialistSuggestionItems
+            id={iMId as string}
+            editable={false}
+          />
+          <IMContentSpecialistSuggestionItems
+            id={iMId as string}
+            editable={false}
+          />
         </div>
         <button className='rounded border' onClick={handleSubmitReview}>
           Submit Review

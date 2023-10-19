@@ -13,7 +13,9 @@ export default function IDDSpecialistSuggestionItem({
   const handleDelete = () => {
     if (confirm("Are you sure? This action cannot be undone.")) {
       axios
-        .delete(`/api/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}`)
+        .delete(
+          `/api/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}`
+        )
         .then(() => {
           alert("Suggestion deleted successfully");
           router.reload();
@@ -25,11 +27,20 @@ export default function IDDSpecialistSuggestionItem({
     }
   };
   return (
-    <div className='border rounded'>
-      <p>suggestion: {iDDSpecialistSuggestionItem.suggestion}</p>
-      <p>pageNumber: {iDDSpecialistSuggestionItem.pageNumber}</p>
-      <p>remarks: {iDDSpecialistSuggestionItem.remarks}</p>
-      <div className='space-x-1'>
+    <tr className=''>
+      <td>{iDDSpecialistSuggestionItem.id}</td>
+      <td>
+        {new Date(iDDSpecialistSuggestionItem.createdAt).toLocaleString()}
+      </td>
+      <td>
+        {new Date(iDDSpecialistSuggestionItem.updatedAt).toLocaleString()}
+      </td>
+      <td>{iDDSpecialistSuggestionItem.suggestion}</td>
+      <td>{iDDSpecialistSuggestionItem.pageNumber}</td>
+      <td>{iDDSpecialistSuggestionItem.actionTaken}</td>
+      <td>{iDDSpecialistSuggestionItem.remarks}</td>
+      <td>{iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId}</td>
+      <td className=''>
         <Link
           className='border rounded'
           href={`/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}/edit`}
@@ -39,7 +50,7 @@ export default function IDDSpecialistSuggestionItem({
         <button className='border rounded' onClick={handleDelete}>
           delete
         </button>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }

@@ -1,6 +1,6 @@
 import useContentSpecialistSuggestionItemsIM from "@/hooks/useContentSpecialistSuggestionItemsIM";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface IMContentSpecialistSuggestionItemsProps {
   id: string;
@@ -16,6 +16,10 @@ export default function IMContentSpecialistSuggestionItems({
     take: 10,
     id,
   });
+  
+  useEffect(() => {
+    setState((prev) => ({ ...prev, id }));
+  }, [id]);
 
   const contentSpecialistSuggestionItems =
     useContentSpecialistSuggestionItemsIM(state);

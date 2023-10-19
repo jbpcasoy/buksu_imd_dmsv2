@@ -1,6 +1,6 @@
 import useIDDSpecialistSuggestionItemsIM from "@/hooks/useIDDSpecialistSuggestionItemsIM";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface IMIDDSpecialistSuggestionItemsProps {
   id: string;
@@ -16,6 +16,10 @@ export default function IMIDDSpecialistSuggestionItems({
     take: 10,
     id,
   });
+
+  useEffect(() => {
+    setState((prev) => ({ ...prev, id }));
+  }, [id]);
 
   const iDDSpecialistSuggestionItems = useIDDSpecialistSuggestionItemsIM(state);
 

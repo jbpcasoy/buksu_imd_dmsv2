@@ -1,4 +1,7 @@
 import IDDCoordinatorSuggestionItem from "@/components/IDDCoordinatorSuggestionItem";
+import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
+import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
+import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
@@ -137,17 +140,41 @@ export default function IDDCoordinatorSuggestionPage() {
           <input type='submit' value='Submit' className='border rounded' />
         </form>
         <div>
-          <h3>Suggestions</h3>
-          {iDDCoordinatorSuggestionItems.iDDCoordinatorSuggestionItems.map(
-            (iDDCoordinatorSuggestionItem) => {
-              return (
-                <IDDCoordinatorSuggestionItem
-                  iDDCoordinatorSuggestionItem={iDDCoordinatorSuggestionItem}
-                  key={iDDCoordinatorSuggestionItem.id}
-                />
-              );
-            }
-          )}
+          <table>
+            <caption>IDD Coordinator Suggestions</caption>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>createdAt</th>
+                <th>updatedAt</th>
+                <th>suggestion</th>
+                <th>pageNumber</th>
+                <th>actionTaken</th>
+                <th>remarks</th>
+                <th>iDDCoordinatorSuggestionId</th>
+                <th>actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {iDDCoordinatorSuggestionItems.iDDCoordinatorSuggestionItems.map(
+                (iDDCoordinatorSuggestionItem) => {
+                  return (
+                    <IDDCoordinatorSuggestionItem
+                      iDDCoordinatorSuggestionItem={
+                        iDDCoordinatorSuggestionItem
+                      }
+                      key={iDDCoordinatorSuggestionItem.id}
+                    />
+                  );
+                }
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <IMPeerSuggestionItems id={iMId as string} editable={false} />
+          <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
+          <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
         </div>
         <button className='rounded border' onClick={handleSubmitReview}>
           Submit Review

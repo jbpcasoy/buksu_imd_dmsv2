@@ -13,7 +13,9 @@ export default function CoordinatorSuggestionItem({
   const handleDelete = () => {
     if (confirm("Are you sure? This action cannot be undone.")) {
       axios
-        .delete(`/api/coordinator_suggestion_item/${coordinatorSuggestionItem.id}`)
+        .delete(
+          `/api/coordinator_suggestion_item/${coordinatorSuggestionItem.id}`
+        )
         .then(() => {
           alert("Suggestion deleted successfully");
           router.reload();
@@ -25,11 +27,16 @@ export default function CoordinatorSuggestionItem({
     }
   };
   return (
-    <div className='border rounded'>
-      <p>suggestion: {coordinatorSuggestionItem.suggestion}</p>
-      <p>pageNumber: {coordinatorSuggestionItem.pageNumber}</p>
-      <p>remarks: {coordinatorSuggestionItem.remarks}</p>
-      <div className='space-x-1'>
+    <tr className=''>
+      <td>{coordinatorSuggestionItem.id}</td>
+      <td>{new Date(coordinatorSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(coordinatorSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{coordinatorSuggestionItem.suggestion}</td>
+      <td>{coordinatorSuggestionItem.pageNumber}</td>
+      <td>{coordinatorSuggestionItem.actionTaken}</td>
+      <td>{coordinatorSuggestionItem.remarks}</td>
+      <td>{coordinatorSuggestionItem.coordinatorSuggestionId}</td>
+      <td className=''>
         <Link
           className='border rounded'
           href={`/coordinator_suggestion_item/${coordinatorSuggestionItem.id}/edit`}
@@ -39,7 +46,7 @@ export default function CoordinatorSuggestionItem({
         <button className='border rounded' onClick={handleDelete}>
           delete
         </button>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }

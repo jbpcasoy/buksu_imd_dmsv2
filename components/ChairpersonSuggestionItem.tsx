@@ -13,7 +13,9 @@ export default function ChairpersonSuggestionItem({
   const handleDelete = () => {
     if (confirm("Are you sure? This action cannot be undone.")) {
       axios
-        .delete(`/api/chairperson_suggestion_item/${chairpersonSuggestionItem.id}`)
+        .delete(
+          `/api/chairperson_suggestion_item/${chairpersonSuggestionItem.id}`
+        )
         .then(() => {
           alert("Suggestion deleted successfully");
           router.reload();
@@ -25,11 +27,16 @@ export default function ChairpersonSuggestionItem({
     }
   };
   return (
-    <div className='border rounded'>
-      <p>suggestion: {chairpersonSuggestionItem.suggestion}</p>
-      <p>pageNumber: {chairpersonSuggestionItem.pageNumber}</p>
-      <p>remarks: {chairpersonSuggestionItem.remarks}</p>
-      <div className='space-x-1'>
+    <tr className=''>
+      <td>{chairpersonSuggestionItem.id}</td>
+      <td>{new Date(chairpersonSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(chairpersonSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{chairpersonSuggestionItem.suggestion}</td>
+      <td>{chairpersonSuggestionItem.pageNumber}</td>
+      <td>{chairpersonSuggestionItem.actionTaken}</td>
+      <td>{chairpersonSuggestionItem.remarks}</td>
+      <td>{chairpersonSuggestionItem.chairpersonSuggestionId}</td>
+      <td className=''>
         <Link
           className='border rounded'
           href={`/chairperson_suggestion_item/${chairpersonSuggestionItem.id}/edit`}
@@ -39,7 +46,7 @@ export default function ChairpersonSuggestionItem({
         <button className='border rounded' onClick={handleDelete}>
           delete
         </button>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }
