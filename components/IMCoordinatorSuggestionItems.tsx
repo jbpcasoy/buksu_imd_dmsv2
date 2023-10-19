@@ -4,10 +4,12 @@ import { useState } from "react";
 
 export interface IMCoordinatorSuggestionItemsProps {
   id: string;
+  editable?: boolean;
 }
 
 export default function IMCoordinatorSuggestionItems({
   id,
+  editable = true,
 }: IMCoordinatorSuggestionItemsProps) {
   const [state, setState] = useState({
     skip: 0,
@@ -30,7 +32,7 @@ export default function IMCoordinatorSuggestionItems({
           <th>actionTaken</th>
           <th>remarks</th>
           <th>coordinatorSuggestionId</th>
-          <th>actions</th>
+          {editable && <th>actions</th>}
         </tr>
       </thead>
       <tbody>
@@ -54,14 +56,16 @@ export default function IMCoordinatorSuggestionItems({
                 <td>{coordinatorSuggestionItem.actionTaken}</td>
                 <td>{coordinatorSuggestionItem.remarks}</td>
                 <td>{coordinatorSuggestionItem.coordinatorSuggestionId}</td>
-                <td>
-                  <Link
-                    href={`/coordinator_suggestion_item/${coordinatorSuggestionItem.id}/action_taken/edit`}
-                    className='border rounded'
-                  >
-                    edit
-                  </Link>
-                </td>
+                {editable && (
+                  <td>
+                    <Link
+                      href={`/coordinator_suggestion_item/${coordinatorSuggestionItem.id}/action_taken/edit`}
+                      className='border rounded'
+                    >
+                      edit
+                    </Link>
+                  </td>
+                )}
               </tr>
             );
           }

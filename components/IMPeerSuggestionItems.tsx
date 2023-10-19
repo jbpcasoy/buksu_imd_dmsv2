@@ -4,10 +4,12 @@ import { useState } from "react";
 
 export interface IMPeerSuggestionItemsProps {
   id: string;
+  editable?: boolean;
 }
 
 export default function IMPeerSuggestionItems({
   id,
+  editable = true,
 }: IMPeerSuggestionItemsProps) {
   const [state, setState] = useState({
     skip: 0,
@@ -48,7 +50,7 @@ export default function IMPeerSuggestionItems({
             <th>actionTaken</th>
             <th>remarks</th>
             <th>peerSuggestionId</th>
-            <th>actions</th>
+            {editable && <th>actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -67,14 +69,16 @@ export default function IMPeerSuggestionItems({
                 <td>{peerSuggestionItem.actionTaken}</td>
                 <td>{peerSuggestionItem.remarks}</td>
                 <td>{peerSuggestionItem.peerSuggestionId}</td>
-                <td>
-                  <Link
-                    href={`/peer_suggestion_item/${peerSuggestionItem.id}/action_taken/edit`}
-                    className='border rounded'
-                  >
-                    edit
-                  </Link>
-                </td>
+                {editable && (
+                  <td>
+                    <Link
+                      href={`/peer_suggestion_item/${peerSuggestionItem.id}/action_taken/edit`}
+                      className='border rounded'
+                    >
+                      edit
+                    </Link>
+                  </td>
+                )}
               </tr>
             );
           })}

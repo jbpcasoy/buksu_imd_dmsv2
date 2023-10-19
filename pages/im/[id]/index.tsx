@@ -528,6 +528,9 @@ export default function ViewIM() {
 
       {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" && (
         <div className='space-x-1'>
+          <IMChairpersonSuggestionItems id={iM.id} editable={false} />
+          <IMCoordinatorSuggestionItems id={iM.id} editable={false} />
+          <IMPeerSuggestionItems id={iM.id} editable={false} />
           <button
             className='border rounded'
             onClick={coordinatorEndorsementHandler}
@@ -577,6 +580,7 @@ export default function ViewIM() {
 
       {iMStatus === "IMPLEMENTATION_CITL_REVISED" && (
         <div className='space-x-1'>
+          <IMIDDCoordinatorSuggestionItems id={iM.id} editable={false} />
           <button
             className='border rounded'
             onClick={iDDCoordinatorEndorsementHandler}
@@ -676,6 +680,9 @@ export default function ViewIM() {
 
       {iMStatus === "IMERC_CITL_REVISED" && (
         <div className='space-x-1'>
+          <IMContentSpecialistSuggestionItems id={iM.id} editable={false}/>
+          <IMIDDSpecialistSuggestionItems id={iM.id} editable={false}/>
+          <IMContentEditorSuggestionItems id={iM.id} editable={false}/>
           <button
             className='border rounded'
             onClick={iMERCIDDCoordinatorEndorsementHandler}
@@ -710,7 +717,7 @@ export default function ViewIM() {
         </div>
       )}
 
-      <div className="flex">
+      <div className='flex'>
         {iMFile && (
           <iframe
             src={`/api/im_file/${iMFile.id}/pdf`}

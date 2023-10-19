@@ -4,10 +4,12 @@ import { useState } from "react";
 
 export interface IMContentSpecialistSuggestionItemsProps {
   id: string;
+  editable?: boolean;
 }
 
 export default function IMContentSpecialistSuggestionItems({
   id,
+  editable = true,
 }: IMContentSpecialistSuggestionItemsProps) {
   const [state, setState] = useState({
     skip: 0,
@@ -31,7 +33,7 @@ export default function IMContentSpecialistSuggestionItems({
           <th>actionTaken</th>
           <th>remarks</th>
           <th>contentSpecialistSuggestionId</th>
-          <th>actions</th>
+          {editable && <th>actions</th>}
         </tr>
       </thead>
       <tbody>
@@ -59,14 +61,16 @@ export default function IMContentSpecialistSuggestionItems({
                     contentSpecialistSuggestionItem.contentSpecialistSuggestionId
                   }
                 </td>
-                <td>
-                  <Link
-                    href={`/content_specialist_suggestion_item/${contentSpecialistSuggestionItem.id}/action_taken/edit`}
-                    className='border rounded'
-                  >
-                    edit
-                  </Link>
-                </td>
+                {editable && (
+                  <td>
+                    <Link
+                      href={`/content_specialist_suggestion_item/${contentSpecialistSuggestionItem.id}/action_taken/edit`}
+                      className='border rounded'
+                    >
+                      edit
+                    </Link>
+                  </td>
+                )}
               </tr>
             );
           }

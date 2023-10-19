@@ -4,10 +4,12 @@ import { useState } from "react";
 
 export interface IMIDDSpecialistSuggestionItemsProps {
   id: string;
+  editable?: boolean;
 }
 
 export default function IMIDDSpecialistSuggestionItems({
   id,
+  editable = true,
 }: IMIDDSpecialistSuggestionItemsProps) {
   const [state, setState] = useState({
     skip: 0,
@@ -15,8 +17,7 @@ export default function IMIDDSpecialistSuggestionItems({
     id,
   });
 
-  const iDDSpecialistSuggestionItems =
-    useIDDSpecialistSuggestionItemsIM(state);
+  const iDDSpecialistSuggestionItems = useIDDSpecialistSuggestionItemsIM(state);
 
   return (
     <table>
@@ -31,7 +32,7 @@ export default function IMIDDSpecialistSuggestionItems({
           <th>actionTaken</th>
           <th>remarks</th>
           <th>iDDSpecialistSuggestionId</th>
-          <th>actions</th>
+          {editable && <th>actions</th>}
         </tr>
       </thead>
       <tbody>
@@ -54,19 +55,17 @@ export default function IMIDDSpecialistSuggestionItems({
                 <td>{iDDSpecialistSuggestionItem.pageNumber}</td>
                 <td>{iDDSpecialistSuggestionItem.actionTaken}</td>
                 <td>{iDDSpecialistSuggestionItem.remarks}</td>
-                <td>
-                  {
-                    iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId
-                  }
-                </td>
-                <td>
-                  <Link
-                    href={`/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}/action_taken/edit`}
-                    className='border rounded'
-                  >
-                    edit
-                  </Link>
-                </td>
+                <td>{iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId}</td>
+                {editable && (
+                  <td>
+                    <Link
+                      href={`/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}/action_taken/edit`}
+                      className='border rounded'
+                    >
+                      edit
+                    </Link>
+                  </td>
+                )}
               </tr>
             );
           }

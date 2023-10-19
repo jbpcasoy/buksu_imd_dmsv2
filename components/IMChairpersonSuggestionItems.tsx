@@ -4,10 +4,12 @@ import { useState } from "react";
 
 export interface IMChairpersonSuggestionItemsProps {
   id: string;
+  editable?: boolean;
 }
 
 export default function IMChairpersonSuggestionItems({
   id,
+  editable = true,
 }: IMChairpersonSuggestionItemsProps) {
   const [state, setState] = useState({
     skip: 0,
@@ -30,7 +32,7 @@ export default function IMChairpersonSuggestionItems({
           <th>actionTaken</th>
           <th>remarks</th>
           <th>chairpersonSuggestionId</th>
-          <th>actions</th>
+          {editable && <th>actions</th>}
         </tr>
       </thead>
       <tbody>
@@ -54,14 +56,16 @@ export default function IMChairpersonSuggestionItems({
                 <td>{chairpersonSuggestionItem.actionTaken}</td>
                 <td>{chairpersonSuggestionItem.remarks}</td>
                 <td>{chairpersonSuggestionItem.chairpersonSuggestionId}</td>
-                <td>
-                  <Link
-                    href={`/chairperson_suggestion_item/${chairpersonSuggestionItem.id}/action_taken/edit`}
-                    className='border rounded'
-                  >
-                    edit
-                  </Link>
-                </td>
+                {editable && (
+                  <td>
+                    <Link
+                      href={`/chairperson_suggestion_item/${chairpersonSuggestionItem.id}/action_taken/edit`}
+                      className='border rounded'
+                    >
+                      edit
+                    </Link>
+                  </td>
+                )}
               </tr>
             );
           }
