@@ -108,7 +108,7 @@ export default function IDDCoordinatorSuggestionPage() {
     <MainLayout>
       <div>
         <div className='flex justify-between'>
-          <h2 className='inline'>IDD Coordinator Review</h2>
+          <h2 className='inline'>IDD Coordinator Suggestion</h2>
           <Link
             href={`/api/im_file/im/${iMId}/pdf`}
             className='underline'

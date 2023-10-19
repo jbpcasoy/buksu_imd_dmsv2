@@ -13,6 +13,7 @@ import useActiveDeanMe from "@/hooks/useActiveDeanMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useIM from "@/hooks/useIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
+import useIMLatestQAMISFile from "@/hooks/useIMLatestQAMISFile";
 import useIMStatus from "@/hooks/useIMStatus";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
 import {
@@ -41,6 +42,7 @@ export default function ViewIM() {
   const activeCITLDirector = useActiveCITLDirectorMe();
   const qAMISRevision = useQAMISRevisionIM({ id: iMId as string });
   const iMFile = useIMLatestIMFile({ id: iMId as string });
+  const qAMISFile = useIMLatestQAMISFile({ id: iMId as string });
 
   const onQAMISChairpersonEndorsement = () => {
     axios
@@ -708,7 +710,22 @@ export default function ViewIM() {
         </div>
       )}
 
-      {iMFile && <iframe src={`/api/im_file/${iMFile.id}/pdf`}  title={iM.title} className="w-full h-screen"/>}
+      <div className="flex">
+        {iMFile && (
+          <iframe
+            src={`/api/im_file/${iMFile.id}/pdf`}
+            title={iM.title}
+            className='w-full h-screen'
+          />
+        )}
+        {qAMISFile && iMStatus === "IMERC_QAMIS_REVISED" && (
+          <iframe
+            src={`/api/qamis_file/${qAMISFile.id}/pdf`}
+            title={iM.title}
+            className='w-full h-screen'
+          />
+        )}
+      </div>
     </MainLayout>
   );
 }
