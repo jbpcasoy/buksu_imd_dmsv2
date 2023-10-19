@@ -165,6 +165,7 @@ export default function ContentEditorSuggestionPage() {
           </table>
         </div>
         <div>
+          {/* TODO add qamis suggestions */}
           <IMIDDSpecialistSuggestionItems
             id={iMId as string}
             editable={false}

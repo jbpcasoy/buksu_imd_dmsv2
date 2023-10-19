@@ -460,6 +460,9 @@ export default function ViewIM() {
         <h2 className='flex-1'>View IM</h2>
 
         <div>
+          <Link href={`/im/${iM.id}/all_suggestions`} className='border rounded'>
+            all suggestions
+          </Link>
           <Link href={`/im/${iM.id}/edit`} className='border rounded'>
             edit
           </Link>

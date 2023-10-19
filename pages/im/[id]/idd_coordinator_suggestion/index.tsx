@@ -172,6 +172,7 @@ export default function IDDCoordinatorSuggestionPage() {
           </table>
         </div>
         <div>
+          {/* TODO add qamis suggestions */}
           <IMPeerSuggestionItems id={iMId as string} editable={false} />
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
           <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
