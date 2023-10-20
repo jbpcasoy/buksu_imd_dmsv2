@@ -102,6 +102,24 @@ export default function ContentEditorSuggestionPage() {
     },
   });
 
+  const handleNext = () => {
+    setState((prev) => {
+      const nextVal = prev.skip + prev.take;
+      return {
+        ...prev,
+        skip:
+          nextVal <= contentEditorSuggestionItems.count ? nextVal : prev.skip,
+      };
+    });
+  };
+
+  const handlePrev = () => {
+    setState((prev) => {
+      const nextVal = prev.skip - prev.take;
+      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
+    });
+  };
+
   return (
     <MainLayout>
       <div>
@@ -164,6 +182,18 @@ export default function ContentEditorSuggestionPage() {
               )}
             </tbody>
           </table>
+          <div className='flex justify-end space-x-1'>
+            <p>
+              {state.skip} - {state.skip + state.take} of{" "}
+              {contentEditorSuggestionItems.count}
+            </p>
+            <button className='border rounded' onClick={handlePrev}>
+              prev
+            </button>
+            <button className='border rounded' onClick={handleNext}>
+              next
+            </button>
+          </div>
         </div>
         <div>
           <IMQAMISSuggestionItems id={iMId as string} editable={false} />

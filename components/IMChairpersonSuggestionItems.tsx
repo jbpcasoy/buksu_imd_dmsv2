@@ -22,59 +22,89 @@ export default function IMChairpersonSuggestionItems({
   }, [id]);
 
   const chairpersonSuggestionItems = useChairpersonSuggestionItemsIM(state);
+  const handleNext = () => {
+    setState((prev) => {
+      const nextVal = prev.skip + prev.take;
+      return {
+        ...prev,
+        skip: nextVal <= chairpersonSuggestionItems.count ? nextVal : prev.skip,
+      };
+    });
+  };
+
+  const handlePrev = () => {
+    setState((prev) => {
+      const nextVal = prev.skip - prev.take;
+      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
+    });
+  };
 
   return (
-    <table>
-      <caption>Chairperson Suggestions</caption>
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>createdAt</th>
-          <th>updatedAt</th>
-          <th>suggestion</th>
-          <th>pageNumber</th>
-          <th>actionTaken</th>
-          <th>remarks</th>
-          <th>chairpersonSuggestionId</th>
-          {editable && <th>actions</th>}
-        </tr>
-      </thead>
-      <tbody>
-        {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
-          (chairpersonSuggestionItem) => {
-            return (
-              <tr key={chairpersonSuggestionItem.id}>
-                <td>{chairpersonSuggestionItem.id}</td>
-                <td>
-                  {new Date(
-                    chairpersonSuggestionItem.createdAt
-                  ).toLocaleString()}
-                </td>
-                <td>
-                  {new Date(
-                    chairpersonSuggestionItem.updatedAt
-                  ).toLocaleString()}
-                </td>
-                <td>{chairpersonSuggestionItem.suggestion}</td>
-                <td>{chairpersonSuggestionItem.pageNumber}</td>
-                <td>{chairpersonSuggestionItem.actionTaken}</td>
-                <td>{chairpersonSuggestionItem.remarks}</td>
-                <td>{chairpersonSuggestionItem.chairpersonSuggestionId}</td>
-                {editable && (
+    <div>
+      <table>
+        <caption>Chairperson Suggestions</caption>
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>createdAt</th>
+            <th>updatedAt</th>
+            <th>suggestion</th>
+            <th>pageNumber</th>
+            <th>actionTaken</th>
+            <th>remarks</th>
+            <th>chairpersonSuggestionId</th>
+            {editable && <th>actions</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
+            (chairpersonSuggestionItem) => {
+              return (
+                <tr key={chairpersonSuggestionItem.id}>
+                  <td>{chairpersonSuggestionItem.id}</td>
                   <td>
-                    <Link
-                      href={`/chairperson_suggestion_item/${chairpersonSuggestionItem.id}/action_taken/edit`}
-                      className='border rounded'
-                    >
-                      edit
-                    </Link>
+                    {new Date(
+                      chairpersonSuggestionItem.createdAt
+                    ).toLocaleString()}
                   </td>
-                )}
-              </tr>
-            );
-          }
-        )}
-      </tbody>
-    </table>
+                  <td>
+                    {new Date(
+                      chairpersonSuggestionItem.updatedAt
+                    ).toLocaleString()}
+                  </td>
+                  <td>{chairpersonSuggestionItem.suggestion}</td>
+                  <td>{chairpersonSuggestionItem.pageNumber}</td>
+                  <td>{chairpersonSuggestionItem.actionTaken}</td>
+                  <td>{chairpersonSuggestionItem.remarks}</td>
+                  <td>{chairpersonSuggestionItem.chairpersonSuggestionId}</td>
+                  {editable && (
+                    <td>
+                      <Link
+                        href={`/chairperson_suggestion_item/${chairpersonSuggestionItem.id}/action_taken/edit`}
+                        className='border rounded'
+                      >
+                        edit
+                      </Link>
+                    </td>
+                  )}
+                </tr>
+              );
+            }
+          )}
+        </tbody>
+      </table>
+      <div className='flex justify-end space-x-1'>
+        <p>
+          {state.skip} - {state.skip + state.take} of{" "}
+          {chairpersonSuggestionItems.count}
+        </p>
+        <button className='border rounded' onClick={handlePrev}>
+          prev
+        </button>
+        <button className='border rounded' onClick={handleNext}>
+          next
+        </button>
+      </div>
+    </div>
   );
 }

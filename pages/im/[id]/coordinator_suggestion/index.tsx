@@ -27,6 +27,22 @@ export default function CoordinatorSuggestionPage() {
     take: 10,
   });
   const coordinatorSuggestionItems = useCoordinatorSuggestionItemsOwn(state);
+  const handleNext = () => {
+    setState((prev) => {
+      const nextVal = prev.skip + prev.take;
+      return {
+        ...prev,
+        skip: nextVal <= coordinatorSuggestionItems.count ? nextVal : prev.skip,
+      };
+    });
+  };
+
+  const handlePrev = () => {
+    setState((prev) => {
+      const nextVal = prev.skip - prev.take;
+      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
+    });
+  };
   const handleSubmitReview = () => {
     if (!coordinatorSuggestion) return;
     axios
@@ -159,6 +175,18 @@ export default function CoordinatorSuggestionPage() {
               )}
             </tbody>
           </table>
+          <div className='flex justify-end space-x-1'>
+            <p>
+              {state.skip} - {state.skip + state.take} of{" "}
+              {coordinatorSuggestionItems.count}
+            </p>
+            <button className='border rounded' onClick={handlePrev}>
+              prev
+            </button>
+            <button className='border rounded' onClick={handleNext}>
+              next
+            </button>
+          </div>
         </div>
         <div>
           <IMPeerSuggestionItems id={iMId as string} editable={false} />

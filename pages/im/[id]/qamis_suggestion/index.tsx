@@ -153,10 +153,26 @@ export default function QAMISSuggestionPage() {
     },
   });
 
+  const handleNext = () => {
+    setState((prev) => {
+      const nextVal = prev.skip + prev.take;
+      return {
+        ...prev,
+        skip: nextVal <= qAMISSuggestionItems.count ? nextVal : prev.skip,
+      };
+    });
+  };
+
+  const handlePrev = () => {
+    setState((prev) => {
+      const nextVal = prev.skip - prev.take;
+      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
+    });
+  };
   return (
     <MainLayout>
       <div>
-        <div className="flex justify-between">
+        <div className='flex justify-between'>
           <h2 className='inline'>QAMIS Suggestion</h2>
           <Link
             href={`/api/im_file/im/${iMId}/pdf`}
@@ -208,18 +224,30 @@ export default function QAMISSuggestionPage() {
               </tr>
             </thead>
             <tbody>
-          {qAMISSuggestionItems.qAMISSuggestionItems.map(
-            (qAMISSuggestionItem) => {
-              return (
-                <QAMISSuggestionItem
-                  qAMISSuggestionItem={qAMISSuggestionItem}
-                  key={qAMISSuggestionItem.id}
-                />
-              );
-            }
-          )}
+              {qAMISSuggestionItems.qAMISSuggestionItems.map(
+                (qAMISSuggestionItem) => {
+                  return (
+                    <QAMISSuggestionItem
+                      qAMISSuggestionItem={qAMISSuggestionItem}
+                      key={qAMISSuggestionItem.id}
+                    />
+                  );
+                }
+              )}
             </tbody>
           </table>
+          <div className='flex justify-end space-x-1'>
+            <p>
+              {state.skip} - {state.skip + state.take} of{" "}
+              {qAMISSuggestionItems.count}
+            </p>
+            <button className='border rounded' onClick={handlePrev}>
+              prev
+            </button>
+            <button className='border rounded' onClick={handleNext}>
+              next
+            </button>
+          </div>
         </div>
         <p>QAMIS File:</p>
         <input type='file' onChange={onQAMISFileChange} />

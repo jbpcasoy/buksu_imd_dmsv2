@@ -101,6 +101,24 @@ export default function IDDSpecialistSuggestionPage() {
     },
   });
 
+  const handleNext = () => {
+    setState((prev) => {
+      const nextVal = prev.skip + prev.take;
+      return {
+        ...prev,
+        skip:
+          nextVal <= iDDSpecialistSuggestionItems.count ? nextVal : prev.skip,
+      };
+    });
+  };
+
+  const handlePrev = () => {
+    setState((prev) => {
+      const nextVal = prev.skip - prev.take;
+      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
+    });
+  };
+
   return (
     <MainLayout>
       <div>
@@ -162,12 +180,21 @@ export default function IDDSpecialistSuggestionPage() {
               )}
             </tbody>
           </table>
+          <div className='flex justify-end space-x-1'>
+            <p>
+              {state.skip} - {state.skip + state.take} of{" "}
+              {iDDSpecialistSuggestionItems.count}
+            </p>
+            <button className='border rounded' onClick={handlePrev}>
+              prev
+            </button>
+            <button className='border rounded' onClick={handleNext}>
+              next
+            </button>
+          </div>
         </div>
         <div>
-          <IMQAMISSuggestionItems
-            id={iMId as string}
-            editable={false}
-          />
+          <IMQAMISSuggestionItems id={iMId as string} editable={false} />
           <IMContentSpecialistSuggestionItems
             id={iMId as string}
             editable={false}

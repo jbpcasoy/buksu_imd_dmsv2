@@ -27,6 +27,22 @@ export default function ChairpersonSuggestionPage() {
     take: 10,
   });
   const chairpersonSuggestionItems = useChairpersonSuggestionItemsOwn(state);
+  const handleNext = () => {
+    setState((prev) => {
+      const nextVal = prev.skip + prev.take;
+      return {
+        ...prev,
+        skip: nextVal <= chairpersonSuggestionItems.count ? nextVal : prev.skip,
+      };
+    });
+  };
+
+  const handlePrev = () => {
+    setState((prev) => {
+      const nextVal = prev.skip - prev.take;
+      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
+    });
+  };
   const handleSubmitReview = () => {
     if (!chairpersonSuggestion) return;
     axios
@@ -158,6 +174,18 @@ export default function ChairpersonSuggestionPage() {
               )}
             </tbody>
           </table>
+          <div className='flex justify-end space-x-1'>
+            <p>
+              {state.skip} - {state.skip + state.take} of{" "}
+              {chairpersonSuggestionItems.count}
+            </p>
+            <button className='border rounded' onClick={handlePrev}>
+              prev
+            </button>
+            <button className='border rounded' onClick={handleNext}>
+              next
+            </button>
+          </div>
         </div>
         <div>
           <IMPeerSuggestionItems id={iMId as string} editable={false} />

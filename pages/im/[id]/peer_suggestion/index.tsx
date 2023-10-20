@@ -28,6 +28,23 @@ export default function PeerSuggestionPage() {
     take: 10,
   });
   const peerSuggestionItems = usePeerSuggestionItemsOwn(state);
+  const handleNext = () => {
+    setState((prev) => {
+      const nextVal = prev.skip + prev.take;
+      return {
+        ...prev,
+        skip: nextVal <= peerSuggestionItems.count ? nextVal : prev.skip,
+      };
+    });
+  };
+
+  const handlePrev = () => {
+    setState((prev) => {
+      const nextVal = prev.skip - prev.take;
+      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
+    });
+  };
+
   const handleSubmitReview = () => {
     if (!peerSuggestion) return;
     axios
@@ -159,6 +176,19 @@ export default function PeerSuggestionPage() {
               )}
             </tbody>
           </table>
+
+          <div className='flex justify-end space-x-1'>
+            <p>
+              {state.skip} - {state.skip + state.take} of{" "}
+              {peerSuggestionItems.count}
+            </p>
+            <button className='border rounded' onClick={handlePrev}>
+              prev
+            </button>
+            <button className='border rounded' onClick={handleNext}>
+              next
+            </button>
+          </div>
         </div>
         <div>
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
