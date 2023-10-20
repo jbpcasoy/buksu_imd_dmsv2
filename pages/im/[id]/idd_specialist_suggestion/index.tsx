@@ -14,6 +14,7 @@ import { IDDSpecialistSuggestion } from "@prisma/client";
 import Link from "next/link";
 import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
 import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
+import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 
 export default function IDDSpecialistSuggestionPage() {
   const router = useRouter();
@@ -163,6 +164,10 @@ export default function IDDSpecialistSuggestionPage() {
           </table>
         </div>
         <div>
+          <IMQAMISSuggestionItems
+            id={iMId as string}
+            editable={false}
+          />
           <IMContentSpecialistSuggestionItems
             id={iMId as string}
             editable={false}

@@ -14,6 +14,7 @@ import { ContentEditorSuggestion } from "@prisma/client";
 import Link from "next/link";
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
+import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 
 export default function ContentEditorSuggestionPage() {
   const router = useRouter();
@@ -165,7 +166,7 @@ export default function ContentEditorSuggestionPage() {
           </table>
         </div>
         <div>
-          {/* TODO add qamis suggestions */}
+          <IMQAMISSuggestionItems id={iMId as string} editable={false} />
           <IMIDDSpecialistSuggestionItems
             id={iMId as string}
             editable={false}

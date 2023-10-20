@@ -5,6 +5,7 @@ import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionIt
 import IMIDDCoordinatorSuggestionItems from "@/components/IMIDDCoordinatorSuggestionItems";
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
+import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -33,7 +34,7 @@ export default function AllSuggestionsPage() {
       <IMIDDCoordinatorSuggestionItems id={iMId as string} editable={false} />
       <p className='text-center font-bold'>IMERC</p>
       <p className='text-center font-bold text-sm'>QAMIS SUGGESTIONS</p>
-      {/* TODO add qamis suggestions */}
+      <IMQAMISSuggestionItems id={iMId as string} editable={false} />
       <p className='text-center font-bold text-sm'>CITL REVIEW</p>
       <IMIDDSpecialistSuggestionItems id={iMId as string} editable={false} />
       <IMContentSpecialistSuggestionItems
