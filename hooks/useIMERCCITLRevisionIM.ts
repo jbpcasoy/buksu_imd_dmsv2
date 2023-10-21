@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { DeanEndorsement, IM } from "@prisma/client";
+import { IMERCCITLRevision, IM } from "@prisma/client";
 import axios from "axios";
 
-export interface useDeanEndorsementIMParams {
+export interface useIMERCCITLRevisionIMParams {
   id?: string;
 }
-export default function useDeanEndorsementIM({
+export default function useIMERCCITLRevisionIM({
   id,
-}: useDeanEndorsementIMParams) {
-  const [state, setState] = useState<DeanEndorsement | null>();
+}: useIMERCCITLRevisionIMParams) {
+  const [state, setState] = useState<IMERCCITLRevision | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -16,7 +16,7 @@ export default function useDeanEndorsementIM({
     let subscribe = true;
 
     axios
-      .get(`/api/dean_endorsement/im/${id}`)
+      .get(`/api/imerc_citl_revision/im/${id}`)
       .then((res) => {
         if (!subscribe) return;
         setState(res.data);

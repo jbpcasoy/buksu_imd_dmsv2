@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { DepartmentReview, IM } from "@prisma/client";
 import axios from "axios";
 
-export interface useDepartmentReviewByIMParams {
-  id: string;
+export interface useDepartmentReviewIMParams {
+  id?: string;
 }
-export default function useDepartmentReviewByIM({ id }: useDepartmentReviewByIMParams) {
+export default function useDepartmentReviewIM({
+  id,
+}: useDepartmentReviewIMParams) {
   const [state, setState] = useState<DepartmentReview | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useDepartmentReviewByIM({ id }: useDepartmentReviewByIMP
     axios
       .get(`/api/department_review/im/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

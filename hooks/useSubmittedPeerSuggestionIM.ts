@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import { DeanEndorsement, IM } from "@prisma/client";
+import { SubmittedPeerSuggestion, IM } from "@prisma/client";
 import axios from "axios";
 
-export interface useDeanEndorsementIMParams {
+export interface useSubmittedPeerSuggestionIMParams {
   id?: string;
 }
-export default function useDeanEndorsementIM({
-  id,
-}: useDeanEndorsementIMParams) {
-  const [state, setState] = useState<DeanEndorsement | null>();
+export default function useSubmittedPeerSuggestionIM({ id }: useSubmittedPeerSuggestionIMParams) {
+  const [state, setState] = useState<SubmittedPeerSuggestion | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -16,7 +14,7 @@ export default function useDeanEndorsementIM({
     let subscribe = true;
 
     axios
-      .get(`/api/dean_endorsement/im/${id}`)
+      .get(`/api/submitted_peer_suggestion/im/${id}`)
       .then((res) => {
         if (!subscribe) return;
         setState(res.data);

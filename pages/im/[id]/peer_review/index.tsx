@@ -1,6 +1,6 @@
 import MainLayout from "@/components/MainLayout";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
-import useDepartmentReviewByIM from "@/hooks/useDepartmentReviewByIM";
+import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
 import usePeerReviewMe from "@/hooks/usePeerReviewMe";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
@@ -14,7 +14,7 @@ import * as Yup from "yup";
 export default function AddPeerReviewPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const departmentReview = useDepartmentReviewByIM({ id: iMId as string });
+  const departmentReview = useDepartmentReviewIM({ id: iMId as string });
   const peerReview = usePeerReviewMe({ id: iMId as string });
   const activeFaculty = useActiveFacultyMe();
   const formik = useFormik({

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { DeanEndorsement, IM } from "@prisma/client";
+import { QAMISDeanEndorsement, IM } from "@prisma/client";
 import axios from "axios";
 
-export interface useDeanEndorsementIMParams {
+export interface useQAMISDeanEndorsementIMParams {
   id?: string;
 }
-export default function useDeanEndorsementIM({
+export default function useQAMISDeanEndorsementIM({
   id,
-}: useDeanEndorsementIMParams) {
-  const [state, setState] = useState<DeanEndorsement | null>();
+}: useQAMISDeanEndorsementIMParams) {
+  const [state, setState] = useState<QAMISDeanEndorsement | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -16,7 +16,7 @@ export default function useDeanEndorsementIM({
     let subscribe = true;
 
     axios
-      .get(`/api/dean_endorsement/im/${id}`)
+      .get(`/api/qamis_dean_endorsement/im/${id}`)
       .then((res) => {
         if (!subscribe) return;
         setState(res.data);

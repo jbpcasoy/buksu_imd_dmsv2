@@ -3,7 +3,7 @@ import { QAMISRevision, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useQAMISRevisionIMParams {
-  id: string;
+  id?: string;
 }
 export default function useQAMISRevisionIM({ id }: useQAMISRevisionIMParams) {
   const [state, setState] = useState<QAMISRevision | null>();

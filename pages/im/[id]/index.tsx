@@ -463,6 +463,9 @@ export default function ViewIM() {
           <Link href={`/im/${iM.id}/all_suggestions`} className='border rounded'>
             all suggestions
           </Link>
+          <Link href={`/im/${iM.id}/track`} className='border rounded'>
+            track
+          </Link>
           <Link href={`/im/${iM.id}/edit`} className='border rounded'>
             edit
           </Link>
