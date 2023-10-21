@@ -1,11 +1,11 @@
-import CrudLayout from "@/components/CrudLayout";
-import useDepartments from "@/hooks/useDepartments";
+import AdminLayout from "@/components/AdminLayout";
+import useUsers from "@/hooks/useUsers";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function DepartmentsPage() {
+export default function AdminUsersPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { departments, count } = useDepartments(state);
+  const { users, count } = useUsers(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -22,12 +22,9 @@ export default function DepartmentsPage() {
   };
 
   return (
-    <CrudLayout>
+    <AdminLayout>
       <div className='flex justify-between'>
-        <h2>Department</h2>
-        <Link className='border rounded' href={`/crud/department/add`}>
-          Add
-        </Link>
+        <h2>User</h2>
       </div>
 
       <div>
@@ -35,32 +32,21 @@ export default function DepartmentsPage() {
           <thead>
             <tr>
               <th>id</th>
-              <th>createdAt</th>
-              <th>updatedAt</th>
-              <th>collegeId</th>
               <th>name</th>
+              <th>email</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {departments.map((department) => {
+            {users.map((user) => {
               return (
-                <tr key={department.id}>
-                  <td>{department.id}</td>
-                  <td>{new Date(department.createdAt).toLocaleString()}</td>
-                  <td>{new Date(department.updatedAt).toLocaleString()}</td>
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
                   <td>
                     <Link
-                      href={`/crud/college/${department.collegeId}`}
-                      className='underline'
-                    >
-                      {department.collegeId}
-                    </Link>
-                  </td>
-                  <td>{department.name}</td>
-                  <td>
-                    <Link
-                      href={`/crud/department/${department.id}`}
+                      href={`/admin/user/${user.id}`}
                       className='border rounded'
                     >
                       view
@@ -83,6 +69,6 @@ export default function DepartmentsPage() {
           </button>
         </div>
       </div>
-    </CrudLayout>
+    </AdminLayout>
   );
 }

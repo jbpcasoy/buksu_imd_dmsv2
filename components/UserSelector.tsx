@@ -4,7 +4,7 @@ import { ChangeEventHandler, useState } from "react";
 
 export default function UserSelector(props: FieldInputProps<any>) {
   const [state, setState] = useState({
-    name: "",
+    email: "",
   });
   const { users, count } = useUsers({
     skip: 0,
@@ -15,7 +15,7 @@ export default function UserSelector(props: FieldInputProps<any>) {
   const onSearch: ChangeEventHandler<HTMLInputElement> = (e) => {
     console.log(e.target.value);
     setState((prev) => {
-      return { ...prev, name: e.target.value };
+      return { ...prev, email: e.target.value };
     });
   };
 
@@ -27,7 +27,7 @@ export default function UserSelector(props: FieldInputProps<any>) {
         {users.map((user) => {
           return (
             <option key={user.id} value={user.id}>
-              {user.name}
+              {user.email}
             </option>
           );
         })}

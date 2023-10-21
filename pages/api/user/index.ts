@@ -26,22 +26,61 @@ export default async function handler(
       const validator = Yup.object({
         skip: Yup.number().required(),
         take: Yup.number().required(),
+        "filter[email]": Yup.string().optional(),
+        "filter[name]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
 
-      const { skip, take } = validator.cast(req.query);
+      const {
+        skip,
+        take,
+        "filter[email]": filterEmail,
+        "filter[name]": filterName,
+      } = validator.cast(req.query);
 
       const users = await prisma.user.findMany({
         skip,
         take,
         where: {
-          AND: [accessibleBy(ability).User],
+          AND: [
+            accessibleBy(ability).User,
+            {
+              OR: [
+                {
+                  email: {
+                    contains: filterEmail,
+                  },
+                },
+                {
+                  name: {
+                    contains: filterName,
+                  },
+                },
+              ],
+            },
+          ],
         },
       });
       const count = await prisma.user.count({
         where: {
-          AND: [accessibleBy(ability).User],
+          AND: [
+            accessibleBy(ability).User,
+            {
+              OR: [
+                {
+                  email: {
+                    contains: filterEmail,
+                  },
+                },
+                {
+                  name: {
+                    contains: filterName,
+                  },
+                },
+              ],
+            },
+          ],
         },
       });
 

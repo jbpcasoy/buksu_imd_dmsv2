@@ -1,4 +1,4 @@
-import CrudLayout from "@/components/CrudLayout";
+import AdminLayout from "@/components/AdminLayout";
 import useDepartments from "@/hooks/useDepartments";
 import Link from "next/link";
 import { useState } from "react";
@@ -22,10 +22,10 @@ export default function DepartmentsPage() {
   };
 
   return (
-    <CrudLayout>
+    <AdminLayout>
       <div className='flex justify-between'>
         <h2>Department</h2>
-        <Link className='border rounded' href={`/crud/department/add`}>
+        <Link className='border rounded' href={`/admin/department/add`}>
           Add
         </Link>
       </div>
@@ -51,7 +51,7 @@ export default function DepartmentsPage() {
                   <td>{new Date(department.updatedAt).toLocaleString()}</td>
                   <td>
                     <Link
-                      href={`/crud/college/${department.collegeId}`}
+                      href={`/admin/college/${department.collegeId}`}
                       className='underline'
                     >
                       {department.collegeId}
@@ -60,7 +60,7 @@ export default function DepartmentsPage() {
                   <td>{department.name}</td>
                   <td>
                     <Link
-                      href={`/crud/department/${department.id}`}
+                      href={`/admin/department/${department.id}`}
                       className='border rounded'
                     >
                       view
@@ -83,6 +83,6 @@ export default function DepartmentsPage() {
           </button>
         </div>
       </div>
-    </CrudLayout>
+    </AdminLayout>
   );
 }

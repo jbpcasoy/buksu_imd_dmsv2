@@ -1,11 +1,11 @@
-import CrudLayout from "@/components/CrudLayout";
-import useDepartments from "@/hooks/useDepartments";
+import AdminLayout from "@/components/AdminLayout";
+import useFaculties from "@/hooks/useFaculties";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function DepartmentsPage() {
+export default function FacultiesPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { departments, count } = useDepartments(state);
+  const { faculties, count } = useFaculties(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -22,10 +22,10 @@ export default function DepartmentsPage() {
   };
 
   return (
-    <CrudLayout>
+    <AdminLayout>
       <div className='flex justify-between'>
-        <h2>Department</h2>
-        <Link className='border rounded' href={`/crud/department/add`}>
+        <h2>Faculty</h2>
+        <Link className='border rounded' href={`/admin/faculty/add`}>
           Add
         </Link>
       </div>
@@ -37,30 +37,23 @@ export default function DepartmentsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>collegeId</th>
-              <th>name</th>
+              <th>userId</th>
+              <th>departmentId</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {departments.map((department) => {
+            {faculties.map((faculty) => {
               return (
-                <tr key={department.id}>
-                  <td>{department.id}</td>
-                  <td>{new Date(department.createdAt).toLocaleString()}</td>
-                  <td>{new Date(department.updatedAt).toLocaleString()}</td>
+                <tr key={faculty.id}>
+                  <td>{faculty.id}</td>
+                  <td>{new Date(faculty.createdAt).toLocaleString()}</td>
+                  <td>{new Date(faculty.updatedAt).toLocaleString()}</td>
+                  <td><Link href={`/admin/user/${faculty.userId}`} className="underline">{faculty.userId}</Link></td>
+                  <td><Link href={`/admin/department/${faculty.departmentId}`} className="underline">{faculty.departmentId}</Link></td>
                   <td>
                     <Link
-                      href={`/crud/college/${department.collegeId}`}
-                      className='underline'
-                    >
-                      {department.collegeId}
-                    </Link>
-                  </td>
-                  <td>{department.name}</td>
-                  <td>
-                    <Link
-                      href={`/crud/department/${department.id}`}
+                      href={`/admin/faculty/${faculty.id}`}
                       className='border rounded'
                     >
                       view
@@ -83,6 +76,6 @@ export default function DepartmentsPage() {
           </button>
         </div>
       </div>
-    </CrudLayout>
+    </AdminLayout>
   );
 }

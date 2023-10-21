@@ -1,4 +1,4 @@
-import CrudLayout from "@/components/CrudLayout";
+import AdminLayout from "@/components/AdminLayout";
 import useUser from "@/hooks/useUser";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -11,11 +11,11 @@ export default function UserPage() {
   if (!user) return null;
 
   return (
-    <CrudLayout>
+    <AdminLayout>
       <div className='flex'>
         <h2 className='flex-1'>User</h2>
         <div className='space-x-1'>
-          <Link className='border rounded' href={`/crud/user/${userId}/edit`}>
+          <Link className='border rounded' href={`/admin/user/${userId}/edit`}>
             edit
           </Link>
         </div>
@@ -23,6 +23,6 @@ export default function UserPage() {
       <p>id: {user.id}</p>
       <p>name: {user.name}</p>
       <p>email: {user.email}</p>
-    </CrudLayout>
+    </AdminLayout>
   );
 }
