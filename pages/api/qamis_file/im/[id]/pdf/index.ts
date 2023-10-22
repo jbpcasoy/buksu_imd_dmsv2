@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import qAMISFileAbility from "@/services/ability/qAMISFileAbility";
 import getServerUser from "@/services/getServerUser";
+import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import fs from "fs";
@@ -17,7 +18,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
   const ability = qAMISFileAbility({ user });
@@ -56,7 +57,7 @@ export default async function handler(
 
       return res.send(file);
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });

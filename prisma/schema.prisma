@@ -1021,3 +1021,15 @@ model ActiveContentSpecialist {
     ContentSpecialist   ContentSpecialist @relation(fields: [contentSpecialistId], references: [id])
     contentSpecialistId String            @unique
 }
+
+enum EventType {
+    IM_CREATED
+}
+
+model Event {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    type EventType
+}

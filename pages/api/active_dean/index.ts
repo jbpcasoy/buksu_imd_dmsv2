@@ -1,6 +1,8 @@
 import prisma from "@/prisma/client";
 import activeDeanAbility from "@/services/ability/activeDeanAbility";
 import getServerUser from "@/services/getServerUser";
+import logger from "@/services/logger";
+
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
@@ -15,7 +17,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
@@ -114,7 +116,7 @@ export default async function handler(
 
       return res.json(activeDean);
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });
@@ -165,7 +167,7 @@ export default async function handler(
 
       return res.json({ activeDeans, count });
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });

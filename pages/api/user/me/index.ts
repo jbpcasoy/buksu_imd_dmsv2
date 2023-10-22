@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import getServerUser from "@/services/getServerUser";
+import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -12,7 +13,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
@@ -20,7 +21,7 @@ export default async function handler(
     try {
       return res.json(user);
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });

@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import iDDCoordinatorSuggestionItemAbility from "@/services/ability/iDDCoordinatorSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
+import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -15,7 +16,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
   const ability = iDDCoordinatorSuggestionItemAbility({ user });
@@ -84,7 +85,7 @@ export default async function handler(
 
       return res.json({ iDDCoordinatorSuggestionItems, count });
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });

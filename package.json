@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "pm2-dev": "pm2 restart ecosystem.config.js --env production",
+    "pm2-prod": "pm2 restart ecosystem.config.js --env production",
     "test": "jest --watch"
   },
   "dependencies": {
@@ -14,6 +16,7 @@
     "@casl/ability": "^6.5.0",
     "@casl/prisma": "^1.4.1",
     "@prisma/client": "^5.3.1",
+    "@types/pino-pretty": "^5.0.0",
     "axios": "^1.5.1",
     "formidable": "^3.5.1",
     "formik": "^2.4.5",
@@ -21,6 +24,8 @@
     "next": "13.5.4",
     "next-auth": "^4.23.2",
     "next-connect": "^1.0.0-next.4",
+    "pino": "^8.16.0",
+    "pino-express": "^1.1.1",
     "react": "^18",
     "react-dom": "^18",
     "yup": "^1.3.2"

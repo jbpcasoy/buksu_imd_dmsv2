@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
+import logger from "@/services/logger";
 import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
@@ -18,7 +19,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
   const ability = iMFileAbility({ user });
@@ -41,7 +42,7 @@ export default async function handler(
 
       return res.json(iMFile);
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });
@@ -95,7 +96,7 @@ export default async function handler(
         `/files/im/${iMFileToDelete.filename}`
       );
       fs.rm(filePath, (error) => {
-        console.error({ error });
+        logger.error({ error });
         throw error;
       });
 
@@ -107,7 +108,7 @@ export default async function handler(
 
       return res.json(iMFile);
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });

@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 import qAMISRevisionAbility from "@/services/ability/qAMISRevisionAbility";
 import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
+import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { PrismaClient, User } from "@prisma/client";
@@ -17,7 +18,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
   const ability = qAMISRevisionAbility({ user });
@@ -122,7 +123,7 @@ export default async function handler(
 
       return res.json(qAMISRevision);
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });
@@ -154,7 +155,7 @@ export default async function handler(
 
       return res.json({ qAMISRevisions, count });
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });

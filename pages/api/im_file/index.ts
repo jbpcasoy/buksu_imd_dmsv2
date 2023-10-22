@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
+import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
 import { ActiveFaculty, IM, User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
@@ -26,7 +27,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
@@ -110,7 +111,7 @@ export default async function handler(
       });
       res.status(200).json(iMFile);
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });
@@ -143,7 +144,7 @@ export default async function handler(
 
       return res.json({ iMFiles, count });
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });

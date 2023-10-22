@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import AdminSidebar from "./AdminSidebar";
 import Header from "./Header";
 
@@ -11,6 +11,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const { data: session } = useSession({
     required: true,
   });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!session?.user?.isAdmin && router) {
+      router.replace("/");
+    }
+  }, [session]);
 
   return (
     <div className='flex flex-col h-screen'>

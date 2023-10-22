@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 import iMERCCITLRevisionAbility from "@/services/ability/iMERCCITLRevisionAbility";
 import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
+import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { PrismaClient, User } from "@prisma/client";
@@ -17,7 +18,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
   const ability = iMERCCITLRevisionAbility({ user });
@@ -173,7 +174,7 @@ export default async function handler(
 
       return res.json(iMERCCITLRevision);
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });
@@ -195,7 +196,7 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      console.log({ filterName });
+      
       const iMERCCITLRevisions = await prisma.iMERCCITLRevision.findMany({
         skip,
         take,
@@ -211,7 +212,7 @@ export default async function handler(
 
       return res.json({ iMERCCITLRevisions, count });
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });

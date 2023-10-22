@@ -19,9 +19,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
     console.log({ activeFaculty });
   }, [activeFaculty]);
 
-  if(session?.user?.isAdmin) {
-    router.replace("/admin")
-  }
+  useEffect(() => {
+    if (session?.user?.isAdmin && router) {
+      router.replace("/admin");
+    }
+  }, [session]);
 
   return (
     <div className='flex flex-col h-screen'>

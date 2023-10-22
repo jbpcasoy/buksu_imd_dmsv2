@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import contentSpecialistSuggestionItemAbility from "@/services/ability/contentSpecialistSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
+import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
@@ -16,7 +17,7 @@ export default async function handler(
   try {
     user = await getServerUser(req, res);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
   const ability = contentSpecialistSuggestionItemAbility({ user });
@@ -89,7 +90,7 @@ export default async function handler(
 
       return res.json({ contentSpecialistSuggestionItems, count });
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });
