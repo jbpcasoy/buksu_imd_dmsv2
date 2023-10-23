@@ -49,8 +49,8 @@ export default async function handler(
         },
       });
 
-      const iMERCIDDCoordinatorEndorsement = await prisma.iMERCIDDCoordinatorEndorsement.create(
-        {
+      const iMERCIDDCoordinatorEndorsement =
+        await prisma.iMERCIDDCoordinatorEndorsement.create({
           data: {
             IDDCoordinator: {
               connect: {
@@ -62,9 +62,18 @@ export default async function handler(
                 id: iMERCCITLRevisionId,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
+              },
+            },
           },
-        }
-      );
+        });
 
       return res.json(iMERCIDDCoordinatorEndorsement);
     } catch (error: any) {

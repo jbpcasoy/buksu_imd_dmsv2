@@ -35,9 +35,8 @@ export default async function handler(
         "IMERCCITLDirectorEndorsement"
       );
 
-      const {  iMERCIDDCoordinatorEndorsementId, activeCITLDirectorId } = validator.cast(
-        req.body
-      );
+      const { iMERCIDDCoordinatorEndorsementId, activeCITLDirectorId } =
+        validator.cast(req.body);
 
       const cITLDirector = await prisma.cITLDirector.findFirstOrThrow({
         where: {
@@ -49,8 +48,8 @@ export default async function handler(
         },
       });
 
-      const iMERCCITLDirectorEndorsement = await prisma.iMERCCITLDirectorEndorsement.create(
-        {
+      const iMERCCITLDirectorEndorsement =
+        await prisma.iMERCCITLDirectorEndorsement.create({
           data: {
             CITLDirector: {
               connect: {
@@ -62,9 +61,18 @@ export default async function handler(
                 id: iMERCIDDCoordinatorEndorsementId,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED",
+              },
+            },
           },
-        }
-      );
+        });
 
       return res.json(iMERCCITLDirectorEndorsement);
     } catch (error: any) {

@@ -42,6 +42,16 @@ export default async function handler(
                 id: peerSuggestionId as string,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "SUBMITTED_PEER_SUGGESTION_CREATED",
+              },
+            },
           },
         });
       const submittedCoordinatorSuggestion =
@@ -106,6 +116,16 @@ export default async function handler(
             SubmittedPeerSuggestion: {
               connect: {
                 id: submittedPeerSuggestion.id,
+              },
+            },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "DEPARTMENT_REVIEWED_CREATED",
               },
             },
           },

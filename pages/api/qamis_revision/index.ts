@@ -118,6 +118,16 @@ export default async function handler(
               id: submittedQAMISSuggestion.id,
             },
           },
+          Event: {
+            create: {
+              User: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              type: "QAMIS_REVISION_CREATED",
+            },
+          },
         },
       });
 

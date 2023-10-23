@@ -60,6 +60,16 @@ export default async function handler(
                 id: qAMISRevisionId,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "QAMIS_CHAIRPERSON_ENDORSEMENT",
+              },
+            },
           },
         });
 
@@ -108,6 +118,16 @@ export default async function handler(
             QAMISDeanEndorsement: {
               connect: {
                 id: qAMISDeanEndorsement.id,
+              },
+            },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "QAMIS_DEPARTMENT_ENDORSEMENT"
               },
             },
           },

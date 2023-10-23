@@ -30,12 +30,9 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "DeanEndorsement"
-      );
+      ForbiddenError.from(ability).throwUnlessCan("create", "DeanEndorsement");
 
-      const {  coordinatorEndorsementId, activeDeanId } = validator.cast(
+      const { coordinatorEndorsementId, activeDeanId } = validator.cast(
         req.body
       );
 
@@ -49,22 +46,30 @@ export default async function handler(
         },
       });
 
-      const deanEndorsement = await prisma.deanEndorsement.create(
-        {
-          data: {
-            Dean: {
-              connect: {
-                id: dean.id,
-              },
-            },
-            CoordinatorEndorsement: {
-              connect: {
-                id: coordinatorEndorsementId,
-              },
+      const deanEndorsement = await prisma.deanEndorsement.create({
+        data: {
+          Dean: {
+            connect: {
+              id: dean.id,
             },
           },
-        }
-      );
+          CoordinatorEndorsement: {
+            connect: {
+              id: coordinatorEndorsementId,
+            },
+          },
+          Event: {
+            create: {
+              User: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              type: "DEAN_ENDORSEMENT",
+            },
+          },
+        },
+      });
 
       return res.json(deanEndorsement);
     } catch (error: any) {
@@ -85,14 +90,13 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { skip, take } = validator.cast(req.query);
-      const deanEndorsements =
-        await prisma.deanEndorsement.findMany({
-          skip,
-          take,
-          where: {
-            AND: [accessibleBy(ability).DeanEndorsement],
-          },
-        });
+      const deanEndorsements = await prisma.deanEndorsement.findMany({
+        skip,
+        take,
+        where: {
+          AND: [accessibleBy(ability).DeanEndorsement],
+        },
+      });
       const count = await prisma.deanEndorsement.count({
         where: {
           AND: [accessibleBy(ability).DeanEndorsement],

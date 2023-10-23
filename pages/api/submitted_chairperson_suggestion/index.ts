@@ -44,6 +44,16 @@ export default async function handler(
                 id: chairpersonSuggestionId as string,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "SUBMITTED_CHAIRPERSON_SUGGESTION_CREATED",
+              },
+            },
           },
         });
 
@@ -109,6 +119,16 @@ export default async function handler(
             SubmittedPeerSuggestion: {
               connect: {
                 id: submittedPeerSuggestion.id,
+              },
+            },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "DEPARTMENT_REVIEWED_CREATED",
               },
             },
           },

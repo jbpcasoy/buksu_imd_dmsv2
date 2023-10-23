@@ -61,6 +61,16 @@ export default async function handler(
             },
           },
           type,
+          Event: {
+            create: {
+              User: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              type: "IM_CREATED",
+            },
+          },
         },
       });
 

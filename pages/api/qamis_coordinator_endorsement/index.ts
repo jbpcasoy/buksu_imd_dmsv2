@@ -35,9 +35,7 @@ export default async function handler(
         "QAMISCoordinatorEndorsement"
       );
 
-      const { qAMISRevisionId, activeCoordinatorId } = validator.cast(
-        req.body
-      );
+      const { qAMISRevisionId, activeCoordinatorId } = validator.cast(req.body);
 
       const coordinator = await prisma.coordinator.findFirstOrThrow({
         where: {
@@ -49,8 +47,8 @@ export default async function handler(
         },
       });
 
-      const qAMISCoordinatorEndorsement = await prisma.qAMISCoordinatorEndorsement.create(
-        {
+      const qAMISCoordinatorEndorsement =
+        await prisma.qAMISCoordinatorEndorsement.create({
           data: {
             Coordinator: {
               connect: {
@@ -62,9 +60,18 @@ export default async function handler(
                 id: qAMISRevisionId,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "QAMIS_COORDINATOR_ENDORSEMENT",
+              },
+            },
           },
-        }
-      );
+        });
 
       const qAMISChairpersonEndorsement =
         await prisma.qAMISChairpersonEndorsement.findFirst({
@@ -111,6 +118,16 @@ export default async function handler(
             QAMISDeanEndorsement: {
               connect: {
                 id: qAMISDeanEndorsement.id,
+              },
+            },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "QAMIS_DEPARTMENT_ENDORSEMENT"
               },
             },
           },

@@ -65,6 +65,16 @@ export default async function handler(
               id: iMFileId,
             },
           },
+          Event: {
+            create: {
+              User: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              type: "DEPARTMENT_REVIEW_CREATED",
+            },
+          },
         },
       });
 

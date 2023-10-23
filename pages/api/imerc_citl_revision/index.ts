@@ -169,6 +169,16 @@ export default async function handler(
               id: iMERCCITLReviewed.id,
             },
           },
+          Event: {
+            create: {
+              User: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              type: "IMERC_CITL_REVISION_CREATED",
+            },
+          },
         },
       });
 
@@ -196,7 +206,7 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      
+
       const iMERCCITLRevisions = await prisma.iMERCCITLRevision.findMany({
         skip,
         take,

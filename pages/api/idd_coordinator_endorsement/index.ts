@@ -49,8 +49,8 @@ export default async function handler(
         },
       });
 
-      const iDDCoordinatorEndorsement = await prisma.iDDCoordinatorEndorsement.create(
-        {
+      const iDDCoordinatorEndorsement =
+        await prisma.iDDCoordinatorEndorsement.create({
           data: {
             IDDCoordinator: {
               connect: {
@@ -62,9 +62,18 @@ export default async function handler(
                 id: cITLRevisionId,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
+              },
+            },
           },
-        }
-      );
+        });
 
       return res.json(iDDCoordinatorEndorsement);
     } catch (error: any) {

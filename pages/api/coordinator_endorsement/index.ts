@@ -62,6 +62,16 @@ export default async function handler(
                 id: departmentRevisionId,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "COORDINATOR_ENDORSEMENT",
+              },
+            },
           },
         }
       );

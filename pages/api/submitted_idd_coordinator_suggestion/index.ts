@@ -44,6 +44,16 @@ export default async function handler(
                 id: iDDCoordinatorSuggestionId as string,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "SUBMITTED_IDD_COORDINATOR_SUGGESTION_CREATED",
+              },
+            },
           },
         });
 

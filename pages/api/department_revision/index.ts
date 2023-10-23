@@ -175,6 +175,16 @@ export default async function handler(
               id: departmentReviewed.id,
             },
           },
+          Event: {
+            create: {
+              User: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              type: "DEPARTMENT_REVISION_CREATED",
+            },
+          },
         },
       });
 
@@ -202,7 +212,7 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      
+
       const departmentRevisions = await prisma.departmentRevision.findMany({
         skip,
         take,

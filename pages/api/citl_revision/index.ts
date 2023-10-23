@@ -169,6 +169,16 @@ export default async function handler(
               id: submittedIDDCoordinatorSuggestion.id,
             },
           },
+          Event: {
+            create: {
+              User: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              type: "CITL_REVISION",
+            },
+          },
         },
       });
 
@@ -196,7 +206,7 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      
+
       const cITLRevisions = await prisma.cITLRevision.findMany({
         skip,
         take,

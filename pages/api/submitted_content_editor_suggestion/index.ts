@@ -42,6 +42,16 @@ export default async function handler(
                 id: contentEditorSuggestionId as string,
               },
             },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "SUBMITTED_CONTENT_EDITOR_SUGGESTION_CREATED",
+              },
+            },
           },
         });
       const submittedContentSpecialistSuggestion =
@@ -106,6 +116,16 @@ export default async function handler(
             SubmittedContentEditorSuggestion: {
               connect: {
                 id: submittedContentEditorSuggestion.id,
+              },
+            },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "IMERC_CITL_REVIEWED_CREATED",
               },
             },
           },

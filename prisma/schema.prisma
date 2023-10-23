@@ -47,6 +47,7 @@ model User {
     Faculty        Faculty[]
     IDDCoordinator IDDCoordinator?
     CITLDirector   CITLDirector?
+    Event          Event[]
 }
 
 model VerificationToken {
@@ -123,6 +124,7 @@ model IM {
     title     String
     type      IMType
     IMFile    IMFile[]
+    Event     Event[]
 }
 
 model IMFile {
@@ -217,6 +219,7 @@ model DepartmentReview {
     PeerReview        PeerReview?
     ChairpersonReview ChairpersonReview?
     CoordinatorReview CoordinatorReview?
+    Event             Event[]
 }
 
 enum Rating {
@@ -300,6 +303,7 @@ model SubmittedPeerSuggestion {
     PeerSuggestion     PeerSuggestion      @relation(fields: [peerSuggestionId], references: [id])
     peerSuggestionId   String              @unique
     DepartmentReviewed DepartmentReviewed?
+    Event              Event[]
 }
 
 model ChairpersonReview {
@@ -372,6 +376,7 @@ model SubmittedChairpersonSuggestion {
     ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [chairpersonSuggestionId], references: [id])
     chairpersonSuggestionId String                @unique
     DepartmentReviewed      DepartmentReviewed?
+    Event                   Event[]
 }
 
 model CoordinatorReview {
@@ -444,6 +449,7 @@ model SubmittedCoordinatorSuggestion {
     CoordinatorSuggestion   CoordinatorSuggestion @relation(fields: [coordinatorSuggestionId], references: [id])
     coordinatorSuggestionId String                @unique
     DepartmentReviewed      DepartmentReviewed?
+    Event                   Event[]
 }
 
 model DepartmentReviewed {
@@ -458,6 +464,7 @@ model DepartmentReviewed {
     SubmittedPeerSuggestion          SubmittedPeerSuggestion        @relation(fields: [submittedPeerSuggestionId], references: [id])
     submittedPeerSuggestionId        String                         @unique
     DepartmentRevision               DepartmentRevision[]
+    Event                            Event[]
 }
 
 model DepartmentRevision {
@@ -471,6 +478,7 @@ model DepartmentRevision {
     iMFileId               String                  @unique
     returned               Boolean                 @default(false)
     CoordinatorEndorsement CoordinatorEndorsement?
+    Event                  Event[]
 }
 
 model CoordinatorEndorsement {
@@ -483,6 +491,7 @@ model CoordinatorEndorsement {
     Coordinator          Coordinator        @relation(fields: [coordinatorId], references: [id])
     coordinatorId        String
     DeanEndorsement      DeanEndorsement?
+    Event                Event[]
 }
 
 model DeanEndorsement {
@@ -495,6 +504,7 @@ model DeanEndorsement {
     Dean                     Dean                      @relation(fields: [deanId], references: [id])
     deanId                   String
     IDDCoordinatorSuggestion IDDCoordinatorSuggestion?
+    Event                    Event[]
 }
 
 model IDDCoordinator {
@@ -576,6 +586,7 @@ model SubmittedIDDCoordinatorSuggestion {
     IDDCoordinatorSuggestion   IDDCoordinatorSuggestion @relation(fields: [iDDCoordinatorSuggestionId], references: [id])
     iDDCoordinatorSuggestionId String                   @unique
     CITLRevision               CITLRevision[]
+    Event                      Event[]
 }
 
 model CITLRevision {
@@ -589,6 +600,7 @@ model CITLRevision {
     IMFile                              IMFile                            @relation(fields: [iMFileId], references: [id])
     iMFileId                            String                            @unique
     IDDCoordinatorEndorsement           IDDCoordinatorEndorsement?
+    Event                               Event[]
 }
 
 model IDDCoordinatorEndorsement {
@@ -601,6 +613,7 @@ model IDDCoordinatorEndorsement {
     CITLRevision            CITLRevision             @relation(fields: [cITLRevisionId], references: [id])
     cITLRevisionId          String                   @unique
     CITLDirectorEndorsement CITLDirectorEndorsement?
+    Event                   Event[]
 }
 
 model CITLDirectorEndorsement {
@@ -613,6 +626,7 @@ model CITLDirectorEndorsement {
     CITLDirector                CITLDirector              @relation(fields: [cITLDirectorId], references: [id])
     cITLDirectorId              String
     QAMISSuggestion             QAMISSuggestion?
+    Event                       Event[]
 }
 
 model QAMISSuggestion {
@@ -678,6 +692,7 @@ model QAMISRevision {
     QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement?
     QAMISChairpersonEndorsement QAMISChairpersonEndorsement?
     QAMISDeanEndorsement        QAMISDeanEndorsement?
+    Event                       Event[]
 }
 
 model QAMISCoordinatorEndorsement {
@@ -690,6 +705,7 @@ model QAMISCoordinatorEndorsement {
     Coordinator                Coordinator                 @relation(fields: [coordinatorId], references: [id])
     coordinatorId              String
     QAMISDepartmentEndorsement QAMISDepartmentEndorsement?
+    Event                      Event[]
 }
 
 model QAMISChairpersonEndorsement {
@@ -702,6 +718,7 @@ model QAMISChairpersonEndorsement {
     Chairperson                Chairperson                 @relation(fields: [chairpersonId], references: [id])
     chairpersonId              String
     QAMISDepartmentEndorsement QAMISDepartmentEndorsement?
+    Event                      Event[]
 }
 
 model QAMISDeanEndorsement {
@@ -714,6 +731,7 @@ model QAMISDeanEndorsement {
     Dean                       Dean                        @relation(fields: [deanId], references: [id])
     deanId                     String
     QAMISDepartmentEndorsement QAMISDepartmentEndorsement?
+    Event                      Event[]
 }
 
 model QAMISDepartmentEndorsement {
@@ -730,6 +748,7 @@ model QAMISDepartmentEndorsement {
     ContentSpecialistReview       ContentSpecialistReview?
     ContentEditorReview           ContentEditorReview?
     IDDSpecialistReview           IDDSpecialistReview?
+    Event                         Event[]
 }
 
 model ContentSpecialistReview {
@@ -803,6 +822,7 @@ model SubmittedContentSpecialistSuggestion {
     ContentSpecialistSuggestion   ContentSpecialistSuggestion @relation(fields: [contentSpecialistSuggestionId], references: [id])
     contentSpecialistSuggestionId String                      @unique
     IMERCCITLReviewed             IMERCCITLReviewed?
+    Event                         Event[]
 }
 
 model ContentEditorReview {
@@ -876,6 +896,7 @@ model SubmittedContentEditorSuggestion {
     ContentEditorSuggestion   ContentEditorSuggestion @relation(fields: [contentEditorSuggestionId], references: [id])
     contentEditorSuggestionId String                  @unique
     IMERCCITLReviewed         IMERCCITLReviewed?
+    Event                     Event[]
 }
 
 model IDDSpecialistReview {
@@ -949,6 +970,7 @@ model SubmittedIDDSpecialistSuggestion {
     IDDSpecialistSuggestion   IDDSpecialistSuggestion @relation(fields: [iDDSpecialistSuggestionId], references: [id])
     iDDSpecialistSuggestionId String                  @unique
     IMERCCITLReviewed         IMERCCITLReviewed?
+    Event                     Event[]
 }
 
 model IMERCCITLReviewed {
@@ -963,6 +985,7 @@ model IMERCCITLReviewed {
     SubmittedContentSpecialistSuggestion   SubmittedContentSpecialistSuggestion @relation(fields: [submittedContentSpecialistSuggestionId], references: [id])
     submittedContentSpecialistSuggestionId String                               @unique
     IMERCCITLRevision                      IMERCCITLRevision[]
+    Event                                  Event[]
 }
 
 model IMERCCITLRevision {
@@ -977,6 +1000,7 @@ model IMERCCITLRevision {
     iMFileId                       String                          @unique
     returned                       Boolean                         @default(false)
     IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement?
+    Event                          Event[]
 }
 
 model IMERCIDDCoordinatorEndorsement {
@@ -989,6 +1013,7 @@ model IMERCIDDCoordinatorEndorsement {
     IMERCCITLRevision            IMERCCITLRevision             @relation(fields: [iMERCCITLRevisionId], references: [id])
     iMERCCITLRevisionId          String                        @unique
     IMERCCITLDirectorEndorsement IMERCCITLDirectorEndorsement?
+    Event                        Event[]
 }
 
 model IMERCCITLDirectorEndorsement {
@@ -1000,6 +1025,7 @@ model IMERCCITLDirectorEndorsement {
     cITLDirectorId                   String
     IMERCIDDCoordinatorEndorsement   IMERCIDDCoordinatorEndorsement @relation(fields: [iMERCIDDCoordinatorEndorsementId], references: [id])
     iMERCIDDCoordinatorEndorsementId String                         @unique
+    Event                            Event[]
 }
 
 model ContentSpecialist {
@@ -1024,6 +1050,30 @@ model ActiveContentSpecialist {
 
 enum EventType {
     IM_CREATED
+    DEPARTMENT_REVIEW_CREATED
+    SUBMITTED_PEER_SUGGESTION_CREATED
+    SUBMITTED_COORDINATOR_SUGGESTION_CREATED
+    SUBMITTED_CHAIRPERSON_SUGGESTION_CREATED
+    DEPARTMENT_REVIEWED_CREATED
+    DEPARTMENT_REVISION_CREATED
+    COORDINATOR_ENDORSEMENT
+    DEAN_ENDORSEMENT
+    SUBMITTED_IDD_COORDINATOR_SUGGESTION_CREATED
+    CITL_REVISION_CREATED
+    IDD_COORDINATOR_ENDORSEMENT_CREATED
+    CITL_DIRECTOR_ENDORSEMENT_CREATED
+    QAMIS_REVISION_CREATED
+    QAMIS_COORDINATOR_ENDORSEMENT
+    QAMIS_CHAIRPERSON_ENDORSEMENT
+    QAMIS_DEAN_ENDORSEMENT
+    QAMIS_DEPARTMENT_ENDORSEMENT
+    SUBMITTED_CONTENT_SPECIALIST_SUGGESTION_CREATED
+    SUBMITTED_IDD_SPECIALIST_SUGGESTION_CREATED
+    SUBMITTED_CONTENT_EDITOR_SUGGESTION_CREATED
+    IMERC_CITL_REVIEWED_CREATED
+    IMERC_CITL_REVISION_CREATED
+    IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED
+    IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED
 }
 
 model Event {
@@ -1031,5 +1081,59 @@ model Event {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    type EventType
+    message                                String? // Tobe updated when returning request
+    url                                    String? // Tobe updated when returning request
+    User                                   User                                  @relation(fields: [userId], references: [id])
+    userId                                 String
+    type                                   EventType
+    IM                                     IM?                                   @relation(fields: [iMId], references: [id])
+    iMId                                   String?
+    DepartmentReview                       DepartmentReview?                     @relation(fields: [departmentReviewId], references: [id])
+    departmentReviewId                     String?
+    SubmittedPeerSuggestion                SubmittedPeerSuggestion?              @relation(fields: [submittedPeerSuggestionId], references: [id])
+    submittedPeerSuggestionId              String?
+    SubmittedCoordinatorSuggestion         SubmittedCoordinatorSuggestion?       @relation(fields: [submittedCoordinatorSuggestionId], references: [id])
+    submittedCoordinatorSuggestionId       String?
+    SubmittedChairpersonSuggestion         SubmittedChairpersonSuggestion?       @relation(fields: [submittedChairpersonSuggestionId], references: [id])
+    submittedChairpersonSuggestionId       String?
+    DepartmentReviewed                     DepartmentReviewed?                   @relation(fields: [departmentReviewedId], references: [id])
+    departmentReviewedId                   String?
+    DepartmentRevision                     DepartmentRevision?                   @relation(fields: [departmentRevisionId], references: [id])
+    departmentRevisionId                   String?
+    CoordinatorEndorsement                 CoordinatorEndorsement?               @relation(fields: [coordinatorEndorsementId], references: [id])
+    coordinatorEndorsementId               String?
+    DeanEndorsement                        DeanEndorsement?                      @relation(fields: [deanEndorsementId], references: [id])
+    deanEndorsementId                      String?
+    SubmittedIDDCoordinatorSuggestion      SubmittedIDDCoordinatorSuggestion?    @relation(fields: [submittedIDDCoordinatorSuggestionId], references: [id])
+    submittedIDDCoordinatorSuggestionId    String?
+    CITLRevision                           CITLRevision?                         @relation(fields: [cITLRevisionId], references: [id])
+    cITLRevisionId                         String?
+    IDDCoordinatorEndorsement              IDDCoordinatorEndorsement?            @relation(fields: [iDDCoordinatorEndorsementId], references: [id])
+    iDDCoordinatorEndorsementId            String?
+    CITLDirectorEndorsement                CITLDirectorEndorsement?              @relation(fields: [cITLDirectorEndorsementId], references: [id])
+    cITLDirectorEndorsementId              String?
+    QAMISRevision                          QAMISRevision?                        @relation(fields: [qAMISRevisionId], references: [id])
+    qAMISRevisionId                        String?
+    QAMISCoordinatorEndorsement            QAMISCoordinatorEndorsement?          @relation(fields: [qAMISCoordinatorEndorsementId], references: [id])
+    qAMISCoordinatorEndorsementId          String?
+    QAMISChairpersonEndorsement            QAMISChairpersonEndorsement?          @relation(fields: [qAMISChairpersonEndorsementId], references: [id])
+    qAMISChairpersonEndorsementId          String?
+    QAMISDeanEndorsement                   QAMISDeanEndorsement?                 @relation(fields: [qAMISDeanEndorsementId], references: [id])
+    qAMISDeanEndorsementId                 String?
+    QAMISDepartmentEndorsement             QAMISDepartmentEndorsement?           @relation(fields: [qAMISDepartmentEndorsementId], references: [id])
+    qAMISDepartmentEndorsementId           String?
+    SubmittedContentSpecialistSuggestion   SubmittedContentSpecialistSuggestion? @relation(fields: [submittedContentSpecialistSuggestionId], references: [id])
+    submittedContentSpecialistSuggestionId String?
+    SubmittedContentEditorSuggestion       SubmittedContentEditorSuggestion?     @relation(fields: [submittedContentEditorSuggestionId], references: [id])
+    submittedContentEditorSuggestionId     String?
+    SubmittedIDDSpecialistSuggestion       SubmittedIDDSpecialistSuggestion?     @relation(fields: [submittedIDDSpecialistSuggestionId], references: [id])
+    submittedIDDSpecialistSuggestionId     String?
+    IMERCCITLReviewed                      IMERCCITLReviewed?                    @relation(fields: [iMERCCITLReviewedId], references: [id])
+    iMERCCITLReviewedId                    String?
+    IMERCCITLRevision                      IMERCCITLRevision?                    @relation(fields: [iMERCCITLRevisionId], references: [id])
+    iMERCCITLRevisionId                    String?
+    IMERCIDDCoordinatorEndorsement         IMERCIDDCoordinatorEndorsement?       @relation(fields: [iMERCIDDCoordinatorEndorsementId], references: [id])
+    iMERCIDDCoordinatorEndorsementId       String?
+    IMERCCITLDirectorEndorsement           IMERCCITLDirectorEndorsement?         @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id])
+    iMERCCITLDirectorEndorsementId         String?
 }
