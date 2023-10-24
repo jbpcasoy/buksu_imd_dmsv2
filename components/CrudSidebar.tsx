@@ -275,6 +275,10 @@ export default function CrudSidebar() {
       link: "/crud/active_content_specialist",
       label: "Active Content Specialist",
     },
+    {
+      link: "/crud/event",
+      label: "Event",
+    },
   ];
   
   return (
