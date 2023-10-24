@@ -1,13 +1,13 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import prisma from "@/prisma/client";
-import userAbility from "@/services/ability/userAbility";
+import profilePictureFileAbility from "@/services/ability/profilePictureFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { ForbiddenError, subject } from "@casl/ability";
-import { Prisma, User } from "@prisma/client";
+import { accessibleBy } from "@casl/prisma";
+import { User } from "@prisma/client";
+import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
+import path from "path";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,31 +21,25 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = userAbility({ user });
+  const ability = profilePictureFileAbility({ user });
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
-
-      const user = await prisma.user.findFirstOrThrow({
+      const { id } = req.query;
+      const profilePictureFile = await prisma.profilePictureFile.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).User,
+            accessibleBy(ability).ProfilePictureFile,
             {
               id: {
-                equals: id,
+                equals: id as string,
               },
             },
           ],
         },
       });
 
-      return res.json(user);
+      return res.json(profilePictureFile);
     } catch (error: any) {
       logger.error(error);
       return res
@@ -54,42 +48,45 @@ export default async function handler(
     }
   };
 
-  const putHandler = async () => {
+  const deleteHandler = async () => {
     try {
-      const validator = Yup.object({
-        name: Yup.string().optional(),
-        image: Yup.string().optional(),
-      });
-      await validator.validate(req.body);
-
       const { id } = req.query;
-      const { name, image } = validator.cast(req.body);
 
-      let userToUpdate;
-      userToUpdate = await prisma.user.findFirstOrThrow({
+      let profilePictureFileToDelete;
+      profilePictureFileToDelete = await prisma.profilePictureFile.findFirstOrThrow({
         where: {
-          id: {
-            equals: id as string,
-          },
+          AND: [
+            accessibleBy(ability).ProfilePictureFile,
+            {
+              id: {
+                equals: id as string,
+              },
+            },
+          ],
         },
       });
 
       ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        subject("User", userToUpdate)
+        "delete",
+        subject("ProfilePictureFile", profilePictureFileToDelete)
       );
 
-      const user = await prisma.user.update({
+      const filePath = path.join(
+        process.cwd(),
+        `/files/qamis/${profilePictureFileToDelete.filename}`
+      );
+      fs.rm(filePath, (error) => {
+        logger.error({ error });
+        throw error;
+      });
+
+      const profilePictureFile = await prisma.profilePictureFile.delete({
         where: {
           id: id as string,
         },
-        data: {
-          name,
-          image,
-        },
       });
 
-      return res.json(user);
+      return res.json(profilePictureFile);
     } catch (error: any) {
       logger.error(error);
       return res
@@ -99,10 +96,10 @@ export default async function handler(
   };
 
   switch (req.method) {
+    case "DELETE":
+      return await deleteHandler();
     case "GET":
       return await getHandler();
-    case "PUT":
-      return await putHandler();
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }

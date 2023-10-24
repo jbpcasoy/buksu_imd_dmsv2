@@ -31,7 +31,7 @@ export default function AddQAMISFile() {
       </div>
       <input type="text" placeholder="submittedQAMISSuggestionId" onChange={onSubmittedQAMISSuggestionChange} />
       <br/>
-      <input type='file' onChange={onFileChange} />
+      <input type='file' onChange={onFileChange} accept=".pdf" />
       <button className='border rounded' onClick={uploadFileHandler}>
         Upload file
       </button>

@@ -250,10 +250,10 @@ export default function QAMISSuggestionPage() {
           </div>
         </div>
         <p>QAMIS File:</p>
-        <input type='file' onChange={onQAMISFileChange} />
+        <input type='file' onChange={onQAMISFileChange} accept='.pdf' />
         <br />
         <p>IM File:</p>
-        <input type='file' onChange={onIMFileChange} />
+        <input type='file' onChange={onIMFileChange} accept='.pdf' />
         <br />
         <button className='rounded border' onClick={handleSubmitSuggestion}>
           Submit for endorsement

@@ -488,7 +488,7 @@ export default function ViewIM() {
 
       {iMStatus === "IMPLEMENTATION_DRAFT" && (
         <div>
-          <input type='file' onChange={onFileChange} />
+          <input type='file' onChange={onFileChange} accept=".pdf" />
           <button className='border rounded' onClick={submitForReviewHandler}>
             Submit for review
           </button>
@@ -522,7 +522,7 @@ export default function ViewIM() {
           <IMChairpersonSuggestionItems id={iM.id} />
           <IMCoordinatorSuggestionItems id={iM.id} />
           <IMPeerSuggestionItems id={iM.id} />
-          <input type='file' onChange={onFileChange} />
+          <input type='file' onChange={onFileChange} accept=".pdf" />
           <button
             className='border rounded'
             onClick={submitForEndorsementHandler}
@@ -574,7 +574,7 @@ export default function ViewIM() {
       {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" && (
         <div>
           <IMIDDCoordinatorSuggestionItems id={iM.id} />
-          <input type='file' onChange={onFileChange} />
+          <input type='file' onChange={onFileChange} accept=".pdf" />
           <button
             className='border rounded'
             onClick={submitForCITLEndorsementHandler}
@@ -674,7 +674,7 @@ export default function ViewIM() {
           <IMContentSpecialistSuggestionItems id={iM.id} />
           <IMIDDSpecialistSuggestionItems id={iM.id} />
           <IMContentEditorSuggestionItems id={iM.id} />
-          <input type='file' onChange={onFileChange} />
+          <input type='file' onChange={onFileChange} accept=".pdf" />
           <button
             className='border rounded'
             onClick={submitForIMERCCITLEndorsementHandler}

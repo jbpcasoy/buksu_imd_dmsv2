@@ -43,11 +43,13 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    isAdmin        Boolean         @default(false) // changed in auth route, not modified in database
-    Faculty        Faculty[]
-    IDDCoordinator IDDCoordinator?
-    CITLDirector   CITLDirector?
-    Event          Event[]
+    isAdmin            Boolean              @default(false) // changed in auth route, not modified in database
+    Faculty            Faculty[]
+    IDDCoordinator     IDDCoordinator?
+    CITLDirector       CITLDirector?
+    Event              Event[]
+    NotificationRead   NotificationRead[]
+    ProfilePictureFile ProfilePictureFile[]
 }
 
 model VerificationToken {
@@ -1136,4 +1138,29 @@ model Event {
     iMERCIDDCoordinatorEndorsementId       String?
     IMERCCITLDirectorEndorsement           IMERCCITLDirectorEndorsement?         @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id])
     iMERCCITLDirectorEndorsementId         String?
+    NotificationRead                       NotificationRead[]
+}
+
+model NotificationRead {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    User    User   @relation(fields: [userId], references: [id])
+    userId  String
+    Event   Event  @relation(fields: [eventId], references: [id])
+    eventId String
+}
+
+model ProfilePictureFile {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    User             User   @relation(fields: [userId], references: [id])
+    userId           String
+    filename         String
+    size             Int
+    mimetype         String
+    originalFilename String
 }

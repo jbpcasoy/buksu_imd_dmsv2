@@ -68,6 +68,7 @@ import {
   IMERCCITLDirectorEndorsement,
   ContentSpecialist,
   ActiveContentSpecialist,
+  ProfilePictureFile,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -140,6 +141,7 @@ export type AppSubjects =
       IMERCCITLDirectorEndorsement: IMERCCITLDirectorEndorsement;
       ContentSpecialist: ContentSpecialist;
       ActiveContentSpecialist: ActiveContentSpecialist;
+      ProfilePictureFile: ProfilePictureFile;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

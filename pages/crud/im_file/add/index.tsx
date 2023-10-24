@@ -30,7 +30,7 @@ export default function AddIMFile() {
         <h2 className='flex-1'>Add IMFile</h2>
       </div>
       <input type="text" placeholder="iMId" onChange={onIMChange} />
-      <input type='file' onChange={onFileChange} />
+      <input type='file' onChange={onFileChange} accept=".pdf" />
       <button className='border rounded' onClick={uploadFileHandler}>
         Upload file
       </button>
