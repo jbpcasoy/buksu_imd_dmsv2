@@ -176,7 +176,7 @@ export default async function handler(
                   id: user.id,
                 },
               },
-              type: "CITL_REVISION",
+              type: "CITL_REVISION_CREATED",
             },
           },
         },

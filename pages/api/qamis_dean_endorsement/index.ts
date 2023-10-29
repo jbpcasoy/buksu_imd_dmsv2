@@ -66,7 +66,7 @@ export default async function handler(
                   id: user.id,
                 },
               },
-              type: "QAMIS_DEAN_ENDORSEMENT",
+              type: "QAMIS_DEAN_ENDORSEMENT_CREATED",
             },
           },
         },
@@ -127,7 +127,7 @@ export default async function handler(
                     id: user.id,
                   },
                 },
-                type: "QAMIS_DEPARTMENT_ENDORSEMENT"
+                type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED"
               },
             },
           },

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
 import AdminSidebar from "./AdminSidebar";
 import Header from "./Header";
+import AdminHeader from "./AdminHeader";
 
 export interface AdminLayoutProps {
   children: ReactNode;
@@ -26,7 +27,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <AdminSidebar />
         </div>
         <div className='flex-1 flex flex-col h-full overflow-auto'>
-          <Header />
+          <AdminHeader />
           <div className=''>{children}</div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import Header from "./Header";
 import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
 import { useSession } from "next-auth/react";
 import CrudSidebar from "./CrudSidebar";
+import CrudHeader from "./CrudHeader";
 
 export interface CrudLayoutProps {
   children: ReactNode;
@@ -25,7 +26,7 @@ export default function CrudLayout({ children }: CrudLayoutProps) {
           <CrudSidebar />
         </div>
         <div className='flex-1 flex flex-col h-full overflow-auto'>
-          <Header />
+          <CrudHeader />
           <div className="">{children}</div>
         </div>
       </div>

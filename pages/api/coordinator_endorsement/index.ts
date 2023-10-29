@@ -69,7 +69,7 @@ export default async function handler(
                     id: user.id,
                   },
                 },
-                type: "COORDINATOR_ENDORSEMENT",
+                type: "COORDINATOR_ENDORSEMENT_CREATED",
               },
             },
           },

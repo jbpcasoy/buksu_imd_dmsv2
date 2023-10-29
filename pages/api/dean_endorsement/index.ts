@@ -65,7 +65,7 @@ export default async function handler(
                   id: user.id,
                 },
               },
-              type: "DEAN_ENDORSEMENT",
+              type: "DEAN_ENDORSEMENT_CREATED",
             },
           },
         },
