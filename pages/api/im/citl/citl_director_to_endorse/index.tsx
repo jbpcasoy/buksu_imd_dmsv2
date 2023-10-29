@@ -105,6 +105,9 @@ export default async function handler(
             },
           ],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.iM.count({
         where: {

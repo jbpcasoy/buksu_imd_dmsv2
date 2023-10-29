@@ -31,6 +31,7 @@ export default function NotificationPage() {
           return (
             <div className='rounded border my-1' key={event.id}>
               <p className='text-sm'>{event.type}</p>
+              <p className='text-sm'>{event.message}</p>
               <p className='text-sm'>
                 {new Date(event.createdAt).toLocaleString()}
               </p>

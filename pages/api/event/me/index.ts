@@ -1235,11 +1235,97 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).Event, whereQuery],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.event.count({
         where: {
           AND: [accessibleBy(ability).Event, whereQuery],
         },
+      });
+
+      events.forEach((event) => {
+        switch (event.type) {
+          case "DEPARTMENT_REVIEW_CREATED":
+            event.message = "An IM has been submitted for review.";
+            break;
+          case "SUBMITTED_PEER_SUGGESTION_CREATED":
+            event.message = "Your IM has been reviewed by a Peer.";
+            break;
+          case "SUBMITTED_COORDINATOR_SUGGESTION_CREATED":
+            event.message = "Your IM has been reviewed by the Coordinator.";
+            break;
+          case "SUBMITTED_CHAIRPERSON_SUGGESTION_CREATED":
+            event.message = "Your IM has been reviewed by the Chairperson.";
+            break;
+          case "DEPARTMENT_REVIEWED_CREATED":
+            event.message = "Your IM has been reviewed by the department.";
+            break;
+          case "DEPARTMENT_REVISION_CREATED":
+            event.message = "An IM has been revised.";
+            break;
+          case "COORDINATOR_ENDORSEMENT_CREATED":
+            event.message = "Your IM has been endorsed by the Coordinator.";
+            break;
+          case "DEAN_ENDORSEMENT_CREATED":
+            event.message = "Your IM has been endorsed by the Dean.";
+            break;
+          case "SUBMITTED_IDD_COORDINATOR_SUGGESTION_CREATED":
+            event.message = "Your IM has been reviewed by the IDD Coordinator.";
+            break;
+          case "CITL_REVISION_CREATED":
+            event.message = "An IM has been revised.";
+            break;
+          case "IDD_COORDINATOR_ENDORSEMENT_CREATED":
+            event.message = "Your IM has been reviewed by the IDD Coordinator.";
+            break;
+          case "CITL_DIRECTOR_ENDORSEMENT_CREATED":
+            event.message = "Your IM has been endorsed by the CITL Director.";
+            break;
+          case "QAMIS_REVISION_CREATED":
+            event.message = "An IM has been submitted for IMERC endorsement.";
+            break;
+          case "QAMIS_COORDINATOR_ENDORSEMENT_CREATED":
+            event.message =
+              "Your IM has been endorsed by the Coordinator for IMERC review.";
+            break;
+          case "QAMIS_CHAIRPERSON_ENDORSEMENT_CREATED":
+            event.message =
+              "Your IM has been endorsed by the Chairperson for IMERC review.";
+            break;
+          case "QAMIS_DEAN_ENDORSEMENT_CREATED":
+            event.message =
+              "Your IM has been endorsed by the Dean for IMERC review.";
+            break;
+          case "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED":
+            event.message =
+              "Your IM has been endorsed by the Department for IMERC review.";
+            break;
+          case "SUBMITTED_CONTENT_SPECIALIST_SUGGESTION_CREATED":
+            event.message = "Yor IM has been reviewed by a Content Specialist.";
+            break;
+          case "SUBMITTED_IDD_SPECIALIST_SUGGESTION_CREATED":
+            event.message = "Your IM has been reviewed by the IDD Specialist.";
+            break;
+          case "SUBMITTED_CONTENT_EDITOR_SUGGESTION_CREATED":
+            event.message = "Your IM has been reviewed by the Content Editor.";
+            break;
+          case "IMERC_CITL_REVIEWED_CREATED":
+            event.message = "Your IM had finished IMERC review.";
+            break;
+          case "IMERC_CITL_REVISION_CREATED":
+            event.message = "An IM has been revised.";
+            break;
+          case "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED":
+            event.message =
+              "Your IM has been endorsed by the IDD Coordinator. (IMERC review)";
+            break;
+          case "IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED":
+            event.message =
+              "Your IM has been endorsed by the CITL Director. (IMERC review)";
+            break;
+        }
       });
 
       return res.json({ events, count });

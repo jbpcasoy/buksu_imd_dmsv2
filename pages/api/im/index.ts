@@ -99,6 +99,9 @@ export default async function handler(
         skip,
         take,
         where: { AND: [accessibleBy(ability).IM] },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.iM.count({
         where: { AND: [accessibleBy(ability).IM] },
