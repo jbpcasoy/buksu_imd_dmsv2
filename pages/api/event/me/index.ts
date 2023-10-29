@@ -1192,12 +1192,40 @@ export default async function handler(
               },
             },
           },
-          // {
-          //   type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
-          //   IMERCIDDCoordinatorEndorsement: {
-          //     // TODO continue
-          //   },
-          // },
+          {
+            type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
+            IMERCIDDCoordinatorEndorsement: {
+              IMERCCITLRevision: {
+                IMFile: {
+                  IM: {
+                    Faculty: {
+                      User: {
+                        id: user.id,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            type: "IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED",
+            IMERCCITLDirectorEndorsement: {
+              IMERCIDDCoordinatorEndorsement: {
+                IMERCCITLRevision: {
+                  IMFile: {
+                    IM: {
+                      Faculty: {
+                        User: {
+                          id: user.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         ],
       };
 
