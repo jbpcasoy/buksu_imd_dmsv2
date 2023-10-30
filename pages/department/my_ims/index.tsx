@@ -68,6 +68,9 @@ export default function MyIMsPage() {
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
+        <p>
+          {state.skip} - {state.skip + state.take} of {count}
+        </p>
         <button className='border rounded' onClick={previousHandler}>
           prev
         </button>

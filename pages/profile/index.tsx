@@ -68,7 +68,15 @@ export default function ProfilePage() {
 
   return (
     <MainLayout>
-      <h1>Profile</h1>
+      <div className='flex justify-between'>
+        <h1>Profile</h1>
+        <button
+          onClick={onLogout}
+          className='bg-palette_blue text-white px-1 rounded'
+        >
+          LOGOUT
+        </button>
+      </div>
 
       <div className='mb-10'>
         <form noValidate onSubmit={formik.handleSubmit}>
@@ -88,15 +96,6 @@ export default function ProfilePage() {
             <input type='submit' value='Save' className='border rounded' />
           </div>
         </form>
-      </div>
-
-      <div className='flex justify-end'>
-        <button
-          onClick={onLogout}
-          className='bg-palette_blue text-white px-1 rounded'
-        >
-          LOGOUT
-        </button>
       </div>
     </MainLayout>
   );

@@ -167,29 +167,6 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISCoordinatorEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISDeanEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
                   CITLRevision: {
                     IDDCoordinatorEndorsement: {
                       CITLDirectorEndorsement: {
@@ -238,6 +215,35 @@ export default async function handler(
                             SubmittedContentSpecialistSuggestion: {
                               IMERCCITLReviewed: {
                                 isNot: null,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              NOT: {
+                IMFile: {
+                  some: {
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentSpecialistReview: {
+                            ContentSpecialistSuggestion: {
+                              SubmittedContentSpecialistSuggestion: {
+                                IMERCCITLReviewed: {
+                                  IMERCCITLRevision: {
+                                    some: {
+                                      returned: {
+                                        equals: false,
+                                      },
+                                    },
+                                  },
+                                },
                               },
                             },
                           },

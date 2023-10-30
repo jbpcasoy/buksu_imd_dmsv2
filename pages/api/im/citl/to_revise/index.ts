@@ -141,16 +141,18 @@ export default async function handler(
               },
             },
             {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        IDDCoordinatorSuggestion: {
-                          SubmittedIDDCoordinatorSuggestion: {
-                            CITLRevision: {
-                              some: {
-                                returned: true,
+              NOT: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      CoordinatorEndorsement: {
+                        DeanEndorsement: {
+                          IDDCoordinatorSuggestion: {
+                            SubmittedIDDCoordinatorSuggestion: {
+                              CITLRevision: {
+                                some: {
+                                  returned: false,
+                                },
                               },
                             },
                           },
