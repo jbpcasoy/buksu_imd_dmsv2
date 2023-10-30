@@ -147,7 +147,7 @@ export default function ViewIM() {
             iMFileId: res.data.id,
           })
           .then(() => {
-            alert("IM has been submitted for review");
+            alert("IM has been submitted for endorsement");
           });
       })
       .catch((err) => {
@@ -172,7 +172,7 @@ export default function ViewIM() {
             iMFileId: res.data.id,
           })
           .then(() => {
-            alert("IM has been submitted for review");
+            alert("IM has been submitted for endorsement");
           });
       })
       .catch((err) => {
@@ -197,7 +197,7 @@ export default function ViewIM() {
             iMFileId: res.data.id,
           })
           .then(() => {
-            alert("IM has been submitted for review");
+            alert("IM has been submitted for endorsement");
           });
       })
       .catch((err) => {

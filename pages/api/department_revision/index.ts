@@ -75,6 +75,31 @@ export default async function handler(
             },
           },
         });
+      const blank_peer_suggestion_items = await prisma.peerSuggestionItem.count(
+        {
+          where: {
+            PeerSuggestion: {
+              SubmittedPeerSuggestion: {
+                id: {
+                  equals: submittedPeerSuggestion.id,
+                },
+              },
+            },
+            NOT: {
+              actionTaken: {
+                not: null,
+              },
+            },
+          },
+        }
+      );
+      if (blank_peer_suggestion_items > 0) {
+        return res.status(400).json({
+          error: {
+            message: "Action taken must be filled in peer suggestions",
+          },
+        });
+      }
 
       const submittedChairpersonSuggestion =
         await prisma.submittedChairpersonSuggestion.findFirstOrThrow({
@@ -90,6 +115,31 @@ export default async function handler(
             },
           },
         });
+      const blank_chairperson_suggestion_items = await prisma.chairpersonSuggestionItem.count(
+        {
+          where: {
+            ChairpersonSuggestion: {
+              SubmittedChairpersonSuggestion: {
+                id: {
+                  equals: submittedChairpersonSuggestion.id,
+                },
+              },
+            },
+            NOT: {
+              actionTaken: {
+                not: null,
+              },
+            },
+          },
+        }
+      );
+      if (blank_chairperson_suggestion_items > 0) {
+        return res.status(400).json({
+          error: {
+            message: "Action taken must be filled in chairperson suggestions",
+          },
+        });
+      }
 
       const submittedCoordinatorSuggestion =
         await prisma.submittedCoordinatorSuggestion.findFirstOrThrow({
@@ -105,6 +155,31 @@ export default async function handler(
             },
           },
         });
+        const blank_coordinator_suggestion_items = await prisma.coordinatorSuggestionItem.count(
+          {
+            where: {
+              CoordinatorSuggestion: {
+                SubmittedCoordinatorSuggestion: {
+                  id: {
+                    equals: submittedCoordinatorSuggestion.id,
+                  },
+                },
+              },
+              NOT: {
+                actionTaken: {
+                  not: null,
+                },
+              },
+            },
+          }
+        );
+        if (blank_coordinator_suggestion_items > 0) {
+          return res.status(400).json({
+            error: {
+              message: "Action taken must be filled in coordinator suggestions",
+            },
+          });
+        }
 
       const departmentReviewed =
         await prisma.departmentReviewed.findFirstOrThrow({

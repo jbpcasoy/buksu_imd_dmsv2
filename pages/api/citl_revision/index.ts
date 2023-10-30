@@ -156,6 +156,29 @@ export default async function handler(
             ],
           },
         });
+      const blank_suggestions = await prisma.iDDCoordinatorSuggestionItem.count(
+        {
+          where: {
+            IDDCoordinatorSuggestion: {
+              SubmittedIDDCoordinatorSuggestion: {
+                id: {
+                  equals: submittedIDDCoordinatorSuggestion.id,
+                },
+              },
+            },
+            actionTaken: {
+              equals: null,
+            },
+          },
+        }
+      );
+      if(blank_suggestions > 0) {
+        return res.status(400).json({
+          error: {
+            message: "Action taken must be filled in idd coordinator suggestions"
+          }
+        })
+      }
 
       const cITLRevision = await prisma.cITLRevision.create({
         data: {

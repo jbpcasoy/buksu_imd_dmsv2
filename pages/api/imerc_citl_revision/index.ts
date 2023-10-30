@@ -76,6 +76,29 @@ export default async function handler(
             },
           },
         });
+      const blank_content_specialist_suggestion =
+        await prisma.contentSpecialistSuggestionItem.count({
+          where: {
+            ContentSpecialistSuggestion: {
+              SubmittedContentSpecialistSuggestion: {
+                id: {
+                  equals: submittedContentSpecialistSuggestion.id,
+                },
+              },
+            },
+            actionTaken: {
+              equals: null,
+            },
+          },
+        });
+      if (blank_content_specialist_suggestion > 0) {
+        return res.status(400).json({
+          error: {
+            message:
+              "Action taken must be filled in content specialist suggestions",
+          },
+        });
+      }
 
       const submittedContentEditorSuggestion =
         await prisma.submittedContentEditorSuggestion.findFirstOrThrow({
@@ -91,6 +114,29 @@ export default async function handler(
             },
           },
         });
+      const blank_content_editor_suggestion =
+        await prisma.contentEditorSuggestionItem.count({
+          where: {
+            ContentEditorSuggestion: {
+              SubmittedContentEditorSuggestion: {
+                id: {
+                  equals: submittedContentEditorSuggestion.id,
+                },
+              },
+            },
+            actionTaken: {
+              equals: null,
+            },
+          },
+        });
+      if (blank_content_editor_suggestion > 0) {
+        return res.status(400).json({
+          error: {
+            message:
+              "Action taken must be filled in content editor suggestions",
+          },
+        });
+      }
 
       const submittedIDDSpecialistSuggestion =
         await prisma.submittedIDDSpecialistSuggestion.findFirstOrThrow({
@@ -106,6 +152,29 @@ export default async function handler(
             },
           },
         });
+      const blank_idd_specialist_suggestion =
+        await prisma.iDDSpecialistSuggestionItem.count({
+          where: {
+            IDDSpecialistSuggestion: {
+              SubmittedIDDSpecialistSuggestion: {
+                id: {
+                  equals: submittedIDDSpecialistSuggestion.id,
+                },
+              },
+            },
+            actionTaken: {
+              equals: null,
+            },
+          },
+        });
+      if (blank_idd_specialist_suggestion > 0) {
+        return res.status(400).json({
+          error: {
+            message:
+              "Action taken must be filled in idd specialist suggestions",
+          },
+        });
+      }
 
       const iMERCCITLReviewed = await prisma.iMERCCITLReviewed.findFirstOrThrow(
         {
