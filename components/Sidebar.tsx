@@ -84,25 +84,29 @@ export default function Sidebar() {
                   To Revise
                 </Link>
               )}
-              <p className='font-bold text-xs'>IDD Coordinator</p>
               {activeIDDCoordinator && (
-                <Link href='/citl/to_review' className='underline'>
-                  To Review
-                </Link>
+                <div>
+                  <p className='font-bold text-xs'>IDD Coordinator</p>
+                  <Link href='/citl/to_review' className='underline'>
+                    To Review
+                  </Link>
+                </div>
               )}
               {activeIDDCoordinator && (
                 <Link href='/citl/to_endorse' className='underline'>
                   To Endorse
                 </Link>
               )}
-              <p className='font-bold text-xs'>CITL Director</p>
               {activeCITLDirector && (
-                <Link
-                  href='/citl/citl_director_to_endorse'
-                  className='underline'
-                >
-                  To Endorse
-                </Link>
+                <div>
+                  <p className='font-bold text-xs'>CITL Director</p>
+                  <Link
+                    href='/citl/citl_director_to_endorse'
+                    className='underline'
+                  >
+                    To Endorse
+                  </Link>
+                </div>
               )}
             </div>
           )}
@@ -152,20 +156,24 @@ export default function Sidebar() {
                   To Review
                 </Link>
               )}
-              <p className='font-bold text-xs'>IDD Coordinator</p>
               {activeIDDCoordinator && (
-                <Link href='/imerc/citl/to_endorse' className='underline'>
-                  To Endorse
-                </Link>
+                <div>
+                  <p className='font-bold text-xs'>IDD Coordinator</p>
+                  <Link href='/imerc/citl/to_endorse' className='underline'>
+                    To Endorse
+                  </Link>
+                </div>
               )}
-              <p className='font-bold text-xs'>CITL Director</p>
               {activeCITLDirector && (
-                <Link
-                  href='/imerc/citl/citl_director_to_endorse'
-                  className='underline'
-                >
-                  To Endorse
-                </Link>
+                <div>
+                  <p className='font-bold text-xs'>CITL Director</p>
+                  <Link
+                    href='/imerc/citl/citl_director_to_endorse'
+                    className='underline'
+                  >
+                    To Endorse
+                  </Link>
+                </div>
               )}
             </div>
           )}

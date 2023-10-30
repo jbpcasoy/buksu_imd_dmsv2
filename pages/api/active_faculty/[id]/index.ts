@@ -123,6 +123,25 @@ export default async function handler(
           .json({ error: { message: "Faculty is an Active Dean" } });
       }
 
+      const activeContentSpecialist = await prisma.activeContentSpecialist.findFirst({
+        where: {
+          ContentSpecialist: {
+            Faculty: {
+              ActiveFaculty: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (activeContentSpecialist) {
+        return res
+          .status(400)
+          .json({ error: { message: "Faculty is an Active Content Specialist" } });
+      }
+
       const activeFaculty = await prisma.activeFaculty.delete({
         where: {
           id,

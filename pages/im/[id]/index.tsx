@@ -10,6 +10,7 @@ import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
+import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useIM from "@/hooks/useIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
@@ -35,6 +36,7 @@ export default function ViewIM() {
   const iM = useIM({ id: iMId as string });
   const [state, setState] = useState<File | null>();
   const iMStatus = useIMStatus({ id: iMId as string });
+  const activeFaculty = useActiveFacultyMe();
   const activeCoordinator = useActiveCoordinatorMe();
   const activeChairperson = useActiveChairpersonMe();
   const activeDean = useActiveDeanMe();
@@ -460,7 +462,10 @@ export default function ViewIM() {
         <h2 className='flex-1'>View IM</h2>
 
         <div>
-          <Link href={`/im/${iM.id}/all_suggestions`} className='border rounded'>
+          <Link
+            href={`/im/${iM.id}/all_suggestions`}
+            className='border rounded'
+          >
             all suggestions
           </Link>
           <Link href={`/im/${iM.id}/track`} className='border rounded'>
@@ -486,34 +491,41 @@ export default function ViewIM() {
         <p>type: {iM.type}</p>
       </div>
 
-      {iMStatus === "IMPLEMENTATION_DRAFT" && (
-        <div>
-          <input type='file' onChange={onFileChange} accept=".pdf" />
-          <button className='border rounded' onClick={submitForReviewHandler}>
-            Submit for review
-          </button>
-        </div>
-      )}
+      {iMStatus === "IMPLEMENTATION_DRAFT" &&
+        iM.facultyId === activeFaculty?.facultyId && (
+          <div>
+            <input type='file' onChange={onFileChange} accept='.pdf' />
+            <button className='border rounded' onClick={submitForReviewHandler}>
+              Submit for review
+            </button>
+          </div>
+        )}
 
       {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
         <div className='space-x-2'>
-          <Link href={`/im/${iM.id}/peer_review`} className='border rounded'>
-            Peer Review
-          </Link>
+          {iM.facultyId !== activeFaculty?.facultyId && (
+            <Link href={`/im/${iM.id}/peer_review`} className='border rounded'>
+              Peer Review
+            </Link>
+          )}
 
-          <Link
-            href={`/im/${iM.id}/coordinator_review`}
-            className='border rounded'
-          >
-            Coordinator Review
-          </Link>
+          {activeCoordinator && (
+            <Link
+              href={`/im/${iM.id}/coordinator_review`}
+              className='border rounded'
+            >
+              Coordinator Review
+            </Link>
+          )}
 
-          <Link
-            href={`/im/${iM.id}/chairperson_review`}
-            className='border rounded'
-          >
-            Chairperson Review
-          </Link>
+          {activeChairperson && (
+            <Link
+              href={`/im/${iM.id}/chairperson_review`}
+              className='border rounded'
+            >
+              Chairperson Review
+            </Link>
+          )}
         </div>
       )}
 
@@ -522,7 +534,7 @@ export default function ViewIM() {
           <IMChairpersonSuggestionItems id={iM.id} />
           <IMCoordinatorSuggestionItems id={iM.id} />
           <IMPeerSuggestionItems id={iM.id} />
-          <input type='file' onChange={onFileChange} accept=".pdf" />
+          <input type='file' onChange={onFileChange} accept='.pdf' />
           <button
             className='border rounded'
             onClick={submitForEndorsementHandler}
@@ -574,7 +586,7 @@ export default function ViewIM() {
       {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" && (
         <div>
           <IMIDDCoordinatorSuggestionItems id={iM.id} />
-          <input type='file' onChange={onFileChange} accept=".pdf" />
+          <input type='file' onChange={onFileChange} accept='.pdf' />
           <button
             className='border rounded'
             onClick={submitForCITLEndorsementHandler}
@@ -674,7 +686,7 @@ export default function ViewIM() {
           <IMContentSpecialistSuggestionItems id={iM.id} />
           <IMIDDSpecialistSuggestionItems id={iM.id} />
           <IMContentEditorSuggestionItems id={iM.id} />
-          <input type='file' onChange={onFileChange} accept=".pdf" />
+          <input type='file' onChange={onFileChange} accept='.pdf' />
           <button
             className='border rounded'
             onClick={submitForIMERCCITLEndorsementHandler}

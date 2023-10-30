@@ -1,13 +1,18 @@
 import AdminLayout from "@/components/AdminLayout";
+import useActiveFacultyByFacultyId from "@/hooks/useActiveFacultyByFacultyId";
 import useFaculty from "@/hooks/useFaculty";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function FacultyPage() {
   const router = useRouter();
   const facultyId = router.query.id;
   const faculty = useFaculty({ id: facultyId as string });
+  const activeFaculty = useActiveFacultyByFacultyId({
+    id: facultyId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -23,6 +28,36 @@ export default function FacultyPage() {
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
+      });
+  };
+
+  const activateHandler = async () => {
+    return axios
+      .post(`/api/active_faculty`, {
+        facultyId,
+      })
+      .then(() => {
+        alert("Faculty has been activated successfully");
+      })
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
+  const deactivateHandler = async () => {
+    return axios
+      .delete(`/api/active_faculty/${activeFaculty?.id}`)
+      .then(() => {
+        alert("Faculty has been deactivated successfully");
+      })
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -56,6 +91,17 @@ export default function FacultyPage() {
           {faculty.departmentId}
         </Link>
       </p>
+      {!activeFaculty && (
+        <button className='border rounded' onClick={activateHandler}>
+          Activate
+        </button>
+      )}
+
+      {activeFaculty && (
+        <button className='border rounded' onClick={deactivateHandler}>
+          Deactivate
+        </button>
+      )}
     </AdminLayout>
   );
 }

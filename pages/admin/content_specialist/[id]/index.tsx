@@ -1,4 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
+import useActiveContentSpecialistByContentSpecialistId from "@/hooks/useActiveContentSpecialistByContentSpecialistId";
+import useActiveFacultyByFacultyId from "@/hooks/useActiveFacultyByFacultyId";
 import useContentSpecialist from "@/hooks/useContentSpecialist";
 import axios from "axios";
 import Link from "next/link";
@@ -8,7 +10,16 @@ import { useEffect } from "react";
 export default function ContentSpecialistPage() {
   const router = useRouter();
   const contentSpecialistId = router.query.id;
-  const contentSpecialist = useContentSpecialist({ id: contentSpecialistId as string });
+  const contentSpecialist = useContentSpecialist({
+    id: contentSpecialistId as string,
+  });
+  const activeFaculty = useActiveFacultyByFacultyId({
+    id: contentSpecialist?.facultyId,
+  });
+  const activeContentSpecialist =
+    useActiveContentSpecialistByContentSpecialistId({
+      id: contentSpecialistId as string,
+    });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -24,6 +35,36 @@ export default function ContentSpecialistPage() {
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
+      });
+  };
+
+  const activateHandler = async () => {
+    return axios
+      .post(`/api/active_content_specialist`, {
+        activeFacultyId: activeFaculty?.id,
+      })
+      .then(() => {
+        alert("ContentSpecialist has been activated successfully");
+      })
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
+  const deactivateHandler = async () => {
+    return axios
+      .delete(`/api/active_content_specialist/${activeContentSpecialist?.id}`)
+      .then(() => {
+        alert("ContentSpecialist has been deactivated successfully");
+      })
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -51,6 +92,17 @@ export default function ContentSpecialistPage() {
           {contentSpecialist.facultyId}
         </Link>
       </p>
+      {!activeContentSpecialist && (
+        <button className='border rounded' onClick={activateHandler}>
+          Activate
+        </button>
+      )}
+
+      {activeContentSpecialist && (
+        <button className='border rounded' onClick={deactivateHandler}>
+          Deactivate
+        </button>
+      )}
     </AdminLayout>
   );
 }

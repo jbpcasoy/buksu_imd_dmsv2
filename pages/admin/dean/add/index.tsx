@@ -1,3 +1,4 @@
+import ActiveFacultySelector from "@/components/ActiveFacultySelector";
 import AdminLayout from "@/components/AdminLayout";
 import axios from "axios";
 import { useFormik } from "formik";
@@ -22,16 +23,13 @@ export default function AddDeanPage() {
         });
     },
   });
+  
   return (
     <AdminLayout>
       <h2>Add Dean</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='activeFacultyId'
-          {...formik.getFieldProps("activeFacultyId")}
-        />
+        <ActiveFacultySelector {...formik.getFieldProps("activeFacultyId")} />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </AdminLayout>

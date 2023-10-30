@@ -1,4 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
+import useActiveCoordinatorByCoordinatorId from "@/hooks/useActiveCoordinatorByCoordinatorId";
+import useActiveFacultyByFacultyId from "@/hooks/useActiveFacultyByFacultyId";
 import useCoordinator from "@/hooks/useCoordinator";
 import axios from "axios";
 import Link from "next/link";
@@ -9,6 +11,12 @@ export default function CoordinatorPage() {
   const router = useRouter();
   const coordinatorId = router.query.id;
   const coordinator = useCoordinator({ id: coordinatorId as string });
+  const activeFaculty = useActiveFacultyByFacultyId({
+    id: coordinator?.facultyId,
+  });
+  const activeCoordinator = useActiveCoordinatorByCoordinatorId({
+    id: coordinatorId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -24,6 +32,36 @@ export default function CoordinatorPage() {
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
+      });
+  };
+
+  const activateHandler = async () => {
+    return axios
+      .post(`/api/active_coordinator`, {
+        activeFacultyId: activeFaculty?.id,
+      })
+      .then(() => {
+        alert("Coordinator has been activated successfully");
+      })
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
+  const deactivateHandler = async () => {
+    return axios
+      .delete(`/api/active_coordinator/${activeCoordinator?.id}`)
+      .then(() => {
+        alert("Coordinator has been deactivated successfully");
+      })
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -51,6 +89,17 @@ export default function CoordinatorPage() {
           {coordinator.facultyId}
         </Link>
       </p>
+      {!activeCoordinator && (
+        <button className='border rounded' onClick={activateHandler}>
+          Activate
+        </button>
+      )}
+
+      {activeCoordinator && (
+        <button className='border rounded' onClick={deactivateHandler}>
+          Deactivate
+        </button>
+      )}
     </AdminLayout>
   );
 }

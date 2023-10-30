@@ -1,4 +1,5 @@
 import AdminLayout from "@/components/AdminLayout";
+import UserSelector from "@/components/UserSelector";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useEffect } from "react";
@@ -31,11 +32,7 @@ export default function AddCITLDirectorPage() {
       <h2>Add CITLDirector</h2>
 
       <form onSubmit={formik.handleSubmit} noValidate>
-        <input
-          type='text'
-          placeholder='userId'
-          {...formik.getFieldProps("userId")}
-        />
+        <UserSelector {...formik.getFieldProps("userId")} />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </AdminLayout>

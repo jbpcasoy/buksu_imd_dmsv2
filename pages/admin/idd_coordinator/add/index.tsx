@@ -1,4 +1,5 @@
 import AdminLayout from "@/components/AdminLayout";
+import UserSelector from "@/components/UserSelector";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useEffect } from "react";
@@ -23,15 +24,17 @@ export default function AddIDDCoordinatorPage() {
         });
     },
   });
+  
   useEffect(() => {
     console.log(formik.values);
   }, [formik.values]);
+
   return (
     <AdminLayout>
       <h2>Add IDDCoordinator</h2>
 
       <form onSubmit={formik.handleSubmit} noValidate>
-        <input type='text' placeholder='userId' {...formik.getFieldProps("userId")} />
+        <UserSelector {...formik.getFieldProps("userId")} />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
     </AdminLayout>
