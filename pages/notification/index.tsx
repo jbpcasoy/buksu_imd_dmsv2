@@ -1,6 +1,7 @@
 import MainLayout from "@/components/MainLayout";
 import useEvents from "@/hooks/useEvents";
 import useEventsMe from "@/hooks/useEventsMe";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function NotificationPage() {
@@ -29,12 +30,17 @@ export default function NotificationPage() {
       <div>
         {events.map((event) => {
           return (
-            <div className='rounded border my-1' key={event.id}>
+            <div className='rounded border m-1 p-1' key={event.id}>
               <p className='text-sm'>{event.type}</p>
               <p className='text-sm'>{event.message}</p>
               <p className='text-sm'>
                 {new Date(event.createdAt).toLocaleString()}
               </p>
+              {event.url && (
+                <Link className='text-sm underline' href={event.url}>
+                  View
+                </Link>
+              )}
             </div>
           );
         })}
@@ -43,8 +49,12 @@ export default function NotificationPage() {
         <p>
           {state.skip} - {state.skip + state.take} of {count}
         </p>
-        <button className='border rounded' onClick={handlePrev}>prev</button>
-        <button className='border rounded' onClick={handleNext}>next</button>
+        <button className='border rounded' onClick={handlePrev}>
+          prev
+        </button>
+        <button className='border rounded' onClick={handleNext}>
+          next
+        </button>
       </div>
     </MainLayout>
   );
