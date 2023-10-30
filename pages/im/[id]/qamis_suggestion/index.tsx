@@ -1,19 +1,20 @@
-import QAMISSuggestionItem from "@/components/QAMISSuggestionItem";
 import MainLayout from "@/components/MainLayout";
+import QAMISSuggestionItem from "@/components/QAMISSuggestionItem";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useCITLDirectorEndorsementIM from "@/hooks/useCITLDirectorEndorsementIM";
+import useIM from "@/hooks/useIM";
 import useQAMISSuggestionItemsOwn, {
   useQAMISSuggestionItemsOwnParams,
 } from "@/hooks/useQAMISSuggestionItemsOwn";
-import useIM from "@/hooks/useIM";
+import useQAMISSuggestionMe from "@/hooks/useQAMISSuggestionMe";
+import useSubmittedQAMISSuggestionIM from "@/hooks/useSubmittedQAMISSuggestionIM";
+import { QAMISSuggestion, SubmittedQAMISSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import * as Yup from "yup";
-import useQAMISSuggestionMe from "@/hooks/useQAMISSuggestionMe";
-import { QAMISSuggestion, SubmittedQAMISSuggestion } from "@prisma/client";
-import Link from "next/link";
 
 export default function QAMISSuggestionPage() {
   const router = useRouter();
@@ -21,6 +22,9 @@ export default function QAMISSuggestionPage() {
   const activeFaculty = useActiveFacultyMe();
   const iM = useIM({ id: iMId as string });
   const qAMISSuggestion = useQAMISSuggestionMe({
+    id: iMId as string,
+  });
+  const submittedQAMISSuggestion = useSubmittedQAMISSuggestionIM({
     id: iMId as string,
   });
 
@@ -152,6 +156,12 @@ export default function QAMISSuggestionPage() {
       }
     },
   });
+
+  useEffect(() => {
+    if (submittedQAMISSuggestion) {
+      router.push(`/im/${iMId}`);
+    }
+  }, [submittedQAMISSuggestion]);
 
   const handleNext = () => {
     setState((prev) => {

@@ -8,6 +8,7 @@ import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
+import useActiveContentSpecialistMe from "@/hooks/useActiveContentSpecialistMe";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
@@ -42,6 +43,7 @@ export default function ViewIM() {
   const activeDean = useActiveDeanMe();
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();
   const activeCITLDirector = useActiveCITLDirectorMe();
+  const activeContentSpecialist = useActiveContentSpecialistMe();
   const qAMISRevision = useQAMISRevisionIM({ id: iMId as string });
   const iMFile = useIMLatestIMFile({ id: iMId as string });
   const qAMISFile = useIMLatestQAMISFile({ id: iMId as string });
@@ -529,74 +531,79 @@ export default function ViewIM() {
         </div>
       )}
 
-      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" && (
-        <div>
-          <IMChairpersonSuggestionItems id={iM.id} />
-          <IMCoordinatorSuggestionItems id={iM.id} />
-          <IMPeerSuggestionItems id={iM.id} />
-          <input type='file' onChange={onFileChange} accept='.pdf' />
-          <button
-            className='border rounded'
-            onClick={submitForEndorsementHandler}
-          >
-            Submit for endorsement
-          </button>
-        </div>
-      )}
+      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" &&
+        iM.facultyId === activeFaculty?.facultyId && (
+          <div>
+            <IMChairpersonSuggestionItems id={iM.id} />
+            <IMCoordinatorSuggestionItems id={iM.id} />
+            <IMPeerSuggestionItems id={iM.id} />
+            <input type='file' onChange={onFileChange} accept='.pdf' />
+            <button
+              className='border rounded'
+              onClick={submitForEndorsementHandler}
+            >
+              Submit for endorsement
+            </button>
+          </div>
+        )}
 
-      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" && (
-        <div className='space-x-1'>
-          <IMChairpersonSuggestionItems id={iM.id} editable={false} />
-          <IMCoordinatorSuggestionItems id={iM.id} editable={false} />
-          <IMPeerSuggestionItems id={iM.id} editable={false} />
-          <button
-            className='border rounded'
-            onClick={coordinatorEndorsementHandler}
-          >
-            Endorse IM
-          </button>
-          <button
-            className='border rounded'
-            onClick={returnCoordinatorEndorsementHandler}
-          >
-            Return revision
-          </button>
-        </div>
-      )}
+      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" &&
+        activeCoordinator && (
+          <div className='space-x-1'>
+            <IMChairpersonSuggestionItems id={iM.id} editable={false} />
+            <IMCoordinatorSuggestionItems id={iM.id} editable={false} />
+            <IMPeerSuggestionItems id={iM.id} editable={false} />
+            <button
+              className='border rounded'
+              onClick={coordinatorEndorsementHandler}
+            >
+              Endorse IM
+            </button>
+            <button
+              className='border rounded'
+              onClick={returnCoordinatorEndorsementHandler}
+            >
+              Return revision
+            </button>
+          </div>
+        )}
 
-      {iMStatus === "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED" && (
-        <div>
-          <button className='border rounded' onClick={deanEndorsementHandler}>
-            Endorse IM
-          </button>
-        </div>
-      )}
+      {iMStatus === "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED" &&
+        activeDean && (
+          <div>
+            <button className='border rounded' onClick={deanEndorsementHandler}>
+              Endorse IM
+            </button>
+          </div>
+        )}
 
-      {iMStatus === "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED" && (
-        <div>
-          <Link
-            href={`/im/${iM.id}/idd_coordinator_suggestion`}
-            className='border rounded'
-          >
-            IDD Coordinator Suggestion
-          </Link>
-        </div>
-      )}
+      {iMStatus === "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED" &&
+        activeIDDCoordinator && (
+          <div>
+            <Link
+              href={`/im/${iM.id}/idd_coordinator_suggestion`}
+              className='border rounded'
+            >
+              IDD Coordinator Suggestion
+            </Link>
+          </div>
+        )}
 
-      {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" && (
-        <div>
-          <IMIDDCoordinatorSuggestionItems id={iM.id} />
-          <input type='file' onChange={onFileChange} accept='.pdf' />
-          <button
-            className='border rounded'
-            onClick={submitForCITLEndorsementHandler}
-          >
-            Submit for endorsement
-          </button>
-        </div>
-      )}
+      {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" &&
+        iM.facultyId === activeFaculty?.facultyId && (
+          <div>
+            <IMIDDCoordinatorSuggestionItems id={iM.id} />
+            <input type='file' onChange={onFileChange} accept='.pdf' />
+            <button
+              className='border rounded'
+              onClick={submitForCITLEndorsementHandler}
+            >
+              Submit for endorsement
+            </button>
+          </div>
+        )}
 
-      {iMStatus === "IMPLEMENTATION_CITL_REVISED" && (
+      {iMStatus === "IMPLEMENTATION_CITL_REVISED" && activeIDDCoordinator && (
         <div className='space-x-1'>
           <IMIDDCoordinatorSuggestionItems id={iM.id} editable={false} />
           <button
@@ -614,89 +621,104 @@ export default function ViewIM() {
         </div>
       )}
 
-      {iMStatus === "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" && (
-        <div>
-          <button
-            className='border rounded'
-            onClick={cITLDirectorEndorsementHandler}
-          >
-            Endorse IM
-          </button>
-        </div>
-      )}
+      {iMStatus === "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" &&
+        activeCITLDirector && (
+          <div>
+            <button
+              className='border rounded'
+              onClick={cITLDirectorEndorsementHandler}
+            >
+              Endorse IM
+            </button>
+          </div>
+        )}
 
-      {iMStatus === "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED" && (
-        <div>
-          <Link
-            href={`/im/${iM.id}/qamis_suggestion`}
-            className='border rounded'
-          >
-            Input QAMIS suggestions
-          </Link>
-        </div>
-      )}
+      {iMStatus === "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED" &&
+        iM.facultyId === activeFaculty?.facultyId && (
+          <div>
+            <Link
+              href={`/im/${iM.id}/qamis_suggestion`}
+              className='border rounded'
+            >
+              Input QAMIS suggestions
+            </Link>
+          </div>
+        )}
 
       {iMStatus === "IMERC_QAMIS_REVISED" && (
         <div className='space-x-2'>
-          <button
-            className='border rounded'
-            onClick={onQAMISCoordinatorEndorsement}
-          >
-            Coordinator Endorsement
-          </button>
-          <button
-            className='border rounded'
-            onClick={onQAMISChairpersonEndorsement}
-          >
-            Chairperson Endorsement
-          </button>
-          <button className='border rounded' onClick={onQAMISDeanEndorsement}>
-            Dean Endorsement
-          </button>
+          {activeCoordinator && (
+            <button
+              className='border rounded'
+              onClick={onQAMISCoordinatorEndorsement}
+            >
+              Coordinator Endorsement
+            </button>
+          )}
+          {activeChairperson && (
+            <button
+              className='border rounded'
+              onClick={onQAMISChairpersonEndorsement}
+            >
+              Chairperson Endorsement
+            </button>
+          )}
+          {activeDean && (
+            <button className='border rounded' onClick={onQAMISDeanEndorsement}>
+              Dean Endorsement
+            </button>
+          )}
         </div>
       )}
 
       {iMStatus === "IMERC_QAMIS_DEPARTMENT_ENDORSED" && (
         <div className='space-x-2'>
-          <Link
-            href={`/im/${iM.id}/content_specialist_review`}
-            className='border rounded'
-          >
-            Content Specialist Review
-          </Link>
+          {activeContentSpecialist && (
+            <Link
+              href={`/im/${iM.id}/content_specialist_review`}
+              className='border rounded'
+            >
+              Content Specialist Review
+            </Link>
+          )}
 
-          <Link
-            href={`/im/${iM.id}/content_editor_review`}
-            className='border rounded'
-          >
-            Content Editor Review
-          </Link>
+          {activeCITLDirector && (
+            <Link
+              href={`/im/${iM.id}/content_editor_review`}
+              className='border rounded'
+            >
+              Content Editor Review
+            </Link>
+          )}
 
-          <Link
-            href={`/im/${iM.id}/idd_specialist_review`}
-            className='border rounded'
-          >
-            IDD Specialist Review
-          </Link>
+          {activeIDDCoordinator && (
+            <Link
+              href={`/im/${iM.id}/idd_specialist_review`}
+              className='border rounded'
+            >
+              IDD Specialist Review
+            </Link>
+          )}
         </div>
       )}
 
-      {iMStatus === "IMERC_CITL_REVIEWED" && (
-        <div>
-          <IMContentSpecialistSuggestionItems id={iM.id} />
-          <IMIDDSpecialistSuggestionItems id={iM.id} />
-          <IMContentEditorSuggestionItems id={iM.id} />
-          <input type='file' onChange={onFileChange} accept='.pdf' />
-          <button
-            className='border rounded'
-            onClick={submitForIMERCCITLEndorsementHandler}
-          >
-            Submit for endorsement
-          </button>
-        </div>
-      )}
+      {iMStatus === "IMERC_CITL_REVIEWED" &&
+        iM.facultyId === activeFaculty?.facultyId && (
+          <div>
+            <IMContentSpecialistSuggestionItems id={iM.id} />
+            <IMIDDSpecialistSuggestionItems id={iM.id} />
+            <IMContentEditorSuggestionItems id={iM.id} />
+            <input type='file' onChange={onFileChange} accept='.pdf' />
+            <button
+              className='border rounded'
+              onClick={submitForIMERCCITLEndorsementHandler}
+            >
+              Submit for endorsement
+            </button>
+          </div>
+        )}
 
-      {iMStatus === "IMERC_CITL_REVISED" && (
+      {iMStatus === "IMERC_CITL_REVISED" && activeIDDCoordinator && (
         <div className='space-x-1'>
           <IMContentSpecialistSuggestionItems id={iM.id} editable={false} />
           <IMIDDSpecialistSuggestionItems id={iM.id} editable={false} />
@@ -716,7 +738,7 @@ export default function ViewIM() {
         </div>
       )}
 
-      {iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" && (
+      {iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" && activeCITLDirector && (
         <div>
           <button
             className='border rounded'

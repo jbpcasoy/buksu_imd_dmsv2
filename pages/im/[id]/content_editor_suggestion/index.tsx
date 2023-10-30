@@ -15,6 +15,7 @@ import Link from "next/link";
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
+import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
 
 export default function ContentEditorSuggestionPage() {
   const router = useRouter();
@@ -22,6 +23,8 @@ export default function ContentEditorSuggestionPage() {
   const contentEditorSuggestion = useContentEditorSuggestionMe({
     id: iMId as string,
   });
+  const submittedContentEditorSuggestion =
+    useSubmittedContentEditorSuggestionIM({ id: iMId as string });
   const contentEditorReview = useContentEditorReviewMe({ id: iMId as string });
   const [state, setState] = useState<useContentEditorSuggestionItemsOwnParams>({
     skip: 0,
@@ -119,6 +122,12 @@ export default function ContentEditorSuggestionPage() {
       return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
     });
   };
+
+  useEffect(() => {
+    if (submittedContentEditorSuggestion) {
+      router.push(`/im/${iMId}`);
+    }
+  }, [submittedContentEditorSuggestion]);
 
   return (
     <MainLayout>

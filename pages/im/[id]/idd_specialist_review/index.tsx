@@ -1,5 +1,6 @@
 import MainLayout from "@/components/MainLayout";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import useIDDSpecialistReviewIM from "@/hooks/useIDDSpecialistReviewIM";
 import useIDDSpecialistReviewMe from "@/hooks/useIDDSpecialistReviewMe";
 import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
@@ -17,7 +18,7 @@ export default function AddIDDSpecialistReviewPage() {
   const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
     id: iMId as string,
   });
-  const iddSpecialistReview = useIDDSpecialistReviewMe({
+  const iddSpecialistReview = useIDDSpecialistReviewIM({
     id: iMId as string,
   });
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();

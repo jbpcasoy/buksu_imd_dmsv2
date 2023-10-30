@@ -1,20 +1,21 @@
-import MainLayout from "@/components/MainLayout";
 import IDDSpecialistSuggestionItem from "@/components/IDDSpecialistSuggestionItem";
+import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
+import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
+import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
+import MainLayout from "@/components/MainLayout";
 import useIDDSpecialistReviewMe from "@/hooks/useIDDSpecialistReviewMe";
 import useIDDSpecialistSuggestionItemsOwn, {
   useIDDSpecialistSuggestionItemsOwnParams,
 } from "@/hooks/useIDDSpecialistSuggestionItemsOwn";
 import useIDDSpecialistSuggestionMe from "@/hooks/useIDDSpecialistSuggestionMe";
+import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
+import { IDDSpecialistSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
-import { IDDSpecialistSuggestion } from "@prisma/client";
-import Link from "next/link";
-import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
-import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
-import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 
 export default function IDDSpecialistSuggestionPage() {
   const router = useRouter();
@@ -23,6 +24,8 @@ export default function IDDSpecialistSuggestionPage() {
     id: iMId as string,
   });
   const iDDSpecialistReview = useIDDSpecialistReviewMe({ id: iMId as string });
+  const submittedIDDSpecialistSuggestion =
+    useSubmittedIDDSpecialistSuggestionIM({ id: iMId as string });
   const [state, setState] = useState<useIDDSpecialistSuggestionItemsOwnParams>({
     skip: 0,
     take: 10,
@@ -118,6 +121,12 @@ export default function IDDSpecialistSuggestionPage() {
       return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
     });
   };
+
+  useEffect(() => {
+    if (submittedIDDSpecialistSuggestion) {
+      router.push(`/im/${iMId}`);
+    }
+  }, [submittedIDDSpecialistSuggestion]);
 
   return (
     <MainLayout>

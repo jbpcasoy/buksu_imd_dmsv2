@@ -7,6 +7,7 @@ import useChairpersonSuggestionItemsOwn, {
   useChairpersonSuggestionItemsOwnParams,
 } from "@/hooks/useChairpersonSuggestionItemsOwn";
 import useChairpersonSuggestionMe from "@/hooks/useChairpersonSuggestionMe";
+import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import { ChairpersonSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
@@ -22,6 +23,9 @@ export default function ChairpersonSuggestionPage() {
     id: iMId as string,
   });
   const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
+  const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
+    id: iMId as string,
+  });
   const [state, setState] = useState<useChairpersonSuggestionItemsOwnParams>({
     skip: 0,
     take: 10,
@@ -112,6 +116,12 @@ export default function ChairpersonSuggestionPage() {
       }
     },
   });
+
+  useEffect(() => {
+    if (submittedChairpersonSuggestion) {
+      router.push(`/im/${iMId}`);
+    }
+  }, [submittedChairpersonSuggestion]);
 
   return (
     <MainLayout>

@@ -1,10 +1,11 @@
 import prisma from "@/prisma/client";
-import iMFileAbility from "@/services/ability/iMFileAbility";
+import coordinatorReviewAbility from "@/services/ability/coordinatorReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,30 +19,38 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iMFileAbility({ user });
+  const ability = coordinatorReviewAbility({ user });
 
   const getHandler = async () => {
     try {
-      const { id } = req.query;
-      const iMFile = await prisma.iMFile.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).IMFile,
-            {
-              IM: {
-                id: {
-                  equals: id as string,
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+      await validator.validate(req.query);
+
+      const { id } = validator.cast(req.query);
+      const coordinatorReview = await prisma.coordinatorReview.findFirstOrThrow(
+        {
+          where: {
+            AND: [
+              accessibleBy(ability).CoordinatorReview,
+              {
+                DepartmentReview: {
+                  IMFile: {
+                    IM: {
+                      id: {
+                        equals: id,
+                      },
+                    },
+                  },
                 },
               },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+            ],
+          },
+        }
+      );
 
-      return res.json(iMFile);
+      return res.json(coordinatorReview);
     } catch (error: any) {
       logger.error(error);
       return res

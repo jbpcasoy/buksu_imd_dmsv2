@@ -31,16 +31,6 @@ export default async function handler(
       await validator.validate(req.query);
 
       let ability: AppAbility;
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
       ability = iMAbility({ user });
 
       const { skip, take } = validator.cast(req.query);
@@ -50,13 +40,6 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
-            {
-              Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
             {
               IMFile: {
                 some: {
@@ -187,13 +170,6 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
-            {
-              Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
             {
               IMFile: {
                 some: {

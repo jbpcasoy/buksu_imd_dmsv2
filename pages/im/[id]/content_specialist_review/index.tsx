@@ -1,5 +1,6 @@
 import MainLayout from "@/components/MainLayout";
 import useActiveContentSpecialistMe from "@/hooks/useActiveContentSpecialistMe";
+import useContentSpecialistReviewIM from "@/hooks/useContentSpecialistReviewIM";
 import useContentSpecialistReviewMe from "@/hooks/useContentSpecialistReviewMe";
 import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
@@ -17,7 +18,7 @@ export default function AddContentSpecialistReviewPage() {
   const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
     id: iMId as string,
   });
-  const contentSpecialistReview = useContentSpecialistReviewMe({
+  const contentSpecialistReview = useContentSpecialistReviewIM({
     id: iMId as string,
   });
   const activeContentSpecialist = useActiveContentSpecialistMe();

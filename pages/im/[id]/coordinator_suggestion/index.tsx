@@ -7,6 +7,7 @@ import useCoordinatorSuggestionItemsOwn, {
   useCoordinatorSuggestionItemsOwnParams,
 } from "@/hooks/useCoordinatorSuggestionItemsOwn";
 import useCoordinatorSuggestionMe from "@/hooks/useCoordinatorSuggestionMe";
+import useSubmittedCoordinatorSuggestionIM from "@/hooks/useSubmittedCoordinatorSuggestionIM";
 import { CoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
@@ -25,6 +26,9 @@ export default function CoordinatorSuggestionPage() {
   const [state, setState] = useState<useCoordinatorSuggestionItemsOwnParams>({
     skip: 0,
     take: 10,
+  });
+  const submittedCoordinatorSuggestion = useSubmittedCoordinatorSuggestionIM({
+    id: iMId as string,
   });
   const coordinatorSuggestionItems = useCoordinatorSuggestionItemsOwn(state);
   const handleNext = () => {
@@ -112,6 +116,12 @@ export default function CoordinatorSuggestionPage() {
       }
     },
   });
+
+  useEffect(() => {
+    if (submittedCoordinatorSuggestion) {
+      router.push(`/im/${iMId}`);
+    }
+  }, [submittedCoordinatorSuggestion]);
 
   return (
     <MainLayout>

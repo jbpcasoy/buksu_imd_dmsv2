@@ -17,6 +17,7 @@ import { PeerSuggestion } from "@prisma/client";
 import Link from "next/link";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
+import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
@@ -28,6 +29,9 @@ export default function PeerSuggestionPage() {
     take: 10,
   });
   const peerSuggestionItems = usePeerSuggestionItemsOwn(state);
+  const submittedPeerSuggestion = useSubmittedPeerSuggestionIM({
+    id: iMId as string,
+  });
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -114,6 +118,12 @@ export default function PeerSuggestionPage() {
       }
     },
   });
+
+  useEffect(() => {
+    if (submittedPeerSuggestion) {
+      router.push(`/im/${iMId}`);
+    }
+  }, [submittedPeerSuggestion]);
 
   return (
     <MainLayout>

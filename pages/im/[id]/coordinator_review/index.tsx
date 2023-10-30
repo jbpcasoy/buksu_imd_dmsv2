@@ -11,12 +11,13 @@ import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import Link from "next/link";
+import useCoordinatorReviewIM from "@/hooks/useCoordinatorReviewIM";
 
 export default function AddCoordinatorReviewPage() {
   const router = useRouter();
   const iMId = router.query.id;
   const departmentReview = useDepartmentReviewIM({ id: iMId as string });
-  const coordinatorReview = useCoordinatorReviewMe({ id: iMId as string });
+  const coordinatorReview = useCoordinatorReviewIM({ id: iMId as string });
   const activeFaculty = useActiveCoordinatorMe();
   const formik = useFormik({
     initialValues: {

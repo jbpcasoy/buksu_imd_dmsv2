@@ -1,5 +1,6 @@
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
+import useContentEditorReviewIM from "@/hooks/useContentEditorReviewIM";
 import useContentEditorReviewMe from "@/hooks/useContentEditorReviewMe";
 import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
@@ -17,7 +18,7 @@ export default function AddContentEditorReviewPage() {
   const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
     id: iMId as string,
   });
-  const contentEditorReview = useContentEditorReviewMe({
+  const contentEditorReview = useContentEditorReviewIM({
     id: iMId as string,
   });
   const activeCITLDirector = useActiveCITLDirectorMe();

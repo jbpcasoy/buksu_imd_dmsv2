@@ -10,6 +10,7 @@ import useIDDCoordinatorSuggestionItemsOwn, {
   useIDDCoordinatorSuggestionItemsOwnParams,
 } from "@/hooks/useIDDCoordinatorSuggestionItemsOwn";
 import useIDDCoordinatorSuggestionMe from "@/hooks/useIDDCoordinatorSuggestionMe";
+import useSubmittedIDDCoordinatorSuggestionIM from "@/hooks/useSubmittedIDDCoordinatorSuggestionIM";
 import { IDDCoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
@@ -24,6 +25,10 @@ export default function IDDCoordinatorSuggestionPage() {
   const iDDCoordinatorSuggestion = useIDDCoordinatorSuggestionMe({
     id: iMId as string,
   });
+  const submittedIDDCoordinatorSuggestion =
+    useSubmittedIDDCoordinatorSuggestionIM({
+      id: iMId as string,
+    });
   const deanEndorsement = useDeanEndorsementIM({ id: iMId as string });
   const [state, setState] = useState<useIDDCoordinatorSuggestionItemsOwnParams>(
     {
@@ -124,6 +129,12 @@ export default function IDDCoordinatorSuggestionPage() {
       return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
     });
   };
+
+  useEffect(() => {
+    if (submittedIDDCoordinatorSuggestion) {
+      router.push(`/im/${iMId}`);
+    }
+  }, [submittedIDDCoordinatorSuggestion]);
 
   return (
     <MainLayout>

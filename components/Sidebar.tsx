@@ -16,18 +16,6 @@ export default function Sidebar() {
   const activeChairperson = useActiveChairpersonMe();
   const activeContentSpecialist = useActiveContentSpecialistMe();
 
-  //   <div className='h-full overflow-y-auto pb-10'>
-  //   <h1 className='py-2 sticky top-0 bg-white shadow'>BUKSU IMD DMS</h1>
-
-  //   <div className='flex flex-col'>
-  //     {items.map((item) => (
-  //       <Link href={item.link} className='underline' key={item.link}>
-  //         {item.label}
-  //       </Link>
-  //     ))}
-  //   </div>
-  // </div>
-
   return (
     <div className='h-full overflow-y-auto flex flex-col pb-10'>
       <Link
@@ -36,7 +24,7 @@ export default function Sidebar() {
       >
         BUKSU IMD DMS
       </Link>
-      {activeFaculty && (
+      {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
         <>
           {activeFaculty && (
             <Link href='/department/my_ims' className='underline font-bold'>
@@ -75,7 +63,7 @@ export default function Sidebar() {
               )}
             </div>
           )}
-          {activeFaculty && (
+          {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
             <div className='flex flex-col'>
               <p className='font-bold'>CITL</p>
 
@@ -142,7 +130,7 @@ export default function Sidebar() {
             </div>
           )}
 
-          {activeFaculty && (
+          {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
             <div className='flex flex-col'>
               <p className='font-bold'>CITL</p>
 
@@ -151,7 +139,7 @@ export default function Sidebar() {
                   To Revise
                 </Link>
               )}
-              {activeIDDCoordinator && (
+              {(activeIDDCoordinator || activeCITLDirector) && (
                 <Link href='/imerc/citl/to_review' className='underline'>
                   To Review
                 </Link>

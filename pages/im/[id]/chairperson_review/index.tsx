@@ -11,12 +11,13 @@ import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
 import * as Yup from "yup";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
 import Link from "next/link";
+import useChairpersonReviewIM from "@/hooks/useChairpersonReviewIM";
 
 export default function AddChairpersonReviewPage() {
   const router = useRouter();
   const iMId = router.query.id;
   const departmentReview = useDepartmentReviewIM({ id: iMId as string });
-  const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
+  const chairpersonReview = useChairpersonReviewIM({ id: iMId as string });
   const activeFaculty = useActiveChairpersonMe();
   const formik = useFormik({
     initialValues: {

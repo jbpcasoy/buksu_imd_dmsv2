@@ -15,6 +15,7 @@ import Link from "next/link";
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
+import useSubmittedContentSpecialistSuggestionIM from "@/hooks/useSubmittedContentSpecialistSuggestionIM";
 
 export default function ContentSpecialistSuggestionPage() {
   const router = useRouter();
@@ -30,6 +31,8 @@ export default function ContentSpecialistSuggestionPage() {
       skip: 0,
       take: 10,
     });
+  const submittedContentSpecialistSuggestion =
+    useSubmittedContentSpecialistSuggestionIM({ id: iMId as string });
   const contentSpecialistSuggestionItems =
     useContentSpecialistSuggestionItemsOwn(state);
   const handleSubmitReview = () => {
@@ -113,7 +116,10 @@ export default function ContentSpecialistSuggestionPage() {
       const nextVal = prev.skip + prev.take;
       return {
         ...prev,
-        skip: nextVal <= contentSpecialistSuggestionItems.count ? nextVal : prev.skip,
+        skip:
+          nextVal <= contentSpecialistSuggestionItems.count
+            ? nextVal
+            : prev.skip,
       };
     });
   };
@@ -124,6 +130,12 @@ export default function ContentSpecialistSuggestionPage() {
       return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
     });
   };
+
+  useEffect(() => {
+    if (submittedContentSpecialistSuggestion) {
+      router.push(`/im/${iMId}`);
+    }
+  }, [submittedContentSpecialistSuggestion]);
 
   return (
     <MainLayout>
