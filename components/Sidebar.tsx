@@ -20,6 +20,7 @@ import useIMERCToEndorseCount from "@/hooks/useIMERCToEndorseCount";
 import useIMERCToReviewCount from "@/hooks/useIMERCToReviewCount";
 import useIMERCToReviseCount from "@/hooks/useIMERCToReviseCount";
 import useMyIMsCount from "@/hooks/useMyIMsCount";
+import useReviewedCount from "@/hooks/useReviewedCount";
 import useToReviewCount from "@/hooks/useToReviewCount";
 import useToReviseCount from "@/hooks/useToReviseCount";
 import Link from "next/link";
@@ -37,6 +38,7 @@ export default function Sidebar() {
   const deanToEndorseCount = useDeanToEndorseCount();
   const toReviseCount = useToReviseCount();
   const toReviewCount = useToReviewCount();
+  const reviewedCount = useReviewedCount();
   const cITLToRevise = useCITLToReviseCount();
   const cITLToReviewCount = useCITLToReviewCount();
   const cITLIDDToEndorse = useCITLIDDToEndorseCount();
@@ -80,6 +82,12 @@ export default function Sidebar() {
                 <Link href='/department/to_review' className='underline'>
                   <span className='font-normal'>{toReviewCount.count}</span> To
                   Review
+                </Link>
+              )}
+              {activeFaculty && (
+                <Link href='/department/reviewed' className='underline'>
+                  <span className='font-normal'>{reviewedCount.count}</span>{" "}
+                  Reviewed
                 </Link>
               )}
               {activeCoordinator && (
@@ -224,7 +232,7 @@ export default function Sidebar() {
                     <span className='font-normal'>
                       {iMERCCITLDirectorToEndorse.count}
                     </span>{" "}
-                    To Endorse  
+                    To Endorse
                   </Link>
                 </div>
               )}
