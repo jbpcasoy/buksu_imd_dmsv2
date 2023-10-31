@@ -1,15 +1,18 @@
 import MainLayout from "@/components/MainLayout";
-import useEvents from "@/hooks/useEvents";
+import Notification from "@/components/Notification";
 import useEventsMe from "@/hooks/useEventsMe";
-import Link from "next/link";
 import { useState } from "react";
 
 export default function NotificationPage() {
   const [state, setState] = useState({
     take: 10,
     skip: 0,
+    filter: {
+      read: "unread",
+    },
   });
   const { events, count } = useEventsMe(state);
+
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -29,32 +32,40 @@ export default function NotificationPage() {
       <h2>Notifications</h2>
       <div>
         {events.map((event) => {
-          return (
-            <div className='rounded border m-1 p-1' key={event.id}>
-              <p className='text-sm'>{event.type}</p>
-              <p className='text-sm'>{event.message}</p>
-              <p className='text-sm'>
-                {new Date(event.createdAt).toLocaleString()}
-              </p>
-              {event.url && (
-                <Link className='text-sm underline' href={event.url}>
-                  View
-                </Link>
-              )}
-            </div>
-          );
+          return <Notification event={event} key={event.id} />;
         })}
       </div>
-      <div className='flex justify-end space-x-1'>
-        <p>
-          {state.skip} - {state.skip + state.take} of {count}
-        </p>
-        <button className='border rounded' onClick={handlePrev}>
-          prev
-        </button>
-        <button className='border rounded' onClick={handleNext}>
-          next
-        </button>
+      <div className='flex flex-row justify-between'>
+        <div>
+          <select
+            value={`${state.filter.read}`}
+            onChange={(e) =>
+              setState((prev) => ({
+                ...prev,
+                skip: 0,
+                filter: {
+                  ...prev.filter,
+                  read: e.target.value,
+                },
+              }))
+            }
+          >
+            <option value='read'>Read</option>
+            <option value='unread'>Unread</option>
+            <option value='all'>All</option>
+          </select>
+        </div>
+        <div className='flex justify-end space-x-1'>
+          <p>
+            {state.skip} - {state.skip + state.take} of {count}
+          </p>
+          <button className='border rounded' onClick={handlePrev}>
+            prev
+          </button>
+          <button className='border rounded' onClick={handleNext}>
+            next
+          </button>
+        </div>
       </div>
     </MainLayout>
   );

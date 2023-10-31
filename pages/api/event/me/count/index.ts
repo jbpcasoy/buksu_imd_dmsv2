@@ -1222,7 +1222,21 @@ export default async function handler(
 
       const count = await prisma.event.count({
         where: {
-          AND: [accessibleBy(ability).Event, whereQuery],
+          AND: [
+            accessibleBy(ability).Event,
+            whereQuery,
+            {
+              NotificationRead: {
+                none: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
       });
 

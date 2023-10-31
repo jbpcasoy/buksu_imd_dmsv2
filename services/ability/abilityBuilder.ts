@@ -70,6 +70,7 @@ import {
   ActiveContentSpecialist,
   ProfilePictureFile,
   Event,
+  NotificationRead,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -144,6 +145,7 @@ export type AppSubjects =
       ActiveContentSpecialist: ActiveContentSpecialist;
       ProfilePictureFile: ProfilePictureFile;
       Event: Event;
+      NotificationRead: NotificationRead;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

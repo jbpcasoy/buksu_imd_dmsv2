@@ -279,6 +279,11 @@ export default function CrudSidebar() {
       link: "/crud/event",
       label: "Event",
     },
+    {
+      link: "/crud/notification_read",
+      label: "NotificationRead",
+    },
+    // TODO add profile picture file
   ];
   
   return (

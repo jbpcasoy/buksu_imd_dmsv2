@@ -27,11 +27,16 @@ export default async function handler(
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
+        "filter[read]": Yup.string().optional().default("unread"),
       });
 
       await validator.validate(req.query);
 
-      const { skip, take } = validator.cast(req.query);
+      const {
+        skip,
+        take,
+        "filter[read]": filterRead,
+      } = validator.cast(req.query);
 
       const whereQuery: Prisma.EventWhereInput = {
         OR: [
@@ -1229,21 +1234,113 @@ export default async function handler(
         ],
       };
 
-      const events = await prisma.event.findMany({
-        skip,
-        take,
-        where: {
-          AND: [accessibleBy(ability).Event, whereQuery],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
-      const count = await prisma.event.count({
-        where: {
-          AND: [accessibleBy(ability).Event, whereQuery],
-        },
-      });
+      let events;
+      let count;
+      if (filterRead === "unread") {
+        events = await prisma.event.findMany({
+          skip,
+          take,
+          where: {
+            AND: [
+              accessibleBy(ability).Event,
+              whereQuery,
+              {
+                NotificationRead: {
+                  none: {
+                    User: {
+                      id: {
+                        equals: user.id,
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
+        count = await prisma.event.count({
+          where: {
+            AND: [
+              accessibleBy(ability).Event,
+              whereQuery,
+              {
+                NotificationRead: {
+                  none: {
+                    User: {
+                      id: {
+                        equals: user.id,
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        });
+      } else if (filterRead === "read") {
+        events = await prisma.event.findMany({
+          skip,
+          take,
+          where: {
+            AND: [
+              accessibleBy(ability).Event,
+              whereQuery,
+              {
+                NotificationRead: {
+                  some: {
+                    User: {
+                      id: {
+                        equals: user.id,
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
+        count = await prisma.event.count({
+          where: {
+            AND: [
+              accessibleBy(ability).Event,
+              whereQuery,
+              {
+                NotificationRead: {
+                  some: {
+                    User: {
+                      id: {
+                        equals: user.id,
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        });
+      } else {
+        events = await prisma.event.findMany({
+          skip,
+          take,
+          where: {
+            AND: [accessibleBy(ability).Event, whereQuery],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
+        count = await prisma.event.count({
+          where: {
+            AND: [accessibleBy(ability).Event, whereQuery],
+          },
+        });
+      }
 
       for (let event of events) {
         switch (event.type) {
