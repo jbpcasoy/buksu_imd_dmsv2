@@ -5,6 +5,23 @@ import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import useCITLDirectorToEndorseCount from "@/hooks/useCITLDirectorToEndorseCount";
+import useCITLIDDToEndorseCount from "@/hooks/useCITLIDDToEndorseCount";
+import useCITLToReviewCount from "@/hooks/useCITLToReviewCount";
+import useCITLToReviseCount from "@/hooks/useCITLToReviseCount";
+import useCoordinatorToEndorseCount from "@/hooks/useCoordinatorToEndorseCount";
+import useDeanToEndorseCount from "@/hooks/useDeanToEndorseCount";
+import useIMERCCITLDirectorToEndorseCount from "@/hooks/useIMERCCITLDirectorToEndorseCount";
+import useIMERCCITLToEndorseCount from "@/hooks/useIMERCCITLToEndorseCount";
+import useIMERCCITLToReviewCount from "@/hooks/useIMERCCITLToReviewCount";
+import useIMERCCITLToReviseCount from "@/hooks/useIMERCCITLToReviseCount";
+import useIMERCCollegeToEndorseCount from "@/hooks/useIMERCCollegeToEndorseCount";
+import useIMERCToEndorseCount from "@/hooks/useIMERCToEndorseCount";
+import useIMERCToReviewCount from "@/hooks/useIMERCToReviewCount";
+import useIMERCToReviseCount from "@/hooks/useIMERCToReviseCount";
+import useMyIMsCount from "@/hooks/useMyIMsCount";
+import useToReviewCount from "@/hooks/useToReviewCount";
+import useToReviseCount from "@/hooks/useToReviseCount";
 import Link from "next/link";
 
 export default function Sidebar() {
@@ -15,6 +32,23 @@ export default function Sidebar() {
   const activeCoordinator = useActiveCoordinatorMe();
   const activeChairperson = useActiveChairpersonMe();
   const activeContentSpecialist = useActiveContentSpecialistMe();
+  const myIMsCount = useMyIMsCount();
+  const coordinatorToEndorseCount = useCoordinatorToEndorseCount();
+  const deanToEndorseCount = useDeanToEndorseCount();
+  const toReviseCount = useToReviseCount();
+  const toReviewCount = useToReviewCount();
+  const cITLToRevise = useCITLToReviseCount();
+  const cITLToReviewCount = useCITLToReviewCount();
+  const cITLIDDToEndorse = useCITLIDDToEndorseCount();
+  const cITLDirectorToEndorse = useCITLDirectorToEndorseCount();
+  const iMERCToRevise = useIMERCToReviseCount();
+  const iMERCToReview = useIMERCToReviewCount();
+  const iMERCToEndorse = useIMERCToEndorseCount();
+  const iMERCCollegeToEndorse = useIMERCCollegeToEndorseCount();
+  const iMERCCITLToRevise = useIMERCCITLToReviseCount();
+  const iMERCCITLToReview = useIMERCCITLToReviewCount();
+  const iMERCCITLToEndorse = useIMERCCITLToEndorseCount();
+  const iMERCCITLDirectorToEndorse = useIMERCCITLDirectorToEndorseCount();
 
   return (
     <div className='h-full overflow-y-auto flex flex-col pb-10'>
@@ -25,10 +59,11 @@ export default function Sidebar() {
         BUKSU IMD DMS
       </Link>
       {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
-        <>
+        <div className='my-2'>
           {activeFaculty && (
             <Link href='/department/my_ims' className='underline font-bold'>
-              My IM&apos;s
+              <span className='font-normal'>{myIMsCount.count}</span> My
+              IM&apos;s
             </Link>
           )}
           <p className='text-xs text-center'>IMPLEMENTATION PHASE</p>
@@ -37,16 +72,21 @@ export default function Sidebar() {
               <p className='font-bold'>Department</p>
               {activeFaculty && (
                 <Link href='/department/to_revise' className='underline'>
-                  To Revise
+                  <span className='font-normal'>{toReviseCount.count}</span> To
+                  Revise
                 </Link>
               )}
               {activeFaculty && (
                 <Link href='/department/to_review' className='underline'>
-                  To Review
+                  <span className='font-normal'>{toReviewCount.count}</span> To
+                  Review
                 </Link>
               )}
               {activeCoordinator && (
                 <Link href='/department/to_endorse' className='underline'>
+                  <span className='font-normal'>
+                    {coordinatorToEndorseCount.count}
+                  </span>{" "}
                   To Endorse
                 </Link>
               )}
@@ -58,6 +98,9 @@ export default function Sidebar() {
 
               {activeDean && (
                 <Link href='/college/to_endorse' className='underline'>
+                  <span className='font-normal'>
+                    {deanToEndorseCount.count}
+                  </span>{" "}
                   To Endorse
                 </Link>
               )}
@@ -69,19 +112,24 @@ export default function Sidebar() {
 
               {activeFaculty && (
                 <Link href='/citl/to_revise' className='underline'>
-                  To Revise
+                  <span className='font-normal'>{cITLToRevise.count}</span> To
+                  Revise
                 </Link>
               )}
               {activeIDDCoordinator && (
                 <div>
                   <p className='font-bold text-xs'>IDD Coordinator</p>
                   <Link href='/citl/to_review' className='underline'>
+                    <span className='font-normal'>
+                      {cITLToReviewCount.count}
+                    </span>{" "}
                     To Review
                   </Link>
                 </div>
               )}
               {activeIDDCoordinator && (
                 <Link href='/citl/to_endorse' className='underline'>
+                  <span className='font-normal'>{cITLIDDToEndorse.count}</span>{" "}
                   To Endorse
                 </Link>
               )}
@@ -92,6 +140,9 @@ export default function Sidebar() {
                     href='/citl/citl_director_to_endorse'
                     className='underline'
                   >
+                    <span className='font-normal'>
+                      {cITLDirectorToEndorse.count}
+                    </span>{" "}
                     To Endorse
                   </Link>
                 </div>
@@ -105,17 +156,20 @@ export default function Sidebar() {
 
               {activeFaculty && (
                 <Link href='/imerc/department/to_revise' className='underline'>
-                  To Revise
+                  <span className='font-normal'>{iMERCToRevise.count}</span> To
+                  Revise
                 </Link>
               )}
               {activeContentSpecialist && (
                 <Link href='/imerc/department/to_review' className='underline'>
-                  To Review
+                  <span className='font-normal'>{iMERCToReview.count}</span> To
+                  Review
                 </Link>
               )}
               {(activeCoordinator || activeChairperson) && (
                 <Link href='/imerc/department/to_endorse' className='underline'>
-                  To Endorse
+                  <span className='font-normal'>{iMERCToEndorse.count}</span> To
+                  Endorse
                 </Link>
               )}
             </div>
@@ -125,6 +179,9 @@ export default function Sidebar() {
               <p className='font-bold'>College</p>
 
               <Link href='/imerc/college/to_endorse' className='underline'>
+                <span className='font-normal'>
+                  {iMERCCollegeToEndorse.count}
+                </span>{" "}
                 To Endorse
               </Link>
             </div>
@@ -136,11 +193,13 @@ export default function Sidebar() {
 
               {activeFaculty && (
                 <Link href='/imerc/citl/to_revise' className='underline'>
+                  <span className='font-normal'>{iMERCCITLToRevise.count}</span>{" "}
                   To Revise
                 </Link>
               )}
               {(activeIDDCoordinator || activeCITLDirector) && (
                 <Link href='/imerc/citl/to_review' className='underline'>
+                  <span className='font-normal'>{iMERCCITLToReview.count}</span>{" "}
                   To Review
                 </Link>
               )}
@@ -148,6 +207,9 @@ export default function Sidebar() {
                 <div>
                   <p className='font-bold text-xs'>IDD Coordinator</p>
                   <Link href='/imerc/citl/to_endorse' className='underline'>
+                    <span className='font-normal'>
+                      {iMERCCITLToEndorse.count}
+                    </span>{" "}
                     To Endorse
                   </Link>
                 </div>
@@ -159,13 +221,16 @@ export default function Sidebar() {
                     href='/imerc/citl/citl_director_to_endorse'
                     className='underline'
                   >
-                    To Endorse
+                    <span className='font-normal'>
+                      {iMERCCITLDirectorToEndorse.count}
+                    </span>{" "}
+                    To Endorse  
                   </Link>
                 </div>
               )}
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
