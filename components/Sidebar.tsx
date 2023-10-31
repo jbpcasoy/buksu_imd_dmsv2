@@ -11,6 +11,7 @@ import useCITLToReviewCount from "@/hooks/useCITLToReviewCount";
 import useCITLToReviseCount from "@/hooks/useCITLToReviseCount";
 import useCoordinatorToEndorseCount from "@/hooks/useCoordinatorToEndorseCount";
 import useDeanToEndorseCount from "@/hooks/useDeanToEndorseCount";
+import useDepartmentIMsCount from "@/hooks/useDepartmentIMsCount";
 import useIMERCCITLDirectorToEndorseCount from "@/hooks/useIMERCCITLDirectorToEndorseCount";
 import useIMERCCITLToEndorseCount from "@/hooks/useIMERCCITLToEndorseCount";
 import useIMERCCITLToReviewCount from "@/hooks/useIMERCCITLToReviewCount";
@@ -34,6 +35,7 @@ export default function Sidebar() {
   const activeChairperson = useActiveChairpersonMe();
   const activeContentSpecialist = useActiveContentSpecialistMe();
   const myIMsCount = useMyIMsCount();
+  const departmentIMsCount = useDepartmentIMsCount();
   const coordinatorToEndorseCount = useCoordinatorToEndorseCount();
   const deanToEndorseCount = useDeanToEndorseCount();
   const toReviseCount = useToReviseCount();
@@ -96,6 +98,14 @@ export default function Sidebar() {
                     {coordinatorToEndorseCount.count}
                   </span>{" "}
                   To Endorse
+                </Link>
+              )}
+              {(activeCoordinator || activeChairperson) && (
+                <Link href='/department/all_ims' className='underline'>
+                  <span className='font-normal'>
+                    {departmentIMsCount.count}
+                  </span>{" "}
+                  All IMs
                 </Link>
               )}
             </div>
