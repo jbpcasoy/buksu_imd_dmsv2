@@ -5,6 +5,7 @@ import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import useCITLRevisionIM from "@/hooks/useCITLRevisionIM";
 import useDeanEndorsementIM from "@/hooks/useDeanEndorsementIM";
 import useIDDCoordinatorSuggestionItemsOwn, {
   useIDDCoordinatorSuggestionItemsOwnParams,
@@ -30,6 +31,7 @@ export default function IDDCoordinatorSuggestionPage() {
       id: iMId as string,
     });
   const deanEndorsement = useDeanEndorsementIM({ id: iMId as string });
+  const cITLRevision = useCITLRevisionIM({ id: iMId as string });
   const [state, setState] = useState<useIDDCoordinatorSuggestionItemsOwnParams>(
     {
       skip: 0,
@@ -131,10 +133,10 @@ export default function IDDCoordinatorSuggestionPage() {
   };
 
   useEffect(() => {
-    if (submittedIDDCoordinatorSuggestion) {
+    if (submittedIDDCoordinatorSuggestion && cITLRevision) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedIDDCoordinatorSuggestion]);
+  }, [submittedIDDCoordinatorSuggestion, cITLRevision]);
 
   return (
     <MainLayout>
@@ -217,9 +219,16 @@ export default function IDDCoordinatorSuggestionPage() {
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
           <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
         </div>
-        <button className='rounded border' onClick={handleSubmitReview}>
-          Submit Review
-        </button>
+        {!submittedIDDCoordinatorSuggestion && (
+          <button className='rounded border' onClick={handleSubmitReview}>
+            Submit Review
+          </button>
+        )}
+        {submittedIDDCoordinatorSuggestion && (
+          <Link className='rounded border' href={`/im/${iMId}`}>
+            Finish
+          </Link>
+        )}
       </div>
     </MainLayout>
   );

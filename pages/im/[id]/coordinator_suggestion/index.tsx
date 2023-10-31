@@ -7,6 +7,7 @@ import useCoordinatorSuggestionItemsOwn, {
   useCoordinatorSuggestionItemsOwnParams,
 } from "@/hooks/useCoordinatorSuggestionItemsOwn";
 import useCoordinatorSuggestionMe from "@/hooks/useCoordinatorSuggestionMe";
+import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useSubmittedCoordinatorSuggestionIM from "@/hooks/useSubmittedCoordinatorSuggestionIM";
 import { CoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
@@ -27,6 +28,7 @@ export default function CoordinatorSuggestionPage() {
     skip: 0,
     take: 10,
   });
+  const departmentRevision = useDepartmentRevisionIM({ id: iMId as string });
   const submittedCoordinatorSuggestion = useSubmittedCoordinatorSuggestionIM({
     id: iMId as string,
   });
@@ -118,10 +120,10 @@ export default function CoordinatorSuggestionPage() {
   });
 
   useEffect(() => {
-    if (submittedCoordinatorSuggestion) {
+    if (submittedCoordinatorSuggestion && departmentRevision) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedCoordinatorSuggestion]);
+  }, [submittedCoordinatorSuggestion, departmentRevision]);
 
   return (
     <MainLayout>
@@ -202,9 +204,16 @@ export default function CoordinatorSuggestionPage() {
           <IMPeerSuggestionItems id={iMId as string} editable={false} />
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
         </div>
-        <button className='rounded border' onClick={handleSubmitReview}>
-          Submit Review
-        </button>
+        {!submittedCoordinatorSuggestion && (
+          <button className='rounded border' onClick={handleSubmitReview}>
+            Submit Review
+          </button>
+        )}
+        {submittedCoordinatorSuggestion && (
+          <Link className='rounded border' href={`/im/${iMId}`}>
+            Finish
+          </Link>
+        )}
       </div>
     </MainLayout>
   );

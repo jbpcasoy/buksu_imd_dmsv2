@@ -252,13 +252,11 @@ export default function ViewIM() {
           )
           .then(() => {
             alert("IM returned successfully");
-            router.reload();
+            router.push(`/im/${iMId}/coordinator_suggestion`);
           });
       })
       .catch((error) => {
         alert(error.response.data.error.message);
-      })
-      .finally(() => {
         router.reload();
       });
   };
@@ -330,14 +328,13 @@ export default function ViewIM() {
           })
           .then(() => {
             alert("IM returned successfully");
+            router.push(`/im/${iMId}/idd_coordinator_suggestion`)
           });
       })
       .catch((error) => {
         alert(error.response.data.error.message);
-      })
-      .finally(() => {
         router.reload();
-      });
+      })
   };
 
   const cITLDirectorEndorsementHandler = async () => {
@@ -414,14 +411,13 @@ export default function ViewIM() {
           .then((res) => {
             console.log({ data: res.data });
             alert("IM returned successfully");
+            router.push(`/im/${iMId}/imerc_idd_specialist_suggestion`);
           });
       })
       .catch((error) => {
         alert(error.response.data.error.message);
-      })
-      .finally(() => {
         router.reload();
-      });
+      })
   };
 
   const iMERCCITLDirectorEndorsementHandler = async () => {
@@ -738,16 +734,17 @@ export default function ViewIM() {
         </div>
       )}
 
-      {iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" && activeCITLDirector && (
-        <div>
-          <button
-            className='border rounded'
-            onClick={iMERCCITLDirectorEndorsementHandler}
-          >
-            Endorse IM
-          </button>
-        </div>
-      )}
+      {iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" &&
+        activeCITLDirector && (
+          <div>
+            <button
+              className='border rounded'
+              onClick={iMERCCITLDirectorEndorsementHandler}
+            >
+              Endorse IM
+            </button>
+          </div>
+        )}
 
       {iMStatus === "IMERC_CITL_DIRECTOR_ENDORSED" && (
         <div>

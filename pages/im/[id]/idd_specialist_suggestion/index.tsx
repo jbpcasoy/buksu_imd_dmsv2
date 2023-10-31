@@ -8,6 +8,7 @@ import useIDDSpecialistSuggestionItemsOwn, {
   useIDDSpecialistSuggestionItemsOwnParams,
 } from "@/hooks/useIDDSpecialistSuggestionItemsOwn";
 import useIDDSpecialistSuggestionMe from "@/hooks/useIDDSpecialistSuggestionMe";
+import useIMERCCITLRevisionIM from "@/hooks/useIMERCCITLRevisionIM";
 import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
 import { IDDSpecialistSuggestion } from "@prisma/client";
 import axios from "axios";
@@ -24,6 +25,7 @@ export default function IDDSpecialistSuggestionPage() {
     id: iMId as string,
   });
   const iDDSpecialistReview = useIDDSpecialistReviewMe({ id: iMId as string });
+  const iMERCCITLRevision = useIMERCCITLRevisionIM({ id: iMId as string });
   const submittedIDDSpecialistSuggestion =
     useSubmittedIDDSpecialistSuggestionIM({ id: iMId as string });
   const [state, setState] = useState<useIDDSpecialistSuggestionItemsOwnParams>({
@@ -123,10 +125,10 @@ export default function IDDSpecialistSuggestionPage() {
   };
 
   useEffect(() => {
-    if (submittedIDDSpecialistSuggestion) {
+    if (submittedIDDSpecialistSuggestion && iMERCCITLRevision) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedIDDSpecialistSuggestion]);
+  }, [submittedIDDSpecialistSuggestion, iMERCCITLRevision]);
 
   return (
     <MainLayout>
@@ -213,9 +215,16 @@ export default function IDDSpecialistSuggestionPage() {
             editable={false}
           />
         </div>
-        <button className='rounded border' onClick={handleSubmitReview}>
-          Submit Review
-        </button>
+        {!submittedIDDSpecialistSuggestion && (
+          <button className='rounded border' onClick={handleSubmitReview}>
+            Submit Review
+          </button>
+        )}
+        {submittedIDDSpecialistSuggestion && (
+          <Link className='rounded border' href={`/im/${iMId}`}>
+            Finish
+          </Link>
+        )}
       </div>
     </MainLayout>
   );

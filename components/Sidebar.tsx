@@ -45,7 +45,7 @@ export default function Sidebar() {
                   To Review
                 </Link>
               )}
-              {activeFaculty && (
+              {activeCoordinator && (
                 <Link href='/department/to_endorse' className='underline'>
                   To Endorse
                 </Link>
