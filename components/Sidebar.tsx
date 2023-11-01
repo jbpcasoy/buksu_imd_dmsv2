@@ -9,6 +9,7 @@ import useCITLDirectorToEndorseCount from "@/hooks/useCITLDirectorToEndorseCount
 import useCITLIDDToEndorseCount from "@/hooks/useCITLIDDToEndorseCount";
 import useCITLToReviewCount from "@/hooks/useCITLToReviewCount";
 import useCITLToReviseCount from "@/hooks/useCITLToReviseCount";
+import useCollegeIMsCount from "@/hooks/useCollegeIMsCount";
 import useCoordinatorEndorsedCount from "@/hooks/useCoordinatorEndorsedCount";
 import useCoordinatorToEndorseCount from "@/hooks/useCoordinatorToEndorseCount";
 import useDeanToEndorseCount from "@/hooks/useDeanToEndorseCount";
@@ -55,6 +56,7 @@ export default function Sidebar() {
   const iMERCCITLToEndorse = useIMERCCITLToEndorseCount();
   const iMERCCITLDirectorToEndorse = useIMERCCITLDirectorToEndorseCount();
   const coordinatorEndorsedCount = useCoordinatorEndorsedCount();
+  const collegeIMsCount = useCollegeIMsCount();
 
   return (
     <div className='h-full overflow-y-auto flex flex-col pb-10'>
@@ -130,6 +132,14 @@ export default function Sidebar() {
                     {deanToEndorseCount.count}
                   </span>{" "}
                   To Endorse
+                </Link>
+              )}
+              {activeDean && (
+                <Link href='/college/all_ims' className='underline'>
+                  <span className='font-normal'>
+                    {collegeIMsCount.count}
+                  </span>{" "}
+                  All IM&apos;s
                 </Link>
               )}
             </div>
