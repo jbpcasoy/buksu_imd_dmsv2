@@ -24,6 +24,7 @@ import useIMERCCITLToEndorseCount from "@/hooks/useIMERCCITLToEndorseCount";
 import useIMERCCITLToReviewCount from "@/hooks/useIMERCCITLToReviewCount";
 import useIMERCCITLToReviseCount from "@/hooks/useIMERCCITLToReviseCount";
 import useIMERCCollegeToEndorseCount from "@/hooks/useIMERCCollegeToEndorseCount";
+import useIMERCReviewedCount from "@/hooks/useIMERCReviewedCount";
 import useIMERCToEndorseCount from "@/hooks/useIMERCToEndorseCount";
 import useIMERCToReviewCount from "@/hooks/useIMERCToReviewCount";
 import useIMERCToReviseCount from "@/hooks/useIMERCToReviseCount";
@@ -59,6 +60,7 @@ export default function Sidebar() {
   const cITLDirectorEndorsedCount = useCITLDirectorEndorsedCount();
   const iMERCToReviseCount = useIMERCToReviseCount();
   const iMERCToReviewCount = useIMERCToReviewCount();
+  const iMERCReviewedCount = useIMERCReviewedCount();
   const iMERCToEndorseCount = useIMERCToEndorseCount();
   const iMERCCollegeToEndorseCount = useIMERCCollegeToEndorseCount();
   const iMERCCITLToReviseCount = useIMERCCITLToReviseCount();
@@ -209,7 +211,7 @@ export default function Sidebar() {
                 </Link>
               )}
               {activeCITLDirector && (
-                <div className="flex flex-col">
+                <div className='flex flex-col'>
                   <p className='font-bold text-xs'>CITL Director</p>
                   <Link
                     href='/citl/citl_director_to_endorse'
@@ -252,6 +254,14 @@ export default function Sidebar() {
                     {iMERCToReviewCount.count}
                   </span>{" "}
                   To Review
+                </Link>
+              )}
+              {activeContentSpecialist && (
+                <Link href='/imerc/department/reviewed' className='underline'>
+                  <span className='font-normal'>
+                    {iMERCReviewedCount.count}
+                  </span>{" "}
+                  Reviewed
                 </Link>
               )}
               {(activeCoordinator || activeChairperson) && (
