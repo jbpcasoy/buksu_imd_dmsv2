@@ -7,6 +7,7 @@ import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useCITLDirectorToEndorseCount from "@/hooks/useCITLDirectorToEndorseCount";
 import useCITLIDDToEndorseCount from "@/hooks/useCITLIDDToEndorseCount";
+import useCITLReviewedCount from "@/hooks/useCITLReviewedCount";
 import useCITLToReviewCount from "@/hooks/useCITLToReviewCount";
 import useCITLToReviseCount from "@/hooks/useCITLToReviseCount";
 import useCollegeIMsCount from "@/hooks/useCollegeIMsCount";
@@ -45,18 +46,19 @@ export default function Sidebar() {
   const toReviseCount = useToReviseCount();
   const toReviewCount = useToReviewCount();
   const reviewedCount = useReviewedCount();
-  const cITLToRevise = useCITLToReviseCount();
+  const cITLToReviseCount = useCITLToReviseCount();
   const cITLToReviewCount = useCITLToReviewCount();
-  const cITLIDDToEndorse = useCITLIDDToEndorseCount();
-  const cITLDirectorToEndorse = useCITLDirectorToEndorseCount();
-  const iMERCToRevise = useIMERCToReviseCount();
-  const iMERCToReview = useIMERCToReviewCount();
-  const iMERCToEndorse = useIMERCToEndorseCount();
-  const iMERCCollegeToEndorse = useIMERCCollegeToEndorseCount();
-  const iMERCCITLToRevise = useIMERCCITLToReviseCount();
-  const iMERCCITLToReview = useIMERCCITLToReviewCount();
-  const iMERCCITLToEndorse = useIMERCCITLToEndorseCount();
-  const iMERCCITLDirectorToEndorse = useIMERCCITLDirectorToEndorseCount();
+  const cITLReviewedCount = useCITLReviewedCount();
+  const cITLIDDToEndorseCount = useCITLIDDToEndorseCount();
+  const cITLDirectorToEndorseCount = useCITLDirectorToEndorseCount();
+  const iMERCToReviseCount = useIMERCToReviseCount();
+  const iMERCToReviewCount = useIMERCToReviewCount();
+  const iMERCToEndorseCount = useIMERCToEndorseCount();
+  const iMERCCollegeToEndorseCount = useIMERCCollegeToEndorseCount();
+  const iMERCCITLToReviseCount = useIMERCCITLToReviseCount();
+  const iMERCCITLToReviewCount = useIMERCCITLToReviewCount();
+  const iMERCCITLToEndorseCount = useIMERCCITLToEndorseCount();
+  const iMERCCITLDirectorToEndorseCount = useIMERCCITLDirectorToEndorseCount();
   const coordinatorEndorsedCount = useCoordinatorEndorsedCount();
   const collegeIMsCount = useCollegeIMsCount();
 
@@ -138,17 +140,13 @@ export default function Sidebar() {
               )}
               {activeDean && (
                 <Link href='/college/endorsed' className='underline'>
-                  <span className='font-normal'>
-                    {deanEndorsedCount.count}
-                  </span>{" "}
+                  <span className='font-normal'>{deanEndorsedCount.count}</span>{" "}
                   Endorsed
                 </Link>
               )}
               {activeDean && (
                 <Link href='/college/all_ims' className='underline'>
-                  <span className='font-normal'>
-                    {collegeIMsCount.count}
-                  </span>{" "}
+                  <span className='font-normal'>{collegeIMsCount.count}</span>{" "}
                   All IM&apos;s
                 </Link>
               )}
@@ -160,12 +158,12 @@ export default function Sidebar() {
 
               {activeFaculty && (
                 <Link href='/citl/to_revise' className='underline'>
-                  <span className='font-normal'>{cITLToRevise.count}</span> To
+                  <span className='font-normal'>{cITLToReviseCount.count}</span> To
                   Revise
                 </Link>
               )}
               {activeIDDCoordinator && (
-                <div>
+                <div className='flex flex-col'>
                   <p className='font-bold text-xs'>IDD Coordinator</p>
                   <Link href='/citl/to_review' className='underline'>
                     <span className='font-normal'>
@@ -173,11 +171,17 @@ export default function Sidebar() {
                     </span>{" "}
                     To Review
                   </Link>
+                  <Link href='/citl/reviewed' className='underline'>
+                    <span className='font-normal'>
+                      {cITLReviewedCount.count}
+                    </span>{" "}
+                    Reviewed
+                  </Link>
                 </div>
               )}
               {activeIDDCoordinator && (
                 <Link href='/citl/to_endorse' className='underline'>
-                  <span className='font-normal'>{cITLIDDToEndorse.count}</span>{" "}
+                  <span className='font-normal'>{cITLIDDToEndorseCount.count}</span>{" "}
                   To Endorse
                 </Link>
               )}
@@ -189,7 +193,7 @@ export default function Sidebar() {
                     className='underline'
                   >
                     <span className='font-normal'>
-                      {cITLDirectorToEndorse.count}
+                      {cITLDirectorToEndorseCount.count}
                     </span>{" "}
                     To Endorse
                   </Link>
@@ -204,19 +208,19 @@ export default function Sidebar() {
 
               {activeFaculty && (
                 <Link href='/imerc/department/to_revise' className='underline'>
-                  <span className='font-normal'>{iMERCToRevise.count}</span> To
+                  <span className='font-normal'>{iMERCToReviseCount.count}</span> To
                   Revise
                 </Link>
               )}
               {activeContentSpecialist && (
                 <Link href='/imerc/department/to_review' className='underline'>
-                  <span className='font-normal'>{iMERCToReview.count}</span> To
+                  <span className='font-normal'>{iMERCToReviewCount.count}</span> To
                   Review
                 </Link>
               )}
               {(activeCoordinator || activeChairperson) && (
                 <Link href='/imerc/department/to_endorse' className='underline'>
-                  <span className='font-normal'>{iMERCToEndorse.count}</span> To
+                  <span className='font-normal'>{iMERCToEndorseCount.count}</span> To
                   Endorse
                 </Link>
               )}
@@ -228,7 +232,7 @@ export default function Sidebar() {
 
               <Link href='/imerc/college/to_endorse' className='underline'>
                 <span className='font-normal'>
-                  {iMERCCollegeToEndorse.count}
+                  {iMERCCollegeToEndorseCount.count}
                 </span>{" "}
                 To Endorse
               </Link>
@@ -241,13 +245,13 @@ export default function Sidebar() {
 
               {activeFaculty && (
                 <Link href='/imerc/citl/to_revise' className='underline'>
-                  <span className='font-normal'>{iMERCCITLToRevise.count}</span>{" "}
+                  <span className='font-normal'>{iMERCCITLToReviseCount.count}</span>{" "}
                   To Revise
                 </Link>
               )}
               {(activeIDDCoordinator || activeCITLDirector) && (
                 <Link href='/imerc/citl/to_review' className='underline'>
-                  <span className='font-normal'>{iMERCCITLToReview.count}</span>{" "}
+                  <span className='font-normal'>{iMERCCITLToReviewCount.count}</span>{" "}
                   To Review
                 </Link>
               )}
@@ -256,7 +260,7 @@ export default function Sidebar() {
                   <p className='font-bold text-xs'>IDD Coordinator</p>
                   <Link href='/imerc/citl/to_endorse' className='underline'>
                     <span className='font-normal'>
-                      {iMERCCITLToEndorse.count}
+                      {iMERCCITLToEndorseCount.count}
                     </span>{" "}
                     To Endorse
                   </Link>
@@ -270,7 +274,7 @@ export default function Sidebar() {
                     className='underline'
                   >
                     <span className='font-normal'>
-                      {iMERCCITLDirectorToEndorse.count}
+                      {iMERCCITLDirectorToEndorseCount.count}
                     </span>{" "}
                     To Endorse
                   </Link>
