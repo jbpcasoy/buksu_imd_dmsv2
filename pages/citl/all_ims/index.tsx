@@ -1,5 +1,5 @@
 import MainLayout from "@/components/MainLayout";
-import useDepartmentIMs from "@/hooks/useDepartmentIMs";
+import useCITLIMs from "@/hooks/useCITLIMs";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -9,7 +9,7 @@ export default function ToReviewPage() {
     skip: 0,
   });
 
-  const { iMs, count } = useDepartmentIMs(state);
+  const { iMs, count } = useCITLIMs(state);
 
   const nextHandler = () => {
     setState((prev) => {
@@ -30,7 +30,7 @@ export default function ToReviewPage() {
   return (
     <MainLayout>
       <div className='flex'>
-        <h2 className='flex-1'>Department IM&apos;s</h2>
+        <h2 className='flex-1'>All IM&apos;s</h2>
       </div>
       <table className='table-auto w-full'>
         <thead>

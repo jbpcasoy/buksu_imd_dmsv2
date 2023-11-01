@@ -30,7 +30,7 @@ export default function ToReviewPage() {
   return (
     <MainLayout>
       <div className='flex'>
-        <h2 className='flex-1'>All IM&apos;s</h2>
+        <h2 className='flex-1'>College IM&apos;s</h2>
       </div>
       <table className='table-auto w-full'>
         <thead>

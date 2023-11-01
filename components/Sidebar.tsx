@@ -8,6 +8,7 @@ import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useCITLDirectorToEndorseCount from "@/hooks/useCITLDirectorToEndorseCount";
 import useCITLIDDEndorsedCount from "@/hooks/useCITLEndorsementCount";
 import useCITLIDDToEndorseCount from "@/hooks/useCITLIDDToEndorseCount";
+import useCITLIMsCount from "@/hooks/useCITLIMsCount";
 import useCITLReviewedCount from "@/hooks/useCITLReviewedCount";
 import useCITLToReviewCount from "@/hooks/useCITLToReviewCount";
 import useCITLToReviseCount from "@/hooks/useCITLToReviseCount";
@@ -52,6 +53,7 @@ export default function Sidebar() {
   const cITLReviewedCount = useCITLReviewedCount();
   const cITLIDDToEndorseCount = useCITLIDDToEndorseCount();
   const cITLIDDEndorsedCount = useCITLIDDEndorsedCount();
+  const cITLIMsCount = useCITLIMsCount();
   const cITLDirectorToEndorseCount = useCITLDirectorToEndorseCount();
   const iMERCToReviseCount = useIMERCToReviseCount();
   const iMERCToReviewCount = useIMERCToReviewCount();
@@ -74,12 +76,35 @@ export default function Sidebar() {
       </Link>
       {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
         <div className='my-2'>
-          {activeFaculty && (
-            <Link href='/department/my_ims' className='underline font-bold'>
-              <span className='font-normal'>{myIMsCount.count}</span> My
-              IM&apos;s
-            </Link>
-          )}
+          <div className='flex flex-col'>
+            {activeFaculty && (
+              <Link href='/department/my_ims' className='underline'>
+                <span className='font-normal'>{myIMsCount.count}</span> My
+                IM&apos;s
+              </Link>
+            )}
+
+            {(activeCoordinator || activeChairperson) && (
+              <Link href='/department/all_ims' className='underline'>
+                <span className='font-normal'>{departmentIMsCount.count}</span>{" "}
+                Department IMs
+              </Link>
+            )}
+            {activeDean && (
+              <Link href='/college/all_ims' className='underline'>
+                <span className='font-normal'>{collegeIMsCount.count}</span>{" "}
+                College IM&apos;s
+              </Link>
+            )}
+            {(activeCITLDirector || activeIDDCoordinator) && (
+              <Link href='/citl/all_ims' className='underline'>
+                <span className='font-normal'>
+                  {cITLIMsCount.count}
+                </span>{" "}
+                All IM&apos;s
+              </Link>
+            )}
+          </div>
           <p className='text-xs text-center'>IMPLEMENTATION PHASE</p>
           {activeFaculty && (
             <div className='flex flex-col'>
@@ -118,14 +143,6 @@ export default function Sidebar() {
                   Endorsed
                 </Link>
               )}
-              {(activeCoordinator || activeChairperson) && (
-                <Link href='/department/all_ims' className='underline'>
-                  <span className='font-normal'>
-                    {departmentIMsCount.count}
-                  </span>{" "}
-                  All IMs
-                </Link>
-              )}
             </div>
           )}
           {activeDean && (
@@ -144,12 +161,6 @@ export default function Sidebar() {
                 <Link href='/college/endorsed' className='underline'>
                   <span className='font-normal'>{deanEndorsedCount.count}</span>{" "}
                   Endorsed
-                </Link>
-              )}
-              {activeDean && (
-                <Link href='/college/all_ims' className='underline'>
-                  <span className='font-normal'>{collegeIMsCount.count}</span>{" "}
-                  All IM&apos;s
                 </Link>
               )}
             </div>
