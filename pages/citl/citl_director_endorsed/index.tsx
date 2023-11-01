@@ -1,5 +1,5 @@
 import MainLayout from "@/components/MainLayout";
-import useCITLDirectorToEndorse from "@/hooks/useCITLDirectorToEndorse";
+import useCITLDirectorEndorsed from "@/hooks/useCITLDirectorEndorsed";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -9,7 +9,7 @@ export default function ToRevisePage() {
     skip: 0,
   });
 
-  const { iMs, count } = useCITLDirectorToEndorse(state);
+  const { iMs, count } = useCITLDirectorEndorsed(state);
 
   const nextHandler = () => {
     setState((prev) => {
@@ -30,7 +30,7 @@ export default function ToRevisePage() {
   return (
     <MainLayout>
       <div className='flex'>
-        <h2 className='flex-1'>To Endorse</h2>
+        <h2 className='flex-1'>Endorsed</h2>
       </div>
       <table className='table-auto w-full'>
         <thead>
