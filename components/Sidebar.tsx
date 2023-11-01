@@ -19,6 +19,7 @@ import useCoordinatorToEndorseCount from "@/hooks/useCoordinatorToEndorseCount";
 import useDeanEndorsedCount from "@/hooks/useDeanEndorsedCount";
 import useDeanToEndorseCount from "@/hooks/useDeanToEndorseCount";
 import useDepartmentIMsCount from "@/hooks/useDepartmentIMsCount";
+import useIMERCCITLDirectorEndorsedCount from "@/hooks/useIMERCCITLDirectorEndorsedCount";
 import useIMERCCITLDirectorToEndorseCount from "@/hooks/useIMERCCITLDirectorToEndorseCount";
 import useIMERCCITLEndorsedCount from "@/hooks/useIMERCCITLEndorsedCount";
 import useIMERCCITLToEndorseCount from "@/hooks/useIMERCCITLToEndorseCount";
@@ -75,6 +76,7 @@ export default function Sidebar() {
   const iMERCReviewedByCITLCount = useIMERCReviewedByCITLCount();
   const iMERCCITLToEndorseCount = useIMERCCITLToEndorseCount();
   const iMERCCITLDirectorToEndorseCount = useIMERCCITLDirectorToEndorseCount();
+  const iMERCCITLDirectorEndorsedCount = useIMERCCITLDirectorEndorsedCount();
   const iMERCCITLEndorsedCount = useIMERCCITLEndorsedCount();
   const coordinatorEndorsedCount = useCoordinatorEndorsedCount();
   const collegeIMsCount = useCollegeIMsCount();
@@ -339,7 +341,7 @@ export default function Sidebar() {
                 </Link>
               )}
               {activeIDDCoordinator && (
-                <div className="flex flex-col">
+                <div className='flex flex-col'>
                   <p className='font-bold text-xs'>IDD Coordinator</p>
                   <Link href='/imerc/citl/to_endorse' className='underline'>
                     <span className='font-normal'>
@@ -356,7 +358,7 @@ export default function Sidebar() {
                 </div>
               )}
               {activeCITLDirector && (
-                <div>
+                <div className="flex flex-col">
                   <p className='font-bold text-xs'>CITL Director</p>
                   <Link
                     href='/imerc/citl/citl_director_to_endorse'
@@ -366,6 +368,15 @@ export default function Sidebar() {
                       {iMERCCITLDirectorToEndorseCount.count}
                     </span>{" "}
                     To Endorse
+                  </Link>
+                  <Link
+                    href='/imerc/citl/citl_director_endorsed'
+                    className='underline'
+                  >
+                    <span className='font-normal'>
+                      {iMERCCITLDirectorEndorsedCount.count}
+                    </span>{" "}
+                    Endorsed
                   </Link>
                 </div>
               )}
