@@ -24,6 +24,8 @@ import useIMERCCITLToEndorseCount from "@/hooks/useIMERCCITLToEndorseCount";
 import useIMERCCITLToReviewCount from "@/hooks/useIMERCCITLToReviewCount";
 import useIMERCCITLToReviseCount from "@/hooks/useIMERCCITLToReviseCount";
 import useIMERCCollegeToEndorseCount from "@/hooks/useIMERCCollegeToEndorseCount";
+import useIMERCEndorsed from "@/hooks/useIMERCEndorsed";
+import useIMERCEndorsedCount from "@/hooks/useIMERCEndorsedCount";
 import useIMERCReviewedCount from "@/hooks/useIMERCReviewedCount";
 import useIMERCToEndorseCount from "@/hooks/useIMERCToEndorseCount";
 import useIMERCToReviewCount from "@/hooks/useIMERCToReviewCount";
@@ -62,6 +64,7 @@ export default function Sidebar() {
   const iMERCToReviewCount = useIMERCToReviewCount();
   const iMERCReviewedCount = useIMERCReviewedCount();
   const iMERCToEndorseCount = useIMERCToEndorseCount();
+  const iMERCEndorsedCount = useIMERCEndorsedCount();
   const iMERCCollegeToEndorseCount = useIMERCCollegeToEndorseCount();
   const iMERCCITLToReviseCount = useIMERCCITLToReviseCount();
   const iMERCCITLToReviewCount = useIMERCCITLToReviewCount();
@@ -270,6 +273,14 @@ export default function Sidebar() {
                     {iMERCToEndorseCount.count}
                   </span>{" "}
                   To Endorse
+                </Link>
+              )}
+              {(activeCoordinator || activeChairperson) && (
+                <Link href='/imerc/department/endorsed' className='underline'>
+                  <span className='font-normal'>
+                    {iMERCEndorsedCount.count}
+                  </span>{" "}
+                  Endorsed
                 </Link>
               )}
             </div>
