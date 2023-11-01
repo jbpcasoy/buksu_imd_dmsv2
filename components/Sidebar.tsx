@@ -20,6 +20,7 @@ import useDeanEndorsedCount from "@/hooks/useDeanEndorsedCount";
 import useDeanToEndorseCount from "@/hooks/useDeanToEndorseCount";
 import useDepartmentIMsCount from "@/hooks/useDepartmentIMsCount";
 import useIMERCCITLDirectorToEndorseCount from "@/hooks/useIMERCCITLDirectorToEndorseCount";
+import useIMERCCITLEndorsedCount from "@/hooks/useIMERCCITLEndorsedCount";
 import useIMERCCITLToEndorseCount from "@/hooks/useIMERCCITLToEndorseCount";
 import useIMERCCITLToReviewCount from "@/hooks/useIMERCCITLToReviewCount";
 import useIMERCCITLToReviseCount from "@/hooks/useIMERCCITLToReviseCount";
@@ -74,6 +75,7 @@ export default function Sidebar() {
   const iMERCReviewedByCITLCount = useIMERCReviewedByCITLCount();
   const iMERCCITLToEndorseCount = useIMERCCITLToEndorseCount();
   const iMERCCITLDirectorToEndorseCount = useIMERCCITLDirectorToEndorseCount();
+  const iMERCCITLEndorsedCount = useIMERCCITLEndorsedCount();
   const coordinatorEndorsedCount = useCoordinatorEndorsedCount();
   const collegeIMsCount = useCollegeIMsCount();
 
@@ -337,13 +339,19 @@ export default function Sidebar() {
                 </Link>
               )}
               {activeIDDCoordinator && (
-                <div>
+                <div className="flex flex-col">
                   <p className='font-bold text-xs'>IDD Coordinator</p>
                   <Link href='/imerc/citl/to_endorse' className='underline'>
                     <span className='font-normal'>
                       {iMERCCITLToEndorseCount.count}
                     </span>{" "}
                     To Endorse
+                  </Link>
+                  <Link href='/imerc/citl/endorsed' className='underline'>
+                    <span className='font-normal'>
+                      {iMERCCITLEndorsedCount.count}
+                    </span>{" "}
+                    Endorsed
                   </Link>
                 </div>
               )}
