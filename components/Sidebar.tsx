@@ -27,6 +27,7 @@ import useIMERCCollegeEndorsedCount from "@/hooks/useIMERCCollegeEndorsedCount";
 import useIMERCCollegeToEndorseCount from "@/hooks/useIMERCCollegeToEndorseCount";
 import useIMERCEndorsed from "@/hooks/useIMERCEndorsed";
 import useIMERCEndorsedCount from "@/hooks/useIMERCEndorsedCount";
+import useIMERCReviewedByCITLCount from "@/hooks/useIMERCReviewedByCITLCount";
 import useIMERCReviewedCount from "@/hooks/useIMERCReviewedCount";
 import useIMERCToEndorseCount from "@/hooks/useIMERCToEndorseCount";
 import useIMERCToReviewCount from "@/hooks/useIMERCToReviewCount";
@@ -70,6 +71,7 @@ export default function Sidebar() {
   const iMERCCollegeEndorsedCount = useIMERCCollegeEndorsedCount();
   const iMERCCITLToReviseCount = useIMERCCITLToReviseCount();
   const iMERCCITLToReviewCount = useIMERCCITLToReviewCount();
+  const iMERCReviewedByCITLCount = useIMERCReviewedByCITLCount();
   const iMERCCITLToEndorseCount = useIMERCCITLToEndorseCount();
   const iMERCCITLDirectorToEndorseCount = useIMERCCITLDirectorToEndorseCount();
   const coordinatorEndorsedCount = useCoordinatorEndorsedCount();
@@ -324,6 +326,14 @@ export default function Sidebar() {
                     {iMERCCITLToReviewCount.count}
                   </span>{" "}
                   To Review
+                </Link>
+              )}
+              {(activeIDDCoordinator || activeCITLDirector) && (
+                <Link href='/imerc/citl/reviewed' className='underline'>
+                  <span className='font-normal'>
+                    {iMERCReviewedByCITLCount.count}
+                  </span>{" "}
+                  Reviewed
                 </Link>
               )}
               {activeIDDCoordinator && (
