@@ -1,4 +1,5 @@
 import MainLayout from "@/components/MainLayout";
+import useCITLIDDEndorsed from "@/hooks/useCITLIDDEndorsed";
 import useCITLIDDToEndorse from "@/hooks/useCITLIDDToEndorse";
 import Link from "next/link";
 import { useState } from "react";
@@ -9,7 +10,7 @@ export default function ToRevisePage() {
     skip: 0,
   });
 
-  const { iMs, count } = useCITLIDDToEndorse(state);
+  const { iMs, count } = useCITLIDDEndorsed(state);
 
   const nextHandler = () => {
     setState((prev) => {
@@ -30,7 +31,7 @@ export default function ToRevisePage() {
   return (
     <MainLayout>
       <div className='flex'>
-        <h2 className='flex-1'>To Endorse</h2>
+        <h2 className='flex-1'>Endorsed</h2>
       </div>
       <table className='table-auto w-full'>
         <thead>

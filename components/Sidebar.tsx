@@ -6,6 +6,7 @@ import useActiveDeanMe from "@/hooks/useActiveDeanMe";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useCITLDirectorToEndorseCount from "@/hooks/useCITLDirectorToEndorseCount";
+import useCITLIDDEndorsedCount from "@/hooks/useCITLEndorsementCount";
 import useCITLIDDToEndorseCount from "@/hooks/useCITLIDDToEndorseCount";
 import useCITLReviewedCount from "@/hooks/useCITLReviewedCount";
 import useCITLToReviewCount from "@/hooks/useCITLToReviewCount";
@@ -50,6 +51,7 @@ export default function Sidebar() {
   const cITLToReviewCount = useCITLToReviewCount();
   const cITLReviewedCount = useCITLReviewedCount();
   const cITLIDDToEndorseCount = useCITLIDDToEndorseCount();
+  const cITLIDDEndorsedCount = useCITLIDDEndorsedCount();
   const cITLDirectorToEndorseCount = useCITLDirectorToEndorseCount();
   const iMERCToReviseCount = useIMERCToReviseCount();
   const iMERCToReviewCount = useIMERCToReviewCount();
@@ -158,8 +160,8 @@ export default function Sidebar() {
 
               {activeFaculty && (
                 <Link href='/citl/to_revise' className='underline'>
-                  <span className='font-normal'>{cITLToReviseCount.count}</span> To
-                  Revise
+                  <span className='font-normal'>{cITLToReviseCount.count}</span>{" "}
+                  To Revise
                 </Link>
               )}
               {activeIDDCoordinator && (
@@ -181,8 +183,18 @@ export default function Sidebar() {
               )}
               {activeIDDCoordinator && (
                 <Link href='/citl/to_endorse' className='underline'>
-                  <span className='font-normal'>{cITLIDDToEndorseCount.count}</span>{" "}
+                  <span className='font-normal'>
+                    {cITLIDDToEndorseCount.count}
+                  </span>{" "}
                   To Endorse
+                </Link>
+              )}
+              {activeIDDCoordinator && (
+                <Link href='/citl/endorsed' className='underline'>
+                  <span className='font-normal'>
+                    {cITLIDDEndorsedCount.count}
+                  </span>{" "}
+                  Endorsed
                 </Link>
               )}
               {activeCITLDirector && (
@@ -208,20 +220,26 @@ export default function Sidebar() {
 
               {activeFaculty && (
                 <Link href='/imerc/department/to_revise' className='underline'>
-                  <span className='font-normal'>{iMERCToReviseCount.count}</span> To
-                  Revise
+                  <span className='font-normal'>
+                    {iMERCToReviseCount.count}
+                  </span>{" "}
+                  To Revise
                 </Link>
               )}
               {activeContentSpecialist && (
                 <Link href='/imerc/department/to_review' className='underline'>
-                  <span className='font-normal'>{iMERCToReviewCount.count}</span> To
-                  Review
+                  <span className='font-normal'>
+                    {iMERCToReviewCount.count}
+                  </span>{" "}
+                  To Review
                 </Link>
               )}
               {(activeCoordinator || activeChairperson) && (
                 <Link href='/imerc/department/to_endorse' className='underline'>
-                  <span className='font-normal'>{iMERCToEndorseCount.count}</span> To
-                  Endorse
+                  <span className='font-normal'>
+                    {iMERCToEndorseCount.count}
+                  </span>{" "}
+                  To Endorse
                 </Link>
               )}
             </div>
@@ -245,13 +263,17 @@ export default function Sidebar() {
 
               {activeFaculty && (
                 <Link href='/imerc/citl/to_revise' className='underline'>
-                  <span className='font-normal'>{iMERCCITLToReviseCount.count}</span>{" "}
+                  <span className='font-normal'>
+                    {iMERCCITLToReviseCount.count}
+                  </span>{" "}
                   To Revise
                 </Link>
               )}
               {(activeIDDCoordinator || activeCITLDirector) && (
                 <Link href='/imerc/citl/to_review' className='underline'>
-                  <span className='font-normal'>{iMERCCITLToReviewCount.count}</span>{" "}
+                  <span className='font-normal'>
+                    {iMERCCITLToReviewCount.count}
+                  </span>{" "}
                   To Review
                 </Link>
               )}
