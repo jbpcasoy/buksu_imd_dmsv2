@@ -1,0 +1,94 @@
+import useDepartments from "@/hooks/useDepartments";
+import axios from "axios";
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import autocolors from "chartjs-plugin-autocolors";
+import { useEffect, useState } from "react";
+import { Pie } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend, autocolors);
+
+export function IMDepartmentPieChart() {
+  const [state, setState] = useState<{ [key: string]: number }>();
+  const { departments } = useDepartments({
+    skip: 0,
+    take: 100,
+  });
+
+  const labels = [
+    "IMPLEMENTATION_DRAFT",
+    "IMPLEMENTATION_DEPARTMENT_REVIEW",
+    "IMPLEMENTATION_DEPARTMENT_REVIEWED",
+    "IMPLEMENTATION_DEPARTMENT_REVISED",
+    "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED",
+    "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED",
+    "IMPLEMENTATION_CITL_REVIEWED",
+    "IMPLEMENTATION_CITL_REVISED",
+    "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED",
+    "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED",
+    "IMERC_QAMIS_REVISED",
+    "IMERC_QAMIS_DEPARTMENT_ENDORSED",
+    "IMERC_CITL_REVIEWED",
+    "IMERC_CITL_REVISED",
+    "IMERC_CITL_IDD_COORDINATOR_ENDORSED",
+    "IMERC_CITL_DIRECTOR_ENDORSED",
+  ];
+
+  useEffect(() => {
+    if (departments?.length < 1) return;
+    let subscribe = true;
+
+    for (let department of departments) {
+      axios
+        .get(`api/im/count`, {
+          params: {
+            filter: {
+              departmentId: department.id,
+            },
+          },
+        })
+        .then((res) => {
+          if (!subscribe) return;
+          setState((prev) => ({
+            ...prev,
+            [department.name]: res.data.count,
+          }));
+        });
+    }
+
+    return () => {
+      subscribe = false;
+    };
+  }, [departments]);
+
+  if (departments?.length < 1) return null;
+
+  const data = {
+    labels: departments?.map((department) => department.name),
+    datasets: [
+      {
+        label: "# of IM's",
+        data: departments.map((department) => {
+          return state?.[department.name];
+        }),
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  return (
+    <Pie
+      options={{
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "top" as const,
+          },
+          autocolors: {
+            mode: "data",
+          },
+        },
+      }}
+      data={data}
+    />
+  );
+}

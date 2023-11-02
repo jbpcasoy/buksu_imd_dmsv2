@@ -1,11 +1,6 @@
 import prisma from "@/prisma/client";
-import facultyAbility from "@/services/ability/facultyAbility";
-import iMAbility from "@/services/ability/iMAbility";
-import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { ActiveFaculty, Faculty, Prisma, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -13,14 +8,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  let user: User;
-  try {
-    user = await getServerUser(req, res);
-  } catch (error) {
-    logger.error(error);
-    return res.status(401).json({ error: { message: "Unauthorized" } });
-  }
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -44,6 +31,8 @@ export default async function handler(
           "IMPLEMENTATION_DEPARTMENT_REVIEW",
           "IMPLEMENTATION_DRAFT",
         ]),
+        "filter[start]": Yup.date().optional(),
+        "filter[end]": Yup.date().optional(),
       });
       await validator.validate(req.query);
 
@@ -51,26 +40,47 @@ export default async function handler(
         "filter[collegeId]": filterCollegeId,
         "filter[departmentId]": filterDepartmentId,
         "filter[status]": filterStatus,
+        "filter[start]": filterStart,
+        "filter[end]": filterEnd,
       } = validator.cast(req.query);
-      console.log({ filterCollegeId, filterDepartmentId, query: req.query });
 
-      const ability = iMAbility({ user });
-
+      let startWhere: Prisma.IMWhereInput = {
+        createdAt: {
+          gte: filterStart,
+        },
+      };
+      let endWhere: Prisma.IMWhereInput = {
+        createdAt: {
+          lte: filterEnd,
+        },
+      };
       let statusWhere: Prisma.IMWhereInput = {};
       switch (filterStatus) {
         case "IMPLEMENTATION_DRAFT":
           statusWhere = {
             AND: [
               {
-                IMFile: {
-                  none: {
-                    DepartmentReview: {
-                      isNot: null,
+                NOT: {
+                  IMFile: {
+                    some: {
+                      DepartmentReview: {
+                        isNot: null,
+                      },
                     },
                   },
                 },
               },
             ],
+          };
+          startWhere = {
+            createdAt: {
+              gte: filterStart,
+            },
+          };
+          endWhere = {
+            createdAt: {
+              lte: filterEnd,
+            },
           };
           break;
         case "IMPLEMENTATION_DEPARTMENT_REVIEW":
@@ -88,14 +98,16 @@ export default async function handler(
               {
                 AND: [
                   {
-                    IMFile: {
-                      none: {
-                        DepartmentReview: {
-                          CoordinatorReview: {
-                            CoordinatorSuggestion: {
-                              SubmittedCoordinatorSuggestion: {
-                                DepartmentReviewed: {
-                                  isNot: null,
+                    NOT: {
+                      IMFile: {
+                        some: {
+                          DepartmentReview: {
+                            CoordinatorReview: {
+                              CoordinatorSuggestion: {
+                                SubmittedCoordinatorSuggestion: {
+                                  DepartmentReviewed: {
+                                    isNot: null,
+                                  },
                                 },
                               },
                             },
@@ -105,14 +117,16 @@ export default async function handler(
                     },
                   },
                   {
-                    IMFile: {
-                      none: {
-                        DepartmentReview: {
-                          ChairpersonReview: {
-                            ChairpersonSuggestion: {
-                              SubmittedChairpersonSuggestion: {
-                                DepartmentReviewed: {
-                                  isNot: null,
+                    NOT: {
+                      IMFile: {
+                        some: {
+                          DepartmentReview: {
+                            ChairpersonReview: {
+                              ChairpersonSuggestion: {
+                                SubmittedChairpersonSuggestion: {
+                                  DepartmentReviewed: {
+                                    isNot: null,
+                                  },
                                 },
                               },
                             },
@@ -122,14 +136,16 @@ export default async function handler(
                     },
                   },
                   {
-                    IMFile: {
-                      none: {
-                        DepartmentReview: {
-                          PeerReview: {
-                            PeerSuggestion: {
-                              SubmittedPeerSuggestion: {
-                                DepartmentReviewed: {
-                                  isNot: null,
+                    NOT: {
+                      IMFile: {
+                        some: {
+                          DepartmentReview: {
+                            PeerReview: {
+                              PeerSuggestion: {
+                                SubmittedPeerSuggestion: {
+                                  DepartmentReviewed: {
+                                    isNot: null,
+                                  },
                                 },
                               },
                             },
@@ -141,6 +157,29 @@ export default async function handler(
                 ],
               },
             ],
+          };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  createdAt: {
+                    gte: filterStart,
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  createdAt: {
+                    lte: filterEnd,
+                  },
+                },
+              },
+            },
           };
           break;
         case "IMPLEMENTATION_DEPARTMENT_REVIEWED":
@@ -198,15 +237,67 @@ export default async function handler(
                 },
               },
               {
-                IMFile: {
-                  none: {
-                    DepartmentRevision: {
-                      returned: false,
+                NOT: {
+                  IMFile: {
+                    some: {
+                      DepartmentRevision: {
+                        returned: false,
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                NOT: {
+                  IMFile: {
+                    some: {
+                      DepartmentRevision: {
+                        isNot: null,
+                      },
                     },
                   },
                 },
               },
             ],
+          };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  CoordinatorReview: {
+                    CoordinatorSuggestion: {
+                      SubmittedCoordinatorSuggestion: {
+                        DepartmentReviewed: {
+                          createdAt: {
+                            gte: filterStart,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  CoordinatorReview: {
+                    CoordinatorSuggestion: {
+                      SubmittedCoordinatorSuggestion: {
+                        DepartmentReviewed: {
+                          createdAt: {
+                            lte: filterEnd,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           };
           break;
         case "IMPLEMENTATION_DEPARTMENT_REVISED":
@@ -236,6 +327,31 @@ export default async function handler(
                 },
               },
             ],
+          };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  returned: false,
+                  createdAt: {
+                    gte: filterStart,
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  returned: false,
+                  createdAt: {
+                    lte: filterEnd,
+                  },
+                },
+              },
+            },
           };
           break;
         case "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED":
@@ -271,6 +387,35 @@ export default async function handler(
               },
             ],
           };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  returned: false,
+                  CoordinatorEndorsement: {
+                    createdAt: {
+                      gte: filterStart,
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  returned: false,
+                  CoordinatorEndorsement: {
+                    createdAt: {
+                      lte: filterEnd,
+                    },
+                  },
+                },
+              },
+            },
+          };
           break;
         case "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED":
           statusWhere = {
@@ -290,15 +435,17 @@ export default async function handler(
                 },
               },
               {
-                IMFile: {
-                  none: {
-                    DepartmentRevision: {
-                      returned: false,
-                      CoordinatorEndorsement: {
-                        DeanEndorsement: {
-                          IDDCoordinatorSuggestion: {
-                            SubmittedIDDCoordinatorSuggestion: {
-                              isNot: null,
+                NOT: {
+                  IMFile: {
+                    some: {
+                      DepartmentRevision: {
+                        returned: false,
+                        CoordinatorEndorsement: {
+                          DeanEndorsement: {
+                            IDDCoordinatorSuggestion: {
+                              SubmittedIDDCoordinatorSuggestion: {
+                                isNot: null,
+                              },
                             },
                           },
                         },
@@ -309,6 +456,39 @@ export default async function handler(
               },
             ],
           };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  returned: false,
+                  CoordinatorEndorsement: {
+                    DeanEndorsement: {
+                      createdAt: {
+                        gte: filterStart,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  returned: false,
+                  CoordinatorEndorsement: {
+                    DeanEndorsement: {
+                      createdAt: {
+                        lte: filterEnd,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
           break;
         case "IMPLEMENTATION_CITL_REVIEWED":
           statusWhere = {
@@ -317,6 +497,7 @@ export default async function handler(
                 IMFile: {
                   some: {
                     DepartmentRevision: {
+                      returned: false,
                       CoordinatorEndorsement: {
                         DeanEndorsement: {
                           IDDCoordinatorSuggestion: {
@@ -341,7 +522,59 @@ export default async function handler(
                   },
                 },
               },
+              {
+                NOT: {
+                  IMFile: {
+                    some: {
+                      CITLRevision: {
+                        isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
             ],
+          };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  returned: false,
+                  CoordinatorEndorsement: {
+                    DeanEndorsement: {
+                      IDDCoordinatorSuggestion: {
+                        SubmittedIDDCoordinatorSuggestion: {
+                          createdAt: {
+                            gte: filterStart,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  returned: false,
+                  CoordinatorEndorsement: {
+                    DeanEndorsement: {
+                      IDDCoordinatorSuggestion: {
+                        SubmittedIDDCoordinatorSuggestion: {
+                          createdAt: {
+                            lte: filterEnd,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           };
           break;
         case "IMPLEMENTATION_CITL_REVISED":
@@ -371,6 +604,31 @@ export default async function handler(
                 },
               },
             ],
+          };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                CITLRevision: {
+                  returned: false,
+                  createdAt: {
+                    gte: filterStart,
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                CITLRevision: {
+                  returned: false,
+                  createdAt: {
+                    lte: filterEnd,
+                  },
+                },
+              },
+            },
           };
           break;
         case "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED":
@@ -406,6 +664,35 @@ export default async function handler(
               },
             ],
           };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                CITLRevision: {
+                  returned: false,
+                  IDDCoordinatorEndorsement: {
+                    createdAt: {
+                      gte: filterStart,
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                CITLRevision: {
+                  returned: false,
+                  IDDCoordinatorEndorsement: {
+                    createdAt: {
+                      lte: filterEnd,
+                    },
+                  },
+                },
+              },
+            },
+          };
           break;
         case "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED":
           statusWhere = {
@@ -437,6 +724,39 @@ export default async function handler(
               },
             ],
           };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                CITLRevision: {
+                  returned: false,
+                  IDDCoordinatorEndorsement: {
+                    CITLDirectorEndorsement: {
+                      createdAt: {
+                        gte: filterStart,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                CITLRevision: {
+                  returned: false,
+                  IDDCoordinatorEndorsement: {
+                    CITLDirectorEndorsement: {
+                      createdAt: {
+                        lte: filterEnd,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
           break;
         case "IMERC_QAMIS_REVISED":
           statusWhere = {
@@ -466,6 +786,29 @@ export default async function handler(
                 },
               },
             ],
+          };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                QAMISRevision: {
+                  createdAt: {
+                    gte: filterStart,
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                QAMISRevision: {
+                  createdAt: {
+                    lte: filterEnd,
+                  },
+                },
+              },
+            },
           };
           break;
         case "IMERC_QAMIS_DEPARTMENT_ENDORSED":
@@ -509,6 +852,37 @@ export default async function handler(
               },
             ],
           };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                QAMISRevision: {
+                  QAMISDeanEndorsement: {
+                    QAMISDepartmentEndorsement: {
+                      createdAt: {
+                        gte: filterStart,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                QAMISRevision: {
+                  QAMISDeanEndorsement: {
+                    QAMISDepartmentEndorsement: {
+                      createdAt: {
+                        lte: filterEnd,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
           break;
         case "IMERC_CITL_REVIEWED":
           statusWhere = {
@@ -539,23 +913,8 @@ export default async function handler(
                   IMFile: {
                     some: {
                       IMERCCITLRevision: {
-                        isNot: null,
+                        returned: false,
                       },
-                    },
-                  },
-                },
-              },
-            ],
-          };
-          break;
-        case "IMERC_CITL_REVISED":
-          statusWhere = {
-            AND: [
-              {
-                IMFile: {
-                  some: {
-                    IMERCCITLRevision: {
-                      isNot: null,
                     },
                   },
                 },
@@ -565,6 +924,80 @@ export default async function handler(
                   IMFile: {
                     some: {
                       IMERCCITLRevision: {
+                        isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                QAMISRevision: {
+                  QAMISDeanEndorsement: {
+                    QAMISDepartmentEndorsement: {
+                      ContentEditorReview: {
+                        ContentEditorSuggestion: {
+                          SubmittedContentEditorSuggestion: {
+                            IMERCCITLReviewed: {
+                              createdAt: {
+                                gte: filterStart,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                QAMISRevision: {
+                  QAMISDeanEndorsement: {
+                    QAMISDepartmentEndorsement: {
+                      ContentEditorReview: {
+                        ContentEditorSuggestion: {
+                          SubmittedContentEditorSuggestion: {
+                            IMERCCITLReviewed: {
+                              createdAt: {
+                                lte: filterEnd,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+          break;
+        case "IMERC_CITL_REVISED":
+          statusWhere = {
+            AND: [
+              {
+                IMFile: {
+                  some: {
+                    IMERCCITLRevision: {
+                      returned: false,
+                    },
+                  },
+                },
+              },
+              {
+                NOT: {
+                  IMFile: {
+                    some: {
+                      IMERCCITLRevision: {
+                        returned: false,
                         IMERCIDDCoordinatorEndorsement: {
                           isNot: null,
                         },
@@ -575,6 +1008,31 @@ export default async function handler(
               },
             ],
           };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                IMERCCITLRevision: {
+                  returned: false,
+                  createdAt: {
+                    gte: filterStart,
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                IMERCCITLRevision: {
+                  returned: false,
+                  createdAt: {
+                    lte: filterEnd,
+                  },
+                },
+              },
+            },
+          };
           break;
         case "IMERC_CITL_IDD_COORDINATOR_ENDORSED":
           statusWhere = {
@@ -583,6 +1041,7 @@ export default async function handler(
                 IMFile: {
                   some: {
                     IMERCCITLRevision: {
+                      returned: false,
                       IMERCIDDCoordinatorEndorsement: {
                         isNot: null,
                       },
@@ -595,6 +1054,7 @@ export default async function handler(
                   IMFile: {
                     some: {
                       IMERCCITLRevision: {
+                        returned: false,
                         IMERCIDDCoordinatorEndorsement: {
                           IMERCCITLDirectorEndorsement: {
                             isNot: null,
@@ -607,6 +1067,33 @@ export default async function handler(
               },
             ],
           };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                IMERCCITLRevision: {
+                  returned: false,
+                  IMERCIDDCoordinatorEndorsement: {
+                    createdAt: {
+                      gte: filterStart,
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                IMERCCITLRevision: {
+                  returned: false,
+                  createdAt: {
+                    lte: filterEnd,
+                  },
+                },
+              },
+            },
+          };
           break;
         case "IMERC_CITL_DIRECTOR_ENDORSED":
           statusWhere = {
@@ -615,6 +1102,7 @@ export default async function handler(
                 IMFile: {
                   some: {
                     IMERCCITLRevision: {
+                      returned: false,
                       IMERCIDDCoordinatorEndorsement: {
                         IMERCCITLDirectorEndorsement: {
                           isNot: null,
@@ -625,6 +1113,39 @@ export default async function handler(
                 },
               },
             ],
+          };
+
+          startWhere = {
+            IMFile: {
+              some: {
+                IMERCCITLRevision: {
+                  returned: false,
+                  IMERCIDDCoordinatorEndorsement: {
+                    IMERCCITLDirectorEndorsement: {
+                      createdAt: {
+                        gte: filterStart,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          };
+          endWhere = {
+            IMFile: {
+              some: {
+                IMERCCITLRevision: {
+                  returned: false,
+                  IMERCIDDCoordinatorEndorsement: {
+                    IMERCCITLDirectorEndorsement: {
+                      createdAt: {
+                        lte: filterEnd,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           };
           break;
       }
@@ -653,6 +1174,8 @@ export default async function handler(
               },
             },
             statusWhere,
+            startWhere,
+            endWhere,
           ],
         },
       });

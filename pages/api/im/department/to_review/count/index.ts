@@ -59,6 +59,17 @@ export default async function handler(
               },
             },
             {
+              NOT: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+            {
               IMFile: {
                 some: {
                   DepartmentReview: {
