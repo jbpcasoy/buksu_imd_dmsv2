@@ -34,31 +34,17 @@ export function IMDepartmentPieChart() {
   ];
 
   useEffect(() => {
-    if (departments?.length < 1) return;
     let subscribe = true;
 
-    for (let department of departments) {
-      axios
-        .get(`api/im/count`, {
-          params: {
-            filter: {
-              departmentId: department.id,
-            },
-          },
-        })
-        .then((res) => {
-          if (!subscribe) return;
-          setState((prev) => ({
-            ...prev,
-            [department.name]: res.data.count,
-          }));
-        });
-    }
+    axios.get(`api/im/count/by_department`).then((res) => {
+      if (!subscribe) return;
+      setState(res.data);
+    });
 
     return () => {
       subscribe = false;
     };
-  }, [departments]);
+  }, []);
 
   if (departments?.length < 1) return null;
 

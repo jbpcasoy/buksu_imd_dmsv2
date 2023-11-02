@@ -31,23 +31,10 @@ export function IMStatusPieChart() {
   useEffect(() => {
     let subscribe = true;
 
-    for (let label of labels) {
-      axios
-        .get(`api/im/count`, {
-          params: {
-            filter: {
-              status: label,
-            },
-          },
-        })
-        .then((res) => {
-          if (!subscribe) return;
-          setState((prev) => ({
-            ...prev,
-            [label]: res.data.count,
-          }));
-        });
-    }
+    axios.get(`api/im/count/by_status`).then((res) => {
+      if (!subscribe) return;
+      setState(res.data);
+    });
 
     return () => {
       subscribe = false;

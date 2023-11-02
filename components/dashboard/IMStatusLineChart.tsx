@@ -62,40 +62,28 @@ export function IMStatusLineChart({ filter }: IMStatusLineChartProps) {
   const [state, setState] = useState<{
     [label: string]: { [department: string]: number };
   }>();
-
+  
   useEffect(() => {
     let subscribe = true;
 
-    for (let department of departments) {
-      labels.forEach((label) => {
-        axios
-          .get(`/api/im/count`, {
-            params: {
-              filter: {
-                start: filter?.start ? new Date(filter.start) : undefined,
-                end: filter?.end ? new Date(filter.end) : undefined,
-                departmentId: department.id,
-                status: label,
-              },
-            },
-          })
-          .then((res) => {
-            if (!subscribe) return;
-            setState((prev) => ({
-              ...prev,
-              [department.name]: {
-                ...prev?.[department.name],
-                [label]: res.data.count,
-              },
-            }));
-          });
+    axios
+      .get(`/api/im/count/status_by_department`, {
+        params: {
+          filter: {
+            start: filter?.start ? new Date(filter.start) : undefined,
+            end: filter?.end ? new Date(filter.end) : undefined,
+          },
+        },
+      })
+      .then((res) => {
+        if (!subscribe) return;
+        setState(res.data);
       });
-    }
 
     return () => {
       subscribe = false;
     };
-  }, [departments, filter]);
+  }, [filter]);
 
   useEffect(() => {
     console.log({ state });
