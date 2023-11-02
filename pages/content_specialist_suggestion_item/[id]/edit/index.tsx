@@ -31,6 +31,7 @@ export default function ContentSpecialistSuggestionItemEditPage() {
         )
         .then(() => {
           alert("Suggestion updated successfully");
+          router.reload();
         });
     },
   });

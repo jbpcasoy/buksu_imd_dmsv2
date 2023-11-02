@@ -28,6 +28,7 @@ export default function PeerSuggestionItemEditPage() {
         .put(`/api/peer_suggestion_item/${peerSuggestionItemId}`, values)
         .then(() => {
           alert("Suggestion updated successfully");
+          router.reload();
         });
     },
   });

@@ -69,37 +69,15 @@ export default async function handler(
               },
             },
             {
-              AND: [
-                {
-                  NOT: {
-                    Faculty: {
-                      User: {
-                        id: {
-                          equals: user.id,
-                        },
-                      },
+              NOT: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
                     },
                   },
                 },
-                {
-                  Faculty: {
-                    Coordinator: {
-                      ActiveCoordinator: {
-                        is: null,
-                      },
-                    },
-                  },
-                },
-                {
-                  Faculty: {
-                    Chairperson: {
-                      ActiveChairperson: {
-                        is: null,
-                      },
-                    },
-                  },
-                },
-              ],
+              },
             },
             {
               IMFile: {
@@ -180,6 +158,17 @@ export default async function handler(
                 Department: {
                   id: {
                     equals: department.id,
+                  },
+                },
+              },
+            },
+            {
+              NOT: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
                   },
                 },
               },

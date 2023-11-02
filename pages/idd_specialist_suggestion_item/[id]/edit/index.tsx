@@ -31,6 +31,7 @@ export default function IDDSpecialistSuggestionItemEditPage() {
         )
         .then(() => {
           alert("Suggestion updated successfully");
+          router.reload();
         });
     },
   });

@@ -33,6 +33,7 @@ export default function QAMISSuggestionItemEditPage() {
         )
         .then(() => {
           alert("Suggestion updated successfully");
+          router.reload();
         });
     },
   });

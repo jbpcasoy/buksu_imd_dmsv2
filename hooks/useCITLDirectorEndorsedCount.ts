@@ -8,7 +8,7 @@ export default function useCITLDirectorEndorsedCount() {
 
   useEffect(() => {
     axios
-      .get("/api/im/citl/citl_director_endorsed")
+      .get("/api/im/citl/citl_director_endorsed/count")
       .then((res) => {
         setState(res.data);
       })

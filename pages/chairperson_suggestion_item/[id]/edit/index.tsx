@@ -31,6 +31,7 @@ export default function ChairpersonSuggestionItemEditPage() {
         )
         .then(() => {
           alert("Suggestion updated successfully");
+          router.reload();
         });
     },
   });

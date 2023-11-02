@@ -31,6 +31,7 @@ export default function ContentEditorSuggestionItemEditPage() {
         )
         .then(() => {
           alert("Suggestion updated successfully");
+          router.reload();
         });
     },
   });

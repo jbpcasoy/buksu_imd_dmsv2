@@ -31,6 +31,7 @@ export default function CoordinatorSuggestionItemEditPage() {
         )
         .then(() => {
           alert("Suggestion updated successfully");
+          router.reload();
         });
     },
   });

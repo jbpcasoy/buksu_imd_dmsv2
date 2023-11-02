@@ -27,6 +27,7 @@ export default function IDDCoordinatorSuggestionItemEditPage() {
         )
         .then(() => {
           alert("Suggestion updated successfully");
+          router.reload();
         });
     },
   });
