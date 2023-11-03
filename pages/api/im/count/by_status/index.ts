@@ -45,7 +45,6 @@ export default async function handler(
         "filter[end]": filterEnd,
       } = validator.cast(req.query);
 
-      const departments = await prisma.department.findMany();
       const statuses = [
         "IMERC_CITL_DIRECTOR_ENDORSED",
         "IMERC_CITL_IDD_COORDINATOR_ENDORSED",
@@ -73,7 +72,7 @@ export default async function handler(
             filterStart,
             filterEnd,
             status,
-            undefined,
+            filterDepartmentId,
             filterCollegeId
           ),
         };

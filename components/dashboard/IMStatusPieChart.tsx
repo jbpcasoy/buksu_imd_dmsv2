@@ -1,3 +1,4 @@
+import useDepartment from "@/hooks/useDepartment";
 import axios from "axios";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
@@ -6,8 +7,19 @@ import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend, autocolors);
 
-export function IMStatusPieChart() {
+export function IMStatusPieChart({
+  filter,
+}: {
+  filter?: {
+    status?: string;
+    departmentId?: string;
+    collegeId?: string;
+    start?: string;
+    end?: string;
+  };
+}) {
   const [state, setState] = useState<{ [key: string]: number }>();
+  const department = useDepartment({ id: filter?.departmentId ?? "" });
 
   const labels = [
     "IMPLEMENTATION_DRAFT",
@@ -31,21 +43,27 @@ export function IMStatusPieChart() {
   useEffect(() => {
     let subscribe = true;
 
-    axios.get(`api/im/count/by_status`).then((res) => {
-      if (!subscribe) return;
-      setState(res.data);
-    });
+    axios
+      .get(`api/im/count/by_status`, {
+        params: {
+          filter,
+        },
+      })
+      .then((res) => {
+        if (!subscribe) return;
+        setState(res.data);
+      });
 
     return () => {
       subscribe = false;
     };
-  }, []);
+  }, [filter]);
 
   const data = {
     labels,
     datasets: [
       {
-        label: "# of IM's",
+        label: `# of ${department?.name ?? ""} IM's`,
         data: labels.map((label) => {
           return state?.[label];
         }),
@@ -60,7 +78,7 @@ export function IMStatusPieChart() {
         responsive: true,
         plugins: {
           legend: {
-            position: "top" as const,
+            display: false,
           },
           autocolors: {
             mode: "data",

@@ -7,7 +7,17 @@ import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend, autocolors);
 
-export function IMDepartmentPieChart() {
+export function IMDepartmentPieChart({
+  filter,
+}: {
+  filter?: {
+    status?: string;
+    departmentId?: string;
+    collegeId?: string;
+    start?: string;
+    end?: string;
+  };
+}) {
   const [state, setState] = useState<{ [key: string]: number }>();
   const { departments } = useDepartments({
     skip: 0,
@@ -36,15 +46,21 @@ export function IMDepartmentPieChart() {
   useEffect(() => {
     let subscribe = true;
 
-    axios.get(`api/im/count/by_department`).then((res) => {
-      if (!subscribe) return;
-      setState(res.data);
-    });
+    axios
+      .get(`api/im/count/by_department`, {
+        params: {
+          filter,
+        },
+      })
+      .then((res) => {
+        if (!subscribe) return;
+        setState(res.data);
+      });
 
     return () => {
       subscribe = false;
     };
-  }, []);
+  }, [filter]);
 
   if (departments?.length < 1) return null;
 
@@ -52,7 +68,7 @@ export function IMDepartmentPieChart() {
     labels: departments?.map((department) => department.name),
     datasets: [
       {
-        label: "# of IM's",
+        label: `# of ${filter?.status ?? ""} IM's`,
         data: departments.map((department) => {
           return state?.[department.name];
         }),
@@ -67,7 +83,7 @@ export function IMDepartmentPieChart() {
         responsive: true,
         plugins: {
           legend: {
-            position: "top" as const,
+            display: false,
           },
           autocolors: {
             mode: "data",

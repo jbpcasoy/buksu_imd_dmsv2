@@ -72,7 +72,7 @@ export default async function handler(
           [department.name]: await countIMs(
             filterStart,
             filterEnd,
-            undefined,
+            filterStatus,
             department.id,
             filterCollegeId
           ),

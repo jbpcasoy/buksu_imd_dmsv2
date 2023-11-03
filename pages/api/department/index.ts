@@ -68,6 +68,7 @@ export default async function handler(
         take: Yup.number().required(),
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
+        "filter[collegeId]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -76,6 +77,7 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
+        "filter[collegeId]": filterCollege,
       } = validator.cast(req.query);
 
       const departments = await prisma.department.findMany({
@@ -88,6 +90,13 @@ export default async function handler(
               name: {
                 contains: filterName,
                 mode: "insensitive",
+              },
+            },
+            {
+              College: {
+                id: {
+                  contains: filterCollege,
+                },
               },
             },
           ],
