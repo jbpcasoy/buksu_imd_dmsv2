@@ -93,6 +93,11 @@ export default function Sidebar() {
         <div className='my-2'>
           <div className='flex flex-col'>
             {activeFaculty && (
+              <Link href='/department' className='underline'>
+                My Department
+              </Link>
+            )}
+            {activeFaculty && (
               <Link href='/department/my_ims' className='underline'>
                 <span className='font-normal'>{myIMsCount.count}</span> My
                 IM&apos;s
@@ -358,7 +363,7 @@ export default function Sidebar() {
                 </div>
               )}
               {activeCITLDirector && (
-                <div className="flex flex-col">
+                <div className='flex flex-col'>
                   <p className='font-bold text-xs'>CITL Director</p>
                   <Link
                     href='/imerc/citl/citl_director_to_endorse'
