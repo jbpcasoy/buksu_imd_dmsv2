@@ -23,140 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              IMFile: {
-                some: {
-                  CITLRevision: {
-                    IDDCoordinatorEndorsement: {
-                      CITLDirectorEndorsement: {
-                        QAMISSuggestion: {
-                          SubmittedQAMISSuggestion: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISCoordinatorEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISDeanEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        ContentSpecialistReview: {
-                          ContentSpecialistSuggestion: {
-                            SubmittedContentSpecialistSuggestion: {
-                              IMERCCITLReviewed: {
-                                isNot: null,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        ContentSpecialistReview: {
-                          ContentSpecialistSuggestion: {
-                            SubmittedContentSpecialistSuggestion: {
-                              IMERCCITLReviewed: {
-                                IMERCCITLRevision: {
-                                  some: {
-                                    returned: {
-                                      equals: false,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        ContentSpecialistReview: {
-                          ContentSpecialistSuggestion: {
-                            SubmittedContentSpecialistSuggestion: {
-                              IMERCCITLReviewed: {
-                                IMERCCITLRevision: {
-                                  some: {
-                                    returned: {
-                                      equals: false,
-                                    },
-                                    IMERCIDDCoordinatorEndorsement: {
-                                      IDDCoordinator: {
-                                        User: {
-                                          id: {
-                                            equals: user.id,
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const count = await iMERCCITLEndorsedCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -174,3 +41,142 @@ export default async function handler(
       return res.status(405).send(`${req.method} Not Allowed`);
   }
 }
+
+export async function iMERCCITLEndorsedCount(user: User) {
+  let ability: AppAbility;
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          IMFile: {
+            some: {
+              CITLRevision: {
+                IDDCoordinatorEndorsement: {
+                  CITLDirectorEndorsement: {
+                    QAMISSuggestion: {
+                      SubmittedQAMISSuggestion: {
+                        isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+                QAMISCoordinatorEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    ContentSpecialistReview: {
+                      ContentSpecialistSuggestion: {
+                        SubmittedContentSpecialistSuggestion: {
+                          IMERCCITLReviewed: {
+                            isNot: null,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    ContentSpecialistReview: {
+                      ContentSpecialistSuggestion: {
+                        SubmittedContentSpecialistSuggestion: {
+                          IMERCCITLReviewed: {
+                            IMERCCITLRevision: {
+                              some: {
+                                returned: {
+                                  equals: false,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    ContentSpecialistReview: {
+                      ContentSpecialistSuggestion: {
+                        SubmittedContentSpecialistSuggestion: {
+                          IMERCCITLReviewed: {
+                            IMERCCITLRevision: {
+                              some: {
+                                returned: {
+                                  equals: false,
+                                },
+                                IMERCIDDCoordinatorEndorsement: {
+                                  IDDCoordinator: {
+                                    User: {
+                                      id: {
+                                        equals: user.id,
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return count;
+}
+

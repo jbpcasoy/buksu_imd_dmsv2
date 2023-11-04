@@ -23,72 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-      ability = iMAbility({ user });
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        IDDCoordinatorSuggestion: {
-                          SubmittedIDDCoordinatorSuggestion: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              NOT: {
-                IMFile: {
-                  some: {
-                    DepartmentRevision: {
-                      CoordinatorEndorsement: {
-                        DeanEndorsement: {
-                          IDDCoordinatorSuggestion: {
-                            SubmittedIDDCoordinatorSuggestion: {
-                              CITLRevision: {
-                                some: {
-                                  returned: false,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const count = await cITLToReviseCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -105,4 +40,74 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function cITLToReviseCount(user: User) {
+  let ability: AppAbility;
+  let userActiveFaculty: ActiveFaculty;
+  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
+    where: {
+      Faculty: {
+        userId: {
+          equals: user.id,
+        },
+      },
+    },
+  });
+  ability = iMAbility({ user });
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          Faculty: {
+            id: {
+              equals: userActiveFaculty.facultyId,
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              DepartmentRevision: {
+                CoordinatorEndorsement: {
+                  DeanEndorsement: {
+                    IDDCoordinatorSuggestion: {
+                      SubmittedIDDCoordinatorSuggestion: {
+                        isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          NOT: {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  CoordinatorEndorsement: {
+                    DeanEndorsement: {
+                      IDDCoordinatorSuggestion: {
+                        SubmittedIDDCoordinatorSuggestion: {
+                          CITLRevision: {
+                            some: {
+                              returned: false,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return count;
 }

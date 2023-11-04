@@ -23,123 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  CITLRevision: {
-                    IDDCoordinatorEndorsement: {
-                      CITLDirectorEndorsement: {
-                        QAMISSuggestion: {
-                          SubmittedQAMISSuggestion: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISCoordinatorEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISDeanEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        ContentSpecialistReview: {
-                          ContentSpecialistSuggestion: {
-                            SubmittedContentSpecialistSuggestion: {
-                              IMERCCITLReviewed: {
-                                isNot: null,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              NOT: {
-                IMFile: {
-                  some: {
-                    QAMISRevision: {
-                      QAMISChairpersonEndorsement: {
-                        QAMISDepartmentEndorsement: {
-                          ContentSpecialistReview: {
-                            ContentSpecialistSuggestion: {
-                              SubmittedContentSpecialistSuggestion: {
-                                IMERCCITLReviewed: {
-                                  IMERCCITLRevision: {
-                                    some: {
-                                      returned: {
-                                        equals: false,
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const count = await iMERCCITLToReviseCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -156,4 +40,125 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function iMERCCITLToReviseCount(user: User) {
+  let ability: AppAbility;
+  let userActiveFaculty: ActiveFaculty;
+  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
+    where: {
+      Faculty: {
+        userId: {
+          equals: user.id,
+        },
+      },
+    },
+  });
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          Faculty: {
+            id: {
+              equals: userActiveFaculty.facultyId,
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              CITLRevision: {
+                IDDCoordinatorEndorsement: {
+                  CITLDirectorEndorsement: {
+                    QAMISSuggestion: {
+                      SubmittedQAMISSuggestion: {
+                        isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+                QAMISCoordinatorEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    ContentSpecialistReview: {
+                      ContentSpecialistSuggestion: {
+                        SubmittedContentSpecialistSuggestion: {
+                          IMERCCITLReviewed: {
+                            isNot: null,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          NOT: {
+            IMFile: {
+              some: {
+                QAMISRevision: {
+                  QAMISChairpersonEndorsement: {
+                    QAMISDepartmentEndorsement: {
+                      ContentSpecialistReview: {
+                        ContentSpecialistSuggestion: {
+                          SubmittedContentSpecialistSuggestion: {
+                            IMERCCITLReviewed: {
+                              IMERCCITLRevision: {
+                                some: {
+                                  returned: {
+                                    equals: false,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return count;
 }

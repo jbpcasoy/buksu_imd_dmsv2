@@ -23,85 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISCoordinatorEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISDeanEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              OR: [
-                {
-                  NOT: {
-                    IMFile: {
-                      some: {
-                        QAMISRevision: {
-                          QAMISChairpersonEndorsement: {
-                            QAMISDepartmentEndorsement: {
-                              ContentEditorReview: {
-                                ContentEditorSuggestion: {
-                                  SubmittedContentEditorSuggestion: {
-                                    isNot: null,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                {
-                  NOT: {
-                    IMFile: {
-                      some: {
-                        QAMISRevision: {
-                          QAMISChairpersonEndorsement: {
-                            QAMISDepartmentEndorsement: {
-                              IDDSpecialistReview: {
-                                IDDSpecialistSuggestion: {
-                                  SubmittedIDDSpecialistSuggestion: {
-                                    isNot: null,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      });
+      const count = await iMERCCITLToReviewCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -118,4 +40,87 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function iMERCCITLToReviewCount(user: User) {
+  let ability: AppAbility;
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+                QAMISCoordinatorEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          OR: [
+            {
+              NOT: {
+                IMFile: {
+                  some: {
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentEditorReview: {
+                            ContentEditorSuggestion: {
+                              SubmittedContentEditorSuggestion: {
+                                isNot: null,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              NOT: {
+                IMFile: {
+                  some: {
+                    QAMISRevision: {
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          IDDSpecialistReview: {
+                            IDDSpecialistSuggestion: {
+                              SubmittedIDDSpecialistSuggestion: {
+                                isNot: null,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  });
+  return count;
 }

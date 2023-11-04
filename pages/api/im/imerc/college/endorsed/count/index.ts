@@ -23,70 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              Faculty: {
-                Department: {
-                  College: {
-                    Department: {
-                      some: {
-                        Faculty: {
-                          some: {
-                            User: {
-                              id: {
-                                equals: user.id,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    OR: [
-                      {
-                        QAMISDeanEndorsement: {
-                          Dean: {
-                            Faculty: {
-                              User: {
-                                id: {
-                                  equals: user.id,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const count = await iMERCCollegeEndorsedCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -103,4 +40,72 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function iMERCCollegeEndorsedCount(user: User) {
+  let ability: AppAbility;
+  let userActiveFaculty: ActiveFaculty;
+  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
+    where: {
+      Faculty: {
+        userId: {
+          equals: user.id,
+        },
+      },
+    },
+  });
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          Faculty: {
+            Department: {
+              College: {
+                Department: {
+                  some: {
+                    Faculty: {
+                      some: {
+                        User: {
+                          id: {
+                            equals: user.id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                OR: [
+                  {
+                    QAMISDeanEndorsement: {
+                      Dean: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return count;
 }

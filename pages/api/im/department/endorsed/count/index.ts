@@ -23,63 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              id: userActiveFaculty.facultyId,
-            },
-          },
-        },
-      });
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      Coordinator: {
-                        Faculty: {
-                          User: {
-                            id: {
-                              equals: user.id,
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const count = await coordinatorEndorsedCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -96,4 +40,65 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function coordinatorEndorsedCount(user: User) {
+  let ability: AppAbility;
+  let userActiveFaculty: ActiveFaculty;
+  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
+    where: {
+      Faculty: {
+        userId: {
+          equals: user.id,
+        },
+      },
+    },
+  });
+  const department = await prisma.department.findFirstOrThrow({
+    where: {
+      Faculty: {
+        some: {
+          id: userActiveFaculty.facultyId,
+        },
+      },
+    },
+  });
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          Faculty: {
+            Department: {
+              id: {
+                equals: department.id,
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              DepartmentRevision: {
+                CoordinatorEndorsement: {
+                  Coordinator: {
+                    Faculty: {
+                      User: {
+                        id: {
+                          equals: user.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return count;
 }

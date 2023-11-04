@@ -23,77 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              Faculty: {
-                Department: {
-                  Faculty: {
-                    some: {
-                      User: {
-                        id: {
-                          equals: user.id,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    OR: [
-                      {
-                        QAMISChairpersonEndorsement: {
-                          Chairperson: {
-                            Faculty: {
-                              User: {
-                                id: {
-                                  equals: user.id,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                      {
-                        QAMISCoordinatorEndorsement: {
-                          Coordinator: {
-                            Faculty: {
-                              User: {
-                                id: {
-                                  equals: user.id,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const count = await iMERCEndorsedCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -110,4 +40,79 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function iMERCEndorsedCount(user: User) {
+  let ability: AppAbility;
+  let userActiveFaculty: ActiveFaculty;
+  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
+    where: {
+      Faculty: {
+        userId: {
+          equals: user.id,
+        },
+      },
+    },
+  });
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          Faculty: {
+            Department: {
+              Faculty: {
+                some: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                OR: [
+                  {
+                    QAMISChairpersonEndorsement: {
+                      Chairperson: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    QAMISCoordinatorEndorsement: {
+                      Coordinator: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return count;
 }

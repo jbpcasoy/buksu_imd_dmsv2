@@ -23,48 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              NOT: {
-                IMFile: {
-                  some: {
-                    DepartmentRevision: {
-                      CoordinatorEndorsement: {
-                        DeanEndorsement: {
-                          IDDCoordinatorSuggestion: {
-                            SubmittedIDDCoordinatorSuggestion: {
-                              isNot: null,
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const count = await cITLToReviewCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -81,4 +40,50 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function cITLToReviewCount(user: User) {
+  let ability: AppAbility;
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          IMFile: {
+            some: {
+              DepartmentRevision: {
+                CoordinatorEndorsement: {
+                  DeanEndorsement: {
+                    isNot: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          NOT: {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  CoordinatorEndorsement: {
+                    DeanEndorsement: {
+                      IDDCoordinatorSuggestion: {
+                        SubmittedIDDCoordinatorSuggestion: {
+                          isNot: null,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return count;
 }

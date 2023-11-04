@@ -23,80 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISCoordinatorEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                    QAMISDeanEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        ContentSpecialistReview: {
-                          ContentSpecialistSuggestion: {
-                            SubmittedContentSpecialistSuggestion: {
-                              ContentSpecialistSuggestion: {
-                                ContentSpecialistReview: {
-                                  ContentSpecialist: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const count = await iMERCReviewedCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -113,4 +40,82 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function iMERCReviewedCount(user: User) {
+  let ability: AppAbility;
+  let userActiveFaculty: ActiveFaculty;
+  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
+    where: {
+      Faculty: {
+        userId: {
+          equals: user.id,
+        },
+      },
+    },
+  });
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+                QAMISCoordinatorEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    isNot: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    ContentSpecialistReview: {
+                      ContentSpecialistSuggestion: {
+                        SubmittedContentSpecialistSuggestion: {
+                          ContentSpecialistSuggestion: {
+                            ContentSpecialistReview: {
+                              ContentSpecialist: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return count;
 }

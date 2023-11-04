@@ -23,14 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [accessibleBy(ability).IM],
-        },
-      });
+      const count = await cITLIMsCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -47,4 +40,16 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function cITLIMsCount(user: User) {
+  let ability: AppAbility;
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [accessibleBy(ability).IM],
+    },
+  });
+  return count;
 }

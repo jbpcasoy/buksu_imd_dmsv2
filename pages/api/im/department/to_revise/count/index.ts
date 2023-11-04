@@ -23,102 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    isNot: null,
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                every: {
-                  DepartmentRevision: {
-                    is: null,
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const count = await toReviseCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -135,4 +40,104 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function toReviseCount(user: User) {
+  let ability: AppAbility;
+  let userActiveFaculty: ActiveFaculty;
+  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
+    where: {
+      Faculty: {
+        userId: {
+          equals: user.id,
+        },
+      },
+    },
+  });
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          Faculty: {
+            id: {
+              equals: userActiveFaculty.facultyId,
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              DepartmentReview: {
+                isNot: null,
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            every: {
+              DepartmentRevision: {
+                is: null,
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              DepartmentReview: {
+                CoordinatorReview: {
+                  CoordinatorSuggestion: {
+                    SubmittedCoordinatorSuggestion: {
+                      DepartmentReviewed: {
+                        isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              DepartmentReview: {
+                ChairpersonReview: {
+                  ChairpersonSuggestion: {
+                    SubmittedChairpersonSuggestion: {
+                      DepartmentReviewed: {
+                        isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            some: {
+              DepartmentReview: {
+                PeerReview: {
+                  PeerSuggestion: {
+                    SubmittedPeerSuggestion: {
+                      DepartmentReviewed: {
+                        isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return count;
 }

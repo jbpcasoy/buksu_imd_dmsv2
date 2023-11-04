@@ -23,127 +23,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      let ability: AppAbility;
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              id: userActiveFaculty.facultyId,
-            },
-          },
-        },
-      });
-      ability = iMAbility({ user });
-
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            accessibleBy(ability).IM,
-            {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
-            {
-              OR: [
-                {
-                  IMFile: {
-                    some: {
-                      DepartmentReview: {
-                        CoordinatorReview: {
-                          CoordinatorSuggestion: {
-                            SubmittedCoordinatorSuggestion: {
-                              CoordinatorSuggestion: {
-                                CoordinatorReview: {
-                                  Coordinator: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                {
-                  IMFile: {
-                    some: {
-                      DepartmentReview: {
-                        ChairpersonReview: {
-                          ChairpersonSuggestion: {
-                            SubmittedChairpersonSuggestion: {
-                              ChairpersonSuggestion: {
-                                ChairpersonReview: {
-                                  Chairperson: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                {
-                  IMFile: {
-                    some: {
-                      DepartmentReview: {
-                        PeerReview: {
-                          PeerSuggestion: {
-                            SubmittedPeerSuggestion: {
-                              PeerSuggestion: {
-                                PeerReview: {
-                                  Faculty: {
-                                    User: {
-                                      id: {
-                                        equals: user.id,
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      });
+      const count = await reviewedCount(user);
 
       return res.json({ count });
     } catch (error: any) {
@@ -160,4 +40,129 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
+}
+
+export async function reviewedCount(user: User) {
+  let ability: AppAbility;
+  let userActiveFaculty: ActiveFaculty;
+  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
+    where: {
+      Faculty: {
+        userId: {
+          equals: user.id,
+        },
+      },
+    },
+  });
+  const department = await prisma.department.findFirstOrThrow({
+    where: {
+      Faculty: {
+        some: {
+          id: userActiveFaculty.facultyId,
+        },
+      },
+    },
+  });
+  ability = iMAbility({ user });
+
+  const count = await prisma.iM.count({
+    where: {
+      AND: [
+        accessibleBy(ability).IM,
+        {
+          Faculty: {
+            Department: {
+              id: {
+                equals: department.id,
+              },
+            },
+          },
+        },
+        {
+          OR: [
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    CoordinatorReview: {
+                      CoordinatorSuggestion: {
+                        SubmittedCoordinatorSuggestion: {
+                          CoordinatorSuggestion: {
+                            CoordinatorReview: {
+                              Coordinator: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    ChairpersonReview: {
+                      ChairpersonSuggestion: {
+                        SubmittedChairpersonSuggestion: {
+                          ChairpersonSuggestion: {
+                            ChairpersonReview: {
+                              Chairperson: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    PeerReview: {
+                      PeerSuggestion: {
+                        SubmittedPeerSuggestion: {
+                          PeerSuggestion: {
+                            PeerReview: {
+                              Faculty: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  });
+  return count;
 }
