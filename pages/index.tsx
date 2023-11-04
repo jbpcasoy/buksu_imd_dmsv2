@@ -7,10 +7,12 @@ import { IMStatusDepartmentLineChart } from "@/components/dashboard/IMStatusDepa
 import { IMStatusLineChart } from "@/components/dashboard/IMStatusLineChart";
 import { IMStatusPieChart } from "@/components/dashboard/IMStatusPieChart";
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function Home() {
+  const router = useRouter();
   const [state, setState] = useState<{
     collegeId: undefined;
     departmentId: undefined;
@@ -71,7 +73,7 @@ export default function Home() {
         <br />
         <div>
           <input type='submit' value='Refresh' className='border rounded' />
-          <button className='border rounded' onClick={formik.handleReset}>
+          <button className='border rounded' onClick={router.reload}>
             Reset
           </button>
         </div>
