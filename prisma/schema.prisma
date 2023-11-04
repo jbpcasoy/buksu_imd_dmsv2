@@ -121,12 +121,13 @@ model IM {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty   Faculty  @relation(fields: [facultyId], references: [id])
-    facultyId String
-    title     String
-    type      IMType
-    IMFile    IMFile[]
-    Event     Event[]
+    Faculty        Faculty          @relation(fields: [facultyId], references: [id])
+    facultyId      String
+    title          String
+    type           IMType
+    IMFile         IMFile[]
+    Event          Event[]
+    PlagiarismFile PlagiarismFile[]
 }
 
 model IMFile {
@@ -1159,6 +1160,19 @@ model ProfilePictureFile {
 
     User             User   @relation(fields: [userId], references: [id])
     userId           String
+    filename         String
+    size             Int
+    mimetype         String
+    originalFilename String
+}
+
+model PlagiarismFile {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IM               IM     @relation(fields: [iMId], references: [id])
+    iMId             String
     filename         String
     size             Int
     mimetype         String

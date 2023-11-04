@@ -283,6 +283,10 @@ export default function CrudSidebar() {
       link: "/crud/notification_read",
       label: "NotificationRead",
     },
+    {
+      link: "/crud/plagiarism_file",
+      label: "PlagiarismFile",
+    },
     // TODO add profile picture file
   ];
   

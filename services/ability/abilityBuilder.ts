@@ -71,6 +71,7 @@ import {
   ProfilePictureFile,
   Event,
   NotificationRead,
+  PlagiarismFile,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -146,6 +147,7 @@ export type AppSubjects =
       ProfilePictureFile: ProfilePictureFile;
       Event: Event;
       NotificationRead: NotificationRead;
+      PlagiarismFile: PlagiarismFile;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
