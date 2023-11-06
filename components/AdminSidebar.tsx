@@ -46,6 +46,9 @@ export default function AdminSidebar() {
         <Link href='/admin/announcement' className='underline'>
           Announcement
         </Link>
+        <Link href='/api/export' className='underline'>
+          Export
+        </Link>
       </div>
     </div>
   );
