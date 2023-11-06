@@ -4,10 +4,12 @@ import { ChangeEventHandler, useEffect, useState } from "react";
 
 export interface DepartmentSelectorProps extends FieldInputProps<any> {
   collegeId?: string;
+  disabled?: boolean;
 }
 
 export default function DepartmentSelector({
   collegeId,
+  disabled = false,
   ...props
 }: DepartmentSelectorProps) {
   const [state, setState] = useState({
@@ -37,8 +39,13 @@ export default function DepartmentSelector({
 
   return (
     <div>
-      <input type='text' onChange={onSearch} placeholder='Search department' />
-      <select {...props}>
+      <input
+        type='text'
+        onChange={onSearch}
+        placeholder='Search department'
+        disabled={disabled}
+      />
+      <select {...props} disabled={disabled}>
         <option value=''>Select</option>
         {departments.map((department) => {
           return (

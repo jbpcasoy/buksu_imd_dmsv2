@@ -2,7 +2,16 @@ import useColleges from "@/hooks/useColleges";
 import { FieldInputProps } from "formik";
 import { ChangeEventHandler, useState } from "react";
 
-export default function CollegeSelector(props: FieldInputProps<any>) {
+export interface CollegeSelectorProps extends FieldInputProps<any> {
+  collegeId?: string;
+  disabled?: boolean;
+}
+
+export default function CollegeSelector({
+  collegeId,
+  disabled = false,
+  ...props
+}: CollegeSelectorProps) {
   const [state, setState] = useState({
     name: "",
   });
@@ -21,8 +30,13 @@ export default function CollegeSelector(props: FieldInputProps<any>) {
 
   return (
     <div>
-      <input type='text' onChange={onSearch} placeholder="Search college"/>
-      <select {...props}>
+      <input
+        type='text'
+        onChange={onSearch}
+        placeholder='Search college'
+        disabled={disabled}
+      />
+      <select {...props} disabled={disabled}>
         <option value=''>Select</option>
         {colleges.map((college) => {
           return (

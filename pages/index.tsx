@@ -4,8 +4,11 @@ import MainLayout from "@/components/MainLayout";
 import StatusSelector from "@/components/StatusSelector";
 import { IMDepartmentPieChart } from "@/components/dashboard/IMDepartmentPieChart";
 import { IMStatusDepartmentLineChart } from "@/components/dashboard/IMStatusDepartmentLineChart";
-import { IMStatusLineChart } from "@/components/dashboard/IMStatusLineChart";
 import { IMStatusPieChart } from "@/components/dashboard/IMStatusPieChart";
+import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
+import useActiveDeanMe from "@/hooks/useActiveDeanMe";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -41,6 +44,18 @@ export default function Home() {
     },
   });
 
+  const department = useDepartmentMe();
+  const activeDean = useActiveDeanMe();
+  const activeCITLDirector = useActiveCITLDirectorMe();
+  const activeIDDCoordinator = useActiveIDDCoordinatorMe();
+
+  useEffect(() => {
+    if (!department) return;
+
+    formik.setFieldValue("collegeId", department.collegeId);
+    formik.setFieldValue("departmentId", department.id);
+  }, [department]);
+
   useEffect(() => {
     console.log({ state });
   }, [state]);
@@ -49,10 +64,14 @@ export default function Home() {
     <MainLayout>
       <h1 className='text-lg'>Dashboard</h1>
       <form noValidate onSubmit={formik.handleSubmit}>
-        <CollegeSelector {...formik.getFieldProps("collegeId")} />
+        <CollegeSelector
+          {...formik.getFieldProps("collegeId")}
+          disabled={!(activeCITLDirector || activeIDDCoordinator)}
+        />
         <DepartmentSelector
           {...formik.getFieldProps("departmentId")}
           collegeId={formik.values.collegeId}
+          disabled={!(activeDean || activeCITLDirector || activeIDDCoordinator)}
         />
         <StatusSelector {...formik.getFieldProps("status")} />
         <label htmlFor='start'>start: </label>
