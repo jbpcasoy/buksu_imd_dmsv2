@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 export interface useIMERCEndorsedParams {
   skip: number;
   take: number;
+  filter?: object;
 }
-export default function useIMERCEndorsed({ skip, take }: useIMERCEndorsedParams) {
+export default function useIMERCEndorsed({ skip, take, filter }: useIMERCEndorsedParams) {
   const [state, setState] = useState<{iMs: IM[], count: number}>({
     count: 0,
     iMs: []
@@ -18,6 +19,7 @@ export default function useIMERCEndorsed({ skip, take }: useIMERCEndorsedParams)
         params: {
           skip,
           take,
+          filter
         },
       })
       .then((res) => {
@@ -26,7 +28,7 @@ export default function useIMERCEndorsed({ skip, take }: useIMERCEndorsedParams)
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take]);
+  }, [skip, take, filter]);
 
   return state;
 }

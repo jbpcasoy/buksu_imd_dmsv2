@@ -5,11 +5,16 @@ import { useEffect, useState } from "react";
 export interface useIMERCCITLEndorsedParams {
   skip: number;
   take: number;
+  filter?: object;
 }
-export default function useIMERCCITLEndorsed({ skip, take }: useIMERCCITLEndorsedParams) {
-  const [state, setState] = useState<{iMs: IM[], count: number}>({
+export default function useIMERCCITLEndorsed({
+  skip,
+  take,
+  filter,
+}: useIMERCCITLEndorsedParams) {
+  const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
-    iMs: []
+    iMs: [],
   });
 
   useEffect(() => {
@@ -18,6 +23,7 @@ export default function useIMERCCITLEndorsed({ skip, take }: useIMERCCITLEndorse
         params: {
           skip,
           take,
+          filter,
         },
       })
       .then((res) => {
@@ -26,7 +32,7 @@ export default function useIMERCCITLEndorsed({ skip, take }: useIMERCCITLEndorse
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take]);
+  }, [skip, take, filter]);
 
   return state;
 }

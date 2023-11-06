@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 export interface useIMERCCITLDirectorToEndorseParams {
   skip: number;
   take: number;
+  filter?: object;
 }
-export default function useIMERCCITLDirectorToEndorse({ skip, take }: useIMERCCITLDirectorToEndorseParams) {
+export default function useIMERCCITLDirectorToEndorse({ skip, take, filter }: useIMERCCITLDirectorToEndorseParams) {
   const [state, setState] = useState<{iMs: IM[], count: number}>({
     count: 0,
     iMs: []
@@ -18,6 +19,7 @@ export default function useIMERCCITLDirectorToEndorse({ skip, take }: useIMERCCI
         params: {
           skip,
           take,
+          filter
         },
       })
       .then((res) => {
@@ -26,7 +28,7 @@ export default function useIMERCCITLDirectorToEndorse({ skip, take }: useIMERCCI
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take]);
+  }, [skip, take, filter]);
 
   return state;
 }

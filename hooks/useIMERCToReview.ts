@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 export interface useIMERCToReviewParams {
   skip: number;
   take: number;
+  filter?: object;
 }
-export default function useIMERCToReview({ skip, take }: useIMERCToReviewParams) {
+export default function useIMERCToReview({ skip, take, filter }: useIMERCToReviewParams) {
   const [state, setState] = useState<{iMs: IM[], count: number}>({
     count: 0,
     iMs: []
@@ -18,6 +19,7 @@ export default function useIMERCToReview({ skip, take }: useIMERCToReviewParams)
         params: {
           skip,
           take,
+          filter
         },
       })
       .then((res) => {
@@ -26,7 +28,7 @@ export default function useIMERCToReview({ skip, take }: useIMERCToReviewParams)
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take]);
+  }, [skip, take, filter]);
 
   return state;
 }

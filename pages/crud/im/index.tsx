@@ -1,10 +1,19 @@
 import CrudLayout from "@/components/CrudLayout";
 import useIMs from "@/hooks/useIMs";
 import Link from "next/link";
-import { useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 
 export default function IMsPage() {
-  const [state, setState] = useState({ skip: 0, take: 10 });
+  const [state, setState] = useState({
+    skip: 0,
+    take: 10,
+    filter: {
+      title: "",
+      userName: "",
+      departmentName: "",
+      collegeName: "",
+    },
+  });
   const { iMs, count } = useIMs(state);
 
   const handleNext = () => {
@@ -21,6 +30,43 @@ export default function IMsPage() {
     });
   };
 
+  const handleTitleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        title: e.target.value ?? "",
+      },
+    }));
+  };
+  const handleUserNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        userName: e.target.value ?? "",
+      },
+    }));
+  };
+  const handleDepartmentNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        departmentName: e.target.value ?? "",
+      },
+    }));
+  };
+  const handleCollegeNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        collegeName: e.target.value ?? "",
+      },
+    }));
+  };
+
   return (
     <CrudLayout>
       <div className='flex justify-between'>
@@ -28,6 +74,13 @@ export default function IMsPage() {
         <Link className='border rounded' href={`/crud/im/add`}>
           Add
         </Link>
+      </div>
+
+      <div>
+        <input type='text' placeholder='title' onChange={handleTitleChange} />
+        <input type='text' placeholder='userName' onChange={handleUserNameChange} />
+        <input type='text' placeholder='departmentName' onChange={handleDepartmentNameChange} />
+        <input type='text' placeholder='collegeName' onChange={handleCollegeNameChange} />
       </div>
 
       <div>

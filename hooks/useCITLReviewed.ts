@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 export interface useCITLReviewedParams {
   skip: number;
   take: number;
+  filter?: object;
 }
-export default function useCITLReviewed({ skip, take }: useCITLReviewedParams) {
+export default function useCITLReviewed({ skip, take, filter }: useCITLReviewedParams) {
   const [state, setState] = useState<{iMs: IM[], count: number}>({
     count: 0,
     iMs: []
@@ -18,6 +19,7 @@ export default function useCITLReviewed({ skip, take }: useCITLReviewedParams) {
         params: {
           skip,
           take,
+          filter
         },
       })
       .then((res) => {
@@ -26,7 +28,7 @@ export default function useCITLReviewed({ skip, take }: useCITLReviewedParams) {
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take]);
+  }, [skip, take, filter]);
 
   return state;
 }

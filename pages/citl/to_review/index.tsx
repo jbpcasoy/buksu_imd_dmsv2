@@ -2,12 +2,18 @@ import MainLayout from "@/components/MainLayout";
 import useCITLToReview from "@/hooks/useCITLToReview";
 import useToReview from "@/hooks/useToReview";
 import Link from "next/link";
-import { useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 
 export default function ToReviewPage() {
   const [state, setState] = useState({
     take: 10,
     skip: 0,
+    filter: {
+      title: "",
+      userName: "",
+      departmentName: "",
+      collegeName: "",
+    },
   });
 
   const { iMs, count } = useCITLToReview(state);
@@ -28,11 +34,70 @@ export default function ToReviewPage() {
     });
   };
 
+  const handleTitleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        title: e.target.value ?? "",
+      },
+    }));
+  };
+  const handleUserNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        userName: e.target.value ?? "",
+      },
+    }));
+  };
+  const handleDepartmentNameChange: ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        departmentName: e.target.value ?? "",
+      },
+    }));
+  };
+  const handleCollegeNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        collegeName: e.target.value ?? "",
+      },
+    }));
+  };
+
   return (
     <MainLayout>
       <div className='flex'>
         <h2 className='flex-1'>To Review</h2>
       </div>
+
+      <div>
+        <input type='text' placeholder='title' onChange={handleTitleChange} />
+        <input
+          type='text'
+          placeholder='userName'
+          onChange={handleUserNameChange}
+        />
+        <input
+          type='text'
+          placeholder='departmentName'
+          onChange={handleDepartmentNameChange}
+        />
+        <input
+          type='text'
+          placeholder='collegeName'
+          onChange={handleCollegeNameChange}
+        />
+      </div>
+
       <table className='table-auto w-full'>
         <thead>
           <tr>

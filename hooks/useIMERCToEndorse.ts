@@ -5,11 +5,16 @@ import { useEffect, useState } from "react";
 export interface useIMERCToEndorseParams {
   skip: number;
   take: number;
+  filter?: object;
 }
-export default function useIMERCToEndorse({ skip, take }: useIMERCToEndorseParams) {
-  const [state, setState] = useState<{iMs: IM[], count: number}>({
+export default function useIMERCToEndorse({
+  skip,
+  take,
+  filter,
+}: useIMERCToEndorseParams) {
+  const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
-    iMs: []
+    iMs: [],
   });
 
   useEffect(() => {
@@ -18,6 +23,7 @@ export default function useIMERCToEndorse({ skip, take }: useIMERCToEndorseParam
         params: {
           skip,
           take,
+          filter,
         },
       })
       .then((res) => {
@@ -26,7 +32,7 @@ export default function useIMERCToEndorse({ skip, take }: useIMERCToEndorseParam
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take]);
+  }, [skip, take, filter]);
 
   return state;
 }

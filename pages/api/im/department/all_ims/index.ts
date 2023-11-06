@@ -26,6 +26,10 @@ export default async function handler(
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
+        "filter[title]": Yup.string().optional(),
+        "filter[userName]": Yup.string().optional(),
+        "filter[collegeName]": Yup.string().optional(),
+        "filter[departmentName]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -52,7 +56,14 @@ export default async function handler(
       });
       ability = iMAbility({ user });
 
-      const { skip, take } = validator.cast(req.query);
+      const {
+        skip,
+        take,
+        "filter[collegeName]": filterCollegeName,
+        "filter[departmentName]": filterDepartmentName,
+        "filter[title]": filterTitle,
+        "filter[userName]": filterUserName,
+      } = validator.cast(req.query);
       const iMs = await prisma.iM.findMany({
         skip,
         take,
@@ -64,6 +75,44 @@ export default async function handler(
                 Department: {
                   id: {
                     equals: department.id,
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                User: {
+                  name: {
+                    contains: filterUserName ?? "",
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              title: {
+                contains: filterTitle ?? "",
+                mode: "insensitive",
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  name: {
+                    contains: filterDepartmentName ?? "",
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName ?? "",
+                      mode: "insensitive",
+                    },
                   },
                 },
               },
@@ -83,6 +132,44 @@ export default async function handler(
                 Department: {
                   id: {
                     equals: department.id,
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                User: {
+                  name: {
+                    contains: filterUserName ?? "",
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              title: {
+                contains: filterTitle ?? "",
+                mode: "insensitive",
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  name: {
+                    contains: filterDepartmentName ?? "",
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName ?? "",
+                      mode: "insensitive",
+                    },
                   },
                 },
               },

@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 export interface useCITLIDDEndorsedParams {
   skip: number;
   take: number;
+  filter: object;
 }
-export default function useCITLIDDEndorsed({ skip, take }: useCITLIDDEndorsedParams) {
+export default function useCITLIDDEndorsed({ skip, take, filter }: useCITLIDDEndorsedParams) {
   const [state, setState] = useState<{iMs: IM[], count: number}>({
     count: 0,
     iMs: []
@@ -18,6 +19,7 @@ export default function useCITLIDDEndorsed({ skip, take }: useCITLIDDEndorsedPar
         params: {
           skip,
           take,
+          filter
         },
       })
       .then((res) => {
@@ -26,7 +28,7 @@ export default function useCITLIDDEndorsed({ skip, take }: useCITLIDDEndorsedPar
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take]);
+  }, [skip, take, filter]);
 
   return state;
 }

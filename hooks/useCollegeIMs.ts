@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 export interface useCollegeIMsParams {
   skip: number;
   take: number;
+  filter?: object;
 }
-export default function useCollegeIMs({ skip, take }: useCollegeIMsParams) {
+export default function useCollegeIMs({ skip, take, filter }: useCollegeIMsParams) {
   const [state, setState] = useState<{iMs: IM[], count: number}>({
     count: 0,
     iMs: []
@@ -18,6 +19,7 @@ export default function useCollegeIMs({ skip, take }: useCollegeIMsParams) {
         params: {
           skip,
           take,
+          filter
         },
       })
       .then((res) => {
@@ -26,7 +28,7 @@ export default function useCollegeIMs({ skip, take }: useCollegeIMsParams) {
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take]);
+  }, [skip, take, filter]);
 
   return state;
 }
