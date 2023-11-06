@@ -1,13 +1,14 @@
 import prisma from "@/prisma/client";
-import profilePictureFileAbility from "@/services/ability/profilePictureFileAbility";
+import grammarlyFileAbility from "@/services/ability/grammarlyFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
-import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
+import * as Yup from "yup";
+import fs from "fs";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,15 +22,15 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = profilePictureFileAbility({ user });
+  const ability = grammarlyFileAbility({ user });
 
   const getHandler = async () => {
     try {
       const { id } = req.query;
-      const profilePictureFile = await prisma.profilePictureFile.findFirstOrThrow({
+      const grammarlyFile = await prisma.grammarlyFile.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).ProfilePictureFile,
+            accessibleBy(ability).GrammarlyFile,
             {
               id: {
                 equals: id as string,
@@ -39,7 +40,7 @@ export default async function handler(
         },
       });
 
-      return res.json(profilePictureFile);
+      return res.json(grammarlyFile);
     } catch (error: any) {
       logger.error(error);
       return res
@@ -52,11 +53,11 @@ export default async function handler(
     try {
       const { id } = req.query;
 
-      let profilePictureFileToDelete;
-      profilePictureFileToDelete = await prisma.profilePictureFile.findFirstOrThrow({
+      let grammarlyFileToDelete;
+      grammarlyFileToDelete = await prisma.grammarlyFile.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).ProfilePictureFile,
+            accessibleBy(ability).GrammarlyFile,
             {
               id: {
                 equals: id as string,
@@ -64,29 +65,48 @@ export default async function handler(
             },
           ],
         },
+        include: {
+          IM: {
+            include: {
+              Faculty: {
+                include: {
+                  ActiveFaculty: {
+                    include: {
+                      Faculty: {
+                        include: {
+                          User: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
-        subject("ProfilePictureFile", profilePictureFileToDelete)
+        subject("GrammarlyFile", grammarlyFileToDelete)
       );
 
       const filePath = path.join(
         process.cwd(),
-        `/files/profile_picture/${profilePictureFileToDelete.filename}`
+        `/files/grammarly/${grammarlyFileToDelete.filename}`
       );
       fs.rm(filePath, (error) => {
         logger.error({ error });
         throw error;
       });
 
-      const profilePictureFile = await prisma.profilePictureFile.delete({
+      const grammarlyFile = await prisma.grammarlyFile.delete({
         where: {
           id: id as string,
         },
       });
 
-      return res.json(profilePictureFile);
+      return res.json(grammarlyFile);
     } catch (error: any) {
       logger.error(error);
       return res

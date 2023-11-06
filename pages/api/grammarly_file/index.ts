@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import plagiarismFileAbility from "@/services/ability/plagiarismFileAbility";
+import grammarlyFileAbility from "@/services/ability/grammarlyFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
@@ -82,7 +82,7 @@ export default async function handler(
 
       const ability = iMAbility({ user });
       ForbiddenError.from(ability).throwUnlessCan(
-        "connectToPlagiarismFile",
+        "connectToGrammarlyFile",
         subject("IM", iM)
       );
 
@@ -90,13 +90,13 @@ export default async function handler(
       const file = data.files.file[0];
       const filename = `${file.newFilename}.pdf`;
       const filePath = file.filepath;
-      const destination = path.join(process.cwd(), `/files/plagiarism/${filename}`);
+      const destination = path.join(process.cwd(), `/files/grammarly/${filename}`);
       fs.copyFile(filePath, destination, (err) => {
         if (err) throw err;
       });
 
       // create object to server
-      const plagiarismFile = await prisma.plagiarismFile.create({
+      const grammarlyFile = await prisma.grammarlyFile.create({
         data: {
           IM: {
             connect: {
@@ -109,7 +109,7 @@ export default async function handler(
           originalFilename: file.originalFilename,
         },
       });
-      res.status(200).json(plagiarismFile);
+      res.status(200).json(grammarlyFile);
     } catch (error: any) {
       logger.error(error);
       return res
@@ -127,22 +127,22 @@ export default async function handler(
       await validator.validate(req.query);
       const { skip, take } = validator.cast(req.query);
 
-      const ability = plagiarismFileAbility({ user });
+      const ability = grammarlyFileAbility({ user });
 
-      const plagiarismFiles = await prisma.plagiarismFile.findMany({
+      const grammarlyFiles = await prisma.grammarlyFile.findMany({
         skip,
         take,
         where: {
-          AND: [accessibleBy(ability).PlagiarismFile],
+          AND: [accessibleBy(ability).GrammarlyFile],
         },
       });
-      const count = await prisma.plagiarismFile.count({
+      const count = await prisma.grammarlyFile.count({
         where: {
-          AND: [accessibleBy(ability).PlagiarismFile],
+          AND: [accessibleBy(ability).GrammarlyFile],
         },
       });
 
-      return res.json({ plagiarismFiles, count });
+      return res.json({ grammarlyFiles, count });
     } catch (error: any) {
       logger.error(error);
       return res

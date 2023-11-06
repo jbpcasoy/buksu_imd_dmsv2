@@ -93,7 +93,7 @@ export default async function handler(
 
       const filePath = path.join(
         process.cwd(),
-        `/files/im/${plagiarismFileToDelete.filename}`
+        `/files/plagiarism/${plagiarismFileToDelete.filename}`
       );
       fs.rm(filePath, (error) => {
         logger.error({ error });
