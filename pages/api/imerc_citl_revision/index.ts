@@ -27,6 +27,7 @@ export default async function handler(
     try {
       const validator = Yup.object({
         iMFileId: Yup.string().required(),
+        plagiarismFileId: Yup.string().required(),
       });
       await validator.validate(req.body);
 
@@ -35,12 +36,19 @@ export default async function handler(
         "IMERCCITLRevision"
       );
 
-      const { iMFileId } = validator.cast(req.body);
+      const { iMFileId, plagiarismFileId } = validator.cast(req.body);
 
       const iMFile = await prisma.iMFile.findFirstOrThrow({
         where: {
           id: {
             equals: iMFileId,
+          },
+        },
+      });
+      const plagiarismFile = await prisma.plagiarismFile.findFirstOrThrow({
+        where: {
+          id: {
+            equals: plagiarismFileId,
           },
         },
       });
@@ -228,9 +236,14 @@ export default async function handler(
 
       const iMERCCITLRevision = await prisma.iMERCCITLRevision.create({
         data: {
+          PlagiarismFile: {
+            connect: {
+              id: plagiarismFile.id,
+            },
+          },
           IMFile: {
             connect: {
-              id: iMFileId,
+              id: iMFile.id,
             },
           },
           IMERCCITLReviewed: {

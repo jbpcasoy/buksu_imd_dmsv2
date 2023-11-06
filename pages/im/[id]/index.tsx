@@ -15,6 +15,7 @@ import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useIM from "@/hooks/useIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
+import useIMLatestPlagiarismFile from "@/hooks/useIMLatestPlagiarismFile";
 import useIMLatestQAMISFile from "@/hooks/useIMLatestQAMISFile";
 import useIMStatus from "@/hooks/useIMStatus";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
@@ -29,13 +30,16 @@ import {
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 
 export default function ViewIM() {
   const router = useRouter();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
-  const [state, setState] = useState<File | null>();
+  const [state, setState] = useState<{
+    iMFile?: File | null;
+    plagiarismFile?: File | null;
+  }>();
   const iMStatus = useIMStatus({ id: iMId as string });
   const activeFaculty = useActiveFacultyMe();
   const activeCoordinator = useActiveCoordinatorMe();
@@ -47,6 +51,7 @@ export default function ViewIM() {
   const qAMISRevision = useQAMISRevisionIM({ id: iMId as string });
   const iMFile = useIMLatestIMFile({ id: iMId as string });
   const qAMISFile = useIMLatestQAMISFile({ id: iMId as string });
+  const plagiarismFile = useIMLatestPlagiarismFile({ id: iMId as string });
 
   const onQAMISChairpersonEndorsement = () => {
     axios
@@ -105,14 +110,17 @@ export default function ViewIM() {
   };
 
   const onFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setState(e.target.files?.item(0));
+    setState((prev) => ({ ...prev, iMFile: e.target.files?.item(0) }));
+  };
+  const onPlagiarismFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setState((prev) => ({ ...prev, plagiarismFile: e.target.files?.item(0) }));
   };
 
   const submitForReviewHandler = async () => {
-    if (!state || !iMId) return;
+    if (!state?.iMFile || !iMId) return;
 
     const formData = new FormData();
-    formData.append("file", state);
+    formData.append("file", state.iMFile);
     formData.append("iMId", iMId as string);
     return axios
       .post<IMFile>("/api/im_file", formData)
@@ -134,10 +142,10 @@ export default function ViewIM() {
   };
 
   const submitForEndorsementHandler = async () => {
-    if (!state || !iMId) return;
+    if (!state?.iMFile || !iMId) return;
 
     const formData = new FormData();
-    formData.append("file", state);
+    formData.append("file", state.iMFile);
     formData.append("iMId", iMId as string);
     return axios
       .post<IMFile>("/api/im_file", formData)
@@ -159,10 +167,10 @@ export default function ViewIM() {
   };
 
   const submitForCITLEndorsementHandler = async () => {
-    if (!state || !iMId) return;
+    if (!state?.iMFile || !iMId) return;
 
     const formData = new FormData();
-    formData.append("file", state);
+    formData.append("file", state.iMFile);
     formData.append("iMId", iMId as string);
     return axios
       .post<IMFile>("/api/im_file", formData)
@@ -184,24 +192,33 @@ export default function ViewIM() {
   };
 
   const submitForIMERCCITLEndorsementHandler = async () => {
-    if (!state || !iMId) return;
+    console.log({ state });
+    if (!state?.iMFile || !state?.plagiarismFile) return;
 
-    const formData = new FormData();
-    formData.append("file", state);
-    formData.append("iMId", iMId as string);
+    const iMFormData = new FormData();
+    iMFormData.append("file", state.iMFile);
+    iMFormData.append("iMId", iMId as string);
     return axios
-      .post<IMFile>("/api/im_file", formData)
-      .then(async (res) => {
+      .post("/api/im_file", iMFormData)
+      .then((res) => {
+        const iMFile = res.data;
+        if (!state?.plagiarismFile) return;
+
+        const plagiarismFormData = new FormData();
+        plagiarismFormData.append("file", state.plagiarismFile);
+        plagiarismFormData.append("iMId", iMId as string);
         return axios
-          .post("/api/imerc_citl_revision/", {
-            iMFileId: res.data.id,
-          })
-          .then(() => {
-            alert("IM has been submitted for endorsement");
+          .post("/api/plagiarism_file", plagiarismFormData)
+          .then((res) => {
+            const plagiarismFile = res.data;
+            return axios.post("/api/imerc_citl_revision", {
+              iMFileId: iMFile.id,
+              plagiarismFileId: plagiarismFile.id,
+            });
           });
       })
-      .catch((err) => {
-        alert(err?.response?.data?.error?.message ?? err.message);
+      .catch((error) => {
+        alert(error.response.data.error.message);
       })
       .finally(() => {
         router.reload();
@@ -328,13 +345,13 @@ export default function ViewIM() {
           })
           .then(() => {
             alert("IM returned successfully");
-            router.push(`/im/${iMId}/idd_coordinator_suggestion`)
+            router.push(`/im/${iMId}/idd_coordinator_suggestion`);
           });
       })
       .catch((error) => {
         alert(error.response.data.error.message);
         router.reload();
-      })
+      });
   };
 
   const cITLDirectorEndorsementHandler = async () => {
@@ -411,13 +428,13 @@ export default function ViewIM() {
           .then((res) => {
             console.log({ data: res.data });
             alert("IM returned successfully");
-            router.push(`/im/${iMId}/imerc_idd_specialist_suggestion`);
+            router.push(`/im/${iMId}/idd_specialist_suggestion`);
           });
       })
       .catch((error) => {
         alert(error.response.data.error.message);
         router.reload();
-      })
+      });
   };
 
   const iMERCCITLDirectorEndorsementHandler = async () => {
@@ -459,11 +476,8 @@ export default function ViewIM() {
       <div className='flex'>
         <h2 className='flex-1'>View IM</h2>
 
-        <div className="space-x-1">
-          <Link
-            href={`/im/${iM.id}/all_reviews`}
-            className='border rounded'
-          >
+        <div className='space-x-1'>
+          <Link href={`/im/${iM.id}/all_reviews`} className='border rounded'>
             all reviews
           </Link>
           <Link
@@ -710,7 +724,22 @@ export default function ViewIM() {
             <IMContentSpecialistSuggestionItems id={iM.id} />
             <IMIDDSpecialistSuggestionItems id={iM.id} />
             <IMContentEditorSuggestionItems id={iM.id} />
-            <input type='file' onChange={onFileChange} accept='.pdf' />
+
+            <p>Plagiarism File:</p>
+            <input
+              type='file'
+              onChange={onPlagiarismFileChange}
+              accept='.pdf'
+            />
+            <br />
+            <p>IM File:</p>
+            <input
+              type='file'
+              id='im_file'
+              onChange={onFileChange}
+              accept='.pdf'
+            />
+            <br />
             <button
               className='border rounded'
               onClick={submitForIMERCCITLEndorsementHandler}
@@ -767,6 +796,16 @@ export default function ViewIM() {
             <iframe
               src={`/api/qamis_file/${qAMISFile.id}/pdf`}
               title='QAMIS File'
+              className='w-full h-screen'
+            />
+          </div>
+        )}
+        {plagiarismFile && iMStatus === "IMERC_CITL_REVISED" && (
+          <div className='flex flex-col w-full'>
+            <p className='text-sm font-bold text-center'>PLAGIARISM FILE</p>
+            <iframe
+              src={`/api/plagiarism_file/${plagiarismFile.id}/pdf`}
+              title='Plagiarism File'
               className='w-full h-screen'
             />
           </div>

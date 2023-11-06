@@ -128,7 +128,6 @@ model IM {
     IMFile         IMFile[]
     Event          Event[]
     PlagiarismFile PlagiarismFile[]
-    GrammarlyFile  GrammarlyFile[]
 }
 
 model IMFile {
@@ -997,7 +996,8 @@ model IMERCCITLRevision {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    // CoordinatorEndorsement CoordinatorEndorsement?
+    PlagiarismFile                 PlagiarismFile                  @relation(fields: [plagiarismFileId], references: [id])
+    plagiarismFileId               String
     IMERCCITLReviewed              IMERCCITLReviewed               @relation(fields: [iMERCCITLReviewedId], references: [id])
     iMERCCITLReviewedId            String
     IMFile                         IMFile                          @relation(fields: [iMFileId], references: [id])
@@ -1172,23 +1172,11 @@ model PlagiarismFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM               IM     @relation(fields: [iMId], references: [id])
-    iMId             String
-    filename         String
-    size             Int
-    mimetype         String
-    originalFilename String
-}
-
-model GrammarlyFile {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    IM               IM     @relation(fields: [iMId], references: [id])
-    iMId             String
-    filename         String
-    size             Int
-    mimetype         String
-    originalFilename String
+    IM                IM                  @relation(fields: [iMId], references: [id])
+    iMId              String
+    filename          String
+    size              Int
+    mimetype          String
+    originalFilename  String
+    IMERCCITLRevision IMERCCITLRevision[]
 }

@@ -24,6 +24,30 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
+      const activeIDDCoordinator = await prisma.activeIDDCoordinator.findFirst({
+        where: {
+          IDDCoordinator: {
+            User: {
+              id: {
+                equals: user.id,
+              },
+            },
+          },
+        },
+      });
+
+      const activeCITLDirector = await prisma.activeCITLDirector.findFirst({
+        where: {
+          CITLDirector: {
+            User: {
+              id: {
+                equals: user.id,
+              },
+            },
+          },
+        },
+      });
+
       const whereQuery: Prisma.EventWhereInput = {
         OR: [
           {
@@ -89,17 +113,21 @@ export default async function handler(
           {
             type: "DEPARTMENT_REVIEW_CREATED",
             DepartmentReview: {
-              IMFile: {
-                IM: {
-                  Faculty: {
-                    Department: {
+              AND: [
+                {
+                  IMFile: {
+                    IM: {
                       Faculty: {
-                        some: {
-                          ActiveFaculty: {
-                            Faculty: {
-                              User: {
-                                id: {
-                                  equals: user.id,
+                        Department: {
+                          Faculty: {
+                            some: {
+                              ActiveFaculty: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
                                 },
                               },
                             },
@@ -109,7 +137,22 @@ export default async function handler(
                     },
                   },
                 },
-              },
+                {
+                  IMFile: {
+                    NOT: {
+                      IM: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
             },
           },
           {
@@ -556,51 +599,88 @@ export default async function handler(
           },
           {
             type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED",
-            QAMISDepartmentEndorsement: {
-              AND: [
-                {
-                  QAMISCoordinatorEndorsement: {
-                    QAMISRevision: {
-                      IMFile: {
-                        IM: {
-                          Faculty: {
-                            User: {
-                              id: {
-                                equals: user.id,
+            OR: [
+              {
+                QAMISDepartmentEndorsement: {
+                  AND: [
+                    {
+                      QAMISCoordinatorEndorsement: {
+                        QAMISRevision: {
+                          IMFile: {
+                            IM: {
+                              Faculty: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
                               },
                             },
                           },
                         },
                       },
                     },
-                  },
-                },
-                {
-                  QAMISChairpersonEndorsement: {
-                    QAMISRevision: {
-                      IMFile: {
-                        IM: {
-                          Faculty: {
-                            User: {
-                              id: {
-                                equals: user.id,
+                    {
+                      QAMISChairpersonEndorsement: {
+                        QAMISRevision: {
+                          IMFile: {
+                            IM: {
+                              Faculty: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
                               },
                             },
                           },
                         },
                       },
                     },
-                  },
+                    {
+                      QAMISDeanEndorsement: {
+                        QAMISRevision: {
+                          IMFile: {
+                            IM: {
+                              Faculty: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  ],
                 },
-                {
+              },
+              {
+                QAMISDepartmentEndorsement: {
                   QAMISDeanEndorsement: {
                     QAMISRevision: {
                       IMFile: {
                         IM: {
                           Faculty: {
-                            User: {
-                              id: {
-                                equals: user.id,
+                            Department: {
+                              Faculty: {
+                                some: {
+                                  ContentSpecialist: {
+                                    ActiveContentSpecialist: {
+                                      ContentSpecialist: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
                               },
                             },
                           },
@@ -609,8 +689,17 @@ export default async function handler(
                     },
                   },
                 },
-              ],
-            },
+              },
+              activeCITLDirector || activeIDDCoordinator
+                ? {
+                    type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED",
+                  }
+                : {
+                    NOT: {
+                      type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED",
+                    },
+                  },
+            ],
           },
           {
             type: "SUBMITTED_CONTENT_SPECIALIST_SUGGESTION_CREATED",

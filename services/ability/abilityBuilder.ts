@@ -72,7 +72,6 @@ import {
   Event,
   NotificationRead,
   PlagiarismFile,
-  GrammarlyFile,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -149,7 +148,6 @@ export type AppSubjects =
       Event: Event;
       NotificationRead: NotificationRead;
       PlagiarismFile: PlagiarismFile;
-      GrammarlyFile: GrammarlyFile;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
