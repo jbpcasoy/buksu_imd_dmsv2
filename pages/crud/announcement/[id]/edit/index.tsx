@@ -20,7 +20,7 @@ export default function EditAnnouncementPage() {
     validationSchema: Yup.object({
       title: Yup.string().required(),
       description: Yup.string(),
-      url: Yup.string().required(),
+      url: Yup.string(),
     }),
     onSubmit: (values) => {
       axios
@@ -41,7 +41,7 @@ export default function EditAnnouncementPage() {
     formik.setValues({
       title: announcement.title,
       description: announcement.description ?? "",
-      url: announcement.url,
+      url: announcement.url ?? "",  
     });
 
     return () => {

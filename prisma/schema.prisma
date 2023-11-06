@@ -1188,5 +1188,5 @@ model Announcement {
 
     title       String
     description String?
-    url         String
+    url         String?
 }

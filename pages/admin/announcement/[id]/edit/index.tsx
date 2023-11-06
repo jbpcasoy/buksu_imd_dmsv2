@@ -1,9 +1,16 @@
-import CrudLayout from "@/components/CrudLayout";
+import AdminLayout from "@/components/AdminLayout";
+import useAnnouncement from "@/hooks/useAnnouncement";
 import axios from "axios";
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import * as Yup from "yup";
 
-export default function AddAnnouncementPage() {
+export default function EditAnnouncementPage() {
+  const router = useRouter();
+  const announcementId = router.query.id;
+  const announcement = useAnnouncement({ id: announcementId as string });
+
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -17,18 +24,36 @@ export default function AddAnnouncementPage() {
     }),
     onSubmit: (values) => {
       axios
-        .post("/api/announcement", values)
+        .put(`/api/announcement/${announcementId}`, values)
         .then(() => {
-          alert("Announcement Added Successfully");
+          alert("Announcement updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
         });
     },
   });
+
+  useEffect(() => {
+    if (!announcement) return;
+    let subscribe = true;
+
+    formik.setValues({
+      title: announcement.title,
+      description: announcement.description ?? "",
+      url: announcement.url ?? "",  
+    });
+
+    return () => {
+      subscribe = false;
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [announcement]);
+
   return (
-    <CrudLayout>
-      <h2>Add Announcement</h2>
+    <AdminLayout>
+      <h2>Edit Announcement</h2>
 
       <form onSubmit={formik.handleSubmit}>
         <input
@@ -44,8 +69,9 @@ export default function AddAnnouncementPage() {
         <br />
         <input type='text' placeholder='url' {...formik.getFieldProps("url")} />
         <br />
+
         <input type='submit' value='Submit' className='rounded border' />
       </form>
-    </CrudLayout>
+    </AdminLayout>
   );
 }

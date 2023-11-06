@@ -1,4 +1,4 @@
-import CrudLayout from "@/components/CrudLayout";
+import AdminLayout from "@/components/AdminLayout";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -27,7 +27,7 @@ export default function AddAnnouncementPage() {
     },
   });
   return (
-    <CrudLayout>
+    <AdminLayout>
       <h2>Add Announcement</h2>
 
       <form onSubmit={formik.handleSubmit}>
@@ -46,6 +46,6 @@ export default function AddAnnouncementPage() {
         <br />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
-    </CrudLayout>
+    </AdminLayout>
   );
 }

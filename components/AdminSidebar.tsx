@@ -43,6 +43,9 @@ export default function AdminSidebar() {
         <Link href='/admin/im' className='underline'>
           IM
         </Link>
+        <Link href='/admin/announcement' className='underline'>
+          Announcement
+        </Link>
       </div>
     </div>
   );
