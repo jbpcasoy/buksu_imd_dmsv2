@@ -46,11 +46,9 @@ export default function AllReviewsPage() {
       {contentEditorReview && (
         <ContentEditorReview contentEditorReview={contentEditorReview} />
       )}
-      {
-        iDDSpecialistReview && (
-          <IDDSpecialistReview iDDSpecialistReview={iDDSpecialistReview}/>
-        )
-      }
+      {iDDSpecialistReview && (
+        <IDDSpecialistReview iDDSpecialistReview={iDDSpecialistReview} />
+      )}
     </MainLayout>
   );
 }
@@ -809,18 +807,14 @@ function IDDSpecialistReview({
   return (
     <div>
       <div className='flex'>
-        <h3 className='flex-1 text-center font-bold'>
-          IDDSpecialistReview
-        </h3>
+        <h3 className='flex-1 text-center font-bold'>IDDSpecialistReview</h3>
       </div>
       <p>id: {iDDSpecialistReview.id}</p>
       <p>
-        createdAt:{" "}
-        {new Date(iDDSpecialistReview.createdAt).toLocaleString()}
+        createdAt: {new Date(iDDSpecialistReview.createdAt).toLocaleString()}
       </p>
       <p>
-        updatedAt:{" "}
-        {new Date(iDDSpecialistReview.updatedAt).toLocaleString()}
+        updatedAt: {new Date(iDDSpecialistReview.updatedAt).toLocaleString()}
       </p>
       <p>
         departmentReviewId:{" "}
