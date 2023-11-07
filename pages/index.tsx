@@ -7,6 +7,7 @@ import { IMStatusDepartmentLineChart } from "@/components/dashboard/IMStatusDepa
 import { IMStatusPieChart } from "@/components/dashboard/IMStatusPieChart";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
+import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useDepartmentMe from "@/hooks/useDepartmentMe";
 import { useFormik } from "formik";
@@ -48,6 +49,7 @@ export default function Home() {
   const activeDean = useActiveDeanMe();
   const activeCITLDirector = useActiveCITLDirectorMe();
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();
+  const activeFaculty = useActiveFacultyMe();
 
   useEffect(() => {
     if (!department) return;
@@ -63,52 +65,73 @@ export default function Home() {
   return (
     <MainLayout>
       <h1 className='text-lg'>Dashboard</h1>
-      <form noValidate onSubmit={formik.handleSubmit}>
-        <CollegeSelector
-          {...formik.getFieldProps("collegeId")}
-          disabled={!(activeCITLDirector || activeIDDCoordinator)}
-        />
-        <DepartmentSelector
-          {...formik.getFieldProps("departmentId")}
-          collegeId={formik.values.collegeId}
-          disabled={!(activeDean || activeCITLDirector || activeIDDCoordinator)}
-        />
-        <StatusSelector {...formik.getFieldProps("status")} />
-        <label htmlFor='start'>start: </label>
-        <input
-          type='datetime-local'
-          id='start'
-          max={formik.values.end}
-          {...formik.getFieldProps("start")}
-        />
-        <br />
-        <label htmlFor='end'>end: </label>
-        <input
-          type='datetime-local'
-          id='end'
-          min={formik.values.start}
-          {...formik.getFieldProps("end")}
-        />
-        <br />
+      {!activeFaculty &&
+        !(activeDean || activeCITLDirector || activeIDDCoordinator) && (
+          <div>
+            <p>
+              Welcome, you are not yet assigned as a faculty. Please be patient
+              while the admin sets your roles.
+            </p>
+          </div>
+        )}
+      {activeFaculty &&
+        !(activeDean || activeCITLDirector || activeIDDCoordinator) && (
+          <div>
+            <p>Welcome Faculty!</p>
+          </div>
+        )}
+      {(activeDean || activeCITLDirector || activeIDDCoordinator) && (
         <div>
-          <input type='submit' value='Refresh' className='border rounded' />
-          <button className='border rounded' onClick={router.reload}>
-            Reset
-          </button>
-        </div>
-      </form>
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <CollegeSelector
+              {...formik.getFieldProps("collegeId")}
+              disabled={!(activeCITLDirector || activeIDDCoordinator)}
+            />
+            <DepartmentSelector
+              {...formik.getFieldProps("departmentId")}
+              collegeId={formik.values.collegeId}
+              disabled={
+                !(activeDean || activeCITLDirector || activeIDDCoordinator)
+              }
+            />
+            <StatusSelector {...formik.getFieldProps("status")} />
+            <label htmlFor='start'>start: </label>
+            <input
+              type='datetime-local'
+              id='start'
+              max={formik.values.end}
+              {...formik.getFieldProps("start")}
+            />
+            <br />
+            <label htmlFor='end'>end: </label>
+            <input
+              type='datetime-local'
+              id='end'
+              min={formik.values.start}
+              {...formik.getFieldProps("end")}
+            />
+            <br />
+            <div>
+              <input type='submit' value='Refresh' className='border rounded' />
+              <button className='border rounded' onClick={router.reload}>
+                Reset
+              </button>
+            </div>
+          </form>
 
-      <div>
-        <IMStatusDepartmentLineChart filter={state} />
-        <div className='flex flex-row justify-center items-center space-y-2'>
-          <div className='w-1/2 xs:w-full'>
-            <IMStatusPieChart filter={state} />
-          </div>
-          <div className='w-1/2 xs:w-full'>
-            <IMDepartmentPieChart filter={state} />
+          <div>
+            <IMStatusDepartmentLineChart filter={state} />
+            <div className='flex flex-row justify-center items-center space-y-2'>
+              <div className='w-1/2 xs:w-full'>
+                <IMStatusPieChart filter={state} />
+              </div>
+              <div className='w-1/2 xs:w-full'>
+                <IMDepartmentPieChart filter={state} />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </MainLayout>
   );
 }
