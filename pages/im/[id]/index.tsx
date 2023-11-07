@@ -103,9 +103,10 @@ export default function ViewIM() {
       .delete(`/api/im/${id}`)
       .then(() => {
         alert("IM deleted successfully");
-      })
-      .finally(() => {
         router.push("/my_ims");
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
       });
   };
 
@@ -489,15 +490,21 @@ export default function ViewIM() {
           <Link href={`/im/${iM.id}/track`} className='border rounded'>
             track
           </Link>
-          <Link href={`/im/${iM.id}/edit`} className='border rounded'>
-            edit
-          </Link>
-          <button
-            onClick={() => deleteHandler(iM.id)}
-            className='border rounded'
-          >
-            delete
-          </button>
+          {iM.facultyId === activeFaculty?.facultyId &&
+            iMStatus === "IMPLEMENTATION_DRAFT" && (
+              <Link href={`/im/${iM.id}/edit`} className='border rounded'>
+                edit
+              </Link>
+            )}
+          {iM.facultyId === activeFaculty?.facultyId &&
+            iMStatus === "IMPLEMENTATION_DRAFT" && (
+              <button
+                onClick={() => deleteHandler(iM.id)}
+                className='border rounded'
+              >
+                delete
+              </button>
+            )}
         </div>
       </div>
       <div>

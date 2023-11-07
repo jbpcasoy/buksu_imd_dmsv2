@@ -76,6 +76,23 @@ export default async function handler(
           },
         },
       });
+
+      const departmentReview = await prisma.departmentReview.findFirst({
+        where: {
+          IMFile: {
+            IM: {
+              id: {
+                equals: iMToDelete.id,
+              },
+            },
+          },
+        },
+      });
+
+      if (departmentReview && !user.isAdmin) {
+        throw new Error("Cannot delete IMs submitted for review.");
+      }
+      
       ForbiddenError.from(ability).throwUnlessCan(
         "delete",
         subject("IM", iMToDelete)
@@ -108,8 +125,7 @@ export default async function handler(
       const { title, type } = validator.cast(req.body);
 
       const { id } = req.query;
-      let iMToUpdate: IM | null;
-      iMToUpdate = await prisma.iM.findFirstOrThrow({
+      const iMToUpdate = await prisma.iM.findFirstOrThrow({
         where: {
           id: {
             equals: id as string,
@@ -132,8 +148,24 @@ export default async function handler(
         },
       });
 
+      const departmentReview = await prisma.departmentReview.findFirst({
+        where: {
+          IMFile: {
+            IM: {
+              id: {
+                equals: iMToUpdate.id,
+              },
+            },
+          },
+        },
+      });
+
+      if (departmentReview && !user.isAdmin) {
+        throw new Error("Cannot update IMs submitted for review.");
+      }
+
       ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
+        "update",
         subject("IM", iMToUpdate)
       );
 

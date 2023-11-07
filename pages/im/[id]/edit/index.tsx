@@ -26,7 +26,9 @@ export default function IMEdit() {
     onSubmit: (values) => {
       axios.put(`/api/im/${iMId}`, values).then(() => {
         alert("IM Updated");
-      });
+      }).catch(error => {
+        alert(error.response.data.error.message);
+      }) ;
     },
   });
 
