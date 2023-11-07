@@ -294,6 +294,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).DepartmentRevision],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.departmentRevision.count({
         where: {

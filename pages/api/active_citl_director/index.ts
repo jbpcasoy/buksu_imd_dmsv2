@@ -30,7 +30,10 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "ActiveCITLDirector");
+      ForbiddenError.from(ability).throwUnlessCan(
+        "create",
+        "ActiveCITLDirector"
+      );
 
       const { cITLDirectorId } = validator.cast(req.body);
 
@@ -42,7 +45,8 @@ export default async function handler(
         },
       });
 
-      const userActiveCITLDirectorCount = await prisma.activeCITLDirector.count();
+      const userActiveCITLDirectorCount =
+        await prisma.activeCITLDirector.count();
 
       if (userActiveCITLDirectorCount > 0) {
         return res.status(409).json({
@@ -102,6 +106,9 @@ export default async function handler(
               },
             },
           ],
+        },
+        orderBy: {
+          updatedAt: "desc",
         },
       });
       const count = await prisma.activeCITLDirector.count({

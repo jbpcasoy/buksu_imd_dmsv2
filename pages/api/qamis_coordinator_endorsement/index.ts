@@ -127,7 +127,7 @@ export default async function handler(
                     id: user.id,
                   },
                 },
-                type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED"
+                type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED",
               },
             },
           },
@@ -159,6 +159,9 @@ export default async function handler(
           take,
           where: {
             AND: [accessibleBy(ability).QAMISCoordinatorEndorsement],
+          },
+          orderBy: {
+            updatedAt: "desc",
           },
         });
       const count = await prisma.qAMISCoordinatorEndorsement.count({

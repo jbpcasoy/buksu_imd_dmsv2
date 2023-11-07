@@ -178,6 +178,9 @@ export default async function handler(
           where: {
             AND: [accessibleBy(ability).IDDSpecialistReview],
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         });
       const count = await prisma.iDDSpecialistReview.count({
         where: {

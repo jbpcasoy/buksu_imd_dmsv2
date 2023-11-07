@@ -69,6 +69,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).QAMISSuggestion],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.qAMISSuggestion.count({
         where: {

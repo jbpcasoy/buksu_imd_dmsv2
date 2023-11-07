@@ -105,6 +105,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).ProfilePictureFile],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.profilePictureFile.count({
         where: {

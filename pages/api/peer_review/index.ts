@@ -170,6 +170,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).PeerReview],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.peerReview.count({
         where: {

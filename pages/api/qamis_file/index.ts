@@ -118,6 +118,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).QAMISFile],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.qAMISFile.count({
         where: {

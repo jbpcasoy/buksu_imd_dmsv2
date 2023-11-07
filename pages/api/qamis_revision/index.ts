@@ -156,6 +156,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).QAMISRevision],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.qAMISRevision.count({
         where: {

@@ -94,15 +94,17 @@ export default async function handler(
         activeContentSpecialistId,
       } = validator.cast(req.body);
 
-      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow({
-        where: {
-          ActiveContentSpecialist: {
-            id: {
-              equals: activeContentSpecialistId,
+      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow(
+        {
+          where: {
+            ActiveContentSpecialist: {
+              id: {
+                equals: activeContentSpecialistId,
+              },
             },
           },
-        },
-      });
+        }
+      );
 
       const contentSpecialistReview =
         await prisma.contentSpecialistReview.create({
@@ -141,9 +143,9 @@ export default async function handler(
             },
             ContentSpecialist: {
               connect: {
-                id: contentSpecialist.id
-              }
-            }
+                id: contentSpecialist.id,
+              },
+            },
           },
         });
 
@@ -177,6 +179,9 @@ export default async function handler(
           take,
           where: {
             AND: [accessibleBy(ability).ContentSpecialistReview],
+          },
+          orderBy: {
+            updatedAt: "desc",
           },
         });
       const count = await prisma.contentSpecialistReview.count({

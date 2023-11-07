@@ -100,6 +100,9 @@ export default async function handler(
           where: {
             AND: [accessibleBy(ability).IMERCCITLDirectorEndorsement],
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         });
       const count = await prisma.iMERCCITLDirectorEndorsement.count({
         where: {

@@ -74,6 +74,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).NotificationRead],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.notificationRead.count({
         where: {

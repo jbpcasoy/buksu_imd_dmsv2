@@ -164,6 +164,9 @@ export default async function handler(
           where: {
             AND: [accessibleBy(ability).SubmittedPeerSuggestion],
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         });
       const count = await prisma.submittedPeerSuggestion.count({
         where: {

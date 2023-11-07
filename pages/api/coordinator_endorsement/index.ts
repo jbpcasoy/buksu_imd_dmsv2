@@ -102,6 +102,9 @@ export default async function handler(
           where: {
             AND: [accessibleBy(ability).CoordinatorEndorsement],
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         });
       const count = await prisma.coordinatorEndorsement.count({
         where: {

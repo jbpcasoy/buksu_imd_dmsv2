@@ -96,6 +96,9 @@ export default async function handler(
           where: {
             AND: [accessibleBy(ability).IDDCoordinatorSuggestion],
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         });
       const count = await prisma.iDDCoordinatorSuggestion.count({
         where: {

@@ -178,6 +178,9 @@ export default async function handler(
           where: {
             AND: [accessibleBy(ability).ContentEditorReview],
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         });
       const count = await prisma.contentEditorReview.count({
         where: {

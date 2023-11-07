@@ -62,6 +62,9 @@ export default async function handler(
             },
           ],
         },
+        orderBy: {
+          name: "desc"
+        },
       });
       const count = await prisma.user.count({
         where: {

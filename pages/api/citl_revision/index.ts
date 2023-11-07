@@ -236,6 +236,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).CITLRevision],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.cITLRevision.count({
         where: {

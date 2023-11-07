@@ -295,6 +295,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).IMERCCITLRevision],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.iMERCCITLRevision.count({
         where: {

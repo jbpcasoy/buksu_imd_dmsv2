@@ -135,6 +135,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).IMFile],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.iMFile.count({
         where: {

@@ -135,6 +135,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).PlagiarismFile],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.plagiarismFile.count({
         where: {

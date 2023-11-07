@@ -53,6 +53,9 @@ export default async function handler(
               },
             ],
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         });
       const count = await prisma.coordinatorSuggestionItem.count({
         where: {

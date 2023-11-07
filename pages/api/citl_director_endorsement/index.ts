@@ -100,6 +100,9 @@ export default async function handler(
           where: {
             AND: [accessibleBy(ability).CITLDirectorEndorsement],
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         });
       const count = await prisma.cITLDirectorEndorsement.count({
         where: {

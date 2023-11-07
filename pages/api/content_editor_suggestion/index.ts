@@ -75,6 +75,9 @@ export default async function handler(
         where: {
           AND: [accessibleBy(ability).ContentEditorSuggestion],
         },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
       const count = await prisma.contentEditorSuggestion.count({
         where: {
