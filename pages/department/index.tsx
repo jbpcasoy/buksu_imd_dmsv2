@@ -3,12 +3,15 @@ import useActiveFaculties from "@/hooks/useActiveFaculties";
 import useDepartmentMe from "@/hooks/useDepartmentMe";
 import useUserActiveFaculty from "@/hooks/useUserActiveFaculty";
 import { ActiveFaculty } from "@prisma/client";
-import { useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 
 export default function DepartmentPage() {
   const [state, setState] = useState({
     take: 10,
     skip: 0,
+    filter: {
+      name: "",
+    },
   });
   const department = useDepartmentMe();
   const { activeFaculties, count } = useActiveFaculties(state);
@@ -28,10 +31,24 @@ export default function DepartmentPage() {
       return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
     });
   };
+
+  const handleNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        name: e.target.value,
+      },
+    }));
+  };
+
   return (
     <MainLayout>
       <div className='flex'>
         <h2 className='flex-1'>{department?.name}</h2>
+      </div>
+      <div>
+        <input placeholder='Name' onChange={handleNameChange} />
       </div>
       <table className='table-auto w-full'>
         <thead>
