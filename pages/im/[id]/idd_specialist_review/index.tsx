@@ -108,7 +108,8 @@ export default function AddIDDSpecialistReviewPage() {
     }
 
     router.replace(`/im/${iMId}/idd_specialist_suggestion`);
-  }, [iddSpecialistReview]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [iddSpecialistReview, iMId]);
 
   if (!qAMISDepartmentEndorsement || !activeIDDCoordinator) {
     return null;

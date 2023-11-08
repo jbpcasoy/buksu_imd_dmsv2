@@ -56,6 +56,7 @@ export default function Home() {
 
     formik.setFieldValue("collegeId", department.collegeId);
     formik.setFieldValue("departmentId", department.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [department]);
 
   useEffect(() => {

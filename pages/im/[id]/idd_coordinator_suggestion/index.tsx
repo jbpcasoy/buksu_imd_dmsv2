@@ -136,7 +136,8 @@ export default function IDDCoordinatorSuggestionPage() {
     if (submittedIDDCoordinatorSuggestion && cITLRevision) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedIDDCoordinatorSuggestion, cITLRevision]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submittedIDDCoordinatorSuggestion, cITLRevision, iMId]);
 
   return (
     <MainLayout>

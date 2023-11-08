@@ -64,6 +64,7 @@ export default function ProfilePage() {
     formik.setValues({
       name: session?.user?.name ?? "",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.user]);
 
   return (
@@ -81,10 +82,13 @@ export default function ProfilePage() {
       <div className='mb-10'>
         <form noValidate onSubmit={formik.handleSubmit}>
           <div className='space-x-1'>
-            <img
-              src={state?.previewUrl ?? session?.user?.image ?? ""}
-              className='h-32 w-32'
-            />
+            <picture>
+              <img
+                src={state?.previewUrl ?? session?.user?.image ?? ""}
+                className='h-32 w-32'
+                alt="User avatar"
+              />
+            </picture>
             <input type='file' accept='image/*' onChange={showProfilePreview} />
             <br />
             <input

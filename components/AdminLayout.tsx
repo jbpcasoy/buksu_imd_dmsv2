@@ -18,6 +18,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (!session?.user?.isAdmin && router) {
       router.replace("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   return (

@@ -27,10 +27,7 @@ export default function QAMISSuggestionItemEditPage() {
     }),
     onSubmit: (values) => {
       axios
-        .put(
-          `/api/qamis_suggestion_item/${qAMISSuggestionItemId}`,
-          values
-        )
+        .put(`/api/qamis_suggestion_item/${qAMISSuggestionItemId}`, values)
         .then(() => {
           alert("Suggestion updated successfully");
           router.reload();
@@ -46,6 +43,7 @@ export default function QAMISSuggestionItemEditPage() {
       remarks: qAMISSuggestionItem?.remarks ?? "",
       suggestion: qAMISSuggestionItem.suggestion,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qAMISSuggestionItem]);
 
   return (

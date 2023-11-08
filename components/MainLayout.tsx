@@ -23,6 +23,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     if (session?.user?.isAdmin && router) {
       router.replace("/admin");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   return (

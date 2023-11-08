@@ -36,6 +36,7 @@ export default function ContentSpecialistSuggestionItemEditPage() {
     formik.setValues({
       actionTaken: contentSpecialistSuggestionItem.actionTaken ?? "",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentSpecialistSuggestionItem]);
 
   return (

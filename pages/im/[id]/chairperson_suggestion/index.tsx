@@ -121,7 +121,8 @@ export default function ChairpersonSuggestionPage() {
     if (submittedChairpersonSuggestion) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedChairpersonSuggestion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submittedChairpersonSuggestion, iMId]);
 
   return (
     <MainLayout>

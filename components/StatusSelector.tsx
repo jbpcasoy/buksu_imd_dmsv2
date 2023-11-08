@@ -37,7 +37,7 @@ export default function StatusSelector(props?: FieldInputProps<any>) {
       <select {...props}>
         <option value=''>Select</option>
         {state?.map((status) => (
-          <option>{status}</option>
+          <option key={status}>{status}</option>
         ))}
       </select>
     </div>

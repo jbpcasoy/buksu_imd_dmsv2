@@ -37,6 +37,7 @@ export default function PeerSuggestionItemEditPage() {
     formik.setValues({
       actionTaken: peerSuggestionItem.actionTaken ?? "",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [peerSuggestionItem]);
 
   return (

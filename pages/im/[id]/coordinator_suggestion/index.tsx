@@ -123,7 +123,8 @@ export default function CoordinatorSuggestionPage() {
     if (submittedCoordinatorSuggestion && departmentRevision) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedCoordinatorSuggestion, departmentRevision]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submittedCoordinatorSuggestion, departmentRevision, iMId]);
 
   return (
     <MainLayout>

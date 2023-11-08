@@ -108,7 +108,8 @@ export default function AddContentEditorReviewPage() {
     }
 
     router.replace(`/im/${iMId}/content_editor_suggestion`);
-  }, [contentEditorReview]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contentEditorReview, iMId]);
 
   if (!qAMISDepartmentEndorsement || !activeCITLDirector) {
     return null;

@@ -127,7 +127,8 @@ export default function ContentEditorSuggestionPage() {
     if (submittedContentEditorSuggestion) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedContentEditorSuggestion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submittedContentEditorSuggestion, iMId]);
 
   return (
     <MainLayout>

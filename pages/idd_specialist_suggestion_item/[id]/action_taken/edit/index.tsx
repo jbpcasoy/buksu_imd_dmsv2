@@ -37,6 +37,7 @@ export default function IDDSpecialistSuggestionItemEditPage() {
     formik.setValues({
       actionTaken: iDDSpecialistSuggestionItem.actionTaken ?? "",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iDDSpecialistSuggestionItem]);
 
   return (

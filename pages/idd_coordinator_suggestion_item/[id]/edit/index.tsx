@@ -43,6 +43,7 @@ export default function IDDCoordinatorSuggestionItemEditPage() {
       remarks: iDDCoordinatorSuggestionItem?.remarks ?? "",
       suggestion: iDDCoordinatorSuggestionItem.suggestion,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iDDCoordinatorSuggestionItem]);
 
   return (

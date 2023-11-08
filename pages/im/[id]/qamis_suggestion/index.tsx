@@ -161,7 +161,8 @@ export default function QAMISSuggestionPage() {
     if (submittedQAMISSuggestion) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedQAMISSuggestion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submittedQAMISSuggestion, iMId]);
 
   const handleNext = () => {
     setState((prev) => {

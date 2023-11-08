@@ -36,6 +36,7 @@ export default function CoordinatorSuggestionItemEditPage() {
     formik.setValues({
       actionTaken: coordinatorSuggestionItem.actionTaken ?? "",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinatorSuggestionItem]);
 
   return (

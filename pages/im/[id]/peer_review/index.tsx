@@ -102,7 +102,8 @@ export default function AddPeerReviewPage() {
     }
 
     router.replace(`/im/${iMId}/peer_suggestion`);
-  }, [peerReview]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [peerReview, iMId]);
 
   if (!departmentReview || !activeFaculty) {
     return null;
@@ -110,9 +111,15 @@ export default function AddPeerReviewPage() {
 
   return (
     <MainLayout>
-      <div className="flex justify-between">
-        <h2 className="inline">Peer Review</h2>
-        <Link href={`/api/im_file/im/${iMId}/pdf`} className="underline" target="_blank">View PDF</Link>
+      <div className='flex justify-between'>
+        <h2 className='inline'>Peer Review</h2>
+        <Link
+          href={`/api/im_file/im/${iMId}/pdf`}
+          className='underline'
+          target='_blank'
+        >
+          View PDF
+        </Link>
       </div>
 
       <form onSubmit={formik.handleSubmit}>

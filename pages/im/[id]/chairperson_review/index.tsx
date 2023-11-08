@@ -102,7 +102,8 @@ export default function AddChairpersonReviewPage() {
     }
 
     router.replace(`/im/${iMId}/chairperson_suggestion`);
-  }, [chairpersonReview]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chairpersonReview, iMId]);
 
   if (!departmentReview || !activeFaculty) {
     return null;

@@ -43,6 +43,7 @@ export default function CoordinatorSuggestionItemEditPage() {
       remarks: coordinatorSuggestionItem?.remarks ?? "",
       suggestion: coordinatorSuggestionItem.suggestion,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinatorSuggestionItem]);
 
   return (

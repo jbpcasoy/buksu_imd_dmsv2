@@ -43,6 +43,7 @@ export default function ContentEditorSuggestionItemEditPage() {
       remarks: contentEditorSuggestionItem?.remarks ?? "",
       suggestion: contentEditorSuggestionItem.suggestion,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentEditorSuggestionItem]);
 
   return (

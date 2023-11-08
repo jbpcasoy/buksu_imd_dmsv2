@@ -37,6 +37,7 @@ export default function IDDCoordinatorSuggestionItemEditPage() {
     formik.setValues({
       actionTaken: iDDCoordinatorSuggestionItem.actionTaken ?? "",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iDDCoordinatorSuggestionItem]);
 
   return (

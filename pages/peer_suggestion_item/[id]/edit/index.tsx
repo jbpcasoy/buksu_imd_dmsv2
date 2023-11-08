@@ -40,6 +40,7 @@ export default function PeerSuggestionItemEditPage() {
       remarks: peerSuggestionItem?.remarks ?? "",
       suggestion: peerSuggestionItem.suggestion,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [peerSuggestionItem]);
 
   return (

@@ -37,6 +37,7 @@ export default function ChairpersonSuggestionItemEditPage() {
     formik.setValues({
       actionTaken: chairpersonSuggestionItem.actionTaken ?? "",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chairpersonSuggestionItem]);
 
   return (

@@ -102,7 +102,8 @@ export default function AddCoordinatorReviewPage() {
     }
 
     router.replace(`/im/${iMId}/coordinator_suggestion`);
-  }, [coordinatorReview]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coordinatorReview, iMId]);
 
   if (!departmentReview || !activeFaculty) {
     return null;

@@ -128,7 +128,8 @@ export default function IDDSpecialistSuggestionPage() {
     if (submittedIDDSpecialistSuggestion && iMERCCITLRevision) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedIDDSpecialistSuggestion, iMERCCITLRevision]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submittedIDDSpecialistSuggestion, iMERCCITLRevision, iMId]);
 
   return (
     <MainLayout>

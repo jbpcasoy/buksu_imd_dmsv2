@@ -43,6 +43,7 @@ export default function IDDSpecialistSuggestionItemEditPage() {
       remarks: iDDSpecialistSuggestionItem?.remarks ?? "",
       suggestion: iDDSpecialistSuggestionItem.suggestion,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iDDSpecialistSuggestionItem]);
 
   return (

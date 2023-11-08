@@ -43,6 +43,7 @@ export default function ChairpersonSuggestionItemEditPage() {
       remarks: chairpersonSuggestionItem?.remarks ?? "",
       suggestion: chairpersonSuggestionItem.suggestion,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chairpersonSuggestionItem]);
 
   return (

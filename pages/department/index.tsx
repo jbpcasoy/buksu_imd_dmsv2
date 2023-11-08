@@ -102,7 +102,9 @@ function ActiveFacultyItem({
       <td>{activeFaculty.facultyId}</td>
       <td>{user?.name}</td>
       <td>
-        <img src={user?.image ?? ""} className='h-10 w-10 rounded-full m-1' />
+        <picture>
+          <img src={user?.image ?? ""} className='h-10 w-10 rounded-full m-1' alt="User avatar" />
+        </picture>
       </td>
       {/* <td>
       <Link href={`/im/${activeFaculty.id}`} className='border rounded'>

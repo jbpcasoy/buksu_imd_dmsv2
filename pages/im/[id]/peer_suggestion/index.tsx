@@ -123,7 +123,8 @@ export default function PeerSuggestionPage() {
     if (submittedPeerSuggestion) {
       router.push(`/im/${iMId}`);
     }
-  }, [submittedPeerSuggestion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submittedPeerSuggestion, iMId]);
 
   return (
     <MainLayout>
