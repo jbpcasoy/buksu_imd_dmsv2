@@ -1087,58 +1087,58 @@ model Event {
 
     message                                String? // Tobe updated when returning request
     url                                    String? // Tobe updated when returning request
-    User                                   User                                  @relation(fields: [userId], references: [id])
+    User                                   User                                  @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId                                 String
     type                                   EventType
-    IM                                     IM?                                   @relation(fields: [iMId], references: [id])
+    IM                                     IM?                                   @relation(fields: [iMId], references: [id], onDelete: Cascade)
     iMId                                   String?
-    DepartmentReview                       DepartmentReview?                     @relation(fields: [departmentReviewId], references: [id])
+    DepartmentReview                       DepartmentReview?                     @relation(fields: [departmentReviewId], references: [id], onDelete: Cascade)
     departmentReviewId                     String?
-    SubmittedPeerSuggestion                SubmittedPeerSuggestion?              @relation(fields: [submittedPeerSuggestionId], references: [id])
+    SubmittedPeerSuggestion                SubmittedPeerSuggestion?              @relation(fields: [submittedPeerSuggestionId], references: [id], onDelete: Cascade)
     submittedPeerSuggestionId              String?
-    SubmittedCoordinatorSuggestion         SubmittedCoordinatorSuggestion?       @relation(fields: [submittedCoordinatorSuggestionId], references: [id])
+    SubmittedCoordinatorSuggestion         SubmittedCoordinatorSuggestion?       @relation(fields: [submittedCoordinatorSuggestionId], references: [id], onDelete: Cascade)
     submittedCoordinatorSuggestionId       String?
-    SubmittedChairpersonSuggestion         SubmittedChairpersonSuggestion?       @relation(fields: [submittedChairpersonSuggestionId], references: [id])
+    SubmittedChairpersonSuggestion         SubmittedChairpersonSuggestion?       @relation(fields: [submittedChairpersonSuggestionId], references: [id], onDelete: Cascade)
     submittedChairpersonSuggestionId       String?
-    DepartmentReviewed                     DepartmentReviewed?                   @relation(fields: [departmentReviewedId], references: [id])
+    DepartmentReviewed                     DepartmentReviewed?                   @relation(fields: [departmentReviewedId], references: [id], onDelete: Cascade)
     departmentReviewedId                   String?
-    DepartmentRevision                     DepartmentRevision?                   @relation(fields: [departmentRevisionId], references: [id])
+    DepartmentRevision                     DepartmentRevision?                   @relation(fields: [departmentRevisionId], references: [id], onDelete: Cascade)
     departmentRevisionId                   String?
-    CoordinatorEndorsement                 CoordinatorEndorsement?               @relation(fields: [coordinatorEndorsementId], references: [id])
+    CoordinatorEndorsement                 CoordinatorEndorsement?               @relation(fields: [coordinatorEndorsementId], references: [id], onDelete: Cascade)
     coordinatorEndorsementId               String?
-    DeanEndorsement                        DeanEndorsement?                      @relation(fields: [deanEndorsementId], references: [id])
+    DeanEndorsement                        DeanEndorsement?                      @relation(fields: [deanEndorsementId], references: [id], onDelete: Cascade)
     deanEndorsementId                      String?
-    SubmittedIDDCoordinatorSuggestion      SubmittedIDDCoordinatorSuggestion?    @relation(fields: [submittedIDDCoordinatorSuggestionId], references: [id])
+    SubmittedIDDCoordinatorSuggestion      SubmittedIDDCoordinatorSuggestion?    @relation(fields: [submittedIDDCoordinatorSuggestionId], references: [id], onDelete: Cascade)
     submittedIDDCoordinatorSuggestionId    String?
-    CITLRevision                           CITLRevision?                         @relation(fields: [cITLRevisionId], references: [id])
+    CITLRevision                           CITLRevision?                         @relation(fields: [cITLRevisionId], references: [id], onDelete: Cascade)
     cITLRevisionId                         String?
-    IDDCoordinatorEndorsement              IDDCoordinatorEndorsement?            @relation(fields: [iDDCoordinatorEndorsementId], references: [id])
+    IDDCoordinatorEndorsement              IDDCoordinatorEndorsement?            @relation(fields: [iDDCoordinatorEndorsementId], references: [id], onDelete: Cascade)
     iDDCoordinatorEndorsementId            String?
-    CITLDirectorEndorsement                CITLDirectorEndorsement?              @relation(fields: [cITLDirectorEndorsementId], references: [id])
+    CITLDirectorEndorsement                CITLDirectorEndorsement?              @relation(fields: [cITLDirectorEndorsementId], references: [id], onDelete: Cascade)
     cITLDirectorEndorsementId              String?
-    QAMISRevision                          QAMISRevision?                        @relation(fields: [qAMISRevisionId], references: [id])
+    QAMISRevision                          QAMISRevision?                        @relation(fields: [qAMISRevisionId], references: [id], onDelete: Cascade)
     qAMISRevisionId                        String?
-    QAMISCoordinatorEndorsement            QAMISCoordinatorEndorsement?          @relation(fields: [qAMISCoordinatorEndorsementId], references: [id])
+    QAMISCoordinatorEndorsement            QAMISCoordinatorEndorsement?          @relation(fields: [qAMISCoordinatorEndorsementId], references: [id], onDelete: Cascade)
     qAMISCoordinatorEndorsementId          String?
-    QAMISChairpersonEndorsement            QAMISChairpersonEndorsement?          @relation(fields: [qAMISChairpersonEndorsementId], references: [id])
+    QAMISChairpersonEndorsement            QAMISChairpersonEndorsement?          @relation(fields: [qAMISChairpersonEndorsementId], references: [id], onDelete: Cascade)
     qAMISChairpersonEndorsementId          String?
-    QAMISDeanEndorsement                   QAMISDeanEndorsement?                 @relation(fields: [qAMISDeanEndorsementId], references: [id])
+    QAMISDeanEndorsement                   QAMISDeanEndorsement?                 @relation(fields: [qAMISDeanEndorsementId], references: [id], onDelete: Cascade)
     qAMISDeanEndorsementId                 String?
-    QAMISDepartmentEndorsement             QAMISDepartmentEndorsement?           @relation(fields: [qAMISDepartmentEndorsementId], references: [id])
+    QAMISDepartmentEndorsement             QAMISDepartmentEndorsement?           @relation(fields: [qAMISDepartmentEndorsementId], references: [id], onDelete: Cascade)
     qAMISDepartmentEndorsementId           String?
-    SubmittedContentSpecialistSuggestion   SubmittedContentSpecialistSuggestion? @relation(fields: [submittedContentSpecialistSuggestionId], references: [id])
+    SubmittedContentSpecialistSuggestion   SubmittedContentSpecialistSuggestion? @relation(fields: [submittedContentSpecialistSuggestionId], references: [id], onDelete: Cascade)
     submittedContentSpecialistSuggestionId String?
-    SubmittedContentEditorSuggestion       SubmittedContentEditorSuggestion?     @relation(fields: [submittedContentEditorSuggestionId], references: [id])
+    SubmittedContentEditorSuggestion       SubmittedContentEditorSuggestion?     @relation(fields: [submittedContentEditorSuggestionId], references: [id], onDelete: Cascade)
     submittedContentEditorSuggestionId     String?
-    SubmittedIDDSpecialistSuggestion       SubmittedIDDSpecialistSuggestion?     @relation(fields: [submittedIDDSpecialistSuggestionId], references: [id])
+    SubmittedIDDSpecialistSuggestion       SubmittedIDDSpecialistSuggestion?     @relation(fields: [submittedIDDSpecialistSuggestionId], references: [id], onDelete: Cascade)
     submittedIDDSpecialistSuggestionId     String?
-    IMERCCITLReviewed                      IMERCCITLReviewed?                    @relation(fields: [iMERCCITLReviewedId], references: [id])
+    IMERCCITLReviewed                      IMERCCITLReviewed?                    @relation(fields: [iMERCCITLReviewedId], references: [id], onDelete: Cascade)
     iMERCCITLReviewedId                    String?
-    IMERCCITLRevision                      IMERCCITLRevision?                    @relation(fields: [iMERCCITLRevisionId], references: [id])
+    IMERCCITLRevision                      IMERCCITLRevision?                    @relation(fields: [iMERCCITLRevisionId], references: [id], onDelete: Cascade)
     iMERCCITLRevisionId                    String?
-    IMERCIDDCoordinatorEndorsement         IMERCIDDCoordinatorEndorsement?       @relation(fields: [iMERCIDDCoordinatorEndorsementId], references: [id])
+    IMERCIDDCoordinatorEndorsement         IMERCIDDCoordinatorEndorsement?       @relation(fields: [iMERCIDDCoordinatorEndorsementId], references: [id], onDelete: Cascade)
     iMERCIDDCoordinatorEndorsementId       String?
-    IMERCCITLDirectorEndorsement           IMERCCITLDirectorEndorsement?         @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id])
+    IMERCCITLDirectorEndorsement           IMERCCITLDirectorEndorsement?         @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id], onDelete: Cascade)
     iMERCCITLDirectorEndorsementId         String?
     NotificationRead                       NotificationRead[]
 }
