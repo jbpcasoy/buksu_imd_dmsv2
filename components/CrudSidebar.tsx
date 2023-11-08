@@ -295,6 +295,10 @@ export default function CrudSidebar() {
       link: "/crud/returned_department_revision",
       label: "ReturnedDepartmentRevision",
     },
+    {
+      link: "/crud/returned_department_revision_suggestion_item",
+      label: "ReturnedDepartmentRevisionSuggestionItem",
+    },
     // TODO add profile picture file
   ];
   

@@ -74,6 +74,7 @@ import {
   PlagiarismFile,
   Announcement,
   ReturnedDepartmentRevision,
+  ReturnedDepartmentRevisionSuggestionItem,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -152,6 +153,7 @@ export type AppSubjects =
       PlagiarismFile: PlagiarismFile;
       Announcement: Announcement;
       ReturnedDepartmentRevision: ReturnedDepartmentRevision;
+      ReturnedDepartmentRevisionSuggestionItem: ReturnedDepartmentRevisionSuggestionItem;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

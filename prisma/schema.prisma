@@ -1213,6 +1213,10 @@ model ReturnedDepartmentRevisionSuggestionItem {
 
     ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id])
     returnedDepartmentRevisionId String
+    suggestion                   String
+    actionTaken                  String?
+    remarks                      String?
+    pageNumber                   Int
 }
 
 model SubmittedReturnedDepartmentRevision {
