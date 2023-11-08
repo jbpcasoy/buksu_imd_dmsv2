@@ -73,6 +73,7 @@ import {
   NotificationRead,
   PlagiarismFile,
   Announcement,
+  ReturnedDepartmentRevision,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -150,6 +151,7 @@ export type AppSubjects =
       NotificationRead: NotificationRead;
       PlagiarismFile: PlagiarismFile;
       Announcement: Announcement;
+      ReturnedDepartmentRevision: ReturnedDepartmentRevision;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

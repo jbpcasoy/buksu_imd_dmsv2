@@ -171,6 +171,7 @@ model Coordinator {
     CoordinatorReview           CoordinatorReview[]
     CoordinatorEndorsement      CoordinatorEndorsement[]
     QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement[]
+    ReturnedDepartmentRevision  ReturnedDepartmentRevision[]
 }
 
 model Dean {
@@ -475,13 +476,14 @@ model DepartmentRevision {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    DepartmentReviewed     DepartmentReviewed      @relation(fields: [departmentReviewedId], references: [id], onDelete: Cascade)
-    departmentReviewedId   String
-    IMFile                 IMFile                  @relation(fields: [iMFileId], references: [id], onDelete: Cascade)
-    iMFileId               String                  @unique
-    returned               Boolean                 @default(false)
-    CoordinatorEndorsement CoordinatorEndorsement?
-    Event                  Event[]
+    DepartmentReviewed         DepartmentReviewed          @relation(fields: [departmentReviewedId], references: [id], onDelete: Cascade)
+    departmentReviewedId       String
+    IMFile                     IMFile                      @relation(fields: [iMFileId], references: [id], onDelete: Cascade)
+    iMFileId                   String                      @unique
+    returned                   Boolean                     @default(false)
+    CoordinatorEndorsement     CoordinatorEndorsement?
+    Event                      Event[]
+    ReturnedDepartmentRevision ReturnedDepartmentRevision?
 }
 
 model CoordinatorEndorsement {
@@ -946,7 +948,7 @@ model IDDSpecialistSuggestion {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IDDSpecialistReview              IDDSpecialistReview               @relation(fields: [iDDSpecialistReviewId], references: [id],onDelete: Cascade)
+    IDDSpecialistReview              IDDSpecialistReview               @relation(fields: [iDDSpecialistReviewId], references: [id], onDelete: Cascade)
     iDDSpecialistReviewId            String                            @unique
     SubmittedIDDSpecialistSuggestion SubmittedIDDSpecialistSuggestion?
     IDDSpecialistSuggestionItem      IDDSpecialistSuggestionItem[]
@@ -1189,4 +1191,35 @@ model Announcement {
     title       String
     description String?
     url         String?
+}
+
+model ReturnedDepartmentRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    DepartmentRevision                       DepartmentRevision                         @relation(fields: [departmentRevisionId], references: [id], onDelete: Cascade)
+    departmentRevisionId                     String                                     @unique
+    ReturnedDepartmentRevisionSuggestionItem ReturnedDepartmentRevisionSuggestionItem[]
+    SubmittedReturnedDepartmentRevision      SubmittedReturnedDepartmentRevision[]
+    Coordinator                              Coordinator                                @relation(fields: [coordinatorId], references: [id])
+    coordinatorId                            String
+}
+
+model ReturnedDepartmentRevisionSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id])
+    returnedDepartmentRevisionId String
+}
+
+model SubmittedReturnedDepartmentRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id])
+    returnedDepartmentRevisionId String
 }

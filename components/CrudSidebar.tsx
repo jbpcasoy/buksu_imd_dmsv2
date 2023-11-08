@@ -291,6 +291,10 @@ export default function CrudSidebar() {
       link: "/crud/announcement",
       label: "Announcement",
     },
+    {
+      link: "/crud/returned_department_revision",
+      label: "ReturnedDepartmentRevision",
+    },
     // TODO add profile picture file
   ];
   
