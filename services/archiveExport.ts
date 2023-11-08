@@ -7,7 +7,7 @@ import logger from "./logger";
 // create a file to stream archive data to.
 export default async function archiveExport() {
   return new Promise((resolve, reject) => {
-    const destination = path.join(process.cwd(), `/files`);
+    const destination = path.join(process.cwd(), `/files/export`);
     const output = fs.createWriteStream(path.join(process.cwd(), `/export.zip`));
     const archive = archiver("zip", {
       zlib: { level: 9 }, // Sets the compression level.
