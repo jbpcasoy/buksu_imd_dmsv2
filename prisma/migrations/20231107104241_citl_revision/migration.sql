@@ -1,0 +1,5 @@
+-- DropForeignKey
+ALTER TABLE "CITLRevision" DROP CONSTRAINT "CITLRevision_iMFileId_fkey";
+
+-- AddForeignKey
+ALTER TABLE "CITLRevision" ADD CONSTRAINT "CITLRevision_iMFileId_fkey" FOREIGN KEY ("iMFileId") REFERENCES "IMFile"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -18,11 +18,15 @@ export default function IMPage() {
       return;
     }
 
-    axios.delete(`/api/im/${iMId}`).then(() => {
-      alert("IM deleted successfully.");
-    }).catch(error => {
-      alert(error.message)
-    });
+    axios
+      .delete(`/api/im/${iMId}`)
+      .then(() => {
+        alert("IM deleted successfully.");
+        router.push("/admin/im");
+      })
+      .catch((error) => {
+        alert(error.response.data.error.message);
+      });
   };
 
   if (!iM) return null;
@@ -32,7 +36,9 @@ export default function IMPage() {
       <div className='flex'>
         <h2 className='flex-1'>IM</h2>
         <div className='space-x-1'>
-          <Link className='border rounded' href={`/admin/im/${iMId}/edit`}>edit</Link>
+          <Link className='border rounded' href={`/admin/im/${iMId}/edit`}>
+            edit
+          </Link>
           <button className='border rounded' onClick={deleteHandler}>
             delete
           </button>
@@ -43,7 +49,12 @@ export default function IMPage() {
       <p>updatedAt: {new Date(iM.updatedAt).toLocaleString()}</p>
       <p>title: {iM.title}</p>
       <p>type: {iM.type}</p>
-      <p>facultyId: <Link href={`/admin/faculty/${iM.facultyId}`} className="underline">{iM.facultyId}</Link></p>
+      <p>
+        facultyId:{" "}
+        <Link href={`/admin/faculty/${iM.facultyId}`} className='underline'>
+          {iM.facultyId}
+        </Link>
+      </p>
     </AdminLayout>
   );
 }

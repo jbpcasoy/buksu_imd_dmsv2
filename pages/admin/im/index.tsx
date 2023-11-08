@@ -73,9 +73,6 @@ export default function IMsPage() {
     <AdminLayout>
       <div className='flex justify-between'>
         <h2>IM</h2>
-        <Link className='border rounded' href={`/admin/im/add`}>
-          Add
-        </Link>
       </div>
 
       <div>
