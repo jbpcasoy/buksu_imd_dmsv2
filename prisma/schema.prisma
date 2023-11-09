@@ -1080,6 +1080,7 @@ enum EventType {
     IMERC_CITL_REVISION_CREATED
     IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED
     IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED
+    SUBMITTED_RETURNED_DEPARTMENT_REVISION_CREATED
 }
 
 model Event {
@@ -1142,7 +1143,10 @@ model Event {
     iMERCIDDCoordinatorEndorsementId       String?
     IMERCCITLDirectorEndorsement           IMERCCITLDirectorEndorsement?         @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id], onDelete: Cascade)
     iMERCCITLDirectorEndorsementId         String?
-    NotificationRead                       NotificationRead[]
+    SubmittedReturnedDepartmentRevision    SubmittedReturnedDepartmentRevision?  @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id])
+    submittedReturnedDepartmentRevisionId  String?
+
+    NotificationRead NotificationRead[]
 }
 
 model NotificationRead {
@@ -1201,7 +1205,7 @@ model ReturnedDepartmentRevision {
     DepartmentRevision                       DepartmentRevision                         @relation(fields: [departmentRevisionId], references: [id], onDelete: Cascade)
     departmentRevisionId                     String                                     @unique
     ReturnedDepartmentRevisionSuggestionItem ReturnedDepartmentRevisionSuggestionItem[]
-    SubmittedReturnedDepartmentRevision      SubmittedReturnedDepartmentRevision[]
+    SubmittedReturnedDepartmentRevision      SubmittedReturnedDepartmentRevision?
     Coordinator                              Coordinator                                @relation(fields: [coordinatorId], references: [id])
     coordinatorId                            String
 }
@@ -1225,5 +1229,6 @@ model SubmittedReturnedDepartmentRevision {
     updatedAt DateTime @updatedAt
 
     ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id])
-    returnedDepartmentRevisionId String
+    returnedDepartmentRevisionId String                     @unique
+    Event                        Event[]
 }

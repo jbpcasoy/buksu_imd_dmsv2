@@ -75,6 +75,7 @@ import {
   Announcement,
   ReturnedDepartmentRevision,
   ReturnedDepartmentRevisionSuggestionItem,
+  SubmittedReturnedDepartmentRevision,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -154,6 +155,7 @@ export type AppSubjects =
       Announcement: Announcement;
       ReturnedDepartmentRevision: ReturnedDepartmentRevision;
       ReturnedDepartmentRevisionSuggestionItem: ReturnedDepartmentRevisionSuggestionItem;
+      SubmittedReturnedDepartmentRevision: SubmittedReturnedDepartmentRevision;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
