@@ -172,6 +172,7 @@ model Coordinator {
     CoordinatorEndorsement      CoordinatorEndorsement[]
     QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement[]
     ReturnedDepartmentRevision  ReturnedDepartmentRevision[]
+    ReturnedCITLRevision        ReturnedCITLRevision[]
 }
 
 model Dean {
@@ -606,6 +607,7 @@ model CITLRevision {
     iMFileId                            String                            @unique
     IDDCoordinatorEndorsement           IDDCoordinatorEndorsement?
     Event                               Event[]
+    ReturnedCITLRevision                ReturnedCITLRevision?
 }
 
 model IDDCoordinatorEndorsement {
@@ -1143,10 +1145,12 @@ model Event {
     iMERCIDDCoordinatorEndorsementId       String?
     IMERCCITLDirectorEndorsement           IMERCCITLDirectorEndorsement?         @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id], onDelete: Cascade)
     iMERCCITLDirectorEndorsementId         String?
-    SubmittedReturnedDepartmentRevision    SubmittedReturnedDepartmentRevision?  @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id])
+    SubmittedReturnedDepartmentRevision    SubmittedReturnedDepartmentRevision?  @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     submittedReturnedDepartmentRevisionId  String?
 
-    NotificationRead NotificationRead[]
+    NotificationRead                NotificationRead[]
+    SubmittedReturnedCITLRevision   SubmittedReturnedCITLRevision? @relation(fields: [submittedReturnedCITLRevisionId], references: [id], onDelete: Cascade)
+    submittedReturnedCITLRevisionId String?
 }
 
 model NotificationRead {
@@ -1231,4 +1235,40 @@ model SubmittedReturnedDepartmentRevision {
     ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     returnedDepartmentRevisionId String                     @unique
     Event                        Event[]
+}
+
+model ReturnedCITLRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CITLRevision                       CITLRevision                         @relation(fields: [cITLRevisionId], references: [id], onDelete: Cascade)
+    cITLRevisionId                     String                               @unique
+    ReturnedCITLRevisionSuggestionItem ReturnedCITLRevisionSuggestionItem[]
+    SubmittedReturnedCITLRevision      SubmittedReturnedCITLRevision?
+    Coordinator                        Coordinator                          @relation(fields: [coordinatorId], references: [id])
+    coordinatorId                      String
+}
+
+model ReturnedCITLRevisionSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedCITLRevision   ReturnedCITLRevision @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
+    returnedCITLRevisionId String
+    suggestion             String
+    actionTaken            String?
+    remarks                String?
+    pageNumber             Int
+}
+
+model SubmittedReturnedCITLRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedCITLRevision   ReturnedCITLRevision @relation(fields: [returnedCITLRevisionId], references: [id])
+    returnedCITLRevisionId String               @unique
+    Event                  Event[]
 }
