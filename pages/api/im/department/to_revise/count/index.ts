@@ -77,10 +77,16 @@ export async function toReviseCount(user: User) {
           },
         },
         {
-          IMFile: {
-            every: {
-              DepartmentRevision: {
-                is: null,
+          NOT: {
+            IMFile: {
+              some: {
+                DepartmentRevision: {
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                },
               },
             },
           },

@@ -98,14 +98,44 @@ export default async function handler(
 
       const departmentRevision = await prisma.departmentRevision.findFirst({
         where: {
-          returned: false,
-          DepartmentReviewed: {
-            id: {
-              equals: departmentReviewed?.id ?? "undefined",
+          AND: [
+            {
+              DepartmentReviewed: {
+                id: {
+                  equals: departmentReviewed?.id ?? "undefined",
+                },
+              },
             },
-          },
+            {
+              ReturnedDepartmentRevision: {
+                is: null,
+              },
+            },
+          ],
         },
       });
+
+      const returnedDepartmentRevision =
+        await prisma.returnedDepartmentRevision.findFirst({
+          where: {
+            AND: [
+              {
+                SubmittedReturnedDepartmentRevision: {
+                  is: null,
+                },
+              },
+              {
+                DepartmentRevision: {
+                  DepartmentReviewed: {
+                    id: {
+                      equals: departmentReviewed?.id ?? "undefined",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        });
 
       const coordinatorEndorsement =
         await prisma.coordinatorEndorsement.findFirst({
@@ -114,7 +144,6 @@ export default async function handler(
               id: {
                 equals: departmentRevision?.id ?? "undefined",
               },
-              returned: false,
             },
           },
         });
@@ -332,6 +361,10 @@ export default async function handler(
         return res.send("IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED");
       } else if (coordinatorEndorsement) {
         return res.send("IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED");
+      } else if (returnedDepartmentRevision) {
+        return res.send(
+          "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION_NOT_SUBMITTED"
+        );
       } else if (departmentRevision) {
         return res.send("IMPLEMENTATION_DEPARTMENT_REVISED");
       } else if (departmentReviewed) {

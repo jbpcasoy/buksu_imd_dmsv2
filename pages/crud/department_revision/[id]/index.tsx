@@ -71,7 +71,6 @@ export default function DepartmentRevisionPage() {
           {departmentRevision.departmentReviewedId}
         </Link>
       </p>
-      <p>returned: {departmentRevision.returned ? "Yes" : "No"}</p>
     </CrudLayout>
   );
 }

@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import departmentRevisionAbility from "@/services/ability/departmentRevisionAbility";
+import submittedReturnedDepartmentRevisionAbility from "@/services/ability/submittedReturnedDepartmentRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
@@ -16,39 +16,31 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
+    981;
   } catch (error) {
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = departmentRevisionAbility({ user });
+  const ability = submittedReturnedDepartmentRevisionAbility({ user });
 
   const getHandler = async () => {
     try {
       const { id } = req.query;
-      const departmentRevision =
-        await prisma.departmentRevision.findFirstOrThrow({
+      const submittedReturnedDepartmentRevision =
+        await prisma.submittedReturnedDepartmentRevision.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).DepartmentRevision,
-              {
-                IMFile: {
-                  IM: {
-                    id: {
-                      equals: id as string,
-                    },
-                  },
-                },
-              },
+              accessibleBy(ability).SubmittedReturnedDepartmentRevision,
               {
                 ReturnedDepartmentRevision: {
-                  is: null,
+                  id: id as string,
                 },
               },
             ],
           },
         });
 
-      return res.json(departmentRevision);
+      return res.json(submittedReturnedDepartmentRevision);
     } catch (error: any) {
       logger.error(error);
       return res

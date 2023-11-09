@@ -91,7 +91,11 @@ export default async function handler(
                 IMFile: {
                   some: {
                     DepartmentRevision: {
-                      returned: false,
+                      ReturnedDepartmentRevision: {
+                        SubmittedReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
                     },
                   },
                 },

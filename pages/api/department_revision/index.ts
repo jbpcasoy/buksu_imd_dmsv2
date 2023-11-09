@@ -115,8 +115,8 @@ export default async function handler(
             },
           },
         });
-      const blank_chairperson_suggestion_items = await prisma.chairpersonSuggestionItem.count(
-        {
+      const blank_chairperson_suggestion_items =
+        await prisma.chairpersonSuggestionItem.count({
           where: {
             ChairpersonSuggestion: {
               SubmittedChairpersonSuggestion: {
@@ -131,8 +131,7 @@ export default async function handler(
               },
             },
           },
-        }
-      );
+        });
       if (blank_chairperson_suggestion_items > 0) {
         return res.status(400).json({
           error: {
@@ -155,31 +154,64 @@ export default async function handler(
             },
           },
         });
-        const blank_coordinator_suggestion_items = await prisma.coordinatorSuggestionItem.count(
-          {
-            where: {
-              CoordinatorSuggestion: {
-                SubmittedCoordinatorSuggestion: {
-                  id: {
-                    equals: submittedCoordinatorSuggestion.id,
+      const blank_coordinator_suggestion_items =
+        await prisma.coordinatorSuggestionItem.count({
+          where: {
+            CoordinatorSuggestion: {
+              SubmittedCoordinatorSuggestion: {
+                id: {
+                  equals: submittedCoordinatorSuggestion.id,
+                },
+              },
+            },
+            NOT: {
+              actionTaken: {
+                not: null,
+              },
+            },
+          },
+        });
+
+      if (blank_coordinator_suggestion_items > 0) {
+        return res.status(400).json({
+          error: {
+            message: "Action taken must be filled in coordinator suggestions",
+          },
+        });
+      }
+      const blank_returned_department_revision_suggestion_items =
+        await prisma.returnedDepartmentRevisionSuggestionItem.count({
+          where: {
+            ReturnedDepartmentRevision: {
+              SubmittedReturnedDepartmentRevision: {
+                ReturnedDepartmentRevision: {
+                  DepartmentRevision: {
+                    IMFile: {
+                      IM: {
+                        id: {
+                          equals: iMFile.iMId,
+                        },
+                      },
+                    },
                   },
                 },
               },
-              NOT: {
-                actionTaken: {
-                  not: null,
-                },
+            },
+            NOT: {
+              actionTaken: {
+                not: null,
               },
             },
-          }
-        );
-        if (blank_coordinator_suggestion_items > 0) {
-          return res.status(400).json({
-            error: {
-              message: "Action taken must be filled in coordinator suggestions",
-            },
-          });
-        }
+          },
+        });
+      if (blank_returned_department_revision_suggestion_items > 0) {
+        return res.status(400).json({
+          error: {
+            message:
+              "Action taken must be filled in returned department revision suggestions",
+          },
+        });
+      }
 
       const departmentReviewed =
         await prisma.departmentReviewed.findFirstOrThrow({
@@ -224,8 +256,8 @@ export default async function handler(
                 },
               },
               {
-                returned: {
-                  equals: false,
+                ReturnedDepartmentRevision: {
+                  is: null,
                 },
               },
             ],

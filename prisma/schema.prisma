@@ -1215,7 +1215,7 @@ model ReturnedDepartmentRevisionSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id])
+    ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     returnedDepartmentRevisionId String
     suggestion                   String
     actionTaken                  String?
@@ -1228,7 +1228,7 @@ model SubmittedReturnedDepartmentRevision {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id])
+    ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     returnedDepartmentRevisionId String                     @unique
     Event                        Event[]
 }

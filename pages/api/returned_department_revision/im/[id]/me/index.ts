@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import departmentRevisionAbility from "@/services/ability/departmentRevisionAbility";
+import returnedDepartmentRevisionAbility from "@/services/ability/returnedDepartmentRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
@@ -20,27 +20,47 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = departmentRevisionAbility({ user });
+  const ability = returnedDepartmentRevisionAbility({ user });
 
   const getHandler = async () => {
     try {
-      const { id } = req.query;
-      const departmentRevision =
-        await prisma.departmentRevision.findFirstOrThrow({
+      const validator = Yup.object({
+        id: Yup.string().required(),
+      });
+
+      await validator.validate(req.query);
+
+      const { id } = validator.cast(req.query);
+
+      const returnedDepartmentRevision =
+        await prisma.returnedDepartmentRevision.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).DepartmentRevision,
+              accessibleBy(ability).ReturnedDepartmentRevision,
               {
-                IMFile: {
-                  IM: {
-                    id: {
-                      equals: id as string,
+                DepartmentRevision: {
+                  IMFile: {
+                    IM: {
+                      id: {
+                        equals: id,
+                      },
                     },
                   },
                 },
               },
               {
-                ReturnedDepartmentRevision: {
+                Coordinator: {
+                  Faculty: {
+                    User: {
+                      id: {
+                        equals: user.id,
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                SubmittedReturnedDepartmentRevision: {
                   is: null,
                 },
               },
@@ -48,7 +68,7 @@ export default async function handler(
           },
         });
 
-      return res.json(departmentRevision);
+      return res.json(returnedDepartmentRevision);
     } catch (error: any) {
       logger.error(error);
       return res

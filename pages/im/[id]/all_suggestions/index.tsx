@@ -6,6 +6,7 @@ import IMIDDCoordinatorSuggestionItems from "@/components/IMIDDCoordinatorSugges
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
+import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -30,6 +31,10 @@ export default function AllSuggestionsPage() {
       <IMPeerSuggestionItems id={iMId as string} editable={false} />
       <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
       <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
+      <IMReturnedDepartmentRevisionSuggestionItems
+        id={iMId as string}
+        editable={false}
+      />
       <p className='text-center font-bold text-sm'>CITL REVIEW</p>
       <IMIDDCoordinatorSuggestionItems id={iMId as string} editable={false} />
       <p className='text-center font-bold'>IMERC</p>

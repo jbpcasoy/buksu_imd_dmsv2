@@ -5,6 +5,7 @@ import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionIt
 import IMIDDCoordinatorSuggestionItems from "@/components/IMIDDCoordinatorSuggestionItems";
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
+import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
@@ -26,6 +27,7 @@ import {
   DepartmentRevision,
   IMERCCITLRevision,
   IMFile,
+  ReturnedDepartmentRevision,
 } from "@prisma/client";
 import axios from "axios";
 import Link from "next/link";
@@ -253,30 +255,31 @@ export default function ViewIM() {
   };
 
   const returnCoordinatorEndorsementHandler = async () => {
-    if (!activeCoordinator) return;
+    router.push(`/im/${iMId}/returned_department_revision`);
+    // if (!activeCoordinator) return;
 
-    return axios
-      .get<DepartmentRevision>(`/api/department_revision/im/${iMId}`)
-      .then((res) => {
-        const departmentRevision = res.data;
-        if (!departmentRevision) return;
+    // return axios
+    //   .get<DepartmentRevision>(`/api/department_revision/im/${iMId}`)
+    //   .then((res) => {
+    //     const departmentRevision = res.data;
+    //     if (!departmentRevision || !activeCoordinator) return;
 
-        return axios
-          .put<DepartmentRevision>(
-            `/api/department_revision/${departmentRevision.id}`,
-            {
-              returned: true,
-            }
-          )
-          .then(() => {
-            alert("IM returned successfully");
-            router.push(`/im/${iMId}/coordinator_suggestion`);
-          });
-      })
-      .catch((error) => {
-        alert(error.response.data.error.message);
-        router.reload();
-      });
+    //     return axios
+    //       .post<ReturnedDepartmentRevision>(
+    //         `/api/returned_department_revision/`,
+    //         {
+    //           departmentRevisionId: departmentRevision.id,
+    //           activeCoordinatorId: activeCoordinator.id,
+    //         }
+    //       )
+    //       .then(() => {
+    //         alert("IM returned successfully");
+    //       });
+    //   })
+    //   .catch((error) => {
+    //     alert(error.response.data.error.message);
+    //     router.reload();
+    //   });
   };
 
   const deanEndorsementHandler = async () => {
@@ -560,6 +563,7 @@ export default function ViewIM() {
             <IMChairpersonSuggestionItems id={iM.id} />
             <IMCoordinatorSuggestionItems id={iM.id} />
             <IMPeerSuggestionItems id={iM.id} />
+            <IMReturnedDepartmentRevisionSuggestionItems id={iM.id} />
             <input type='file' onChange={onFileChange} accept='.pdf' />
             <button
               className='border rounded'
@@ -570,12 +574,15 @@ export default function ViewIM() {
           </div>
         )}
 
-      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" &&
+      {(iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" ||
+        iMStatus ===
+          "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION_NOT_SUBMITTED") &&
         activeCoordinator && (
           <div className='space-x-1'>
             <IMChairpersonSuggestionItems id={iM.id} editable={false} />
             <IMCoordinatorSuggestionItems id={iM.id} editable={false} />
             <IMPeerSuggestionItems id={iM.id} editable={false} />
+            <IMReturnedDepartmentRevisionSuggestionItems id={iM.id} />
             <button
               className='border rounded'
               onClick={coordinatorEndorsementHandler}
