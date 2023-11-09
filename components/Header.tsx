@@ -15,7 +15,7 @@ export default function Header() {
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
-      return { ...prev, skip: nextVal <= count ? nextVal : prev.skip };
+      return { ...prev, skip: nextVal < count ? nextVal : prev.skip };
     });
   };
 
