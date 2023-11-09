@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import returnedCITLRevisionAbility from "@/services/ability/returnedCITLRevisionAbility";
+import submittedReturnedCITLRevisionAbility from "@/services/ability/submittedReturnedCITLRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
@@ -20,50 +20,44 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedCITLRevisionAbility({ user });
+  const ability = submittedReturnedCITLRevisionAbility({ user });
 
   const postHandler = async () => {
     try {
       const validator = Yup.object({
-        cITLRevisionId: Yup.string().required(),
-        activeIDDCoordinatorId: Yup.string().required(),
+        returnedCITLRevisionId: Yup.string().required(),
       });
       await validator.validate(req.body);
 
       ForbiddenError.from(ability).throwUnlessCan(
         "create",
-        "ReturnedCITLRevision"
+        "SubmittedReturnedCITLRevision"
       );
 
-      const { activeIDDCoordinatorId, cITLRevisionId } = validator.cast(
-        req.body
-      );
+      const { returnedCITLRevisionId } = validator.cast(req.body);
 
-      const activeIDDCoordinator =
-        await prisma.activeIDDCoordinator.findFirstOrThrow({
-          where: {
-            id: {
-              equals: activeIDDCoordinatorId,
+      const submittedReturnedCITLRevision =
+        await prisma.submittedReturnedCITLRevision.create({
+          data: {
+            ReturnedCITLRevision: {
+              connect: {
+                id: returnedCITLRevisionId as string,
+              },
+            },
+            Event: {
+              create: {
+                User: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: "SUBMITTED_RETURNED_DEPARTMENT_REVISION_CREATED",
+              },
             },
           },
         });
 
-      const returnedCITLRevision = await prisma.returnedCITLRevision.create({
-        data: {
-          CITLRevision: {
-            connect: {
-              id: cITLRevisionId,
-            },
-          },
-          IDDCoordinator: {
-            connect: {
-              id: activeIDDCoordinator.iDDCoordinatorId,
-            },
-          },
-        },
-      });
-
-      return res.json(returnedCITLRevision);
+      return res.json(submittedReturnedCITLRevision);
     } catch (error: any) {
       logger.error(error);
       return res
@@ -87,24 +81,24 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-
-      const returnedCITLRevisions = await prisma.returnedCITLRevision.findMany({
-        skip,
-        take,
+      const submittedReturnedCITLRevisions =
+        await prisma.submittedReturnedCITLRevision.findMany({
+          skip,
+          take,
+          where: {
+            AND: [accessibleBy(ability).SubmittedReturnedCITLRevision],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
+      const count = await prisma.submittedReturnedCITLRevision.count({
         where: {
-          AND: [accessibleBy(ability).ReturnedCITLRevision],
-        },
-        orderBy: {
-          updatedAt: "desc",
+          AND: [accessibleBy(ability).SubmittedReturnedCITLRevision],
         },
       });
-      const count = await prisma.returnedCITLRevision.count({
-        where: {
-          AND: [accessibleBy(ability).ReturnedCITLRevision],
-        },
-      });
 
-      return res.json({ returnedCITLRevisions, count });
+      return res.json({ submittedReturnedCITLRevisions, count });
     } catch (error: any) {
       logger.error(error);
       return res

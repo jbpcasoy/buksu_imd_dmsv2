@@ -172,7 +172,6 @@ model Coordinator {
     CoordinatorEndorsement      CoordinatorEndorsement[]
     QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement[]
     ReturnedDepartmentRevision  ReturnedDepartmentRevision[]
-    ReturnedCITLRevision        ReturnedCITLRevision[]
 }
 
 model Dean {
@@ -525,6 +524,7 @@ model IDDCoordinator {
     IDDCoordinatorEndorsement      IDDCoordinatorEndorsement[]
     IDDSpecialistReview            IDDSpecialistReview[]
     IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement[]
+    ReturnedCITLRevision           ReturnedCITLRevision[]
 }
 
 model ActiveIDDCoordinator {
@@ -1246,8 +1246,8 @@ model ReturnedCITLRevision {
     cITLRevisionId                     String                               @unique
     ReturnedCITLRevisionSuggestionItem ReturnedCITLRevisionSuggestionItem[]
     SubmittedReturnedCITLRevision      SubmittedReturnedCITLRevision?
-    Coordinator                        Coordinator                          @relation(fields: [coordinatorId], references: [id])
-    coordinatorId                      String
+    IDDCoordinator                     IDDCoordinator                       @relation(fields: [iDDCoordinatorId], references: [id])
+    iDDCoordinatorId                   String
 }
 
 model ReturnedCITLRevisionSuggestionItem {
@@ -1268,7 +1268,7 @@ model SubmittedReturnedCITLRevision {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedCITLRevision   ReturnedCITLRevision @relation(fields: [returnedCITLRevisionId], references: [id])
+    ReturnedCITLRevision   ReturnedCITLRevision @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
     returnedCITLRevisionId String               @unique
     Event                  Event[]
 }

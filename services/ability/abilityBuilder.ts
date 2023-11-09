@@ -76,6 +76,9 @@ import {
   ReturnedDepartmentRevision,
   ReturnedDepartmentRevisionSuggestionItem,
   SubmittedReturnedDepartmentRevision,
+  ReturnedCITLRevision,
+  ReturnedCITLRevisionSuggestionItem,
+  SubmittedReturnedCITLRevision,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -156,6 +159,9 @@ export type AppSubjects =
       ReturnedDepartmentRevision: ReturnedDepartmentRevision;
       ReturnedDepartmentRevisionSuggestionItem: ReturnedDepartmentRevisionSuggestionItem;
       SubmittedReturnedDepartmentRevision: SubmittedReturnedDepartmentRevision;
+      ReturnedCITLRevision: ReturnedCITLRevision;
+      ReturnedCITLRevisionSuggestionItem: ReturnedCITLRevisionSuggestionItem;
+      SubmittedReturnedCITLRevision: SubmittedReturnedCITLRevision;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

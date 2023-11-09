@@ -303,6 +303,18 @@ export default function CrudSidebar() {
       link: "/crud/submitted_returned_department_revision",
       label: "SubmittedReturnedDepartmentRevision",
     },
+    {
+      link: "/crud/returned_citl_revision",
+      label: "ReturnedCITLRevision",
+    },
+    {
+      link: "/crud/returned_citl_revision_suggestion_item",
+      label: "ReturnedCITLRevisionSuggestionItem",
+    },
+    {
+      link: "/crud/submitted_returned_citl_revision",
+      label: "SubmittedReturnedCITLRevision",
+    },
     // TODO add profile picture file
   ];
   
