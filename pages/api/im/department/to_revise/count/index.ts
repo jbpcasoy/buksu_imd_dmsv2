@@ -142,6 +142,17 @@ export async function toReviseCount(user: User) {
             },
           },
         },
+        {
+          IMFile: {
+            none: {
+              DepartmentRevision: {
+                CoordinatorEndorsement: {
+                  isNot: null,
+                },
+              },
+            },
+          },
+        },
       ],
     },
   });

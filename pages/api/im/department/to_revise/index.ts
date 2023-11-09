@@ -153,6 +153,17 @@ export default async function handler(
               },
             },
             {
+              IMFile: {
+                none: {
+                  DepartmentRevision: {
+                    CoordinatorEndorsement: {
+                      isNot: null,
+                    },
+                  },
+                },
+              },
+            },
+            {
               Faculty: {
                 User: {
                   name: {
@@ -217,10 +228,16 @@ export default async function handler(
               },
             },
             {
-              IMFile: {
-                every: {
-                  DepartmentRevision: {
-                    is: null,
+              NOT: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      ReturnedDepartmentRevision: {
+                        SubmittedReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -271,6 +288,17 @@ export default async function handler(
                           },
                         },
                       },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  DepartmentRevision: {
+                    CoordinatorEndorsement: {
+                      isNot: null,
                     },
                   },
                 },
