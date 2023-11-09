@@ -25,28 +25,27 @@ export default async function handler(
   const getHandler = async () => {
     try {
       const { id } = req.query;
-      const cITLRevision =
-        await prisma.cITLRevision.findFirstOrThrow({
-          where: {
-            AND: [
-              accessibleBy(ability).CITLRevision,
-              {
-                IMFile: {
-                  IM: {
-                    id: {
-                      equals: id as string,
-                    },
+      const cITLRevision = await prisma.cITLRevision.findFirstOrThrow({
+        where: {
+          AND: [
+            accessibleBy(ability).CITLRevision,
+            {
+              IMFile: {
+                IM: {
+                  id: {
+                    equals: id as string,
                   },
                 },
               },
-              {
-                returned: {
-                  equals: false,
-                },
+            },
+            {
+              ReturnedCITLRevision: {
+                is: null,
               },
-            ],
-          },
-        });
+            },
+          ],
+        },
+      });
 
       return res.json(cITLRevision);
     } catch (error: any) {

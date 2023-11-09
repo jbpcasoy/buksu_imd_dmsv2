@@ -54,8 +54,8 @@ export default async function handler(
               },
             },
             {
-              returned: {
-                equals: false,
+              ReturnedCITLRevision: {
+                is: null,
               },
             },
           ],
@@ -172,12 +172,47 @@ export default async function handler(
           },
         }
       );
-      if(blank_suggestions > 0) {
+      if (blank_suggestions > 0) {
         return res.status(400).json({
           error: {
-            message: "Action taken must be filled in idd coordinator suggestions"
-          }
-        })
+            message:
+              "Action taken must be filled in idd coordinator suggestions",
+          },
+        });
+      }
+
+      const blank_returned_citl_revision_suggestion_items =
+        await prisma.returnedCITLRevisionSuggestionItem.count({
+          where: {
+            ReturnedCITLRevision: {
+              SubmittedReturnedCITLRevision: {
+                ReturnedCITLRevision: {
+                  CITLRevision: {
+                    IMFile: {
+                      IM: {
+                        id: {
+                          equals: iMFile.iMId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            NOT: {
+              actionTaken: {
+                not: null,
+              },
+            },
+          },
+        });
+      if (blank_returned_citl_revision_suggestion_items > 0) {
+        return res.status(400).json({
+          error: {
+            message:
+              "Action taken must be filled in returned citl revision suggestions",
+          },
+        });
       }
 
       const cITLRevision = await prisma.cITLRevision.create({

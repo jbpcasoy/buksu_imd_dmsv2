@@ -172,12 +172,42 @@ export default async function handler(
 
       const cITLRevision = await prisma.cITLRevision.findFirst({
         where: {
-          returned: false,
-          SubmittedIDDCoordinatorSuggestion: {
-            id: {
-              equals: submittedIDDCoordinatorSuggestion?.id ?? "undefined",
+          AND: [
+            {
+              SubmittedIDDCoordinatorSuggestion: {
+                id: {
+                  equals: submittedIDDCoordinatorSuggestion?.id ?? "undefined",
+                },
+              },
             },
-          },
+            {
+              ReturnedCITLRevision: {
+                is: null,
+              },
+            },
+          ],
+        },
+      });
+
+      const returnedCITLRevision = await prisma.returnedCITLRevision.findFirst({
+        where: {
+          AND: [
+            {
+              SubmittedReturnedCITLRevision: {
+                is: null,
+              },
+            },
+            {
+              CITLRevision: {
+                SubmittedIDDCoordinatorSuggestion: {
+                  id: {
+                    equals:
+                      submittedIDDCoordinatorSuggestion?.id ?? "undefined",
+                  },
+                },
+              },
+            },
+          ],
         },
       });
 
@@ -353,6 +383,10 @@ export default async function handler(
         return res.send("IMPLEMENTATION_CITL_DIRECTOR_ENDORSED");
       } else if (iDDCoordinatorEndorsement) {
         return res.send("IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED");
+      } else if (returnedCITLRevision) {
+        return res.send(
+          "IMPLEMENTATION_CITL_RETURNED_REVISION_NOT_SUBMITTED"
+        );
       } else if (cITLRevision) {
         return res.send("IMPLEMENTATION_CITL_REVISED");
       } else if (submittedIDDCoordinatorSuggestion) {

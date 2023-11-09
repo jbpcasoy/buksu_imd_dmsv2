@@ -5,6 +5,7 @@ import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionIt
 import IMIDDCoordinatorSuggestionItems from "@/components/IMIDDCoordinatorSuggestionItems";
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
+import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
@@ -256,30 +257,6 @@ export default function ViewIM() {
 
   const returnCoordinatorEndorsementHandler = async () => {
     router.push(`/im/${iMId}/returned_department_revision`);
-    // if (!activeCoordinator) return;
-
-    // return axios
-    //   .get<DepartmentRevision>(`/api/department_revision/im/${iMId}`)
-    //   .then((res) => {
-    //     const departmentRevision = res.data;
-    //     if (!departmentRevision || !activeCoordinator) return;
-
-    //     return axios
-    //       .post<ReturnedDepartmentRevision>(
-    //         `/api/returned_department_revision/`,
-    //         {
-    //           departmentRevisionId: departmentRevision.id,
-    //           activeCoordinatorId: activeCoordinator.id,
-    //         }
-    //       )
-    //       .then(() => {
-    //         alert("IM returned successfully");
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     alert(error.response.data.error.message);
-    //     router.reload();
-    //   });
   };
 
   const deanEndorsementHandler = async () => {
@@ -335,27 +312,28 @@ export default function ViewIM() {
   };
 
   const returnIDDCoordinatorEndorsementHandler = async () => {
-    if (!activeIDDCoordinator) return;
+    router.push(`/im/${iMId}/returned_citl_revision`);
+    // if (!activeIDDCoordinator) return;
 
-    return axios
-      .get<DepartmentRevision>(`/api/citl_revision/im/${iMId}`)
-      .then((res) => {
-        const cITLRevision = res.data;
-        if (!cITLRevision) return;
+    // return axios
+    //   .get<DepartmentRevision>(`/api/citl_revision/im/${iMId}`)
+    //   .then((res) => {
+    //     const cITLRevision = res.data;
+    //     if (!cITLRevision) return;
 
-        return axios
-          .put<CITLRevision>(`/api/citl_revision/${cITLRevision.id}`, {
-            returned: true,
-          })
-          .then(() => {
-            alert("IM returned successfully");
-            router.push(`/im/${iMId}/idd_coordinator_suggestion`);
-          });
-      })
-      .catch((error) => {
-        alert(error.response.data.error.message);
-        router.reload();
-      });
+    //     return axios
+    //       .put<CITLRevision>(`/api/citl_revision/${cITLRevision.id}`, {
+    //         returned: true,
+    //       })
+    //       .then(() => {
+    //         alert("IM returned successfully");
+    //         router.push(`/im/${iMId}/idd_coordinator_suggestion`);
+    //       });
+    //   })
+    //   .catch((error) => {
+    //     alert(error.response.data.error.message);
+    //     router.reload();
+    //   });
   };
 
   const cITLDirectorEndorsementHandler = async () => {
@@ -623,6 +601,8 @@ export default function ViewIM() {
         iM.facultyId === activeFaculty?.facultyId && (
           <div>
             <IMIDDCoordinatorSuggestionItems id={iM.id} />
+            <IMReturnedCITLRevisionSuggestionItems id={iM.id} />
+
             <input type='file' onChange={onFileChange} accept='.pdf' />
             <button
               className='border rounded'
@@ -633,23 +613,26 @@ export default function ViewIM() {
           </div>
         )}
 
-      {iMStatus === "IMPLEMENTATION_CITL_REVISED" && activeIDDCoordinator && (
-        <div className='space-x-1'>
-          <IMIDDCoordinatorSuggestionItems id={iM.id} editable={false} />
-          <button
-            className='border rounded'
-            onClick={iDDCoordinatorEndorsementHandler}
-          >
-            Endorse IM
-          </button>
-          <button
-            className='border rounded'
-            onClick={returnIDDCoordinatorEndorsementHandler}
-          >
-            Return revision
-          </button>
-        </div>
-      )}
+      {(iMStatus === "IMPLEMENTATION_CITL_REVISED" ||
+        iMStatus === "IMPLEMENTATION_CITL_RETURNED_REVISION_NOT_SUBMITTED") &&
+        activeIDDCoordinator && (
+          <div className='space-x-1'>
+            <IMIDDCoordinatorSuggestionItems id={iM.id} editable={false} />
+            <IMReturnedCITLRevisionSuggestionItems id={iM.id} />
+            <button
+              className='border rounded'
+              onClick={iDDCoordinatorEndorsementHandler}
+            >
+              Endorse IM
+            </button>
+            <button
+              className='border rounded'
+              onClick={returnIDDCoordinatorEndorsementHandler}
+            >
+              Return revision
+            </button>
+          </div>
+        )}
 
       {iMStatus === "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" &&
         activeCITLDirector && (

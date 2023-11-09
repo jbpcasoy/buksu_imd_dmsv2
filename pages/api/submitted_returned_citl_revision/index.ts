@@ -51,7 +51,7 @@ export default async function handler(
                     id: user.id,
                   },
                 },
-                type: "SUBMITTED_RETURNED_DEPARTMENT_REVISION_CREATED",
+                type: "SUBMITTED_RETURNED_CITL_REVISION_CREATED",
               },
             },
           },

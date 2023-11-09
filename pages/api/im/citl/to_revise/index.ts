@@ -78,20 +78,23 @@ export default async function handler(
               NOT: {
                 IMFile: {
                   some: {
-                    DepartmentRevision: {
-                      CoordinatorEndorsement: {
-                        DeanEndorsement: {
-                          IDDCoordinatorSuggestion: {
-                            SubmittedIDDCoordinatorSuggestion: {
-                              CITLRevision: {
-                                some: {
-                                  returned: false,
-                                },
-                              },
-                            },
-                          },
+                    CITLRevision: {
+                      ReturnedCITLRevision: {
+                        SubmittedReturnedCITLRevision: {
+                          is: null,
                         },
                       },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  CITLRevision: {
+                    IDDCoordinatorEndorsement: {
+                      isNot: null,
                     },
                   },
                 },
@@ -135,20 +138,23 @@ export default async function handler(
               NOT: {
                 IMFile: {
                   some: {
-                    DepartmentRevision: {
-                      CoordinatorEndorsement: {
-                        DeanEndorsement: {
-                          IDDCoordinatorSuggestion: {
-                            SubmittedIDDCoordinatorSuggestion: {
-                              CITLRevision: {
-                                some: {
-                                  returned: false,
-                                },
-                              },
-                            },
-                          },
+                    CITLRevision: {
+                      ReturnedCITLRevision: {
+                        SubmittedReturnedCITLRevision: {
+                          is: null,
                         },
                       },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  CITLRevision: {
+                    IDDCoordinatorEndorsement: {
+                      isNot: null,
                     },
                   },
                 },
