@@ -79,6 +79,9 @@ import {
   ReturnedCITLRevision,
   ReturnedCITLRevisionSuggestionItem,
   SubmittedReturnedCITLRevision,
+  ReturnedIMERCCITLRevision,
+  ReturnedIMERCCITLRevisionSuggestionItem,
+  SubmittedReturnedIMERCCITLRevision,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -162,6 +165,9 @@ export type AppSubjects =
       ReturnedCITLRevision: ReturnedCITLRevision;
       ReturnedCITLRevisionSuggestionItem: ReturnedCITLRevisionSuggestionItem;
       SubmittedReturnedCITLRevision: SubmittedReturnedCITLRevision;
+      ReturnedIMERCCITLRevision: ReturnedIMERCCITLRevision;
+      ReturnedIMERCCITLRevisionSuggestionItem: ReturnedIMERCCITLRevisionSuggestionItem;
+      SubmittedReturnedIMERCCITLRevision: SubmittedReturnedIMERCCITLRevision;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
