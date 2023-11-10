@@ -7,6 +7,7 @@ import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggesti
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
+import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
@@ -22,13 +23,10 @@ import useIMLatestQAMISFile from "@/hooks/useIMLatestQAMISFile";
 import useIMStatus from "@/hooks/useIMStatus";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
 import {
-  CITLRevision,
   CoordinatorEndorsement,
   DepartmentReview,
   DepartmentRevision,
-  IMERCCITLRevision,
   IMFile,
-  ReturnedDepartmentRevision,
 } from "@prisma/client";
 import axios from "axios";
 import Link from "next/link";
@@ -392,31 +390,7 @@ export default function ViewIM() {
   };
 
   const returnIMERCIDDCoordinatorEndorsementHandler = async () => {
-    if (!activeIDDCoordinator) return;
-
-    return axios
-      .get<IMERCCITLRevision>(`/api/imerc_citl_revision/im/${iMId}`)
-      .then((res) => {
-        const iMERCCITLRevision = res.data;
-        if (!iMERCCITLRevision) return;
-
-        return axios
-          .put<IMERCCITLRevision>(
-            `/api/imerc_citl_revision/${iMERCCITLRevision.id}`,
-            {
-              returned: true,
-            }
-          )
-          .then((res) => {
-            console.log({ data: res.data });
-            alert("IM returned successfully");
-            router.push(`/im/${iMId}/idd_specialist_suggestion`);
-          });
-      })
-      .catch((error) => {
-        alert(error.response.data.error.message);
-        router.reload();
-      });
+    return router.push(`/im/${iMId}/returned_imerc_citl_revision`);
   };
 
   const iMERCCITLDirectorEndorsementHandler = async () => {
@@ -560,7 +534,10 @@ export default function ViewIM() {
             <IMChairpersonSuggestionItems id={iM.id} editable={false} />
             <IMCoordinatorSuggestionItems id={iM.id} editable={false} />
             <IMPeerSuggestionItems id={iM.id} editable={false} />
-            <IMReturnedDepartmentRevisionSuggestionItems id={iM.id} />
+            <IMReturnedDepartmentRevisionSuggestionItems
+              id={iM.id}
+              editable={false}
+            />
             <button
               className='border rounded'
               onClick={coordinatorEndorsementHandler}
@@ -618,7 +595,10 @@ export default function ViewIM() {
         activeIDDCoordinator && (
           <div className='space-x-1'>
             <IMIDDCoordinatorSuggestionItems id={iM.id} editable={false} />
-            <IMReturnedCITLRevisionSuggestionItems id={iM.id} />
+            <IMReturnedCITLRevisionSuggestionItems
+              id={iM.id}
+              editable={false}
+            />
             <button
               className='border rounded'
               onClick={iDDCoordinatorEndorsementHandler}
@@ -721,6 +701,7 @@ export default function ViewIM() {
             <IMContentSpecialistSuggestionItems id={iM.id} />
             <IMIDDSpecialistSuggestionItems id={iM.id} />
             <IMContentEditorSuggestionItems id={iM.id} />
+            <IMReturnedIMERCCITLRevisionSuggestionItems id={iM.id} />
 
             <p>Plagiarism File:</p>
             <input
@@ -746,25 +727,32 @@ export default function ViewIM() {
           </div>
         )}
 
-      {iMStatus === "IMERC_CITL_REVISED" && activeIDDCoordinator && (
-        <div className='space-x-1'>
-          <IMContentSpecialistSuggestionItems id={iM.id} editable={false} />
-          <IMIDDSpecialistSuggestionItems id={iM.id} editable={false} />
-          <IMContentEditorSuggestionItems id={iM.id} editable={false} />
-          <button
-            className='border rounded'
-            onClick={iMERCIDDCoordinatorEndorsementHandler}
-          >
-            Endorse IM
-          </button>
-          <button
-            className='border rounded'
-            onClick={returnIMERCIDDCoordinatorEndorsementHandler}
-          >
-            Return revision
-          </button>
-        </div>
-      )}
+      {(iMStatus === "IMERC_CITL_REVISED" ||
+        iMStatus ===
+          "IMPLEMENTATION_IMERC_CITL_RETURNED_REVISION_NOT_SUBMITTED") &&
+        activeIDDCoordinator && (
+          <div className='space-x-1'>
+            <IMContentSpecialistSuggestionItems id={iM.id} editable={false} />
+            <IMIDDSpecialistSuggestionItems id={iM.id} editable={false} />
+            <IMContentEditorSuggestionItems id={iM.id} editable={false} />
+            <IMReturnedIMERCCITLRevisionSuggestionItems
+              id={iM.id}
+              editable={false}
+            />
+            <button
+              className='border rounded'
+              onClick={iMERCIDDCoordinatorEndorsementHandler}
+            >
+              Endorse IM
+            </button>
+            <button
+              className='border rounded'
+              onClick={returnIMERCIDDCoordinatorEndorsementHandler}
+            >
+              Return revision
+            </button>
+          </div>
+        )}
 
       {iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" &&
         activeCITLDirector && (

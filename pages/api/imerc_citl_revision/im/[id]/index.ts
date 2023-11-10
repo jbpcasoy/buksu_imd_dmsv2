@@ -45,7 +45,11 @@ export default async function handler(
                   },
                 },
               },
-              { returned: false },
+              {
+                ReturnedIMERCCITLRevision: {
+                  is: null,
+                },
+              },
             ],
           },
         }

@@ -2,7 +2,6 @@ import prisma from "@/prisma/client";
 import returnedIMERCCITLRevisionSuggestionItemAbility from "@/services/ability/returnedIMERCCITLRevisionSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -25,100 +24,67 @@ export default async function handler(
   const getHandler = async () => {
     try {
       const validator = Yup.object({
-        id: Yup.string().required(),
+        take: Yup.number().required(),
+        skip: Yup.number().required(),
       });
 
       await validator.validate(req.query);
 
-      const { id } = validator.cast(req.query);
-      const returnedIMERCCITLRevisionSuggestionItem =
-        await prisma.returnedIMERCCITLRevisionSuggestionItem.findFirstOrThrow({
+      const { skip, take } = validator.cast(req.query);
+      const returnedIMERCCITLRevisionSuggestionItems =
+        await prisma.returnedIMERCCITLRevisionSuggestionItem.findMany({
+          skip,
+          take,
           where: {
             AND: [
               accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItem,
               {
-                id: {
-                  equals: id,
+                ReturnedIMERCCITLRevision: {
+                  SubmittedReturnedIMERCCITLRevision: {
+                    ReturnedIMERCCITLRevision: {
+                      IMERCCITLRevision: {
+                        IMFile: {
+                          IM: {
+                            id: req.query.id as string,
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
               },
             ],
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         });
-
-      return res.json(returnedIMERCCITLRevisionSuggestionItem);
-    } catch (error: any) {
-      logger.error(error);
-      return res
-        .status(400)
-        .json({ error: { message: error?.message ?? "Server Error" } });
-    }
-  };
-
-  const deleteHandler = async () => {
-    try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
-
-      await validator.validate(req.query);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ReturnedIMERCCITLRevisionSuggestionItem"
-      );
-
-      const { id } = validator.cast(req.query);
-      const returnedIMERCCITLRevisionSuggestionItem =
-        await prisma.returnedIMERCCITLRevisionSuggestionItem.delete({
+      const count = await prisma.returnedIMERCCITLRevisionSuggestionItem.count(
+        {
           where: {
-            id,
+            AND: [
+              accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItem,
+              {
+                ReturnedIMERCCITLRevision: {
+                  SubmittedReturnedIMERCCITLRevision: {
+                    ReturnedIMERCCITLRevision: {
+                      IMERCCITLRevision: {
+                        IMFile: {
+                          IM: {
+                            id: req.query.id as string,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
           },
-        });
-
-      return res.json(returnedIMERCCITLRevisionSuggestionItem);
-    } catch (error: any) {
-      logger.error(error);
-      return res
-        .status(400)
-        .json({ error: { message: error?.message ?? "Server Error" } });
-    }
-  };
-
-  const putHandler = async () => {
-    try {
-      const validator = Yup.object({
-        actionTaken: Yup.string().optional(),
-        pageNumber: Yup.number().min(0).optional(),
-        remarks: Yup.string().optional(),
-        suggestion: Yup.string().optional(),
-      });
-
-      await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "ReturnedIMERCCITLRevisionSuggestionItem"
+        }
       );
 
-      const { id } = req.query;
-      const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
-        req.body
-      );
-
-      const returnedIMERCCITLRevisionSuggestionItem =
-        await prisma.returnedIMERCCITLRevisionSuggestionItem.update({
-          where: {
-            id: id as string,
-          },
-          data: {
-            actionTaken,
-            remarks,
-            suggestion,
-            pageNumber,
-          },
-        });
-
-      return res.json(returnedIMERCCITLRevisionSuggestionItem);
+      return res.json({ returnedIMERCCITLRevisionSuggestionItems, count });
     } catch (error: any) {
       logger.error(error);
       return res
@@ -128,12 +94,8 @@ export default async function handler(
   };
 
   switch (req.method) {
-    case "DELETE":
-      return await deleteHandler();
     case "GET":
       return await getHandler();
-    case "PUT":
-      return await putHandler();
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }

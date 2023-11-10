@@ -1151,12 +1151,11 @@ model Event {
     iMERCCITLDirectorEndorsementId         String?
     SubmittedReturnedDepartmentRevision    SubmittedReturnedDepartmentRevision?  @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     submittedReturnedDepartmentRevisionId  String?
-
-    NotificationRead                     NotificationRead[]
-    SubmittedReturnedCITLRevision        SubmittedReturnedCITLRevision?      @relation(fields: [submittedReturnedCITLRevisionId], references: [id], onDelete: Cascade)
-    submittedReturnedCITLRevisionId      String?
-    SubmittedReturnedIMERCCITLRevision   SubmittedReturnedIMERCCITLRevision? @relation(fields: [submittedReturnedIMERCCITLRevisionId], references: [id])
-    submittedReturnedIMERCCITLRevisionId String?
+    SubmittedReturnedCITLRevision          SubmittedReturnedCITLRevision?        @relation(fields: [submittedReturnedCITLRevisionId], references: [id], onDelete: Cascade)
+    submittedReturnedCITLRevisionId        String?
+    SubmittedReturnedIMERCCITLRevision     SubmittedReturnedIMERCCITLRevision?   @relation(fields: [submittedReturnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
+    submittedReturnedIMERCCITLRevisionId   String?
+    NotificationRead                       NotificationRead[]
 }
 
 model NotificationRead {

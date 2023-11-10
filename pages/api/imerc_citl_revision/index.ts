@@ -220,8 +220,8 @@ export default async function handler(
                 },
               },
               {
-                returned: {
-                  equals: false,
+                ReturnedIMERCCITLRevision: {
+                  is: null,
                 },
               },
             ],

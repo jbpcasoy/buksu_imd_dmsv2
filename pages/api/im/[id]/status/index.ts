@@ -335,9 +335,33 @@ export default async function handler(
               equals: iMERCCITLReviewed?.id ?? "undefined",
             },
           },
-          returned: false,
+          ReturnedIMERCCITLRevision: {
+            is: null,
+          },
         },
       });
+
+      const returnedIMERCCITLRevision =
+        await prisma.returnedIMERCCITLRevision.findFirst({
+          where: {
+            AND: [
+              {
+                SubmittedReturnedIMERCCITLRevision: {
+                  is: null,
+                },
+              },
+              {
+                IMERCCITLRevision: {
+                  IMERCCITLReviewed: {
+                    id: {
+                      equals: iMERCCITLReviewed?.id ?? "undefined",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        });
 
       const iMERCIDDCoordinatorEndorsement =
         await prisma.iMERCIDDCoordinatorEndorsement.findFirst({
@@ -371,6 +395,8 @@ export default async function handler(
         return res.send("IMERC_CITL_DIRECTOR_ENDORSED");
       } else if (iMERCIDDCoordinatorEndorsement) {
         return res.send("IMERC_CITL_IDD_COORDINATOR_ENDORSED");
+      } else if (returnedIMERCCITLRevision) {
+        return res.send("IMERC_CITL_RETURNED_REVISION_NOT_SUBMITTED");
       } else if (iMERCCITLRevision) {
         return res.send("IMERC_CITL_REVISED");
       } else if (iMERCCITLReviewed) {
@@ -384,9 +410,7 @@ export default async function handler(
       } else if (iDDCoordinatorEndorsement) {
         return res.send("IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED");
       } else if (returnedCITLRevision) {
-        return res.send(
-          "IMPLEMENTATION_CITL_RETURNED_REVISION_NOT_SUBMITTED"
-        );
+        return res.send("IMPLEMENTATION_CITL_RETURNED_REVISION_NOT_SUBMITTED");
       } else if (cITLRevision) {
         return res.send("IMPLEMENTATION_CITL_REVISED");
       } else if (submittedIDDCoordinatorSuggestion) {
