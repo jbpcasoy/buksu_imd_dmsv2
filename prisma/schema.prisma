@@ -525,6 +525,7 @@ model IDDCoordinator {
     IDDSpecialistReview            IDDSpecialistReview[]
     IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement[]
     ReturnedCITLRevision           ReturnedCITLRevision[]
+    ReturnedIMERCCITLRevision      ReturnedIMERCCITLRevision[]
 }
 
 model ActiveIDDCoordinator {
@@ -1009,6 +1010,7 @@ model IMERCCITLRevision {
     returned                       Boolean                         @default(false)
     IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement?
     Event                          Event[]
+    ReturnedIMERCCITLRevision      ReturnedIMERCCITLRevision?
 }
 
 model IMERCIDDCoordinatorEndorsement {
@@ -1149,9 +1151,11 @@ model Event {
     SubmittedReturnedDepartmentRevision    SubmittedReturnedDepartmentRevision?  @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     submittedReturnedDepartmentRevisionId  String?
 
-    NotificationRead                NotificationRead[]
-    SubmittedReturnedCITLRevision   SubmittedReturnedCITLRevision? @relation(fields: [submittedReturnedCITLRevisionId], references: [id], onDelete: Cascade)
-    submittedReturnedCITLRevisionId String?
+    NotificationRead                     NotificationRead[]
+    SubmittedReturnedCITLRevision        SubmittedReturnedCITLRevision?      @relation(fields: [submittedReturnedCITLRevisionId], references: [id], onDelete: Cascade)
+    submittedReturnedCITLRevisionId      String?
+    SubmittedReturnedIMERCCITLRevision   SubmittedReturnedIMERCCITLRevision? @relation(fields: [submittedReturnedIMERCCITLRevisionId], references: [id])
+    submittedReturnedIMERCCITLRevisionId String?
 }
 
 model NotificationRead {
@@ -1272,4 +1276,40 @@ model SubmittedReturnedCITLRevision {
     ReturnedCITLRevision   ReturnedCITLRevision @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
     returnedCITLRevisionId String               @unique
     Event                  Event[]
+}
+
+model ReturnedIMERCCITLRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IMERCCITLRevision                       IMERCCITLRevision                         @relation(fields: [iMERCCITLRevisionId], references: [id], onDelete: Cascade)
+    iMERCCITLRevisionId                     String                                    @unique
+    IDDCoordinator                          IDDCoordinator                            @relation(fields: [iDDCoordinatorId], references: [id])
+    iDDCoordinatorId                        String
+    ReturnedIMERCCITLRevisionSuggestionItem ReturnedIMERCCITLRevisionSuggestionItem[]
+    SubmittedReturnedIMERCCITLRevision      SubmittedReturnedIMERCCITLRevision?
+}
+
+model ReturnedIMERCCITLRevisionSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedIMERCCITLRevision   ReturnedIMERCCITLRevision @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
+    returnedIMERCCITLRevisionId String
+    suggestion                  String
+    actionTaken                 String?
+    remarks                     String?
+    pageNumber                  Int
+}
+
+model SubmittedReturnedIMERCCITLRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedIMERCCITLRevision   ReturnedIMERCCITLRevision @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
+    returnedIMERCCITLRevisionId String                    @unique
+    Event                       Event[]
 }
