@@ -44,7 +44,13 @@ export default async function handler(
         "filter[end]": filterEnd,
       } = validator.cast(req.query);
 
-      const count = await countIMs(filterStart, filterEnd, filterStatus, filterDepartmentId, filterCollegeId);
+      const count = await countIMs(
+        filterStart,
+        filterEnd,
+        filterStatus,
+        filterDepartmentId,
+        filterCollegeId
+      );
       return res.json({ count });
     } catch (error: any) {
       logger.error(error);
@@ -62,7 +68,13 @@ export default async function handler(
   }
 }
 
-export async function countIMs(filterStart: Date | undefined, filterEnd: Date | undefined, filterStatus: string | undefined, filterDepartmentId: string | undefined, filterCollegeId: string | undefined) {
+export async function countIMs(
+  filterStart: Date | undefined,
+  filterEnd: Date | undefined,
+  filterStatus: string | undefined,
+  filterDepartmentId: string | undefined,
+  filterCollegeId: string | undefined
+) {
   let startWhere: Prisma.IMWhereInput = {
     createdAt: {
       gte: filterStart,
@@ -260,7 +272,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   DepartmentRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedDepartmentRevision: {
+                          SubmittedReturnedDepartmentRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                   },
                 },
               },
@@ -326,7 +351,11 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 DepartmentRevision: {
-                  returned: false,
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
                 },
               },
             },
@@ -336,7 +365,11 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   DepartmentRevision: {
-                    returned: false,
+                    ReturnedDepartmentRevision: {
+                      SubmittedReturnedDepartmentRevision: {
+                        is: null,
+                      },
+                    },
                     CoordinatorEndorsement: {
                       isNot: null,
                     },
@@ -352,7 +385,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             DepartmentRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               createdAt: {
                 gte: filterStart,
               },
@@ -364,7 +410,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             DepartmentRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               createdAt: {
                 lte: filterEnd,
               },
@@ -380,7 +439,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 DepartmentRevision: {
-                  returned: false,
+                  OR: [
+                    {
+                      ReturnedDepartmentRevision: {
+                        is: null,
+                      },
+                    },
+                    {
+                      ReturnedDepartmentRevision: {
+                        SubmittedReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
                   CoordinatorEndorsement: {
                     isNot: null,
                   },
@@ -393,7 +465,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   DepartmentRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedDepartmentRevision: {
+                          SubmittedReturnedDepartmentRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                     CoordinatorEndorsement: {
                       DeanEndorsement: {
                         isNot: null,
@@ -411,7 +496,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             DepartmentRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               CoordinatorEndorsement: {
                 createdAt: {
                   gte: filterStart,
@@ -425,7 +523,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             DepartmentRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               CoordinatorEndorsement: {
                 createdAt: {
                   lte: filterEnd,
@@ -443,7 +554,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 DepartmentRevision: {
-                  returned: false,
+                  OR: [
+                    {
+                      ReturnedDepartmentRevision: {
+                        is: null,
+                      },
+                    },
+                    {
+                      ReturnedDepartmentRevision: {
+                        SubmittedReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
                   CoordinatorEndorsement: {
                     DeanEndorsement: {
                       isNot: null,
@@ -458,7 +582,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   DepartmentRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedDepartmentRevision: {
+                          SubmittedReturnedDepartmentRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                     CoordinatorEndorsement: {
                       DeanEndorsement: {
                         IDDCoordinatorSuggestion: {
@@ -480,7 +617,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             DepartmentRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               CoordinatorEndorsement: {
                 DeanEndorsement: {
                   createdAt: {
@@ -496,7 +646,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             DepartmentRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               CoordinatorEndorsement: {
                 DeanEndorsement: {
                   createdAt: {
@@ -516,7 +679,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 DepartmentRevision: {
-                  returned: false,
+                  OR: [
+                    {
+                      ReturnedDepartmentRevision: {
+                        is: null,
+                      },
+                    },
+                    {
+                      ReturnedDepartmentRevision: {
+                        SubmittedReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
                   CoordinatorEndorsement: {
                     DeanEndorsement: {
                       IDDCoordinatorSuggestion: {
@@ -535,7 +711,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   CITLRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedCITLRevision: {
+                          SubmittedReturnedCITLRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                   },
                 },
               },
@@ -559,7 +748,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             DepartmentRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               CoordinatorEndorsement: {
                 DeanEndorsement: {
                   IDDCoordinatorSuggestion: {
@@ -579,7 +781,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             DepartmentRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedDepartmentRevision: {
+                    SubmittedReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               CoordinatorEndorsement: {
                 DeanEndorsement: {
                   IDDCoordinatorSuggestion: {
@@ -603,7 +818,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 CITLRevision: {
-                  returned: false,
+                  OR: [
+                    {
+                      ReturnedCITLRevision: {
+                        is: null,
+                      },
+                    },
+                    {
+                      ReturnedCITLRevision: {
+                        SubmittedReturnedCITLRevision: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
                 },
               },
             },
@@ -613,7 +841,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   CITLRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedCITLRevision: {
+                          SubmittedReturnedCITLRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                     IDDCoordinatorEndorsement: {
                       isNot: null,
                     },
@@ -629,7 +870,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             CITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedCITLRevision: {
+                    SubmittedReturnedCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               createdAt: {
                 gte: filterStart,
               },
@@ -641,7 +895,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             CITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedCITLRevision: {
+                    SubmittedReturnedCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               createdAt: {
                 lte: filterEnd,
               },
@@ -657,7 +924,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 CITLRevision: {
-                  returned: false,
+                  OR: [
+                    {
+                      ReturnedCITLRevision: {
+                        is: null,
+                      },
+                    },
+                    {
+                      ReturnedCITLRevision: {
+                        SubmittedReturnedCITLRevision: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
                   IDDCoordinatorEndorsement: {
                     isNot: null,
                   },
@@ -670,7 +950,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   CITLRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedCITLRevision: {
+                          SubmittedReturnedCITLRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                     IDDCoordinatorEndorsement: {
                       CITLDirectorEndorsement: {
                         isNot: null,
@@ -688,7 +981,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             CITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedCITLRevision: {
+                    SubmittedReturnedCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               IDDCoordinatorEndorsement: {
                 createdAt: {
                   gte: filterStart,
@@ -702,7 +1008,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             CITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedCITLRevision: {
+                    SubmittedReturnedCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               IDDCoordinatorEndorsement: {
                 createdAt: {
                   lte: filterEnd,
@@ -720,7 +1039,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 CITLRevision: {
-                  returned: false,
+                  OR: [
+                    {
+                      ReturnedCITLRevision: {
+                        is: null,
+                      },
+                    },
+                    {
+                      ReturnedCITLRevision: {
+                        SubmittedReturnedCITLRevision: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
                   IDDCoordinatorEndorsement: {
                     CITLDirectorEndorsement: {
                       isNot: null,
@@ -748,7 +1080,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             CITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedCITLRevision: {
+                    SubmittedReturnedCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               IDDCoordinatorEndorsement: {
                 CITLDirectorEndorsement: {
                   createdAt: {
@@ -764,7 +1109,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             CITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedCITLRevision: {
+                    SubmittedReturnedCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               IDDCoordinatorEndorsement: {
                 CITLDirectorEndorsement: {
                   createdAt: {
@@ -932,7 +1290,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   IMERCCITLRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          SubmittedReturnedIMERCCITLRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                   },
                 },
               },
@@ -1006,7 +1377,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 IMERCCITLRevision: {
-                  returned: false,
+                  OR: [
+                    {
+                      ReturnedIMERCCITLRevision: {
+                        is: null,
+                      },
+                    },
+                    {
+                      ReturnedIMERCCITLRevision: {
+                        SubmittedReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
                 },
               },
             },
@@ -1016,7 +1400,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   IMERCCITLRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          SubmittedReturnedIMERCCITLRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                     IMERCIDDCoordinatorEndorsement: {
                       isNot: null,
                     },
@@ -1032,7 +1429,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             IMERCCITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedIMERCCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedIMERCCITLRevision: {
+                    SubmittedReturnedIMERCCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               createdAt: {
                 gte: filterStart,
               },
@@ -1044,7 +1454,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             IMERCCITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedIMERCCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedIMERCCITLRevision: {
+                    SubmittedReturnedIMERCCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               createdAt: {
                 lte: filterEnd,
               },
@@ -1060,7 +1483,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 IMERCCITLRevision: {
-                  returned: false,
+                  OR: [
+                    {
+                      ReturnedIMERCCITLRevision: {
+                        is: null,
+                      },
+                    },
+                    {
+                      ReturnedIMERCCITLRevision: {
+                        SubmittedReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
                   IMERCIDDCoordinatorEndorsement: {
                     isNot: null,
                   },
@@ -1073,7 +1509,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
               IMFile: {
                 some: {
                   IMERCCITLRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          SubmittedReturnedIMERCCITLRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                     IMERCIDDCoordinatorEndorsement: {
                       IMERCCITLDirectorEndorsement: {
                         isNot: null,
@@ -1091,7 +1540,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             IMERCCITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedIMERCCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedIMERCCITLRevision: {
+                    SubmittedReturnedIMERCCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               IMERCIDDCoordinatorEndorsement: {
                 createdAt: {
                   gte: filterStart,
@@ -1105,7 +1567,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             IMERCCITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedIMERCCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedIMERCCITLRevision: {
+                    SubmittedReturnedIMERCCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               createdAt: {
                 lte: filterEnd,
               },
@@ -1121,7 +1596,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
             IMFile: {
               some: {
                 IMERCCITLRevision: {
-                  returned: false,
+                  OR: [
+                    {
+                      ReturnedIMERCCITLRevision: {
+                        is: null,
+                      },
+                    },
+                    {
+                      ReturnedIMERCCITLRevision: {
+                        SubmittedReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
                   IMERCIDDCoordinatorEndorsement: {
                     IMERCCITLDirectorEndorsement: {
                       isNot: null,
@@ -1138,7 +1626,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             IMERCCITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedIMERCCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedIMERCCITLRevision: {
+                    SubmittedReturnedIMERCCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               IMERCIDDCoordinatorEndorsement: {
                 IMERCCITLDirectorEndorsement: {
                   createdAt: {
@@ -1154,7 +1655,20 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
         IMFile: {
           some: {
             IMERCCITLRevision: {
-              returned: false,
+              OR: [
+                {
+                  ReturnedIMERCCITLRevision: {
+                    is: null,
+                  },
+                },
+                {
+                  ReturnedIMERCCITLRevision: {
+                    SubmittedReturnedIMERCCITLRevision: {
+                      is: null,
+                    },
+                  },
+                },
+              ],
               IMERCIDDCoordinatorEndorsement: {
                 IMERCCITLDirectorEndorsement: {
                   createdAt: {
@@ -1200,4 +1714,3 @@ export async function countIMs(filterStart: Date | undefined, filterEnd: Date | 
   });
   return count;
 }
-

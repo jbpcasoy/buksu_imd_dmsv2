@@ -311,27 +311,6 @@ export default function ViewIM() {
 
   const returnIDDCoordinatorEndorsementHandler = async () => {
     router.push(`/im/${iMId}/returned_citl_revision`);
-    // if (!activeIDDCoordinator) return;
-
-    // return axios
-    //   .get<DepartmentRevision>(`/api/citl_revision/im/${iMId}`)
-    //   .then((res) => {
-    //     const cITLRevision = res.data;
-    //     if (!cITLRevision) return;
-
-    //     return axios
-    //       .put<CITLRevision>(`/api/citl_revision/${cITLRevision.id}`, {
-    //         returned: true,
-    //       })
-    //       .then(() => {
-    //         alert("IM returned successfully");
-    //         router.push(`/im/${iMId}/idd_coordinator_suggestion`);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     alert(error.response.data.error.message);
-    //     router.reload();
-    //   });
   };
 
   const cITLDirectorEndorsementHandler = async () => {

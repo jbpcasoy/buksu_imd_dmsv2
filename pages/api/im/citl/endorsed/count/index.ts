@@ -73,27 +73,6 @@ export async function cITLIDDEndorsedCount(user: User) {
                       SubmittedIDDCoordinatorSuggestion: {
                         CITLRevision: {
                           some: {
-                            returned: false,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
-          IMFile: {
-            some: {
-              DepartmentRevision: {
-                CoordinatorEndorsement: {
-                  DeanEndorsement: {
-                    IDDCoordinatorSuggestion: {
-                      SubmittedIDDCoordinatorSuggestion: {
-                        CITLRevision: {
-                          some: {
                             IDDCoordinatorEndorsement: {
                               IDDCoordinator: {
                                 User: {

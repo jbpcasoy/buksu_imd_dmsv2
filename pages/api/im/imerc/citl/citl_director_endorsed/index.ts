@@ -37,11 +37,14 @@ export default async function handler(
       let ability: AppAbility;
       ability = iMAbility({ user });
 
-      const { skip, take, 
+      const {
+        skip,
+        take,
         "filter[collegeName]": filterCollegeName,
         "filter[departmentName]": filterDepartmentName,
         "filter[title]": filterTitle,
-        "filter[userName]": filterUserName, } = validator.cast(req.query);
+        "filter[userName]": filterUserName,
+      } = validator.cast(req.query);
       const iMs = await prisma.iM.findMany({
         skip,
         take,
@@ -121,9 +124,15 @@ export default async function handler(
                               IMERCCITLReviewed: {
                                 IMERCCITLRevision: {
                                   some: {
-                                    returned: {
-                                      equals: false,
-                                    },
+                                    OR: [
+                                      {
+                                        ReturnedIMERCCITLRevision: {
+                                          SubmittedReturnedIMERCCITLRevision: {
+                                            is: null,
+                                          },
+                                        },
+                                      },
+                                    ],
                                   },
                                 },
                               },
@@ -148,9 +157,15 @@ export default async function handler(
                               IMERCCITLReviewed: {
                                 IMERCCITLRevision: {
                                   some: {
-                                    returned: {
-                                      equals: false,
-                                    },
+                                    OR: [
+                                      {
+                                        ReturnedIMERCCITLRevision: {
+                                          SubmittedReturnedIMERCCITLRevision: {
+                                            is: null,
+                                          },
+                                        },
+                                      },
+                                    ],
                                     IMERCIDDCoordinatorEndorsement: {
                                       isNot: null,
                                     },
@@ -178,9 +193,15 @@ export default async function handler(
                               IMERCCITLReviewed: {
                                 IMERCCITLRevision: {
                                   some: {
-                                    returned: {
-                                      equals: false,
-                                    },
+                                    OR: [
+                                      {
+                                        ReturnedIMERCCITLRevision: {
+                                          SubmittedReturnedIMERCCITLRevision: {
+                                            is: null,
+                                          },
+                                        },
+                                      },
+                                    ],
                                     IMERCIDDCoordinatorEndorsement: {
                                       IMERCCITLDirectorEndorsement: {
                                         CITLDirector: {
@@ -325,9 +346,15 @@ export default async function handler(
                               IMERCCITLReviewed: {
                                 IMERCCITLRevision: {
                                   some: {
-                                    returned: {
-                                      equals: false,
-                                    },
+                                    OR: [
+                                      {
+                                        ReturnedIMERCCITLRevision: {
+                                          SubmittedReturnedIMERCCITLRevision: {
+                                            is: null,
+                                          },
+                                        },
+                                      },
+                                    ],
                                   },
                                 },
                               },
@@ -352,9 +379,15 @@ export default async function handler(
                               IMERCCITLReviewed: {
                                 IMERCCITLRevision: {
                                   some: {
-                                    returned: {
-                                      equals: false,
-                                    },
+                                    OR: [
+                                      {
+                                        ReturnedIMERCCITLRevision: {
+                                          SubmittedReturnedIMERCCITLRevision: {
+                                            is: null,
+                                          },
+                                        },
+                                      },
+                                    ],
                                     IMERCIDDCoordinatorEndorsement: {
                                       isNot: null,
                                     },
@@ -382,9 +415,15 @@ export default async function handler(
                               IMERCCITLReviewed: {
                                 IMERCCITLRevision: {
                                   some: {
-                                    returned: {
-                                      equals: false,
-                                    },
+                                    OR: [
+                                      {
+                                        ReturnedIMERCCITLRevision: {
+                                          SubmittedReturnedIMERCCITLRevision: {
+                                            is: null,
+                                          },
+                                        },
+                                      },
+                                    ],
                                     IMERCIDDCoordinatorEndorsement: {
                                       IMERCCITLDirectorEndorsement: {
                                         CITLDirector: {

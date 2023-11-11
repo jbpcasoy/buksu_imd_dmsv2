@@ -153,6 +153,28 @@ export async function toReviseCount(user: User) {
             },
           },
         },
+        {
+          IMFile: {
+            none: {
+              DepartmentRevision: {
+                OR: [
+                  {
+                    ReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                  {
+                    ReturnedDepartmentRevision: {
+                      SubmittedReturnedDepartmentRevision: {
+                        is: null,
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
       ],
     },
   });

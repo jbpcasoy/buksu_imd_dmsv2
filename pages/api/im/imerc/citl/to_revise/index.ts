@@ -142,9 +142,20 @@ export default async function handler(
                                 IMERCCITLReviewed: {
                                   IMERCCITLRevision: {
                                     some: {
-                                      returned: {
-                                        equals: false,
-                                      },
+                                      OR: [
+                                        {
+                                          ReturnedIMERCCITLRevision: {
+                                            is: null,
+                                          },
+                                        },
+                                        {
+                                          ReturnedIMERCCITLRevision: {
+                                            SubmittedReturnedIMERCCITLRevision: {
+                                              is: null,
+                                            },
+                                          },
+                                        },
+                                      ],
                                     },
                                   },
                                 },
@@ -287,9 +298,20 @@ export default async function handler(
                                 IMERCCITLReviewed: {
                                   IMERCCITLRevision: {
                                     some: {
-                                      returned: {
-                                        equals: false,
-                                      },
+                                      OR: [
+                                        {
+                                          ReturnedIMERCCITLRevision: {
+                                            is: null,
+                                          },
+                                        },
+                                        {
+                                          ReturnedIMERCCITLRevision: {
+                                            SubmittedReturnedIMERCCITLRevision: {
+                                              is: null,
+                                            },
+                                          },
+                                        },
+                                      ],
                                     },
                                   },
                                 },

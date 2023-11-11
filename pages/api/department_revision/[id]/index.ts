@@ -84,47 +84,11 @@ export default async function handler(
     }
   };
 
-  const putHandler = async () => {
-    try {
-      const validator = Yup.object({
-        returned: Yup.boolean().required(),
-      });
-
-      await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "DepartmentRevision"
-      );
-
-      const { id } = req.query;
-      const { returned } = validator.cast(req.body);
-
-      const departmentRevision = await prisma.departmentRevision.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          returned,
-        },
-      });
-
-      return res.json(departmentRevision);
-    } catch (error: any) {
-      logger.error(error);
-      return res
-        .status(400)
-        .json({ error: { message: error?.message ?? "Server Error" } });
-    }
-  };
-
   switch (req.method) {
     case "DELETE":
       return await deleteHandler();
     case "GET":
       return await getHandler();
-    case "PUT":
-      return await putHandler();
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }

@@ -39,7 +39,6 @@ export default function DepartmentRevisionsPage() {
               <th>updatedAt</th>
               <th>iMFileId</th>
               <th>departmentReviewedId</th>
-              <th>returned</th>
               <th>action</th>
             </tr>
           </thead>
@@ -70,7 +69,6 @@ export default function DepartmentRevisionsPage() {
                       {departmentRevision.departmentReviewedId}
                     </Link>
                   </td>
-                  <td>{departmentRevision.returned ? "Yes" : "No"}</td>
                   <td>
                     <Link
                       href={`/crud/department_revision/${departmentRevision.id}`}

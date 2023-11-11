@@ -39,7 +39,6 @@ export default function IMERCCITLRevisionsPage() {
               <th>updatedAt</th>
               <th>iMFileId</th>
               <th>iMERCCITLReviewedId</th>
-              <th>returned</th>
               <th>action</th>
             </tr>
           </thead>
@@ -70,7 +69,6 @@ export default function IMERCCITLRevisionsPage() {
                       {iMERCCITLRevision.iMERCCITLReviewedId}
                     </Link>
                   </td>
-                  <td>{iMERCCITLRevision.returned ? "Yes" : "No"}</td>
                   <td>
                     <Link
                       href={`/crud/imerc_citl_revision/${iMERCCITLRevision.id}`}

@@ -100,6 +100,28 @@ export default async function handler(
                 },
               },
             },
+            {
+              IMFile: {
+                none: {
+                  CITLRevision: {
+                    OR: [
+                      {
+                        ReturnedCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedCITLRevision: {
+                          SubmittedReturnedCITLRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
           ],
         },
         orderBy: {
@@ -156,6 +178,28 @@ export default async function handler(
                     IDDCoordinatorEndorsement: {
                       isNot: null,
                     },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  CITLRevision: {
+                    OR: [
+                      {
+                        ReturnedCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedCITLRevision: {
+                          SubmittedReturnedCITLRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                   },
                 },
               },

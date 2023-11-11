@@ -66,20 +66,21 @@ export async function cITLIDDToEndorseCount(user: User) {
         {
           IMFile: {
             some: {
-              DepartmentRevision: {
-                CoordinatorEndorsement: {
-                  DeanEndorsement: {
-                    IDDCoordinatorSuggestion: {
-                      SubmittedIDDCoordinatorSuggestion: {
-                        CITLRevision: {
-                          some: {
-                            returned: false,
-                          },
-                        },
+              CITLRevision: {
+                OR: [
+                  {
+                    ReturnedCITLRevision: {
+                      is: null,
+                    },
+                  },
+                  {
+                    ReturnedCITLRevision: {
+                      SubmittedReturnedCITLRevision: {
+                        is: null,
                       },
                     },
                   },
-                },
+                ],
               },
             },
           },

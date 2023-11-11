@@ -123,9 +123,20 @@ export async function iMERCCITLEndorsedCount(user: User) {
                           IMERCCITLReviewed: {
                             IMERCCITLRevision: {
                               some: {
-                                returned: {
-                                  equals: false,
-                                },
+                                OR: [
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      is: null,
+                                    },
+                                  },
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      SubmittedReturnedIMERCCITLRevision: {
+                                        is: null,
+                                      },
+                                    },
+                                  },
+                                ],
                               },
                             },
                           },
@@ -150,9 +161,20 @@ export async function iMERCCITLEndorsedCount(user: User) {
                           IMERCCITLReviewed: {
                             IMERCCITLRevision: {
                               some: {
-                                returned: {
-                                  equals: false,
-                                },
+                                OR: [
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      is: null,
+                                    },
+                                  },
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      SubmittedReturnedIMERCCITLRevision: {
+                                        is: null,
+                                      },
+                                    },
+                                  },
+                                ],
                                 IMERCIDDCoordinatorEndorsement: {
                                   IDDCoordinator: {
                                     User: {

@@ -74,27 +74,6 @@ export default async function handler(
                           SubmittedIDDCoordinatorSuggestion: {
                             CITLRevision: {
                               some: {
-                                returned: false,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        IDDCoordinatorSuggestion: {
-                          SubmittedIDDCoordinatorSuggestion: {
-                            CITLRevision: {
-                              some: {
                                 IDDCoordinatorEndorsement: {
                                   IDDCoordinator: {
                                     User: {
@@ -169,27 +148,6 @@ export default async function handler(
                     CoordinatorEndorsement: {
                       DeanEndorsement: {
                         isNot: null,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        IDDCoordinatorSuggestion: {
-                          SubmittedIDDCoordinatorSuggestion: {
-                            CITLRevision: {
-                              some: {
-                                returned: false,
-                              },
-                            },
-                          },
-                        },
                       },
                     },
                   },

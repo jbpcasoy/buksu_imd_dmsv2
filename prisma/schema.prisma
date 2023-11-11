@@ -480,7 +480,6 @@ model DepartmentRevision {
     departmentReviewedId       String
     IMFile                     IMFile                      @relation(fields: [iMFileId], references: [id], onDelete: Cascade)
     iMFileId                   String                      @unique
-    returned                   Boolean                     @default(false)
     CoordinatorEndorsement     CoordinatorEndorsement?
     Event                      Event[]
     ReturnedDepartmentRevision ReturnedDepartmentRevision?
@@ -603,7 +602,6 @@ model CITLRevision {
 
     SubmittedIDDCoordinatorSuggestion   SubmittedIDDCoordinatorSuggestion @relation(fields: [submittedIDDCoordinatorSuggestionId], references: [id], onDelete: Cascade)
     submittedIDDCoordinatorSuggestionId String
-    returned                            Boolean                           @default(false)
     IMFile                              IMFile                            @relation(fields: [iMFileId], references: [id], onDelete: Cascade)
     iMFileId                            String                            @unique
     IDDCoordinatorEndorsement           IDDCoordinatorEndorsement?
@@ -1007,7 +1005,6 @@ model IMERCCITLRevision {
     iMERCCITLReviewedId            String
     IMFile                         IMFile                          @relation(fields: [iMFileId], references: [id], onDelete: Cascade)
     iMFileId                       String                          @unique
-    returned                       Boolean                         @default(false)
     IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement?
     Event                          Event[]
     ReturnedIMERCCITLRevision      ReturnedIMERCCITLRevision?

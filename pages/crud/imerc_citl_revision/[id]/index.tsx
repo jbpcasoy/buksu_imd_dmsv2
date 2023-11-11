@@ -67,7 +67,6 @@ export default function IMERCCITLRevisionPage() {
           {iMERCCITLRevision.iMERCCITLReviewedId}
         </Link>
       </p>
-      <p>returned: {iMERCCITLRevision.returned ? "Yes" : "No"}</p>
     </CrudLayout>
   );
 }

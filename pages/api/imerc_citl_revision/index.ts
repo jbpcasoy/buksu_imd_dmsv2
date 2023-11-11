@@ -184,6 +184,40 @@ export default async function handler(
         });
       }
 
+      const blank_returned_imerc_citl_revision_suggestion_items =
+        await prisma.returnedIMERCCITLRevisionSuggestionItem.count({
+          where: {
+            ReturnedIMERCCITLRevision: {
+              SubmittedReturnedIMERCCITLRevision: {
+                ReturnedIMERCCITLRevision: {
+                  IMERCCITLRevision: {
+                    IMFile: {
+                      IM: {
+                        id: {
+                          equals: iMFile.iMId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            NOT: {
+              actionTaken: {
+                not: null,
+              },
+            },
+          },
+        });
+      if (blank_returned_imerc_citl_revision_suggestion_items > 0) {
+        return res.status(400).json({
+          error: {
+            message:
+              "Action taken must be filled in returned imerc citl revision suggestions",
+          },
+        });
+      }
+
       const iMERCCITLReviewed = await prisma.iMERCCITLReviewed.findFirstOrThrow(
         {
           where: {

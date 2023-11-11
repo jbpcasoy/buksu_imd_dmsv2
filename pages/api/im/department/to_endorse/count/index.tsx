@@ -82,7 +82,18 @@ export async function coordinatorToEndorseCount(user: User) {
           IMFile: {
             some: {
               DepartmentRevision: {
-                returned: false,
+                OR: [
+                  {
+                    ReturnedDepartmentRevision: {
+                      is: null,
+                    },
+                  },
+                  {
+                    ReturnedDepartmentRevision: {
+                      SubmittedReturnedDepartmentRevision: null,
+                    },
+                  },
+                ],
               },
             },
           },

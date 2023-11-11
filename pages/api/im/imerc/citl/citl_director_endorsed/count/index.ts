@@ -123,9 +123,20 @@ export async function iMERCCITLDirectorEndorsedCount(user: User) {
                           IMERCCITLReviewed: {
                             IMERCCITLRevision: {
                               some: {
-                                returned: {
-                                  equals: false,
-                                },
+                                OR: [
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      is: null,
+                                    },
+                                  },
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      SubmittedReturnedIMERCCITLRevision: {
+                                        is: null,
+                                      },
+                                    },
+                                  },
+                                ],
                               },
                             },
                           },
@@ -150,9 +161,20 @@ export async function iMERCCITLDirectorEndorsedCount(user: User) {
                           IMERCCITLReviewed: {
                             IMERCCITLRevision: {
                               some: {
-                                returned: {
-                                  equals: false,
-                                },
+                                OR: [
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      is: null,
+                                    },
+                                  },
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      SubmittedReturnedIMERCCITLRevision: {
+                                        is: null,
+                                      },
+                                    },
+                                  },
+                                ],
                                 IMERCIDDCoordinatorEndorsement: {
                                   isNot: null,
                                 },
@@ -180,9 +202,20 @@ export async function iMERCCITLDirectorEndorsedCount(user: User) {
                           IMERCCITLReviewed: {
                             IMERCCITLRevision: {
                               some: {
-                                returned: {
-                                  equals: false,
-                                },
+                                OR: [
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      is: null,
+                                    },
+                                  },
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      SubmittedReturnedIMERCCITLRevision: {
+                                        is: null,
+                                      },
+                                    },
+                                  },
+                                ],
                                 IMERCIDDCoordinatorEndorsement: {
                                   IMERCCITLDirectorEndorsement: {
                                     CITLDirector: {

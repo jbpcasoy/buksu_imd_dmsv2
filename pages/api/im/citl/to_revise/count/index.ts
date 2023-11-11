@@ -109,6 +109,28 @@ export async function cITLToReviseCount(user: User) {
             },
           },
         },
+        {
+          IMFile: {
+            none: {
+              CITLRevision: {
+                OR: [
+                  {
+                    ReturnedCITLRevision: {
+                      is: null,
+                    },
+                  },
+                  {
+                    ReturnedCITLRevision: {
+                      SubmittedReturnedCITLRevision: {
+                        is: null,
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
       ],
     },
   });

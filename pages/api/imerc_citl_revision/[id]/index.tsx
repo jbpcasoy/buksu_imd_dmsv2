@@ -31,8 +31,8 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const iMERCCITLRevision =
-        await prisma.iMERCCITLRevision.findFirstOrThrow({
+      const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirstOrThrow(
+        {
           where: {
             AND: [
               accessibleBy(ability).IMERCCITLRevision,
@@ -43,7 +43,8 @@ export default async function handler(
               },
             ],
           },
-        });
+        }
+      );
 
       return res.json(iMERCCITLRevision);
     } catch (error: any) {
@@ -84,47 +85,11 @@ export default async function handler(
     }
   };
 
-  const putHandler = async () => {
-    try {
-      const validator = Yup.object({
-        returned: Yup.boolean().required(),
-      });
-
-      await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "IMERCCITLRevision"
-      );
-
-      const { id } = req.query;
-      const { returned } = validator.cast(req.body);
-
-      const iMERCCITLRevision = await prisma.iMERCCITLRevision.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          returned,
-        },
-      });
-
-      return res.json(iMERCCITLRevision);
-    } catch (error: any) {
-      logger.error(error);
-      return res
-        .status(400)
-        .json({ error: { message: error?.message ?? "Server Error" } });
-    }
-  };
-
   switch (req.method) {
     case "DELETE":
       return await deleteHandler();
     case "GET":
       return await getHandler();
-    case "PUT":
-      return await putHandler();
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }

@@ -7,6 +7,7 @@ import logger from "@/services/logger";
 import iMAbility from "@/services/ability/iMAbility";
 import { accessibleBy } from "@casl/prisma";
 import { AppAbility } from "@/services/ability/abilityBuilder";
+import ReturnedCITLRevisionPage from "@/pages/crud/returned_citl_revision/[id]";
 
 export default async function handler(
   req: NextApiRequest,
@@ -83,7 +84,18 @@ export default async function handler(
               IMFile: {
                 some: {
                   DepartmentRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedDepartmentRevision: {
+                          SubmittedReturnedDepartmentRevision: null,
+                        },
+                      },
+                    ],
                   },
                 },
               },
@@ -162,7 +174,18 @@ export default async function handler(
               IMFile: {
                 some: {
                   DepartmentRevision: {
-                    returned: false,
+                    OR: [
+                      {
+                        ReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedDepartmentRevision: {
+                          SubmittedReturnedDepartmentRevision: null,
+                        },
+                      },
+                    ],
                   },
                 },
               },

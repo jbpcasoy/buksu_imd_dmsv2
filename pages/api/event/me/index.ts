@@ -1099,7 +1099,6 @@ export default async function handler(
           {
             type: "IMERC_CITL_REVISION_CREATED",
             IMERCCITLRevision: {
-              returned: false,
               IMERCCITLReviewed: {
                 SubmittedContentEditorSuggestion: {
                   ContentEditorSuggestion: {

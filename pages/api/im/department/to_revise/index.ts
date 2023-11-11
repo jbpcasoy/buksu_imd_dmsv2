@@ -156,6 +156,28 @@ export default async function handler(
               IMFile: {
                 none: {
                   DepartmentRevision: {
+                    OR: [
+                      {
+                        ReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedDepartmentRevision: {
+                          SubmittedReturnedDepartmentRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  DepartmentRevision: {
                     CoordinatorEndorsement: {
                       isNot: null,
                     },
@@ -289,6 +311,28 @@ export default async function handler(
                         },
                       },
                     },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  DepartmentRevision: {
+                    OR: [
+                      {
+                        ReturnedDepartmentRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedDepartmentRevision: {
+                          SubmittedReturnedDepartmentRevision: {
+                            is: null,
+                          },
+                        },
+                      },
+                    ],
                   },
                 },
               },
