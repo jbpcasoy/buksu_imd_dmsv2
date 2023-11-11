@@ -291,12 +291,13 @@ model PeerSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    suggestion       String
-    actionTaken      String?
-    remarks          String?
-    PeerSuggestion   PeerSuggestion @relation(fields: [peerSuggestionId], references: [id], onDelete: Cascade)
-    peerSuggestionId String
-    pageNumber       Int
+    suggestion                    String
+    actionTaken                   String?
+    remarks                       String?
+    PeerSuggestion                PeerSuggestion                 @relation(fields: [peerSuggestionId], references: [id], onDelete: Cascade)
+    peerSuggestionId              String
+    pageNumber                    Int
+    PeerSuggestionItemActionTaken PeerSuggestionItemActionTaken?
 }
 
 model SubmittedPeerSuggestion {
@@ -1309,4 +1310,14 @@ model SubmittedReturnedIMERCCITLRevision {
     ReturnedIMERCCITLRevision   ReturnedIMERCCITLRevision @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
     returnedIMERCCITLRevisionId String                    @unique
     Event                       Event[]
+}
+
+model PeerSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    PeerSuggestionItem   PeerSuggestionItem @relation(fields: [peerSuggestionItemId], references: [id], onDelete: Cascade)
+    peerSuggestionItemId String             @unique
+    value                String
 }
