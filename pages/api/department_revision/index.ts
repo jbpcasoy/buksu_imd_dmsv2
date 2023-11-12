@@ -85,10 +85,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            PeerSuggestionItemActionTaken: {
+              is: null,
             },
           },
         }
