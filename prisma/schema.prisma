@@ -365,12 +365,13 @@ model ChairpersonSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    suggestion              String
-    actionTaken             String?
-    remarks                 String?
-    ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [chairpersonSuggestionId], references: [id], onDelete: Cascade)
-    chairpersonSuggestionId String
-    pageNumber              Int
+    suggestion                           String
+    actionTaken                          String?
+    remarks                              String?
+    ChairpersonSuggestion                ChairpersonSuggestion                 @relation(fields: [chairpersonSuggestionId], references: [id], onDelete: Cascade)
+    chairpersonSuggestionId              String
+    pageNumber                           Int
+    ChairpersonSuggestionItemActionTaken ChairpersonSuggestionItemActionTaken?
 }
 
 model SubmittedChairpersonSuggestion {
@@ -438,12 +439,13 @@ model CoordinatorSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    suggestion              String
-    actionTaken             String?
-    remarks                 String?
-    CoordinatorSuggestion   CoordinatorSuggestion @relation(fields: [coordinatorSuggestionId], references: [id], onDelete: Cascade)
-    coordinatorSuggestionId String
-    pageNumber              Int
+    suggestion                           String
+    actionTaken                          String?
+    remarks                              String?
+    CoordinatorSuggestion                CoordinatorSuggestion                 @relation(fields: [coordinatorSuggestionId], references: [id], onDelete: Cascade)
+    coordinatorSuggestionId              String
+    pageNumber                           Int
+    CoordinatorSuggestionItemActionTaken CoordinatorSuggestionItemActionTaken?
 }
 
 model SubmittedCoordinatorSuggestion {
@@ -1320,4 +1322,24 @@ model PeerSuggestionItemActionTaken {
     PeerSuggestionItem   PeerSuggestionItem @relation(fields: [peerSuggestionItemId], references: [id], onDelete: Cascade)
     peerSuggestionItemId String             @unique
     value                String
+}
+
+model ChairpersonSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ChairpersonSuggestionItem   ChairpersonSuggestionItem @relation(fields: [chairpersonSuggestionItemId], references: [id], onDelete: Cascade)
+    chairpersonSuggestionItemId String                    @unique
+    value                       String
+}
+
+model CoordinatorSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CoordinatorSuggestionItem   CoordinatorSuggestionItem @relation(fields: [coordinatorSuggestionItemId], references: [id], onDelete: Cascade)
+    coordinatorSuggestionItemId String                    @unique
+    value                       String
 }

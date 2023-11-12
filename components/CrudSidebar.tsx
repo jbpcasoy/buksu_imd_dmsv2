@@ -331,9 +331,13 @@ export default function CrudSidebar() {
       link: "/crud/peer_suggestion_item_action_taken",
       label: "PeerSuggestionItemActionTaken",
     },
+    {
+      link: "/crud/chairperson_suggestion_item_action_taken",
+      label: "ChairpersonSuggestionItemActionTaken",
+    },
     // TODO add profile picture file
   ];
-  
+
   return (
     <div className='h-full overflow-y-auto pb-10'>
       <Link
@@ -344,11 +348,13 @@ export default function CrudSidebar() {
       </Link>
 
       <div className='flex flex-col'>
-        {items.sort((a, b) => a.label.localeCompare(b.label)).map((item) => (
-          <Link href={item.link} className='underline' key={item.link}>
-            {item.label}
-          </Link>
-        ))}
+        {items
+          .sort((a, b) => a.label.localeCompare(b.label))
+          .map((item) => (
+            <Link href={item.link} className='underline' key={item.link}>
+              {item.label}
+            </Link>
+          ))}
       </div>
     </div>
   );
