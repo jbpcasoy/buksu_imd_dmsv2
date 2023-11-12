@@ -84,6 +84,7 @@ import {
   SubmittedReturnedIMERCCITLRevision,
   PeerSuggestionItemActionTaken,
   ChairpersonSuggestionItemActionTaken,
+  CoordinatorSuggestionItemActionTaken,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -172,6 +173,7 @@ export type AppSubjects =
       SubmittedReturnedIMERCCITLRevision: SubmittedReturnedIMERCCITLRevision;
       PeerSuggestionItemActionTaken: PeerSuggestionItemActionTaken;
       ChairpersonSuggestionItemActionTaken: ChairpersonSuggestionItemActionTaken;
+      CoordinatorSuggestionItemActionTaken: CoordinatorSuggestionItemActionTaken;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

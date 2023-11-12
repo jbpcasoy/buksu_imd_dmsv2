@@ -8,9 +8,9 @@ import * as Yup from "yup";
 
 export default function EditChairpersonSuggestionItemActionTakenPage() {
   const router = useRouter();
-  const ChairpersonSuggestionItemActionTakenId = router.query.id;
-  const ChairpersonSuggestionItemActionTaken = useChairpersonSuggestionItemActionTaken({
-    id: ChairpersonSuggestionItemActionTakenId as string,
+  const chairpersonSuggestionItemActionTakenId = router.query.id;
+  const chairpersonSuggestionItemActionTaken = useChairpersonSuggestionItemActionTaken({
+    id: chairpersonSuggestionItemActionTakenId as string,
   });
 
   const formik = useFormik({
@@ -25,7 +25,7 @@ export default function EditChairpersonSuggestionItemActionTakenPage() {
     onSubmit: (values) => {
       axios
         .put(
-          `/api/chairperson_suggestion_item_action_taken/${ChairpersonSuggestionItemActionTakenId}`,
+          `/api/chairperson_suggestion_item_action_taken/${chairpersonSuggestionItemActionTakenId}`,
           values
         )
         .then(() => {
@@ -38,12 +38,12 @@ export default function EditChairpersonSuggestionItemActionTakenPage() {
   });
 
   useEffect(() => {
-    if (!ChairpersonSuggestionItemActionTaken) return;
+    if (!chairpersonSuggestionItemActionTaken) return;
     let subscribe = true;
 
     formik.setValues({
-      value: ChairpersonSuggestionItemActionTaken.value,
-      chairpersonSuggestionItemId: ChairpersonSuggestionItemActionTaken.chairpersonSuggestionItemId,
+      value: chairpersonSuggestionItemActionTaken.value,
+      chairpersonSuggestionItemId: chairpersonSuggestionItemActionTaken.chairpersonSuggestionItemId,
     });
 
     return () => {
@@ -51,7 +51,7 @@ export default function EditChairpersonSuggestionItemActionTakenPage() {
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ChairpersonSuggestionItemActionTaken]);
+  }, [chairpersonSuggestionItemActionTaken]);
 
   return (
     <CrudLayout>

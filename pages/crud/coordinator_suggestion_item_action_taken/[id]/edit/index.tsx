@@ -1,35 +1,35 @@
 import CrudLayout from "@/components/CrudLayout";
-import usePeerSuggestionItemActionTaken from "@/hooks/usePeerSuggestionItemActionTaken";
+import useCoordinatorSuggestionItemActionTaken from "@/hooks/useCoordinatorSuggestionItemActionTaken";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import * as Yup from "yup";
 
-export default function EditPeerSuggestionItemActionTakenPage() {
+export default function EditCoordinatorSuggestionItemActionTakenPage() {
   const router = useRouter();
-  const peerSuggestionItemActionTakenId = router.query.id;
-  const peerSuggestionItemActionTaken = usePeerSuggestionItemActionTaken({
-    id: peerSuggestionItemActionTakenId as string,
+  const coordinatorSuggestionItemActionTakenId = router.query.id;
+  const coordinatorSuggestionItemActionTaken = useCoordinatorSuggestionItemActionTaken({
+    id: coordinatorSuggestionItemActionTakenId as string,
   });
 
   const formik = useFormik({
     initialValues: {
       value: "",
-      peerSuggestionItemId: "",
+      coordinatorSuggestionItemId: "",
     },
     validationSchema: Yup.object({
       value: Yup.string().required(),
-      peerSuggestionItemId: Yup.string().required(),
+      coordinatorSuggestionItemId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
         .put(
-          `/api/peer_suggestion_item_action_taken/${peerSuggestionItemActionTakenId}`,
+          `/api/coordinator_suggestion_item_action_taken/${coordinatorSuggestionItemActionTakenId}`,
           values
         )
         .then(() => {
-          alert("PeerSuggestionItemActionTaken updated successfully");
+          alert("CoordinatorSuggestionItemActionTaken updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -38,12 +38,12 @@ export default function EditPeerSuggestionItemActionTakenPage() {
   });
 
   useEffect(() => {
-    if (!peerSuggestionItemActionTaken) return;
+    if (!coordinatorSuggestionItemActionTaken) return;
     let subscribe = true;
 
     formik.setValues({
-      value: peerSuggestionItemActionTaken.value,
-      peerSuggestionItemId: peerSuggestionItemActionTaken.peerSuggestionItemId,
+      value: coordinatorSuggestionItemActionTaken.value,
+      coordinatorSuggestionItemId: coordinatorSuggestionItemActionTaken.coordinatorSuggestionItemId,
     });
 
     return () => {
@@ -51,17 +51,17 @@ export default function EditPeerSuggestionItemActionTakenPage() {
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [peerSuggestionItemActionTaken]);
+  }, [coordinatorSuggestionItemActionTaken]);
 
   return (
     <CrudLayout>
-      <h2>Edit PeerSuggestionItemActionTaken</h2>
+      <h2>Edit CoordinatorSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
         <input
           type='text'
-          placeholder='peerSuggestionItemId'
-          {...formik.getFieldProps("peerSuggestionItemId")}
+          placeholder='coordinatorSuggestionItemId'
+          {...formik.getFieldProps("coordinatorSuggestionItemId")}
         />
         <input
           type='text'

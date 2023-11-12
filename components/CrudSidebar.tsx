@@ -335,6 +335,10 @@ export default function CrudSidebar() {
       link: "/crud/chairperson_suggestion_item_action_taken",
       label: "ChairpersonSuggestionItemActionTaken",
     },
+    {
+      link: "/crud/coordinator_suggestion_item_action_taken",
+      label: "CoordinatorSuggestionItemActionTaken",
+    },
     // TODO add profile picture file
   ];
 

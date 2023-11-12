@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function PeerSuggestionItemActionTakensPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { peerSuggestionItemActionTakens, count } = usePeerSuggestionItemActionTakens(state);
+  const { peerSuggestionItemActionTakens, count } =
+    usePeerSuggestionItemActionTakens(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -25,7 +26,10 @@ export default function PeerSuggestionItemActionTakensPage() {
     <CrudLayout>
       <div className='flex justify-between'>
         <h2>PeerSuggestionItemActionTaken</h2>
-        <Link className='border rounded' href={`/crud/peer_suggestion_item_action_taken/add`}>
+        <Link
+          className='border rounded'
+          href={`/crud/peer_suggestion_item_action_taken/add`}
+        >
           Add
         </Link>
       </div>
@@ -37,29 +41,48 @@ export default function PeerSuggestionItemActionTakensPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
+              <th>peerSuggestionItemId</th>
               <th>value</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {peerSuggestionItemActionTakens.map((peerSuggestionItemActionTaken) => {
-              return (
-                <tr key={peerSuggestionItemActionTaken.id}>
-                  <td>{peerSuggestionItemActionTaken.id}</td>
-                  <td>{new Date(peerSuggestionItemActionTaken.createdAt).toLocaleString()}</td>
-                  <td>{new Date(peerSuggestionItemActionTaken.updatedAt).toLocaleString()}</td>
-                  <td>{peerSuggestionItemActionTaken.value}</td>
-                  <td>
-                    <Link
-                      href={`/crud/peer_suggestion_item_action_taken/${peerSuggestionItemActionTaken.id}`}
-                      className='border rounded'
-                    >
-                      view
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
+            {peerSuggestionItemActionTakens.map(
+              (peerSuggestionItemActionTaken) => {
+                return (
+                  <tr key={peerSuggestionItemActionTaken.id}>
+                    <td>{peerSuggestionItemActionTaken.id}</td>
+                    <td>
+                      {new Date(
+                        peerSuggestionItemActionTaken.createdAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      {new Date(
+                        peerSuggestionItemActionTaken.updatedAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>{peerSuggestionItemActionTaken.value}</td>
+                    <td>
+                      <Link
+                        href={`/crud/peer_suggestion_item/${peerSuggestionItemActionTaken.peerSuggestionItemId}`}
+                        className='underline'
+                      >
+                        {peerSuggestionItemActionTaken.peerSuggestionItemId}
+                      </Link>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/peer_suggestion_item_action_taken/${peerSuggestionItemActionTaken.id}`}
+                        className='border rounded'
+                      >
+                        view
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
         <div className='flex justify-end space-x-1'>

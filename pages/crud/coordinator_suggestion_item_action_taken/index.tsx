@@ -1,12 +1,12 @@
 import CrudLayout from "@/components/CrudLayout";
-import useChairpersonSuggestionItemActionTakens from "@/hooks/useChairpersonSuggestionItemActionTakens";
+import useCoordinatorSuggestionItemActionTakens from "@/hooks/useCoordinatorSuggestionItemActionTakens";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function ChairpersonSuggestionItemActionTakensPage() {
+export default function CoordinatorSuggestionItemActionTakensPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { chairpersonSuggestionItemActionTakens, count } =
-    useChairpersonSuggestionItemActionTakens(state);
+  const { coordinatorSuggestionItemActionTakens, count } =
+    useCoordinatorSuggestionItemActionTakens(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -25,10 +25,10 @@ export default function ChairpersonSuggestionItemActionTakensPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>ChairpersonSuggestionItemActionTaken</h2>
+        <h2>CoordinatorSuggestionItemActionTaken</h2>
         <Link
           className='border rounded'
-          href={`/crud/chairperson_suggestion_item_action_taken/add`}
+          href={`/crud/coordinator_suggestion_item_action_taken/add`}
         >
           Add
         </Link>
@@ -41,41 +41,40 @@ export default function ChairpersonSuggestionItemActionTakensPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>chairpersonSuggestionItemId</th>
               <th>value</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {chairpersonSuggestionItemActionTakens.map(
-              (chairpersonSuggestionItemActionTaken) => {
+            {coordinatorSuggestionItemActionTakens.map(
+              (coordinatorSuggestionItemActionTaken) => {
                 return (
-                  <tr key={chairpersonSuggestionItemActionTaken.id}>
-                    <td>{chairpersonSuggestionItemActionTaken.id}</td>
+                  <tr key={coordinatorSuggestionItemActionTaken.id}>
+                    <td>{coordinatorSuggestionItemActionTaken.id}</td>
                     <td>
                       {new Date(
-                        chairpersonSuggestionItemActionTaken.createdAt
+                        coordinatorSuggestionItemActionTaken.createdAt
                       ).toLocaleString()}
                     </td>
                     <td>
                       {new Date(
-                        chairpersonSuggestionItemActionTaken.updatedAt
+                        coordinatorSuggestionItemActionTaken.updatedAt
                       ).toLocaleString()}
                     </td>
+                    <td>{coordinatorSuggestionItemActionTaken.value}</td>
                     <td>
                       <Link
-                        href={`/crud/chairperson_suggestion_item/${chairpersonSuggestionItemActionTaken.chairpersonSuggestionItemId}`}
+                        href={`/crud/coordinator_suggestion_item/${coordinatorSuggestionItemActionTaken.coordinatorSuggestionItemId}`}
                         className='underline'
                       >
                         {
-                          chairpersonSuggestionItemActionTaken.chairpersonSuggestionItemId
+                          coordinatorSuggestionItemActionTaken.coordinatorSuggestionItemId
                         }
                       </Link>
                     </td>
-                    <td>{chairpersonSuggestionItemActionTaken.value}</td>
                     <td>
                       <Link
-                        href={`/crud/chairperson_suggestion_item_action_taken/${chairpersonSuggestionItemActionTaken.id}`}
+                        href={`/crud/coordinator_suggestion_item_action_taken/${coordinatorSuggestionItemActionTaken.id}`}
                         className='border rounded'
                       >
                         view
