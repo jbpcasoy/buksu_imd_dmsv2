@@ -83,6 +83,15 @@ import {
   ReturnedIMERCCITLRevisionSuggestionItem,
   SubmittedReturnedIMERCCITLRevision,
   PeerSuggestionItemActionTaken,
+  ChairpersonSuggestionItemActionTaken,
+  CoordinatorSuggestionItemActionTaken,
+  ReturnedDepartmentRevisionSuggestionItemActionTaken,
+  IDDCoordinatorSuggestionItemActionTaken,
+  ReturnedCITLRevisionSuggestionItemActionTaken,
+  ContentEditorSuggestionItemActionTaken,
+  ContentSpecialistSuggestionItemActionTaken,
+  IDDSpecialistSuggestionItemActionTaken,
+  ReturnedIMERCCITLRevisionSuggestionItemActionTaken,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -170,6 +179,15 @@ export type AppSubjects =
       ReturnedIMERCCITLRevisionSuggestionItem: ReturnedIMERCCITLRevisionSuggestionItem;
       SubmittedReturnedIMERCCITLRevision: SubmittedReturnedIMERCCITLRevision;
       PeerSuggestionItemActionTaken: PeerSuggestionItemActionTaken;
+      ChairpersonSuggestionItemActionTaken: ChairpersonSuggestionItemActionTaken;
+      CoordinatorSuggestionItemActionTaken: CoordinatorSuggestionItemActionTaken;
+      ReturnedDepartmentRevisionSuggestionItemActionTaken: ReturnedDepartmentRevisionSuggestionItemActionTaken;
+      IDDCoordinatorSuggestionItemActionTaken: IDDCoordinatorSuggestionItemActionTaken;
+      ReturnedCITLRevisionSuggestionItemActionTaken: ReturnedCITLRevisionSuggestionItemActionTaken;
+      ContentEditorSuggestionItemActionTaken: ContentEditorSuggestionItemActionTaken;
+      ContentSpecialistSuggestionItemActionTaken: ContentSpecialistSuggestionItemActionTaken;
+      IDDSpecialistSuggestionItemActionTaken: IDDSpecialistSuggestionItemActionTaken;
+      ReturnedIMERCCITLRevisionSuggestionItemActionTaken: ReturnedIMERCCITLRevisionSuggestionItemActionTaken;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

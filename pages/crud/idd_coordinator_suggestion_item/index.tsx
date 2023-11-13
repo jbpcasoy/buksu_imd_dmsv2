@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function IDDCoordinatorSuggestionItemsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { iDDCoordinatorSuggestionItems, count } = useIDDCoordinatorSuggestionItems(state);
+  const { iDDCoordinatorSuggestionItems, count } =
+    useIDDCoordinatorSuggestionItems(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -45,35 +46,43 @@ export default function IDDCoordinatorSuggestionItemsPage() {
             </tr>
           </thead>
           <tbody>
-            {iDDCoordinatorSuggestionItems.map((iDDCoordinatorSuggestionItem) => {
-              return (
-                <tr key={iDDCoordinatorSuggestionItem.id}>
-                  <td>{iDDCoordinatorSuggestionItem.id}</td>
-                  <td>
-                    {new Date(iDDCoordinatorSuggestionItem.createdAt).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(iDDCoordinatorSuggestionItem.updatedAt).toLocaleString()}
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/idd_coordinator_suggestion/${iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}`}
-                      className='underline'
-                    >
-                      {iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}`}
-                      className='border rounded'
-                    >
-                      view
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
+            {iDDCoordinatorSuggestionItems.map(
+              (iDDCoordinatorSuggestionItem) => {
+                return (
+                  <tr key={iDDCoordinatorSuggestionItem.id}>
+                    <td>{iDDCoordinatorSuggestionItem.id}</td>
+                    <td>
+                      {new Date(
+                        iDDCoordinatorSuggestionItem.createdAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      {new Date(
+                        iDDCoordinatorSuggestionItem.updatedAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/idd_coordinator_suggestion/${iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}`}
+                        className='underline'
+                      >
+                        {
+                          iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId
+                        }
+                      </Link>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}`}
+                        className='border rounded'
+                      >
+                        view
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
         <div className='flex justify-end space-x-1'>

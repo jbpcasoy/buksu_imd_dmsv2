@@ -8,24 +8,22 @@ import * as Yup from "yup";
 
 export default function EditPeerSuggestionItemActionTakenPage() {
   const router = useRouter();
-  const PeerSuggestionItemActionTakenId = router.query.id;
-  const PeerSuggestionItemActionTaken = usePeerSuggestionItemActionTaken({
-    id: PeerSuggestionItemActionTakenId as string,
+  const peerSuggestionItemActionTakenId = router.query.id;
+  const peerSuggestionItemActionTaken = usePeerSuggestionItemActionTaken({
+    id: peerSuggestionItemActionTakenId as string,
   });
 
   const formik = useFormik({
     initialValues: {
       value: "",
-      peerSuggestionItemId: "",
     },
     validationSchema: Yup.object({
       value: Yup.string().required(),
-      peerSuggestionItemId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
         .put(
-          `/api/peer_suggestion_item_action_taken/${PeerSuggestionItemActionTakenId}`,
+          `/api/peer_suggestion_item_action_taken/${peerSuggestionItemActionTakenId}`,
           values
         )
         .then(() => {
@@ -38,12 +36,11 @@ export default function EditPeerSuggestionItemActionTakenPage() {
   });
 
   useEffect(() => {
-    if (!PeerSuggestionItemActionTaken) return;
+    if (!peerSuggestionItemActionTaken) return;
     let subscribe = true;
 
     formik.setValues({
-      value: PeerSuggestionItemActionTaken.value,
-      peerSuggestionItemId: PeerSuggestionItemActionTaken.peerSuggestionItemId,
+      value: peerSuggestionItemActionTaken.value,
     });
 
     return () => {
@@ -51,18 +48,14 @@ export default function EditPeerSuggestionItemActionTakenPage() {
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [PeerSuggestionItemActionTaken]);
+  }, [peerSuggestionItemActionTaken]);
 
   return (
     <CrudLayout>
       <h2>Edit PeerSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='peerSuggestionItemId'
-          {...formik.getFieldProps("peerSuggestionItemId")}
-        />
+        
         <input
           type='text'
           placeholder='value'

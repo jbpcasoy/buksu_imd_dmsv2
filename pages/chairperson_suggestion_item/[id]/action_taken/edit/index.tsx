@@ -1,5 +1,5 @@
 import MainLayout from "@/components/MainLayout";
-import useChairpersonSuggestionItem from "@/hooks/useChairpersonSuggestionItem";
+import useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem from "@/hooks/useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -9,46 +9,56 @@ import * as Yup from "yup";
 export default function ChairpersonSuggestionItemEditPage() {
   const router = useRouter();
   const chairpersonSuggestionItemId = router.query.id;
-  const chairpersonSuggestionItem = useChairpersonSuggestionItem({
-    id: chairpersonSuggestionItemId as string,
-  });
+  const chairpersonSuggestionItemActionTaken =
+    useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem({
+      id: chairpersonSuggestionItemId as string,
+    });
   const formik = useFormik({
     initialValues: {
-      actionTaken: "",
+      value: "",
     },
     validationSchema: Yup.object({
-      actionTaken: Yup.string().required(),
+      value: Yup.string().required(),
     }),
     onSubmit: (values) => {
-      axios
-        .put(
-          `/api/chairperson_suggestion_item/${chairpersonSuggestionItemId}`,
-          values
-        )
-        .then(() => {
-          alert("Suggestion updated successfully");
-          router.reload();
-        });
+      if (chairpersonSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/chairperson_suggestion_item_action_taken/${chairpersonSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/chairperson_suggestion_item_action_taken`, {
+            chairpersonSuggestionItemId: chairpersonSuggestionItemId,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
     },
   });
 
   useEffect(() => {
-    if (!chairpersonSuggestionItem) return;
+    if (!chairpersonSuggestionItemActionTaken) return;
     formik.setValues({
-      actionTaken: chairpersonSuggestionItem.actionTaken ?? "",
+      value: chairpersonSuggestionItemActionTaken.value ?? "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chairpersonSuggestionItem]);
+  }, [chairpersonSuggestionItemActionTaken]);
 
   return (
     <MainLayout>
       <div>
         <h2>Chairperson Review</h2>
         <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='actionTaken'
-            {...formik.getFieldProps("actionTaken")}
-          />
+          <textarea placeholder='value' {...formik.getFieldProps("value")} />
           <br />
           <input type='submit' value='Submit' className='border rounded' />
         </form>

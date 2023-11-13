@@ -365,12 +365,13 @@ model ChairpersonSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    suggestion              String
-    actionTaken             String?
-    remarks                 String?
-    ChairpersonSuggestion   ChairpersonSuggestion @relation(fields: [chairpersonSuggestionId], references: [id], onDelete: Cascade)
-    chairpersonSuggestionId String
-    pageNumber              Int
+    suggestion                           String
+    actionTaken                          String?
+    remarks                              String?
+    ChairpersonSuggestion                ChairpersonSuggestion                 @relation(fields: [chairpersonSuggestionId], references: [id], onDelete: Cascade)
+    chairpersonSuggestionId              String
+    pageNumber                           Int
+    ChairpersonSuggestionItemActionTaken ChairpersonSuggestionItemActionTaken?
 }
 
 model SubmittedChairpersonSuggestion {
@@ -438,12 +439,13 @@ model CoordinatorSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    suggestion              String
-    actionTaken             String?
-    remarks                 String?
-    CoordinatorSuggestion   CoordinatorSuggestion @relation(fields: [coordinatorSuggestionId], references: [id], onDelete: Cascade)
-    coordinatorSuggestionId String
-    pageNumber              Int
+    suggestion                           String
+    actionTaken                          String?
+    remarks                              String?
+    CoordinatorSuggestion                CoordinatorSuggestion                 @relation(fields: [coordinatorSuggestionId], references: [id], onDelete: Cascade)
+    coordinatorSuggestionId              String
+    pageNumber                           Int
+    CoordinatorSuggestionItemActionTaken CoordinatorSuggestionItemActionTaken?
 }
 
 model SubmittedCoordinatorSuggestion {
@@ -577,12 +579,13 @@ model IDDCoordinatorSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IDDCoordinatorSuggestion   IDDCoordinatorSuggestion @relation(fields: [iDDCoordinatorSuggestionId], references: [id], onDelete: Cascade)
-    iDDCoordinatorSuggestionId String
-    suggestion                 String
-    actionTaken                String?
-    remarks                    String?
-    pageNumber                 Int
+    IDDCoordinatorSuggestion                IDDCoordinatorSuggestion                 @relation(fields: [iDDCoordinatorSuggestionId], references: [id], onDelete: Cascade)
+    iDDCoordinatorSuggestionId              String
+    suggestion                              String
+    actionTaken                             String?
+    remarks                                 String?
+    pageNumber                              Int
+    IDDCoordinatorSuggestionItemActionTaken IDDCoordinatorSuggestionItemActionTaken?
 }
 
 model SubmittedIDDCoordinatorSuggestion {
@@ -813,12 +816,13 @@ model ContentSpecialistSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ContentSpecialistSuggestion   ContentSpecialistSuggestion @relation(fields: [contentSpecialistSuggestionId], references: [id], onDelete: Cascade)
-    contentSpecialistSuggestionId String
-    suggestion                    String
-    actionTaken                   String?
-    remarks                       String?
-    pageNumber                    Int
+    ContentSpecialistSuggestion                ContentSpecialistSuggestion                 @relation(fields: [contentSpecialistSuggestionId], references: [id], onDelete: Cascade)
+    contentSpecialistSuggestionId              String
+    suggestion                                 String
+    actionTaken                                String?
+    remarks                                    String?
+    pageNumber                                 Int
+    ContentSpecialistSuggestionItemActionTaken ContentSpecialistSuggestionItemActionTaken?
 }
 
 model SubmittedContentSpecialistSuggestion {
@@ -887,12 +891,13 @@ model ContentEditorSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ContentEditorSuggestion   ContentEditorSuggestion @relation(fields: [contentEditorSuggestionId], references: [id], onDelete: Cascade)
-    contentEditorSuggestionId String
-    suggestion                String
-    actionTaken               String?
-    remarks                   String?
-    pageNumber                Int
+    ContentEditorSuggestion                ContentEditorSuggestion                 @relation(fields: [contentEditorSuggestionId], references: [id], onDelete: Cascade)
+    contentEditorSuggestionId              String
+    suggestion                             String
+    actionTaken                            String?
+    remarks                                String?
+    pageNumber                             Int
+    ContentEditorSuggestionItemActionTaken ContentEditorSuggestionItemActionTaken?
 }
 
 model SubmittedContentEditorSuggestion {
@@ -961,12 +966,13 @@ model IDDSpecialistSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IDDSpecialistSuggestion   IDDSpecialistSuggestion @relation(fields: [iDDSpecialistSuggestionId], references: [id], onDelete: Cascade)
-    iDDSpecialistSuggestionId String
-    suggestion                String
-    actionTaken               String?
-    remarks                   String?
-    pageNumber                Int
+    IDDSpecialistSuggestion                IDDSpecialistSuggestion                 @relation(fields: [iDDSpecialistSuggestionId], references: [id], onDelete: Cascade)
+    iDDSpecialistSuggestionId              String
+    suggestion                             String
+    actionTaken                            String?
+    remarks                                String?
+    pageNumber                             Int
+    IDDSpecialistSuggestionItemActionTaken IDDSpecialistSuggestionItemActionTaken?
 }
 
 model SubmittedIDDSpecialistSuggestion {
@@ -1222,12 +1228,13 @@ model ReturnedDepartmentRevisionSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
-    returnedDepartmentRevisionId String
-    suggestion                   String
-    actionTaken                  String?
-    remarks                      String?
-    pageNumber                   Int
+    ReturnedDepartmentRevision                          ReturnedDepartmentRevision                           @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
+    returnedDepartmentRevisionId                        String
+    suggestion                                          String
+    actionTaken                                         String?
+    remarks                                             String?
+    pageNumber                                          Int
+    ReturnedDepartmentRevisionSuggestionItemActionTaken ReturnedDepartmentRevisionSuggestionItemActionTaken?
 }
 
 model SubmittedReturnedDepartmentRevision {
@@ -1258,12 +1265,13 @@ model ReturnedCITLRevisionSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedCITLRevision   ReturnedCITLRevision @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
-    returnedCITLRevisionId String
-    suggestion             String
-    actionTaken            String?
-    remarks                String?
-    pageNumber             Int
+    ReturnedCITLRevision                          ReturnedCITLRevision                           @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
+    returnedCITLRevisionId                        String
+    suggestion                                    String
+    actionTaken                                   String?
+    remarks                                       String?
+    pageNumber                                    Int
+    ReturnedCITLRevisionSuggestionItemActionTaken ReturnedCITLRevisionSuggestionItemActionTaken?
 }
 
 model SubmittedReturnedCITLRevision {
@@ -1294,12 +1302,13 @@ model ReturnedIMERCCITLRevisionSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedIMERCCITLRevision   ReturnedIMERCCITLRevision @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
-    returnedIMERCCITLRevisionId String
-    suggestion                  String
-    actionTaken                 String?
-    remarks                     String?
-    pageNumber                  Int
+    ReturnedIMERCCITLRevision                          ReturnedIMERCCITLRevision                            @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
+    returnedIMERCCITLRevisionId                        String
+    suggestion                                         String
+    actionTaken                                        String?
+    remarks                                            String?
+    pageNumber                                         Int
+    ReturnedIMERCCITLRevisionSuggestionItemActionTaken ReturnedIMERCCITLRevisionSuggestionItemActionTaken?
 }
 
 model SubmittedReturnedIMERCCITLRevision {
@@ -1320,4 +1329,94 @@ model PeerSuggestionItemActionTaken {
     PeerSuggestionItem   PeerSuggestionItem @relation(fields: [peerSuggestionItemId], references: [id], onDelete: Cascade)
     peerSuggestionItemId String             @unique
     value                String
+}
+
+model ChairpersonSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ChairpersonSuggestionItem   ChairpersonSuggestionItem @relation(fields: [chairpersonSuggestionItemId], references: [id], onDelete: Cascade)
+    chairpersonSuggestionItemId String                    @unique
+    value                       String
+}
+
+model CoordinatorSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CoordinatorSuggestionItem   CoordinatorSuggestionItem @relation(fields: [coordinatorSuggestionItemId], references: [id], onDelete: Cascade)
+    coordinatorSuggestionItemId String                    @unique
+    value                       String
+}
+
+model ReturnedDepartmentRevisionSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedDepartmentRevisionSuggestionItem   ReturnedDepartmentRevisionSuggestionItem @relation(fields: [returnedDepartmentRevisionSuggestionItemId], references: [id], onDelete: Cascade)
+    returnedDepartmentRevisionSuggestionItemId String                                   @unique
+    value                                      String
+}
+
+model IDDCoordinatorSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IDDCoordinatorSuggestionItem   IDDCoordinatorSuggestionItem @relation(fields: [iDDCoordinatorSuggestionItemId], references: [id], onDelete: Cascade)
+    iDDCoordinatorSuggestionItemId String                       @unique
+    value                          String
+}
+
+model ReturnedCITLRevisionSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedCITLRevisionSuggestionItem   ReturnedCITLRevisionSuggestionItem @relation(fields: [returnedCITLRevisionSuggestionItemId], references: [id], onDelete: Cascade)
+    returnedCITLRevisionSuggestionItemId String                             @unique
+    value                                String
+}
+
+model ContentSpecialistSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ContentSpecialistSuggestionItem   ContentSpecialistSuggestionItem @relation(fields: [contentSpecialistSuggestionItemId], references: [id], onDelete: Cascade)
+    contentSpecialistSuggestionItemId String                          @unique
+    value                             String
+}
+
+model ContentEditorSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ContentEditorSuggestionItem   ContentEditorSuggestionItem @relation(fields: [contentEditorSuggestionItemId], references: [id], onDelete: Cascade)
+    contentEditorSuggestionItemId String                      @unique
+    value                         String
+}
+
+model IDDSpecialistSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IDDSpecialistSuggestionItem   IDDSpecialistSuggestionItem @relation(fields: [iDDSpecialistSuggestionItemId], references: [id], onDelete: Cascade)
+    iDDSpecialistSuggestionItemId String                      @unique
+    value                         String
+}
+
+model ReturnedIMERCCITLRevisionSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedIMERCCITLRevisionSuggestionItem   ReturnedIMERCCITLRevisionSuggestionItem @relation(fields: [returnedIMERCCITLRevisionSuggestionItemId], references: [id], onDelete: Cascade)
+    returnedIMERCCITLRevisionSuggestionItemId String                                  @unique
+    value                                     String
 }

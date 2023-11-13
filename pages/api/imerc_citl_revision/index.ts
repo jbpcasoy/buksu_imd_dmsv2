@@ -94,8 +94,8 @@ export default async function handler(
                 },
               },
             },
-            actionTaken: {
-              equals: null,
+            ContentSpecialistSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });
@@ -132,8 +132,8 @@ export default async function handler(
                 },
               },
             },
-            actionTaken: {
-              equals: null,
+            ContentEditorSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });
@@ -170,8 +170,8 @@ export default async function handler(
                 },
               },
             },
-            actionTaken: {
-              equals: null,
+            IDDSpecialistSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });
@@ -202,10 +202,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            ReturnedIMERCCITLRevisionSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });

@@ -1,4 +1,6 @@
+import usePeerSuggestionItemActionTakenPeerSuggestionItem from "@/hooks/usePeerSuggestionItemActionTakenPeerSuggestionItem";
 import usePeerSuggestionItemsIM from "@/hooks/usePeerSuggestionItemsIM";
+import { PeerSuggestionItem } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -60,30 +62,11 @@ export default function IMPeerSuggestionItems({
         <tbody>
           {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
             return (
-              <tr key={peerSuggestionItem.id}>
-                <td>{peerSuggestionItem.id}</td>
-                <td>
-                  {new Date(peerSuggestionItem.createdAt).toLocaleString()}
-                </td>
-                <td>
-                  {new Date(peerSuggestionItem.updatedAt).toLocaleString()}
-                </td>
-                <td>{peerSuggestionItem.suggestion}</td>
-                <td>{peerSuggestionItem.pageNumber}</td>
-                <td>{peerSuggestionItem.actionTaken}</td>
-                <td>{peerSuggestionItem.remarks}</td>
-                <td>{peerSuggestionItem.peerSuggestionId}</td>
-                {editable && (
-                  <td>
-                    <Link
-                      href={`/peer_suggestion_item/${peerSuggestionItem.id}/action_taken/edit`}
-                      className='border rounded'
-                    >
-                      edit
-                    </Link>
-                  </td>
-                )}
-              </tr>
+              <Item
+                peerSuggestionItem={peerSuggestionItem}
+                editable={editable}
+                key={peerSuggestionItem.id}
+              />
             );
           })}
         </tbody>
@@ -101,5 +84,41 @@ export default function IMPeerSuggestionItems({
         </button>
       </div>
     </div>
+  );
+}
+
+function Item({
+  peerSuggestionItem,
+  editable,
+}: {
+  peerSuggestionItem: PeerSuggestionItem;
+  editable: boolean;
+}) {
+  const peerSuggestionItemActionTaken =
+    usePeerSuggestionItemActionTakenPeerSuggestionItem({
+      id: peerSuggestionItem.id,
+    });
+
+  return (
+    <tr>
+      <td>{peerSuggestionItem.id}</td>
+      <td>{new Date(peerSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(peerSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{peerSuggestionItem.suggestion}</td>
+      <td>{peerSuggestionItem.pageNumber}</td>
+      <td>{peerSuggestionItemActionTaken?.value}</td>
+      <td>{peerSuggestionItem.remarks}</td>
+      <td>{peerSuggestionItem.peerSuggestionId}</td>
+      {editable && (
+        <td>
+          <Link
+            href={`/peer_suggestion_item/${peerSuggestionItem.id}/action_taken/edit`}
+            className='border rounded'
+          >
+            edit
+          </Link>
+        </td>
+      )}
+    </tr>
   );
 }

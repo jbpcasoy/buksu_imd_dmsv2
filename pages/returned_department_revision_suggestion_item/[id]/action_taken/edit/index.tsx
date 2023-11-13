@@ -1,5 +1,5 @@
 import MainLayout from "@/components/MainLayout";
-import useReturnedDepartmentRevisionSuggestionItem from "@/hooks/useReturnedDepartmentRevisionSuggestionItem";
+import useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem from "@/hooks/useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -9,45 +9,56 @@ import * as Yup from "yup";
 export default function ReturnedDepartmentRevisionSuggestionItemEditPage() {
   const router = useRouter();
   const returnedDepartmentRevisionSuggestionItemId = router.query.id;
-  const returnedDepartmentRevisionSuggestionItem = useReturnedDepartmentRevisionSuggestionItem({
-    id: returnedDepartmentRevisionSuggestionItemId as string,
-  });
+  const returnedDepartmentRevisionSuggestionItemActionTaken =
+    useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem({
+      id: returnedDepartmentRevisionSuggestionItemId as string,
+    });
   const formik = useFormik({
     initialValues: {
-      actionTaken: "",
+      value: "",
     },
     validationSchema: Yup.object({
-      actionTaken: Yup.string().required(),
+      value: Yup.string().required(),
     }),
     onSubmit: (values) => {
-      axios
-        .put(
-          `/api/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItemId}`,
-          values
-        )
-        .then(() => {
-          alert("Suggestion updated successfully");
-        });
+      if (returnedDepartmentRevisionSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/returned_department_revision_suggestion_item_action_taken/${returnedDepartmentRevisionSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/returned_department_revision_suggestion_item_action_taken`, {
+            returnedDepartmentRevisionSuggestionItemId: returnedDepartmentRevisionSuggestionItemId,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
     },
   });
 
   useEffect(() => {
-    if (!returnedDepartmentRevisionSuggestionItem) return;
+    if (!returnedDepartmentRevisionSuggestionItemActionTaken) return;
     formik.setValues({
-      actionTaken: returnedDepartmentRevisionSuggestionItem.actionTaken ?? "",
+      value: returnedDepartmentRevisionSuggestionItemActionTaken.value ?? "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [returnedDepartmentRevisionSuggestionItem]);
+  }, [returnedDepartmentRevisionSuggestionItemActionTaken]);
 
   return (
     <MainLayout>
       <div>
-        <h2>Returned Department Revision Suggestion</h2>
+        <h2>ReturnedDepartmentRevision Review</h2>
         <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='actionTaken'
-            {...formik.getFieldProps("actionTaken")}
-          />
+          <textarea placeholder='value' {...formik.getFieldProps("value")} />
           <br />
           <input type='submit' value='Submit' className='border rounded' />
         </form>

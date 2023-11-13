@@ -85,10 +85,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            PeerSuggestionItemActionTaken: {
+              is: null,
             },
           },
         }
@@ -125,10 +123,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            ChairpersonSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });
@@ -164,10 +160,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            CoordinatorSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });
@@ -197,10 +191,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            ReturnedDepartmentRevisionSuggestionItemActionTaken: {
+              is: null
             },
           },
         });

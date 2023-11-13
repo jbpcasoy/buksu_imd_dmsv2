@@ -166,8 +166,8 @@ export default async function handler(
                 },
               },
             },
-            actionTaken: {
-              equals: null,
+            IDDCoordinatorSuggestionItemActionTaken: {
+              is: null,
             },
           },
         }
@@ -199,10 +199,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            ReturnedCITLRevisionSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });
