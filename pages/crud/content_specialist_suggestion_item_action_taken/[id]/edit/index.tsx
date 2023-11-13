@@ -9,18 +9,17 @@ import * as Yup from "yup";
 export default function EditContentSpecialistSuggestionItemActionTakenPage() {
   const router = useRouter();
   const contentSpecialistSuggestionItemActionTakenId = router.query.id;
-  const contentSpecialistSuggestionItemActionTaken = useContentSpecialistSuggestionItemActionTaken({
-    id: contentSpecialistSuggestionItemActionTakenId as string,
-  });
+  const contentSpecialistSuggestionItemActionTaken =
+    useContentSpecialistSuggestionItemActionTaken({
+      id: contentSpecialistSuggestionItemActionTakenId as string,
+    });
 
   const formik = useFormik({
     initialValues: {
       value: "",
-      contentSpecialistSuggestionItemId: "",
     },
     validationSchema: Yup.object({
       value: Yup.string().required(),
-      contentSpecialistSuggestionItemId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -29,7 +28,9 @@ export default function EditContentSpecialistSuggestionItemActionTakenPage() {
           values
         )
         .then(() => {
-          alert("ContentSpecialistSuggestionItemActionTaken updated successfully");
+          alert(
+            "ContentSpecialistSuggestionItemActionTaken updated successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -43,7 +44,6 @@ export default function EditContentSpecialistSuggestionItemActionTakenPage() {
 
     formik.setValues({
       value: contentSpecialistSuggestionItemActionTaken.value,
-      contentSpecialistSuggestionItemId: contentSpecialistSuggestionItemActionTaken.contentSpecialistSuggestionItemId,
     });
 
     return () => {
@@ -58,11 +58,6 @@ export default function EditContentSpecialistSuggestionItemActionTakenPage() {
       <h2>Edit ContentSpecialistSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='contentSpecialistSuggestionItemId'
-          {...formik.getFieldProps("contentSpecialistSuggestionItemId")}
-        />
         <input
           type='text'
           placeholder='value'

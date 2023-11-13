@@ -281,11 +281,11 @@ export default function CrudSidebar() {
     },
     {
       link: "/crud/notification_read",
-      label: "NotificationRead",
+      label: "Notification Read",
     },
     {
       link: "/crud/plagiarism_file",
-      label: "PlagiarismFile",
+      label: "Plagiarism File",
     },
     {
       link: "/crud/announcement",
@@ -293,67 +293,71 @@ export default function CrudSidebar() {
     },
     {
       link: "/crud/returned_department_revision",
-      label: "ReturnedDepartmentRevision",
+      label: "Returned Department Revision",
     },
     {
       link: "/crud/returned_department_revision_suggestion_item",
-      label: "ReturnedDepartmentRevisionSuggestionItem",
+      label: "Returned Department Revision Suggestion Item",
     },
     {
       link: "/crud/submitted_returned_department_revision",
-      label: "SubmittedReturnedDepartmentRevision",
+      label: "Submitted Returned Department Revision",
     },
     {
       link: "/crud/returned_citl_revision",
-      label: "ReturnedCITLRevision",
+      label: "Returned CITL Revision",
     },
     {
       link: "/crud/returned_citl_revision_suggestion_item",
-      label: "ReturnedCITLRevisionSuggestionItem",
+      label: "Returned CITL Revision Suggestion Item",
     },
     {
       link: "/crud/submitted_returned_citl_revision",
-      label: "SubmittedReturnedCITLRevision",
+      label: "Submitted Returned CITL Revision",
     },
     {
       link: "/crud/returned_imerc_citl_revision",
-      label: "ReturnedIMERCCITLRevision",
+      label: "Returned IMERC CITL Revision",
     },
     {
       link: "/crud/returned_imerc_citl_revision_suggestion_item",
-      label: "ReturnedIMERCCITLRevisionSuggestionItem",
+      label: "Returned IMERC CITL Revision Suggestion Item",
     },
     {
       link: "/crud/submitted_returned_imerc_citl_revision",
-      label: "SubmittedReturnedIMERCCITLRevision",
+      label: "Submitted Returned IMERC CITL Revision",
     },
     {
       link: "/crud/peer_suggestion_item_action_taken",
-      label: "PeerSuggestionItemActionTaken",
+      label: "Peer Suggestion Item Action Taken",
     },
     {
       link: "/crud/chairperson_suggestion_item_action_taken",
-      label: "ChairpersonSuggestionItemActionTaken",
+      label: "Chairperson Suggestion Item Action Taken",
     },
     {
       link: "/crud/coordinator_suggestion_item_action_taken",
-      label: "CoordinatorSuggestionItemActionTaken",
+      label: "Coordinator Suggestion Item Action Taken",
     },
     {
       link: "/crud/returned_department_revision_suggestion_item_action_taken",
-      label: "ReturnedDepartmentRevisionSuggestionItemActionTaken",
+      label: "Returned Department Revision Suggestion Item Action Taken",
     },
     {
       link: "/crud/idd_coordinator_suggestion_item_action_taken",
-      label: "IDDCoordinatorSuggestionItemActionTaken",
+      label: "IDD Coordinator Suggestion Item Action Taken",
     },
     {
       link: "/crud/returned_citl_revision_suggestion_item_action_taken",
-      label: "ReturnedCITLRevisionSuggestionItemActionTaken",
+      label: "Returned CITL Revision Suggestion Item Action Taken",
     },
     {
       link: "/crud/content_specialist_suggestion_item_action_taken",
-      label: "ContentSpecialistSuggestionItemActionTaken",
+      label: "Content Specialist Suggestion Item Action Taken",
+    },
+    {
+      link: "/crud/content_editor_suggestion_item_action_taken",
+      label: "Content Editor Suggestion Item Action Taken",
     },
     // TODO add profile picture file
   ];

@@ -16,11 +16,9 @@ export default function EditPeerSuggestionItemActionTakenPage() {
   const formik = useFormik({
     initialValues: {
       value: "",
-      peerSuggestionItemId: "",
     },
     validationSchema: Yup.object({
       value: Yup.string().required(),
-      peerSuggestionItemId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -43,7 +41,6 @@ export default function EditPeerSuggestionItemActionTakenPage() {
 
     formik.setValues({
       value: peerSuggestionItemActionTaken.value,
-      peerSuggestionItemId: peerSuggestionItemActionTaken.peerSuggestionItemId,
     });
 
     return () => {
@@ -58,11 +55,7 @@ export default function EditPeerSuggestionItemActionTakenPage() {
       <h2>Edit PeerSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='peerSuggestionItemId'
-          {...formik.getFieldProps("peerSuggestionItemId")}
-        />
+        
         <input
           type='text'
           placeholder='value'

@@ -9,18 +9,17 @@ import * as Yup from "yup";
 export default function EditReturnedDepartmentRevisionSuggestionItemActionTakenPage() {
   const router = useRouter();
   const returnedDepartmentRevisionSuggestionItemActionTakenId = router.query.id;
-  const returnedDepartmentRevisionSuggestionItemActionTaken = useReturnedDepartmentRevisionSuggestionItemActionTaken({
-    id: returnedDepartmentRevisionSuggestionItemActionTakenId as string,
-  });
+  const returnedDepartmentRevisionSuggestionItemActionTaken =
+    useReturnedDepartmentRevisionSuggestionItemActionTaken({
+      id: returnedDepartmentRevisionSuggestionItemActionTakenId as string,
+    });
 
   const formik = useFormik({
     initialValues: {
       value: "",
-      returnedDepartmentRevisionSuggestionItemId: "",
     },
     validationSchema: Yup.object({
       value: Yup.string().required(),
-      returnedDepartmentRevisionSuggestionItemId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -29,7 +28,9 @@ export default function EditReturnedDepartmentRevisionSuggestionItemActionTakenP
           values
         )
         .then(() => {
-          alert("ReturnedDepartmentRevisionSuggestionItemActionTaken updated successfully");
+          alert(
+            "ReturnedDepartmentRevisionSuggestionItemActionTaken updated successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -43,7 +44,6 @@ export default function EditReturnedDepartmentRevisionSuggestionItemActionTakenP
 
     formik.setValues({
       value: returnedDepartmentRevisionSuggestionItemActionTaken.value,
-      returnedDepartmentRevisionSuggestionItemId: returnedDepartmentRevisionSuggestionItemActionTaken.returnedDepartmentRevisionSuggestionItemId,
     });
 
     return () => {
@@ -58,11 +58,6 @@ export default function EditReturnedDepartmentRevisionSuggestionItemActionTakenP
       <h2>Edit ReturnedDepartmentRevisionSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='returnedDepartmentRevisionSuggestionItemId'
-          {...formik.getFieldProps("returnedDepartmentRevisionSuggestionItemId")}
-        />
         <input
           type='text'
           placeholder='value'

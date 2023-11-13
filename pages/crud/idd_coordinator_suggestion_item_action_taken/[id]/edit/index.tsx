@@ -16,11 +16,9 @@ export default function EditIDDCoordinatorSuggestionItemActionTakenPage() {
   const formik = useFormik({
     initialValues: {
       value: "",
-      iDDCoordinatorSuggestionItemId: "",
     },
     validationSchema: Yup.object({
       value: Yup.string().required(),
-      iDDCoordinatorSuggestionItemId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -43,7 +41,6 @@ export default function EditIDDCoordinatorSuggestionItemActionTakenPage() {
 
     formik.setValues({
       value: iDDCoordinatorSuggestionItemActionTaken.value,
-      iDDCoordinatorSuggestionItemId: iDDCoordinatorSuggestionItemActionTaken.iDDCoordinatorSuggestionItemId,
     });
 
     return () => {
@@ -58,11 +55,6 @@ export default function EditIDDCoordinatorSuggestionItemActionTakenPage() {
       <h2>Edit IDDCoordinatorSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='iDDCoordinatorSuggestionItemId'
-          {...formik.getFieldProps("iDDCoordinatorSuggestionItemId")}
-        />
         <input
           type='text'
           placeholder='value'

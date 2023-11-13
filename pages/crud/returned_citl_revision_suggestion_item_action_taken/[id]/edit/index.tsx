@@ -9,18 +9,17 @@ import * as Yup from "yup";
 export default function EditReturnedCITLRevisionSuggestionItemActionTakenPage() {
   const router = useRouter();
   const returnedCITLRevisionSuggestionItemActionTakenId = router.query.id;
-  const returnedCITLRevisionSuggestionItemActionTaken = useReturnedCITLRevisionSuggestionItemActionTaken({
-    id: returnedCITLRevisionSuggestionItemActionTakenId as string,
-  });
+  const returnedCITLRevisionSuggestionItemActionTaken =
+    useReturnedCITLRevisionSuggestionItemActionTaken({
+      id: returnedCITLRevisionSuggestionItemActionTakenId as string,
+    });
 
   const formik = useFormik({
     initialValues: {
       value: "",
-      returnedCITLRevisionSuggestionItemId: "",
     },
     validationSchema: Yup.object({
       value: Yup.string().required(),
-      returnedCITLRevisionSuggestionItemId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -29,7 +28,9 @@ export default function EditReturnedCITLRevisionSuggestionItemActionTakenPage() 
           values
         )
         .then(() => {
-          alert("ReturnedCITLRevisionSuggestionItemActionTaken updated successfully");
+          alert(
+            "ReturnedCITLRevisionSuggestionItemActionTaken updated successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -43,7 +44,6 @@ export default function EditReturnedCITLRevisionSuggestionItemActionTakenPage() 
 
     formik.setValues({
       value: returnedCITLRevisionSuggestionItemActionTaken.value,
-      returnedCITLRevisionSuggestionItemId: returnedCITLRevisionSuggestionItemActionTaken.returnedCITLRevisionSuggestionItemId,
     });
 
     return () => {
@@ -58,11 +58,6 @@ export default function EditReturnedCITLRevisionSuggestionItemActionTakenPage() 
       <h2>Edit ReturnedCITLRevisionSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='returnedCITLRevisionSuggestionItemId'
-          {...formik.getFieldProps("returnedCITLRevisionSuggestionItemId")}
-        />
         <input
           type='text'
           placeholder='value'

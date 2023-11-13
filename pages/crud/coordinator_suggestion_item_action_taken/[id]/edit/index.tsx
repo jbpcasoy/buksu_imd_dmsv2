@@ -9,18 +9,17 @@ import * as Yup from "yup";
 export default function EditCoordinatorSuggestionItemActionTakenPage() {
   const router = useRouter();
   const coordinatorSuggestionItemActionTakenId = router.query.id;
-  const coordinatorSuggestionItemActionTaken = useCoordinatorSuggestionItemActionTaken({
-    id: coordinatorSuggestionItemActionTakenId as string,
-  });
+  const coordinatorSuggestionItemActionTaken =
+    useCoordinatorSuggestionItemActionTaken({
+      id: coordinatorSuggestionItemActionTakenId as string,
+    });
 
   const formik = useFormik({
     initialValues: {
       value: "",
-      coordinatorSuggestionItemId: "",
     },
     validationSchema: Yup.object({
       value: Yup.string().required(),
-      coordinatorSuggestionItemId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -43,7 +42,6 @@ export default function EditCoordinatorSuggestionItemActionTakenPage() {
 
     formik.setValues({
       value: coordinatorSuggestionItemActionTaken.value,
-      coordinatorSuggestionItemId: coordinatorSuggestionItemActionTaken.coordinatorSuggestionItemId,
     });
 
     return () => {
@@ -58,11 +56,6 @@ export default function EditCoordinatorSuggestionItemActionTakenPage() {
       <h2>Edit CoordinatorSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='coordinatorSuggestionItemId'
-          {...formik.getFieldProps("coordinatorSuggestionItemId")}
-        />
         <input
           type='text'
           placeholder='value'

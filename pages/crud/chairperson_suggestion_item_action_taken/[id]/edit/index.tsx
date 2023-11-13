@@ -9,18 +9,17 @@ import * as Yup from "yup";
 export default function EditChairpersonSuggestionItemActionTakenPage() {
   const router = useRouter();
   const chairpersonSuggestionItemActionTakenId = router.query.id;
-  const chairpersonSuggestionItemActionTaken = useChairpersonSuggestionItemActionTaken({
-    id: chairpersonSuggestionItemActionTakenId as string,
-  });
+  const chairpersonSuggestionItemActionTaken =
+    useChairpersonSuggestionItemActionTaken({
+      id: chairpersonSuggestionItemActionTakenId as string,
+    });
 
   const formik = useFormik({
     initialValues: {
       value: "",
-      chairpersonSuggestionItemId: "",
     },
     validationSchema: Yup.object({
       value: Yup.string().required(),
-      chairpersonSuggestionItemId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -43,7 +42,6 @@ export default function EditChairpersonSuggestionItemActionTakenPage() {
 
     formik.setValues({
       value: chairpersonSuggestionItemActionTaken.value,
-      chairpersonSuggestionItemId: chairpersonSuggestionItemActionTaken.chairpersonSuggestionItemId,
     });
 
     return () => {
@@ -58,11 +56,6 @@ export default function EditChairpersonSuggestionItemActionTakenPage() {
       <h2>Edit ChairpersonSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          type='text'
-          placeholder='chairpersonSuggestionItemId'
-          {...formik.getFieldProps("chairpersonSuggestionItemId")}
-        />
         <input
           type='text'
           placeholder='value'
