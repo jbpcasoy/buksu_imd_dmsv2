@@ -359,6 +359,10 @@ export default function CrudSidebar() {
       link: "/crud/content_editor_suggestion_item_action_taken",
       label: "Content Editor Suggestion Item Action Taken",
     },
+    {
+      link: "/crud/idd_specialist_suggestion_item_action_taken",
+      label: "IDD Specialist Suggestion Item Action Taken",
+    },
     // TODO add profile picture file
   ];
 

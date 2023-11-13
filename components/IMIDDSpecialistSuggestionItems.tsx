@@ -1,4 +1,6 @@
+import useIDDSpecialistSuggestionItemActionTakenIDDSpecialistSuggestionItem from "@/hooks/useIDDSpecialistSuggestionItemActionTakenIDDSpecialistSuggestionItem";
 import useIDDSpecialistSuggestionItemsIM from "@/hooks/useIDDSpecialistSuggestionItemsIM";
+import { IDDSpecialistSuggestionItem } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,19 +19,18 @@ export default function IMIDDSpecialistSuggestionItems({
     id,
   });
 
+  const iDDSpecialistSuggestionItems = useIDDSpecialistSuggestionItemsIM(state);
+
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
   }, [id]);
-
-  const iDDSpecialistSuggestionItems = useIDDSpecialistSuggestionItemsIM(state);
 
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
       return {
         ...prev,
-        skip:
-          nextVal <= iDDSpecialistSuggestionItems.count ? nextVal : prev.skip,
+        skip: nextVal <= iDDSpecialistSuggestionItems.count ? nextVal : prev.skip,
       };
     });
   };
@@ -59,42 +60,15 @@ export default function IMIDDSpecialistSuggestionItems({
           </tr>
         </thead>
         <tbody>
-          {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map(
-            (iDDSpecialistSuggestionItem) => {
-              return (
-                <tr key={iDDSpecialistSuggestionItem.id}>
-                  <td>{iDDSpecialistSuggestionItem.id}</td>
-                  <td>
-                    {new Date(
-                      iDDSpecialistSuggestionItem.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      iDDSpecialistSuggestionItem.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>{iDDSpecialistSuggestionItem.suggestion}</td>
-                  <td>{iDDSpecialistSuggestionItem.pageNumber}</td>
-                  <td>{iDDSpecialistSuggestionItem.actionTaken}</td>
-                  <td>{iDDSpecialistSuggestionItem.remarks}</td>
-                  <td>
-                    {iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId}
-                  </td>
-                  {editable && (
-                    <td>
-                      <Link
-                        href={`/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}/action_taken/edit`}
-                        className='border rounded'
-                      >
-                        edit
-                      </Link>
-                    </td>
-                  )}
-                </tr>
-              );
-            }
-          )}
+          {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map((iDDSpecialistSuggestionItem) => {
+            return (
+              <Item
+                iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
+                editable={editable}
+                key={iDDSpecialistSuggestionItem.id}
+              />
+            );
+          })}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -110,5 +84,41 @@ export default function IMIDDSpecialistSuggestionItems({
         </button>
       </div>
     </div>
+  );
+}
+
+function Item({
+  iDDSpecialistSuggestionItem,
+  editable,
+}: {
+  iDDSpecialistSuggestionItem: IDDSpecialistSuggestionItem;
+  editable: boolean;
+}) {
+  const iDDSpecialistSuggestionItemActionTaken =
+    useIDDSpecialistSuggestionItemActionTakenIDDSpecialistSuggestionItem({
+      id: iDDSpecialistSuggestionItem.id,
+    });
+
+  return (
+    <tr>
+      <td>{iDDSpecialistSuggestionItem.id}</td>
+      <td>{new Date(iDDSpecialistSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(iDDSpecialistSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{iDDSpecialistSuggestionItem.suggestion}</td>
+      <td>{iDDSpecialistSuggestionItem.pageNumber}</td>
+      <td>{iDDSpecialistSuggestionItemActionTaken?.value}</td>
+      <td>{iDDSpecialistSuggestionItem.remarks}</td>
+      <td>{iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId}</td>
+      {editable && (
+        <td>
+          <Link
+            href={`/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}/action_taken/edit`}
+            className='border rounded'
+          >
+            edit
+          </Link>
+        </td>
+      )}
+    </tr>
   );
 }

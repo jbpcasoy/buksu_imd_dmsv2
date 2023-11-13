@@ -21,7 +21,7 @@ export default function ContentEditorSuggestionItemActionTakenPage() {
 
     axios
       .delete(
-        `/api/content_specialist_suggestion_item_action_taken/${contentEditorSuggestionItemActionTakenId}`
+        `/api/content_editor_suggestion_item_action_taken/${contentEditorSuggestionItemActionTakenId}`
       )
       .then(() => {
         alert("ContentEditorSuggestionItemActionTaken deleted successfully.");
@@ -40,7 +40,7 @@ export default function ContentEditorSuggestionItemActionTakenPage() {
         <div className='space-x-1'>
           <Link
             className='border rounded'
-            href={`/crud/content_specialist_suggestion_item_action_taken/${contentEditorSuggestionItemActionTakenId}/edit`}
+            href={`/crud/content_editor_suggestion_item_action_taken/${contentEditorSuggestionItemActionTakenId}/edit`}
           >
             edit
           </Link>
@@ -65,7 +65,7 @@ export default function ContentEditorSuggestionItemActionTakenPage() {
       <p>
         contentEditorSuggestionItemId:
         <Link
-          href={`/crud/content_specialist_suggestion_item/${contentEditorSuggestionItemActionTaken.contentEditorSuggestionItemId}`}
+          href={`/crud/content_editor_suggestion_item/${contentEditorSuggestionItemActionTaken.contentEditorSuggestionItemId}`}
           className='underline'
         >
           {contentEditorSuggestionItemActionTaken.contentEditorSuggestionItemId}
