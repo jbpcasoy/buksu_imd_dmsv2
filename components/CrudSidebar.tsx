@@ -351,6 +351,10 @@ export default function CrudSidebar() {
       link: "/crud/returned_citl_revision_suggestion_item_action_taken",
       label: "ReturnedCITLRevisionSuggestionItemActionTaken",
     },
+    {
+      link: "/crud/content_specialist_suggestion_item_action_taken",
+      label: "ContentSpecialistSuggestionItemActionTaken",
+    },
     // TODO add profile picture file
   ];
 

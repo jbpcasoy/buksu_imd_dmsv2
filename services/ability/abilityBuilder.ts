@@ -88,6 +88,8 @@ import {
   ReturnedDepartmentRevisionSuggestionItemActionTaken,
   IDDCoordinatorSuggestionItemActionTaken,
   ReturnedCITLRevisionSuggestionItemActionTaken,
+  ContentEditorSuggestionItemActionTaken,
+  ContentSpecialistSuggestionItemActionTaken,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -180,6 +182,8 @@ export type AppSubjects =
       ReturnedDepartmentRevisionSuggestionItemActionTaken: ReturnedDepartmentRevisionSuggestionItemActionTaken;
       IDDCoordinatorSuggestionItemActionTaken: IDDCoordinatorSuggestionItemActionTaken;
       ReturnedCITLRevisionSuggestionItemActionTaken: ReturnedCITLRevisionSuggestionItemActionTaken;
+      ContentEditorSuggestionItemActionTaken: ContentEditorSuggestionItemActionTaken;
+      ContentSpecialistSuggestionItemActionTaken: ContentSpecialistSuggestionItemActionTaken;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
