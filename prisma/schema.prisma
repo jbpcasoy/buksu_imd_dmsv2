@@ -966,7 +966,7 @@ model IDDSpecialistSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IDDSpecialistSuggestion                IDDSpecialistSuggestion                  @relation(fields: [iDDSpecialistSuggestionId], references: [id], onDelete: Cascade)
+    IDDSpecialistSuggestion                IDDSpecialistSuggestion                 @relation(fields: [iDDSpecialistSuggestionId], references: [id], onDelete: Cascade)
     iDDSpecialistSuggestionId              String
     suggestion                             String
     actionTaken                            String?
@@ -1302,12 +1302,13 @@ model ReturnedIMERCCITLRevisionSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedIMERCCITLRevision   ReturnedIMERCCITLRevision @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
-    returnedIMERCCITLRevisionId String
-    suggestion                  String
-    actionTaken                 String?
-    remarks                     String?
-    pageNumber                  Int
+    ReturnedIMERCCITLRevision                          ReturnedIMERCCITLRevision                            @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
+    returnedIMERCCITLRevisionId                        String
+    suggestion                                         String
+    actionTaken                                        String?
+    remarks                                            String?
+    pageNumber                                         Int
+    ReturnedIMERCCITLRevisionSuggestionItemActionTaken ReturnedIMERCCITLRevisionSuggestionItemActionTaken?
 }
 
 model SubmittedReturnedIMERCCITLRevision {
@@ -1408,4 +1409,14 @@ model IDDSpecialistSuggestionItemActionTaken {
     IDDSpecialistSuggestionItem   IDDSpecialistSuggestionItem @relation(fields: [iDDSpecialistSuggestionItemId], references: [id], onDelete: Cascade)
     iDDSpecialistSuggestionItemId String                      @unique
     value                         String
+}
+
+model ReturnedIMERCCITLRevisionSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedIMERCCITLRevisionSuggestionItem   ReturnedIMERCCITLRevisionSuggestionItem @relation(fields: [returnedIMERCCITLRevisionSuggestionItemId], references: [id], onDelete: Cascade)
+    returnedIMERCCITLRevisionSuggestionItemId String                                  @unique
+    value                                     String
 }

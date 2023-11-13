@@ -363,6 +363,10 @@ export default function CrudSidebar() {
       link: "/crud/idd_specialist_suggestion_item_action_taken",
       label: "IDD Specialist Suggestion Item Action Taken",
     },
+    {
+      link: "/crud/returned_imerc_citl_revision_suggestion_item_action_taken",
+      label: "Returned IMERC CITL Suggestion Item Action Taken",
+    },
     // TODO add profile picture file
   ];
 

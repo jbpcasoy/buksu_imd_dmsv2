@@ -91,6 +91,7 @@ import {
   ContentEditorSuggestionItemActionTaken,
   ContentSpecialistSuggestionItemActionTaken,
   IDDSpecialistSuggestionItemActionTaken,
+  ReturnedIMERCCITLRevisionSuggestionItemActionTaken,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -186,6 +187,7 @@ export type AppSubjects =
       ContentEditorSuggestionItemActionTaken: ContentEditorSuggestionItemActionTaken;
       ContentSpecialistSuggestionItemActionTaken: ContentSpecialistSuggestionItemActionTaken;
       IDDSpecialistSuggestionItemActionTaken: IDDSpecialistSuggestionItemActionTaken;
+      ReturnedIMERCCITLRevisionSuggestionItemActionTaken: ReturnedIMERCCITLRevisionSuggestionItemActionTaken;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
