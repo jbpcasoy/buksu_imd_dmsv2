@@ -1,12 +1,12 @@
 import CrudLayout from "@/components/CrudLayout";
-import useIDDCoordinatorSuggestionItems from "@/hooks/useIDDCoordinatorSuggestionItems";
+import useIDDCoordinatorSuggestionItemActionTakens from "@/hooks/useIDDCoordinatorSuggestionItemActionTakens";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function IDDCoordinatorSuggestionItemsPage() {
+export default function IDDCoordinatorSuggestionItemActionTakensPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { iDDCoordinatorSuggestionItems, count } =
-    useIDDCoordinatorSuggestionItems(state);
+  const { iDDCoordinatorSuggestionItemActionTakens, count } =
+    useIDDCoordinatorSuggestionItemActionTakens(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -25,10 +25,10 @@ export default function IDDCoordinatorSuggestionItemsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>IDDCoordinatorSuggestionItem</h2>
+        <h2>IDDCoordinatorSuggestionItemActionTaken</h2>
         <Link
           className='border rounded'
-          href={`/crud/idd_coordinator_suggestion_item/add`}
+          href={`/crud/idd_coordinator_suggestion_item_action_taken/add`}
         >
           Add
         </Link>
@@ -41,39 +41,41 @@ export default function IDDCoordinatorSuggestionItemsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>iDDCoordinatorSuggestionId</th>
+              <th>iDDCoordinatorSuggestionItemId</th>
+              <th>value</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {iDDCoordinatorSuggestionItems.map(
-              (iDDCoordinatorSuggestionItem) => {
+            {iDDCoordinatorSuggestionItemActionTakens.map(
+              (iDDCoordinatorSuggestionItemActionTaken) => {
                 return (
-                  <tr key={iDDCoordinatorSuggestionItem.id}>
-                    <td>{iDDCoordinatorSuggestionItem.id}</td>
+                  <tr key={iDDCoordinatorSuggestionItemActionTaken.id}>
+                    <td>{iDDCoordinatorSuggestionItemActionTaken.id}</td>
                     <td>
                       {new Date(
-                        iDDCoordinatorSuggestionItem.createdAt
+                        iDDCoordinatorSuggestionItemActionTaken.createdAt
                       ).toLocaleString()}
                     </td>
                     <td>
                       {new Date(
-                        iDDCoordinatorSuggestionItem.updatedAt
+                        iDDCoordinatorSuggestionItemActionTaken.updatedAt
                       ).toLocaleString()}
                     </td>
                     <td>
                       <Link
-                        href={`/crud/idd_coordinator_suggestion/${iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}`}
+                        href={`/crud/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItemActionTaken.iDDCoordinatorSuggestionItemId}`}
                         className='underline'
                       >
                         {
-                          iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId
+                          iDDCoordinatorSuggestionItemActionTaken.iDDCoordinatorSuggestionItemId
                         }
                       </Link>
                     </td>
+                    <td>{iDDCoordinatorSuggestionItemActionTaken.value}</td>
                     <td>
                       <Link
-                        href={`/crud/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}`}
+                        href={`/crud/idd_coordinator_suggestion_item_action_taken/${iDDCoordinatorSuggestionItemActionTaken.id}`}
                         className='border rounded'
                       >
                         view

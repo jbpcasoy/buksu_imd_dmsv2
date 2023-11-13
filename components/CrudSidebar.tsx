@@ -343,6 +343,10 @@ export default function CrudSidebar() {
       link: "/crud/returned_department_revision_suggestion_item_action_taken",
       label: "ReturnedDepartmentRevisionSuggestionItemActionTaken",
     },
+    {
+      link: "/crud/idd_coordinator_suggestion_item_action_taken",
+      label: "IDDCoordinatorSuggestionItemActionTaken",
+    },
     // TODO add profile picture file
   ];
 

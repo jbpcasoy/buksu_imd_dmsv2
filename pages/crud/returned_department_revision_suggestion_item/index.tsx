@@ -42,11 +42,9 @@ export default function ReturnedDepartmentRevisionSuggestionItemsPage() {
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>returnedDepartmentRevisionId</th>
-              <th>pageNumber</th>
-              <th>suggestion</th>
-              <th>remarks</th>
               <th>action</th>
             </tr>
+            {/* NOTE: do not add suggestion and remarks as these tend to be long. */}
           </thead>
           <tbody>
             {returnedDepartmentRevisionSuggestionItems.map(
@@ -73,15 +71,6 @@ export default function ReturnedDepartmentRevisionSuggestionItemsPage() {
                           returnedDepartmentRevisionSuggestionItem.returnedDepartmentRevisionId
                         }
                       </Link>
-                    </td>
-                    <td>
-                      {returnedDepartmentRevisionSuggestionItem.pageNumber}
-                    </td>
-                    <td>
-                      {returnedDepartmentRevisionSuggestionItem.suggestion}
-                    </td>
-                    <td>
-                      {returnedDepartmentRevisionSuggestionItem.remarks}
                     </td>
                     <td>
                       <Link
