@@ -1,4 +1,6 @@
+import useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem from "@/hooks/useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem";
 import useReturnedIMERCCITLRevisionSuggestionItemsIM from "@/hooks/useReturnedIMERCCITLRevisionSuggestionItemsIM";
+import { ReturnedIMERCCITLRevisionSuggestionItem } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,11 +19,12 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
     id,
   });
 
+  const returnedIMERCCITLRevisionSuggestionItems = useReturnedIMERCCITLRevisionSuggestionItemsIM(state);
+
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
   }, [id]);
 
-  const returnedIMERCCITLRevisionSuggestionItems = useReturnedIMERCCITLRevisionSuggestionItemsIM(state);
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -42,7 +45,7 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
   return (
     <div>
       <table>
-        <caption>Returned CITL Revision Suggestions</caption>
+        <caption>ReturnedIMERCCITLRevision Suggestions</caption>
         <thead>
           <tr>
             <th>id</th>
@@ -57,40 +60,15 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
           </tr>
         </thead>
         <tbody>
-          {returnedIMERCCITLRevisionSuggestionItems.returnedIMERCCITLRevisionSuggestionItems.map(
-            (returnedIMERCCITLRevisionSuggestionItem) => {
-              return (
-                <tr key={returnedIMERCCITLRevisionSuggestionItem.id}>
-                  <td>{returnedIMERCCITLRevisionSuggestionItem.id}</td>
-                  <td>
-                    {new Date(
-                      returnedIMERCCITLRevisionSuggestionItem.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      returnedIMERCCITLRevisionSuggestionItem.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>{returnedIMERCCITLRevisionSuggestionItem.suggestion}</td>
-                  <td>{returnedIMERCCITLRevisionSuggestionItem.pageNumber}</td>
-                  <td>{returnedIMERCCITLRevisionSuggestionItem.actionTaken}</td>
-                  <td>{returnedIMERCCITLRevisionSuggestionItem.remarks}</td>
-                  <td>{returnedIMERCCITLRevisionSuggestionItem.returnedIMERCCITLRevisionId}</td>
-                  {editable && (
-                    <td>
-                      <Link
-                        href={`/returned_imerc_citl_revision_suggestion_item/${returnedIMERCCITLRevisionSuggestionItem.id}/action_taken/edit`}
-                        className='border rounded'
-                      >
-                        edit
-                      </Link>
-                    </td>
-                  )}
-                </tr>
-              );
-            }
-          )}
+          {returnedIMERCCITLRevisionSuggestionItems.returnedIMERCCITLRevisionSuggestionItems.map((returnedIMERCCITLRevisionSuggestionItem) => {
+            return (
+              <Item
+                returnedIMERCCITLRevisionSuggestionItem={returnedIMERCCITLRevisionSuggestionItem}
+                editable={editable}
+                key={returnedIMERCCITLRevisionSuggestionItem.id}
+              />
+            );
+          })}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -106,5 +84,41 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
         </button>
       </div>
     </div>
+  );
+}
+
+function Item({
+  returnedIMERCCITLRevisionSuggestionItem,
+  editable,
+}: {
+  returnedIMERCCITLRevisionSuggestionItem: ReturnedIMERCCITLRevisionSuggestionItem;
+  editable: boolean;
+}) {
+  const returnedIMERCCITLRevisionSuggestionItemActionTaken =
+    useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem({
+      id: returnedIMERCCITLRevisionSuggestionItem.id,
+    });
+
+  return (
+    <tr>
+      <td>{returnedIMERCCITLRevisionSuggestionItem.id}</td>
+      <td>{new Date(returnedIMERCCITLRevisionSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(returnedIMERCCITLRevisionSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{returnedIMERCCITLRevisionSuggestionItem.suggestion}</td>
+      <td>{returnedIMERCCITLRevisionSuggestionItem.pageNumber}</td>
+      <td>{returnedIMERCCITLRevisionSuggestionItemActionTaken?.value}</td>
+      <td>{returnedIMERCCITLRevisionSuggestionItem.remarks}</td>
+      <td>{returnedIMERCCITLRevisionSuggestionItem.returnedIMERCCITLRevisionId}</td>
+      {editable && (
+        <td>
+          <Link
+            href={`/returned_imerc_citl_revision_suggestion_item/${returnedIMERCCITLRevisionSuggestionItem.id}/action_taken/edit`}
+            className='border rounded'
+          >
+            edit
+          </Link>
+        </td>
+      )}
+    </tr>
   );
 }

@@ -115,79 +115,45 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        ContentSpecialistReview: {
-                          ContentSpecialistSuggestion: {
-                            SubmittedContentSpecialistSuggestion: {
-                              IMERCCITLReviewed: {
-                                IMERCCITLRevision: {
-                                  some: {
-                                    OR: [
-                                      {
-                                        ReturnedIMERCCITLRevision: {
-                                          is: null,
-                                        },
-                                      },
-                                      {
-                                        ReturnedIMERCCITLRevision: {
-                                          SubmittedReturnedIMERCCITLRevision: {
-                                            is: null,
-                                          },
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              },
-                            },
+                  IMERCCITLRevision: {
+                    OR: [
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          SubmittedReturnedIMERCCITLRevision: {
+                            is: null,
                           },
                         },
                       },
-                    },
+                    ],
                   },
                 },
               },
             },
             {
-              NOT: {
-                IMFile: {
-                  some: {
-                    QAMISRevision: {
-                      QAMISChairpersonEndorsement: {
-                        QAMISDepartmentEndorsement: {
-                          ContentSpecialistReview: {
-                            ContentSpecialistSuggestion: {
-                              SubmittedContentSpecialistSuggestion: {
-                                IMERCCITLReviewed: {
-                                  IMERCCITLRevision: {
-                                    some: {
-                                      OR: [
-                                        {
-                                          ReturnedIMERCCITLRevision: {
-                                            is: null,
-                                          },
-                                        },
-                                        {
-                                          ReturnedIMERCCITLRevision: {
-                                            SubmittedReturnedIMERCCITLRevision: {
-                                              is: null,
-                                            },
-                                          },
-                                        },
-                                      ],
-                                      IMERCIDDCoordinatorEndorsement: {
-                                        isNot: null,
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
+              IMFile: {
+                some: {
+                  IMERCCITLRevision: {
+                    OR: [
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          SubmittedReturnedIMERCCITLRevision: {
+                            is: null,
                           },
                         },
                       },
+                    ],
+                    IMERCIDDCoordinatorEndorsement: {
+                      is: null,
                     },
                   },
                 },
@@ -305,79 +271,45 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        ContentSpecialistReview: {
-                          ContentSpecialistSuggestion: {
-                            SubmittedContentSpecialistSuggestion: {
-                              IMERCCITLReviewed: {
-                                IMERCCITLRevision: {
-                                  some: {
-                                    OR: [
-                                      {
-                                        ReturnedIMERCCITLRevision: {
-                                          is: null,
-                                        },
-                                      },
-                                      {
-                                        ReturnedIMERCCITLRevision: {
-                                          SubmittedReturnedIMERCCITLRevision: {
-                                            is: null,
-                                          },
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              },
-                            },
+                  IMERCCITLRevision: {
+                    OR: [
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          SubmittedReturnedIMERCCITLRevision: {
+                            is: null,
                           },
                         },
                       },
-                    },
+                    ],
                   },
                 },
               },
             },
             {
-              NOT: {
-                IMFile: {
-                  some: {
-                    QAMISRevision: {
-                      QAMISChairpersonEndorsement: {
-                        QAMISDepartmentEndorsement: {
-                          ContentSpecialistReview: {
-                            ContentSpecialistSuggestion: {
-                              SubmittedContentSpecialistSuggestion: {
-                                IMERCCITLReviewed: {
-                                  IMERCCITLRevision: {
-                                    some: {
-                                      OR: [
-                                        {
-                                          ReturnedIMERCCITLRevision: {
-                                            is: null,
-                                          },
-                                        },
-                                        {
-                                          ReturnedIMERCCITLRevision: {
-                                            SubmittedReturnedIMERCCITLRevision: {
-                                              is: null,
-                                            },
-                                          },
-                                        },
-                                      ],
-                                      IMERCIDDCoordinatorEndorsement: {
-                                        isNot: null,
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
+              IMFile: {
+                some: {
+                  IMERCCITLRevision: {
+                    OR: [
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          is: null,
+                        },
+                      },
+                      {
+                        ReturnedIMERCCITLRevision: {
+                          SubmittedReturnedIMERCCITLRevision: {
+                            is: null,
                           },
                         },
                       },
+                    ],
+                    IMERCIDDCoordinatorEndorsement: {
+                      is: null,
                     },
                   },
                 },

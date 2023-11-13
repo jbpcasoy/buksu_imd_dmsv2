@@ -202,10 +202,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            ReturnedIMERCCITLRevisionSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });
