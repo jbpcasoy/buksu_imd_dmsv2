@@ -51,6 +51,13 @@ export default async function handler(
                   },
                 },
               },
+              {
+                CoordinatorSuggestion: {
+                  SubmittedCoordinatorSuggestion: {
+                    isNot: null,
+                  },
+                },
+              },
             ],
           },
           orderBy: {
@@ -71,6 +78,13 @@ export default async function handler(
                       },
                     },
                   },
+                },
+              },
+            },
+            {
+              CoordinatorSuggestion: {
+                SubmittedCoordinatorSuggestion: {
+                  isNot: null,
                 },
               },
             },

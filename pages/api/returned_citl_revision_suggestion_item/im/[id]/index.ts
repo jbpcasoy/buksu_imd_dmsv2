@@ -53,36 +53,48 @@ export default async function handler(
                   },
                 },
               },
+              {
+                ReturnedCITLRevision: {
+                  SubmittedReturnedCITLRevision: {
+                    isNot: null,
+                  },
+                },
+              },
             ],
           },
           orderBy: {
             updatedAt: "desc",
           },
         });
-      const count = await prisma.returnedCITLRevisionSuggestionItem.count(
-        {
-          where: {
-            AND: [
-              accessibleBy(ability).ReturnedCITLRevisionSuggestionItem,
-              {
-                ReturnedCITLRevision: {
-                  SubmittedReturnedCITLRevision: {
-                    ReturnedCITLRevision: {
-                      CITLRevision: {
-                        IMFile: {
-                          IM: {
-                            id: req.query.id as string,
-                          },
+      const count = await prisma.returnedCITLRevisionSuggestionItem.count({
+        where: {
+          AND: [
+            accessibleBy(ability).ReturnedCITLRevisionSuggestionItem,
+            {
+              ReturnedCITLRevision: {
+                SubmittedReturnedCITLRevision: {
+                  ReturnedCITLRevision: {
+                    CITLRevision: {
+                      IMFile: {
+                        IM: {
+                          id: req.query.id as string,
                         },
                       },
                     },
                   },
                 },
               },
-            ],
-          },
-        }
-      );
+            },
+            {
+              ReturnedCITLRevision: {
+                SubmittedReturnedCITLRevision: {
+                  isNot: null,
+                },
+              },
+            },
+          ],
+        },
+      });
 
       return res.json({ returnedCITLRevisionSuggestionItems, count });
     } catch (error: any) {
