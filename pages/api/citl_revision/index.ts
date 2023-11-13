@@ -199,10 +199,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            ReturnedCITLRevisionSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });

@@ -1,4 +1,6 @@
+import useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem from "@/hooks/useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem";
 import useReturnedCITLRevisionSuggestionItemsIM from "@/hooks/useReturnedCITLRevisionSuggestionItemsIM";
+import { ReturnedCITLRevisionSuggestionItem } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,11 +19,12 @@ export default function IMReturnedCITLRevisionSuggestionItems({
     id,
   });
 
+  const returnedCITLRevisionSuggestionItems = useReturnedCITLRevisionSuggestionItemsIM(state);
+
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
   }, [id]);
 
-  const returnedCITLRevisionSuggestionItems = useReturnedCITLRevisionSuggestionItemsIM(state);
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -42,7 +45,7 @@ export default function IMReturnedCITLRevisionSuggestionItems({
   return (
     <div>
       <table>
-        <caption>Returned CITL Revision Suggestions</caption>
+        <caption>ReturnedCITLRevision Suggestions</caption>
         <thead>
           <tr>
             <th>id</th>
@@ -57,40 +60,15 @@ export default function IMReturnedCITLRevisionSuggestionItems({
           </tr>
         </thead>
         <tbody>
-          {returnedCITLRevisionSuggestionItems.returnedCITLRevisionSuggestionItems.map(
-            (returnedCITLRevisionSuggestionItem) => {
-              return (
-                <tr key={returnedCITLRevisionSuggestionItem.id}>
-                  <td>{returnedCITLRevisionSuggestionItem.id}</td>
-                  <td>
-                    {new Date(
-                      returnedCITLRevisionSuggestionItem.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      returnedCITLRevisionSuggestionItem.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>{returnedCITLRevisionSuggestionItem.suggestion}</td>
-                  <td>{returnedCITLRevisionSuggestionItem.pageNumber}</td>
-                  <td>{returnedCITLRevisionSuggestionItem.actionTaken}</td>
-                  <td>{returnedCITLRevisionSuggestionItem.remarks}</td>
-                  <td>{returnedCITLRevisionSuggestionItem.returnedCITLRevisionId}</td>
-                  {editable && (
-                    <td>
-                      <Link
-                        href={`/returned_citl_revision_suggestion_item/${returnedCITLRevisionSuggestionItem.id}/action_taken/edit`}
-                        className='border rounded'
-                      >
-                        edit
-                      </Link>
-                    </td>
-                  )}
-                </tr>
-              );
-            }
-          )}
+          {returnedCITLRevisionSuggestionItems.returnedCITLRevisionSuggestionItems.map((returnedCITLRevisionSuggestionItem) => {
+            return (
+              <Item
+                returnedCITLRevisionSuggestionItem={returnedCITLRevisionSuggestionItem}
+                editable={editable}
+                key={returnedCITLRevisionSuggestionItem.id}
+              />
+            );
+          })}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -106,5 +84,41 @@ export default function IMReturnedCITLRevisionSuggestionItems({
         </button>
       </div>
     </div>
+  );
+}
+
+function Item({
+  returnedCITLRevisionSuggestionItem,
+  editable,
+}: {
+  returnedCITLRevisionSuggestionItem: ReturnedCITLRevisionSuggestionItem;
+  editable: boolean;
+}) {
+  const returnedCITLRevisionSuggestionItemActionTaken =
+    useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem({
+      id: returnedCITLRevisionSuggestionItem.id,
+    });
+
+  return (
+    <tr>
+      <td>{returnedCITLRevisionSuggestionItem.id}</td>
+      <td>{new Date(returnedCITLRevisionSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(returnedCITLRevisionSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{returnedCITLRevisionSuggestionItem.suggestion}</td>
+      <td>{returnedCITLRevisionSuggestionItem.pageNumber}</td>
+      <td>{returnedCITLRevisionSuggestionItemActionTaken?.value}</td>
+      <td>{returnedCITLRevisionSuggestionItem.remarks}</td>
+      <td>{returnedCITLRevisionSuggestionItem.returnedCITLRevisionId}</td>
+      {editable && (
+        <td>
+          <Link
+            href={`/returned_citl_revision_suggestion_item/${returnedCITLRevisionSuggestionItem.id}/action_taken/edit`}
+            className='border rounded'
+          >
+            edit
+          </Link>
+        </td>
+      )}
+    </tr>
   );
 }

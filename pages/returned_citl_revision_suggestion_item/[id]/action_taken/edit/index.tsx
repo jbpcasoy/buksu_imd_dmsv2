@@ -1,5 +1,5 @@
 import MainLayout from "@/components/MainLayout";
-import useReturnedCITLRevisionSuggestionItem from "@/hooks/useReturnedCITLRevisionSuggestionItem";
+import useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem from "@/hooks/useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -9,45 +9,56 @@ import * as Yup from "yup";
 export default function ReturnedCITLRevisionSuggestionItemEditPage() {
   const router = useRouter();
   const returnedCITLRevisionSuggestionItemId = router.query.id;
-  const returnedCITLRevisionSuggestionItem = useReturnedCITLRevisionSuggestionItem({
-    id: returnedCITLRevisionSuggestionItemId as string,
-  });
+  const returnedCITLRevisionSuggestionItemActionTaken =
+    useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem({
+      id: returnedCITLRevisionSuggestionItemId as string,
+    });
   const formik = useFormik({
     initialValues: {
-      actionTaken: "",
+      value: "",
     },
     validationSchema: Yup.object({
-      actionTaken: Yup.string().required(),
+      value: Yup.string().required(),
     }),
     onSubmit: (values) => {
-      axios
-        .put(
-          `/api/returned_citl_revision_suggestion_item/${returnedCITLRevisionSuggestionItemId}`,
-          values
-        )
-        .then(() => {
-          alert("Suggestion updated successfully");
-        });
+      if (returnedCITLRevisionSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/returned_citl_revision_suggestion_item_action_taken/${returnedCITLRevisionSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/returned_citl_revision_suggestion_item_action_taken`, {
+            returnedCITLRevisionSuggestionItemId: returnedCITLRevisionSuggestionItemId,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
     },
   });
 
   useEffect(() => {
-    if (!returnedCITLRevisionSuggestionItem) return;
+    if (!returnedCITLRevisionSuggestionItemActionTaken) return;
     formik.setValues({
-      actionTaken: returnedCITLRevisionSuggestionItem.actionTaken ?? "",
+      value: returnedCITLRevisionSuggestionItemActionTaken.value ?? "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [returnedCITLRevisionSuggestionItem]);
+  }, [returnedCITLRevisionSuggestionItemActionTaken]);
 
   return (
     <MainLayout>
       <div>
-        <h2>Returned CITL Revision Suggestion</h2>
+        <h2>ReturnedCITLRevision Review</h2>
         <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='actionTaken'
-            {...formik.getFieldProps("actionTaken")}
-          />
+          <textarea placeholder='value' {...formik.getFieldProps("value")} />
           <br />
           <input type='submit' value='Submit' className='border rounded' />
         </form>
