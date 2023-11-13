@@ -65,7 +65,6 @@ export default async function handler(
   };
 
   const getHandler = async () => {
-    // TODO implement submitted filter
     try {
       const validator = Yup.object({
         take: Yup.number().required(),

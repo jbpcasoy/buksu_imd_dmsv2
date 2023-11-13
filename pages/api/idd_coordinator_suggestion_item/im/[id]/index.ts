@@ -55,6 +55,13 @@ export default async function handler(
                   },
                 },
               },
+              {
+                IDDCoordinatorSuggestion: {
+                  SubmittedIDDCoordinatorSuggestion: {
+                    isNot: null,
+                  },
+                },
+              },
             ],
           },
           orderBy: {

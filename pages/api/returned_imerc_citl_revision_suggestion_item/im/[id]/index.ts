@@ -53,36 +53,48 @@ export default async function handler(
                   },
                 },
               },
+              {
+                ReturnedIMERCCITLRevision: {
+                  SubmittedReturnedIMERCCITLRevision: {
+                    isNot: null,
+                  },
+                },
+              },
             ],
           },
           orderBy: {
             updatedAt: "desc",
           },
         });
-      const count = await prisma.returnedIMERCCITLRevisionSuggestionItem.count(
-        {
-          where: {
-            AND: [
-              accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItem,
-              {
-                ReturnedIMERCCITLRevision: {
-                  SubmittedReturnedIMERCCITLRevision: {
-                    ReturnedIMERCCITLRevision: {
-                      IMERCCITLRevision: {
-                        IMFile: {
-                          IM: {
-                            id: req.query.id as string,
-                          },
+      const count = await prisma.returnedIMERCCITLRevisionSuggestionItem.count({
+        where: {
+          AND: [
+            accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItem,
+            {
+              ReturnedIMERCCITLRevision: {
+                SubmittedReturnedIMERCCITLRevision: {
+                  ReturnedIMERCCITLRevision: {
+                    IMERCCITLRevision: {
+                      IMFile: {
+                        IM: {
+                          id: req.query.id as string,
                         },
                       },
                     },
                   },
                 },
               },
-            ],
-          },
-        }
-      );
+            },
+            {
+              ReturnedIMERCCITLRevision: {
+                SubmittedReturnedIMERCCITLRevision: {
+                  isNot: null,
+                },
+              },
+            },
+          ],
+        },
+      });
 
       return res.json({ returnedIMERCCITLRevisionSuggestionItems, count });
     } catch (error: any) {

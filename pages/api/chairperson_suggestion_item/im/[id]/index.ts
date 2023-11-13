@@ -54,6 +54,13 @@ export default async function handler(
                   },
                 },
               },
+              {
+                ChairpersonSuggestion: {
+                  SubmittedChairpersonSuggestion: {
+                    isNot: null,
+                  },
+                },
+              },
             ],
           },
           orderBy: {
@@ -76,6 +83,13 @@ export default async function handler(
                       },
                     },
                   },
+                },
+              },
+            },
+            {
+              ChairpersonSuggestion: {
+                SubmittedChairpersonSuggestion: {
+                  isNot: null,
                 },
               },
             },

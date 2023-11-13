@@ -58,6 +58,13 @@ export default async function handler(
                   },
                 },
               },
+              {
+                ContentSpecialistSuggestion: {
+                  SubmittedContentSpecialistSuggestion: {
+                    isNot: null,
+                  },
+                },
+              },
             ],
           },
           orderBy: {
@@ -84,6 +91,13 @@ export default async function handler(
                       },
                     },
                   },
+                },
+              },
+            },
+            {
+              ContentSpecialistSuggestion: {
+                SubmittedContentSpecialistSuggestion: {
+                  isNot: null,
                 },
               },
             },

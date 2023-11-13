@@ -53,6 +53,13 @@ export default async function handler(
                   },
                 },
               },
+              {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    isNot: null,
+                  },
+                },
+              },
             ],
           },
           orderBy: {
@@ -76,6 +83,13 @@ export default async function handler(
                         },
                       },
                     },
+                  },
+                },
+              },
+              {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    isNot: null,
                   },
                 },
               },

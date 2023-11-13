@@ -52,6 +52,13 @@ export default async function handler(
                 },
               },
             },
+            {
+              PeerSuggestion: {
+                SubmittedPeerSuggestion: {
+                  isNot: null,
+                },
+              },
+            },
           ],
         },
         orderBy: {
@@ -74,6 +81,13 @@ export default async function handler(
                       },
                     },
                   },
+                },
+              },
+            },
+            {
+              PeerSuggestion: {
+                SubmittedPeerSuggestion: {
+                  isNot: null,
                 },
               },
             },

@@ -53,6 +53,13 @@ export default async function handler(
                 },
               },
             },
+            {
+              QAMISSuggestion: {
+                SubmittedQAMISSuggestion: {
+                  isNot: null,
+                },
+              },
+            },
           ],
         },
         orderBy: {
@@ -75,6 +82,13 @@ export default async function handler(
                       },
                     },
                   },
+                },
+              },
+            },
+            {
+              QAMISSuggestion: {
+                SubmittedQAMISSuggestion: {
+                  isNot: null,
                 },
               },
             },
