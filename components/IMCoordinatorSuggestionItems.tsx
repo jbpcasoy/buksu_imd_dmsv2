@@ -1,4 +1,6 @@
+import useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem from "@/hooks/useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem";
 import useCoordinatorSuggestionItemsIM from "@/hooks/useCoordinatorSuggestionItemsIM";
+import { CoordinatorSuggestionItem } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,11 +19,12 @@ export default function IMCoordinatorSuggestionItems({
     id,
   });
 
+  const coordinatorSuggestionItems = useCoordinatorSuggestionItemsIM(state);
+
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
   }, [id]);
 
-  const coordinatorSuggestionItems = useCoordinatorSuggestionItemsIM(state);
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -57,40 +60,15 @@ export default function IMCoordinatorSuggestionItems({
           </tr>
         </thead>
         <tbody>
-          {coordinatorSuggestionItems.coordinatorSuggestionItems.map(
-            (coordinatorSuggestionItem) => {
-              return (
-                <tr key={coordinatorSuggestionItem.id}>
-                  <td>{coordinatorSuggestionItem.id}</td>
-                  <td>
-                    {new Date(
-                      coordinatorSuggestionItem.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      coordinatorSuggestionItem.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>{coordinatorSuggestionItem.suggestion}</td>
-                  <td>{coordinatorSuggestionItem.pageNumber}</td>
-                  <td>{coordinatorSuggestionItem.actionTaken}</td>
-                  <td>{coordinatorSuggestionItem.remarks}</td>
-                  <td>{coordinatorSuggestionItem.coordinatorSuggestionId}</td>
-                  {editable && (
-                    <td>
-                      <Link
-                        href={`/coordinator_suggestion_item/${coordinatorSuggestionItem.id}/action_taken/edit`}
-                        className='border rounded'
-                      >
-                        edit
-                      </Link>
-                    </td>
-                  )}
-                </tr>
-              );
-            }
-          )}
+          {coordinatorSuggestionItems.coordinatorSuggestionItems.map((coordinatorSuggestionItem) => {
+            return (
+              <Item
+                coordinatorSuggestionItem={coordinatorSuggestionItem}
+                editable={editable}
+                key={coordinatorSuggestionItem.id}
+              />
+            );
+          })}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -106,5 +84,41 @@ export default function IMCoordinatorSuggestionItems({
         </button>
       </div>
     </div>
+  );
+}
+
+function Item({
+  coordinatorSuggestionItem,
+  editable,
+}: {
+  coordinatorSuggestionItem: CoordinatorSuggestionItem;
+  editable: boolean;
+}) {
+  const coordinatorSuggestionItemActionTaken =
+    useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem({
+      id: coordinatorSuggestionItem.id,
+    });
+
+  return (
+    <tr>
+      <td>{coordinatorSuggestionItem.id}</td>
+      <td>{new Date(coordinatorSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(coordinatorSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{coordinatorSuggestionItem.suggestion}</td>
+      <td>{coordinatorSuggestionItem.pageNumber}</td>
+      <td>{coordinatorSuggestionItemActionTaken?.value}</td>
+      <td>{coordinatorSuggestionItem.remarks}</td>
+      <td>{coordinatorSuggestionItem.coordinatorSuggestionId}</td>
+      {editable && (
+        <td>
+          <Link
+            href={`/coordinator_suggestion_item/${coordinatorSuggestionItem.id}/action_taken/edit`}
+            className='border rounded'
+          >
+            edit
+          </Link>
+        </td>
+      )}
+    </tr>
   );
 }

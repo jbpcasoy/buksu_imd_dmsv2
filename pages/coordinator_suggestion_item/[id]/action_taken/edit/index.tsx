@@ -1,5 +1,5 @@
 import MainLayout from "@/components/MainLayout";
-import useCoordinatorSuggestionItem from "@/hooks/useCoordinatorSuggestionItem";
+import useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem from "@/hooks/useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -9,45 +9,56 @@ import * as Yup from "yup";
 export default function CoordinatorSuggestionItemEditPage() {
   const router = useRouter();
   const coordinatorSuggestionItemId = router.query.id;
-  const coordinatorSuggestionItem = useCoordinatorSuggestionItem({
-    id: coordinatorSuggestionItemId as string,
-  });
+  const coordinatorSuggestionItemActionTaken =
+    useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem({
+      id: coordinatorSuggestionItemId as string,
+    });
   const formik = useFormik({
     initialValues: {
-      actionTaken: "",
+      value: "",
     },
     validationSchema: Yup.object({
-      actionTaken: Yup.string().required(),
+      value: Yup.string().required(),
     }),
     onSubmit: (values) => {
-      axios
-        .put(
-          `/api/coordinator_suggestion_item/${coordinatorSuggestionItemId}`,
-          values
-        )
-        .then(() => {
-          alert("Suggestion updated successfully");
-        });
+      if (coordinatorSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/coordinator_suggestion_item_action_taken/${coordinatorSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/coordinator_suggestion_item_action_taken`, {
+            coordinatorSuggestionItemId: coordinatorSuggestionItemId,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
     },
   });
 
   useEffect(() => {
-    if (!coordinatorSuggestionItem) return;
+    if (!coordinatorSuggestionItemActionTaken) return;
     formik.setValues({
-      actionTaken: coordinatorSuggestionItem.actionTaken ?? "",
+      value: coordinatorSuggestionItemActionTaken.value ?? "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coordinatorSuggestionItem]);
+  }, [coordinatorSuggestionItemActionTaken]);
 
   return (
     <MainLayout>
       <div>
         <h2>Coordinator Review</h2>
         <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='actionTaken'
-            {...formik.getFieldProps("actionTaken")}
-          />
+          <textarea placeholder='value' {...formik.getFieldProps("value")} />
           <br />
           <input type='submit' value='Submit' className='border rounded' />
         </form>
