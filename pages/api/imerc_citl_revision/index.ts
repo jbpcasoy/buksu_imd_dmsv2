@@ -94,8 +94,8 @@ export default async function handler(
                 },
               },
             },
-            actionTaken: {
-              equals: null,
+            ContentSpecialistSuggestionItemActionTaken: {
+              is: null,
             },
           },
         });

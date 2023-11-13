@@ -1,4 +1,6 @@
+import useContentSpecialistSuggestionItemActionTakenContentSpecialistSuggestionItem from "@/hooks/useContentSpecialistSuggestionItemActionTakenContentSpecialistSuggestionItem";
 import useContentSpecialistSuggestionItemsIM from "@/hooks/useContentSpecialistSuggestionItemsIM";
+import { ContentSpecialistSuggestionItem } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,22 +19,18 @@ export default function IMContentSpecialistSuggestionItems({
     id,
   });
 
+  const contentSpecialistSuggestionItems = useContentSpecialistSuggestionItemsIM(state);
+
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
   }, [id]);
-
-  const contentSpecialistSuggestionItems =
-    useContentSpecialistSuggestionItemsIM(state);
 
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
       return {
         ...prev,
-        skip:
-          nextVal <= contentSpecialistSuggestionItems.count
-            ? nextVal
-            : prev.skip,
+        skip: nextVal <= contentSpecialistSuggestionItems.count ? nextVal : prev.skip,
       };
     });
   };
@@ -62,44 +60,15 @@ export default function IMContentSpecialistSuggestionItems({
           </tr>
         </thead>
         <tbody>
-          {contentSpecialistSuggestionItems.contentSpecialistSuggestionItems.map(
-            (contentSpecialistSuggestionItem) => {
-              return (
-                <tr key={contentSpecialistSuggestionItem.id}>
-                  <td>{contentSpecialistSuggestionItem.id}</td>
-                  <td>
-                    {new Date(
-                      contentSpecialistSuggestionItem.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      contentSpecialistSuggestionItem.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>{contentSpecialistSuggestionItem.suggestion}</td>
-                  <td>{contentSpecialistSuggestionItem.pageNumber}</td>
-                  <td>{contentSpecialistSuggestionItem.actionTaken}</td>
-                  <td>{contentSpecialistSuggestionItem.remarks}</td>
-                  <td>
-                    {
-                      contentSpecialistSuggestionItem.contentSpecialistSuggestionId
-                    }
-                  </td>
-                  {editable && (
-                    <td>
-                      <Link
-                        href={`/content_specialist_suggestion_item/${contentSpecialistSuggestionItem.id}/action_taken/edit`}
-                        className='border rounded'
-                      >
-                        edit
-                      </Link>
-                    </td>
-                  )}
-                </tr>
-              );
-            }
-          )}
+          {contentSpecialistSuggestionItems.contentSpecialistSuggestionItems.map((contentSpecialistSuggestionItem) => {
+            return (
+              <Item
+                contentSpecialistSuggestionItem={contentSpecialistSuggestionItem}
+                editable={editable}
+                key={contentSpecialistSuggestionItem.id}
+              />
+            );
+          })}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -115,5 +84,41 @@ export default function IMContentSpecialistSuggestionItems({
         </button>
       </div>
     </div>
+  );
+}
+
+function Item({
+  contentSpecialistSuggestionItem,
+  editable,
+}: {
+  contentSpecialistSuggestionItem: ContentSpecialistSuggestionItem;
+  editable: boolean;
+}) {
+  const contentSpecialistSuggestionItemActionTaken =
+    useContentSpecialistSuggestionItemActionTakenContentSpecialistSuggestionItem({
+      id: contentSpecialistSuggestionItem.id,
+    });
+
+  return (
+    <tr>
+      <td>{contentSpecialistSuggestionItem.id}</td>
+      <td>{new Date(contentSpecialistSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(contentSpecialistSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{contentSpecialistSuggestionItem.suggestion}</td>
+      <td>{contentSpecialistSuggestionItem.pageNumber}</td>
+      <td>{contentSpecialistSuggestionItemActionTaken?.value}</td>
+      <td>{contentSpecialistSuggestionItem.remarks}</td>
+      <td>{contentSpecialistSuggestionItem.contentSpecialistSuggestionId}</td>
+      {editable && (
+        <td>
+          <Link
+            href={`/content_specialist_suggestion_item/${contentSpecialistSuggestionItem.id}/action_taken/edit`}
+            className='border rounded'
+          >
+            edit
+          </Link>
+        </td>
+      )}
+    </tr>
   );
 }
