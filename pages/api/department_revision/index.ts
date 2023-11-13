@@ -191,10 +191,8 @@ export default async function handler(
                 },
               },
             },
-            NOT: {
-              actionTaken: {
-                not: null,
-              },
+            ReturnedDepartmentRevisionSuggestionItemActionTaken: {
+              is: null
             },
           },
         });

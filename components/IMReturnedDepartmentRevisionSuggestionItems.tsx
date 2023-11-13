@@ -1,4 +1,6 @@
+import useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem from "@/hooks/useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem";
 import useReturnedDepartmentRevisionSuggestionItemsIM from "@/hooks/useReturnedDepartmentRevisionSuggestionItemsIM";
+import { ReturnedDepartmentRevisionSuggestionItem } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,11 +19,12 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
     id,
   });
 
+  const returnedDepartmentRevisionSuggestionItems = useReturnedDepartmentRevisionSuggestionItemsIM(state);
+
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
   }, [id]);
 
-  const returnedDepartmentRevisionSuggestionItems = useReturnedDepartmentRevisionSuggestionItemsIM(state);
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -42,7 +45,7 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
   return (
     <div>
       <table>
-        <caption>Returned Department Revision Suggestions</caption>
+        <caption>ReturnedDepartmentRevision Suggestions</caption>
         <thead>
           <tr>
             <th>id</th>
@@ -57,40 +60,15 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
           </tr>
         </thead>
         <tbody>
-          {returnedDepartmentRevisionSuggestionItems.returnedDepartmentRevisionSuggestionItems.map(
-            (returnedDepartmentRevisionSuggestionItem) => {
-              return (
-                <tr key={returnedDepartmentRevisionSuggestionItem.id}>
-                  <td>{returnedDepartmentRevisionSuggestionItem.id}</td>
-                  <td>
-                    {new Date(
-                      returnedDepartmentRevisionSuggestionItem.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      returnedDepartmentRevisionSuggestionItem.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>{returnedDepartmentRevisionSuggestionItem.suggestion}</td>
-                  <td>{returnedDepartmentRevisionSuggestionItem.pageNumber}</td>
-                  <td>{returnedDepartmentRevisionSuggestionItem.actionTaken}</td>
-                  <td>{returnedDepartmentRevisionSuggestionItem.remarks}</td>
-                  <td>{returnedDepartmentRevisionSuggestionItem.returnedDepartmentRevisionId}</td>
-                  {editable && (
-                    <td>
-                      <Link
-                        href={`/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItem.id}/action_taken/edit`}
-                        className='border rounded'
-                      >
-                        edit
-                      </Link>
-                    </td>
-                  )}
-                </tr>
-              );
-            }
-          )}
+          {returnedDepartmentRevisionSuggestionItems.returnedDepartmentRevisionSuggestionItems.map((returnedDepartmentRevisionSuggestionItem) => {
+            return (
+              <Item
+                returnedDepartmentRevisionSuggestionItem={returnedDepartmentRevisionSuggestionItem}
+                editable={editable}
+                key={returnedDepartmentRevisionSuggestionItem.id}
+              />
+            );
+          })}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -106,5 +84,41 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
         </button>
       </div>
     </div>
+  );
+}
+
+function Item({
+  returnedDepartmentRevisionSuggestionItem,
+  editable,
+}: {
+  returnedDepartmentRevisionSuggestionItem: ReturnedDepartmentRevisionSuggestionItem;
+  editable: boolean;
+}) {
+  const returnedDepartmentRevisionSuggestionItemActionTaken =
+    useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem({
+      id: returnedDepartmentRevisionSuggestionItem.id,
+    });
+
+  return (
+    <tr>
+      <td>{returnedDepartmentRevisionSuggestionItem.id}</td>
+      <td>{new Date(returnedDepartmentRevisionSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(returnedDepartmentRevisionSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{returnedDepartmentRevisionSuggestionItem.suggestion}</td>
+      <td>{returnedDepartmentRevisionSuggestionItem.pageNumber}</td>
+      <td>{returnedDepartmentRevisionSuggestionItemActionTaken?.value}</td>
+      <td>{returnedDepartmentRevisionSuggestionItem.remarks}</td>
+      <td>{returnedDepartmentRevisionSuggestionItem.returnedDepartmentRevisionId}</td>
+      {editable && (
+        <td>
+          <Link
+            href={`/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItem.id}/action_taken/edit`}
+            className='border rounded'
+          >
+            edit
+          </Link>
+        </td>
+      )}
+    </tr>
   );
 }

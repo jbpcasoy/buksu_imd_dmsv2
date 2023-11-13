@@ -1230,7 +1230,7 @@ model ReturnedDepartmentRevisionSuggestionItem {
     actionTaken                                         String?
     remarks                                             String?
     pageNumber                                          Int
-    ReturnedDepartmentRevisionSuggestionItemActionTaken ReturnedDepartmentRevisionSuggestionItemActionTaken[]
+    ReturnedDepartmentRevisionSuggestionItemActionTaken ReturnedDepartmentRevisionSuggestionItemActionTaken?
 }
 
 model SubmittedReturnedDepartmentRevision {
@@ -1351,6 +1351,6 @@ model ReturnedDepartmentRevisionSuggestionItemActionTaken {
     updatedAt DateTime @updatedAt
 
     ReturnedDepartmentRevisionSuggestionItem   ReturnedDepartmentRevisionSuggestionItem @relation(fields: [returnedDepartmentRevisionSuggestionItemId], references: [id], onDelete: Cascade)
-    returnedDepartmentRevisionSuggestionItemId String
+    returnedDepartmentRevisionSuggestionItemId String @unique
     value                                      String
 }
