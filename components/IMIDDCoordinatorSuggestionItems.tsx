@@ -1,4 +1,6 @@
+import useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem from "@/hooks/useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem";
 import useIDDCoordinatorSuggestionItemsIM from "@/hooks/useIDDCoordinatorSuggestionItemsIM";
+import { IDDCoordinatorSuggestionItem } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,20 +19,18 @@ export default function IMIDDCoordinatorSuggestionItems({
     id,
   });
 
+  const iDDCoordinatorSuggestionItems = useIDDCoordinatorSuggestionItemsIM(state);
+
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
   }, [id]);
-
-  const iDDCoordinatorSuggestionItems =
-    useIDDCoordinatorSuggestionItemsIM(state);
 
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
       return {
         ...prev,
-        skip:
-          nextVal <= iDDCoordinatorSuggestionItems.count ? nextVal : prev.skip,
+        skip: nextVal <= iDDCoordinatorSuggestionItems.count ? nextVal : prev.skip,
       };
     });
   };
@@ -60,42 +60,15 @@ export default function IMIDDCoordinatorSuggestionItems({
           </tr>
         </thead>
         <tbody>
-          {iDDCoordinatorSuggestionItems.iDDCoordinatorSuggestionItems.map(
-            (iDDCoordinatorSuggestionItem) => {
-              return (
-                <tr key={iDDCoordinatorSuggestionItem.id}>
-                  <td>{iDDCoordinatorSuggestionItem.id}</td>
-                  <td>
-                    {new Date(
-                      iDDCoordinatorSuggestionItem.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      iDDCoordinatorSuggestionItem.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>{iDDCoordinatorSuggestionItem.suggestion}</td>
-                  <td>{iDDCoordinatorSuggestionItem.pageNumber}</td>
-                  <td>{iDDCoordinatorSuggestionItem.actionTaken}</td>
-                  <td>{iDDCoordinatorSuggestionItem.remarks}</td>
-                  <td>
-                    {iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}
-                  </td>
-                  {editable && (
-                    <td>
-                      <Link
-                        href={`/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}/action_taken/edit`}
-                        className='border rounded'
-                      >
-                        edit
-                      </Link>
-                    </td>
-                  )}
-                </tr>
-              );
-            }
-          )}
+          {iDDCoordinatorSuggestionItems.iDDCoordinatorSuggestionItems.map((iDDCoordinatorSuggestionItem) => {
+            return (
+              <Item
+                iDDCoordinatorSuggestionItem={iDDCoordinatorSuggestionItem}
+                editable={editable}
+                key={iDDCoordinatorSuggestionItem.id}
+              />
+            );
+          })}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -111,5 +84,41 @@ export default function IMIDDCoordinatorSuggestionItems({
         </button>
       </div>
     </div>
+  );
+}
+
+function Item({
+  iDDCoordinatorSuggestionItem,
+  editable,
+}: {
+  iDDCoordinatorSuggestionItem: IDDCoordinatorSuggestionItem;
+  editable: boolean;
+}) {
+  const iDDCoordinatorSuggestionItemActionTaken =
+    useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem({
+      id: iDDCoordinatorSuggestionItem.id,
+    });
+
+  return (
+    <tr>
+      <td>{iDDCoordinatorSuggestionItem.id}</td>
+      <td>{new Date(iDDCoordinatorSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(iDDCoordinatorSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{iDDCoordinatorSuggestionItem.suggestion}</td>
+      <td>{iDDCoordinatorSuggestionItem.pageNumber}</td>
+      <td>{iDDCoordinatorSuggestionItemActionTaken?.value}</td>
+      <td>{iDDCoordinatorSuggestionItem.remarks}</td>
+      <td>{iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}</td>
+      {editable && (
+        <td>
+          <Link
+            href={`/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}/action_taken/edit`}
+            className='border rounded'
+          >
+            edit
+          </Link>
+        </td>
+      )}
+    </tr>
   );
 }

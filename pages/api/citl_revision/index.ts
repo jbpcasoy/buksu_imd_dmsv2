@@ -166,8 +166,8 @@ export default async function handler(
                 },
               },
             },
-            actionTaken: {
-              equals: null,
+            IDDCoordinatorSuggestionItemActionTaken: {
+              is: null,
             },
           },
         }

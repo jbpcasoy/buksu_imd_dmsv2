@@ -1,5 +1,5 @@
 import MainLayout from "@/components/MainLayout";
-import useIDDCoordinatorSuggestionItem from "@/hooks/useIDDCoordinatorSuggestionItem";
+import useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem from "@/hooks/useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -9,46 +9,56 @@ import * as Yup from "yup";
 export default function IDDCoordinatorSuggestionItemEditPage() {
   const router = useRouter();
   const iDDCoordinatorSuggestionItemId = router.query.id;
-  const iDDCoordinatorSuggestionItem = useIDDCoordinatorSuggestionItem({
-    id: iDDCoordinatorSuggestionItemId as string,
-  });
+  const iDDCoordinatorSuggestionItemActionTaken =
+    useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem({
+      id: iDDCoordinatorSuggestionItemId as string,
+    });
   const formik = useFormik({
     initialValues: {
-      actionTaken: "",
+      value: "",
     },
     validationSchema: Yup.object({
-      actionTaken: Yup.string().required(),
+      value: Yup.string().required(),
     }),
     onSubmit: (values) => {
-      axios
-        .put(
-          `/api/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItemId}`,
-          values
-        )
-        .then(() => {
-          alert("Suggestion updated successfully");
-          router.reload();
-        });
+      if (iDDCoordinatorSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/idd_coordinator_suggestion_item_action_taken/${iDDCoordinatorSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/idd_coordinator_suggestion_item_action_taken`, {
+            iDDCoordinatorSuggestionItemId: iDDCoordinatorSuggestionItemId,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
     },
   });
 
   useEffect(() => {
-    if (!iDDCoordinatorSuggestionItem) return;
+    if (!iDDCoordinatorSuggestionItemActionTaken) return;
     formik.setValues({
-      actionTaken: iDDCoordinatorSuggestionItem.actionTaken ?? "",
+      value: iDDCoordinatorSuggestionItemActionTaken.value ?? "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [iDDCoordinatorSuggestionItem]);
+  }, [iDDCoordinatorSuggestionItemActionTaken]);
 
   return (
     <MainLayout>
       <div>
         <h2>IDDCoordinator Review</h2>
         <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='actionTaken'
-            {...formik.getFieldProps("actionTaken")}
-          />
+          <textarea placeholder='value' {...formik.getFieldProps("value")} />
           <br />
           <input type='submit' value='Submit' className='border rounded' />
         </form>
