@@ -71,9 +71,9 @@ export default function AddPeerReviewPage() {
       q7_3: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q7_4: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
       q7_5: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
-      q8_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
-      q8_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
-      q8_3: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
+      q8_1: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).optional(),
+      q8_2: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).optional(),
+      q8_3: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).optional(),
     }),
     onSubmit: (values) => {
       if (!departmentReview || !activeFaculty) {
