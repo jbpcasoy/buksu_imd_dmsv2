@@ -87,6 +87,7 @@ import {
   CoordinatorSuggestionItemActionTaken,
   ReturnedDepartmentRevisionSuggestionItemActionTaken,
   IDDCoordinatorSuggestionItemActionTaken,
+  ReturnedCITLRevisionSuggestionItemActionTaken,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -178,6 +179,7 @@ export type AppSubjects =
       CoordinatorSuggestionItemActionTaken: CoordinatorSuggestionItemActionTaken;
       ReturnedDepartmentRevisionSuggestionItemActionTaken: ReturnedDepartmentRevisionSuggestionItemActionTaken;
       IDDCoordinatorSuggestionItemActionTaken: IDDCoordinatorSuggestionItemActionTaken;
+      ReturnedCITLRevisionSuggestionItemActionTaken: ReturnedCITLRevisionSuggestionItemActionTaken;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 

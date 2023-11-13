@@ -62,7 +62,6 @@ export default function ReturnedDepartmentRevisionSuggestionItemActionTakensPage
                         returnedDepartmentRevisionSuggestionItemActionTaken.updatedAt
                       ).toLocaleString()}
                     </td>
-                    <td>{returnedDepartmentRevisionSuggestionItemActionTaken.value}</td>
                     <td>
                       <Link
                         href={`/crud/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItemActionTaken.returnedDepartmentRevisionSuggestionItemId}`}
@@ -71,6 +70,7 @@ export default function ReturnedDepartmentRevisionSuggestionItemActionTakensPage
                         {returnedDepartmentRevisionSuggestionItemActionTaken.returnedDepartmentRevisionSuggestionItemId}
                       </Link>
                     </td>
+                    <td>{returnedDepartmentRevisionSuggestionItemActionTaken.value}</td>
                     <td>
                       <Link
                         href={`/crud/returned_department_revision_suggestion_item_action_taken/${returnedDepartmentRevisionSuggestionItemActionTaken.id}`}

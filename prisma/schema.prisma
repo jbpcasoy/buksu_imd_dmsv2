@@ -1262,12 +1262,13 @@ model ReturnedCITLRevisionSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedCITLRevision   ReturnedCITLRevision @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
-    returnedCITLRevisionId String
-    suggestion             String
-    actionTaken            String?
-    remarks                String?
-    pageNumber             Int
+    ReturnedCITLRevision                          ReturnedCITLRevision                           @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
+    returnedCITLRevisionId                        String
+    suggestion                                    String
+    actionTaken                                   String?
+    remarks                                       String?
+    pageNumber                                    Int
+    ReturnedCITLRevisionSuggestionItemActionTaken ReturnedCITLRevisionSuggestionItemActionTaken?
 }
 
 model SubmittedReturnedCITLRevision {
@@ -1364,4 +1365,14 @@ model IDDCoordinatorSuggestionItemActionTaken {
     IDDCoordinatorSuggestionItem   IDDCoordinatorSuggestionItem @relation(fields: [iDDCoordinatorSuggestionItemId], references: [id], onDelete: Cascade)
     iDDCoordinatorSuggestionItemId String                       @unique
     value                          String
+}
+
+model ReturnedCITLRevisionSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedCITLRevisionSuggestionItem   ReturnedCITLRevisionSuggestionItem @relation(fields: [returnedCITLRevisionSuggestionItemId], references: [id])
+    returnedCITLRevisionSuggestionItemId String                             @unique
+    value                                String
 }

@@ -62,7 +62,6 @@ export default function PeerSuggestionItemActionTakensPage() {
                         peerSuggestionItemActionTaken.updatedAt
                       ).toLocaleString()}
                     </td>
-                    <td>{peerSuggestionItemActionTaken.value}</td>
                     <td>
                       <Link
                         href={`/crud/peer_suggestion_item/${peerSuggestionItemActionTaken.peerSuggestionItemId}`}
@@ -71,6 +70,7 @@ export default function PeerSuggestionItemActionTakensPage() {
                         {peerSuggestionItemActionTaken.peerSuggestionItemId}
                       </Link>
                     </td>
+                    <td>{peerSuggestionItemActionTaken.value}</td>
                     <td>
                       <Link
                         href={`/crud/peer_suggestion_item_action_taken/${peerSuggestionItemActionTaken.id}`}

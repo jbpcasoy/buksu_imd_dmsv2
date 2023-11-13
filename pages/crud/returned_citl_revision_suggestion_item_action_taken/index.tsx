@@ -1,12 +1,12 @@
 import CrudLayout from "@/components/CrudLayout";
-import useCoordinatorSuggestionItemActionTakens from "@/hooks/useCoordinatorSuggestionItemActionTakens";
+import useReturnedCITLRevisionSuggestionItemActionTakens from "@/hooks/useReturnedCITLRevisionSuggestionItemActionTakens";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function CoordinatorSuggestionItemActionTakensPage() {
+export default function ReturnedCITLRevisionSuggestionItemActionTakensPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { coordinatorSuggestionItemActionTakens, count } =
-    useCoordinatorSuggestionItemActionTakens(state);
+  const { returnedCITLRevisionSuggestionItemActionTakens, count } =
+    useReturnedCITLRevisionSuggestionItemActionTakens(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -25,10 +25,10 @@ export default function CoordinatorSuggestionItemActionTakensPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>CoordinatorSuggestionItemActionTaken</h2>
+        <h2>ReturnedCITLRevisionSuggestionItemActionTaken</h2>
         <Link
           className='border rounded'
-          href={`/crud/coordinator_suggestion_item_action_taken/add`}
+          href={`/crud/returned_citl_revision_suggestion_item_action_taken/add`}
         >
           Add
         </Link>
@@ -41,41 +41,39 @@ export default function CoordinatorSuggestionItemActionTakensPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>coordinatorSuggestionItemId</th>
+              <th>returnedCITLRevisionSuggestionItemId</th>
               <th>value</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {coordinatorSuggestionItemActionTakens.map(
-              (coordinatorSuggestionItemActionTaken) => {
+            {returnedCITLRevisionSuggestionItemActionTakens.map(
+              (returnedCITLRevisionSuggestionItemActionTaken) => {
                 return (
-                  <tr key={coordinatorSuggestionItemActionTaken.id}>
-                    <td>{coordinatorSuggestionItemActionTaken.id}</td>
+                  <tr key={returnedCITLRevisionSuggestionItemActionTaken.id}>
+                    <td>{returnedCITLRevisionSuggestionItemActionTaken.id}</td>
                     <td>
                       {new Date(
-                        coordinatorSuggestionItemActionTaken.createdAt
+                        returnedCITLRevisionSuggestionItemActionTaken.createdAt
                       ).toLocaleString()}
                     </td>
                     <td>
                       {new Date(
-                        coordinatorSuggestionItemActionTaken.updatedAt
+                        returnedCITLRevisionSuggestionItemActionTaken.updatedAt
                       ).toLocaleString()}
                     </td>
                     <td>
                       <Link
-                        href={`/crud/coordinator_suggestion_item/${coordinatorSuggestionItemActionTaken.coordinatorSuggestionItemId}`}
+                        href={`/crud/returned_citl_revision_suggestion_item/${returnedCITLRevisionSuggestionItemActionTaken.returnedCITLRevisionSuggestionItemId}`}
                         className='underline'
                       >
-                        {
-                          coordinatorSuggestionItemActionTaken.coordinatorSuggestionItemId
-                        }
+                        {returnedCITLRevisionSuggestionItemActionTaken.returnedCITLRevisionSuggestionItemId}
                       </Link>
                     </td>
-                    <td>{coordinatorSuggestionItemActionTaken.value}</td>
+                    <td>{returnedCITLRevisionSuggestionItemActionTaken.value}</td>
                     <td>
                       <Link
-                        href={`/crud/coordinator_suggestion_item_action_taken/${coordinatorSuggestionItemActionTaken.id}`}
+                        href={`/crud/returned_citl_revision_suggestion_item_action_taken/${returnedCITLRevisionSuggestionItemActionTaken.id}`}
                         className='border rounded'
                       >
                         view
