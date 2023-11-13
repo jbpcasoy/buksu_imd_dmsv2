@@ -1,4 +1,6 @@
+import useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem from "@/hooks/useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem";
 import useChairpersonSuggestionItemsIM from "@/hooks/useChairpersonSuggestionItemsIM";
+import { ChairpersonSuggestionItem } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,11 +19,12 @@ export default function IMChairpersonSuggestionItems({
     id,
   });
 
+  const chairpersonSuggestionItems = useChairpersonSuggestionItemsIM(state);
+
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
   }, [id]);
 
-  const chairpersonSuggestionItems = useChairpersonSuggestionItemsIM(state);
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -57,40 +60,15 @@ export default function IMChairpersonSuggestionItems({
           </tr>
         </thead>
         <tbody>
-          {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
-            (chairpersonSuggestionItem) => {
-              return (
-                <tr key={chairpersonSuggestionItem.id}>
-                  <td>{chairpersonSuggestionItem.id}</td>
-                  <td>
-                    {new Date(
-                      chairpersonSuggestionItem.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      chairpersonSuggestionItem.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>{chairpersonSuggestionItem.suggestion}</td>
-                  <td>{chairpersonSuggestionItem.pageNumber}</td>
-                  <td>{chairpersonSuggestionItem.actionTaken}</td>
-                  <td>{chairpersonSuggestionItem.remarks}</td>
-                  <td>{chairpersonSuggestionItem.chairpersonSuggestionId}</td>
-                  {editable && (
-                    <td>
-                      <Link
-                        href={`/chairperson_suggestion_item/${chairpersonSuggestionItem.id}/action_taken/edit`}
-                        className='border rounded'
-                      >
-                        edit
-                      </Link>
-                    </td>
-                  )}
-                </tr>
-              );
-            }
-          )}
+          {chairpersonSuggestionItems.chairpersonSuggestionItems.map((chairpersonSuggestionItem) => {
+            return (
+              <Item
+                chairpersonSuggestionItem={chairpersonSuggestionItem}
+                editable={editable}
+                key={chairpersonSuggestionItem.id}
+              />
+            );
+          })}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -106,5 +84,41 @@ export default function IMChairpersonSuggestionItems({
         </button>
       </div>
     </div>
+  );
+}
+
+function Item({
+  chairpersonSuggestionItem,
+  editable,
+}: {
+  chairpersonSuggestionItem: ChairpersonSuggestionItem;
+  editable: boolean;
+}) {
+  const chairpersonSuggestionItemActionTaken =
+    useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem({
+      id: chairpersonSuggestionItem.id,
+    });
+
+  return (
+    <tr>
+      <td>{chairpersonSuggestionItem.id}</td>
+      <td>{new Date(chairpersonSuggestionItem.createdAt).toLocaleString()}</td>
+      <td>{new Date(chairpersonSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>{chairpersonSuggestionItem.suggestion}</td>
+      <td>{chairpersonSuggestionItem.pageNumber}</td>
+      <td>{chairpersonSuggestionItemActionTaken?.value}</td>
+      <td>{chairpersonSuggestionItem.remarks}</td>
+      <td>{chairpersonSuggestionItem.chairpersonSuggestionId}</td>
+      {editable && (
+        <td>
+          <Link
+            href={`/chairperson_suggestion_item/${chairpersonSuggestionItem.id}/action_taken/edit`}
+            className='border rounded'
+          >
+            edit
+          </Link>
+        </td>
+      )}
+    </tr>
   );
 }
