@@ -1224,12 +1224,13 @@ model ReturnedDepartmentRevisionSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
-    returnedDepartmentRevisionId String
-    suggestion                   String
-    actionTaken                  String?
-    remarks                      String?
-    pageNumber                   Int
+    ReturnedDepartmentRevision                          ReturnedDepartmentRevision                            @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
+    returnedDepartmentRevisionId                        String
+    suggestion                                          String
+    actionTaken                                         String?
+    remarks                                             String?
+    pageNumber                                          Int
+    ReturnedDepartmentRevisionSuggestionItemActionTaken ReturnedDepartmentRevisionSuggestionItemActionTaken[]
 }
 
 model SubmittedReturnedDepartmentRevision {
@@ -1342,4 +1343,14 @@ model CoordinatorSuggestionItemActionTaken {
     CoordinatorSuggestionItem   CoordinatorSuggestionItem @relation(fields: [coordinatorSuggestionItemId], references: [id], onDelete: Cascade)
     coordinatorSuggestionItemId String                    @unique
     value                       String
+}
+
+model ReturnedDepartmentRevisionSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedDepartmentRevisionSuggestionItem   ReturnedDepartmentRevisionSuggestionItem @relation(fields: [returnedDepartmentRevisionSuggestionItemId], references: [id], onDelete: Cascade)
+    returnedDepartmentRevisionSuggestionItemId String
+    value                                      String
 }

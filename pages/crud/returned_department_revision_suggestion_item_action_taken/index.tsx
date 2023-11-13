@@ -1,12 +1,12 @@
 import CrudLayout from "@/components/CrudLayout";
-import useReturnedDepartmentRevisionSuggestionItems from "@/hooks/useReturnedDepartmentRevisionSuggestionItems";
+import useReturnedDepartmentRevisionSuggestionItemActionTakens from "@/hooks/useReturnedDepartmentRevisionSuggestionItemActionTakens";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function ReturnedDepartmentRevisionSuggestionItemsPage() {
+export default function ReturnedDepartmentRevisionSuggestionItemActionTakensPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { returnedDepartmentRevisionSuggestionItems, count } =
-    useReturnedDepartmentRevisionSuggestionItems(state);
+  const { returnedDepartmentRevisionSuggestionItemActionTakens, count } =
+    useReturnedDepartmentRevisionSuggestionItemActionTakens(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -25,10 +25,10 @@ export default function ReturnedDepartmentRevisionSuggestionItemsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>ReturnedDepartmentRevisionSuggestionItem</h2>
+        <h2>ReturnedDepartmentRevisionSuggestionItemActionTaken</h2>
         <Link
           className='border rounded'
-          href={`/crud/returned_department_revision_suggestion_item/add`}
+          href={`/crud/returned_department_revision_suggestion_item_action_taken/add`}
         >
           Add
         </Link>
@@ -41,51 +41,39 @@ export default function ReturnedDepartmentRevisionSuggestionItemsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>returnedDepartmentRevisionId</th>
-              <th>pageNumber</th>
-              <th>suggestion</th>
-              <th>remarks</th>
+              <th>returnedDepartmentRevisionSuggestionItemId</th>
+              <th>value</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {returnedDepartmentRevisionSuggestionItems.map(
-              (returnedDepartmentRevisionSuggestionItem) => {
+            {returnedDepartmentRevisionSuggestionItemActionTakens.map(
+              (returnedDepartmentRevisionSuggestionItemActionTaken) => {
                 return (
-                  <tr key={returnedDepartmentRevisionSuggestionItem.id}>
-                    <td>{returnedDepartmentRevisionSuggestionItem.id}</td>
+                  <tr key={returnedDepartmentRevisionSuggestionItemActionTaken.id}>
+                    <td>{returnedDepartmentRevisionSuggestionItemActionTaken.id}</td>
                     <td>
                       {new Date(
-                        returnedDepartmentRevisionSuggestionItem.createdAt
+                        returnedDepartmentRevisionSuggestionItemActionTaken.createdAt
                       ).toLocaleString()}
                     </td>
                     <td>
                       {new Date(
-                        returnedDepartmentRevisionSuggestionItem.updatedAt
+                        returnedDepartmentRevisionSuggestionItemActionTaken.updatedAt
                       ).toLocaleString()}
                     </td>
+                    <td>{returnedDepartmentRevisionSuggestionItemActionTaken.value}</td>
                     <td>
                       <Link
-                        href={`/crud/returned_department_revision/${returnedDepartmentRevisionSuggestionItem.returnedDepartmentRevisionId}`}
+                        href={`/crud/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItemActionTaken.returnedDepartmentRevisionSuggestionItemId}`}
                         className='underline'
                       >
-                        {
-                          returnedDepartmentRevisionSuggestionItem.returnedDepartmentRevisionId
-                        }
+                        {returnedDepartmentRevisionSuggestionItemActionTaken.returnedDepartmentRevisionSuggestionItemId}
                       </Link>
                     </td>
                     <td>
-                      {returnedDepartmentRevisionSuggestionItem.pageNumber}
-                    </td>
-                    <td>
-                      {returnedDepartmentRevisionSuggestionItem.suggestion}
-                    </td>
-                    <td>
-                      {returnedDepartmentRevisionSuggestionItem.remarks}
-                    </td>
-                    <td>
                       <Link
-                        href={`/crud/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItem.id}`}
+                        href={`/crud/returned_department_revision_suggestion_item_action_taken/${returnedDepartmentRevisionSuggestionItemActionTaken.id}`}
                         className='border rounded'
                       >
                         view

@@ -85,6 +85,7 @@ import {
   PeerSuggestionItemActionTaken,
   ChairpersonSuggestionItemActionTaken,
   CoordinatorSuggestionItemActionTaken,
+  ReturnedDepartmentRevisionSuggestionItemActionTaken,
 } from "@prisma/client";
 
 export type AppSubjects =
@@ -174,6 +175,7 @@ export type AppSubjects =
       PeerSuggestionItemActionTaken: PeerSuggestionItemActionTaken;
       ChairpersonSuggestionItemActionTaken: ChairpersonSuggestionItemActionTaken;
       CoordinatorSuggestionItemActionTaken: CoordinatorSuggestionItemActionTaken;
+      ReturnedDepartmentRevisionSuggestionItemActionTaken: ReturnedDepartmentRevisionSuggestionItemActionTaken;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
