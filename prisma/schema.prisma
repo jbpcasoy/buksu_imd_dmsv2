@@ -1210,6 +1210,7 @@ model Announcement {
     url         String?
 }
 
+// TODO add event on returned revision
 model ReturnedDepartmentRevision {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())

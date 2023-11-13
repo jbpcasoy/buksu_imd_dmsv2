@@ -21,7 +21,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
   const ability = eventAbility({ user });
-  // TODO fix notification queries
 
   const getHandler = async () => {
     try {
@@ -330,48 +329,22 @@ export default async function handler(
           },
           {
             type: "COORDINATOR_ENDORSEMENT_CREATED",
-            CoordinatorEndorsement: {
-              DepartmentRevision: {
-                DepartmentReviewed: {
-                  SubmittedPeerSuggestion: {
-                    PeerSuggestion: {
-                      PeerReview: {
-                        DepartmentReview: {
-                          IMFile: {
-                            IM: {
-                              Faculty: {
-                                User: {
-                                  id: {
-                                    equals: user.id,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          {
-            type: "DEAN_ENDORSEMENT_CREATED",
-            DeanEndorsement: {
-              CoordinatorEndorsement: {
-                DepartmentRevision: {
-                  DepartmentReviewed: {
-                    SubmittedPeerSuggestion: {
-                      PeerSuggestion: {
-                        PeerReview: {
-                          DepartmentReview: {
-                            IMFile: {
-                              IM: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
+            OR: [
+              {
+                CoordinatorEndorsement: {
+                  DepartmentRevision: {
+                    DepartmentReviewed: {
+                      SubmittedPeerSuggestion: {
+                        PeerSuggestion: {
+                          PeerReview: {
+                            DepartmentReview: {
+                              IMFile: {
+                                IM: {
+                                  Faculty: {
+                                    User: {
+                                      id: {
+                                        equals: user.id,
+                                      },
                                     },
                                   },
                                 },
@@ -384,7 +357,97 @@ export default async function handler(
                   },
                 },
               },
-            },
+              {
+                CoordinatorEndorsement: {
+                  DepartmentRevision: {
+                    DepartmentReviewed: {
+                      SubmittedPeerSuggestion: {
+                        PeerSuggestion: {
+                          PeerReview: {
+                            DepartmentReview: {
+                              IMFile: {
+                                IM: {
+                                  Faculty: {
+                                    Department: {
+                                      College: {
+                                        Department: {
+                                          some: {
+                                            Faculty: {
+                                              some: {
+                                                Dean: {
+                                                  ActiveDean: {
+                                                    Dean: {
+                                                      Faculty: {
+                                                        User: {
+                                                          id: {
+                                                            equals: user.id,
+                                                          },
+                                                        },
+                                                      },
+                                                    },
+                                                  },
+                                                },
+                                              },
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            type: "DEAN_ENDORSEMENT_CREATED",
+            OR: [
+              {
+                DeanEndorsement: {
+                  CoordinatorEndorsement: {
+                    DepartmentRevision: {
+                      DepartmentReviewed: {
+                        SubmittedPeerSuggestion: {
+                          PeerSuggestion: {
+                            PeerReview: {
+                              DepartmentReview: {
+                                IMFile: {
+                                  IM: {
+                                    Faculty: {
+                                      User: {
+                                        id: {
+                                          equals: user.id,
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              activeIDDCoordinator
+                ? {
+                    type: "DEAN_ENDORSEMENT_CREATED",
+                  }
+                : {
+                    NOT: {
+                      type: "DEAN_ENDORSEMENT_CREATED",
+                    },
+                  },
+            ],
           },
           {
             type: "SUBMITTED_IDD_COORDINATOR_SUGGESTION_CREATED",
@@ -412,35 +475,48 @@ export default async function handler(
           },
           {
             type: "CITL_REVISION_CREATED",
-            CITLRevision: {
-              IDDCoordinatorEndorsement: {
-                IDDCoordinator: {
-                  User: {
-                    id: {
-                      equals: user.id,
+            OR: [
+              activeIDDCoordinator
+                ? {
+                    type: "CITL_REVISION_CREATED",
+                  }
+                : {
+                    NOT: {
+                      type: "CITL_REVISION_CREATED",
                     },
                   },
-                },
-              },
-            },
+            ],
           },
           {
             type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
-            IDDCoordinatorEndorsement: {
-              CITLRevision: {
-                IMFile: {
-                  IM: {
-                    Faculty: {
-                      User: {
-                        id: {
-                          equals: user.id,
+            OR: [
+              {
+                IDDCoordinatorEndorsement: {
+                  CITLRevision: {
+                    IMFile: {
+                      IM: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
+                            },
+                          },
                         },
                       },
                     },
                   },
                 },
               },
-            },
+              activeCITLDirector
+                ? {
+                    type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
+                  }
+                : {
+                    NOT: {
+                      type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
+                    },
+                  },
+            ],
           },
           {
             type: "CITL_DIRECTOR_ENDORSEMENT_CREATED",
@@ -1098,209 +1174,235 @@ export default async function handler(
           },
           {
             type: "IMERC_CITL_REVISION_CREATED",
-            IMERCCITLRevision: {
-              IMERCCITLReviewed: {
-                SubmittedContentEditorSuggestion: {
-                  ContentEditorSuggestion: {
-                    ContentEditorReview: {
-                      QAMISDepartmentEndorsement: {
-                        AND: [
-                          {
-                            QAMISCoordinatorEndorsement: {
-                              QAMISRevision: {
-                                IMFile: {
-                                  IM: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+            OR: [
+              {
+                IMERCCITLRevision: {
+                  IMERCCITLReviewed: {
+                    SubmittedContentEditorSuggestion: {
+                      ContentEditorSuggestion: {
+                        ContentEditorReview: {
+                          QAMISDepartmentEndorsement: {
+                            AND: [
+                              {
+                                QAMISCoordinatorEndorsement: {
+                                  QAMISRevision: {
+                                    IMFile: {
+                                      IM: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
                                         },
                                       },
                                     },
                                   },
                                 },
                               },
-                            },
-                          },
-                          {
-                            QAMISChairpersonEndorsement: {
-                              QAMISRevision: {
-                                IMFile: {
-                                  IM: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+                              {
+                                QAMISChairpersonEndorsement: {
+                                  QAMISRevision: {
+                                    IMFile: {
+                                      IM: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
                                         },
                                       },
                                     },
                                   },
                                 },
                               },
-                            },
-                          },
-                          {
-                            QAMISDeanEndorsement: {
-                              QAMISRevision: {
-                                IMFile: {
-                                  IM: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+                              {
+                                QAMISDeanEndorsement: {
+                                  QAMISRevision: {
+                                    IMFile: {
+                                      IM: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
                                         },
                                       },
                                     },
                                   },
                                 },
                               },
-                            },
+                            ],
                           },
-                        ],
+                        },
                       },
                     },
-                  },
-                },
-                SubmittedContentSpecialistSuggestion: {
-                  ContentSpecialistSuggestion: {
-                    ContentSpecialistReview: {
-                      QAMISDepartmentEndorsement: {
-                        AND: [
-                          {
-                            QAMISCoordinatorEndorsement: {
-                              QAMISRevision: {
-                                IMFile: {
-                                  IM: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+                    SubmittedContentSpecialistSuggestion: {
+                      ContentSpecialistSuggestion: {
+                        ContentSpecialistReview: {
+                          QAMISDepartmentEndorsement: {
+                            AND: [
+                              {
+                                QAMISCoordinatorEndorsement: {
+                                  QAMISRevision: {
+                                    IMFile: {
+                                      IM: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
                                         },
                                       },
                                     },
                                   },
                                 },
                               },
-                            },
-                          },
-                          {
-                            QAMISChairpersonEndorsement: {
-                              QAMISRevision: {
-                                IMFile: {
-                                  IM: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+                              {
+                                QAMISChairpersonEndorsement: {
+                                  QAMISRevision: {
+                                    IMFile: {
+                                      IM: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
                                         },
                                       },
                                     },
                                   },
                                 },
                               },
-                            },
-                          },
-                          {
-                            QAMISDeanEndorsement: {
-                              QAMISRevision: {
-                                IMFile: {
-                                  IM: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+                              {
+                                QAMISDeanEndorsement: {
+                                  QAMISRevision: {
+                                    IMFile: {
+                                      IM: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
                                         },
                                       },
                                     },
                                   },
                                 },
                               },
-                            },
+                            ],
                           },
-                        ],
+                        },
                       },
                     },
-                  },
-                },
-                SubmittedIDDSpecialistSuggestion: {
-                  IDDSpecialistSuggestion: {
-                    IDDSpecialistReview: {
-                      QAMISDepartmentEndorsement: {
-                        AND: [
-                          {
-                            QAMISCoordinatorEndorsement: {
-                              QAMISRevision: {
-                                IMFile: {
-                                  IM: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+                    SubmittedIDDSpecialistSuggestion: {
+                      IDDSpecialistSuggestion: {
+                        IDDSpecialistReview: {
+                          QAMISDepartmentEndorsement: {
+                            AND: [
+                              {
+                                QAMISCoordinatorEndorsement: {
+                                  QAMISRevision: {
+                                    IMFile: {
+                                      IM: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
                                         },
                                       },
                                     },
                                   },
                                 },
                               },
-                            },
-                          },
-                          {
-                            QAMISChairpersonEndorsement: {
-                              QAMISRevision: {
-                                IMFile: {
-                                  IM: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+                              {
+                                QAMISChairpersonEndorsement: {
+                                  QAMISRevision: {
+                                    IMFile: {
+                                      IM: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
                                         },
                                       },
                                     },
                                   },
                                 },
                               },
-                            },
-                          },
-                          {
-                            QAMISDeanEndorsement: {
-                              QAMISRevision: {
-                                IMFile: {
-                                  IM: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+                              {
+                                QAMISDeanEndorsement: {
+                                  QAMISRevision: {
+                                    IMFile: {
+                                      IM: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
                                         },
                                       },
                                     },
                                   },
                                 },
                               },
-                            },
+                            ],
                           },
-                        ],
+                        },
                       },
                     },
                   },
                 },
               },
-            },
+              activeIDDCoordinator
+                ? {
+                    type: "IMERC_CITL_REVISION_CREATED",
+                  }
+                : {
+                    NOT: {
+                      type: "IMERC_CITL_REVISION_CREATED",
+                    },
+                  },
+            ],
           },
           {
             type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
-            IMERCIDDCoordinatorEndorsement: {
-              IMERCCITLRevision: {
-                IMFile: {
-                  IM: {
-                    Faculty: {
-                      User: {
-                        id: user.id,
+            OR: [
+              {
+                IMERCIDDCoordinatorEndorsement: {
+                  IMERCCITLRevision: {
+                    IMFile: {
+                      IM: {
+                        Faculty: {
+                          User: {
+                            id: user.id,
+                          },
+                        },
                       },
                     },
                   },
                 },
               },
-            },
+              activeCITLDirector
+                ? {
+                    type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
+                  }
+                : {
+                    NOT: {
+                      type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
+                    },
+                  },
+            ],
           },
           {
             type: "IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED",
@@ -1469,7 +1571,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedPeerSuggestion?.PeerSuggestion.PeerReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "Your IM has been reviewed by a Peer.";
+            event.message = "An IM has been reviewed by a Peer.";
             break;
           case "SUBMITTED_COORDINATOR_SUGGESTION_CREATED":
             const submittedCoordinatorSuggestion =
@@ -1494,7 +1596,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedCoordinatorSuggestion.CoordinatorSuggestion.CoordinatorReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "Your IM has been reviewed by the Coordinator.";
+            event.message = "An IM has been reviewed by the Coordinator.";
             break;
           case "SUBMITTED_CHAIRPERSON_SUGGESTION_CREATED":
             const submittedChairpersonSuggestion =
@@ -1519,7 +1621,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedChairpersonSuggestion.ChairpersonSuggestion.ChairpersonReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "Your IM has been reviewed by the Chairperson.";
+            event.message = "An IM has been reviewed by the Chairperson.";
             break;
           case "DEPARTMENT_REVIEWED_CREATED":
             const departmentReviewed =
@@ -1548,7 +1650,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${departmentReviewed.SubmittedCoordinatorSuggestion.CoordinatorSuggestion.CoordinatorReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "Your IM has been reviewed by the department.";
+            event.message = "An IM has been reviewed by the department.";
             break;
           case "DEPARTMENT_REVISION_CREATED":
             const departmentRevision =
@@ -1578,7 +1680,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${coordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "Your IM has been endorsed by the Coordinator.";
+            event.message = "An IM has been endorsed by the Coordinator.";
             break;
           case "DEAN_ENDORSEMENT_CREATED":
             const deanEndorsement =
@@ -1599,7 +1701,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${deanEndorsement.CoordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "Your IM has been endorsed by the Dean.";
+            event.message = "An IM has been endorsed by the Dean.";
             break;
           case "SUBMITTED_IDD_COORDINATOR_SUGGESTION_CREATED":
             const submittedIDDCoordinatorSuggestion =
@@ -1628,7 +1730,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedIDDCoordinatorSuggestion.IDDCoordinatorSuggestion.DeanEndorsement.CoordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "Your IM has been reviewed by the IDD Coordinator.";
+            event.message = "An IM has been reviewed by the IDD Coordinator.";
             break;
           case "CITL_REVISION_CREATED":
             const cITLRevision = await prisma.cITLRevision.findUniqueOrThrow({
@@ -1657,7 +1759,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${iDDCoordinatorEndorsement.CITLRevision.IMFile.iMId}`;
-            event.message = "Your IM has been reviewed by the IDD Coordinator.";
+            event.message = "An IM has been reviewed by the IDD Coordinator.";
             break;
           case "CITL_DIRECTOR_ENDORSEMENT_CREATED":
             const cITLDirectorEndorsement =
@@ -1678,7 +1780,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${cITLDirectorEndorsement.IDDCoordinatorEndorsement.CITLRevision.IMFile.iMId}`;
-            event.message = "Your IM has been endorsed by the CITL Director.";
+            event.message = "An IM has been endorsed by the CITL Director.";
             break;
           case "QAMIS_REVISION_CREATED":
             const qAMISRevision = await prisma.qAMISRevision.findUniqueOrThrow({
@@ -1708,7 +1810,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISCoordinatorEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "Your IM has been endorsed by the Coordinator for IMERC review.";
+              "An IM has been endorsed by the Coordinator for IMERC review.";
             break;
           case "QAMIS_CHAIRPERSON_ENDORSEMENT_CREATED":
             const qAMISChairpersonEndorsement =
@@ -1726,7 +1828,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISChairpersonEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "Your IM has been endorsed by the Chairperson for IMERC review.";
+              "An IM has been endorsed by the Chairperson for IMERC review.";
             break;
           case "QAMIS_DEAN_ENDORSEMENT_CREATED":
             const qAMISDeanEndorsement =
@@ -1744,7 +1846,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "Your IM has been endorsed by the Dean for IMERC review.";
+              "An IM has been endorsed by the Dean for IMERC review.";
             break;
           case "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED":
             const qAMISDepartmentEndorsement =
@@ -1834,7 +1936,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedIDDSpecialistSuggestion.IDDSpecialistSuggestion.IDDSpecialistReview.QAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
-            event.message = "Your IM has been reviewed by the IDD Specialist.";
+            event.message = "An IM has been reviewed by the IDD Specialist.";
             break;
           case "SUBMITTED_CONTENT_EDITOR_SUGGESTION_CREATED":
             const submittedContentEditorSuggestion =
@@ -1867,7 +1969,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedContentEditorSuggestion.ContentEditorSuggestion.ContentEditorReview.QAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
-            event.message = "Your IM has been reviewed by the Content Editor.";
+            event.message = "An IM has been reviewed by the Content Editor.";
             break;
           case "IMERC_CITL_REVIEWED_CREATED":
             const iMERCCITLReviewed =
@@ -1904,7 +2006,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${iMERCCITLReviewed.SubmittedContentEditorSuggestion.ContentEditorSuggestion.ContentEditorReview.QAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
-            event.message = "Your IM had finished IMERC review.";
+            event.message = "An IM had finished IMERC review.";
             break;
           case "IMERC_CITL_REVISION_CREATED":
             const iMERCCITLRevision =
@@ -1935,7 +2037,7 @@ export default async function handler(
               });
             event.url = `/im/${iMERCIDDCoordinatorEndorsement.IMERCCITLRevision.IMFile.iMId}`;
             event.message =
-              "Your IM has been endorsed by the IDD Coordinator. (IMERC review)";
+              "An IM has been endorsed by the IDD Coordinator. (IMERC review)";
             break;
           case "IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED":
             const iMERCCITLDirectorEndorsement =
@@ -1957,7 +2059,7 @@ export default async function handler(
               });
             event.url = `/im/${iMERCCITLDirectorEndorsement.IMERCIDDCoordinatorEndorsement.IMERCCITLRevision.IMFile.iMId}`;
             event.message =
-              "Your IM has been endorsed by the CITL Director. (IMERC review)";
+              "An IM has been endorsed by the CITL Director. (IMERC review)";
             break;
         }
       }
