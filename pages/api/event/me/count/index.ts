@@ -48,6 +48,7 @@ export default async function handler(
         },
       });
 
+      
       const whereQuery: Prisma.EventWhereInput = {
         OR: [
           {
@@ -314,6 +315,26 @@ export default async function handler(
             },
           },
           {
+            type: "SUBMITTED_RETURNED_DEPARTMENT_REVISION_CREATED",
+            SubmittedReturnedDepartmentRevision: {
+              ReturnedDepartmentRevision: {
+                DepartmentRevision: {
+                  IMFile: {
+                    IM: {
+                      Faculty: {
+                        User: {
+                          id: {
+                            equals: user.id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
             type: "COORDINATOR_ENDORSEMENT_CREATED",
             OR: [
               {
@@ -472,6 +493,26 @@ export default async function handler(
                     },
                   },
             ],
+          },
+          {
+            type: "SUBMITTED_RETURNED_CITL_REVISION_CREATED",
+            SubmittedReturnedCITLRevision: {
+              ReturnedCITLRevision: {
+                CITLRevision: {
+                  IMFile: {
+                    IM: {
+                      Faculty: {
+                        User: {
+                          id: {
+                            equals: user.id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           {
             type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
@@ -1360,6 +1401,26 @@ export default async function handler(
                     },
                   },
             ],
+          },
+          {
+            type: "SUBMITTED_RETURNED_IMERC_CITL_REVISION_CREATED",
+            SubmittedReturnedIMERCCITLRevision: {
+              ReturnedIMERCCITLRevision: {
+                IMERCCITLRevision: {
+                  IMFile: {
+                    IM: {
+                      Faculty: {
+                        User: {
+                          id: {
+                            equals: user.id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           {
             type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",

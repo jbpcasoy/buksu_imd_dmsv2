@@ -5,6 +5,7 @@ import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { Prisma, User } from "@prisma/client";
+import { equal } from "assert";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -328,6 +329,26 @@ export default async function handler(
             },
           },
           {
+            type: "SUBMITTED_RETURNED_DEPARTMENT_REVISION_CREATED",
+            SubmittedReturnedDepartmentRevision: {
+              ReturnedDepartmentRevision: {
+                DepartmentRevision: {
+                  IMFile: {
+                    IM: {
+                      Faculty: {
+                        User: {
+                          id: {
+                            equals: user.id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
             type: "COORDINATOR_ENDORSEMENT_CREATED",
             OR: [
               {
@@ -486,6 +507,26 @@ export default async function handler(
                     },
                   },
             ],
+          },
+          {
+            type: "SUBMITTED_RETURNED_CITL_REVISION_CREATED",
+            SubmittedReturnedCITLRevision: {
+              ReturnedCITLRevision: {
+                CITLRevision: {
+                  IMFile: {
+                    IM: {
+                      Faculty: {
+                        User: {
+                          id: {
+                            equals: user.id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           {
             type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
@@ -1376,6 +1417,26 @@ export default async function handler(
             ],
           },
           {
+            type: "SUBMITTED_RETURNED_IMERC_CITL_REVISION_CREATED",
+            SubmittedReturnedIMERCCITLRevision: {
+              ReturnedIMERCCITLRevision: {
+                IMERCCITLRevision: {
+                  IMFile: {
+                    IM: {
+                      Faculty: {
+                        User: {
+                          id: {
+                            equals: user.id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
             type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
             OR: [
               {
@@ -1665,6 +1726,29 @@ export default async function handler(
             event.url = `/im/${departmentRevision.IMFile.iMId}`;
             event.message = "An IM has been revised.";
             break;
+          case "SUBMITTED_RETURNED_DEPARTMENT_REVISION_CREATED":
+            const submittedReturnedDepartmentRevision =
+              await prisma.submittedReturnedDepartmentRevision.findUniqueOrThrow(
+                {
+                  where: {
+                    id: event.submittedReturnedDepartmentRevisionId as string,
+                  },
+                  include: {
+                    ReturnedDepartmentRevision: {
+                      include: {
+                        DepartmentRevision: {
+                          include: {
+                            IMFile: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                }
+              );
+            event.url = `/im/${submittedReturnedDepartmentRevision.ReturnedDepartmentRevision.DepartmentRevision.IMFile.iMId}`;
+            event.message = "An IM has been returned from department review.";
+            break;
           case "COORDINATOR_ENDORSEMENT_CREATED":
             const coordinatorEndorsement =
               await prisma.coordinatorEndorsement.findUniqueOrThrow({
@@ -1743,6 +1827,29 @@ export default async function handler(
             });
             event.url = `/im/${cITLRevision.IMFile.iMId}`;
             event.message = "An IM has been revised.";
+            break;
+          case "SUBMITTED_RETURNED_CITL_REVISION_CREATED":
+            const submittedReturnedCITLRevision =
+              await prisma.submittedReturnedCITLRevision.findUniqueOrThrow(
+                {
+                  where: {
+                    id: event.submittedReturnedCITLRevisionId as string,
+                  },
+                  include: {
+                    ReturnedCITLRevision: {
+                      include: {
+                        CITLRevision: {
+                          include: {
+                            IMFile: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                }
+              );
+            event.url = `/im/${submittedReturnedCITLRevision.ReturnedCITLRevision.CITLRevision.IMFile.iMId}`;
+            event.message = "An IM has been returned from CITL review.";
             break;
           case "IDD_COORDINATOR_ENDORSEMENT_CREATED":
             const iDDCoordinatorEndorsement =
@@ -2020,6 +2127,30 @@ export default async function handler(
               });
             event.url = `/im/${iMERCCITLRevision.IMFile.iMId}`;
             event.message = "An IM has been revised.";
+            break;
+            
+          case "SUBMITTED_RETURNED_IMERC_CITL_REVISION_CREATED":
+            const submittedReturnedIMERCCITLRevision =
+              await prisma.submittedReturnedIMERCCITLRevision.findUniqueOrThrow(
+                {
+                  where: {
+                    id: event.submittedReturnedIMERCCITLRevisionId as string,
+                  },
+                  include: {
+                    ReturnedIMERCCITLRevision: {
+                      include: {
+                        IMERCCITLRevision: {
+                          include: {
+                            IMFile: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                }
+              );
+            event.url = `/im/${submittedReturnedIMERCCITLRevision.ReturnedIMERCCITLRevision.IMERCCITLRevision.IMFile.iMId}`;
+            event.message = "An IM has been returned from IMERC review.";
             break;
           case "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED":
             const iMERCIDDCoordinatorEndorsement =
