@@ -46,6 +46,34 @@ export default async function handler(
         },
       });
       ability = iMAbility({ user });
+      const userActiveDean = await prisma.activeDean.findFirstOrThrow({
+        where: {
+          Dean: {
+            Faculty: {
+              ActiveFaculty: {
+                id: {
+                  equals: userActiveFaculty.id,
+                },
+              },
+            },
+          },
+        },
+        include: {
+          Dean: {
+            include: {
+              Faculty: {
+                include: {
+                  Department: {
+                    include: {
+                      College: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
 
       const {
         skip,
@@ -65,19 +93,7 @@ export default async function handler(
               Faculty: {
                 Department: {
                   College: {
-                    Department: {
-                      some: {
-                        Faculty: {
-                          some: {
-                            User: {
-                              id: {
-                                equals: user.id,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
+                    id: userActiveDean.Dean.Faculty.Department.College.id,
                   },
                 },
               },
@@ -174,19 +190,7 @@ export default async function handler(
               Faculty: {
                 Department: {
                   College: {
-                    Department: {
-                      some: {
-                        Faculty: {
-                          some: {
-                            User: {
-                              id: {
-                                equals: user.id,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
+                    id: userActiveDean.Dean.Faculty.Department.College.id,
                   },
                 },
               },

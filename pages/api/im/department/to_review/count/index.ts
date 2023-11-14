@@ -80,13 +80,52 @@ export async function toReviewCount(user: User) {
         },
         {
           NOT: {
-            Faculty: {
-              User: {
-                id: {
-                  equals: user.id,
+            AND: [
+              {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
                 },
               },
-            },
+              {
+                Faculty: {
+                  OR: [
+                    {
+                      ActiveFaculty: {
+                        is: null,
+                      },
+                    },
+                    {
+                      Chairperson: {
+                        is: null,
+                      },
+                    },
+                    {
+                      Chairperson: {
+                        ActiveChairperson: {
+                          is: null,
+                        },
+                      },
+                    },
+                    {
+                      Coordinator: {
+                        is: null,
+                      },
+                    },
+                    {
+                      Coordinator: {
+                        ActiveCoordinator: {
+                          is: null,
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
           },
         },
         {

@@ -62,6 +62,21 @@ export default async function handler(
           AND: [
             accessibleBy(ability).IM,
             {
+              Faculty: {
+                Department: {
+                  Faculty: {
+                    some: {
+                      User: {
+                        id: {
+                          equals: user.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
               IMFile: {
                 some: {
                   QAMISRevision: {
@@ -153,6 +168,21 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
+            {
+              Faculty: {
+                Department: {
+                  Faculty: {
+                    some: {
+                      User: {
+                        id: {
+                          equals: user.id,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
             {
               IMFile: {
                 some: {

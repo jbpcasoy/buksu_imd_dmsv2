@@ -55,6 +55,34 @@ export async function iMERCCollegeToEndorseCount(user: User) {
     },
   });
   ability = iMAbility({ user });
+  const userActiveDean = await prisma.activeDean.findFirstOrThrow({
+    where: {
+      Dean: {
+        Faculty: {
+          ActiveFaculty: {
+            id: {
+              equals: userActiveFaculty.id,
+            },
+          },
+        },
+      },
+    },
+    include: {
+      Dean: {
+        include: {
+          Faculty: {
+            include: {
+              Department: {
+                include: {
+                  College: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
 
   const count = await prisma.iM.count({
     where: {
@@ -64,19 +92,7 @@ export async function iMERCCollegeToEndorseCount(user: User) {
           Faculty: {
             Department: {
               College: {
-                Department: {
-                  some: {
-                    Faculty: {
-                      some: {
-                        User: {
-                          id: {
-                            equals: user.id,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
+                id: userActiveDean.Dean.Faculty.Department.College.id,
               },
             },
           },

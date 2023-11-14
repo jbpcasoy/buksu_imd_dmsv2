@@ -81,13 +81,52 @@ export default async function handler(
             },
             {
               NOT: {
-                Faculty: {
-                  User: {
-                    id: {
-                      equals: user.id,
+                AND: [
+                  {
+                    Faculty: {
+                      User: {
+                        id: {
+                          equals: user.id,
+                        },
+                      },
                     },
                   },
-                },
+                  {
+                    Faculty: {
+                      OR: [
+                        {
+                          ActiveFaculty: {
+                            is: null,
+                          },
+                        },
+                        {
+                          Chairperson: {
+                            is: null,
+                          },
+                        },
+                        {
+                          Chairperson: {
+                            ActiveChairperson: {
+                              is: null,
+                            },
+                          },
+                        },
+                        {
+                          Coordinator: {
+                            is: null,
+                          },
+                        },
+                        {
+                          Coordinator: {
+                            ActiveCoordinator: {
+                              is: null,
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
               },
             },
             {
@@ -213,13 +252,52 @@ export default async function handler(
             },
             {
               NOT: {
-                Faculty: {
-                  User: {
-                    id: {
-                      equals: user.id,
+                AND: [
+                  {
+                    Faculty: {
+                      User: {
+                        id: {
+                          equals: user.id,
+                        },
+                      },
                     },
                   },
-                },
+                  {
+                    Faculty: {
+                      OR: [
+                        {
+                          ActiveFaculty: {
+                            is: null,
+                          },
+                        },
+                        {
+                          Chairperson: {
+                            is: null,
+                          },
+                        },
+                        {
+                          Chairperson: {
+                            ActiveChairperson: {
+                              is: null,
+                            },
+                          },
+                        },
+                        {
+                          Coordinator: {
+                            is: null,
+                          },
+                        },
+                        {
+                          Coordinator: {
+                            ActiveCoordinator: {
+                              is: null,
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
               },
             },
             {
