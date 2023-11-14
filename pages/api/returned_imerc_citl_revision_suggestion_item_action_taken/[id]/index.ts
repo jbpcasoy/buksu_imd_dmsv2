@@ -20,7 +20,9 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedIMERCCITLRevisionSuggestionItemActionTakenAbility({ user });
+  const ability = returnedIMERCCITLRevisionSuggestionItemActionTakenAbility({
+    user,
+  });
 
   const getHandler = async () => {
     try {
@@ -32,18 +34,21 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
       const returnedIMERCCITLRevisionSuggestionItemActionTaken =
-        await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.findFirstOrThrow({
-          where: {
-            AND: [
-              accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItemActionTaken,
-              {
-                id: {
-                  equals: id,
+        await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.findFirstOrThrow(
+          {
+            where: {
+              AND: [
+                accessibleBy(ability)
+                  .ReturnedIMERCCITLRevisionSuggestionItemActionTaken,
+                {
+                  id: {
+                    equals: id,
+                  },
                 },
-              },
-            ],
-          },
-        });
+              ],
+            },
+          }
+        );
 
       return res.json(returnedIMERCCITLRevisionSuggestionItemActionTaken);
     } catch (error: any) {
@@ -68,6 +73,43 @@ export default async function handler(
       );
 
       const { id } = validator.cast(req.query);
+
+      const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirst({
+        where: {
+          IMFile: {
+            IMERCCITLRevision: {
+              ReturnedIMERCCITLRevision: {
+                ReturnedIMERCCITLRevisionSuggestionItem: {
+                  some: {
+                    ReturnedIMERCCITLRevisionSuggestionItemActionTaken: {
+                      id: {
+                        equals: id,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              ReturnedIMERCCITLRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedIMERCCITLRevision: {
+                SubmittedReturnedIMERCCITLRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (iMERCCITLRevision) {
+        throw new Error("IM already revised.");
+      }
 
       const returnedIMERCCITLRevisionSuggestionItemActionTaken =
         await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.delete({

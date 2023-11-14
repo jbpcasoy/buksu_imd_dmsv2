@@ -20,7 +20,9 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedCITLRevisionSuggestionItemActionTakenAbility({ user });
+  const ability = returnedCITLRevisionSuggestionItemActionTakenAbility({
+    user,
+  });
 
   const getHandler = async () => {
     try {
@@ -31,19 +33,60 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const returnedCITLRevisionSuggestionItemActionTaken =
-        await prisma.returnedCITLRevisionSuggestionItemActionTaken.findFirstOrThrow({
-          where: {
-            AND: [
-              accessibleBy(ability).ReturnedCITLRevisionSuggestionItemActionTaken,
-              {
-                id: {
-                  equals: id,
+
+      const cITLRevision = await prisma.cITLRevision.findFirst({
+        where: {
+          IMFile: {
+            CITLRevision: {
+              ReturnedCITLRevision: {
+                ReturnedCITLRevisionSuggestionItem: {
+                  some: {
+                    ReturnedCITLRevisionSuggestionItemActionTaken: {
+                      id: {
+                        equals: id,
+                      },
+                    },
+                  },
                 },
               },
-            ],
+            },
           },
-        });
+          OR: [
+            {
+              ReturnedCITLRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedCITLRevision: {
+                SubmittedReturnedCITLRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (cITLRevision) {
+        throw new Error("IM already revised.");
+      }
+
+      const returnedCITLRevisionSuggestionItemActionTaken =
+        await prisma.returnedCITLRevisionSuggestionItemActionTaken.findFirstOrThrow(
+          {
+            where: {
+              AND: [
+                accessibleBy(ability)
+                  .ReturnedCITLRevisionSuggestionItemActionTaken,
+                {
+                  id: {
+                    equals: id,
+                  },
+                },
+              ],
+            },
+          }
+        );
 
       return res.json(returnedCITLRevisionSuggestionItemActionTaken);
     } catch (error: any) {

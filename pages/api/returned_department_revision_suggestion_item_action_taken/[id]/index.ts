@@ -20,7 +20,9 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedDepartmentRevisionSuggestionItemActionTakenAbility({ user });
+  const ability = returnedDepartmentRevisionSuggestionItemActionTakenAbility({
+    user,
+  });
 
   const getHandler = async () => {
     try {
@@ -32,18 +34,21 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
       const returnedDepartmentRevisionSuggestionItemActionTaken =
-        await prisma.returnedDepartmentRevisionSuggestionItemActionTaken.findFirstOrThrow({
-          where: {
-            AND: [
-              accessibleBy(ability).ReturnedDepartmentRevisionSuggestionItemActionTaken,
-              {
-                id: {
-                  equals: id,
+        await prisma.returnedDepartmentRevisionSuggestionItemActionTaken.findFirstOrThrow(
+          {
+            where: {
+              AND: [
+                accessibleBy(ability)
+                  .ReturnedDepartmentRevisionSuggestionItemActionTaken,
+                {
+                  id: {
+                    equals: id,
+                  },
                 },
-              },
-            ],
-          },
-        });
+              ],
+            },
+          }
+        );
 
       return res.json(returnedDepartmentRevisionSuggestionItemActionTaken);
     } catch (error: any) {
@@ -69,12 +74,51 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const returnedDepartmentRevisionSuggestionItemActionTaken =
-        await prisma.returnedDepartmentRevisionSuggestionItemActionTaken.delete({
-          where: {
-            id,
+      const departmentRevision = await prisma.departmentRevision.findFirst({
+        where: {
+          IMFile: {
+            DepartmentRevision: {
+              ReturnedDepartmentRevision: {
+                ReturnedDepartmentRevisionSuggestionItem: {
+                  some: {
+                    ReturnedDepartmentRevisionSuggestionItemActionTaken: {
+                      id: {
+                        equals: id,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
-        });
+          OR: [
+            {
+              ReturnedDepartmentRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedDepartmentRevision: {
+                SubmittedReturnedDepartmentRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (departmentRevision) {
+        throw new Error("IM already revised.");
+      }
+
+      const returnedDepartmentRevisionSuggestionItemActionTaken =
+        await prisma.returnedDepartmentRevisionSuggestionItemActionTaken.delete(
+          {
+            where: {
+              id,
+            },
+          }
+        );
 
       return res.json(returnedDepartmentRevisionSuggestionItemActionTaken);
     } catch (error: any) {
@@ -102,14 +146,16 @@ export default async function handler(
       const { value } = validator.cast(req.body);
 
       const returnedDepartmentRevisionSuggestionItemActionTaken =
-        await prisma.returnedDepartmentRevisionSuggestionItemActionTaken.update({
-          where: {
-            id: id as string,
-          },
-          data: {
-            value,
-          },
-        });
+        await prisma.returnedDepartmentRevisionSuggestionItemActionTaken.update(
+          {
+            where: {
+              id: id as string,
+            },
+            data: {
+              value,
+            },
+          }
+        );
 
       return res.json(returnedDepartmentRevisionSuggestionItemActionTaken);
     } catch (error: any) {

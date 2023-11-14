@@ -37,6 +37,43 @@ export default async function handler(
 
       const { value, chairpersonSuggestionItemId } = validator.cast(req.body);
 
+      const departmentRevision = await prisma.departmentRevision.findFirst({
+        where: {
+          IMFile: {
+            DepartmentReview: {
+              ChairpersonReview: {
+                ChairpersonSuggestion: {
+                  ChairpersonSuggestionItem: {
+                    some: {
+                      id: {
+                        equals: chairpersonSuggestionItemId,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              ReturnedDepartmentRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedDepartmentRevision: {
+                SubmittedReturnedDepartmentRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (departmentRevision) {
+        throw new Error("IM already revised.");
+      }
+
       const chairpersonSuggestionItemActionTaken =
         await prisma.chairpersonSuggestionItemActionTaken.create({
           data: {
@@ -63,19 +100,14 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      const {
-        skip,
-        take,
-      } = validator.cast(req.query);
+      const { skip, take } = validator.cast(req.query);
 
       const chairpersonSuggestionItemActionTakens =
         await prisma.chairpersonSuggestionItemActionTaken.findMany({
           skip,
           take,
           where: {
-            AND: [
-              accessibleBy(ability).ChairpersonSuggestionItemActionTaken,
-            ],
+            AND: [accessibleBy(ability).ChairpersonSuggestionItemActionTaken],
           },
           orderBy: {
             updatedAt: "desc",
@@ -83,9 +115,7 @@ export default async function handler(
         });
       const count = await prisma.chairpersonSuggestionItemActionTaken.count({
         where: {
-          AND: [
-            accessibleBy(ability).ChairpersonSuggestionItemActionTaken,
-          ],
+          AND: [accessibleBy(ability).ChairpersonSuggestionItemActionTaken],
         },
       });
 

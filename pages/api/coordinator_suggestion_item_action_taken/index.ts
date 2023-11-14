@@ -37,6 +37,43 @@ export default async function handler(
 
       const { value, coordinatorSuggestionItemId } = validator.cast(req.body);
 
+      const departmentRevision = await prisma.departmentRevision.findFirst({
+        where: {
+          IMFile: {
+            DepartmentReview: {
+              CoordinatorReview: {
+                CoordinatorSuggestion: {
+                  CoordinatorSuggestionItem: {
+                    some: {
+                      id: {
+                        equals: coordinatorSuggestionItemId,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              ReturnedDepartmentRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedDepartmentRevision: {
+                SubmittedReturnedDepartmentRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (departmentRevision) {
+        throw new Error("IM already revised.");
+      }
+
       const coordinatorSuggestionItemActionTaken =
         await prisma.coordinatorSuggestionItemActionTaken.create({
           data: {

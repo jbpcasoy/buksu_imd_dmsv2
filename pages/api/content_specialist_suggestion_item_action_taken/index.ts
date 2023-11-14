@@ -35,7 +35,48 @@ export default async function handler(
         "ContentSpecialistSuggestionItemActionTaken"
       );
 
-      const { value, contentSpecialistSuggestionItemId } = validator.cast(req.body);
+      const { value, contentSpecialistSuggestionItemId } = validator.cast(
+        req.body
+      );
+
+      const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirst({
+        where: {
+          IMFile: {
+            IMERCCITLRevision: {
+              IMERCCITLReviewed: {
+                SubmittedContentSpecialistSuggestion: {
+                  ContentSpecialistSuggestion: {
+                    ContentSpecialistSuggestionItem: {
+                      some: {
+                        id: {
+                          equals: contentSpecialistSuggestionItemId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              ReturnedIMERCCITLRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedIMERCCITLRevision: {
+                SubmittedReturnedIMERCCITLRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (iMERCCITLRevision) {
+        throw new Error("IM already revised.");
+      }
 
       const contentSpecialistSuggestionItemActionTaken =
         await prisma.contentSpecialistSuggestionItemActionTaken.create({
@@ -63,10 +104,7 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      const {
-        skip,
-        take,
-      } = validator.cast(req.query);
+      const { skip, take } = validator.cast(req.query);
 
       const contentSpecialistSuggestionItemActionTakens =
         await prisma.contentSpecialistSuggestionItemActionTaken.findMany({
@@ -81,13 +119,14 @@ export default async function handler(
             updatedAt: "desc",
           },
         });
-      const count = await prisma.contentSpecialistSuggestionItemActionTaken.count({
-        where: {
-          AND: [
-            accessibleBy(ability).ContentSpecialistSuggestionItemActionTaken,
-          ],
-        },
-      });
+      const count =
+        await prisma.contentSpecialistSuggestionItemActionTaken.count({
+          where: {
+            AND: [
+              accessibleBy(ability).ContentSpecialistSuggestionItemActionTaken,
+            ],
+          },
+        });
 
       return res.json({ contentSpecialistSuggestionItemActionTakens, count });
     } catch (error: any) {

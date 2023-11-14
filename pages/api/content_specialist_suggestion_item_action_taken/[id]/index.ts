@@ -32,18 +32,21 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
       const contentSpecialistSuggestionItemActionTaken =
-        await prisma.contentSpecialistSuggestionItemActionTaken.findFirstOrThrow({
-          where: {
-            AND: [
-              accessibleBy(ability).ContentSpecialistSuggestionItemActionTaken,
-              {
-                id: {
-                  equals: id,
+        await prisma.contentSpecialistSuggestionItemActionTaken.findFirstOrThrow(
+          {
+            where: {
+              AND: [
+                accessibleBy(ability)
+                  .ContentSpecialistSuggestionItemActionTaken,
+                {
+                  id: {
+                    equals: id,
+                  },
                 },
-              },
-            ],
-          },
-        });
+              ],
+            },
+          }
+        );
 
       return res.json(contentSpecialistSuggestionItemActionTaken);
     } catch (error: any) {
@@ -68,6 +71,47 @@ export default async function handler(
       );
 
       const { id } = validator.cast(req.query);
+
+      const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirst({
+        where: {
+          IMFile: {
+            IMERCCITLRevision: {
+              IMERCCITLReviewed: {
+                SubmittedContentSpecialistSuggestion: {
+                  ContentSpecialistSuggestion: {
+                    ContentSpecialistSuggestionItem: {
+                      some: {
+                        ContentSpecialistSuggestionItemActionTaken: {
+                          id: {
+                            equals: id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              ReturnedIMERCCITLRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedIMERCCITLRevision: {
+                SubmittedReturnedIMERCCITLRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (iMERCCITLRevision) {
+        throw new Error("IM already revised.");
+      }
 
       const contentSpecialistSuggestionItemActionTaken =
         await prisma.contentSpecialistSuggestionItemActionTaken.delete({

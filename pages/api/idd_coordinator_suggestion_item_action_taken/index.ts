@@ -35,7 +35,44 @@ export default async function handler(
         "IDDCoordinatorSuggestionItemActionTaken"
       );
 
-      const { value, iDDCoordinatorSuggestionItemId } = validator.cast(req.body);
+      const { value, iDDCoordinatorSuggestionItemId } = validator.cast(
+        req.body
+      );
+
+      const cITLRevision = await prisma.cITLRevision.findFirst({
+        where: {
+          IMFile: {
+            DepartmentRevision: {
+              CoordinatorEndorsement: {
+                DeanEndorsement: {
+                  IDDCoordinatorSuggestion: {
+                    id: {
+                      equals: iDDCoordinatorSuggestionItemId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              ReturnedCITLRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedCITLRevision: {
+                SubmittedReturnedCITLRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (cITLRevision) {
+        throw new Error("IM already revised.");
+      }
 
       const iDDCoordinatorSuggestionItemActionTaken =
         await prisma.iDDCoordinatorSuggestionItemActionTaken.create({
@@ -63,10 +100,7 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      const {
-        skip,
-        take,
-      } = validator.cast(req.query);
+      const { skip, take } = validator.cast(req.query);
 
       const iDDCoordinatorSuggestionItemActionTakens =
         await prisma.iDDCoordinatorSuggestionItemActionTaken.findMany({
@@ -83,9 +117,7 @@ export default async function handler(
         });
       const count = await prisma.iDDCoordinatorSuggestionItemActionTaken.count({
         where: {
-          AND: [
-            accessibleBy(ability).IDDCoordinatorSuggestionItemActionTaken,
-          ],
+          AND: [accessibleBy(ability).IDDCoordinatorSuggestionItemActionTaken],
         },
       });
 

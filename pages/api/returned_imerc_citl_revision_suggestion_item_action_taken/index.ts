@@ -20,7 +20,9 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedIMERCCITLRevisionSuggestionItemActionTakenAbility({ user });
+  const ability = returnedIMERCCITLRevisionSuggestionItemActionTakenAbility({
+    user,
+  });
 
   const postHandler = async () => {
     try {
@@ -35,7 +37,43 @@ export default async function handler(
         "ReturnedIMERCCITLRevisionSuggestionItemActionTaken"
       );
 
-      const { value, returnedIMERCCITLRevisionSuggestionItemId } = validator.cast(req.body);
+      const { value, returnedIMERCCITLRevisionSuggestionItemId } =
+        validator.cast(req.body);
+
+      const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirst({
+        where: {
+          IMFile: {
+            IMERCCITLRevision: {
+              ReturnedIMERCCITLRevision: {
+                ReturnedIMERCCITLRevisionSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: returnedIMERCCITLRevisionSuggestionItemId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              ReturnedIMERCCITLRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedIMERCCITLRevision: {
+                SubmittedReturnedIMERCCITLRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (iMERCCITLRevision) {
+        throw new Error("IM already revised.");
+      }
 
       const returnedIMERCCITLRevisionSuggestionItemActionTaken =
         await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.create({
@@ -63,33 +101,38 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      const {
-        skip,
-        take,
-      } = validator.cast(req.query);
+      const { skip, take } = validator.cast(req.query);
 
       const returnedIMERCCITLRevisionSuggestionItemActionTakens =
-        await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.findMany({
-          skip,
-          take,
+        await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.findMany(
+          {
+            skip,
+            take,
+            where: {
+              AND: [
+                accessibleBy(ability)
+                  .ReturnedIMERCCITLRevisionSuggestionItemActionTaken,
+              ],
+            },
+            orderBy: {
+              updatedAt: "desc",
+            },
+          }
+        );
+      const count =
+        await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.count({
           where: {
             AND: [
-              accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItemActionTaken,
+              accessibleBy(ability)
+                .ReturnedIMERCCITLRevisionSuggestionItemActionTaken,
             ],
           },
-          orderBy: {
-            updatedAt: "desc",
-          },
         });
-      const count = await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.count({
-        where: {
-          AND: [
-            accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItemActionTaken,
-          ],
-        },
-      });
 
-      return res.json({ returnedIMERCCITLRevisionSuggestionItemActionTakens, count });
+      return res.json({
+        returnedIMERCCITLRevisionSuggestionItemActionTakens,
+        count,
+      });
     } catch (error: any) {
       logger.error(error);
       return res

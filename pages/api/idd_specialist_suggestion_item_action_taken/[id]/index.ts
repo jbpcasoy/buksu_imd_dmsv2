@@ -69,6 +69,47 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
+      const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirst({
+        where: {
+          IMFile: {
+            IMERCCITLRevision: {
+              IMERCCITLReviewed: {
+                SubmittedIDDSpecialistSuggestion: {
+                  IDDSpecialistSuggestion: {
+                    IDDSpecialistSuggestionItem: {
+                      some: {
+                        IDDSpecialistSuggestionItemActionTaken: {
+                          id: {
+                            equals: id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              ReturnedIMERCCITLRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedIMERCCITLRevision: {
+                SubmittedReturnedIMERCCITLRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (iMERCCITLRevision) {
+        throw new Error("IM already revised.");
+      }
+      
       const iDDSpecialistSuggestionItemActionTaken =
         await prisma.iDDSpecialistSuggestionItemActionTaken.delete({
           where: {

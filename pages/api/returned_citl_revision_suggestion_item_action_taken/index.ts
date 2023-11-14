@@ -20,7 +20,9 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedCITLRevisionSuggestionItemActionTakenAbility({ user });
+  const ability = returnedCITLRevisionSuggestionItemActionTakenAbility({
+    user,
+  });
 
   const postHandler = async () => {
     try {
@@ -35,7 +37,44 @@ export default async function handler(
         "ReturnedCITLRevisionSuggestionItemActionTaken"
       );
 
-      const { value, returnedCITLRevisionSuggestionItemId } = validator.cast(req.body);
+      const { value, returnedCITLRevisionSuggestionItemId } = validator.cast(
+        req.body
+      );
+
+      const cITLRevision = await prisma.cITLRevision.findFirst({
+        where: {
+          IMFile: {
+            CITLRevision: {
+              ReturnedCITLRevision: {
+                ReturnedCITLRevisionSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: returnedCITLRevisionSuggestionItemId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              ReturnedCITLRevision: {
+                is: null,
+              },
+            },
+            {
+              ReturnedCITLRevision: {
+                SubmittedReturnedCITLRevision: {
+                  is: null,
+                },
+              },
+            },
+          ],
+        },
+      });
+      if (cITLRevision) {
+        throw new Error("IM already revised.");
+      }
 
       const returnedCITLRevisionSuggestionItemActionTaken =
         await prisma.returnedCITLRevisionSuggestionItemActionTaken.create({
@@ -63,10 +102,7 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      const {
-        skip,
-        take,
-      } = validator.cast(req.query);
+      const { skip, take } = validator.cast(req.query);
 
       const returnedCITLRevisionSuggestionItemActionTakens =
         await prisma.returnedCITLRevisionSuggestionItemActionTaken.findMany({
@@ -74,22 +110,28 @@ export default async function handler(
           take,
           where: {
             AND: [
-              accessibleBy(ability).ReturnedCITLRevisionSuggestionItemActionTaken,
+              accessibleBy(ability)
+                .ReturnedCITLRevisionSuggestionItemActionTaken,
             ],
           },
           orderBy: {
             updatedAt: "desc",
           },
         });
-      const count = await prisma.returnedCITLRevisionSuggestionItemActionTaken.count({
-        where: {
-          AND: [
-            accessibleBy(ability).ReturnedCITLRevisionSuggestionItemActionTaken,
-          ],
-        },
-      });
+      const count =
+        await prisma.returnedCITLRevisionSuggestionItemActionTaken.count({
+          where: {
+            AND: [
+              accessibleBy(ability)
+                .ReturnedCITLRevisionSuggestionItemActionTaken,
+            ],
+          },
+        });
 
-      return res.json({ returnedCITLRevisionSuggestionItemActionTakens, count });
+      return res.json({
+        returnedCITLRevisionSuggestionItemActionTakens,
+        count,
+      });
     } catch (error: any) {
       logger.error(error);
       return res
