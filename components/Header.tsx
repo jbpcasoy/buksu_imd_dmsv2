@@ -27,25 +27,28 @@ export default function Header() {
   };
 
   return (
-    <div>
-      <div className='flex justify-end p-1 space-x-1'>
-        <Link href='/notification' className='underline'>
+    <div className=''>
+      <div className='flex justify-end items-center h-10 space-x-1 bg-palette_blue border-b border-palette_white'>
+        <Link href='/notification' className='rounded hover:bg-palette_grey text-white'>
           <span className='font-normal'>{eventCount.count}</span> notification
         </Link>
-        <Link href='/profile' className='underline'>
+        <Link href='/profile' className='rounded hover:bg-palette_grey text-white'>
           profile
         </Link>
       </div>
       {announcements?.length > 0 && (
-        <div className='flex justify-between items-center'>
-          <button className='rounded border' onClick={handlePrev}>
-            prev
+        <div className='flex justify-between items-center bg-palette_orange m-2 rounded p-1'>
+          <button
+            className='w-10 h-10 rounded-full bg-palette_grey bg-opacity-10 hover:bg-opacity-20 text-white'
+            onClick={handlePrev}
+          >
+            {"<"}
           </button>
           <div className='flex-1 px-10'>
             <p>{announcements?.[0].title}</p>
             <p>{announcements?.[0].description}</p>
             {announcements?.[0].url && (
-              <Link href={announcements?.[0].url} className='rounded border'>
+              <Link href={announcements?.[0].url} className='rounded border border-palette_blue px-10'>
                 Go
               </Link>
             )}
@@ -53,8 +56,11 @@ export default function Header() {
               {state.skip + 1}/{count}
             </p>
           </div>
-          <button className='rounded border' onClick={handleNext}>
-            next
+          <button
+            className='w-10 h-10 rounded-full bg-palette_grey bg-opacity-10 hover:bg-opacity-20 text-white'
+            onClick={handleNext}
+          >
+            {">"}
           </button>
         </div>
       )}
