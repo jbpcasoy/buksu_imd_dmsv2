@@ -6,6 +6,8 @@ import { IMDepartmentPieChart } from "@/components/dashboard/IMDepartmentPieChar
 import { IMStatusDepartmentLineChart } from "@/components/dashboard/IMStatusDepartmentLineChart";
 import { IMStatusPieChart } from "@/components/dashboard/IMStatusPieChart";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
+import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
+import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
@@ -50,6 +52,8 @@ export default function Home() {
   const activeCITLDirector = useActiveCITLDirectorMe();
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();
   const activeFaculty = useActiveFacultyMe();
+  const activeChairperson = useActiveChairpersonMe();
+  const activeCoordinator = useActiveCoordinatorMe();
 
   useEffect(() => {
     if (!department) return;
@@ -81,7 +85,7 @@ export default function Home() {
             <p>Welcome Faculty!</p>
           </div>
         )}
-      {(activeDean || activeCITLDirector || activeIDDCoordinator) && (
+      {(activeDean || activeCITLDirector || activeIDDCoordinator || activeCoordinator || activeChairperson) && (
         <div>
           <form noValidate onSubmit={formik.handleSubmit}>
             <CollegeSelector
