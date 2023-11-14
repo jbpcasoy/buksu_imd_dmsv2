@@ -69,6 +69,55 @@ export default async function handler(
       );
 
       const { id } = validator.cast(req.query);
+
+      const iMERCIDDCoordinatorEndorsement =
+        await prisma.iMERCIDDCoordinatorEndorsement.findFirst({
+          where: {
+            IMERCCITLRevision: {
+              AND: [
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          IMERCCITLRevision: {
+                            IMERCIDDCoordinatorEndorsement: {
+                              isNot: null,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          IMERCCITLRevision: {
+                            ReturnedIMERCCITLRevision: {
+                              SubmittedReturnedIMERCCITLRevision: {
+                                id: {
+                                  equals: id,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+      if (iMERCIDDCoordinatorEndorsement) {
+        throw new Error("IM already endorsed by IDD Coordinator");
+      }
+
       const submittedReturnedIMERCCITLRevision =
         await prisma.submittedReturnedIMERCCITLRevision.delete({
           where: {

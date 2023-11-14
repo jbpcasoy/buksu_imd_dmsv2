@@ -36,6 +36,52 @@ export default async function handler(
 
       const { returnedIMERCCITLRevisionId } = validator.cast(req.body);
 
+      const iMERCIDDCoordinatorEndorsement =
+        await prisma.iMERCIDDCoordinatorEndorsement.findFirst({
+          where: {
+            IMERCCITLRevision: {
+              AND: [
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          IMERCCITLRevision: {
+                            ReturnedIMERCCITLRevision: {
+                              id: {
+                                equals: returnedIMERCCITLRevisionId,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          IMERCCITLRevision: {
+                            IMERCIDDCoordinatorEndorsement: {
+                              isNot: null,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+      if (iMERCIDDCoordinatorEndorsement) {
+        throw new Error("IM already endorsed by IDD Coordinator");
+      }
+
       const submittedReturnedIMERCCITLRevision =
         await prisma.submittedReturnedIMERCCITLRevision.create({
           data: {

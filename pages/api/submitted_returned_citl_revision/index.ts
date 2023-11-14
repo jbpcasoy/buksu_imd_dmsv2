@@ -36,6 +36,52 @@ export default async function handler(
 
       const { returnedCITLRevisionId } = validator.cast(req.body);
 
+      const iDDCoordinatorEndorsement =
+        await prisma.iDDCoordinatorEndorsement.findFirst({
+          where: {
+            CITLRevision: {
+              AND: [
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          CITLRevision: {
+                            ReturnedCITLRevision: {
+                              id: {
+                                equals: returnedCITLRevisionId,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          CITLRevision: {
+                            IDDCoordinatorEndorsement: {
+                              isNot: null,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+      if (iDDCoordinatorEndorsement) {
+        throw new Error("IM already endorsed by IDD Coordinator");
+      }
+
       const submittedReturnedCITLRevision =
         await prisma.submittedReturnedCITLRevision.create({
           data: {

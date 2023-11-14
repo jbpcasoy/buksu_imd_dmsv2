@@ -39,6 +39,50 @@ export default async function handler(
         req.body
       );
 
+      const iMERCIDDCoordinatorEndorsement =
+        await prisma.iMERCIDDCoordinatorEndorsement.findFirst({
+          where: {
+            IMERCCITLRevision: {
+              AND: [
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          IMERCCITLRevision: {
+                            id: {
+                              equals: iMERCCITLRevisionId,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          IMERCCITLRevision: {
+                            IMERCIDDCoordinatorEndorsement: {
+                              isNot: null,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+      if (iMERCIDDCoordinatorEndorsement) {
+        throw new Error("IM already endorsed by IDD Coordinator");
+      }
+
       const activeIDDCoordinator =
         await prisma.activeIDDCoordinator.findFirstOrThrow({
           where: {
@@ -48,20 +92,21 @@ export default async function handler(
           },
         });
 
-      const returnedIMERCCITLRevision = await prisma.returnedIMERCCITLRevision.create({
-        data: {
-          IMERCCITLRevision: {
-            connect: {
-              id: iMERCCITLRevisionId,
+      const returnedIMERCCITLRevision =
+        await prisma.returnedIMERCCITLRevision.create({
+          data: {
+            IMERCCITLRevision: {
+              connect: {
+                id: iMERCCITLRevisionId,
+              },
+            },
+            IDDCoordinator: {
+              connect: {
+                id: activeIDDCoordinator.iDDCoordinatorId,
+              },
             },
           },
-          IDDCoordinator: {
-            connect: {
-              id: activeIDDCoordinator.iDDCoordinatorId,
-            },
-          },
-        },
-      });
+        });
 
       return res.json(returnedIMERCCITLRevision);
     } catch (error: any) {
@@ -88,16 +133,17 @@ export default async function handler(
         "filter[name]": filterName,
       } = validator.cast(req.query);
 
-      const returnedIMERCCITLRevisions = await prisma.returnedIMERCCITLRevision.findMany({
-        skip,
-        take,
-        where: {
-          AND: [accessibleBy(ability).ReturnedIMERCCITLRevision],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+      const returnedIMERCCITLRevisions =
+        await prisma.returnedIMERCCITLRevision.findMany({
+          skip,
+          take,
+          where: {
+            AND: [accessibleBy(ability).ReturnedIMERCCITLRevision],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
       const count = await prisma.returnedIMERCCITLRevision.count({
         where: {
           AND: [accessibleBy(ability).ReturnedIMERCCITLRevision],

@@ -69,6 +69,55 @@ export default async function handler(
       );
 
       const { id } = validator.cast(req.query);
+
+      const coordinatorEndorsement =
+        await prisma.coordinatorEndorsement.findFirst({
+          where: {
+            DepartmentRevision: {
+              AND: [
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          DepartmentRevision: {
+                            CoordinatorEndorsement: {
+                              isNot: null,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          DepartmentRevision: {
+                            ReturnedDepartmentRevision: {
+                              SubmittedReturnedDepartmentRevision: {
+                                id: {
+                                  equals: id,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+      if (coordinatorEndorsement) {
+        throw new Error("IM already endorsed by IDD Coordinator");
+      }
+
       const submittedReturnedDepartmentRevision =
         await prisma.submittedReturnedDepartmentRevision.delete({
           where: {

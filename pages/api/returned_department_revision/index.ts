@@ -39,6 +39,50 @@ export default async function handler(
         req.body
       );
 
+      const coordinatorEndorsement =
+        await prisma.coordinatorEndorsement.findFirst({
+          where: {
+            DepartmentRevision: {
+              AND: [
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          DepartmentRevision: {
+                            id: {
+                              equals: departmentRevisionId,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  IMFile: {
+                    IM: {
+                      IMFile: {
+                        some: {
+                          DepartmentRevision: {
+                            CoordinatorEndorsement: {
+                              isNot: null,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+      if (coordinatorEndorsement) {
+        throw new Error("IM already endorsed by IDD Coordinator");
+      }
+
       const activeCoordinator = await prisma.activeCoordinator.findFirstOrThrow(
         {
           where: {
