@@ -31,6 +31,26 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
+
+      const submittedReturnedDepartmentRevision =
+        await prisma.submittedReturnedDepartmentRevision.findFirst({
+          where: {
+            ReturnedDepartmentRevision: {
+              ReturnedDepartmentRevisionSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedReturnedDepartmentRevision) {
+        throw new Error("Peer Suggestion is already submitted");
+      }
+
       const returnedDepartmentRevisionSuggestionItem =
         await prisma.returnedDepartmentRevisionSuggestionItem.findFirstOrThrow({
           where: {
@@ -68,6 +88,26 @@ export default async function handler(
       );
 
       const { id } = validator.cast(req.query);
+
+      const submittedReturnedDepartmentRevision =
+        await prisma.submittedReturnedDepartmentRevision.findFirst({
+          where: {
+            ReturnedDepartmentRevision: {
+              ReturnedDepartmentRevisionSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedReturnedDepartmentRevision) {
+        throw new Error("Peer Suggestion is already submitted");
+      }
+
       const returnedDepartmentRevisionSuggestionItem =
         await prisma.returnedDepartmentRevisionSuggestionItem.delete({
           where: {

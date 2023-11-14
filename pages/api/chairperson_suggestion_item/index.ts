@@ -45,6 +45,22 @@ export default async function handler(
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
+
+      const submittedChairpersonSuggestion =
+        await prisma.submittedChairpersonSuggestion.findFirst({
+          where: {
+            ChairpersonSuggestion: {
+              id: {
+                equals: chairpersonSuggestionId,
+              },
+            },
+          },
+        });
+
+      if (submittedChairpersonSuggestion) {
+        throw new Error("Chairperson Suggestion is already submitted");
+      }
+
       const chairpersonSuggestionItem =
         await prisma.chairpersonSuggestionItem.create({
           data: {

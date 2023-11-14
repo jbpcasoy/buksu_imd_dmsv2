@@ -41,6 +41,22 @@ export default async function handler(
       const { actionTaken, iDDSpecialistSuggestionId, remarks, suggestion, pageNumber } =
         validator.cast(req.body);
 
+      const submittedIDDSpecialistSuggestion =
+      await prisma.submittedIDDSpecialistSuggestion.findFirst({
+        where: {
+          IDDSpecialistSuggestion: {
+            id: {
+              equals: iDDSpecialistSuggestionId,
+            },
+          },
+        },
+      });
+
+    if (submittedIDDSpecialistSuggestion) {
+      throw new Error("IDDSpecialist Suggestion is already submitted");
+    }
+
+
       const iDDSpecialistSuggestionItem = await prisma.iDDSpecialistSuggestionItem.create({
         data: {
           actionTaken,

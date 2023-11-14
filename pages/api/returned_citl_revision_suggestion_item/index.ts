@@ -45,6 +45,21 @@ export default async function handler(
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
+      
+      const submittedReturnedCITLRevision =
+      await prisma.submittedReturnedCITLRevision.findFirst({
+        where: {
+          ReturnedCITLRevision: {
+            id: {
+              equals: returnedCITLRevisionId,
+            },
+          },
+        },
+      });
+
+    if (submittedReturnedCITLRevision) {
+      throw new Error("Peer Suggestion is already submitted");
+    }
 
       const returnedCITLRevisionSuggestionItem =
         await prisma.returnedCITLRevisionSuggestionItem.create({

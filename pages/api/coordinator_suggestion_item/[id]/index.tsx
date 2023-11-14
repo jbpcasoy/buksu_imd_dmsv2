@@ -68,6 +68,26 @@ export default async function handler(
       );
 
       const { id } = validator.cast(req.query);
+
+      const submittedCoordinatorSuggestion =
+        await prisma.submittedCoordinatorSuggestion.findFirst({
+          where: {
+            CoordinatorSuggestion: {
+              CoordinatorSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedCoordinatorSuggestion) {
+        throw new Error("Coordinator Suggestion is already submitted");
+      }
+
       const coordinatorSuggestionItem =
         await prisma.coordinatorSuggestionItem.delete({
           where: {
@@ -104,6 +124,25 @@ export default async function handler(
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
+
+      const submittedCoordinatorSuggestion =
+        await prisma.submittedCoordinatorSuggestion.findFirst({
+          where: {
+            CoordinatorSuggestion: {
+              CoordinatorSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedCoordinatorSuggestion) {
+        throw new Error("Coordinator Suggestion is already submitted");
+      }
 
       const coordinatorSuggestionItem =
         await prisma.coordinatorSuggestionItem.update({

@@ -38,8 +38,28 @@ export default async function handler(
         "CoordinatorSuggestionItem"
       );
 
-      const { actionTaken, coordinatorSuggestionId, remarks, suggestion, pageNumber } =
-        validator.cast(req.body);
+      const {
+        actionTaken,
+        coordinatorSuggestionId,
+        remarks,
+        suggestion,
+        pageNumber,
+      } = validator.cast(req.body);
+
+      const submittedCoordinatorSuggestion =
+        await prisma.submittedCoordinatorSuggestion.findFirst({
+          where: {
+            CoordinatorSuggestion: {
+              id: {
+                equals: coordinatorSuggestionId,
+              },
+            },
+          },
+        });
+
+      if (submittedCoordinatorSuggestion) {
+        throw new Error("Coordinator Suggestion is already submitted");
+      }
 
       const coordinatorSuggestionItem =
         await prisma.coordinatorSuggestionItem.create({
@@ -65,7 +85,6 @@ export default async function handler(
     }
   };
 
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -81,25 +100,26 @@ export default async function handler(
         take,
         "filter[coordinatorSuggestionId]": filterCoordinatorSuggestionId,
       } = validator.cast(req.query);
-      const coordinatorSuggestionItems = await prisma.coordinatorSuggestionItem.findMany({
-        skip,
-        take,
-        where: {
-          AND: [
-            accessibleBy(ability).CoordinatorSuggestionItem,
-            {
-              CoordinatorSuggestion: {
-                id: {
-                  equals: filterCoordinatorSuggestionId,
+      const coordinatorSuggestionItems =
+        await prisma.coordinatorSuggestionItem.findMany({
+          skip,
+          take,
+          where: {
+            AND: [
+              accessibleBy(ability).CoordinatorSuggestionItem,
+              {
+                CoordinatorSuggestion: {
+                  id: {
+                    equals: filterCoordinatorSuggestionId,
+                  },
                 },
               },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+            ],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
       const count = await prisma.coordinatorSuggestionItem.count({
         where: {
           AND: [

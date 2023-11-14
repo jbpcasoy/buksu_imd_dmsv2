@@ -41,6 +41,21 @@ export default async function handler(
       const { actionTaken, peerSuggestionId, remarks, suggestion, pageNumber } =
         validator.cast(req.body);
 
+        const submittedPeerSuggestion =
+        await prisma.submittedPeerSuggestion.findFirst({
+          where: {
+            PeerSuggestion: {
+              id: {
+                equals: peerSuggestionId,
+              },
+            },
+          },
+        });
+
+      if (submittedPeerSuggestion) {
+        throw new Error("Peer Suggestion is already submitted");
+      }
+      
       const peerSuggestionItem = await prisma.peerSuggestionItem.create({
         data: {
           actionTaken,

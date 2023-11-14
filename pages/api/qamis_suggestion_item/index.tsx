@@ -45,6 +45,22 @@ export default async function handler(
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
+      
+      const submittedQAMISSuggestion =
+      await prisma.submittedQAMISSuggestion.findFirst({
+        where: {
+          QAMISSuggestion: {
+            id: {
+              equals: qAMISSuggestionId,
+            },
+          },
+        },
+      });
+
+    if (submittedQAMISSuggestion) {
+      throw new Error("QAMIS Suggestion is already submitted");
+    }
+    
       const qAMISSuggestionItem =
         await prisma.qAMISSuggestionItem.create({
           data: {

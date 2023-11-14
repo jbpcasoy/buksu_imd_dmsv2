@@ -70,6 +70,25 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
+      const submittedChairpersonSuggestion =
+        await prisma.submittedChairpersonSuggestion.findFirst({
+          where: {
+            ChairpersonSuggestion: {
+              ChairpersonSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedChairpersonSuggestion) {
+        throw new Error("Chairperson Suggestion is already submitted");
+      }
+
       const chairpersonSuggestionItem =
         await prisma.chairpersonSuggestionItem.delete({
           where: {
@@ -106,6 +125,25 @@ export default async function handler(
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
+
+      const submittedChairpersonSuggestion =
+        await prisma.submittedChairpersonSuggestion.findFirst({
+          where: {
+            ChairpersonSuggestion: {
+              ChairpersonSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedChairpersonSuggestion) {
+        throw new Error("Chairperson Suggestion is already submitted");
+      }
 
       const chairpersonSuggestionItem =
         await prisma.chairpersonSuggestionItem.update({

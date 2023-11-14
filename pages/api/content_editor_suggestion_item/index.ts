@@ -38,22 +38,43 @@ export default async function handler(
         "ContentEditorSuggestionItem"
       );
 
-      const { actionTaken, contentEditorSuggestionId, remarks, suggestion, pageNumber } =
-        validator.cast(req.body);
+      const {
+        actionTaken,
+        contentEditorSuggestionId,
+        remarks,
+        suggestion,
+        pageNumber,
+      } = validator.cast(req.body);
 
-      const contentEditorSuggestionItem = await prisma.contentEditorSuggestionItem.create({
-        data: {
-          actionTaken,
-          remarks,
-          suggestion,
-          pageNumber,
-          ContentEditorSuggestion: {
-            connect: {
-              id: contentEditorSuggestionId,
+      const submittedContentEditorSuggestion =
+        await prisma.submittedContentEditorSuggestion.findFirst({
+          where: {
+            ContentEditorSuggestion: {
+              id: {
+                equals: contentEditorSuggestionId,
+              },
             },
           },
-        },
-      });
+        });
+
+      if (submittedContentEditorSuggestion) {
+        throw new Error("ContentEditor Suggestion is already submitted");
+      }
+
+      const contentEditorSuggestionItem =
+        await prisma.contentEditorSuggestionItem.create({
+          data: {
+            actionTaken,
+            remarks,
+            suggestion,
+            pageNumber,
+            ContentEditorSuggestion: {
+              connect: {
+                id: contentEditorSuggestionId,
+              },
+            },
+          },
+        });
 
       return res.json(contentEditorSuggestionItem);
     } catch (error: any) {
@@ -79,25 +100,26 @@ export default async function handler(
         take,
         "filter[contentEditorSuggestionId]": filterContentEditorSuggestionId,
       } = validator.cast(req.query);
-      const contentEditorSuggestionItems = await prisma.contentEditorSuggestionItem.findMany({
-        skip,
-        take,
-        where: {
-          AND: [
-            accessibleBy(ability).ContentEditorSuggestionItem,
-            {
-              ContentEditorSuggestion: {
-                id: {
-                  equals: filterContentEditorSuggestionId,
+      const contentEditorSuggestionItems =
+        await prisma.contentEditorSuggestionItem.findMany({
+          skip,
+          take,
+          where: {
+            AND: [
+              accessibleBy(ability).ContentEditorSuggestionItem,
+              {
+                ContentEditorSuggestion: {
+                  id: {
+                    equals: filterContentEditorSuggestionId,
+                  },
                 },
               },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+            ],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
       const count = await prisma.contentEditorSuggestionItem.count({
         where: {
           AND: [

@@ -70,12 +70,30 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const qAMISSuggestionItem =
-        await prisma.qAMISSuggestionItem.delete({
+      const submittedQAMISSuggestion =
+        await prisma.submittedQAMISSuggestion.findFirst({
           where: {
-            id,
+            QAMISSuggestion: {
+              QAMISSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
           },
         });
+
+      if (submittedQAMISSuggestion) {
+        throw new Error("QAMIS Suggestion is already submitted");
+      }
+
+      const qAMISSuggestionItem = await prisma.qAMISSuggestionItem.delete({
+        where: {
+          id,
+        },
+      });
 
       return res.json(qAMISSuggestionItem);
     } catch (error: any) {
@@ -106,19 +124,37 @@ export default async function handler(
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
-
-      const qAMISSuggestionItem =
-        await prisma.qAMISSuggestionItem.update({
+      
+      const submittedQAMISSuggestion =
+        await prisma.submittedQAMISSuggestion.findFirst({
           where: {
-            id: id as string,
-          },
-          data: {
-            actionTaken,
-            remarks,
-            suggestion,
-            pageNumber,
+            QAMISSuggestion: {
+              QAMISSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
           },
         });
+
+      if (submittedQAMISSuggestion) {
+        throw new Error("QAMIS Suggestion is already submitted");
+      }
+
+      const qAMISSuggestionItem = await prisma.qAMISSuggestionItem.update({
+        where: {
+          id: id as string,
+        },
+        data: {
+          actionTaken,
+          remarks,
+          suggestion,
+          pageNumber,
+        },
+      });
 
       return res.json(qAMISSuggestionItem);
     } catch (error: any) {

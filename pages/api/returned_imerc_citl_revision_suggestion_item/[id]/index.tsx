@@ -68,6 +68,26 @@ export default async function handler(
       );
 
       const { id } = validator.cast(req.query);
+
+      const submittedReturnedIMERCCITLRevision =
+        await prisma.submittedReturnedIMERCCITLRevision.findFirst({
+          where: {
+            ReturnedIMERCCITLRevision: {
+              ReturnedIMERCCITLRevisionSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedReturnedIMERCCITLRevision) {
+        throw new Error("Peer Suggestion is already submitted");
+      }
+
       const returnedIMERCCITLRevisionSuggestionItem =
         await prisma.returnedIMERCCITLRevisionSuggestionItem.delete({
           where: {
@@ -104,6 +124,25 @@ export default async function handler(
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
+
+      const submittedReturnedIMERCCITLRevision =
+        await prisma.submittedReturnedIMERCCITLRevision.findFirst({
+          where: {
+            ReturnedIMERCCITLRevision: {
+              ReturnedIMERCCITLRevisionSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedReturnedIMERCCITLRevision) {
+        throw new Error("Peer Suggestion is already submitted");
+      }
 
       const returnedIMERCCITLRevisionSuggestionItem =
         await prisma.returnedIMERCCITLRevisionSuggestionItem.update({

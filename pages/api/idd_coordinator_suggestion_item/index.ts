@@ -45,6 +45,23 @@ export default async function handler(
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
+
+      const submittedIDDCoordinatorSuggestion =
+        await prisma.submittedIDDCoordinatorSuggestion.findFirst({
+          where: {
+            IDDCoordinatorSuggestion: {
+              id: {
+                equals: iDDCoordinatorSuggestionId,
+              },
+            },
+          },
+        });
+
+      if (submittedIDDCoordinatorSuggestion) {
+        throw new Error("IDDCoordinator Suggestion is already submitted");
+      }
+
+      
       const iDDCoordinatorSuggestionItem =
         await prisma.iDDCoordinatorSuggestionItem.create({
           data: {

@@ -70,11 +70,31 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const contentEditorSuggestionItem = await prisma.contentEditorSuggestionItem.delete({
-        where: {
-          id,
-        },
-      });
+      const submittedContentEditorSuggestion =
+        await prisma.submittedContentEditorSuggestion.findFirst({
+          where: {
+            ContentEditorSuggestion: {
+              ContentEditorSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedContentEditorSuggestion) {
+        throw new Error("ContentEditor Suggestion is already submitted");
+      }
+
+      const contentEditorSuggestionItem =
+        await prisma.contentEditorSuggestionItem.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(contentEditorSuggestionItem);
     } catch (error: any) {
@@ -105,17 +125,37 @@ export default async function handler(
         req.body
       );
 
-      const contentEditorSuggestionItem = await prisma.contentEditorSuggestionItem.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          actionTaken,
-          remarks,
-          suggestion,
-          pageNumber,
-        },
-      });
+      const submittedContentEditorSuggestion =
+        await prisma.submittedContentEditorSuggestion.findFirst({
+          where: {
+            ContentEditorSuggestion: {
+              ContentEditorSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedContentEditorSuggestion) {
+        throw new Error("ContentEditor Suggestion is already submitted");
+      }
+
+      const contentEditorSuggestionItem =
+        await prisma.contentEditorSuggestionItem.update({
+          where: {
+            id: id as string,
+          },
+          data: {
+            actionTaken,
+            remarks,
+            suggestion,
+            pageNumber,
+          },
+        });
 
       return res.json(contentEditorSuggestionItem);
     } catch (error: any) {

@@ -70,11 +70,27 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const contentSpecialistSuggestionItem = await prisma.contentSpecialistSuggestionItem.delete({
-        where: {
-          id,
-        },
-      });
+      const submittedContentSpecialistSuggestion =
+        await prisma.submittedContentSpecialistSuggestion.findFirst({
+          where: {
+            ContentSpecialistSuggestion: {
+              ContentSpecialistSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      const contentSpecialistSuggestionItem =
+        await prisma.contentSpecialistSuggestionItem.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(contentSpecialistSuggestionItem);
     } catch (error: any) {
@@ -105,17 +121,18 @@ export default async function handler(
         req.body
       );
 
-      const contentSpecialistSuggestionItem = await prisma.contentSpecialistSuggestionItem.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          actionTaken,
-          remarks,
-          suggestion,
-          pageNumber,
-        },
-      });
+      const contentSpecialistSuggestionItem =
+        await prisma.contentSpecialistSuggestionItem.update({
+          where: {
+            id: id as string,
+          },
+          data: {
+            actionTaken,
+            remarks,
+            suggestion,
+            pageNumber,
+          },
+        });
 
       return res.json(contentSpecialistSuggestionItem);
     } catch (error: any) {

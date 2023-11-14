@@ -46,6 +46,21 @@ export default async function handler(
         pageNumber,
       } = validator.cast(req.body);
 
+      const submittedReturnedDepartmentRevision =
+        await prisma.submittedReturnedDepartmentRevision.findFirst({
+          where: {
+            ReturnedDepartmentRevision: {
+              id: {
+                equals: returnedDepartmentRevisionId,
+              },
+            },
+          },
+        });
+
+      if (submittedReturnedDepartmentRevision) {
+        throw new Error("Peer Suggestion is already submitted");
+      }
+
       const returnedDepartmentRevisionSuggestionItem =
         await prisma.returnedDepartmentRevisionSuggestionItem.create({
           data: {

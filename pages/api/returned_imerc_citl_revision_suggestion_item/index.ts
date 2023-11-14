@@ -46,6 +46,21 @@ export default async function handler(
         pageNumber,
       } = validator.cast(req.body);
 
+      const submittedReturnedIMERCCITLRevision =
+        await prisma.submittedReturnedIMERCCITLRevision.findFirst({
+          where: {
+            ReturnedIMERCCITLRevision: {
+              id: {
+                equals: returnedIMERCCITLRevisionId,
+              },
+            },
+          },
+        });
+
+      if (submittedReturnedIMERCCITLRevision) {
+        throw new Error("Peer Suggestion is already submitted");
+      }
+
       const returnedIMERCCITLRevisionSuggestionItem =
         await prisma.returnedIMERCCITLRevisionSuggestionItem.create({
           data: {
@@ -106,22 +121,20 @@ export default async function handler(
             updatedAt: "desc",
           },
         });
-      const count = await prisma.returnedIMERCCITLRevisionSuggestionItem.count(
-        {
-          where: {
-            AND: [
-              accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItem,
-              {
-                ReturnedIMERCCITLRevision: {
-                  id: {
-                    equals: filterReturnedIMERCCITLRevisionId,
-                  },
+      const count = await prisma.returnedIMERCCITLRevisionSuggestionItem.count({
+        where: {
+          AND: [
+            accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItem,
+            {
+              ReturnedIMERCCITLRevision: {
+                id: {
+                  equals: filterReturnedIMERCCITLRevisionId,
                 },
               },
-            ],
-          },
-        }
-      );
+            },
+          ],
+        },
+      });
 
       return res.json({ returnedIMERCCITLRevisionSuggestionItems, count });
     } catch (error: any) {

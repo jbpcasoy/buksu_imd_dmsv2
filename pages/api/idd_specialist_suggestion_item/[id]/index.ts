@@ -70,11 +70,30 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const iDDSpecialistSuggestionItem = await prisma.iDDSpecialistSuggestionItem.delete({
-        where: {
-          id,
-        },
-      });
+      const submittedIDDSpecialistSuggestion =
+        await prisma.submittedIDDSpecialistSuggestion.findFirst({
+          where: {
+            IDDSpecialistSuggestion: {
+              IDDSpecialistSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedIDDSpecialistSuggestion) {
+        throw new Error("IDDSpecialist Suggestion is already submitted");
+      }
+      const iDDSpecialistSuggestionItem =
+        await prisma.iDDSpecialistSuggestionItem.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(iDDSpecialistSuggestionItem);
     } catch (error: any) {
@@ -105,17 +124,37 @@ export default async function handler(
         req.body
       );
 
-      const iDDSpecialistSuggestionItem = await prisma.iDDSpecialistSuggestionItem.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          actionTaken,
-          remarks,
-          suggestion,
-          pageNumber,
-        },
-      });
+      const submittedIDDSpecialistSuggestion =
+        await prisma.submittedIDDSpecialistSuggestion.findFirst({
+          where: {
+            IDDSpecialistSuggestion: {
+              IDDSpecialistSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      if (submittedIDDSpecialistSuggestion) {
+        throw new Error("IDDSpecialist Suggestion is already submitted");
+      }
+
+      const iDDSpecialistSuggestionItem =
+        await prisma.iDDSpecialistSuggestionItem.update({
+          where: {
+            id: id as string,
+          },
+          data: {
+            actionTaken,
+            remarks,
+            suggestion,
+            pageNumber,
+          },
+        });
 
       return res.json(iDDSpecialistSuggestionItem);
     } catch (error: any) {
