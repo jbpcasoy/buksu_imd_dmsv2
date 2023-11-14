@@ -114,6 +114,25 @@ export default async function handler(
         },
       });
 
+      const departmentReview = await prisma.departmentReview.findFirstOrThrow({
+        where: {
+          id: {
+            equals: departmentReviewId,
+          },
+        },
+        include: {
+          IMFile: {
+            include: {
+              IM: true,
+            },
+          },
+        },
+      });
+
+      if (faculty.id === departmentReview.IMFile.IM.facultyId) {
+        throw new Error("Cannot peer review own IM");
+      }
+      
       const peerReview = await prisma.peerReview.create({
         data: {
           q1_1,
