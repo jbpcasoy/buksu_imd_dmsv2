@@ -6,8 +6,9 @@ export interface useMyIMsParams {
   skip: number;
   take: number;
   filter: Object;
+  sort: Object;
 }
-export default function useMyIMs({ skip, take, filter }: useMyIMsParams) {
+export default function useMyIMs({ skip, take, filter, sort }: useMyIMsParams) {
   const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
     iMs: [],
@@ -20,6 +21,7 @@ export default function useMyIMs({ skip, take, filter }: useMyIMsParams) {
           skip,
           take,
           filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +30,7 @@ export default function useMyIMs({ skip, take, filter }: useMyIMsParams) {
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

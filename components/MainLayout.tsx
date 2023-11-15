@@ -34,7 +34,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </div>
         <div className='flex-1 flex flex-col h-full overflow-auto'>
           <Header />
-          <div className='h-full'>{children}</div>
+          <div className='h-full m-2'>{children}</div>
         </div>
       </div>
     </div>
