@@ -6,11 +6,14 @@ export interface useCITLDirectorEndorsedParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
+
 export default function useCITLDirectorEndorsed({
   skip,
   take,
   filter,
+  sort,
 }: useCITLDirectorEndorsedParams) {
   const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
@@ -23,7 +26,8 @@ export default function useCITLDirectorEndorsed({
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -32,7 +36,7 @@ export default function useCITLDirectorEndorsed({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

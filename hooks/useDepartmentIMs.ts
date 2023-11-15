@@ -6,11 +6,18 @@ export interface useDepartmentIMsParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useDepartmentIMs({ skip, take, filter }: useDepartmentIMsParams) {
-  const [state, setState] = useState<{iMs: IM[], count: number}>({
+
+export default function useDepartmentIMs({
+  skip,
+  take,
+  filter,
+  sort,
+}: useDepartmentIMsParams) {
+  const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
-    iMs: []
+    iMs: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,8 @@ export default function useDepartmentIMs({ skip, take, filter }: useDepartmentIM
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +36,7 @@ export default function useDepartmentIMs({ skip, take, filter }: useDepartmentIM
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

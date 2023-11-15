@@ -6,11 +6,17 @@ export interface useCITLReviewedParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useCITLReviewed({ skip, take, filter }: useCITLReviewedParams) {
-  const [state, setState] = useState<{iMs: IM[], count: number}>({
+export default function useCITLReviewed({
+  skip,
+  take,
+  filter,
+  sort,
+}: useCITLReviewedParams) {
+  const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
-    iMs: []
+    iMs: [],
   });
 
   useEffect(() => {
@@ -19,7 +25,8 @@ export default function useCITLReviewed({ skip, take, filter }: useCITLReviewedP
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +35,7 @@ export default function useCITLReviewed({ skip, take, filter }: useCITLReviewedP
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

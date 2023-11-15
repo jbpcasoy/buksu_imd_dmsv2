@@ -6,8 +6,15 @@ export interface useCITLIMsParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useCITLIMs({ skip, take, filter }: useCITLIMsParams) {
+
+export default function useCITLIMs({
+  skip,
+  take,
+  filter,
+  sort,
+}: useCITLIMsParams) {
   const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
     iMs: [],
@@ -19,7 +26,8 @@ export default function useCITLIMs({ skip, take, filter }: useCITLIMsParams) {
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +36,7 @@ export default function useCITLIMs({ skip, take, filter }: useCITLIMsParams) {
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }
