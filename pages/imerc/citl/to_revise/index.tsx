@@ -22,11 +22,13 @@ export default function IMERCCITLToRevisePage() {
   const { iMs, count } = useIMERCCITLToRevise(state);
 
   return (
-    <IMTable
-      count={count}
-      iMs={iMs}
-      title='To Revise'
-      onChangeState={(state) => setState(state)}
-    />
+    <MainLayout>
+      <IMTable
+        count={count}
+        iMs={iMs}
+        title='To Revise'
+        onChangeState={(state) => setState(state)}
+      />
+    </MainLayout>
   );
 }

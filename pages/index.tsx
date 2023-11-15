@@ -67,6 +67,16 @@ export default function Home() {
     console.log({ state });
   }, [state]);
 
+  if (
+    activeDean === undefined ||
+    activeCITLDirector === undefined ||
+    activeIDDCoordinator === undefined ||
+    activeFaculty === undefined ||
+    activeChairperson === undefined ||
+    activeCoordinator === undefined
+  )
+    return null;
+
   return (
     <MainLayout>
       <h1 className='text-lg'>Dashboard</h1>
@@ -79,13 +89,11 @@ export default function Home() {
             </p>
           </div>
         )}
-      {activeFaculty &&
-        !(activeDean || activeCITLDirector || activeIDDCoordinator) && (
-          <div>
-            <p>Welcome Faculty!</p>
-          </div>
-        )}
-      {(activeDean || activeCITLDirector || activeIDDCoordinator || activeCoordinator || activeChairperson) && (
+      {(activeDean ||
+        activeCITLDirector ||
+        activeIDDCoordinator ||
+        activeCoordinator ||
+        activeChairperson) && (
         <div>
           <form noValidate onSubmit={formik.handleSubmit}>
             <CollegeSelector
@@ -137,6 +145,18 @@ export default function Home() {
           </div>
         </div>
       )}
+      {activeFaculty &&
+        !(
+          activeDean ||
+          activeCITLDirector ||
+          activeIDDCoordinator ||
+          activeCoordinator ||
+          activeChairperson
+        ) && (
+          <div>
+            <p>Welcome Faculty!</p>
+          </div>
+        )}
     </MainLayout>
   );
 }

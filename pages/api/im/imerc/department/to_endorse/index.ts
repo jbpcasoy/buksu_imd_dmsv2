@@ -166,6 +166,63 @@ export default async function handler(
               },
             },
             {
+              IMFile: {
+                none: {
+                  QAMISRevision: {
+                    QAMISChairpersonEndorsement: {
+                      Chairperson: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  QAMISRevision: {
+                    QAMISCoordinatorEndorsement: {
+                      Coordinator: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  QAMISRevision: {
+                    QAMISDeanEndorsement: {
+                      Dean: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
               Faculty: {
                 User: {
                   name: {
@@ -216,38 +273,11 @@ export default async function handler(
                 Department: {
                   Faculty: {
                     some: {
-                      OR: [
-                        {
-                          Chairperson: {
-                            ActiveChairperson: {
-                              Chairperson: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
+                      User: {
+                        id: {
+                          equals: user.id,
                         },
-                        {
-                          Coordinator: {
-                            ActiveCoordinator: {
-                              Coordinator: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      ],
+                      },
                     },
                   },
                 },
@@ -278,29 +308,78 @@ export default async function handler(
                 IMFile: {
                   some: {
                     QAMISRevision: {
-                      AND: [
-                        {
-                          QAMISChairpersonEndorsement: {
-                            QAMISDepartmentEndorsement: {
-                              isNot: null,
+                      QAMISChairpersonEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          isNot: null,
+                        },
+                      },
+                      QAMISCoordinatorEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          isNot: null,
+                        },
+                      },
+                      QAMISDeanEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          isNot: null,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  QAMISRevision: {
+                    QAMISChairpersonEndorsement: {
+                      Chairperson: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
                             },
                           },
                         },
-                        {
-                          QAMISCoordinatorEndorsement: {
-                            QAMISDepartmentEndorsement: {
-                              isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  QAMISRevision: {
+                    QAMISCoordinatorEndorsement: {
+                      Coordinator: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
                             },
                           },
                         },
-                        {
-                          QAMISDeanEndorsement: {
-                            QAMISDepartmentEndorsement: {
-                              isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  QAMISRevision: {
+                    QAMISDeanEndorsement: {
+                      Dean: {
+                        Faculty: {
+                          User: {
+                            id: {
+                              equals: user.id,
                             },
                           },
                         },
-                      ],
+                      },
                     },
                   },
                 },

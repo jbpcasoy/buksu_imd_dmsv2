@@ -119,6 +119,95 @@ export async function iMERCCITLToReviewCount(user: User) {
             },
           ],
         },
+        {
+          IMFile: {
+            none: {
+              QAMISRevision: {
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    ContentSpecialistReview: {
+                      ContentSpecialistSuggestion: {
+                        SubmittedContentSpecialistSuggestion: {
+                          ContentSpecialistSuggestion: {
+                            ContentSpecialistReview: {
+                              ContentSpecialist: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              QAMISRevision: {
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    IDDSpecialistReview: {
+                      IDDSpecialistSuggestion: {
+                        SubmittedIDDSpecialistSuggestion: {
+                          IDDSpecialistSuggestion: {
+                            IDDSpecialistReview: {
+                              IDDCoordinator: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              QAMISRevision: {
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    ContentEditorReview: {
+                      ContentEditorSuggestion: {
+                        SubmittedContentEditorSuggestion: {
+                          ContentEditorSuggestion: {
+                            ContentEditorReview: {
+                              CITLDirector: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       ],
     },
   });

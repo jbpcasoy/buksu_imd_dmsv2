@@ -175,6 +175,85 @@ export default async function handler(
             },
             {
               IMFile: {
+                none: {
+                  DepartmentReview: {
+                    ChairpersonReview: {
+                      ChairpersonSuggestion: {
+                        SubmittedChairpersonSuggestion: {
+                          ChairpersonSuggestion: {
+                            ChairpersonReview: {
+                              Chairperson: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  DepartmentReview: {
+                    CoordinatorReview: {
+                      CoordinatorSuggestion: {
+                        SubmittedCoordinatorSuggestion: {
+                          CoordinatorSuggestion: {
+                            CoordinatorReview: {
+                              Coordinator: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  DepartmentReview: {
+                    PeerReview: {
+                      PeerSuggestion: {
+                        SubmittedPeerSuggestion: {
+                          PeerSuggestion: {
+                            PeerReview: {
+                              Faculty: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
                 some: {
                   DepartmentReview: {
                     isNot: null,
@@ -342,6 +421,85 @@ export default async function handler(
                     },
                   },
                 ],
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  DepartmentReview: {
+                    ChairpersonReview: {
+                      ChairpersonSuggestion: {
+                        SubmittedChairpersonSuggestion: {
+                          ChairpersonSuggestion: {
+                            ChairpersonReview: {
+                              Chairperson: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  DepartmentReview: {
+                    CoordinatorReview: {
+                      CoordinatorSuggestion: {
+                        SubmittedCoordinatorSuggestion: {
+                          CoordinatorSuggestion: {
+                            CoordinatorReview: {
+                              Coordinator: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              IMFile: {
+                none: {
+                  DepartmentReview: {
+                    PeerReview: {
+                      PeerSuggestion: {
+                        SubmittedPeerSuggestion: {
+                          PeerSuggestion: {
+                            PeerReview: {
+                              Faculty: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
               },
             },
             {
