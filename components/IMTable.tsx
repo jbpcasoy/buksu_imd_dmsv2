@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import useUserFaculty from "@/hooks/useUserFaculty";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useCollegeIM from "@/hooks/useCollegeIM";
 
 export interface IMTableProps {
   count: number;
@@ -86,43 +88,47 @@ export default function IMTable({
   };
 
   return (
-    <div className='text-sm'>
-      <div className='flex'>
-        <div className='flex-1'>
-          <h2 className='text-base border-b-2 border-palette_orange inline pb-1 px-2'>
-            {title}
-          </h2>
-        </div>
-        <Link
-          href='/im/add'
-          className='rounded bg-palette_blue text-palette_white py-1 px-2'
-        >
-          Add IM
-        </Link>
-      </div>
-      <div className='flex flex-row space-x-1'>
-        <FilterSelector onFilterChange={handleFilterChange} />
+    <div className='text-sm border border-palette_grey rounded'>
+      <div className='p-1 bg-palette_grey bg-opacity-10'>
+        <div className='flex'>
+          <div className='flex-1 flex items-center space-x-1'>
+            <h2 className='text-base border-b-2 border-palette_orange inline pb-1 px-2'>
+              {title}
+            </h2>
+            <div className='flex flex-row space-x-1'>
+              <FilterSelector onFilterChange={handleFilterChange} />
 
-        <SortSelector onSortChange={handleSortChange} />
+              <SortSelector onSortChange={handleSortChange} />
+            </div>
+          </div>
+          <Link
+            href='/im/add'
+            className='rounded bg-palette_blue text-palette_white py-1 px-2'
+          >
+            Add IM
+          </Link>
+        </div>
       </div>
       <table className='table-auto w-full'>
-        <thead>
+        <thead className='bg-palette_grey bg-opacity-10 p-1'>
           <tr>
-            <th>TITLE</th>
-            <th>TYPE</th>
-            <th>AUTHOR</th>
-            <th>STATUS</th>
-            <th>DATE CREATED</th>
-            <th>ACTIONS</th>
+            <th className='font-normal'>TITLE</th>
+            <th className='font-normal'>TYPE</th>
+            <th className='font-normal'>AUTHOR</th>
+            <th className='font-normal'>DEPARTMENT</th>
+            <th className='font-normal'>COLLEGE</th>
+            <th className='font-normal'>STATUS</th>
+            <th className='font-normal'>DATE CREATED</th>
+            <th className='font-normal'>ACTIONS</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className='py-1'>
           {iMs.map((iM) => {
             return <IMItem iM={iM} key={iM.id} />;
           })}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 p-1'>
         <p>
           {state.skip} - {state.skip + state.take} of {count}
         </p>
@@ -141,35 +147,43 @@ function IMItem({ iM }: { iM: IM }) {
   const user = useUserFaculty({
     id: iM.facultyId,
   });
+  const department = useDepartmentIM({ id: iM.id });
+  const college = useCollegeIM({ id: iM.id });
 
   return (
     <tr key={iM.id}>
       <td>
-        <div className='pb-1'>{iM.title}</div>
+        <div className='py-1 pl-4'>{iM.title}</div>
       </td>
       <td>
-        <div className='pb-1'>{iM.type}</div>
+        <div className='py-1'>{iM.type}</div>
       </td>
       <td>
-        <div className='pb-1'>{user?.name}</div>
+        <div className='py-1'>{user?.name}</div>
       </td>
       <td>
-        <div className='pb-1'>
+        <div className='py-1'>{department?.name}</div>
+      </td>
+      <td>
+        <div className='py-1'>{college?.name}</div>
+      </td>
+      <td>
+        <div className='py-1'>
           <IMStatus iM={iM} />
         </div>
       </td>
       <td>
-        <div className='pb-1'>
+        <div className='py-1'>
           {DateTime.fromJSDate(new Date(iM.createdAt)).toRelative()}
         </div>
       </td>
       <td>
-        <div className='pb-1'>
+        <div className='py-1 flex justify-center items-center'>
           <Link
             href={`/im/${iM.id}`}
-            className='rounded bg-palette_blue text-palette_white pb-1 px-2'
+            className='rounded bg-palette_blue text-palette_white py-1 px-2'
           >
-            view
+            View
           </Link>
         </div>
       </td>
@@ -221,8 +235,9 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
       </select>
       <input
         type='text'
-        placeholder='value'
+        placeholder='Search'
         value={filterValue}
+        className='bg-inherit border-b'
         onChange={handleValueChange}
       />
     </div>

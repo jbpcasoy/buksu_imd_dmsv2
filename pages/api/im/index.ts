@@ -92,6 +92,8 @@ export default async function handler(
         "filter[userName]": Yup.string().optional(),
         "filter[collegeName]": Yup.string().optional(),
         "filter[departmentName]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().oneOf(['asc', 'desc']).optional(),
       });
       await validator.validate(req.query);
 
@@ -102,6 +104,8 @@ export default async function handler(
         "filter[departmentName]": filterDepartmentName,
         "filter[title]": filterTitle,
         "filter[userName]": filterUserName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
 
       const ability = iMAbility({ user });
@@ -153,7 +157,7 @@ export default async function handler(
           ],
         },
         orderBy: {
-          updatedAt: "desc",
+          [sortField || 'updatedAt']: sortDirection || 'desc',
         },
       });
       const count = await prisma.iM.count({
