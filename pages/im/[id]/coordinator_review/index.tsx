@@ -148,7 +148,7 @@ export default function AddCoordinatorReviewPage() {
                 onSubmit={formik.handleSubmit}
                 className=''
               >
-                <div className='space-y-2 max-h'>
+                <div className='space-y-2 mx-1'>
                   <ReviewSection title={ReviewSections.s1}>
                     <ReviewItem
                       question={ReviewQuestions.q1_1}
@@ -277,7 +277,7 @@ export default function AddCoordinatorReviewPage() {
                     />
                   </ReviewSection>
                 </div>
-                <div className='flex justify-end'>
+                <div className='flex justify-end p-1'>
                   <input
                     type='submit'
                     value='Next'

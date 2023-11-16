@@ -318,33 +318,29 @@ function AddIM() {
         Add IM
       </button>
       {state.addIMOpen && (
-        <Modal
-          title='ADD IM'
-          onClose={() => setState({ addIMOpen: false })}
-          content={
-            <form onSubmit={formik.handleSubmit} noValidate>
-              <div className='text-base flex flex-col space-y-1'>
-                <input placeholder='Title' {...formik.getFieldProps("title")} />
-                <select
-                  {...formik.getFieldProps("type")}
-                  className='bg-palette_blue text-palette_white rounded block py-1'
-                >
-                  <option value='MODULE'>Module</option>
-                  <option value='COURSE_FILE'>Course File</option>
-                  <option value='WORKTEXT'>Worktext</option>
-                  <option value='TEXTBOOK'>Textbook</option>
-                </select>
-                <input
-                  type='submit'
-                  value='Submit'
-                  disabled={!formik.isValid}
-                  className='border rounded'
-                  onClick={() => setState({ addIMOpen: false })}
-                />
-              </div>
-            </form>
-          }
-        />
+        <Modal title='ADD IM' onClose={() => setState({ addIMOpen: false })}>
+          <form onSubmit={formik.handleSubmit} noValidate>
+            <div className='text-base flex flex-col space-y-1'>
+              <input placeholder='Title' {...formik.getFieldProps("title")} />
+              <select
+                {...formik.getFieldProps("type")}
+                className='bg-palette_blue text-palette_white rounded block py-1'
+              >
+                <option value='MODULE'>Module</option>
+                <option value='COURSE_FILE'>Course File</option>
+                <option value='WORKTEXT'>Worktext</option>
+                <option value='TEXTBOOK'>Textbook</option>
+              </select>
+              <input
+                type='submit'
+                value='Submit'
+                disabled={!formik.isValid}
+                className='border rounded'
+                onClick={() => setState({ addIMOpen: false })}
+              />
+            </div>
+          </form>
+        </Modal>
       )}
     </>
   );

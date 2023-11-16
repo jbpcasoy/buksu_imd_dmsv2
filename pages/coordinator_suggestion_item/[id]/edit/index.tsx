@@ -51,23 +51,25 @@ export default function CoordinatorSuggestionItemEditPage() {
       <div>
         <h2>Coordinator Review</h2>
         <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='suggestion'
-            {...formik.getFieldProps("suggestion")}
-          />
-          <br />
-          <input
-            type='number'
-            placeholder='pageNumber'
-            {...formik.getFieldProps("pageNumber")}
-          />
-          <br />
-          <textarea
-            placeholder='remarks'
-            {...formik.getFieldProps("remarks")}
-          />
-          <br />
-          <input type='submit' value='Submit' className='border rounded' />
+          <div className="flex flex-col space-y-1">
+            <textarea
+              placeholder='suggestion'
+              {...formik.getFieldProps("suggestion")}
+              className='rounded'
+            />
+            <input
+              type='number'
+              placeholder='pageNumber'
+              {...formik.getFieldProps("pageNumber")}
+              className='rounded'
+            />
+            <textarea
+              placeholder='remarks'
+              {...formik.getFieldProps("remarks")}
+              className='rounded'
+            />
+            <input type='submit' value='Submit' className='bg-palette_blue text-white rounded' />
+          </div>
         </form>
       </div>
     </MainLayout>

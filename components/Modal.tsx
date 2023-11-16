@@ -2,12 +2,12 @@ export interface ModalProps {
   onClose: () => void;
   title: string;
   shortDescription?: string;
-  content: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export default function Modal({
   onClose,
-  content,
+  children,
   shortDescription,
   title,
 }: ModalProps) {
@@ -25,7 +25,7 @@ export default function Modal({
             </button>
           </div>
         </div>
-        <div className='px-5 py-2'>{content}</div>
+        <div className='px-5 py-2'>{children}</div>
       </div>
     </div>
   );

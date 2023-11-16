@@ -1,4 +1,3 @@
-import Modal from "@/components/Modal";
 import ReviewItem from "@/components/ReviewItem";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import { useState } from "react";
