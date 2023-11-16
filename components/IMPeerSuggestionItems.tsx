@@ -1,8 +1,15 @@
 import usePeerSuggestionItemActionTakenPeerSuggestionItem from "@/hooks/usePeerSuggestionItemActionTakenPeerSuggestionItem";
 import usePeerSuggestionItemsIM from "@/hooks/usePeerSuggestionItemsIM";
 import { PeerSuggestionItem } from "@prisma/client";
+import axios from "axios";
+import { useFormik } from "formik";
+import { DateTime } from "luxon";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { PeerSuggestionItemProps } from "./PeerSuggestionItem";
+import * as Yup from "yup";
+import Modal from "./Modal";
 
 export interface IMPeerSuggestionItemsProps {
   id: string;
@@ -44,34 +51,33 @@ export default function IMPeerSuggestionItems({
 
   return (
     <div>
-      <table>
-        <caption>Peer Suggestions</caption>
+      <table className='text-sm w-full'>
+        <caption className='text-xs'>Peer Suggestions</caption>
         <thead>
           <tr>
-            <th>id</th>
-            <th>createdAt</th>
-            <th>updatedAt</th>
-            <th>suggestion</th>
-            <th>pageNumber</th>
-            <th>actionTaken</th>
-            <th>remarks</th>
-            <th>peerSuggestionId</th>
-            {editable && <th>actions</th>}
+            <th>LAST ACTIVITY</th>
+            <th>SUGGESTION</th>
+            <th>PAGE NUMBER</th>
+            <th>ACTION TAKEN</th>
+            <th>REMARKS</th>
+            {editable && <th>ACTIONS</th>}
           </tr>
         </thead>
         <tbody>
-          {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
-            return (
-              <Item
-                peerSuggestionItem={peerSuggestionItem}
-                editable={editable}
-                key={peerSuggestionItem.id}
-              />
-            );
-          })}
+          {peerSuggestionItems.peerSuggestionItems.map(
+            (peerSuggestionItem) => {
+              return (
+                <Item
+                  peerSuggestionItem={peerSuggestionItem}
+                  editable={editable}
+                  key={peerSuggestionItem.id}
+                />
+              );
+            }
+          )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 text-sm'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {peerSuggestionItems.count}
@@ -101,24 +107,106 @@ function Item({
 
   return (
     <tr>
-      <td>{peerSuggestionItem.id}</td>
-      <td>{new Date(peerSuggestionItem.createdAt).toLocaleString()}</td>
-      <td>{new Date(peerSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>
+        {DateTime.fromJSDate(
+          new Date(peerSuggestionItem.updatedAt)
+        ).toRelative()}
+      </td>
       <td>{peerSuggestionItem.suggestion}</td>
-      <td>{peerSuggestionItem.pageNumber}</td>
+      <td className='text-center'>{peerSuggestionItem.pageNumber}</td>
       <td>{peerSuggestionItemActionTaken?.value}</td>
       <td>{peerSuggestionItem.remarks}</td>
-      <td>{peerSuggestionItem.peerSuggestionId}</td>
       {editable && (
         <td>
-          <Link
-            href={`/peer_suggestion_item/${peerSuggestionItem.id}/action_taken/edit`}
-            className='border rounded'
-          >
-            edit
-          </Link>
+          <EditSuggestionItemActionTaken
+            peerSuggestionItem={peerSuggestionItem}
+          />
         </td>
       )}
     </tr>
+  );
+}
+
+interface EditSuggestionItemActionTakenProps {
+  peerSuggestionItem: PeerSuggestionItem;
+}
+function EditSuggestionItemActionTaken({
+  peerSuggestionItem,
+}: EditSuggestionItemActionTakenProps) {
+  const router = useRouter();
+  const [openEditActionTaken, setOpenEditActionTaken] = useState(false);
+  const peerSuggestionItemActionTaken =
+    usePeerSuggestionItemActionTakenPeerSuggestionItem({
+      id: peerSuggestionItem.id,
+    });
+  const formik = useFormik({
+    initialValues: {
+      value: "",
+    },
+    validationSchema: Yup.object({
+      value: Yup.string().required(),
+    }),
+    onSubmit: (values) => {
+      if (peerSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/peer_suggestion_item_action_taken/${peerSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/peer_suggestion_item_action_taken`, {
+            peerSuggestionItemId: peerSuggestionItem.id,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (!peerSuggestionItemActionTaken) return;
+    formik.setValues({
+      value: peerSuggestionItemActionTaken.value ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [peerSuggestionItemActionTaken]);
+
+  return (
+    <div>
+      <button
+        className='bg-palette_blue text-palette_white rounded px-1 text-sm w-full'
+        onClick={() => setOpenEditActionTaken(true)}
+      >
+        Edit
+      </button>
+      {openEditActionTaken && (
+        <Modal
+          title='Peer Review'
+          onClose={() => setOpenEditActionTaken(false)}
+        >
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <div className='flex flex-col'>
+              <textarea
+                placeholder='value'
+                {...formik.getFieldProps("value")}
+              />
+              <input
+                type='submit'
+                value='Submit'
+                className='bg-palette_blue text-palette_white rounded'
+              />
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
 }

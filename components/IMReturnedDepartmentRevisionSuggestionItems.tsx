@@ -1,8 +1,13 @@
 import useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem from "@/hooks/useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem";
 import useReturnedDepartmentRevisionSuggestionItemsIM from "@/hooks/useReturnedDepartmentRevisionSuggestionItemsIM";
 import { ReturnedDepartmentRevisionSuggestionItem } from "@prisma/client";
-import Link from "next/link";
+import axios from "axios";
+import { useFormik } from "formik";
+import { DateTime } from "luxon";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import * as Yup from "yup";
+import Modal from "./Modal";
 
 export interface IMReturnedDepartmentRevisionSuggestionItemsProps {
   id: string;
@@ -44,34 +49,33 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
 
   return (
     <div>
-      <table>
-        <caption>ReturnedDepartmentRevision Suggestions</caption>
+      <table className='text-sm w-full'>
+        <caption className='text-xs'>ReturnedDepartmentRevision Suggestions</caption>
         <thead>
           <tr>
-            <th>id</th>
-            <th>createdAt</th>
-            <th>updatedAt</th>
-            <th>suggestion</th>
-            <th>pageNumber</th>
-            <th>actionTaken</th>
-            <th>remarks</th>
-            <th>returnedDepartmentRevisionId</th>
-            {editable && <th>actions</th>}
+            <th>LAST ACTIVITY</th>
+            <th>SUGGESTION</th>
+            <th>PAGE NUMBER</th>
+            <th>ACTION TAKEN</th>
+            <th>REMARKS</th>
+            {editable && <th>ACTIONS</th>}
           </tr>
         </thead>
         <tbody>
-          {returnedDepartmentRevisionSuggestionItems.returnedDepartmentRevisionSuggestionItems.map((returnedDepartmentRevisionSuggestionItem) => {
-            return (
-              <Item
-                returnedDepartmentRevisionSuggestionItem={returnedDepartmentRevisionSuggestionItem}
-                editable={editable}
-                key={returnedDepartmentRevisionSuggestionItem.id}
-              />
-            );
-          })}
+          {returnedDepartmentRevisionSuggestionItems.returnedDepartmentRevisionSuggestionItems.map(
+            (returnedDepartmentRevisionSuggestionItem) => {
+              return (
+                <Item
+                  returnedDepartmentRevisionSuggestionItem={returnedDepartmentRevisionSuggestionItem}
+                  editable={editable}
+                  key={returnedDepartmentRevisionSuggestionItem.id}
+                />
+              );
+            }
+          )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 text-sm'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {returnedDepartmentRevisionSuggestionItems.count}
@@ -101,24 +105,106 @@ function Item({
 
   return (
     <tr>
-      <td>{returnedDepartmentRevisionSuggestionItem.id}</td>
-      <td>{new Date(returnedDepartmentRevisionSuggestionItem.createdAt).toLocaleString()}</td>
-      <td>{new Date(returnedDepartmentRevisionSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>
+        {DateTime.fromJSDate(
+          new Date(returnedDepartmentRevisionSuggestionItem.updatedAt)
+        ).toRelative()}
+      </td>
       <td>{returnedDepartmentRevisionSuggestionItem.suggestion}</td>
-      <td>{returnedDepartmentRevisionSuggestionItem.pageNumber}</td>
+      <td className='text-center'>{returnedDepartmentRevisionSuggestionItem.pageNumber}</td>
       <td>{returnedDepartmentRevisionSuggestionItemActionTaken?.value}</td>
       <td>{returnedDepartmentRevisionSuggestionItem.remarks}</td>
-      <td>{returnedDepartmentRevisionSuggestionItem.returnedDepartmentRevisionId}</td>
       {editable && (
         <td>
-          <Link
-            href={`/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItem.id}/action_taken/edit`}
-            className='border rounded'
-          >
-            edit
-          </Link>
+          <EditSuggestionItemActionTaken
+            returnedDepartmentRevisionSuggestionItem={returnedDepartmentRevisionSuggestionItem}
+          />
         </td>
       )}
     </tr>
+  );
+}
+
+interface EditSuggestionItemActionTakenProps {
+  returnedDepartmentRevisionSuggestionItem: ReturnedDepartmentRevisionSuggestionItem;
+}
+function EditSuggestionItemActionTaken({
+  returnedDepartmentRevisionSuggestionItem,
+}: EditSuggestionItemActionTakenProps) {
+  const router = useRouter();
+  const [openEditActionTaken, setOpenEditActionTaken] = useState(false);
+  const returnedDepartmentRevisionSuggestionItemActionTaken =
+    useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem({
+      id: returnedDepartmentRevisionSuggestionItem.id,
+    });
+  const formik = useFormik({
+    initialValues: {
+      value: "",
+    },
+    validationSchema: Yup.object({
+      value: Yup.string().required(),
+    }),
+    onSubmit: (values) => {
+      if (returnedDepartmentRevisionSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/returned_department_revision_suggestion_item_action_taken/${returnedDepartmentRevisionSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/returned_department_revision_suggestion_item_action_taken`, {
+            returnedDepartmentRevisionSuggestionItemId: returnedDepartmentRevisionSuggestionItem.id,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (!returnedDepartmentRevisionSuggestionItemActionTaken) return;
+    formik.setValues({
+      value: returnedDepartmentRevisionSuggestionItemActionTaken.value ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [returnedDepartmentRevisionSuggestionItemActionTaken]);
+
+  return (
+    <div>
+      <button
+        className='bg-palette_blue text-palette_white rounded px-1 text-sm w-full'
+        onClick={() => setOpenEditActionTaken(true)}
+      >
+        Edit
+      </button>
+      {openEditActionTaken && (
+        <Modal
+          title='ReturnedDepartmentRevision Review'
+          onClose={() => setOpenEditActionTaken(false)}
+        >
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <div className='flex flex-col'>
+              <textarea
+                placeholder='value'
+                {...formik.getFieldProps("value")}
+              />
+              <input
+                type='submit'
+                value='Submit'
+                className='bg-palette_blue text-palette_white rounded'
+              />
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
 }

@@ -1,8 +1,15 @@
 import useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem from "@/hooks/useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem";
 import useCoordinatorSuggestionItemsIM from "@/hooks/useCoordinatorSuggestionItemsIM";
 import { CoordinatorSuggestionItem } from "@prisma/client";
+import axios from "axios";
+import { useFormik } from "formik";
+import { DateTime } from "luxon";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { CoordinatorSuggestionItemProps } from "./CoordinatorSuggestionItem";
+import * as Yup from "yup";
+import Modal from "./Modal";
 
 export interface IMCoordinatorSuggestionItemsProps {
   id: string;
@@ -44,34 +51,33 @@ export default function IMCoordinatorSuggestionItems({
 
   return (
     <div>
-      <table>
-        <caption>Coordinator Suggestions</caption>
+      <table className='text-sm w-full'>
+        <caption className='text-xs'>Coordinator Suggestions</caption>
         <thead>
           <tr>
-            <th>id</th>
-            <th>createdAt</th>
-            <th>updatedAt</th>
-            <th>suggestion</th>
-            <th>pageNumber</th>
-            <th>actionTaken</th>
-            <th>remarks</th>
-            <th>coordinatorSuggestionId</th>
-            {editable && <th>actions</th>}
+            <th>LAST ACTIVITY</th>
+            <th>SUGGESTION</th>
+            <th>PAGE NUMBER</th>
+            <th>ACTION TAKEN</th>
+            <th>REMARKS</th>
+            {editable && <th>ACTIONS</th>}
           </tr>
         </thead>
         <tbody>
-          {coordinatorSuggestionItems.coordinatorSuggestionItems.map((coordinatorSuggestionItem) => {
-            return (
-              <Item
-                coordinatorSuggestionItem={coordinatorSuggestionItem}
-                editable={editable}
-                key={coordinatorSuggestionItem.id}
-              />
-            );
-          })}
+          {coordinatorSuggestionItems.coordinatorSuggestionItems.map(
+            (coordinatorSuggestionItem) => {
+              return (
+                <Item
+                  coordinatorSuggestionItem={coordinatorSuggestionItem}
+                  editable={editable}
+                  key={coordinatorSuggestionItem.id}
+                />
+              );
+            }
+          )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 text-sm'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {coordinatorSuggestionItems.count}
@@ -101,24 +107,106 @@ function Item({
 
   return (
     <tr>
-      <td>{coordinatorSuggestionItem.id}</td>
-      <td>{new Date(coordinatorSuggestionItem.createdAt).toLocaleString()}</td>
-      <td>{new Date(coordinatorSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>
+        {DateTime.fromJSDate(
+          new Date(coordinatorSuggestionItem.updatedAt)
+        ).toRelative()}
+      </td>
       <td>{coordinatorSuggestionItem.suggestion}</td>
-      <td>{coordinatorSuggestionItem.pageNumber}</td>
+      <td className='text-center'>{coordinatorSuggestionItem.pageNumber}</td>
       <td>{coordinatorSuggestionItemActionTaken?.value}</td>
       <td>{coordinatorSuggestionItem.remarks}</td>
-      <td>{coordinatorSuggestionItem.coordinatorSuggestionId}</td>
       {editable && (
         <td>
-          <Link
-            href={`/coordinator_suggestion_item/${coordinatorSuggestionItem.id}/action_taken/edit`}
-            className='border rounded'
-          >
-            edit
-          </Link>
+          <EditSuggestionItemActionTaken
+            coordinatorSuggestionItem={coordinatorSuggestionItem}
+          />
         </td>
       )}
     </tr>
+  );
+}
+
+interface EditSuggestionItemActionTakenProps {
+  coordinatorSuggestionItem: CoordinatorSuggestionItem;
+}
+function EditSuggestionItemActionTaken({
+  coordinatorSuggestionItem,
+}: EditSuggestionItemActionTakenProps) {
+  const router = useRouter();
+  const [openEditActionTaken, setOpenEditActionTaken] = useState(false);
+  const coordinatorSuggestionItemActionTaken =
+    useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem({
+      id: coordinatorSuggestionItem.id,
+    });
+  const formik = useFormik({
+    initialValues: {
+      value: "",
+    },
+    validationSchema: Yup.object({
+      value: Yup.string().required(),
+    }),
+    onSubmit: (values) => {
+      if (coordinatorSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/coordinator_suggestion_item_action_taken/${coordinatorSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/coordinator_suggestion_item_action_taken`, {
+            coordinatorSuggestionItemId: coordinatorSuggestionItem.id,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (!coordinatorSuggestionItemActionTaken) return;
+    formik.setValues({
+      value: coordinatorSuggestionItemActionTaken.value ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coordinatorSuggestionItemActionTaken]);
+
+  return (
+    <div>
+      <button
+        className='bg-palette_blue text-palette_white rounded px-1 text-sm w-full'
+        onClick={() => setOpenEditActionTaken(true)}
+      >
+        Edit
+      </button>
+      {openEditActionTaken && (
+        <Modal
+          title='Coordinator Review'
+          onClose={() => setOpenEditActionTaken(false)}
+        >
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <div className='flex flex-col'>
+              <textarea
+                placeholder='value'
+                {...formik.getFieldProps("value")}
+              />
+              <input
+                type='submit'
+                value='Submit'
+                className='bg-palette_blue text-palette_white rounded'
+              />
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
 }

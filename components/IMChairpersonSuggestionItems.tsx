@@ -1,8 +1,15 @@
 import useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem from "@/hooks/useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem";
 import useChairpersonSuggestionItemsIM from "@/hooks/useChairpersonSuggestionItemsIM";
 import { ChairpersonSuggestionItem } from "@prisma/client";
+import axios from "axios";
+import { useFormik } from "formik";
+import { DateTime } from "luxon";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { ChairpersonSuggestionItemProps } from "./ChairpersonSuggestionItem";
+import * as Yup from "yup";
+import Modal from "./Modal";
 
 export interface IMChairpersonSuggestionItemsProps {
   id: string;
@@ -44,34 +51,33 @@ export default function IMChairpersonSuggestionItems({
 
   return (
     <div>
-      <table>
-        <caption>Chairperson Suggestions</caption>
+      <table className='text-sm w-full'>
+        <caption className='text-xs'>Chairperson Suggestions</caption>
         <thead>
           <tr>
-            <th>id</th>
-            <th>createdAt</th>
-            <th>updatedAt</th>
-            <th>suggestion</th>
-            <th>pageNumber</th>
-            <th>actionTaken</th>
-            <th>remarks</th>
-            <th>chairpersonSuggestionId</th>
-            {editable && <th>actions</th>}
+            <th>LAST ACTIVITY</th>
+            <th>SUGGESTION</th>
+            <th>PAGE NUMBER</th>
+            <th>ACTION TAKEN</th>
+            <th>REMARKS</th>
+            {editable && <th>ACTIONS</th>}
           </tr>
         </thead>
         <tbody>
-          {chairpersonSuggestionItems.chairpersonSuggestionItems.map((chairpersonSuggestionItem) => {
-            return (
-              <Item
-                chairpersonSuggestionItem={chairpersonSuggestionItem}
-                editable={editable}
-                key={chairpersonSuggestionItem.id}
-              />
-            );
-          })}
+          {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
+            (chairpersonSuggestionItem) => {
+              return (
+                <Item
+                  chairpersonSuggestionItem={chairpersonSuggestionItem}
+                  editable={editable}
+                  key={chairpersonSuggestionItem.id}
+                />
+              );
+            }
+          )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 text-sm'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {chairpersonSuggestionItems.count}
@@ -101,24 +107,106 @@ function Item({
 
   return (
     <tr>
-      <td>{chairpersonSuggestionItem.id}</td>
-      <td>{new Date(chairpersonSuggestionItem.createdAt).toLocaleString()}</td>
-      <td>{new Date(chairpersonSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>
+        {DateTime.fromJSDate(
+          new Date(chairpersonSuggestionItem.updatedAt)
+        ).toRelative()}
+      </td>
       <td>{chairpersonSuggestionItem.suggestion}</td>
-      <td>{chairpersonSuggestionItem.pageNumber}</td>
+      <td className="text-center">{chairpersonSuggestionItem.pageNumber}</td>
       <td>{chairpersonSuggestionItemActionTaken?.value}</td>
       <td>{chairpersonSuggestionItem.remarks}</td>
-      <td>{chairpersonSuggestionItem.chairpersonSuggestionId}</td>
       {editable && (
         <td>
-          <Link
-            href={`/chairperson_suggestion_item/${chairpersonSuggestionItem.id}/action_taken/edit`}
-            className='border rounded'
-          >
-            edit
-          </Link>
+          <EditSuggestionItemActionTaken
+            chairpersonSuggestionItem={chairpersonSuggestionItem}
+          />
         </td>
       )}
     </tr>
+  );
+}
+
+interface EditSuggestionItemActionTakenProps {
+  chairpersonSuggestionItem: ChairpersonSuggestionItem;
+}
+function EditSuggestionItemActionTaken({
+  chairpersonSuggestionItem,
+}: EditSuggestionItemActionTakenProps) {
+  const router = useRouter();
+  const [openEditActionTaken, setOpenEditActionTaken] = useState(false);
+  const chairpersonSuggestionItemActionTaken =
+    useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem({
+      id: chairpersonSuggestionItem.id,
+    });
+  const formik = useFormik({
+    initialValues: {
+      value: "",
+    },
+    validationSchema: Yup.object({
+      value: Yup.string().required(),
+    }),
+    onSubmit: (values) => {
+      if (chairpersonSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/chairperson_suggestion_item_action_taken/${chairpersonSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/chairperson_suggestion_item_action_taken`, {
+            chairpersonSuggestionItemId: chairpersonSuggestionItem.id,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (!chairpersonSuggestionItemActionTaken) return;
+    formik.setValues({
+      value: chairpersonSuggestionItemActionTaken.value ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chairpersonSuggestionItemActionTaken]);
+
+  return (
+    <div>
+      <button
+        className='bg-palette_blue text-palette_white rounded px-1 text-sm w-full'
+        onClick={() => setOpenEditActionTaken(true)}
+      >
+        Edit
+      </button>
+      {openEditActionTaken && (
+        <Modal
+          title='Chairperson Review'
+          onClose={() => setOpenEditActionTaken(false)}
+        >
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <div className="flex flex-col">
+              <textarea
+                placeholder='value'
+                {...formik.getFieldProps("value")}
+              />
+              <input
+                type='submit'
+                value='Submit'
+                className='bg-palette_blue text-palette_white rounded'
+              />
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
 }
