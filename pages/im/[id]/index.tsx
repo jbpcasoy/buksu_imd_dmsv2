@@ -484,9 +484,12 @@ export default function ViewIM() {
         )}
 
       {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
-        <div className='space-x-2'>
+        <div className='space-x-2 my-1'>
           {iM.facultyId !== activeFaculty?.facultyId && (
-            <Link href={`/im/${iM.id}/peer_review`} className='border rounded'>
+            <Link
+              href={`/im/${iM.id}/peer_review`}
+              className='bg-palette_blue text-palette_white py-1 px-2 rounded'
+            >
               Peer Review
             </Link>
           )}
@@ -494,7 +497,7 @@ export default function ViewIM() {
           {activeCoordinator && (
             <Link
               href={`/im/${iM.id}/coordinator_review`}
-              className='border rounded'
+              className='bg-palette_blue text-palette_white py-1 px-2 rounded'
             >
               Coordinator Review
             </Link>
@@ -503,7 +506,7 @@ export default function ViewIM() {
           {activeChairperson && (
             <Link
               href={`/im/${iM.id}/chairperson_review`}
-              className='border rounded'
+              className='bg-palette_blue text-palette_white py-1 px-2 rounded'
             >
               Chairperson Review
             </Link>
