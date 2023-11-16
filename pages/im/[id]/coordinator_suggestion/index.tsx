@@ -4,17 +4,13 @@ import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import useCoordinatorReviewMe from "@/hooks/useCoordinatorReviewMe";
-import useCoordinatorSuggestionItem from "@/hooks/useCoordinatorSuggestionItem";
 import useCoordinatorSuggestionItemsOwn, {
   useCoordinatorSuggestionItemsOwnParams,
 } from "@/hooks/useCoordinatorSuggestionItemsOwn";
 import useCoordinatorSuggestionMe from "@/hooks/useCoordinatorSuggestionMe";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useSubmittedCoordinatorSuggestionIM from "@/hooks/useSubmittedCoordinatorSuggestionIM";
-import {
-  CoordinatorSuggestion,
-  CoordinatorSuggestionItem,
-} from "@prisma/client";
+import { CoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
@@ -194,8 +190,8 @@ export default function CoordinatorSuggestionPage() {
         </div>
 
         <div>
-          <table className="text-sm w-full">
-            <caption className="text-xs">COORDINATOR SUGGESTIONS</caption>
+          <table className='text-sm w-full'>
+            <caption className='text-xs'>COORDINATOR SUGGESTIONS</caption>
             <thead>
               <tr>
                 <th>LAST ACTIVITY</th>

@@ -1,12 +1,14 @@
-import ChairpersonSuggestionItem from "@/components/ChairpersonSuggestionItem";
-import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
+import ChairpersonSuggestionItemComponent from "@/components/ChairpersonSuggestionItem";
+import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
+import Modal from "@/components/Modal";
 import useChairpersonReviewMe from "@/hooks/useChairpersonReviewMe";
 import useChairpersonSuggestionItemsOwn, {
   useChairpersonSuggestionItemsOwnParams,
 } from "@/hooks/useChairpersonSuggestionItemsOwn";
 import useChairpersonSuggestionMe from "@/hooks/useChairpersonSuggestionMe";
+import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import { ChairpersonSuggestion } from "@prisma/client";
 import axios from "axios";
@@ -23,12 +25,13 @@ export default function ChairpersonSuggestionPage() {
     id: iMId as string,
   });
   const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
-  const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
-    id: iMId as string,
-  });
   const [state, setState] = useState<useChairpersonSuggestionItemsOwnParams>({
     skip: 0,
     take: 10,
+  });
+  const departmentRevision = useDepartmentRevisionIM({ id: iMId as string });
+  const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
+    id: iMId as string,
   });
   const chairpersonSuggestionItems = useChairpersonSuggestionItemsOwn(state);
   const handleNext = () => {
@@ -71,112 +74,139 @@ export default function ChairpersonSuggestionPage() {
     }));
   }, [chairpersonSuggestion]);
 
-  const formik = useFormik({
-    initialValues: {
-      suggestion: "",
-      remarks: "",
-      pageNumber: 0,
-    },
-    validationSchema: Yup.object({
-      suggestion: Yup.string().required(),
-      remarks: Yup.string(),
-      pageNumber: Yup.number().min(0).required(),
-    }),
-    onSubmit: (values) => {
-      const submitSuggestionItem = async (chairpersonSuggestionId: string) => {
-        return axios
-          .post(`/api/chairperson_suggestion_item`, {
-            ...values,
-            chairpersonSuggestionId,
-          })
-          .then(() => {
-            alert("Suggestion added successfully.");
-            router.reload();
-          });
-      };
-
-      if (!chairpersonSuggestion) {
-        if (!chairpersonReview) {
-          return;
-        }
-        return axios
-          .post<ChairpersonSuggestion>(`/api/chairperson_suggestion/`, {
-            chairpersonReviewId: chairpersonReview.id,
-          })
-          .then((res) => {
-            const createdChairpersonSuggestion = res.data;
-
-            return submitSuggestionItem(createdChairpersonSuggestion.id);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        return submitSuggestionItem(chairpersonSuggestion.id);
-      }
-    },
-  });
-
   useEffect(() => {
-    if (submittedChairpersonSuggestion) {
+    if (submittedChairpersonSuggestion && departmentRevision) {
       router.push(`/im/${iMId}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submittedChairpersonSuggestion, iMId]);
+  }, [submittedChairpersonSuggestion, departmentRevision, iMId]);
+
+  const AddSuggestionItem = () => {
+    const [openAdd, setOpenAdd] = useState(false);
+    const formik = useFormik({
+      initialValues: {
+        suggestion: "",
+        remarks: "",
+        pageNumber: 0,
+      },
+      validationSchema: Yup.object({
+        suggestion: Yup.string().required(),
+        remarks: Yup.string(),
+        pageNumber: Yup.number().min(0).required(),
+      }),
+      onSubmit: (values) => {
+        const submitSuggestionItem = async (
+          chairpersonSuggestionId: string
+        ) => {
+          return axios
+            .post(`/api/chairperson_suggestion_item`, {
+              ...values,
+              chairpersonSuggestionId,
+            })
+            .then(() => {
+              alert("Suggestion added successfully.");
+              router.reload();
+            });
+        };
+
+        if (!chairpersonSuggestion) {
+          if (!chairpersonReview) {
+            return;
+          }
+          return axios
+            .post<ChairpersonSuggestion>(`/api/chairperson_suggestion/`, {
+              chairpersonReviewId: chairpersonReview.id,
+            })
+            .then((res) => {
+              const createdChairpersonSuggestion = res.data;
+
+              return submitSuggestionItem(createdChairpersonSuggestion.id);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          return submitSuggestionItem(chairpersonSuggestion.id);
+        }
+      },
+    });
+    return (
+      <>
+        <button
+          onClick={() => setOpenAdd(true)}
+          className='rounded bg-palette_blue text-palette_white px-2 py-1'
+        >
+          Add
+        </button>
+        {openAdd && (
+          <Modal title='Add Suggestion' onClose={() => setOpenAdd(false)}>
+            <form noValidate onSubmit={formik.handleSubmit}>
+              <div className='flex flex-col space-y-1'>
+                <textarea
+                  placeholder='Suggestion'
+                  {...formik.getFieldProps("suggestion")}
+                  className='w-full rounded'
+                />
+                <input
+                  type='number'
+                  placeholder='pageNumber'
+                  {...formik.getFieldProps("pageNumber")}
+                  className='w-full rounded'
+                />
+                <textarea
+                  placeholder='Remarks'
+                  {...formik.getFieldProps("remarks")}
+                  className='w-full rounded'
+                />
+                <input
+                  type='submit'
+                  value='Submit'
+                  className='bg-palette_blue text-palette_white rounded px-2 py-1'
+                />
+              </div>
+            </form>
+          </Modal>
+        )}
+      </>
+    );
+  };
 
   return (
     <MainLayout>
       <div>
         <div className='flex justify-between'>
-          <h2 className='inline'>Chairperson Review</h2>
-          <Link
-            href={`/api/im_file/im/${iMId}/pdf`}
-            className='underline'
-            target='_blank'
-          >
-            View PDF
-          </Link>
+          <div>
+            <h2 className='inline text-lg font-bold'>
+              Instructional Material Review Form{" "}
+              <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                Chairperson
+              </span>
+            </h2>
+            <p className='text-sm'>Implementation Phase</p>
+          </div>
+          <div>
+            <AddSuggestionItem />
+          </div>
         </div>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='suggestion'
-            {...formik.getFieldProps("suggestion")}
-          />
-          <br />
-          <input
-            type='number'
-            placeholder='pageNumber'
-            {...formik.getFieldProps("pageNumber")}
-          />
-          <br />
-          <textarea
-            placeholder='remarks'
-            {...formik.getFieldProps("remarks")}
-          />
-          <br />
-          <input type='submit' value='Submit' className='border rounded' />
-        </form>
+
         <div>
-          <table>
-            <caption>Chairperson Suggestions</caption>
+          <table className='text-sm w-full'>
+            <caption className='text-xs'>CHAIRPERSON SUGGESTIONS</caption>
             <thead>
               <tr>
-                <th>id</th>
-                <th>createdAt</th>
-                <th>updatedAt</th>
-                <th>suggestion</th>
-                <th>pageNumber</th>
-                <th>actionTaken</th>
-                <th>remarks</th>
-                <th>peerSuggestionId</th>
-                <th>actions</th>
+                <th>LAST ACTIVITY</th>
+                <th>SUGGESTION</th>
+                <th>PAGE NUMBER</th>
+                <th>ACTION TAKEN</th>
+                <th>REMARKS</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
               {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
                 (chairpersonSuggestionItem) => {
                   return (
-                    <ChairpersonSuggestionItem
+                    <ChairpersonSuggestionItemComponent
                       chairpersonSuggestionItem={chairpersonSuggestionItem}
                       key={chairpersonSuggestionItem.id}
                     />
@@ -200,11 +230,18 @@ export default function ChairpersonSuggestionPage() {
         </div>
         <div>
           <IMPeerSuggestionItems id={iMId as string} editable={false} />
-          <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
+          <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
         </div>
-        <button className='rounded border' onClick={handleSubmitReview}>
-          Submit Review
-        </button>
+        {!submittedChairpersonSuggestion && (
+          <button className='rounded border' onClick={handleSubmitReview}>
+            Submit Review
+          </button>
+        )}
+        {submittedChairpersonSuggestion && (
+          <Link className='rounded border' href={`/im/${iMId}`}>
+            Finish
+          </Link>
+        )}
       </div>
     </MainLayout>
   );

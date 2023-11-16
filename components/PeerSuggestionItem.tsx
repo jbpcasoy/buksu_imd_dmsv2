@@ -1,7 +1,11 @@
 import { PeerSuggestionItem } from "@prisma/client";
 import axios from "axios";
-import Link from "next/link";
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import * as Yup from "yup";
+import Modal from "./Modal";
+import { DateTime } from "luxon";
 
 export interface PeerSuggestionItemProps {
   peerSuggestionItem: PeerSuggestionItem;
@@ -13,7 +17,9 @@ export default function PeerSuggestionItem({
   const handleDelete = () => {
     if (confirm("Are you sure? This action cannot be undone.")) {
       axios
-        .delete(`/api/peer_suggestion_item/${peerSuggestionItem.id}`)
+        .delete(
+          `/api/peer_suggestion_item/${peerSuggestionItem.id}`
+        )
         .then(() => {
           alert("Suggestion deleted successfully");
           router.reload();
@@ -26,25 +32,115 @@ export default function PeerSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>{peerSuggestionItem.id}</td>
-      <td>{new Date(peerSuggestionItem.createdAt).toLocaleString()}</td>
-      <td>{new Date(peerSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>
+        {DateTime.fromJSDate(
+          new Date(peerSuggestionItem.updatedAt)
+        ).toRelative()}
+      </td>
       <td>{peerSuggestionItem.suggestion}</td>
-      <td>{peerSuggestionItem.pageNumber}</td>
+      <td className="text-center">{peerSuggestionItem.pageNumber}</td>
       <td>{peerSuggestionItem.actionTaken}</td>
       <td>{peerSuggestionItem.remarks}</td>
-      <td>{peerSuggestionItem.peerSuggestionId}</td>
       <td className=''>
-        <Link
-          className='border rounded'
-          href={`/peer_suggestion_item/${peerSuggestionItem.id}/edit`}
-        >
-          edit
-        </Link>
-        <button className='border rounded' onClick={handleDelete}>
-          delete
-        </button>
+        <div className='flex flex-col space-y-1'>
+          <EditSuggestionItem
+            peerSuggestionItem={peerSuggestionItem}
+          />
+          <button
+            className='bg-palette_blue text-palette_white rounded px-1 text-sm'
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        </div>
       </td>
     </tr>
+  );
+}
+
+interface EditSuggestionItemProps {
+  peerSuggestionItem: PeerSuggestionItem;
+}
+function EditSuggestionItem({
+  peerSuggestionItem,
+}: EditSuggestionItemProps) {
+  const router = useRouter();
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      suggestion: "",
+      pageNumber: 0,
+      remarks: "",
+    },
+    validationSchema: Yup.object({
+      suggestion: Yup.string().required(),
+      pageNumber: Yup.number().min(0).required(),
+      remarks: Yup.string(),
+    }),
+    onSubmit: (values) => {
+      axios
+        .put(
+          `/api/peer_suggestion_item/${peerSuggestionItem.id}`,
+          values
+        )
+        .then(() => {
+          alert("Suggestion updated successfully");
+          router.reload();
+        });
+    },
+  });
+
+  useEffect(() => {
+    if (!peerSuggestionItem) return;
+    formik.setValues({
+      pageNumber: peerSuggestionItem.pageNumber,
+      remarks: peerSuggestionItem?.remarks ?? "",
+      suggestion: peerSuggestionItem.suggestion,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [peerSuggestionItem]);
+
+  return (
+    <div>
+      <button
+        className='bg-palette_blue text-palette_white px-1 rounded text-sm w-full'
+        onClick={() => setOpenEdit(true)}
+      >
+        Edit
+      </button>
+      {openEdit && (
+        <Modal
+          title='Edit Peer Suggestion Item'
+          onClose={() => setOpenEdit(false)}
+        >
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <div className='flex flex-col space-y-1'>
+              <textarea
+                placeholder='suggestion'
+                {...formik.getFieldProps("suggestion")}
+                className='rounded'
+              />
+              <input
+                type='number'
+                placeholder='pageNumber'
+                {...formik.getFieldProps("pageNumber")}
+                className='rounded'
+              />
+              <textarea
+                placeholder='remarks'
+                {...formik.getFieldProps("remarks")}
+                className='rounded'
+              />
+              <input
+                type='submit'
+                value='Submit'
+                className='bg-palette_blue text-white rounded'
+              />
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
 }

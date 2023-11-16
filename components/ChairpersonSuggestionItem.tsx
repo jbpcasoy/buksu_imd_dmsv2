@@ -1,7 +1,11 @@
 import { ChairpersonSuggestionItem } from "@prisma/client";
 import axios from "axios";
-import Link from "next/link";
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import * as Yup from "yup";
+import Modal from "./Modal";
+import { DateTime } from "luxon";
 
 export interface ChairpersonSuggestionItemProps {
   chairpersonSuggestionItem: ChairpersonSuggestionItem;
@@ -28,25 +32,115 @@ export default function ChairpersonSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>{chairpersonSuggestionItem.id}</td>
-      <td>{new Date(chairpersonSuggestionItem.createdAt).toLocaleString()}</td>
-      <td>{new Date(chairpersonSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>
+        {DateTime.fromJSDate(
+          new Date(chairpersonSuggestionItem.updatedAt)
+        ).toRelative()}
+      </td>
       <td>{chairpersonSuggestionItem.suggestion}</td>
-      <td>{chairpersonSuggestionItem.pageNumber}</td>
+      <td className="text-center">{chairpersonSuggestionItem.pageNumber}</td>
       <td>{chairpersonSuggestionItem.actionTaken}</td>
       <td>{chairpersonSuggestionItem.remarks}</td>
-      <td>{chairpersonSuggestionItem.chairpersonSuggestionId}</td>
       <td className=''>
-        <Link
-          className='border rounded'
-          href={`/chairperson_suggestion_item/${chairpersonSuggestionItem.id}/edit`}
-        >
-          edit
-        </Link>
-        <button className='border rounded' onClick={handleDelete}>
-          delete
-        </button>
+        <div className='flex flex-col space-y-1'>
+          <EditSuggestionItem
+            chairpersonSuggestionItem={chairpersonSuggestionItem}
+          />
+          <button
+            className='bg-palette_blue text-palette_white rounded px-1 text-sm'
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        </div>
       </td>
     </tr>
+  );
+}
+
+interface EditSuggestionItemProps {
+  chairpersonSuggestionItem: ChairpersonSuggestionItem;
+}
+function EditSuggestionItem({
+  chairpersonSuggestionItem,
+}: EditSuggestionItemProps) {
+  const router = useRouter();
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      suggestion: "",
+      pageNumber: 0,
+      remarks: "",
+    },
+    validationSchema: Yup.object({
+      suggestion: Yup.string().required(),
+      pageNumber: Yup.number().min(0).required(),
+      remarks: Yup.string(),
+    }),
+    onSubmit: (values) => {
+      axios
+        .put(
+          `/api/chairperson_suggestion_item/${chairpersonSuggestionItem.id}`,
+          values
+        )
+        .then(() => {
+          alert("Suggestion updated successfully");
+          router.reload();
+        });
+    },
+  });
+
+  useEffect(() => {
+    if (!chairpersonSuggestionItem) return;
+    formik.setValues({
+      pageNumber: chairpersonSuggestionItem.pageNumber,
+      remarks: chairpersonSuggestionItem?.remarks ?? "",
+      suggestion: chairpersonSuggestionItem.suggestion,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chairpersonSuggestionItem]);
+
+  return (
+    <div>
+      <button
+        className='bg-palette_blue text-palette_white px-1 rounded text-sm w-full'
+        onClick={() => setOpenEdit(true)}
+      >
+        Edit
+      </button>
+      {openEdit && (
+        <Modal
+          title='Edit Chairperson Suggestion Item'
+          onClose={() => setOpenEdit(false)}
+        >
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <div className='flex flex-col space-y-1'>
+              <textarea
+                placeholder='suggestion'
+                {...formik.getFieldProps("suggestion")}
+                className='rounded'
+              />
+              <input
+                type='number'
+                placeholder='pageNumber'
+                {...formik.getFieldProps("pageNumber")}
+                className='rounded'
+              />
+              <textarea
+                placeholder='remarks'
+                {...formik.getFieldProps("remarks")}
+                className='rounded'
+              />
+              <input
+                type='submit'
+                value='Submit'
+                className='bg-palette_blue text-white rounded'
+              />
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
 }
