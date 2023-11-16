@@ -144,10 +144,7 @@ export default function AddCoordinatorReviewPage() {
         <div className='flex-1 overflow-auto'>
           <div className='flex h-full'>
             <div className='flex-1 overflow-auto'>
-              <form
-                onSubmit={formik.handleSubmit}
-                className=''
-              >
+              <form onSubmit={formik.handleSubmit} className=''>
                 <div className='space-y-2 mx-1'>
                   <ReviewSection title={ReviewSections.s1}>
                     <ReviewItem
@@ -297,23 +294,5 @@ export default function AddCoordinatorReviewPage() {
         </div>
       </div>
     </MainLayout>
-  );
-}
-
-function RateSelector(
-  props?: DetailedHTMLProps<
-    SelectHTMLAttributes<HTMLSelectElement>,
-    HTMLSelectElement
-  >
-) {
-  return (
-    <select {...props}>
-      <option value=''>Select</option>
-      <option value='VM'>VM</option>
-      <option value='M'>M</option>
-      <option value='JE'>JE</option>
-      <option value='NM'>NM</option>
-      <option value='NAA'>NAA</option>
-    </select>
   );
 }

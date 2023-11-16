@@ -1,37 +1,43 @@
+import PeerSuggestionItemComponent from "@/components/PeerSuggestionItem";
+import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
+import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
+import MainLayout from "@/components/MainLayout";
+import Modal from "@/components/Modal";
 import usePeerReviewMe from "@/hooks/usePeerReviewMe";
-import usePeerSuggestionItems, {
-  usePeerSuggestionItemsParams,
-} from "@/hooks/usePeerSuggestionItems";
-import usePeerSuggestionMe from "@/hooks/usePeerSuggestionMe";
-import axios from "axios";
-import { useFormik } from "formik";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import * as Yup from "yup";
-import PeerSuggestionItem from "@/components/PeerSuggestionItem";
+import usePeerSuggestionItem from "@/hooks/usePeerSuggestionItem";
 import usePeerSuggestionItemsOwn, {
   usePeerSuggestionItemsOwnParams,
 } from "@/hooks/usePeerSuggestionItemsOwn";
-import MainLayout from "@/components/MainLayout";
-import { PeerSuggestion } from "@prisma/client";
-import Link from "next/link";
-import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
-import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
+import usePeerSuggestionMe from "@/hooks/usePeerSuggestionMe";
+import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
+import {
+  PeerSuggestion,
+  PeerSuggestionItem,
+} from "@prisma/client";
+import axios from "axios";
+import { useFormik } from "formik";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import * as Yup from "yup";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const peerSuggestion = usePeerSuggestionMe({ id: iMId as string });
+  const peerSuggestion = usePeerSuggestionMe({
+    id: iMId as string,
+  });
   const peerReview = usePeerReviewMe({ id: iMId as string });
   const [state, setState] = useState<usePeerSuggestionItemsOwnParams>({
     skip: 0,
     take: 10,
   });
-  const peerSuggestionItems = usePeerSuggestionItemsOwn(state);
+  const departmentRevision = useDepartmentRevisionIM({ id: iMId as string });
   const submittedPeerSuggestion = useSubmittedPeerSuggestionIM({
     id: iMId as string,
   });
+  const peerSuggestionItems = usePeerSuggestionItemsOwn(state);
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -48,7 +54,6 @@ export default function PeerSuggestionPage() {
       return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
     });
   };
-
   const handleSubmitReview = () => {
     if (!peerSuggestion) return;
     axios
@@ -73,112 +78,139 @@ export default function PeerSuggestionPage() {
     }));
   }, [peerSuggestion]);
 
-  const formik = useFormik({
-    initialValues: {
-      suggestion: "",
-      remarks: "",
-      pageNumber: 0,
-    },
-    validationSchema: Yup.object({
-      suggestion: Yup.string().required(),
-      remarks: Yup.string(),
-      pageNumber: Yup.number().min(0).required(),
-    }),
-    onSubmit: (values) => {
-      const submitSuggestionItem = async (peerSuggestionId: string) => {
-        return axios
-          .post(`/api/peer_suggestion_item`, {
-            ...values,
-            peerSuggestionId,
-          })
-          .then(() => {
-            alert("Suggestion added successfully.");
-            router.reload();
-          });
-      };
-
-      if (!peerSuggestion) {
-        if (!peerReview) {
-          return;
-        }
-        return axios
-          .post<PeerSuggestion>(`/api/peer_suggestion/`, {
-            peerReviewId: peerReview.id,
-          })
-          .then((res) => {
-            const createdPeerSuggestion = res.data;
-
-            return submitSuggestionItem(createdPeerSuggestion.id);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        return submitSuggestionItem(peerSuggestion.id);
-      }
-    },
-  });
-
   useEffect(() => {
-    if (submittedPeerSuggestion) {
+    if (submittedPeerSuggestion && departmentRevision) {
       router.push(`/im/${iMId}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submittedPeerSuggestion, iMId]);
+  }, [submittedPeerSuggestion, departmentRevision, iMId]);
+
+  const AddSuggestionItem = () => {
+    const [openAdd, setOpenAdd] = useState(false);
+    const formik = useFormik({
+      initialValues: {
+        suggestion: "",
+        remarks: "",
+        pageNumber: 0,
+      },
+      validationSchema: Yup.object({
+        suggestion: Yup.string().required(),
+        remarks: Yup.string(),
+        pageNumber: Yup.number().min(0).required(),
+      }),
+      onSubmit: (values) => {
+        const submitSuggestionItem = async (
+          peerSuggestionId: string
+        ) => {
+          return axios
+            .post(`/api/peer_suggestion_item`, {
+              ...values,
+              peerSuggestionId,
+            })
+            .then(() => {
+              alert("Suggestion added successfully.");
+              router.reload();
+            });
+        };
+
+        if (!peerSuggestion) {
+          if (!peerReview) {
+            return;
+          }
+          return axios
+            .post<PeerSuggestion>(`/api/peer_suggestion/`, {
+              peerReviewId: peerReview.id,
+            })
+            .then((res) => {
+              const createdPeerSuggestion = res.data;
+
+              return submitSuggestionItem(createdPeerSuggestion.id);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          return submitSuggestionItem(peerSuggestion.id);
+        }
+      },
+    });
+    return (
+      <>
+        <button
+          onClick={() => setOpenAdd(true)}
+          className='rounded bg-palette_blue text-palette_white px-2 py-1'
+        >
+          Add
+        </button>
+        {openAdd && (
+          <Modal title='Add Suggestion' onClose={() => setOpenAdd(false)}>
+            <form noValidate onSubmit={formik.handleSubmit}>
+              <div className='flex flex-col space-y-1'>
+                <textarea
+                  placeholder='Suggestion'
+                  {...formik.getFieldProps("suggestion")}
+                  className='w-full rounded'
+                />
+                <input
+                  type='number'
+                  placeholder='pageNumber'
+                  {...formik.getFieldProps("pageNumber")}
+                  className='w-full rounded'
+                />
+                <textarea
+                  placeholder='Remarks'
+                  {...formik.getFieldProps("remarks")}
+                  className='w-full rounded'
+                />
+                <input
+                  type='submit'
+                  value='Submit'
+                  className='bg-palette_blue text-palette_white rounded px-2 py-1'
+                />
+              </div>
+            </form>
+          </Modal>
+        )}
+      </>
+    );
+  };
 
   return (
     <MainLayout>
       <div>
         <div className='flex justify-between'>
-          <h2 className='inline'>Peer Review</h2>
-          <Link
-            href={`/api/im_file/im/${iMId}/pdf`}
-            className='underline'
-            target='_blank'
-          >
-            View PDF
-          </Link>
+          <div>
+            <h2 className='inline text-lg font-bold'>
+              Instructional Material Review Form{" "}
+              <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                Peer
+              </span>
+            </h2>
+            <p className='text-sm'>Implementation Phase</p>
+          </div>
+          <div>
+            <AddSuggestionItem />
+          </div>
         </div>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='suggestion'
-            {...formik.getFieldProps("suggestion")}
-          />
-          <br />
-          <input
-            type='number'
-            placeholder='pageNumber'
-            {...formik.getFieldProps("pageNumber")}
-          />
-          <br />
-          <textarea
-            placeholder='remarks'
-            {...formik.getFieldProps("remarks")}
-          />
-          <br />
-          <input type='submit' value='Submit' className='border rounded' />
-        </form>
+
         <div>
-          <table>
-            <caption>Peer Suggestions</caption>
+          <table className="text-sm w-full">
+            <caption className="text-xs">PEER SUGGESTIONS</caption>
             <thead>
               <tr>
-                <th>id</th>
-                <th>createdAt</th>
-                <th>updatedAt</th>
-                <th>suggestion</th>
-                <th>pageNumber</th>
-                <th>actionTaken</th>
-                <th>remarks</th>
-                <th>peerSuggestionId</th>
-                <th>actions</th>
+                <th>LAST ACTIVITY</th>
+                <th>SUGGESTION</th>
+                <th>PAGE NUMBER</th>
+                <th>ACTION TAKEN</th>
+                <th>REMARKS</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
               {peerSuggestionItems.peerSuggestionItems.map(
                 (peerSuggestionItem) => {
                   return (
-                    <PeerSuggestionItem
+                    <PeerSuggestionItemComponent
                       peerSuggestionItem={peerSuggestionItem}
                       key={peerSuggestionItem.id}
                     />
@@ -187,7 +219,6 @@ export default function PeerSuggestionPage() {
               )}
             </tbody>
           </table>
-
           <div className='flex justify-end space-x-1'>
             <p>
               {state.skip} - {state.skip + state.take} of{" "}
@@ -202,12 +233,19 @@ export default function PeerSuggestionPage() {
           </div>
         </div>
         <div>
+          <IMPeerSuggestionItems id={iMId as string} editable={false} />
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
-          <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
         </div>
-        <button className='rounded border' onClick={handleSubmitReview}>
-          Submit Review
-        </button>
+        {!submittedPeerSuggestion && (
+          <button className='rounded border' onClick={handleSubmitReview}>
+            Submit Review
+          </button>
+        )}
+        {submittedPeerSuggestion && (
+          <Link className='rounded border' href={`/im/${iMId}`}>
+            Finish
+          </Link>
+        )}
       </div>
     </MainLayout>
   );

@@ -31,6 +31,14 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
+  /** TODO add post blockers only allow im file upload when:
+   * IM is in status of:
+   * IMPLEMENTATION_DRAFT
+   * IMPLEMENTATION_DEPARTMENT_REVIEWED
+   * IMPLEMENTATION_CITL_REVIEWED
+   * IMPLEMENTATION_CITL_DIRECTOR_ENDORSED
+   * IMERC_CITL_REVIEWED
+   */
   const postHandler = async () => {
     try {
       // Read body using formidable
