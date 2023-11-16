@@ -1,3 +1,4 @@
+import FileUpload from "@/components/FileUpload";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
 import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
@@ -16,19 +17,25 @@ import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import useCollegeIM from "@/hooks/useCollegeIM";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
 import useIM from "@/hooks/useIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import useIMLatestPlagiarismFile from "@/hooks/useIMLatestPlagiarismFile";
 import useIMLatestQAMISFile from "@/hooks/useIMLatestQAMISFile";
 import useIMStatus from "@/hooks/useIMStatus";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
+import useUserFaculty from "@/hooks/useUserFaculty";
 import {
+  ActiveFaculty,
   CoordinatorEndorsement,
   DepartmentReview,
   DepartmentRevision,
+  IM,
   IMFile,
 } from "@prisma/client";
 import axios from "axios";
+import { DateTime } from "luxon";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEventHandler, useState } from "react";
@@ -53,6 +60,11 @@ export default function ViewIM() {
   const iMFile = useIMLatestIMFile({ id: iMId as string });
   const qAMISFile = useIMLatestQAMISFile({ id: iMId as string });
   const plagiarismFile = useIMLatestPlagiarismFile({ id: iMId as string });
+  const department = useDepartmentIM({ id: iMId as string });
+  const college = useCollegeIM({ id: iMId as string });
+  const user = useUserFaculty({
+    id: iM?.facultyId,
+  });
 
   const onQAMISChairpersonEndorsement = () => {
     axios
@@ -104,7 +116,7 @@ export default function ViewIM() {
       .delete(`/api/im/${id}`)
       .then(() => {
         alert("IM deleted successfully");
-        router.push("/my_ims");
+        router.push("/department/my_ims");
       })
       .catch((error) => {
         alert(error.response.data.error.message);
@@ -409,53 +421,64 @@ export default function ViewIM() {
   return (
     <MainLayout>
       <div className='flex'>
-        <h2 className='flex-1'>View IM</h2>
-
-        <div className='space-x-1'>
-          <Link href={`/im/${iM.id}/all_reviews`} className='border rounded'>
-            all reviews
-          </Link>
-          <Link
-            href={`/im/${iM.id}/all_suggestions`}
-            className='border rounded'
-          >
-            all suggestions
-          </Link>
-          <Link href={`/im/${iM.id}/track`} className='border rounded'>
-            track
-          </Link>
-          {iM.facultyId === activeFaculty?.facultyId &&
-            iMStatus === "IMPLEMENTATION_DRAFT" && (
-              <Link href={`/im/${iM.id}/edit`} className='border rounded'>
-                edit
-              </Link>
-            )}
-          {iM.facultyId === activeFaculty?.facultyId &&
-            iMStatus === "IMPLEMENTATION_DRAFT" && (
-              <button
-                onClick={() => deleteHandler(iM.id)}
-                className='border rounded'
-              >
-                delete
-              </button>
-            )}
+        <div className='flex-1'>
+          <h2 className='flex-1 uppercase'>{iM.title}</h2>
+          <div className='space-x-4'>
+            <span className='text-sm text-palette_grey'>Type: {iM.type}</span>
+            <span className='text-sm text-palette_grey'>
+              Status: {iMStatus}
+            </span>
+          </div>
+          <p className='text-sm text-palette_grey'>
+            Department: {department?.name} | {college?.name}
+          </p>
+        </div>
+        <div>
+          {
+            <ActionMenu
+              activeFaculty={activeFaculty}
+              iM={iM}
+              iMStatus={iMStatus}
+              deleteHandler={deleteHandler}
+            />
+          }
         </div>
       </div>
-      <div>
-        <p>id: {iM.id}</p>
-        <p>createdAt: {new Date(iM.createdAt).toLocaleString()}</p>
-        <p>updatedAt: {new Date(iM.updatedAt).toLocaleString()}</p>
-        <p>facultyId: {iM.facultyId}</p>
-        <p>title: {iM.title}</p>
-        <p>type: {iM.type}</p>
+      <div className='flex space-x-2 mt-2'>
+        <img className='w-10 h-10 rounded-full' src={user?.image ?? ""} />
+        <div className='text-sm text-palette_grey'>
+          <p className='uppercase font-bold'>{user?.name}</p>
+          {iM?.createdAt && (
+            <p>
+              {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("DD | t")}
+            </p>
+          )}
+        </div>
       </div>
 
       {iMStatus === "IMPLEMENTATION_DRAFT" &&
         iM.facultyId === activeFaculty?.facultyId && (
           <div>
-            <input type='file' onChange={onFileChange} accept='.pdf' />
-            <button className='border rounded' onClick={submitForReviewHandler}>
-              Submit for review
+            <FileUpload
+              onFileChange={(e) => {
+                setState((prev) => ({
+                  ...prev,
+                  iMFile: e.target.files?.item(0),
+                }));
+              }}
+              onFileReset={() => {
+                setState((prev) => ({
+                  ...prev,
+                  iMFile: undefined,
+                }));
+              }}
+            />
+            <button
+              className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50'
+              disabled={Boolean(!state?.iMFile)}
+              onClick={submitForReviewHandler}
+            >
+              Submit for Review
             </button>
           </div>
         )}
@@ -745,14 +768,6 @@ export default function ViewIM() {
           </div>
         )}
 
-      {iMStatus === "IMERC_CITL_DIRECTOR_ENDORSED" && (
-        <div>
-          <p className='text-lg font-bold'>
-            IM is endorsed to IPTTU for copyright application process.
-          </p>
-        </div>
-      )}
-
       <div className='flex'>
         {qAMISFile && iMStatus === "IMERC_QAMIS_REVISED" && (
           <div className='flex flex-col w-full'>
@@ -786,5 +801,108 @@ export default function ViewIM() {
         )}
       </div>
     </MainLayout>
+  );
+}
+
+interface ActionMenuProps {
+  iM: IM;
+  activeFaculty?: ActiveFaculty | null;
+  iMStatus?: string | null;
+  deleteHandler: (id: string) => void;
+}
+function ActionMenu({
+  iM,
+  activeFaculty,
+  iMStatus,
+  deleteHandler,
+}: ActionMenuProps) {
+  const [state, setState] = useState({
+    openMenu: false,
+  });
+
+  return (
+    <div className='relative inline-block text-left'>
+      <div>
+        <button
+          type='button'
+          className='inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500'
+          id='options-menu'
+          aria-haspopup='true'
+          aria-expanded='true'
+          onClick={() =>
+            setState((prev) => ({ ...prev, openMenu: !prev.openMenu }))
+          }
+        >
+          Actions
+          <svg
+            className='-mr-1 ml-2 h-5 w-5'
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 20 20'
+            fill='currentColor'
+            aria-hidden='true'
+          >
+            <path
+              fillRule='evenodd'
+              d='M10 6a4 4 0 100 8 4 4 0 000-8z'
+              clipRule='evenodd'
+            />
+            <path d='M10 4a6 6 0 100 12A6 6 0 0010 4z' />
+          </svg>
+        </button>
+      </div>
+
+      {state.openMenu && (
+        <div className='origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5'>
+          <div
+            className='py-1'
+            role='menu'
+            aria-orientation='vertical'
+            aria-labelledby='options-menu'
+          >
+            <Link
+              href={`/im/${iM.id}/all_reviews`}
+              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+              role='menuitem'
+            >
+              All reviews
+            </Link>
+            <Link
+              href={`/im/${iM.id}/all_suggestions`}
+              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+              role='menuitem'
+            >
+              All suggestions
+            </Link>
+            <Link
+              href={`/im/${iM.id}/track`}
+              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+              role='menuitem'
+            >
+              Track
+            </Link>
+            {iM.facultyId === activeFaculty?.facultyId &&
+              iMStatus === "IMPLEMENTATION_DRAFT" && (
+                <Link
+                  href={`/im/${iM.id}/edit`}
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  role='menuitem'
+                >
+                  Edit
+                </Link>
+              )}
+            {iM.facultyId === activeFaculty?.facultyId &&
+              iMStatus === "IMPLEMENTATION_DRAFT" && (
+                <button
+                  onClick={() => deleteHandler(iM.id)}
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  role='menuitem'
+                >
+                  Delete
+                </button>
+              )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

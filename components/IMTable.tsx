@@ -1,11 +1,17 @@
 import useIMStatus from "@/hooks/useIMStatus";
 import { IM } from "@prisma/client";
 import Link from "next/link";
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { ChangeEventHandler, useContext, useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import useUserFaculty from "@/hooks/useUserFaculty";
 import useDepartmentIM from "@/hooks/useDepartmentIM";
 import useCollegeIM from "@/hooks/useCollegeIM";
+import axios from "axios";
+import { useRouter } from "next/router";
+import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import Modal from "./Modal";
 
 export interface IMTableProps {
   count: number;
@@ -101,12 +107,7 @@ export default function IMTable({
               <SortSelector onSortChange={handleSortChange} />
             </div>
           </div>
-          <Link
-            href='/im/add'
-            className='rounded bg-palette_blue text-palette_white py-1 px-2'
-          >
-            Add IM
-          </Link>
+          <AddIM />
         </div>
       </div>
       <table className='table-auto w-full'>
@@ -277,5 +278,74 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
         <option value='desc'>Descending</option>
       </select>
     </div>
+  );
+}
+
+function AddIM() {
+  const activeFaculty = useContext(ActiveFacultyContext);
+  const router = useRouter();
+  const [state, setState] = useState({ addIMOpen: false });
+
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      type: "MODULE",
+    },
+    validationSchema: Yup.object({
+      title: Yup.string().required(),
+      type: Yup.string()
+        .oneOf(["MODULE", "COURSE_FILE", "WORKTEXT", "TEXTBOOK"])
+        .required(),
+    }),
+
+    onSubmit: (values) => {
+      axios
+        .post<IM>("/api/im", { ...values, activeFacultyId: activeFaculty?.id })
+        .then((res) => {
+          const iM = res.data;
+          alert("IM Uploaded");
+          router.push(`/im/${iM.id}`);
+        });
+    },
+  });
+
+  return (
+    <>
+      <button
+        className='rounded bg-palette_blue text-palette_white py-1 px-2'
+        onClick={() => setState({ addIMOpen: true })}
+      >
+        Add IM
+      </button>
+      {state.addIMOpen && (
+        <Modal
+          title='ADD IM'
+          onClose={() => setState({ addIMOpen: false })}
+          content={
+            <form onSubmit={formik.handleSubmit} noValidate>
+              <div className='text-base flex flex-col space-y-1'>
+                <input placeholder='Title' {...formik.getFieldProps("title")} />
+                <select
+                  {...formik.getFieldProps("type")}
+                  className='bg-palette_blue text-palette_white rounded block py-1'
+                >
+                  <option value='MODULE'>Module</option>
+                  <option value='COURSE_FILE'>Course File</option>
+                  <option value='WORKTEXT'>Worktext</option>
+                  <option value='TEXTBOOK'>Textbook</option>
+                </select>
+                <input
+                  type='submit'
+                  value='Submit'
+                  disabled={!formik.isValid}
+                  className='border rounded'
+                  onClick={() => setState({ addIMOpen: false })}
+                />
+              </div>
+            </form>
+          }
+        />
+      )}
+    </>
   );
 }

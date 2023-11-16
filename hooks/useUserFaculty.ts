@@ -3,7 +3,7 @@ import { User, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useUserFacultyParams {
-  id: string;
+  id?: string;
 }
 export default function useUserFaculty({
   id,
