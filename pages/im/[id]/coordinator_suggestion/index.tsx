@@ -130,7 +130,15 @@ export default function CoordinatorSuggestionPage() {
     <MainLayout>
       <div>
         <div className='flex justify-between'>
-          <h2 className='inline'>Coordinator Review</h2>
+        <div>
+          <h2 className='inline text-lg font-bold'>
+            Instructional Material Review Form{" "}
+            <span className='bg-palette_orange text-palette_white p-1 rounded'>
+              Coordinator
+            </span>
+          </h2>
+          <p className='text-sm'>Implementation Phase</p>
+        </div>
           <Link
             href={`/api/im_file/im/${iMId}/pdf`}
             className='underline'

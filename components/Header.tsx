@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <div className=''>
-      <div className='flex justify-end items-center h-10 space-x-1 bg-palette_blue border-b border-palette_white'>
+      <div className='flex justify-end items-center h-10 space-x-1 bg-palette_blue border-b border-palette_white sticky top-0'>
         <Link href='/notification' className='rounded hover:bg-palette_grey text-white'>
           <span className='font-normal'>{eventCount.count}</span> notification
         </Link>

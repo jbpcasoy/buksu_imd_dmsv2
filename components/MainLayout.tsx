@@ -32,9 +32,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <div className='w-40'>
           <Sidebar />
         </div>
-        <div className='flex-1 flex flex-col h-full overflow-auto'>
+        <div className='flex-1 flex flex-col h-full'>
           <Header />
-          <div className='h-full m-2'>{children}</div>
+          <div className='overflow-auto h-full m-2'>{children}</div>
         </div>
       </div>
     </div>
