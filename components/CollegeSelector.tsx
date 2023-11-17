@@ -35,7 +35,7 @@ export default function CollegeSelector({
         onChange={onSearch}
         placeholder='Search College'
         disabled={disabled}
-        className='rounded-s p-1 w-80'
+        className='rounded-s p-1'
       />
       <select {...props} disabled={disabled} className='rounded-e py-1'>
         <option value=''>Select</option>

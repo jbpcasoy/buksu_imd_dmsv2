@@ -15,7 +15,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!session?.user?.isAdmin && router) {
+    if (session?.user && !session?.user?.isAdmin && router) {
       router.replace("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

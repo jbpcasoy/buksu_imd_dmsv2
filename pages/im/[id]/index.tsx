@@ -10,6 +10,7 @@ import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRe
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
 import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
 import MainLayout from "@/components/MainLayout";
+import Modal from "@/components/Modal";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
 import useActiveContentSpecialistMe from "@/hooks/useActiveContentSpecialistMe";
@@ -35,10 +36,12 @@ import {
   IMFile,
 } from "@prisma/client";
 import axios from "axios";
+import { useFormik } from "formik";
 import { DateTime } from "luxon";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
+import * as Yup from "yup";
 
 export default function ViewIM() {
   const router = useRouter();
@@ -920,19 +923,20 @@ function ActionMenu({
             </Link>
             {iM.facultyId === activeFaculty?.facultyId &&
               iMStatus === "IMPLEMENTATION_DRAFT" && (
-                <Link
-                  href={`/im/${iM.id}/edit`}
-                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                  role='menuitem'
-                >
-                  Edit
-                </Link>
+                // <Link
+                //   href={`/im/${iM.id}/edit`}
+                //   className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                //   role='menuitem'
+                // >
+                //   Edit
+                // </Link>
+                <EditIM />
               )}
             {iM.facultyId === activeFaculty?.facultyId &&
               iMStatus === "IMPLEMENTATION_DRAFT" && (
                 <button
                   onClick={() => deleteHandler(iM.id)}
-                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left'
                   role='menuitem'
                 >
                   Delete
@@ -942,5 +946,88 @@ function ActionMenu({
         </div>
       )}
     </div>
+  );
+}
+
+function EditIM() {
+  const router = useRouter();
+  const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      type: "MODULE",
+    },
+    validationSchema: Yup.object({
+      title: Yup.string().required(),
+      type: Yup.string()
+        .oneOf(["MODULE", "COURSE_FILE", "WORKTEXT", "TEXTBOOK"])
+        .required(),
+    }),
+
+    onSubmit: (values) => {
+      axios
+        .put(`/api/im/${iMId}`, values)
+        .then(() => {
+          alert("IM Updated");
+          router.reload();
+        })
+        .catch((error) => {
+          alert(error.response.data.error.message);
+        });
+    },
+  });
+
+  useEffect(() => {
+    if (!iM) return;
+
+    formik.setValues({
+      title: iM.title,
+      type: iM.type,
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [iM]);
+
+  useEffect(() => {
+    console.log({ iM });
+  }, [iM]);
+
+  return (
+    <>
+      <button
+        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left'
+        onClick={() => setOpenEdit(true)}
+      >
+        Edit
+      </button>
+      {openEdit && (
+        <Modal title='Edit IM' onClose={() => setOpenEdit(false)}>
+          <form onSubmit={formik.handleSubmit} noValidate>
+            <div className="flex flex-col space-y-1">
+              <input
+                placeholder='Title'
+                {...formik.getFieldProps("title")}
+                className='rounded'
+              />
+              <select {...formik.getFieldProps("type")} className='rounded'>
+                <option value='MODULE'>Module</option>
+                <option value='COURSE_FILE'>Course File</option>
+                <option value='WORKTEXT'>Worktext</option>
+                <option value='TEXTBOOK'>Textbook</option>
+              </select>
+              <input
+                type='submit'
+                value='Submit'
+                disabled={!formik.isValid}
+                className='border rounded py-1 bg-palette_blue text-palette_white'
+              />
+            </div>
+          </form>
+        </Modal>
+      )}
+    </>
   );
 }
