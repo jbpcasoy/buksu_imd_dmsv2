@@ -52,7 +52,7 @@ export default function IMChairpersonSuggestionItems({
   return (
     <div>
       <table className='text-sm w-full'>
-        <caption className='text-xs'>Chairperson Suggestions</caption>
+        <caption className='text-xs'>CHAIRPERSON SUGGESTIONS</caption>
         <thead>
           <tr>
             <th>LAST ACTIVITY</th>

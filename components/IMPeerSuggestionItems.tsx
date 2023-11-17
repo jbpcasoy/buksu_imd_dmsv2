@@ -52,7 +52,7 @@ export default function IMPeerSuggestionItems({
   return (
     <div>
       <table className='text-sm w-full'>
-        <caption className='text-xs'>Peer Suggestions</caption>
+        <caption className='text-xs'>PEER SUGGESTIONS</caption>
         <thead>
           <tr>
             <th>LAST ACTIVITY</th>

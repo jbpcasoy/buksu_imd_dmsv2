@@ -52,7 +52,7 @@ export default function IMCoordinatorSuggestionItems({
   return (
     <div>
       <table className='text-sm w-full'>
-        <caption className='text-xs'>Coordinator Suggestions</caption>
+        <caption className='text-xs'>COORDINATOR SUGGESTIONS</caption>
         <thead>
           <tr>
             <th>LAST ACTIVITY</th>

@@ -50,7 +50,7 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
   return (
     <div>
       <table className='text-sm w-full'>
-        <caption className='text-xs'>ReturnedDepartmentRevision Suggestions</caption>
+        <caption className='text-xs'>RETURNED DEPARTMENT REVISION SUGGESTIONS</caption>
         <thead>
           <tr>
             <th>LAST ACTIVITY</th>
