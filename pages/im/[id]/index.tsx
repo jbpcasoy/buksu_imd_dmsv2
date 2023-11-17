@@ -535,9 +535,23 @@ export default function ViewIM() {
               <IMCoordinatorSuggestionItems id={iM.id} />
               <IMPeerSuggestionItems id={iM.id} />
               <IMReturnedDepartmentRevisionSuggestionItems id={iM.id} />
-              <input type='file' onChange={onFileChange} accept='.pdf' />
+              <FileUpload
+                onFileChange={(e) => {
+                  setState((prev) => ({
+                    ...prev,
+                    iMFile: e.target.files?.item(0),
+                  }));
+                }}
+                onFileReset={() => {
+                  setState((prev) => ({
+                    ...prev,
+                    iMFile: undefined,
+                  }));
+                }}
+              />
               <button
-                className='border rounded'
+                className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50'
+                disabled={Boolean(!state?.iMFile)}
                 onClick={submitForEndorsementHandler}
               >
                 Submit for endorsement
@@ -791,34 +805,34 @@ export default function ViewIM() {
             </div>
           )}
 
-        <div className='flex flex-1'>
+        <div className='flex flex-1 h-screen-3/4'>
           {qAMISFile && iMStatus === "IMERC_QAMIS_REVISED" && (
-            <div className='flex flex-col h-full w-full'>
+            <div className='flex flex-col h-screen-3/4 w-full'>
               <p className='text-xs font-bold text-center'>QAMIS FILE</p>
               <iframe
                 src={`/api/qamis_file/${qAMISFile.id}/pdf`}
                 title='QAMIS File'
-                className='w-full h-full'
+                className='w-full h-screen-3/4'
               />
             </div>
           )}
           {plagiarismFile && iMStatus === "IMERC_CITL_REVISED" && (
-            <div className='flex flex-col h-full w-full'>
+            <div className='flex flex-col h-screen-3/4 w-full'>
               <p className='text-xs font-bold text-center'>PLAGIARISM FILE</p>
               <iframe
                 src={`/api/plagiarism_file/${plagiarismFile.id}/pdf`}
                 title='Plagiarism File'
-                className='w-full h-full'
+                className='w-full h-screen-3/4'
               />
             </div>
           )}
           {iMFile && (
-            <div className='flex flex-col h-full w-full'>
+            <div className='flex flex-col h-screen-3/4 w-full'>
               <p className='text-xs font-bold text-center'>IM FILE</p>
               <iframe
                 src={`/api/im_file/${iMFile.id}/pdf`}
                 title={iM.title}
-                className='w-full h-full'
+                className='w-full h-screen-3/4'
               />
             </div>
           )}

@@ -19,6 +19,9 @@ const config: Config = {
         palette_info: "#29b6f6",
         palette_success: "#66bb6a",
       },
+      height: {
+        "screen-3/4": "75vh",
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],

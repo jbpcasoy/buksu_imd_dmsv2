@@ -49,7 +49,7 @@ function FileUpload({
           />
           <label
             htmlFor='implementation_draft_upload'
-            className='border-2 border-dashed rounded h-96 flex justify-center items-center cursor-pointer my-1'
+            className='border-2 border-dashed rounded h-screen-3/4 flex justify-center items-center cursor-pointer my-1'
             onDrop={(e) => {
               e.dataTransfer.files;
             }}
@@ -68,7 +68,7 @@ function FileUpload({
               Replace File
             </button>
           </div>
-          <iframe src={state.filePreview} className='w-full h-96'></iframe>
+          <iframe src={state.filePreview} className='w-full h-screen-3/4'></iframe>
         </div>
       )}
     </div>

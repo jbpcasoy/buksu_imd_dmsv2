@@ -189,19 +189,20 @@ function EditSuggestionItemActionTaken({
       </button>
       {openEditActionTaken && (
         <Modal
-          title='Coordinator Review'
+          title='Coordinator Suggestion Action Taken'
           onClose={() => setOpenEditActionTaken(false)}
         >
           <form noValidate onSubmit={formik.handleSubmit}>
-            <div className='flex flex-col'>
+            <div className='flex flex-col space-y-1'>
               <textarea
-                placeholder='value'
+                placeholder='Action Taken'
                 {...formik.getFieldProps("value")}
+                className="rounded"
               />
               <input
                 type='submit'
                 value='Submit'
-                className='bg-palette_blue text-palette_white rounded'
+                className='bg-palette_blue text-palette_white rounded py-1'
               />
             </div>
           </form>
