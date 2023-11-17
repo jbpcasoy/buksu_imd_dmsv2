@@ -4,10 +4,8 @@ import { ChairpersonSuggestionItem } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { ChairpersonSuggestionItemProps } from "./ChairpersonSuggestionItem";
 import * as Yup from "yup";
 import Modal from "./Modal";
 

@@ -618,10 +618,22 @@ export default function ViewIM() {
             <div>
               <IMIDDCoordinatorSuggestionItems id={iM.id} />
               <IMReturnedCITLRevisionSuggestionItems id={iM.id} />
-
-              <input type='file' onChange={onFileChange} accept='.pdf' />
+              <FileUpload
+                onFileChange={(e) => {
+                  setState((prev) => ({
+                    ...prev,
+                    iMFile: e.target.files?.item(0),
+                  }));
+                }}
+                onFileReset={() => {
+                  setState((prev) => ({
+                    ...prev,
+                    iMFile: undefined,
+                  }));
+                }}
+              />
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white p-2 py-1 rounded'
                 onClick={submitForCITLEndorsementHandler}
               >
                 Submit for endorsement
@@ -639,13 +651,13 @@ export default function ViewIM() {
                 editable={false}
               />
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white p-2 py-1 rounded'
                 onClick={iDDCoordinatorEndorsementHandler}
               >
                 Endorse IM
               </button>
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white p-2 py-1 rounded'
                 onClick={returnIDDCoordinatorEndorsementHandler}
               >
                 Return revision
@@ -1006,7 +1018,7 @@ function EditIM() {
       {openEdit && (
         <Modal title='Edit IM' onClose={() => setOpenEdit(false)}>
           <form onSubmit={formik.handleSubmit} noValidate>
-            <div className="flex flex-col space-y-1">
+            <div className='flex flex-col space-y-1'>
               <input
                 placeholder='Title'
                 {...formik.getFieldProps("title")}
