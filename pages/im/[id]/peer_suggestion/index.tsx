@@ -21,6 +21,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
@@ -233,7 +234,7 @@ export default function PeerSuggestionPage() {
           </div>
         </div>
         <div>
-          <IMPeerSuggestionItems id={iMId as string} editable={false} />
+          <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
         </div>
         {!submittedPeerSuggestion && (

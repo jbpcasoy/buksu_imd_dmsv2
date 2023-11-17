@@ -135,7 +135,7 @@ function EditSuggestionItem({
               <input
                 type='submit'
                 value='Submit'
-                className='bg-palette_blue text-white rounded'
+                className='bg-palette_blue text-white rounded py-1'
               />
             </div>
           </form>

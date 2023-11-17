@@ -1,5 +1,6 @@
 import ChairpersonSuggestionItemComponent from "@/components/ChairpersonSuggestionItem";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
+import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
@@ -230,7 +231,7 @@ export default function ChairpersonSuggestionPage() {
         </div>
         <div>
           <IMPeerSuggestionItems id={iMId as string} editable={false} />
-          <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
+          <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
         </div>
         {!submittedChairpersonSuggestion && (
           <button className='rounded border' onClick={handleSubmitReview}>

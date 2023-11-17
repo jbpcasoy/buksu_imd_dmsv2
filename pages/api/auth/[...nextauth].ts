@@ -8,10 +8,6 @@ if (!process.env.GOOGLE_CLIENT_ID) {
   throw new Error("env GOOGLE_CLIENT_ID is not set");
 } else if (!process.env.GOOGLE_CLIENT_SECRET) {
   throw new Error("env GOOGLE_CLIENT_SECRET is not set");
-} else if (!process.env.ADMIN_USERNAME) {
-  throw new Error("env ADMIN_USERNAME is not set");
-} else if (!process.env.ADMIN_PASSWORD) {
-  throw new Error("env ADMIN_PASSWORD is not set");
 } else if (!process.env.ADMIN_EMAILS) {
   throw new Error("env ADMIN_EMAILS is not set");
 }
