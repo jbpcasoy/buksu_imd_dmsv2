@@ -80,6 +80,10 @@ export function IMStatusPieChart({
           legend: {
             display: false,
           },
+          title: {
+            display: true,
+            text: "By Status",
+          },
           autocolors: {
             mode: "data",
           },

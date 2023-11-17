@@ -79,84 +79,105 @@ export default function Home() {
 
   return (
     <MainLayout>
-      <h1 className='text-lg'>Dashboard</h1>
-      {!activeFaculty &&
-        !(activeDean || activeCITLDirector || activeIDDCoordinator) && (
-          <div>
-            <p>
-              Welcome, you are not yet assigned as a faculty. Please be patient
-              while the admin sets your roles.
-            </p>
-          </div>
-        )}
-      {(activeDean ||
-        activeCITLDirector ||
-        activeIDDCoordinator ||
-        activeCoordinator ||
-        activeChairperson) && (
-        <div>
-          <form noValidate onSubmit={formik.handleSubmit}>
-            <CollegeSelector
-              {...formik.getFieldProps("collegeId")}
-              disabled={!(activeCITLDirector || activeIDDCoordinator)}
-            />
-            <DepartmentSelector
-              {...formik.getFieldProps("departmentId")}
-              collegeId={formik.values.collegeId}
-              disabled={
-                !(activeDean || activeCITLDirector || activeIDDCoordinator)
-              }
-            />
-            <StatusSelector {...formik.getFieldProps("status")} />
-            <label htmlFor='start'>start: </label>
-            <input
-              type='datetime-local'
-              id='start'
-              max={formik.values.end}
-              {...formik.getFieldProps("start")}
-            />
-            <br />
-            <label htmlFor='end'>end: </label>
-            <input
-              type='datetime-local'
-              id='end'
-              min={formik.values.start}
-              {...formik.getFieldProps("end")}
-            />
-            <br />
+      <div className='flex flex-col h-full'>
+        <h1 className='text-lg'>Dashboard</h1>
+        {!activeFaculty &&
+          !(activeDean || activeCITLDirector || activeIDDCoordinator) && (
             <div>
-              <input type='submit' value='Refresh' className='border rounded' />
-              <button className='border rounded' onClick={router.reload}>
-                Reset
-              </button>
+              <p>
+                Welcome, you are not yet assigned as a faculty. Please be
+                patient while the admin sets your roles.
+              </p>
             </div>
-          </form>
-
-          <div>
-            <IMStatusDepartmentLineChart filter={state} />
-            <div className='flex flex-row justify-center items-center space-y-2'>
-              <div className='w-1/2 xs:w-full'>
-                <IMStatusPieChart filter={state} />
-              </div>
-              <div className='w-1/2 xs:w-full'>
-                <IMDepartmentPieChart filter={state} />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      {activeFaculty &&
-        !(
-          activeDean ||
+          )}
+        {(activeDean ||
           activeCITLDirector ||
           activeIDDCoordinator ||
           activeCoordinator ||
-          activeChairperson
-        ) && (
-          <div>
-            <p>Welcome Faculty!</p>
+          activeChairperson) && (
+          <div className='flex-1 flex flex-col h-full'>
+            <form noValidate onSubmit={formik.handleSubmit}>
+              <div className='space-y-1 flex flex-col w-2/3'>
+                <CollegeSelector
+                  {...formik.getFieldProps("collegeId")}
+                  disabled={!(activeCITLDirector || activeIDDCoordinator)}
+                />
+                <DepartmentSelector
+                  {...formik.getFieldProps("departmentId")}
+                  collegeId={formik.values.collegeId}
+                  disabled={
+                    !(activeDean || activeCITLDirector || activeIDDCoordinator)
+                  }
+                />
+                <StatusSelector {...formik.getFieldProps("status")} />
+                <div className='flex space-x-1'>
+                  <div className='text-sm'>
+                    <label htmlFor='start'>START </label>
+                    <br />
+                    <input
+                      type='datetime-local'
+                      id='start'
+                      max={formik.values.end}
+                      {...formik.getFieldProps("start")}
+                      className='rounded w-full py-1'
+                    />
+                  </div>
+                  <div className='text-sm'>
+                    <label htmlFor='end'>END </label>
+                    <br />
+                    <input
+                      type='datetime-local'
+                      id='end'
+                      min={formik.values.start}
+                      {...formik.getFieldProps("end")}
+                      className='rounded w-full py-1'
+                    />
+                  </div>
+                </div>
+                <div className='space-x-1'>
+                  <input
+                    type='submit'
+                    value='Refresh'
+                    className='bg-palette_blue text-palette_white px-2 rounded'
+                  />
+                  <button
+                    className='bg-palette_blue text-palette_white px-2 rounded'
+                    onClick={router.reload}
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div className='flex-1 flex w-full h-full'>
+              <div className='flex-1 relative h-full'>
+                <IMStatusDepartmentLineChart filter={state} />
+              </div>
+              <div className='flex flex-col justify-center items-center space-y-2  h-full'>
+                <div className='h-1/2 relative'>
+                  <IMStatusPieChart filter={state} />
+                </div>
+                <div className='h-1/2 relative'>
+                  <IMDepartmentPieChart filter={state} />
+                </div>
+              </div>
+            </div>
           </div>
         )}
+        {activeFaculty &&
+          !(
+            activeDean ||
+            activeCITLDirector ||
+            activeIDDCoordinator ||
+            activeCoordinator ||
+            activeChairperson
+          ) && (
+            <div>
+              <p>Welcome Faculty!</p>
+            </div>
+          )}
+      </div>
     </MainLayout>
   );
 }

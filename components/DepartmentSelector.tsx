@@ -38,14 +38,15 @@ export default function DepartmentSelector({
   };
 
   return (
-    <div>
+    <div className='flex'>
       <input
         type='text'
         onChange={onSearch}
-        placeholder='Search department'
+        placeholder='Search Department'
         disabled={disabled}
+        className='rounded-s p-1 w-80'
       />
-      <select {...props} disabled={disabled}>
+      <select {...props} disabled={disabled} className='rounded-e py-1'>
         <option value=''>Select</option>
         {departments.map((department) => {
           return (

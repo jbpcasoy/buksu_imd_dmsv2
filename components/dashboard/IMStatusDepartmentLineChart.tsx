@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   CategoryScale,
+  ChartData,
   Chart as ChartJS,
   Legend,
   LineElement,
@@ -37,7 +38,9 @@ export interface IMStatusDepartmentLineChartProps {
   };
 }
 
-export function IMStatusDepartmentLineChart({ filter }: IMStatusDepartmentLineChartProps) {
+export function IMStatusDepartmentLineChart({
+  filter,
+}: IMStatusDepartmentLineChartProps) {
   const labels = [
     "IMPLEMENTATION_DRAFT",
     "IMPLEMENTATION_DEPARTMENT_REVIEW",
@@ -99,7 +102,7 @@ export function IMStatusDepartmentLineChart({ filter }: IMStatusDepartmentLineCh
     console.log({ filter });
   }, [filter]);
 
-  const data = {
+  const data: ChartData<"line", (number | undefined)[], string> = {
     labels,
     datasets: departments.map((department) => {
       return {

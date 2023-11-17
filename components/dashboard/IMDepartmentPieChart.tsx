@@ -82,6 +82,10 @@ export function IMDepartmentPieChart({
       options={{
         responsive: true,
         plugins: {
+          title: {
+            display: true,
+            text: "By Department",
+          },
           legend: {
             display: false,
           },

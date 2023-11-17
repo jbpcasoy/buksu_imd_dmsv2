@@ -30,7 +30,11 @@ export default async function handler(
           "IMPLEMENTATION_DEPARTMENT_REVIEWED",
           "IMPLEMENTATION_DEPARTMENT_REVIEW",
           "IMPLEMENTATION_DRAFT",
-        ]),
+        ])
+        .optional()
+        .transform((originalValue) => {
+          return originalValue === "" ? undefined : originalValue;
+        }),
         "filter[start]": Yup.date().optional(),
         "filter[end]": Yup.date().optional(),
       });

@@ -29,14 +29,15 @@ export default function CollegeSelector({
   };
 
   return (
-    <div>
+    <div className="flex">
       <input
         type='text'
         onChange={onSearch}
-        placeholder='Search college'
+        placeholder='Search College'
         disabled={disabled}
+        className='rounded-s p-1 w-80'
       />
-      <select {...props} disabled={disabled}>
+      <select {...props} disabled={disabled} className='rounded-e py-1'>
         <option value=''>Select</option>
         {colleges.map((college) => {
           return (
