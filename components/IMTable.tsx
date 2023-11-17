@@ -227,7 +227,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
 
   return (
     <div>
-      <select onChange={handleFieldChange}>
+      <select onChange={handleFieldChange} className='py-1 rounded-s bg-inherit'>
         <option value=''>Select field</option>
         <option value='title'>Title</option>
         <option value='userName'>User Name</option>
@@ -238,7 +238,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
         type='text'
         placeholder='Search'
         value={filterValue}
-        className='bg-inherit border-b'
+        className='bg-inherit border-b py-1 rounded-e'
         onChange={handleValueChange}
       />
     </div>
@@ -266,14 +266,14 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
 
   return (
     <div>
-      <select onChange={handleFieldChange} value={selectedField}>
+      <select onChange={handleFieldChange} value={selectedField} className='py-1 rounded-s bg-inherit'>
         <option value='title'>Title</option>
         <option value='createdAt'>Date Created</option>
-        <option value='userName'>User Name</option>
+        <option value='userName'>Author</option>
         <option value='departmentName'>Department Name</option>
         <option value='collegeName'>College Name</option>
       </select>
-      <select onChange={handleDirectionChange} value={sortDirection}>
+      <select onChange={handleDirectionChange} value={sortDirection} className='py-1 rounded-e bg-inherit'>
         <option value='asc'>Ascending</option>
         <option value='desc'>Descending</option>
       </select>
@@ -321,10 +321,14 @@ function AddIM() {
         <Modal title='ADD IM' onClose={() => setState({ addIMOpen: false })}>
           <form onSubmit={formik.handleSubmit} noValidate>
             <div className='text-base flex flex-col space-y-1'>
-              <input placeholder='Title' {...formik.getFieldProps("title")} />
+              <input
+                placeholder='Title'
+                {...formik.getFieldProps("title")}
+                className='py-1 rounded'
+              />
               <select
                 {...formik.getFieldProps("type")}
-                className='bg-palette_blue text-palette_white rounded block py-1'
+                className='rounded block py-1'
               >
                 <option value='MODULE'>Module</option>
                 <option value='COURSE_FILE'>Course File</option>
@@ -335,8 +339,8 @@ function AddIM() {
                 type='submit'
                 value='Submit'
                 disabled={!formik.isValid}
-                className='border rounded'
-                onClick={() => setState({ addIMOpen: false })}
+                className='border rounded py-1 bg-palette_blue text-palette_white'
+                // onClick={() => setState({ addIMOpen: false })}
               />
             </div>
           </form>
