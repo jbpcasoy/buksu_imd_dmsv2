@@ -1,7 +1,13 @@
+import useIDDCoordinatorSuggestionItem from "@/hooks/useIDDCoordinatorSuggestionItem";
 import { IDDCoordinatorSuggestionItem } from "@prisma/client";
 import axios from "axios";
+import { useFormik } from "formik";
+import { DateTime } from "luxon";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import * as Yup from "yup";
+import Modal from "./Modal";
 
 export interface IDDCoordinatorSuggestionItemProps {
   iDDCoordinatorSuggestionItem: IDDCoordinatorSuggestionItem;
@@ -28,29 +34,111 @@ export default function IDDCoordinatorSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>{iDDCoordinatorSuggestionItem.id}</td>
       <td>
-        {new Date(iDDCoordinatorSuggestionItem.createdAt).toLocaleString()}
-      </td>
-      <td>
-        {new Date(iDDCoordinatorSuggestionItem.updatedAt).toLocaleString()}
+        {DateTime.fromJSDate(
+          new Date(iDDCoordinatorSuggestionItem.updatedAt)
+        ).toRelative()}
       </td>
       <td>{iDDCoordinatorSuggestionItem.suggestion}</td>
-      <td>{iDDCoordinatorSuggestionItem.pageNumber}</td>
+      <td className='text-center'>{iDDCoordinatorSuggestionItem.pageNumber}</td>
       <td>{iDDCoordinatorSuggestionItem.actionTaken}</td>
       <td>{iDDCoordinatorSuggestionItem.remarks}</td>
-      <td>{iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}</td>
       <td className=''>
-        <Link
-          className='border rounded'
-          href={`/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}/edit`}
-        >
-          edit
-        </Link>
-        <button className='border rounded' onClick={handleDelete}>
-          delete
-        </button>
+        <div className='flex flex-col space-y-1'>
+          <EditSuggestionItem
+            iDDCoordinatorSuggestionItem={iDDCoordinatorSuggestionItem}
+          />
+          <button
+            className='bg-palette_blue text-palette_white rounded px-1 text-sm'
+            onClick={handleDelete}
+          >
+            delete
+          </button>
+        </div>
       </td>
     </tr>
+  );
+}
+
+interface EditSuggestionItemProps {
+  iDDCoordinatorSuggestionItem: IDDCoordinatorSuggestionItem;
+}
+function EditSuggestionItem({
+  iDDCoordinatorSuggestionItem,
+}: EditSuggestionItemProps) {
+  const router = useRouter();
+  const [openEdit, setOpenEdit] = useState(false);
+  const formik = useFormik({
+    initialValues: {
+      suggestion: "",
+      pageNumber: 0,
+      remarks: "",
+    },
+    validationSchema: Yup.object({
+      suggestion: Yup.string().required(),
+      pageNumber: Yup.number().min(0).required(),
+      remarks: Yup.string(),
+    }),
+    onSubmit: (values) => {
+      axios
+        .put(
+          `/api/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}`,
+          values
+        )
+        .then(() => {
+          alert("Suggestion updated successfully");
+          router.reload();
+        });
+    },
+  });
+
+  useEffect(() => {
+    if (!iDDCoordinatorSuggestionItem) return;
+    formik.setValues({
+      pageNumber: iDDCoordinatorSuggestionItem.pageNumber,
+      remarks: iDDCoordinatorSuggestionItem?.remarks ?? "",
+      suggestion: iDDCoordinatorSuggestionItem.suggestion,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [iDDCoordinatorSuggestionItem]);
+
+  return (
+    <div>
+      <button
+        className='bg-palette_blue text-palette_white px-1 rounded text-sm w-full'
+        onClick={() => setOpenEdit(true)}
+      >
+        Edit
+      </button>
+      {openEdit && (
+        <Modal title='Coordinator Review' onClose={() => setOpenEdit(false)}>
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <div className='flex flex-col space-y-1'>
+              <textarea
+                placeholder='suggestion'
+                {...formik.getFieldProps("suggestion")}
+                className='rounded'
+              />
+              <input
+                type='number'
+                placeholder='pageNumber'
+                {...formik.getFieldProps("pageNumber")}
+                className='rounded'
+              />
+              <textarea
+                placeholder='remarks'
+                {...formik.getFieldProps("remarks")}
+                className='rounded'
+              />
+              <input
+                type='submit'
+                value='Submit'
+                className='bg-palette_blue text-palette_white rounded px-2 py-1'
+              />
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
 }

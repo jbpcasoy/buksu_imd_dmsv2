@@ -575,13 +575,13 @@ export default function ViewIM() {
                 editable={false}
               />
               <button
-                className='bg-palette_blue text-palette_white rounded px-2'
+                className='bg-palette_blue text-palette_white rounded px-2 py-1'
                 onClick={coordinatorEndorsementHandler}
               >
                 Endorse IM
               </button>
               <button
-                className='bg-palette_blue text-palette_white rounded px-2'
+                className='bg-palette_blue text-palette_white rounded px-2 py-1'
                 onClick={returnCoordinatorEndorsementHandler}
               >
                 Return Revision
@@ -593,7 +593,7 @@ export default function ViewIM() {
           activeDean && (
             <div>
               <button
-                className='bg-palette_blue text-palette_white rounded px-2'
+                className='bg-palette_blue text-palette_white rounded px-2 py-1'
                 onClick={deanEndorsementHandler}
               >
                 Endorse IM
@@ -606,7 +606,7 @@ export default function ViewIM() {
             <div>
               <Link
                 href={`/im/${iM.id}/idd_coordinator_suggestion`}
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 rounded py-1'
               >
                 IDD Coordinator Suggestion
               </Link>
