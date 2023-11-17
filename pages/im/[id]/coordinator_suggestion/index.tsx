@@ -1,4 +1,4 @@
-import CoordinatorSuggestionItemComponent from "@/components/CoordinatorSuggestionItem";
+import CoordinatorSuggestionItem from "@/components/CoordinatorSuggestionItem";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
@@ -149,7 +149,7 @@ export default function CoordinatorSuggestionPage() {
                 />
                 <input
                   type='number'
-                  placeholder='pageNumber'
+                  placeholder='Page No.'
                   {...formik.getFieldProps("pageNumber")}
                   className='w-full rounded'
                 />
@@ -206,7 +206,7 @@ export default function CoordinatorSuggestionPage() {
               {coordinatorSuggestionItems.coordinatorSuggestionItems.map(
                 (coordinatorSuggestionItem) => {
                   return (
-                    <CoordinatorSuggestionItemComponent
+                    <CoordinatorSuggestionItem
                       coordinatorSuggestionItem={coordinatorSuggestionItem}
                       key={coordinatorSuggestionItem.id}
                     />
@@ -232,16 +232,9 @@ export default function CoordinatorSuggestionPage() {
           <IMPeerSuggestionItems id={iMId as string} editable={false} />
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
         </div>
-        {!submittedCoordinatorSuggestion && (
-          <button className='rounded border' onClick={handleSubmitReview}>
-            Submit Review
-          </button>
-        )}
-        {submittedCoordinatorSuggestion && (
-          <Link className='rounded border' href={`/im/${iMId}`}>
-            Finish
-          </Link>
-        )}
+        <button className='rounded border' onClick={handleSubmitReview}>
+          Submit Review
+        </button>
       </div>
     </MainLayout>
   );

@@ -111,7 +111,7 @@ function EditSuggestionItem({
       </button>
       {openEdit && (
         <Modal
-          title='Edit Coordinator Suggestion Item'
+          title='Edit Suggestion Item'
           onClose={() => setOpenEdit(false)}
         >
           <form noValidate onSubmit={formik.handleSubmit}>
@@ -135,7 +135,7 @@ function EditSuggestionItem({
               <input
                 type='submit'
                 value='Submit'
-                className='bg-palette_blue text-white rounded'
+                className='bg-palette_blue text-white rounded py-1'
               />
             </div>
           </form>

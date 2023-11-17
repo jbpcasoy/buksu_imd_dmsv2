@@ -421,7 +421,7 @@ export default function ViewIM() {
   return (
     <MainLayout>
       <div className='flex flex-col h-full'>
-        <div className='flex'>
+        <div className='flex mb-2'>
           <div className='flex-1'>
             <div className='flex'>
               <h2 className='flex-1 uppercase'>{iM.title}</h2>
@@ -572,16 +572,16 @@ export default function ViewIM() {
                 editable={false}
               />
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white rounded px-2'
                 onClick={coordinatorEndorsementHandler}
               >
                 Endorse IM
               </button>
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white rounded px-2'
                 onClick={returnCoordinatorEndorsementHandler}
               >
-                Return revision
+                Return Revision
               </button>
             </div>
           )}
@@ -590,7 +590,7 @@ export default function ViewIM() {
           activeDean && (
             <div>
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white rounded px-2'
                 onClick={deanEndorsementHandler}
               >
                 Endorse IM

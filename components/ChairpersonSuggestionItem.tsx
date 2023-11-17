@@ -111,13 +111,13 @@ function EditSuggestionItem({
       </button>
       {openEdit && (
         <Modal
-          title='Edit Chairperson Suggestion Item'
+          title='Edit Suggestion Item'
           onClose={() => setOpenEdit(false)}
         >
           <form noValidate onSubmit={formik.handleSubmit}>
             <div className='flex flex-col space-y-1'>
               <textarea
-                placeholder='suggestion'
+                placeholder='Suggestion'
                 {...formik.getFieldProps("suggestion")}
                 className='rounded'
               />

@@ -111,7 +111,7 @@ function EditSuggestionItem({
       </button>
       {openEdit && (
         <Modal
-          title='Edit Peer Suggestion Item'
+          title='Edit Suggestion Item'
           onClose={() => setOpenEdit(false)}
         >
           <form noValidate onSubmit={formik.handleSubmit}>
