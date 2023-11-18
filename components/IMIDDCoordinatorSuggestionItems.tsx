@@ -134,7 +134,7 @@ interface EditSuggestionItemActionTakenProps {
 function EditSuggestionItemActionTaken({
   iDDCoordinatorSuggestionItem,
 }: EditSuggestionItemActionTakenProps) {
-  const router = useRouter();
+  const router = useRouter(); 
   const [openEditActionTaken, setOpenEditActionTaken] = useState(false);
   const iDDCoordinatorSuggestionItemActionTaken =
     useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem({
@@ -190,7 +190,7 @@ function EditSuggestionItemActionTaken({
       </button>
       {openEditActionTaken && (
         <Modal
-          title='IDDCoordinator Review'
+          title='Edit Action Taken'
           onClose={() => setOpenEditActionTaken(false)}
         >
           <form noValidate onSubmit={formik.handleSubmit}>

@@ -669,7 +669,7 @@ export default function ViewIM() {
           activeCITLDirector && (
             <div>
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 py-1 rounded'
                 onClick={cITLDirectorEndorsementHandler}
               >
                 Endorse IM
@@ -682,7 +682,7 @@ export default function ViewIM() {
             <div>
               <Link
                 href={`/im/${iM.id}/qamis_suggestion`}
-                className='border rounded'
+                className='rounded bg-palette_blue text-palette_white px-2 py-1'
               >
                 Input QAMIS suggestions
               </Link>
