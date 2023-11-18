@@ -3,6 +3,7 @@ import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionIt
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
 import MainLayout from "@/components/MainLayout";
+import Modal from "@/components/Modal";
 import ReturnedCITLRevisionItem from "@/components/ReturnedCITLRevisionItem";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useCITLRevisionIM from "@/hooks/useCITLRevisionIM";
@@ -83,53 +84,6 @@ export default function ReturnedCITLRevisionPage() {
     }));
   }, [returnedCITLRevision]);
 
-  const formik = useFormik({
-    initialValues: {
-      suggestion: "",
-      remarks: "",
-      pageNumber: 0,
-    },
-    validationSchema: Yup.object({
-      suggestion: Yup.string().required(),
-      remarks: Yup.string(),
-      pageNumber: Yup.number().min(0).required(),
-    }),
-    onSubmit: (values) => {
-      const submitSuggestionItem = async (returnedCITLRevisionId: string) => {
-        return axios
-          .post(`/api/returned_citl_revision_suggestion_item`, {
-            ...values,
-            returnedCITLRevisionId,
-          })
-          .then(() => {
-            alert("Suggestion added successfully.");
-            router.reload();
-          });
-      };
-
-      if (!returnedCITLRevision) {
-        if (!activeIDDCoordinator || !cITLRevision) {
-          return;
-        }
-        return axios
-          .post<ReturnedCITLRevision>(`/api/returned_citl_revision/`, {
-            activeIDDCoordinatorId: activeIDDCoordinator.id,
-            cITLRevisionId: cITLRevision.id,
-          })
-          .then((res) => {
-            const createdCoordinatorSuggestion = res.data;
-
-            return submitSuggestionItem(createdCoordinatorSuggestion.id);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        return submitSuggestionItem(returnedCITLRevision.id);
-      }
-    },
-  });
-
   useEffect(() => {
     if (submittedReturnedCITLRevision && cITLRevision) {
       router.push(`/im/${iMId}`);
@@ -137,53 +91,126 @@ export default function ReturnedCITLRevisionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submittedReturnedCITLRevision, cITLRevision, iMId]);
 
+  const AddSuggestion = () => {
+    const [openAdd, setOpenAdd] = useState(false);
+    const formik = useFormik({
+      initialValues: {
+        suggestion: "",
+        remarks: "",
+        pageNumber: 0,
+      },
+      validationSchema: Yup.object({
+        suggestion: Yup.string().required(),
+        remarks: Yup.string(),
+        pageNumber: Yup.number().min(0).required(),
+      }),
+      onSubmit: (values) => {
+        const submitSuggestionItem = async (returnedCITLRevisionId: string) => {
+          return axios
+            .post(`/api/returned_citl_revision_suggestion_item`, {
+              ...values,
+              returnedCITLRevisionId,
+            })
+            .then(() => {
+              alert("Suggestion added successfully.");
+              router.reload();
+            });
+        };
+
+        if (!returnedCITLRevision) {
+          if (!activeIDDCoordinator || !cITLRevision) {
+            return;
+          }
+          return axios
+            .post<ReturnedCITLRevision>(`/api/returned_citl_revision/`, {
+              activeIDDCoordinatorId: activeIDDCoordinator.id,
+              cITLRevisionId: cITLRevision.id,
+            })
+            .then((res) => {
+              const createdCoordinatorSuggestion = res.data;
+
+              return submitSuggestionItem(createdCoordinatorSuggestion.id);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          return submitSuggestionItem(returnedCITLRevision.id);
+        }
+      },
+    });
+
+    return (
+      <>
+        <button
+          onClick={() => setOpenAdd(true)}
+          className='rounded bg-palette_blue text-palette_white px-2 py-1'
+        >
+          Add
+        </button>
+        {openAdd && (
+          <Modal onClose={() => setOpenAdd(false)} title='Add Suggestion'>
+            <form noValidate onSubmit={formik.handleSubmit}>
+              <div className='flex flex-col space-y-1'>
+                <textarea
+                  placeholder='Suggestion'
+                  {...formik.getFieldProps("suggestion")}
+                  className='rounded'
+                />
+                <input
+                  type='number'
+                  placeholder='Page No.'
+                  {...formik.getFieldProps("pageNumber")}
+                  className='rounded'
+                />
+                <textarea
+                  placeholder='Remarks'
+                  {...formik.getFieldProps("remarks")}
+                  className='rounded'
+                />
+                <input
+                  type='submit'
+                  value='Submit'
+                  className='bg-palette_blue text-palette_white border rounded py-1'
+                />
+              </div>
+            </form>
+          </Modal>
+        )}
+      </>
+    );
+  };
+
   return (
     <MainLayout>
       <div>
         <div className='flex justify-between'>
-          <h2 className='inline'>Return CITL Revision</h2>
-          <Link
-            href={`/api/im_file/im/${iMId}/pdf`}
-            className='underline'
-            target='_blank'
-          >
-            View PDF
-          </Link>
+          <div>
+            <h2 className='inline text-lg font-bold'>
+              Instructional Material Review Form{" "}
+              <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                Returned CITL Revision
+              </span>
+            </h2>
+            <p className='text-sm'>Implementation Phase</p>
+          </div>
+
+          <div>
+            <AddSuggestion />
+          </div>
         </div>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='suggestion'
-            {...formik.getFieldProps("suggestion")}
-          />
-          <br />
-          <input
-            type='number'
-            placeholder='pageNumber'
-            {...formik.getFieldProps("pageNumber")}
-          />
-          <br />
-          <textarea
-            placeholder='remarks'
-            {...formik.getFieldProps("remarks")}
-          />
-          <br />
-          <input type='submit' value='Submit' className='border rounded' />
-        </form>
 
         <div>
-          <table>
-            <caption>Suggestions</caption>
+          <table className='text-sm w-full'>
+            <caption>SUGGESTIONS</caption>
             <thead>
               <tr>
-                <th>id</th>
-                <th>createdAt</th>
-                <th>updatedAt</th>
-                <th>suggestion</th>
-                <th>pageNumber</th>
-                <th>actionTaken</th>
-                <th>remarks</th>
-                <th>returnedCITLRevisionId</th>
-                <th>actions</th>
+                <th>LAST ACTIVITY</th>
+                <th>SUGGESTION</th>
+                <th>PAGE NUMBER</th>
+                <th>ACTION TAKEN</th>
+                <th>REMARKS</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -223,7 +250,10 @@ export default function ReturnedCITLRevisionPage() {
             editable={false}
           />
         </div>
-        <button className='rounded border' onClick={handleSubmitSuggestions}>
+        <button
+          className='rounded bg-palette_blue text-palette_white px-2 py-1'
+          onClick={handleSubmitSuggestions}
+        >
           Submit Review
         </button>
       </div>

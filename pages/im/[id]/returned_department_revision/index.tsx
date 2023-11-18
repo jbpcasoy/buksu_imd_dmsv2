@@ -207,7 +207,7 @@ export default function ReturnedDepartmentRevisionPage() {
 
         <div>
           <table className="text-sm w-full">
-            <caption>Suggestions</caption>
+            <caption>SUGGESTIONS</caption>
             <thead>
               <tr>
                 <th>LAST ACTIVITY</th>
