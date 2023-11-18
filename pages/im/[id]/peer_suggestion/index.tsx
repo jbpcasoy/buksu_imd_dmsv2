@@ -1,27 +1,22 @@
-import PeerSuggestionItemComponent from "@/components/PeerSuggestionItem";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
-import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
+import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
+import PeerSuggestionItemComponent from "@/components/PeerSuggestionItem";
+import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import usePeerReviewMe from "@/hooks/usePeerReviewMe";
-import usePeerSuggestionItem from "@/hooks/usePeerSuggestionItem";
 import usePeerSuggestionItemsOwn, {
   usePeerSuggestionItemsOwnParams,
 } from "@/hooks/usePeerSuggestionItemsOwn";
 import usePeerSuggestionMe from "@/hooks/usePeerSuggestionMe";
-import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
-import {
-  PeerSuggestion,
-  PeerSuggestionItem,
-} from "@prisma/client";
+import { PeerSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
-import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
@@ -100,9 +95,7 @@ export default function PeerSuggestionPage() {
         pageNumber: Yup.number().min(0).required(),
       }),
       onSubmit: (values) => {
-        const submitSuggestionItem = async (
-          peerSuggestionId: string
-        ) => {
+        const submitSuggestionItem = async (peerSuggestionId: string) => {
           return axios
             .post(`/api/peer_suggestion_item`, {
               ...values,
@@ -154,7 +147,7 @@ export default function PeerSuggestionPage() {
                 />
                 <input
                   type='number'
-                  placeholder='pageNumber'
+                  placeholder='Page No.'
                   {...formik.getFieldProps("pageNumber")}
                   className='w-full rounded'
                 />
@@ -182,7 +175,7 @@ export default function PeerSuggestionPage() {
         <div className='flex justify-between'>
           <div>
             <h2 className='inline text-lg font-bold'>
-              Instructional Material Review Form{" "}
+              Instructional Material Review{" "}
               <span className='bg-palette_orange text-palette_white p-1 rounded'>
                 Peer
               </span>
@@ -195,8 +188,8 @@ export default function PeerSuggestionPage() {
         </div>
 
         <div>
-          <table className="text-sm w-full">
-            <caption className="text-xs">PEER SUGGESTIONS</caption>
+          <table className='text-sm w-full'>
+            <caption className='text-xs'>PEER SUGGESTIONS</caption>
             <thead>
               <tr>
                 <th>LAST ACTIVITY</th>
@@ -237,16 +230,9 @@ export default function PeerSuggestionPage() {
           <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
         </div>
-        {!submittedPeerSuggestion && (
-          <button className='rounded border' onClick={handleSubmitReview}>
-            Submit Review
-          </button>
-        )}
-        {submittedPeerSuggestion && (
-          <Link className='rounded border' href={`/im/${iMId}`}>
-            Finish
-          </Link>
-        )}
+        <button className='rounded border' onClick={handleSubmitReview}>
+          Submit Review
+        </button>
       </div>
     </MainLayout>
   );

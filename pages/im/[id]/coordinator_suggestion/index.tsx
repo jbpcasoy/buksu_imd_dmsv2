@@ -177,7 +177,7 @@ export default function CoordinatorSuggestionPage() {
         <div className='flex justify-between'>
           <div>
             <h2 className='inline text-lg font-bold'>
-              Instructional Material Review Form{" "}
+              Instructional Material Review{" "}
               <span className='bg-palette_orange text-palette_white p-1 rounded'>
                 Coordinator
               </span>

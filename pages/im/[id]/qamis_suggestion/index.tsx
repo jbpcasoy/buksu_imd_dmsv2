@@ -1,4 +1,6 @@
+import FileUpload from "@/components/FileUpload";
 import MainLayout from "@/components/MainLayout";
+import Modal from "@/components/Modal";
 import QAMISSuggestionItem from "@/components/QAMISSuggestionItem";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useCITLDirectorEndorsementIM from "@/hooks/useCITLDirectorEndorsementIM";
@@ -109,54 +111,6 @@ export default function QAMISSuggestionPage() {
     }));
   }, [qAMISSuggestion]);
 
-  const formik = useFormik({
-    initialValues: {
-      suggestion: "",
-      actionTaken: "",
-      remarks: "",
-      pageNumber: 0,
-    },
-    validationSchema: Yup.object({
-      suggestion: Yup.string().required(),
-      actionTaken: Yup.string().required(),
-      remarks: Yup.string(),
-      pageNumber: Yup.number().min(0).required(),
-    }),
-    onSubmit: (values) => {
-      const submitSuggestionItem = async (qAMISSuggestionId: string) => {
-        return axios
-          .post(`/api/qamis_suggestion_item`, {
-            ...values,
-            qAMISSuggestionId,
-          })
-          .then(() => {
-            alert("Suggestion added successfully.");
-            router.reload();
-          });
-      };
-
-      if (!qAMISSuggestion) {
-        if (!cITLDirectorEndorsement) {
-          return;
-        }
-        return axios
-          .post<QAMISSuggestion>(`/api/qamis_suggestion/`, {
-            cITLDirectorEndorsementId: cITLDirectorEndorsement.id,
-          })
-          .then((res) => {
-            const createdQAMISSuggestion = res.data;
-
-            return submitSuggestionItem(createdQAMISSuggestion.id);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        return submitSuggestionItem(qAMISSuggestion.id);
-      }
-    },
-  });
-
   useEffect(() => {
     if (submittedQAMISSuggestion) {
       router.push(`/im/${iMId}`);
@@ -180,58 +134,132 @@ export default function QAMISSuggestionPage() {
       return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
     });
   };
+
+  const AddSuggestionItem = () => {
+    const [openAdd, setOpenAdd] = useState(false);
+    const formik = useFormik({
+      initialValues: {
+        suggestion: "",
+        actionTaken: "",
+        remarks: "",
+        pageNumber: 0,
+      },
+      validationSchema: Yup.object({
+        suggestion: Yup.string().required(),
+        actionTaken: Yup.string().required(),
+        remarks: Yup.string(),
+        pageNumber: Yup.number().min(0).required(),
+      }),
+      onSubmit: (values) => {
+        const submitSuggestionItem = async (qAMISSuggestionId: string) => {
+          return axios
+            .post(`/api/qamis_suggestion_item`, {
+              ...values,
+              qAMISSuggestionId,
+            })
+            .then(() => {
+              alert("Suggestion added successfully.");
+              router.reload();
+            });
+        };
+
+        if (!qAMISSuggestion) {
+          if (!cITLDirectorEndorsement) {
+            return;
+          }
+          return axios
+            .post<QAMISSuggestion>(`/api/qamis_suggestion/`, {
+              cITLDirectorEndorsementId: cITLDirectorEndorsement.id,
+            })
+            .then((res) => {
+              const createdQAMISSuggestion = res.data;
+
+              return submitSuggestionItem(createdQAMISSuggestion.id);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          return submitSuggestionItem(qAMISSuggestion.id);
+        }
+      },
+    });
+
+    return (
+      <>
+        <button
+          className='bg-palette_blue text-palette_white px-2 py-1 rounded'
+          onClick={() => setOpenAdd(true)}
+        >
+          Add
+        </button>
+        {openAdd && (
+          <Modal title='Add Suggestion' onClose={() => setOpenAdd(false)}>
+            <form noValidate onSubmit={formik.handleSubmit}>
+              <div className='flex flex-col space-y-1'>
+                <textarea
+                  placeholder='Suggestion'
+                  {...formik.getFieldProps("suggestion")}
+                  className='rounded'
+                />
+                <textarea
+                  placeholder='Action Taken'
+                  {...formik.getFieldProps("actionTaken")}
+                  className='rounded'
+                />
+                <input
+                  type='number'
+                  placeholder='Page No.'
+                  {...formik.getFieldProps("pageNumber")}
+                  className='rounded'
+                />
+                <textarea
+                  placeholder='Remarks'
+                  {...formik.getFieldProps("remarks")}
+                  className='rounded'
+                />
+                <input
+                  type='submit'
+                  value='Submit'
+                  className='bg-palette_blue text-palette_white py-1 rounded'
+                />
+              </div>
+            </form>
+          </Modal>
+        )}
+      </>
+    );
+  };
+
   return (
     <MainLayout>
       <div>
         <div className='flex justify-between'>
-          <h2 className='inline'>QAMIS Suggestion</h2>
-          <Link
-            href={`/api/im_file/im/${iMId}/pdf`}
-            className='underline'
-            target='_blank'
-          >
-            View PDF
-          </Link>
+          <div>
+            <h2 className='inline text-lg font-bold'>
+              Instructional Material Review{" "}
+              <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                QAMIS
+              </span>
+            </h2>
+            <p className='text-sm'>IMERC Phase</p>
+          </div>
+          <div>
+            <AddSuggestionItem />
+          </div>
         </div>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='suggestion'
-            {...formik.getFieldProps("suggestion")}
-          />
-          <br />
-          <textarea
-            placeholder='actionTaken'
-            {...formik.getFieldProps("actionTaken")}
-          />
-          <br />
-          <input
-            type='number'
-            placeholder='pageNumber'
-            {...formik.getFieldProps("pageNumber")}
-          />
-          <br />
-          <textarea
-            placeholder='remarks'
-            {...formik.getFieldProps("remarks")}
-          />
-          <br />
-          <input type='submit' value='Submit' className='border rounded' />
-        </form>
 
         <div>
-          <table>
+          <table className='w-full text-sm'>
             <caption>QAMIS Suggestions</caption>
             <thead>
               <tr>
-                <th>id</th>
-                <th>createdAt</th>
-                <th>updatedAt</th>
-                <th>suggestion</th>
-                <th>pageNumber</th>
-                <th>actionTaken</th>
-                <th>remarks</th>
-                <th>qAMISSuggestionId</th>
-                <th>actions</th>
+                <th>LAST ACTIVITY</th>
+                <th>SUGGESTION</th>
+                <th>PAGE NUMBER</th>
+                <th>ACTION TAKEN</th>
+                <th>REMARKS</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -260,13 +288,43 @@ export default function QAMISSuggestionPage() {
             </button>
           </div>
         </div>
-        <p>QAMIS File:</p>
-        <input type='file' onChange={onQAMISFileChange} accept='.pdf' />
-        <br />
-        <p>IM File:</p>
-        <input type='file' onChange={onIMFileChange} accept='.pdf' />
-        <br />
-        <button className='rounded border' onClick={handleSubmitSuggestion}>
+
+        <div className='flex w-full space-x-1'>
+          <FileUpload
+            label='UPLOAD QAMIS FILE'
+            onFileChange={(e) => {
+              setFiles((prev) => ({
+                ...prev,
+                iMFile: e.target.files?.item(0) as File,
+              }));
+            }}
+            onFileReset={() => {
+              setState((prev) => ({
+                ...prev,
+                iMFile: undefined,
+              }));
+            }}
+          />
+          <FileUpload
+            label='UPLOAD IM FILE'
+            onFileChange={(e) => {
+              setFiles((prev) => ({
+                ...prev,
+                qAMISFile: e.target.files?.item(0) as File,
+              }));
+            }}
+            onFileReset={() => {
+              setState((prev) => ({
+                ...prev,
+                qAMISFile: undefined,
+              }));
+            }}
+          />
+        </div>
+        <button
+          className='rounded bg-palette_blue text-palette_white px-2 py-1'
+          onClick={handleSubmitSuggestion}
+        >
           Submit for endorsement
         </button>
       </div>

@@ -693,7 +693,7 @@ export default function ViewIM() {
           <div className='space-x-2'>
             {activeCoordinator && (
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 py-1 rounded'
                 onClick={onQAMISCoordinatorEndorsement}
               >
                 Coordinator Endorsement
@@ -701,7 +701,7 @@ export default function ViewIM() {
             )}
             {activeChairperson && (
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 py-1 rounded'
                 onClick={onQAMISChairpersonEndorsement}
               >
                 Chairperson Endorsement
@@ -709,7 +709,7 @@ export default function ViewIM() {
             )}
             {activeDean && (
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 py-1 rounded'
                 onClick={onQAMISDeanEndorsement}
               >
                 Dean Endorsement
@@ -723,7 +723,7 @@ export default function ViewIM() {
             {activeContentSpecialist && (
               <Link
                 href={`/im/${iM.id}/content_specialist_review`}
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 py-1 rounded'
               >
                 Content Specialist Review
               </Link>
@@ -732,7 +732,7 @@ export default function ViewIM() {
             {activeCITLDirector && (
               <Link
                 href={`/im/${iM.id}/content_editor_review`}
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 py-1 rounded'
               >
                 Content Editor Review
               </Link>
@@ -741,7 +741,7 @@ export default function ViewIM() {
             {activeIDDCoordinator && (
               <Link
                 href={`/im/${iM.id}/idd_specialist_review`}
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 py-1 rounded'
               >
                 IDD Specialist Review
               </Link>

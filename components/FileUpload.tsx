@@ -3,9 +3,11 @@ import { ChangeEvent, useState } from "react";
 function FileUpload({
   onFileChange,
   onFileReset,
+  label = "UPLOAD FILE",
 }: {
   onFileChange: (event: ChangeEvent<HTMLInputElement>) => any;
   onFileReset: () => any;
+  label?: string;
 }) {
   const [state, setState] = useState<{
     filePreview?: string;
@@ -37,7 +39,7 @@ function FileUpload({
   };
 
   return (
-    <div className='my-1'>
+    <div className='my-1 w-full'>
       {!state?.filePreview && (
         <>
           <input
@@ -54,7 +56,7 @@ function FileUpload({
               e.dataTransfer.files;
             }}
           >
-            <span className='text-palette_grey text-sm'>UPLOAD FILE</span>
+            <span className='text-palette_grey text-sm'>{label}</span>
           </label>
         </>
       )}
@@ -68,7 +70,10 @@ function FileUpload({
               Replace File
             </button>
           </div>
-          <iframe src={state.filePreview} className='w-full h-screen-3/4'></iframe>
+          <iframe
+            src={state.filePreview}
+            className='w-full h-screen-3/4'
+          ></iframe>
         </div>
       )}
     </div>
