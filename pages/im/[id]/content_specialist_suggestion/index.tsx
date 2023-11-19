@@ -16,6 +16,7 @@ import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggesti
 import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 import useSubmittedContentSpecialistSuggestionIM from "@/hooks/useSubmittedContentSpecialistSuggestionIM";
+import Modal from "@/components/Modal";
 
 export default function ContentSpecialistSuggestionPage() {
   const router = useRouter();
@@ -59,58 +60,6 @@ export default function ContentSpecialistSuggestionPage() {
     }));
   }, [contentSpecialistSuggestion]);
 
-  const formik = useFormik({
-    initialValues: {
-      suggestion: "",
-      remarks: "",
-      pageNumber: 0,
-    },
-    validationSchema: Yup.object({
-      suggestion: Yup.string().required(),
-      remarks: Yup.string(),
-      pageNumber: Yup.number().min(0).required(),
-    }),
-
-    onSubmit: (values) => {
-      const submitSuggestionItem = async (
-        contentSpecialistSuggestionId: string
-      ) => {
-        return axios
-          .post(`/api/content_specialist_suggestion_item`, {
-            ...values,
-            contentSpecialistSuggestionId,
-          })
-          .then(() => {
-            alert("Suggestion added successfully.");
-            router.reload();
-          });
-      };
-
-      if (!contentSpecialistSuggestion) {
-        if (!contentSpecialistReview) {
-          return;
-        }
-        return axios
-          .post<ContentSpecialistSuggestion>(
-            `/api/content_specialist_suggestion/`,
-            {
-              contentSpecialistReviewId: contentSpecialistReview.id,
-            }
-          )
-          .then((res) => {
-            const createdContentSpecialistSuggestion = res.data;
-
-            return submitSuggestionItem(createdContentSpecialistSuggestion.id);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        return submitSuggestionItem(contentSpecialistSuggestion.id);
-      }
-    },
-  });
-
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -138,53 +87,132 @@ export default function ContentSpecialistSuggestionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submittedContentSpecialistSuggestion, iMId]);
 
+  const AddSuggestionItem = () => {
+    const [openAdd, setOpenAdd] = useState(false);
+    const formik = useFormik({
+      initialValues: {
+        suggestion: "",
+        remarks: "",
+        pageNumber: 0,
+      },
+      validationSchema: Yup.object({
+        suggestion: Yup.string().required(),
+        remarks: Yup.string(),
+        pageNumber: Yup.number().min(0).required(),
+      }),
+
+      onSubmit: (values) => {
+        const submitSuggestionItem = async (
+          contentSpecialistSuggestionId: string
+        ) => {
+          return axios
+            .post(`/api/content_specialist_suggestion_item`, {
+              ...values,
+              contentSpecialistSuggestionId,
+            })
+            .then(() => {
+              alert("Suggestion added successfully.");
+              router.reload();
+            });
+        };
+
+        if (!contentSpecialistSuggestion) {
+          if (!contentSpecialistReview) {
+            return;
+          }
+          return axios
+            .post<ContentSpecialistSuggestion>(
+              `/api/content_specialist_suggestion/`,
+              {
+                contentSpecialistReviewId: contentSpecialistReview.id,
+              }
+            )
+            .then((res) => {
+              const createdContentSpecialistSuggestion = res.data;
+
+              return submitSuggestionItem(
+                createdContentSpecialistSuggestion.id
+              );
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          return submitSuggestionItem(contentSpecialistSuggestion.id);
+        }
+      },
+    });
+
+    return (
+      <div>
+        <button
+          onClick={() => setOpenAdd(true)}
+          className='bg-palette_blue text-palette_white px-2 py-1 rounded'
+        >
+          Add
+        </button>
+        {openAdd && (
+          <Modal title='Add Suggestion' onClose={() => setOpenAdd(false)}>
+            <form noValidate onSubmit={formik.handleSubmit}>
+              <div className='flex flex-col space-y-1'>
+                <textarea
+                  placeholder='Suggestion'
+                  {...formik.getFieldProps("suggestion")}
+                  className='rounded'
+                />
+                <input
+                  type='number'
+                  placeholder='Page No.'
+                  {...formik.getFieldProps("pageNumber")}
+                  className='rounded'
+                />
+                <textarea
+                  placeholder='Remarks'
+                  {...formik.getFieldProps("remarks")}
+                  className='rounded'
+                />
+                <input
+                  type='submit'
+                  value='Submit'
+                  className='bg-palette_blue text-palette_white py-1 rounded'
+                />
+              </div>
+            </form>
+          </Modal>
+        )}
+      </div>
+    );
+  };
+
   return (
     <MainLayout>
       <div>
-        <div className='flex justify-between'>
-          <h2 className='inline'>Content Specialist Review</h2>
-          <Link
-            href={`/api/im_file/im/${iMId}/pdf`}
-            className='underline'
-            target='_blank'
-          >
-            View PDF
-          </Link>
+        <div className='flex justify-between pb-2'>
+          <div>
+            <h2 className='inline text-lg font-bold'>
+              Instructional Material Review{" "}
+              <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                Content Specialist
+              </span>
+            </h2>
+            <p className='text-sm'>IMERC Phase</p>
+          </div>
+          <div>
+            <AddSuggestionItem />
+          </div>
         </div>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='suggestion'
-            {...formik.getFieldProps("suggestion")}
-          />
-          <br />
-          <input
-            type='number'
-            placeholder='pageNumber'
-            {...formik.getFieldProps("pageNumber")}
-          />
-          <br />
-          <textarea
-            placeholder='remarks'
-            {...formik.getFieldProps("remarks")}
-          />
-          <br />
-          <input type='submit' value='Submit' className='border rounded' />
-        </form>
 
         <div>
-          <table>
+          <table className='w-full text-sm'>
             <caption>Content Specialist Suggestions</caption>
             <thead>
               <tr>
-                <th>id</th>
-                <th>createdAt</th>
-                <th>updatedAt</th>
-                <th>suggestion</th>
-                <th>pageNumber</th>
-                <th>actionTaken</th>
-                <th>remarks</th>
-                <th>contentSpecialistSuggestionId</th>
-                <th>actions</th>
+                <th>LAST ACTIVITY</th>
+                <th>SUGGESTION</th>
+                <th>PAGE NUMBER</th>
+                <th>ACTION TAKEN</th>
+                <th>REMARKS</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
