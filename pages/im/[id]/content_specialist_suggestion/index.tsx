@@ -254,7 +254,10 @@ export default function ContentSpecialistSuggestionPage() {
             editable={false}
           />
         </div>
-        <button className='rounded border' onClick={handleSubmitReview}>
+        <button
+          className='rounded bg-palette_blue text-palette_white px-2 py-1'
+          onClick={handleSubmitReview}
+        >
           Submit Review
         </button>
       </div>
