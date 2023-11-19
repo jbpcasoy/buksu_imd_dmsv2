@@ -4,7 +4,6 @@ import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionIt
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
-import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useCITLRevisionIM from "@/hooks/useCITLRevisionIM";
 import useDeanEndorsementIM from "@/hooks/useDeanEndorsementIM";
@@ -186,7 +185,6 @@ export default function IDDCoordinatorSuggestionPage() {
       </>
     );
   };
-
   return (
     <MainLayout>
       <div>
