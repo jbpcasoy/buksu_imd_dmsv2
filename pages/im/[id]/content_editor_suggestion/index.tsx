@@ -242,7 +242,10 @@ export default function ContentEditorSuggestionPage() {
             editable={false}
           />
         </div>
-        <button className='rounded bg-palette_blue text-palette_white px-2 py-1' onClick={handleSubmitReview}>
+        <button
+          className='rounded bg-palette_blue text-palette_white px-2 py-1'
+          onClick={handleSubmitReview}
+        >
           Submit Review
         </button>
       </div>

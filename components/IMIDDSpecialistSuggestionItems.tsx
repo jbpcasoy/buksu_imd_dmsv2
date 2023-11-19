@@ -1,8 +1,14 @@
 import useIDDSpecialistSuggestionItemActionTakenIDDSpecialistSuggestionItem from "@/hooks/useIDDSpecialistSuggestionItemActionTakenIDDSpecialistSuggestionItem";
 import useIDDSpecialistSuggestionItemsIM from "@/hooks/useIDDSpecialistSuggestionItemsIM";
 import { IDDSpecialistSuggestionItem } from "@prisma/client";
+import axios from "axios";
+import { useFormik } from "formik";
+import { DateTime } from "luxon";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import * as Yup from "yup";
+import Modal from "./Modal";
 
 export interface IMIDDSpecialistSuggestionItemsProps {
   id: string;
@@ -30,7 +36,8 @@ export default function IMIDDSpecialistSuggestionItems({
       const nextVal = prev.skip + prev.take;
       return {
         ...prev,
-        skip: nextVal <= iDDSpecialistSuggestionItems.count ? nextVal : prev.skip,
+        skip:
+          nextVal <= iDDSpecialistSuggestionItems.count ? nextVal : prev.skip,
       };
     });
   };
@@ -44,31 +51,30 @@ export default function IMIDDSpecialistSuggestionItems({
 
   return (
     <div>
-      <table>
+      <table className='w-full text-sm'>
         <caption>IDDSpecialist Suggestions</caption>
         <thead>
           <tr>
-            <th>id</th>
-            <th>createdAt</th>
-            <th>updatedAt</th>
-            <th>suggestion</th>
-            <th>pageNumber</th>
-            <th>actionTaken</th>
-            <th>remarks</th>
-            <th>iDDSpecialistSuggestionId</th>
-            {editable && <th>actions</th>}
+            <th>LAST ACTIVITY</th>
+            <th>SUGGESTION</th>
+            <th>PAGE NUMBER</th>
+            <th>ACTION TAKEN</th>
+            <th>REMARKS</th>
+            {editable && <th>ACTIONS</th>}
           </tr>
         </thead>
         <tbody>
-          {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map((iDDSpecialistSuggestionItem) => {
-            return (
-              <Item
-                iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
-                editable={editable}
-                key={iDDSpecialistSuggestionItem.id}
-              />
-            );
-          })}
+          {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map(
+            (iDDSpecialistSuggestionItem) => {
+              return (
+                <Item
+                  iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
+                  editable={editable}
+                  key={iDDSpecialistSuggestionItem.id}
+                />
+              );
+            }
+          )}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -101,24 +107,106 @@ function Item({
 
   return (
     <tr>
-      <td>{iDDSpecialistSuggestionItem.id}</td>
-      <td>{new Date(iDDSpecialistSuggestionItem.createdAt).toLocaleString()}</td>
-      <td>{new Date(iDDSpecialistSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>
+        {DateTime.fromJSDate(
+          new Date(iDDSpecialistSuggestionItem.updatedAt)
+        ).toRelative()}
+      </td>
       <td>{iDDSpecialistSuggestionItem.suggestion}</td>
-      <td>{iDDSpecialistSuggestionItem.pageNumber}</td>
+      <td className="text-center">{iDDSpecialistSuggestionItem.pageNumber}</td>
       <td>{iDDSpecialistSuggestionItemActionTaken?.value}</td>
       <td>{iDDSpecialistSuggestionItem.remarks}</td>
-      <td>{iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId}</td>
       {editable && (
         <td>
-          <Link
-            href={`/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}/action_taken/edit`}
-            className='border rounded'
-          >
-            edit
-          </Link>
+          <EditSuggestionItemActionTaken
+            iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
+          />
         </td>
       )}
     </tr>
+  );
+}
+
+interface EditSuggestionItemActionTakenProps {
+  iDDSpecialistSuggestionItem: IDDSpecialistSuggestionItem;
+}
+
+function EditSuggestionItemActionTaken({
+  iDDSpecialistSuggestionItem,
+}: EditSuggestionItemActionTakenProps) {
+  const [openEdit, setOpenEdit] = useState(false);
+  const router = useRouter();
+  const iDDSpecialistSuggestionItemActionTaken =
+    useIDDSpecialistSuggestionItemActionTakenIDDSpecialistSuggestionItem({
+      id: iDDSpecialistSuggestionItem.id as string,
+    });
+  const formik = useFormik({
+    initialValues: {
+      value: "",
+    },
+    validationSchema: Yup.object({
+      value: Yup.string().required(),
+    }),
+    onSubmit: (values) => {
+      if (iDDSpecialistSuggestionItemActionTaken) {
+        axios
+          .put(
+            `/api/idd_specialist_suggestion_item_action_taken/${iDDSpecialistSuggestionItemActionTaken.id}`,
+            values
+          )
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      } else {
+        axios
+          .post(`/api/idd_specialist_suggestion_item_action_taken`, {
+            iDDSpecialistSuggestionItemId: iDDSpecialistSuggestionItem.id,
+            value: values.value,
+          })
+          .then(() => {
+            alert("Suggestion updated successfully");
+            router.reload();
+          });
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (!iDDSpecialistSuggestionItemActionTaken) return;
+    formik.setValues({
+      value: iDDSpecialistSuggestionItemActionTaken.value ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [iDDSpecialistSuggestionItemActionTaken]);
+
+  return (
+    <div>
+      <button
+        className='w-full bg-palette_blue text-palette_white rounded'
+        onClick={() => setOpenEdit(true)}
+      >
+        Edit
+      </button>
+
+      {openEdit && (
+        <Modal title='Edit Action Taken' onClose={() => setOpenEdit(false)}>
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <div className='flex flex-col space-y-1'>
+              <textarea
+                placeholder='Action Taken'
+                {...formik.getFieldProps("value")}
+                className='rounded'
+              />
+              <input
+                type='submit'
+                value='Submit'
+                className='rounded bg-palette_blue text-palette_white py-1'
+              />
+            </div>
+          </form>
+        </Modal>
+      )}
+    </div>
   );
 }

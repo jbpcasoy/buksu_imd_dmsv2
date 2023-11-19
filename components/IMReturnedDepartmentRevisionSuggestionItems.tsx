@@ -24,7 +24,8 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
     id,
   });
 
-  const returnedDepartmentRevisionSuggestionItems = useReturnedDepartmentRevisionSuggestionItemsIM(state);
+  const returnedDepartmentRevisionSuggestionItems =
+    useReturnedDepartmentRevisionSuggestionItemsIM(state);
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -35,7 +36,10 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
       const nextVal = prev.skip + prev.take;
       return {
         ...prev,
-        skip: nextVal <= returnedDepartmentRevisionSuggestionItems.count ? nextVal : prev.skip,
+        skip:
+          nextVal <= returnedDepartmentRevisionSuggestionItems.count
+            ? nextVal
+            : prev.skip,
       };
     });
   };
@@ -50,7 +54,9 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
   return (
     <div>
       <table className='text-sm w-full'>
-        <caption className='text-xs'>RETURNED DEPARTMENT REVISION SUGGESTIONS</caption>
+        <caption className='text-xs'>
+          RETURNED DEPARTMENT REVISION SUGGESTIONS
+        </caption>
         <thead>
           <tr>
             <th>LAST ACTIVITY</th>
@@ -66,7 +72,9 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
             (returnedDepartmentRevisionSuggestionItem) => {
               return (
                 <Item
-                  returnedDepartmentRevisionSuggestionItem={returnedDepartmentRevisionSuggestionItem}
+                  returnedDepartmentRevisionSuggestionItem={
+                    returnedDepartmentRevisionSuggestionItem
+                  }
                   editable={editable}
                   key={returnedDepartmentRevisionSuggestionItem.id}
                 />
@@ -99,9 +107,11 @@ function Item({
   editable: boolean;
 }) {
   const returnedDepartmentRevisionSuggestionItemActionTaken =
-    useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem({
-      id: returnedDepartmentRevisionSuggestionItem.id,
-    });
+    useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem(
+      {
+        id: returnedDepartmentRevisionSuggestionItem.id,
+      }
+    );
 
   return (
     <tr>
@@ -111,13 +121,17 @@ function Item({
         ).toRelative()}
       </td>
       <td>{returnedDepartmentRevisionSuggestionItem.suggestion}</td>
-      <td className='text-center'>{returnedDepartmentRevisionSuggestionItem.pageNumber}</td>
+      <td className='text-center'>
+        {returnedDepartmentRevisionSuggestionItem.pageNumber}
+      </td>
       <td>{returnedDepartmentRevisionSuggestionItemActionTaken?.value}</td>
       <td>{returnedDepartmentRevisionSuggestionItem.remarks}</td>
       {editable && (
         <td>
           <EditSuggestionItemActionTaken
-            returnedDepartmentRevisionSuggestionItem={returnedDepartmentRevisionSuggestionItem}
+            returnedDepartmentRevisionSuggestionItem={
+              returnedDepartmentRevisionSuggestionItem
+            }
           />
         </td>
       )}
@@ -134,9 +148,11 @@ function EditSuggestionItemActionTaken({
   const router = useRouter();
   const [openEditActionTaken, setOpenEditActionTaken] = useState(false);
   const returnedDepartmentRevisionSuggestionItemActionTaken =
-    useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem({
-      id: returnedDepartmentRevisionSuggestionItem.id,
-    });
+    useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem(
+      {
+        id: returnedDepartmentRevisionSuggestionItem.id,
+      }
+    );
   const formik = useFormik({
     initialValues: {
       value: "",
@@ -157,10 +173,14 @@ function EditSuggestionItemActionTaken({
           });
       } else {
         axios
-          .post(`/api/returned_department_revision_suggestion_item_action_taken`, {
-            returnedDepartmentRevisionSuggestionItemId: returnedDepartmentRevisionSuggestionItem.id,
-            value: values.value,
-          })
+          .post(
+            `/api/returned_department_revision_suggestion_item_action_taken`,
+            {
+              returnedDepartmentRevisionSuggestionItemId:
+                returnedDepartmentRevisionSuggestionItem.id,
+              value: values.value,
+            }
+          )
           .then(() => {
             alert("Suggestion updated successfully");
             router.reload();
@@ -187,7 +207,7 @@ function EditSuggestionItemActionTaken({
       </button>
       {openEditActionTaken && (
         <Modal
-          title='ReturnedDepartmentRevision Review'
+          title='Edit Action Taken'
           onClose={() => setOpenEditActionTaken(false)}
         >
           <form noValidate onSubmit={formik.handleSubmit}>
@@ -195,7 +215,7 @@ function EditSuggestionItemActionTaken({
               <textarea
                 placeholder='Action Taken'
                 {...formik.getFieldProps("value")}
-                className="rounded"
+                className='rounded'
               />
               <input
                 type='submit'

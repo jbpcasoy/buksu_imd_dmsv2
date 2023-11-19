@@ -794,13 +794,13 @@ export default function ViewIM() {
                 editable={false}
               />
               <button
-                className='border rounded'
+                className='rounded bg-palette_blue text-palette_white px-2 py-1'
                 onClick={iMERCIDDCoordinatorEndorsementHandler}
               >
                 Endorse IM
               </button>
               <button
-                className='border rounded'
+                className='rounded bg-palette_blue text-palette_white px-2 py-1'
                 onClick={returnIMERCIDDCoordinatorEndorsementHandler}
               >
                 Return revision

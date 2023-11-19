@@ -189,7 +189,7 @@ function EditSuggestionItemActionTaken({
       </button>
       {openEditActionTaken && (
         <Modal
-          title='Coordinator Suggestion Action Taken'
+          title='Edit Action Taken'
           onClose={() => setOpenEditActionTaken(false)}
         >
           <form noValidate onSubmit={formik.handleSubmit}>

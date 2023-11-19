@@ -1,6 +1,7 @@
 import useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem from "@/hooks/useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem";
 import useReturnedIMERCCITLRevisionSuggestionItemsIM from "@/hooks/useReturnedIMERCCITLRevisionSuggestionItemsIM";
 import { ReturnedIMERCCITLRevisionSuggestionItem } from "@prisma/client";
+import { DateTime } from "luxon";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -19,7 +20,8 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
     id,
   });
 
-  const returnedIMERCCITLRevisionSuggestionItems = useReturnedIMERCCITLRevisionSuggestionItemsIM(state);
+  const returnedIMERCCITLRevisionSuggestionItems =
+    useReturnedIMERCCITLRevisionSuggestionItemsIM(state);
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -30,7 +32,10 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
       const nextVal = prev.skip + prev.take;
       return {
         ...prev,
-        skip: nextVal <= returnedIMERCCITLRevisionSuggestionItems.count ? nextVal : prev.skip,
+        skip:
+          nextVal <= returnedIMERCCITLRevisionSuggestionItems.count
+            ? nextVal
+            : prev.skip,
       };
     });
   };
@@ -44,31 +49,32 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
 
   return (
     <div>
-      <table>
+      <table className="w-full text-sm">
         <caption>ReturnedIMERCCITLRevision Suggestions</caption>
         <thead>
           <tr>
-            <th>id</th>
-            <th>createdAt</th>
-            <th>updatedAt</th>
-            <th>suggestion</th>
-            <th>pageNumber</th>
-            <th>actionTaken</th>
-            <th>remarks</th>
-            <th>returnedIMERCCITLRevisionId</th>
-            {editable && <th>actions</th>}
+            <th>LAST ACTIVITY</th>
+            <th>SUGGESTION</th>
+            <th>PAGE NUMBER</th>
+            <th>ACTION TAKEN</th>
+            <th>REMARKS</th>
+            {editable && <th>ACTIONS</th>}
           </tr>
         </thead>
         <tbody>
-          {returnedIMERCCITLRevisionSuggestionItems.returnedIMERCCITLRevisionSuggestionItems.map((returnedIMERCCITLRevisionSuggestionItem) => {
-            return (
-              <Item
-                returnedIMERCCITLRevisionSuggestionItem={returnedIMERCCITLRevisionSuggestionItem}
-                editable={editable}
-                key={returnedIMERCCITLRevisionSuggestionItem.id}
-              />
-            );
-          })}
+          {returnedIMERCCITLRevisionSuggestionItems.returnedIMERCCITLRevisionSuggestionItems.map(
+            (returnedIMERCCITLRevisionSuggestionItem) => {
+              return (
+                <Item
+                  returnedIMERCCITLRevisionSuggestionItem={
+                    returnedIMERCCITLRevisionSuggestionItem
+                  }
+                  editable={editable}
+                  key={returnedIMERCCITLRevisionSuggestionItem.id}
+                />
+              );
+            }
+          )}
         </tbody>
       </table>
       <div className='flex justify-end space-x-1'>
@@ -95,20 +101,25 @@ function Item({
   editable: boolean;
 }) {
   const returnedIMERCCITLRevisionSuggestionItemActionTaken =
-    useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem({
-      id: returnedIMERCCITLRevisionSuggestionItem.id,
-    });
+    useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem(
+      {
+        id: returnedIMERCCITLRevisionSuggestionItem.id,
+      }
+    );
 
   return (
     <tr>
-      <td>{returnedIMERCCITLRevisionSuggestionItem.id}</td>
-      <td>{new Date(returnedIMERCCITLRevisionSuggestionItem.createdAt).toLocaleString()}</td>
-      <td>{new Date(returnedIMERCCITLRevisionSuggestionItem.updatedAt).toLocaleString()}</td>
+      <td>
+        {DateTime.fromJSDate(
+          new Date(returnedIMERCCITLRevisionSuggestionItem.updatedAt)
+        ).toRelative()}
+      </td>
       <td>{returnedIMERCCITLRevisionSuggestionItem.suggestion}</td>
-      <td>{returnedIMERCCITLRevisionSuggestionItem.pageNumber}</td>
+      <td className="text-center">{returnedIMERCCITLRevisionSuggestionItem.pageNumber}</td>
       <td>{returnedIMERCCITLRevisionSuggestionItemActionTaken?.value}</td>
       <td>{returnedIMERCCITLRevisionSuggestionItem.remarks}</td>
-      <td>{returnedIMERCCITLRevisionSuggestionItem.returnedIMERCCITLRevisionId}</td>
+      <td>
+      </td>
       {editable && (
         <td>
           <Link
