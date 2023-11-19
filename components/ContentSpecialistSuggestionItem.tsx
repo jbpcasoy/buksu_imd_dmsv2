@@ -111,7 +111,7 @@ function EditSuggestionItem({
         Edit
       </button>
       {openEdit && (
-        <Modal title='EditSuggestion' onClose={() => setOpenEdit(false)}>
+        <Modal title='Edit Suggestion' onClose={() => setOpenEdit(false)}>
           <form noValidate onSubmit={formik.handleSubmit}>
             <div className='flex flex-col space-y-1'>
               <textarea

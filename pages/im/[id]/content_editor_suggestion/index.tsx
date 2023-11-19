@@ -16,6 +16,7 @@ import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggesti
 import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
+import Modal from "@/components/Modal";
 
 export default function ContentEditorSuggestionPage() {
   const router = useRouter();
@@ -56,55 +57,6 @@ export default function ContentEditorSuggestionPage() {
     }));
   }, [contentEditorSuggestion]);
 
-  const formik = useFormik({
-    initialValues: {
-      suggestion: "",
-      remarks: "",
-      pageNumber: 0,
-    },
-    validationSchema: Yup.object({
-      suggestion: Yup.string().required(),
-      remarks: Yup.string(),
-      pageNumber: Yup.number().min(0).required(),
-    }),
-
-    onSubmit: (values) => {
-      const submitSuggestionItem = async (
-        contentEditorSuggestionId: string
-      ) => {
-        return axios
-          .post(`/api/content_editor_suggestion_item`, {
-            ...values,
-            contentEditorSuggestionId,
-          })
-          .then(() => {
-            alert("Suggestion added successfully.");
-            router.reload();
-          });
-      };
-
-      if (!contentEditorSuggestion) {
-        if (!contentEditorReview) {
-          return;
-        }
-        return axios
-          .post<ContentEditorSuggestion>(`/api/content_editor_suggestion/`, {
-            contentEditorReviewId: contentEditorReview.id,
-          })
-          .then((res) => {
-            const createdContentEditorSuggestion = res.data;
-
-            return submitSuggestionItem(createdContentEditorSuggestion.id);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        return submitSuggestionItem(contentEditorSuggestion.id);
-      }
-    },
-  });
-
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -130,53 +82,127 @@ export default function ContentEditorSuggestionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submittedContentEditorSuggestion, iMId]);
 
+  const AddSuggestionItem = () => {
+    const [openAdd, setOpenAdd] = useState(false);
+    const formik = useFormik({
+      initialValues: {
+        suggestion: "",
+        remarks: "",
+        pageNumber: 0,
+      },
+      validationSchema: Yup.object({
+        suggestion: Yup.string().required(),
+        remarks: Yup.string(),
+        pageNumber: Yup.number().min(0).required(),
+      }),
+
+      onSubmit: (values) => {
+        const submitSuggestionItem = async (
+          contentEditorSuggestionId: string
+        ) => {
+          return axios
+            .post(`/api/content_editor_suggestion_item`, {
+              ...values,
+              contentEditorSuggestionId,
+            })
+            .then(() => {
+              alert("Suggestion added successfully.");
+              router.reload();
+            });
+        };
+
+        if (!contentEditorSuggestion) {
+          if (!contentEditorReview) {
+            return;
+          }
+          return axios
+            .post<ContentEditorSuggestion>(`/api/content_editor_suggestion/`, {
+              contentEditorReviewId: contentEditorReview.id,
+            })
+            .then((res) => {
+              const createdContentEditorSuggestion = res.data;
+
+              return submitSuggestionItem(createdContentEditorSuggestion.id);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          return submitSuggestionItem(contentEditorSuggestion.id);
+        }
+      },
+    });
+
+    return (
+      <>
+        <button
+          className='bg-palette_blue text-palette_white px-2 py-1 rounded'
+          onClick={() => setOpenAdd(true)}
+        >
+          Add
+        </button>
+        {openAdd && (
+          <Modal title='Add Suggestion' onClose={() => setOpenAdd(false)}>
+            <form noValidate onSubmit={formik.handleSubmit}>
+              <div className='flex flex-col space-y-1'>
+                <textarea
+                  placeholder='Suggestion'
+                  {...formik.getFieldProps("suggestion")}
+                  className='rounded'
+                />
+                <input
+                  type='number'
+                  placeholder='Page No.'
+                  {...formik.getFieldProps("pageNumber")}
+                  className='rounded'
+                />
+                <textarea
+                  placeholder='Remarks'
+                  {...formik.getFieldProps("remarks")}
+                  className='rounded'
+                />
+                <input
+                  type='submit'
+                  value='Submit'
+                  className='bg-palette_blue text-palette_white py-1 rounded'
+                />
+              </div>
+            </form>
+          </Modal>
+        )}
+      </>
+    );
+  };
+
   return (
     <MainLayout>
       <div>
         <div className='flex justify-between'>
-          <h2 className='inline'>Content Editor Review</h2>
-          <Link
-            href={`/api/im_file/im/${iMId}/pdf`}
-            className='underline'
-            target='_blank'
-          >
-            View PDF
-          </Link>
+          <div>
+            <h2 className='inline text-lg font-bold'>
+              Instructional Material Review{" "}
+              <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                Content Editor
+              </span>
+            </h2>
+            <p className='text-sm'>IMERC Phase</p>
+          </div>
+          <div>
+            <AddSuggestionItem />
+          </div>
         </div>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <textarea
-            placeholder='suggestion'
-            {...formik.getFieldProps("suggestion")}
-          />
-          <br />
-          <input
-            type='number'
-            placeholder='pageNumber'
-            {...formik.getFieldProps("pageNumber")}
-          />
-          <br />
-          <textarea
-            placeholder='remarks'
-            {...formik.getFieldProps("remarks")}
-          />
-          <br />
-          <input type='submit' value='Submit' className='border rounded' />
-        </form>
 
         <div>
-          <table>
+          <table className='w-full text-sm'>
             <caption>Content Editor Suggestions</caption>
             <thead>
               <tr>
-                <th>id</th>
-                <th>createdAt</th>
-                <th>updatedAt</th>
-                <th>suggestion</th>
-                <th>pageNumber</th>
-                <th>actionTaken</th>
-                <th>remarks</th>
-                <th>contentEditorSuggestionId</th>
-                <th>actions</th>
+                <th>LAST ACTIVITY</th>
+                <th>SUGGESTION</th>
+                <th>PAGE NUMBER</th>
+                <th>ACTION TAKEN</th>
+                <th>REMARKS</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -216,7 +242,7 @@ export default function ContentEditorSuggestionPage() {
             editable={false}
           />
         </div>
-        <button className='rounded border' onClick={handleSubmitReview}>
+        <button className='rounded bg-palette_blue text-palette_white px-2 py-1' onClick={handleSubmitReview}>
           Submit Review
         </button>
       </div>
