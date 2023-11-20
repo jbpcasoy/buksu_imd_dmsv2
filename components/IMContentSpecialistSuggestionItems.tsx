@@ -53,20 +53,22 @@ export default function IMContentSpecialistSuggestionItems({
   };
 
   return (
-    <div>
+    <div className='border border-palette_orange rounded'>
       <table className='w-full text-sm'>
-        <caption>ContentSpecialist Suggestions</caption>
-        <thead>
+        <caption className='text-left font-bold bg-palette_grey bg-opacity-10 p-1'>
+          CONTENT SPECIALIST SUGGESTIONS
+        </caption>
+        <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
           <tr>
-            <th>LAST ACTIVITY</th>
-            <th>SUGGESTION</th>
-            <th>PAGE NUMBER</th>
-            <th>ACTION TAKEN</th>
-            <th>REMARKS</th>
-            {editable && <th>ACTIONS</th>}
+            <th className='font-normal'>LAST ACTIVITY</th>
+            <th className='font-normal'>SUGGESTION</th>
+            <th className='font-normal'>PAGE NUMBER</th>
+            <th className='font-normal'>ACTION TAKEN</th>
+            <th className='font-normal'>REMARKS</th>
+            {editable && <th className='font-normal'>ACTIONS</th>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-palette_grey">
           {contentSpecialistSuggestionItems.contentSpecialistSuggestionItems.map(
             (contentSpecialistSuggestionItem) => {
               return (
@@ -82,7 +84,7 @@ export default function IMContentSpecialistSuggestionItems({
           )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 p-1'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {contentSpecialistSuggestionItems.count}
@@ -120,7 +122,9 @@ function Item({
         ).toRelative()}
       </td>
       <td>{contentSpecialistSuggestionItem.suggestion}</td>
-      <td className="text-center">{contentSpecialistSuggestionItem.pageNumber}</td>
+      <td className='text-center'>
+        {contentSpecialistSuggestionItem.pageNumber}
+      </td>
       <td>{contentSpecialistSuggestionItemActionTaken?.value}</td>
       <td>{contentSpecialistSuggestionItem.remarks}</td>
       {editable && (
@@ -207,7 +211,11 @@ function EditSuggestionItemActionTaken({
                 {...formik.getFieldProps("value")}
                 className='rounded'
               />
-              <input type='submit' value='Submit' className='bg-palette_blue text-palette_white py-1 rounded' />
+              <input
+                type='submit'
+                value='Submit'
+                className='bg-palette_blue text-palette_white py-1 rounded'
+              />
             </div>
           </form>
         </Modal>

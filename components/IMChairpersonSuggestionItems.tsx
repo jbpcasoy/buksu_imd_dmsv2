@@ -48,20 +48,22 @@ export default function IMChairpersonSuggestionItems({
   };
 
   return (
-    <div>
+    <div className='border border-palette_orange rounded'>
       <table className='text-sm w-full'>
-        <caption className='text-xs'>CHAIRPERSON SUGGESTIONS</caption>
-        <thead>
+        <caption className='text-left font-bold p-1 bg-palette_grey bg-opacity-10'>
+          CHAIRPERSON SUGGESTIONS
+        </caption>
+        <thead className="bg-palette_grey bg-opacity-10 text-palette_grey">
           <tr>
-            <th>LAST ACTIVITY</th>
-            <th>SUGGESTION</th>
-            <th>PAGE NUMBER</th>
-            <th>ACTION TAKEN</th>
-            <th>REMARKS</th>
-            {editable && <th>ACTIONS</th>}
+            <th className="font-normal">LAST ACTIVITY</th>
+            <th className="font-normal">SUGGESTION</th>
+            <th className="font-normal">PAGE NUMBER</th>
+            <th className="font-normal">ACTION TAKEN</th>
+            <th className="font-normal">REMARKS</th>
+            {editable && <th className="font-normal">ACTIONS</th>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-palette_grey">
           {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
             (chairpersonSuggestionItem) => {
               return (
@@ -75,7 +77,7 @@ export default function IMChairpersonSuggestionItems({
           )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1 text-sm'>
+      <div className='flex justify-end space-x-1 text-sm p-1'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {chairpersonSuggestionItems.count}
@@ -111,7 +113,7 @@ function Item({
         ).toRelative()}
       </td>
       <td>{chairpersonSuggestionItem.suggestion}</td>
-      <td className="text-center">{chairpersonSuggestionItem.pageNumber}</td>
+      <td className='text-center'>{chairpersonSuggestionItem.pageNumber}</td>
       <td>{chairpersonSuggestionItemActionTaken?.value}</td>
       <td>{chairpersonSuggestionItem.remarks}</td>
       {editable && (
@@ -191,11 +193,11 @@ function EditSuggestionItemActionTaken({
           onClose={() => setOpenEditActionTaken(false)}
         >
           <form noValidate onSubmit={formik.handleSubmit}>
-            <div className="flex flex-col space-y-1">
+            <div className='flex flex-col space-y-1'>
               <textarea
                 placeholder='Action Taken'
                 {...formik.getFieldProps("value")}
-                className="rounded"
+                className='rounded'
               />
               <input
                 type='submit'

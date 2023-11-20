@@ -42,20 +42,20 @@ export default function IMQAMISSuggestionItems({
   };
 
   return (
-    <div>
+    <div className="border border-palette_orange rounded">
       <table className="w-full text-sm">
-        <caption>QAMIS Suggestions</caption>
-        <thead>
+        <caption className="bg-palette_grey bg-opacity-10 p-1 text-left font-bold">QAMIS SUGGESTIONS</caption>
+        <thead className="bg-palette_grey bg-opacity-10 text-palette_grey">
           <tr>
-            <th>LAST ACTIVITY</th>
-            <th>SUGGESTION</th>
-            <th>PAGE NUMBER</th>
-            <th>ACTION TAKEN</th>
-            <th>REMARKS</th>
-            {editable && <th>ACTIONS</th>}
+            <th className="font-normal">LAST ACTIVITY</th>
+            <th className="font-normal">SUGGESTION</th>
+            <th className="font-normal">PAGE NUMBER</th>
+            <th className="font-normal">ACTION TAKEN</th>
+            <th className="font-normal">REMARKS</th>
+            {editable && <th className="font-normal">ACTIONS</th>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-palette_grey">
           {qAMISSuggestionItems.qAMISSuggestionItems.map(
             (qAMISSuggestionItem) => {
               return (

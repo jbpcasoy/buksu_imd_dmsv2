@@ -51,20 +51,22 @@ export default function IMIDDCoordinatorSuggestionItems({
   };
 
   return (
-    <div>
+    <div className='border border-palette_orange rounded'>
       <table className='text-sm w-full'>
-        <caption>IDDCoordinator Suggestions</caption>
-        <thead>
+        <caption className='text-left font-bold bg-palette_grey bg-opacity-10 p-1'>
+          IDD COORDINATOR SUGGESTIONS
+        </caption>
+        <thead className='bg-palette_grey bg-opacity-10 p-1 text-palette_grey'>
           <tr>
-            <th>LAST ACTIVITY</th>
-            <th>SUGGESTION</th>
-            <th>PAGE NUMBER</th>
-            <th>ACTION TAKEN</th>
-            <th>REMARKS</th>
-            {editable && <th>ACTIONS</th>}
+            <th className='font-normal'>LAST ACTIVITY</th>
+            <th className='font-normal'>SUGGESTION</th>
+            <th className='font-normal'>PAGE NUMBER</th>
+            <th className='font-normal'>ACTION TAKEN</th>
+            <th className='font-normal'>REMARKS</th>
+            {editable && <th className='font-normal'>ACTIONS</th>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-palette_grey">
           {iDDCoordinatorSuggestionItems.iDDCoordinatorSuggestionItems.map(
             (iDDCoordinatorSuggestionItem) => {
               return (
@@ -78,7 +80,7 @@ export default function IMIDDCoordinatorSuggestionItems({
           )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 p-1'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {iDDCoordinatorSuggestionItems.count}
@@ -134,7 +136,7 @@ interface EditSuggestionItemActionTakenProps {
 function EditSuggestionItemActionTaken({
   iDDCoordinatorSuggestionItem,
 }: EditSuggestionItemActionTakenProps) {
-  const router = useRouter(); 
+  const router = useRouter();
   const [openEditActionTaken, setOpenEditActionTaken] = useState(false);
   const iDDCoordinatorSuggestionItemActionTaken =
     useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem({

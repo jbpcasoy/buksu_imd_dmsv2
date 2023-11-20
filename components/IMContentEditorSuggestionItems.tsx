@@ -50,20 +50,22 @@ export default function IMContentEditorSuggestionItems({
   };
 
   return (
-    <div>
+    <div className='border border-palette_orange rounded'>
       <table className='w-full text-sm'>
-        <caption>ContentEditor Suggestions</caption>
-        <thead>
+        <caption className='font-bold text-left p-1 bg-palette_grey bg-opacity-10'>
+          CONTENT EDITOR SUGGESTIONS
+        </caption>
+        <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
           <tr>
-            <th>LAST ACTIVITY</th>
-            <th>SUGGESTION</th>
-            <th>PAGE NUMBER</th>
-            <th>ACTION TAKEN</th>
-            <th>REMARKS</th>
-            {editable && <th>ACTIONS</th>}
+            <th className='font-normal'>LAST ACTIVITY</th>
+            <th className='font-normal'>SUGGESTION</th>
+            <th className='font-normal'>PAGE NUMBER</th>
+            <th className='font-normal'>ACTION TAKEN</th>
+            <th className='font-normal'>REMARKS</th>
+            {editable && <th className='font-normal'>ACTIONS</th>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className='text-palette_grey'>
           {contentEditorSuggestionItems.contentEditorSuggestionItems.map(
             (contentEditorSuggestionItem) => {
               return (
@@ -77,7 +79,7 @@ export default function IMContentEditorSuggestionItems({
           )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 p-1'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {contentEditorSuggestionItems.count}
@@ -113,7 +115,7 @@ function Item({
         ).toRelative()}
       </td>
       <td>{contentEditorSuggestionItem.suggestion}</td>
-      <td className="text-center">{contentEditorSuggestionItem.pageNumber}</td>
+      <td className='text-center'>{contentEditorSuggestionItem.pageNumber}</td>
       <td>{contentEditorSuggestionItemActionTaken?.value}</td>
       <td>{contentEditorSuggestionItem.remarks}</td>
       {editable && (

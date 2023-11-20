@@ -1,13 +1,12 @@
+import usePeerSuggestion from "@/hooks/usePeerSuggestion";
 import usePeerSuggestionItemActionTakenPeerSuggestionItem from "@/hooks/usePeerSuggestionItemActionTakenPeerSuggestionItem";
 import usePeerSuggestionItemsIM from "@/hooks/usePeerSuggestionItemsIM";
 import { PeerSuggestionItem } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { PeerSuggestionItemProps } from "./PeerSuggestionItem";
 import * as Yup from "yup";
 import Modal from "./Modal";
 
@@ -25,7 +24,6 @@ export default function IMPeerSuggestionItems({
     take: 10,
     id,
   });
-
   const peerSuggestionItems = usePeerSuggestionItemsIM(state);
 
   useEffect(() => {
@@ -50,34 +48,34 @@ export default function IMPeerSuggestionItems({
   };
 
   return (
-    <div>
-      <table className='text-sm w-full'>
-        <caption className='text-xs'>PEER SUGGESTIONS</caption>
-        <thead>
+    <div className='border border-palette_orange rounded'>
+      <table className='text-sm w-full p-1'>
+        <caption className='bg-palette_grey bg-opacity-10 p-1'>
+          <p className='text-left font-bold'>PEER SUGGESTIONS</p>
+        </caption>
+        <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
           <tr>
-            <th>LAST ACTIVITY</th>
-            <th>SUGGESTION</th>
-            <th>PAGE NUMBER</th>
-            <th>ACTION TAKEN</th>
-            <th>REMARKS</th>
-            {editable && <th>ACTIONS</th>}
+            <th className='font-normal'>LAST ACTIVITY</th>
+            <th className='font-normal'>SUGGESTION</th>
+            <th className='font-normal'>PAGE NUMBER</th>
+            <th className='font-normal'>ACTION TAKEN</th>
+            <th className='font-normal'>REMARKS</th>
+            {editable && <th className="font-normal">ACTIONS</th>}
           </tr>
         </thead>
-        <tbody>
-          {peerSuggestionItems.peerSuggestionItems.map(
-            (peerSuggestionItem) => {
-              return (
-                <Item
-                  peerSuggestionItem={peerSuggestionItem}
-                  editable={editable}
-                  key={peerSuggestionItem.id}
-                />
-              );
-            }
-          )}
+        <tbody className="text-palette_grey">
+          {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
+            return (
+              <Item
+                peerSuggestionItem={peerSuggestionItem}
+                editable={editable}
+                key={peerSuggestionItem.id}
+              />
+            );
+          })}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1 text-sm'>
+      <div className='flex justify-end space-x-1 text-sm p-1'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {peerSuggestionItems.count}
@@ -197,7 +195,7 @@ function EditSuggestionItemActionTaken({
               <textarea
                 placeholder='Action Taken'
                 {...formik.getFieldProps("value")}
-                className="rounded"
+                className='rounded'
               />
               <input
                 type='submit'

@@ -50,20 +50,22 @@ export default function IMIDDSpecialistSuggestionItems({
   };
 
   return (
-    <div>
+    <div className='border border-palette_orange rounded'>
       <table className='w-full text-sm'>
-        <caption>IDDSpecialist Suggestions</caption>
-        <thead>
+        <caption className='text-left font-bold bg-palette_grey bg-opacity-10 p-1'>
+          IDD SPECIALIST SUGGESTIONS
+        </caption>
+        <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
           <tr>
-            <th>LAST ACTIVITY</th>
-            <th>SUGGESTION</th>
-            <th>PAGE NUMBER</th>
-            <th>ACTION TAKEN</th>
-            <th>REMARKS</th>
-            {editable && <th>ACTIONS</th>}
+            <th className="font-normal">LAST ACTIVITY</th>
+            <th className="font-normal">SUGGESTION</th>
+            <th className="font-normal">PAGE NUMBER</th>
+            <th className="font-normal">ACTION TAKEN</th>
+            <th className="font-normal">REMARKS</th>
+            {editable && <th className="font-normal">ACTIONS</th>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-palette_grey">
           {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map(
             (iDDSpecialistSuggestionItem) => {
               return (
@@ -77,7 +79,7 @@ export default function IMIDDSpecialistSuggestionItems({
           )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 p-1'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {iDDSpecialistSuggestionItems.count}
@@ -113,7 +115,7 @@ function Item({
         ).toRelative()}
       </td>
       <td>{iDDSpecialistSuggestionItem.suggestion}</td>
-      <td className="text-center">{iDDSpecialistSuggestionItem.pageNumber}</td>
+      <td className='text-center'>{iDDSpecialistSuggestionItem.pageNumber}</td>
       <td>{iDDSpecialistSuggestionItemActionTaken?.value}</td>
       <td>{iDDSpecialistSuggestionItem.remarks}</td>
       {editable && (

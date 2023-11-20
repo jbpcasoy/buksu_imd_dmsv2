@@ -17,27 +17,27 @@ export default function AllSuggestionsPage() {
 
   return (
     <MainLayout>
-      <p className='text-center font-bold'>IMPLEMENTATION PHASE</p>
-      <p className='text-center font-bold text-sm'>DEPARTMENT REVIEW</p>
-      <IMPeerSuggestionItems id={iMId as string} editable={false} />
-      <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
-      <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
-      <IMReturnedDepartmentRevisionSuggestionItems
-        id={iMId as string}
-        editable={false}
-      />
-      <p className='text-center font-bold text-sm'>CITL REVIEW</p>
-      <IMIDDCoordinatorSuggestionItems id={iMId as string} editable={false} />
-      <p className='text-center font-bold'>IMERC</p>
-      <p className='text-center font-bold text-sm'>QAMIS SUGGESTIONS</p>
-      <IMQAMISSuggestionItems id={iMId as string} editable={false} />
-      <p className='text-center font-bold text-sm'>CITL REVIEW</p>
-      <IMIDDSpecialistSuggestionItems id={iMId as string} editable={false} />
-      <IMContentSpecialistSuggestionItems
-        id={iMId as string}
-        editable={false}
-      />
-      <IMContentEditorSuggestionItems id={iMId as string} editable={false} />
+      <div className='space-y-1'>
+        <p className='text-center font-bold'>IMPLEMENTATION PHASE</p>
+        <p className='text-center font-bold text-sm'>DEPARTMENT REVIEW</p>
+        <IMPeerSuggestionItems id={iMId as string} editable={false} />
+        <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
+        <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
+        <IMReturnedDepartmentRevisionSuggestionItems
+          id={iMId as string}
+          editable={false}
+        />
+        <p className='text-center font-bold text-sm'>CITL REVIEW</p>
+        <IMIDDCoordinatorSuggestionItems id={iMId as string} editable={false} />
+        <p className='text-center font-bold'>IMERC</p>
+        <IMQAMISSuggestionItems id={iMId as string} editable={false} />
+        <IMIDDSpecialistSuggestionItems id={iMId as string} editable={false} />
+        <IMContentSpecialistSuggestionItems
+          id={iMId as string}
+          editable={false}
+        />
+        <IMContentEditorSuggestionItems id={iMId as string} editable={false} />
+      </div>
     </MainLayout>
   );
 }
