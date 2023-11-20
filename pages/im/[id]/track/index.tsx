@@ -402,6 +402,7 @@ export default function IMTrackingPage() {
           elementsSelectable={false}
           panOnScroll={true}
           panOnScrollMode={PanOnScrollMode.Vertical}
+          translateExtent={[[0,0], [800, 1700]]}
         >
           <Background />
           <Controls showInteractive={false} />
