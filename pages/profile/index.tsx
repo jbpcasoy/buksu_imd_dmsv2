@@ -113,6 +113,7 @@ export default function ProfilePage() {
                   {department?.name} | {college?.name}
                 </p>
               )}
+              <p className='text-sm'>{session?.user?.email}</p>
               <input
                 type='text'
                 placeholder='Name'
