@@ -1,6 +1,7 @@
 import useNotificationReadMe from "@/hooks/useNotificationReadMe";
 import { Event } from "@prisma/client";
 import axios from "axios";
+import { DateTime } from "luxon";
 import { useRouter } from "next/router";
 
 export interface NotificationProps {
@@ -23,24 +24,21 @@ export default function Notification({ event }: NotificationProps) {
 
   return (
     <div
-      className={`rounded border ${
-        notificationRead ? "" : "border-black"
+      className={`rounded cursor-pointer  ${
+        notificationRead ? "bg-palette_grey bg-opacity-5 hover:bg-opacity-0" : "bg-palette_light_blue bg-opacity-20 hover:bg-opacity-10"
       } m-1 p-1`}
       key={event.id}
+      onClick={() => {
+        if (!event.url) {
+          return;
+        }
+        return handleView(event);
+      }}
     >
-      <p className='text-sm'>{event.type}</p>
-      <p className='text-sm'>{event.message}</p>
-      <p className='text-sm'>{new Date(event.createdAt).toLocaleString()}</p>
-      {event.url && (
-        <button
-          className='text-sm underline'
-          onClick={() => {
-            return handleView(event);
-          }}
-        >
-          View
-        </button>
-      )}
+      <p className='text-sm text-palette_blue'>{event.message}</p>
+      <p className='text-xs text-palette_light_blue'>
+        {DateTime.fromJSDate(new Date(event.createdAt)).toRelative()}
+      </p>
     </div>
   );
 }

@@ -33,7 +33,7 @@ export default function Header() {
           href='/notification'
           className='rounded hover:bg-palette_grey text-white px-2'
         >
-          <span className='font-normal'>{eventCount.count}</span> Notification
+          <span className='font-normal '>{eventCount.count}</span> Notification
         </Link>
         <Link
           href='/profile'

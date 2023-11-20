@@ -12,6 +12,7 @@ const config: Config = {
         palette_blue: "#152033",
         palette_orange: "#F2C050",
         palette_grey: "#717883",
+        palette_light_blue: "#1C64F2",
         palette_white: "#FFFFFF",
         palette_black: "#000000",
         palette_error: "#f44336",

@@ -108,9 +108,11 @@ export default function ProfilePage() {
                   />
                 </picture>
               </label>
-              <p className="text-sm">
-                {department?.name} | {college?.name}
-              </p>
+              {department && college && (
+                <p className='text-sm'>
+                  {department?.name} | {college?.name}
+                </p>
+              )}
               <input
                 type='text'
                 placeholder='Name'
