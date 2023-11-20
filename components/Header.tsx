@@ -29,11 +29,17 @@ export default function Header() {
   return (
     <div className=''>
       <div className='flex justify-end items-center h-10 space-x-1 bg-palette_blue border-b border-palette_white sticky top-0'>
-        <Link href='/notification' className='rounded hover:bg-palette_grey text-white'>
-          <span className='font-normal'>{eventCount.count}</span> notification
+        <Link
+          href='/notification'
+          className='rounded hover:bg-palette_grey text-white px-2'
+        >
+          <span className='font-normal'>{eventCount.count}</span> Notification
         </Link>
-        <Link href='/profile' className='rounded hover:bg-palette_grey text-white'>
-          profile
+        <Link
+          href='/profile'
+          className='rounded hover:bg-palette_grey text-white px-2'
+        >
+          Profile
         </Link>
       </div>
       {announcements?.length > 0 && (
@@ -48,7 +54,10 @@ export default function Header() {
             <p>{announcements?.[0].title}</p>
             <p>{announcements?.[0].description}</p>
             {announcements?.[0].url && (
-              <Link href={announcements?.[0].url} className='rounded border border-palette_blue px-10'>
+              <Link
+                href={announcements?.[0].url}
+                className='rounded border border-palette_blue px-10'
+              >
                 Go
               </Link>
             )}

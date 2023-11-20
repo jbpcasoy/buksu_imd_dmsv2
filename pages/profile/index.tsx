@@ -1,4 +1,7 @@
 import MainLayout from "@/components/MainLayout";
+import useCollege from "@/hooks/useCollege";
+import useDepartment from "@/hooks/useDepartment";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
 import { ProfilePictureFile } from "@prisma/client";
 import axios from "axios";
 import { resolveObjectURL } from "buffer";
@@ -10,6 +13,10 @@ import * as Yup from "yup";
 export default function ProfilePage() {
   const { data: session } = useSession({
     required: true,
+  });
+  const department = useDepartmentMe();
+  const college = useCollege({
+    id: department?.collegeId,
   });
 
   const [state, setState] = useState<{ previewUrl?: string; file?: File }>();
@@ -69,37 +76,55 @@ export default function ProfilePage() {
 
   return (
     <MainLayout>
-      <div className='flex justify-between'>
-        <h1>Profile</h1>
-        <button
-          onClick={onLogout}
-          className='bg-palette_blue text-white px-1 rounded'
-        >
-          LOGOUT
-        </button>
-      </div>
+      <div className='h-full flex flex-col'>
+        <div className='flex justify-end'>
+          <button
+            onClick={onLogout}
+            className='bg-palette_blue text-white px-2 py-1 rounded'
+          >
+            LOGOUT
+          </button>
+        </div>
 
-      <div className='mb-10'>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <div className='space-x-1'>
-            <picture>
-              <img
-                src={state?.previewUrl ?? session?.user?.image ?? ""}
-                className='h-32 w-32'
-                alt="User avatar"
+        <div className='h-full'>
+          <form noValidate onSubmit={formik.handleSubmit} className='h-full'>
+            <div className='space-x-1 flex flex-col justify-center items-center space-y-1 max-w-xs mx-auto h-full'>
+              <input
+                id='profile-picture'
+                type='file'
+                accept='image/*'
+                hidden={true}
+                onChange={showProfilePreview}
               />
-            </picture>
-            <input type='file' accept='image/*' onChange={showProfilePreview} />
-            <br />
-            <input
-              type='text'
-              placeholder='Name'
-              {...formik.getFieldProps("name")}
-            />
-            <br />
-            <input type='submit' value='Save' className='border rounded' />
-          </div>
-        </form>
+              <label
+                htmlFor='profile-picture'
+                className='cursor-pointer hover:opacity-95'
+              >
+                <picture>
+                  <img
+                    src={state?.previewUrl ?? session?.user?.image ?? ""}
+                    className='h-32 w-32 rounded-full'
+                    alt='User avatar'
+                  />
+                </picture>
+              </label>
+              <p className="text-sm">
+                {department?.name} | {college?.name}
+              </p>
+              <input
+                type='text'
+                placeholder='Name'
+                {...formik.getFieldProps("name")}
+                className='rounded w-full'
+              />
+              <input
+                type='submit'
+                value='Save'
+                className='bg-palette_blue text-palette_white w-full py-1 rounded'
+              />
+            </div>
+          </form>
+        </div>
       </div>
     </MainLayout>
   );
