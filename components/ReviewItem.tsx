@@ -1,9 +1,4 @@
-import {
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  SelectHTMLAttributes,
-} from "react";
-import { v4 as uuidv4 } from "uuid";
+import { DetailedHTMLProps, InputHTMLAttributes } from "react";
 
 export interface ReviewItemProps
   extends DetailedHTMLProps<
@@ -11,9 +6,14 @@ export interface ReviewItemProps
     HTMLInputElement
   > {
   question: string;
+  checkedValue?: string;
 }
 
-export default function ReviewItem({ question, ...props }: ReviewItemProps) {
+export default function ReviewItem({
+  question,
+  checkedValue = "",
+  ...props
+}: ReviewItemProps) {
   const ratings: {
     label: string;
     value: string;
@@ -42,6 +42,7 @@ export default function ReviewItem({ question, ...props }: ReviewItemProps) {
               className='form-radio text-palette_blue active:ring-palette_blue focus:ring-palette_blue'
               type='radio'
               value={rating.value}
+              defaultChecked={checkedValue === rating.value}
             />
             <span className='ml-2 text-palette_grey text-xs'>
               {rating.label}
