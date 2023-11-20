@@ -44,45 +44,50 @@ export default function DepartmentPage() {
 
   return (
     <MainLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>{department?.name}</h2>
-      </div>
-      <div>
-        <input placeholder='Name' onChange={handleNameChange} />
-      </div>
-      <table className='table-auto w-full'>
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>createdAt</th>
-            <th>updatedAt</th>
-            <th>facultyId</th>
-            <th>name</th>
-            <th>image</th>
-            {/* <th>actions</th> */}
-          </tr>
-        </thead>
-        <tbody>
-          {activeFaculties.map((activeFaculty) => {
-            return (
-              <ActiveFacultyItem
-                activeFaculty={activeFaculty}
-                key={activeFaculty.id}
-              />
-            );
-          })}
-        </tbody>
-      </table>
-      <div className='flex justify-end space-x-1'>
-        <p>
-          {state.skip} - {state.skip + state.take} of {count}
-        </p>
-        <button className='border rounded' onClick={previousHandler}>
-          prev
-        </button>
-        <button className='border rounded' onClick={nextHandler}>
-          next
-        </button>
+      <div className="h-full overflow-auto border border-palette_grey rounded p-1 bg-opacity-10">
+        <div className='flex justify-between items-center space-x-1'>
+          <div className='flex'>
+            <h2 className='flex-1 border-b-2 pb-1 px-2 uppercase border-palette_orange'>
+              {department?.name}
+            </h2>
+          </div>
+          <div>
+            <input
+              placeholder='Name'
+              className='py-1 rounded'
+              onChange={handleNameChange}
+            />
+          </div>
+        </div>
+        <table className='table-auto w-full'>
+          <thead>
+            <tr>
+              <th>IMAGE</th>
+              <th>NAME</th>
+            </tr>
+          </thead>
+          <tbody>
+            {activeFaculties.map((activeFaculty) => {
+              return (
+                <ActiveFacultyItem
+                  activeFaculty={activeFaculty}
+                  key={activeFaculty.id}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+        <div className='flex justify-end space-x-1'>
+          <p>
+            {state.skip} - {state.skip + state.take} of {count}
+          </p>
+          <button className='border rounded' onClick={previousHandler}>
+            prev
+          </button>
+          <button className='border rounded' onClick={nextHandler}>
+            next
+          </button>
+        </div>
       </div>
     </MainLayout>
   );
@@ -96,21 +101,22 @@ function ActiveFacultyItem({
   const user = useUserActiveFaculty({ id: activeFaculty.id });
   return (
     <tr>
-      <td>{activeFaculty.id}</td>
-      <td>{new Date(activeFaculty.createdAt).toLocaleString()}</td>
-      <td>{new Date(activeFaculty.updatedAt).toLocaleString()}</td>
-      <td>{activeFaculty.facultyId}</td>
-      <td>{user?.name}</td>
-      <td>
-        <picture>
-          <img src={user?.image ?? ""} className='h-10 w-10 rounded-full m-1' alt="User avatar" />
-        </picture>
+      <td className='w-20'>
+        <div className='flex justify-center'>
+          <picture>
+            <img
+              src={user?.image ?? ""}
+              className='h-10 w-10 rounded-full m-1'
+              alt='User avatar'
+            />
+          </picture>
+        </div>
       </td>
-      {/* <td>
-      <Link href={`/im/${activeFaculty.id}`} className='border rounded'>
-        view
-      </Link>
-    </td> */}
+      <td>
+        <div className='flex items-center h-full'>
+          <p className='text-palette_grey'>{user?.name}</p>
+        </div>
+      </td>
     </tr>
   );
 }
