@@ -53,20 +53,22 @@ export default function IMReturnedCITLRevisionSuggestionItems({
   };
 
   return (
-    <div>
+    <div className='border border-palette_orange rounded'>
       <table className='w-full text-sm'>
-        <caption>ReturnedCITLRevision Suggestions</caption>
-        <thead>
+        <caption className='bg-palette_grey bg-opacity-10 text-left font-bold p-1'>
+          RETURNED CITL REVISION SUGGESTIONS
+        </caption>
+        <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
           <tr>
-            <th>LAST ACTIVITY</th>
-            <th>SUGGESTION</th>
-            <th>PAGE NUMBER</th>
-            <th>ACTION TAKEN</th>
-            <th>REMARKS</th>
-            {editable && <th>ACTIONS</th>}
+            <th className='font-normal'>LAST ACTIVITY</th>
+            <th className='font-normal'>SUGGESTION</th>
+            <th className='font-normal'>PAGE NUMBER</th>
+            <th className='font-normal'>ACTION TAKEN</th>
+            <th className='font-normal'>REMARKS</th>
+            {editable && <th className='font-normal'>ACTIONS</th>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-palette_grey">
           {returnedCITLRevisionSuggestionItems.returnedCITLRevisionSuggestionItems.map(
             (returnedCITLRevisionSuggestionItem) => {
               return (
@@ -82,7 +84,7 @@ export default function IMReturnedCITLRevisionSuggestionItems({
           )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 p-1'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {returnedCITLRevisionSuggestionItems.count}
@@ -207,7 +209,7 @@ function EditSuggestionItemActionTaken({
           onClose={() => setOpenEditActionTaken(false)}
         >
           <form noValidate onSubmit={formik.handleSubmit}>
-            <div className="flex flex-col space-y-1">
+            <div className='flex flex-col space-y-1'>
               <textarea
                 placeholder='Action Taken'
                 {...formik.getFieldProps("value")}

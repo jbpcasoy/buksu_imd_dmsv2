@@ -177,7 +177,7 @@ export default function IDDSpecialistSuggestionPage() {
 
   return (
     <MainLayout>
-      <div>
+      <div className="space-y-1 px-1">
         <div className='flex justify-between'>
           <div>
             <h2 className='inline text-lg font-bold'>
@@ -231,7 +231,7 @@ export default function IDDSpecialistSuggestionPage() {
             </button>
           </div>
         </div>
-        <div>
+        <div className="space-y-1">
           <IMQAMISSuggestionItems id={iMId as string} editable={false} />
           <IMContentSpecialistSuggestionItems
             id={iMId as string}

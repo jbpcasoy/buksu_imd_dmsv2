@@ -156,7 +156,7 @@ export default function IDDCoordinatorSuggestionPage() {
         {openAdd && (
           <Modal title='Add Suggestion' onClose={() => setOpenAdd(false)}>
             <form noValidate onSubmit={formik.handleSubmit}>
-              <div className="flex flex-col space-y-1">
+              <div className='flex flex-col space-y-1'>
                 <textarea
                   placeholder='Suggestion'
                   {...formik.getFieldProps("suggestion")}
@@ -187,7 +187,7 @@ export default function IDDCoordinatorSuggestionPage() {
   };
   return (
     <MainLayout>
-      <div>
+      <div className='space-y-1'>
         <div className='flex justify-between'>
           <div>
             <h2 className='inline text-lg font-bold'>
@@ -203,7 +203,7 @@ export default function IDDCoordinatorSuggestionPage() {
           </div>
         </div>
         <div>
-          <table className="text-sm w-full">
+          <table className='text-sm w-full'>
             <caption>IDD Coordinator Suggestions</caption>
             <thead>
               <tr>
@@ -243,21 +243,14 @@ export default function IDDCoordinatorSuggestionPage() {
             </button>
           </div>
         </div>
-        <div>
+        <div className='space-y-1'>
           <IMPeerSuggestionItems id={iMId as string} editable={false} />
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
           <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
         </div>
-        {!submittedIDDCoordinatorSuggestion && (
-          <button className='rounded border' onClick={handleSubmitReview}>
-            Submit Review
-          </button>
-        )}
-        {submittedIDDCoordinatorSuggestion && (
-          <Link className='rounded border' href={`/im/${iMId}`}>
-            Finish
-          </Link>
-        )}
+        <button className='rounded bg-palette_blue text-palette_white px-2 py-1' onClick={handleSubmitReview}>
+          Submit Review
+        </button>
       </div>
     </MainLayout>
   );

@@ -54,7 +54,7 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
   return (
     <div className='border border-palette_orange rounded'>
       <table className='text-sm w-full'>
-        <caption className='text-left font-bold bg-palette_grey bg-opacity-10 p-1'>
+        <caption className='text-left font-bold bg-palette_grey bg-opacity-10 p-1 text-palette_grey p-1'>
           RETURNED DEPARTMENT REVISION SUGGESTIONS
         </caption>
         <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>

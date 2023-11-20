@@ -23,7 +23,7 @@ import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecia
 import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import ReactFlow, { Background, Controls, Node } from "reactflow";
+import ReactFlow, { Background, Controls, Edge, Node, PanOnScrollMode } from "reactflow";
 
 export default function IMTrackingPage() {
   const router = useRouter();
@@ -152,7 +152,7 @@ export default function IMTrackingPage() {
       id: "7",
       data: { label: "Revision" },
       position: { x: 300, y: 600 },
-      hidden: !Boolean(departmentRevision),
+      hidden: !Boolean(cITLRevision),
     },
     {
       id: "8",
@@ -244,7 +244,7 @@ export default function IMTrackingPage() {
     },
   ];
 
-  const edges = [
+  const edges: Edge<any>[] = [
     {
       id: "1-2_1",
       source: "1",
@@ -400,6 +400,8 @@ export default function IMTrackingPage() {
           edges={edges}
           nodesConnectable={false}
           elementsSelectable={false}
+          panOnScroll={true}
+          panOnScrollMode={PanOnScrollMode.Vertical}
         >
           <Background />
           <Controls showInteractive={false} />

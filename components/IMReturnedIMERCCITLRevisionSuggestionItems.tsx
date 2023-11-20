@@ -53,20 +53,22 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
   };
 
   return (
-    <div>
+    <div className='border border-palette_orange rounded'>
       <table className='w-full text-sm'>
-        <caption>ReturnedIMERCCITLRevision Suggestions</caption>
-        <thead>
+        <caption className='bg-palette_grey bg-opacity-10 text-left font-bold p-1'>
+          RETURNED IMERC CITL REVISION SUGGESTIONS
+        </caption>
+        <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
           <tr>
-            <th>LAST ACTIVITY</th>
-            <th>SUGGESTION</th>
-            <th>PAGE NUMBER</th>
-            <th>ACTION TAKEN</th>
-            <th>REMARKS</th>
-            {editable && <th>ACTIONS</th>}
+            <th className='font-normal'>LAST ACTIVITY</th>
+            <th className='font-normal'>SUGGESTION</th>
+            <th className='font-normal'>PAGE NUMBER</th>
+            <th className='font-normal'>ACTION TAKEN</th>
+            <th className='font-normal'>REMARKS</th>
+            {editable && <th className='font-normal'>ACTIONS</th>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-palette_grey">
           {returnedIMERCCITLRevisionSuggestionItems.returnedIMERCCITLRevisionSuggestionItems.map(
             (returnedIMERCCITLRevisionSuggestionItem) => {
               return (
@@ -82,7 +84,7 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
           )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1'>
+      <div className='flex justify-end space-x-1 p-1'>
         <p>
           {state.skip} - {state.skip + state.take} of{" "}
           {returnedIMERCCITLRevisionSuggestionItems.count}

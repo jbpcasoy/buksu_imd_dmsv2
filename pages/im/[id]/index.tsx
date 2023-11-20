@@ -501,7 +501,7 @@ export default function ViewIM() {
           )}
 
         {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
-          <div className='space-x-2 my-1 text-xs'>
+          <div className='space-x-2 my-1'>
             {iM.facultyId !== activeFaculty?.facultyId && (
               <Link
                 href={`/im/${iM.id}/peer_review`}
@@ -533,7 +533,7 @@ export default function ViewIM() {
 
         {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" &&
           iM.facultyId === activeFaculty?.facultyId && (
-            <div>
+            <div className='space-y-1 px-1'>
               <IMChairpersonSuggestionItems id={iM.id} />
               <IMCoordinatorSuggestionItems id={iM.id} />
               <IMPeerSuggestionItems id={iM.id} />
@@ -566,7 +566,7 @@ export default function ViewIM() {
           iMStatus ===
             "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION_NOT_SUBMITTED") &&
           activeCoordinator && (
-            <div className='space-x-1'>
+            <div className='space-y-1 p-1'>
               <IMChairpersonSuggestionItems id={iM.id} editable={false} />
               <IMCoordinatorSuggestionItems id={iM.id} editable={false} />
               <IMPeerSuggestionItems id={iM.id} editable={false} />
@@ -574,18 +574,20 @@ export default function ViewIM() {
                 id={iM.id}
                 editable={false}
               />
-              <button
-                className='bg-palette_blue text-palette_white rounded px-2 py-1'
-                onClick={coordinatorEndorsementHandler}
-              >
-                Endorse IM
-              </button>
-              <button
-                className='bg-palette_blue text-palette_white rounded px-2 py-1'
-                onClick={returnCoordinatorEndorsementHandler}
-              >
-                Return Revision
-              </button>
+              <div className='space-x-1'>
+                <button
+                  className='bg-palette_blue text-palette_white rounded px-2 py-1'
+                  onClick={coordinatorEndorsementHandler}
+                >
+                  Endorse IM
+                </button>
+                <button
+                  className='bg-palette_blue text-palette_white rounded px-2 py-1'
+                  onClick={returnCoordinatorEndorsementHandler}
+                >
+                  Return Revision
+                </button>
+              </div>
             </div>
           )}
 
@@ -615,7 +617,7 @@ export default function ViewIM() {
 
         {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" &&
           iM.facultyId === activeFaculty?.facultyId && (
-            <div>
+            <div className='space-y-1 px-1'>
               <IMIDDCoordinatorSuggestionItems id={iM.id} />
               <IMReturnedCITLRevisionSuggestionItems id={iM.id} />
               <FileUpload
@@ -644,24 +646,26 @@ export default function ViewIM() {
         {(iMStatus === "IMPLEMENTATION_CITL_REVISED" ||
           iMStatus === "IMPLEMENTATION_CITL_RETURNED_REVISION_NOT_SUBMITTED") &&
           activeIDDCoordinator && (
-            <div className='space-x-1'>
+            <div className='space-y-1 px-1'>
               <IMIDDCoordinatorSuggestionItems id={iM.id} editable={false} />
               <IMReturnedCITLRevisionSuggestionItems
                 id={iM.id}
                 editable={false}
               />
-              <button
-                className='bg-palette_blue text-palette_white p-2 py-1 rounded'
-                onClick={iDDCoordinatorEndorsementHandler}
-              >
-                Endorse IM
-              </button>
-              <button
-                className='bg-palette_blue text-palette_white p-2 py-1 rounded'
-                onClick={returnIDDCoordinatorEndorsementHandler}
-              >
-                Return revision
-              </button>
+              <div className='space-x-1'>
+                <button
+                  className='bg-palette_blue text-palette_white p-2 py-1 rounded'
+                  onClick={iDDCoordinatorEndorsementHandler}
+                >
+                  Endorse IM
+                </button>
+                <button
+                  className='bg-palette_blue text-palette_white p-2 py-1 rounded'
+                  onClick={returnIDDCoordinatorEndorsementHandler}
+                >
+                  Return revision
+                </button>
+              </div>
             </div>
           )}
 
@@ -751,7 +755,7 @@ export default function ViewIM() {
 
         {iMStatus === "IMERC_CITL_REVIEWED" &&
           iM.facultyId === activeFaculty?.facultyId && (
-            <div>
+            <div className='space-y-1 px-1'>
               <IMContentSpecialistSuggestionItems id={iM.id} />
               <IMIDDSpecialistSuggestionItems id={iM.id} />
               <IMContentEditorSuggestionItems id={iM.id} />
@@ -803,7 +807,7 @@ export default function ViewIM() {
           iMStatus ===
             "IMPLEMENTATION_IMERC_CITL_RETURNED_REVISION_NOT_SUBMITTED") &&
           activeIDDCoordinator && (
-            <div className='space-x-1'>
+            <div className='space-y-1 px-1'>
               <IMContentSpecialistSuggestionItems id={iM.id} editable={false} />
               <IMIDDSpecialistSuggestionItems id={iM.id} editable={false} />
               <IMContentEditorSuggestionItems id={iM.id} editable={false} />
@@ -811,18 +815,20 @@ export default function ViewIM() {
                 id={iM.id}
                 editable={false}
               />
-              <button
-                className='rounded bg-palette_blue text-palette_white px-2 py-1'
-                onClick={iMERCIDDCoordinatorEndorsementHandler}
-              >
-                Endorse IM
-              </button>
-              <button
-                className='rounded bg-palette_blue text-palette_white px-2 py-1'
-                onClick={returnIMERCIDDCoordinatorEndorsementHandler}
-              >
-                Return revision
-              </button>
+              <div className="space-x-1">
+                <button
+                  className='rounded bg-palette_blue text-palette_white px-2 py-1'
+                  onClick={iMERCIDDCoordinatorEndorsementHandler}
+                >
+                  Endorse IM
+                </button>
+                <button
+                  className='rounded bg-palette_blue text-palette_white px-2 py-1'
+                  onClick={returnIMERCIDDCoordinatorEndorsementHandler}
+                >
+                  Return revision
+                </button>
+              </div>
             </div>
           )}
 

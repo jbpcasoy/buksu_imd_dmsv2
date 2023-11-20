@@ -39,7 +39,6 @@ export default function QAMISSuggestionItem({
       <td>{qAMISSuggestionItem.pageNumber}</td>
       <td>{qAMISSuggestionItem.actionTaken}</td>
       <td className='text-center'>{qAMISSuggestionItem.remarks}</td>
-      <td>{qAMISSuggestionItem.qAMISSuggestionId}</td>
       <td className=''>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem qAMISSuggestionItem={qAMISSuggestionItem} />
@@ -109,23 +108,23 @@ function EditSuggestionItem({ qAMISSuggestionItem }: EditSuggestionItemProps) {
           <form noValidate onSubmit={formik.handleSubmit}>
             <div className='flex flex-col space-y-1'>
               <textarea
-                placeholder='suggestion'
+                placeholder='Suggestion'
                 {...formik.getFieldProps("suggestion")}
                 className='rounded'
               />
               <textarea
-                placeholder='actionTaken'
+                placeholder='Action Taken'
                 {...formik.getFieldProps("actionTaken")}
                 className='rounded'
               />
               <input
                 type='number'
-                placeholder='pageNumber'
+                placeholder='Page No.'
                 {...formik.getFieldProps("pageNumber")}
                 className='rounded'
               />
               <textarea
-                placeholder='remarks'
+                placeholder='Remarks'
                 {...formik.getFieldProps("remarks")}
                 className='rounded'
               />

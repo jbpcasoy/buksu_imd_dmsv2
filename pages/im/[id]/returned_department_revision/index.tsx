@@ -189,7 +189,7 @@ export default function ReturnedDepartmentRevisionPage() {
 
   return (
     <MainLayout>
-      <div>
+      <div className="space-y-1 p-1">
         <div className='flex justify-between'>
           <div>
             <h2 className='inline text-lg font-bold'>
@@ -246,7 +246,7 @@ export default function ReturnedDepartmentRevisionPage() {
             </button>
           </div>
         </div>
-        <div>
+        <div className="space-y-1">
           <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
           <IMPeerSuggestionItems id={iMId as string} editable={false} />
           <IMChairpersonSuggestionItems id={iMId as string} editable={false} />

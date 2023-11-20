@@ -114,18 +114,18 @@ function EditSuggestionItem({
           <form noValidate onSubmit={formik.handleSubmit}>
             <div className="flex flex-col space-y-1">
               <textarea
-                placeholder='suggestion'
+                placeholder='Suggestion'
                 {...formik.getFieldProps("suggestion")}
                 className='rounded'
               />
               <input
                 type='number'
-                placeholder='pageNumber'
+                placeholder='Page No.'
                 {...formik.getFieldProps("pageNumber")}
                 className='rounded'
               />
               <textarea
-                placeholder='remarks'
+                placeholder='Remarks'
                 {...formik.getFieldProps("remarks")}
                 className='rounded'
               />
