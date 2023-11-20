@@ -23,6 +23,7 @@ import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecia
 import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import ReactFlow, { Background, Controls, Node } from "reactflow";
 
 export default function IMTrackingPage() {
   const router = useRouter();
@@ -84,7 +85,7 @@ export default function IMTrackingPage() {
     useSubmittedContentEditorSuggestionIM({
       id: iM?.id,
     });
-  const submittedIDDSpecialistSuggestionIM =
+  const submittedIDDSpecialistSuggestion =
     useSubmittedIDDSpecialistSuggestionIM({
       id: iM?.id,
     });
@@ -98,165 +99,313 @@ export default function IMTrackingPage() {
     id: iM?.id,
   });
 
+  const nodes: Node<any, string | undefined>[] = [
+    {
+      id: "1",
+      data: { label: "Draft" },
+      position: { x: 300, y: 10 },
+      hidden: !Boolean(departmentReview),
+    },
+    {
+      id: "2_1",
+      data: { label: "Peer Review" },
+      position: { x: 100, y: 100 },
+      hidden: !Boolean(submittedPeerSuggestion),
+    },
+    {
+      id: "2_2",
+      data: { label: "Chairperson Review" },
+      position: { x: 300, y: 100 },
+      hidden: !Boolean(submittedChairpersonSuggestion),
+    },
+    {
+      id: "2_3",
+      data: { label: "Coordinator Review" },
+      position: { x: 500, y: 100 },
+      hidden: !Boolean(submittedCoordinatorSuggestion),
+    },
+    {
+      id: "3",
+      data: { label: "Revision" },
+      position: { x: 300, y: 200 },
+      hidden: !Boolean(departmentRevision),
+    },
+    {
+      id: "4",
+      data: { label: "Coordinator Endorsement" },
+      position: { x: 300, y: 300 },
+      hidden: !Boolean(coordinatorEndorsement),
+    },
+    {
+      id: "5",
+      data: { label: "Dean Endorsement" },
+      position: { x: 300, y: 400 },
+      hidden: !Boolean(deanEndorsement),
+    },
+    {
+      id: "6",
+      data: { label: "IDD Coordinator Review" },
+      position: { x: 300, y: 500 },
+      hidden: !Boolean(submittedIDDCoordinatorSuggestion),
+    },
+    {
+      id: "7",
+      data: { label: "Revision" },
+      position: { x: 300, y: 600 },
+      hidden: !Boolean(departmentRevision),
+    },
+    {
+      id: "8",
+      data: { label: "IDD Coordinator Endorsement" },
+      position: { x: 300, y: 700 },
+      hidden: !Boolean(iDDCoordinatorEndorsement),
+    },
+    {
+      id: "9",
+      data: { label: "CITL Director Endorsement" },
+      position: { x: 300, y: 800 },
+      hidden: !Boolean(cITLDirectorEndorsement),
+    },
+    {
+      id: "10",
+      data: { label: "Try-out" },
+      position: { x: 300, y: 900 },
+      hidden: !Boolean(cITLDirectorEndorsement),
+    },
+    {
+      id: "11",
+      data: { label: "Revision" },
+      position: { x: 300, y: 1000 },
+      hidden: !Boolean(qAMISRevision),
+    },
+    {
+      id: "12_1",
+      data: { label: "Chairperson Endorsement" },
+      position: { x: 100, y: 1100 },
+      hidden: !Boolean(qAMISChairpersonEndorsement),
+    },
+    {
+      id: "12_2",
+      data: { label: "Coordinator Endorsement" },
+      position: { x: 300, y: 1100 },
+      hidden: !Boolean(qAMISCoordinatorEndorsement),
+    },
+    {
+      id: "12_3",
+      data: { label: "Dean Endorsement" },
+      position: { x: 500, y: 1100 },
+      hidden: !Boolean(qAMISDeanEndorsement),
+    },
+    {
+      id: "13",
+      data: { label: "Department Endorsement" },
+      position: { x: 300, y: 1200 },
+      hidden: !Boolean(
+        qAMISDeanEndorsement &&
+          qAMISCoordinatorEndorsement &&
+          qAMISCoordinatorEndorsement
+      ),
+    },
+    {
+      id: "14_1",
+      data: { label: "Content Specialist Review" },
+      position: { x: 100, y: 1300 },
+      hidden: !Boolean(submittedContentSpecialistSuggestion),
+    },
+    {
+      id: "14_2",
+      data: { label: "IDD Specialist Review" },
+      position: { x: 300, y: 1300 },
+      hidden: !Boolean(submittedIDDSpecialistSuggestion),
+    },
+    {
+      id: "14_3",
+      data: { label: "Content Editor Review" },
+      position: { x: 500, y: 1300 },
+      hidden: !Boolean(submittedContentEditorSuggestion),
+    },
+    {
+      id: "15",
+      data: { label: "Revision" },
+      position: { x: 300, y: 1400 },
+      hidden: !Boolean(iMERCCITLRevision),
+    },
+    {
+      id: "16",
+      data: { label: "IDD Coordinator Endorsement" },
+      position: { x: 300, y: 1500 },
+      hidden: !Boolean(iMERCIDDCoordinatorEndorsement),
+    },
+    {
+      id: "17",
+      data: { label: "CITL Director Endorsement" },
+      position: { x: 300, y: 1600 },
+      hidden: !Boolean(iMERCCITLDirectorEndorsement),
+    },
+  ];
+
+  const edges = [
+    {
+      id: "1-2_1",
+      source: "1",
+      target: "2_1",
+    },
+    {
+      id: "1-2_2",
+      source: "1",
+      target: "2_2",
+    },
+    {
+      id: "1-2_3",
+      source: "1",
+      target: "2_3",
+    },
+    {
+      id: "2_1-3",
+      source: "2_1",
+      target: "3",
+    },
+    {
+      id: "2_2-3",
+      source: "2_2",
+      target: "3",
+    },
+    {
+      id: "2_2-3",
+      source: "2_2",
+      target: "3",
+    },
+    {
+      id: "2_3-3",
+      source: "2_3",
+      target: "3",
+    },
+    {
+      id: "3-4",
+      source: "3",
+      target: "4",
+    },
+    {
+      id: "4-5",
+      source: "4",
+      target: "5",
+    },
+    {
+      id: "5-6",
+      source: "5",
+      target: "6",
+    },
+    {
+      id: "6-7",
+      source: "6",
+      target: "7",
+    },
+    {
+      id: "7-8",
+      source: "7",
+      target: "8",
+    },
+    {
+      id: "8-9",
+      source: "8",
+      target: "9",
+    },
+    {
+      id: "9-10",
+      source: "9",
+      target: "10",
+    },
+    {
+      id: "10-11",
+      source: "10",
+      target: "11",
+    },
+    {
+      id: "11-12_1",
+      source: "11",
+      target: "12_1",
+    },
+    {
+      id: "11-12_2",
+      source: "11",
+      target: "12_2",
+    },
+    {
+      id: "11-12_3",
+      source: "11",
+      target: "12_3",
+    },
+    {
+      id: "12_1-13",
+      source: "12_1",
+      target: "13",
+    },
+    {
+      id: "12_2-13",
+      source: "12_2",
+      target: "13",
+    },
+    {
+      id: "12_3-13",
+      source: "12_3",
+      target: "13",
+    },
+    {
+      id: "13-14_1",
+      source: "13",
+      target: "14_1",
+    },
+    {
+      id: "13-14_2",
+      source: "13",
+      target: "14_2",
+    },
+    {
+      id: "13-14_3",
+      source: "13",
+      target: "14_3",
+    },
+    {
+      id: "14_1-15",
+      source: "14_1",
+      target: "15",
+    },
+    {
+      id: "14_2-15",
+      source: "14_2",
+      target: "15",
+    },
+    {
+      id: "14_3-15",
+      source: "14_3",
+      target: "15",
+    },
+    {
+      id: "15-16",
+      source: "15",
+      target: "16",
+    },
+    {
+      id: "16-17",
+      source: "16",
+      target: "17",
+    },
+  ];
+
   return (
     <MainLayout>
-      <div>
-        <div className='flex justify-between'>
-          <Link href={`/im/${iMId}`} className='underline'>
-            Go back
-          </Link>
-          <h2 className='inline'>IM Tracking</h2>
-          <Link
-            href={`/api/im_file/im/${iMId}/pdf`}
-            className='underline'
-            target='_blank'
-          >
-            View PDF
-          </Link>
-        </div>
-        <p className={`text-center ${departmentReview ? "font-bold" : ""}`}>
-          Draft
-        </p>
-        <div className='flex flex-row justify-evenly'>
-          <p
-            className={`w-full text-center ${
-              submittedPeerSuggestion ? "font-bold" : ""
-            }`}
-          >
-            Peer Review
-          </p>
-          <p
-            className={`w-full text-center ${
-              submittedChairpersonSuggestion ? "font-bold" : ""
-            }`}
-          >
-            Chairperson Review
-          </p>
-          <p
-            className={`w-full text-center ${
-              submittedCoordinatorSuggestion ? "font-bold" : ""
-            }`}
-          >
-            Coordinator Review
-          </p>
-        </div>
-        <p className={`text-center ${departmentRevision ? "font-bold" : ""}`}>
-          Revision
-        </p>
-        <p
-          className={`text-center ${coordinatorEndorsement ? "font-bold" : ""}`}
+      <div className='h-full w-full mr-50'>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodesConnectable={false}
+          elementsSelectable={false}
         >
-          Coordinator Endorsement
-        </p>
-        <p className={`text-center ${deanEndorsement ? "font-bold" : ""}`}>
-          Dean Endorsement
-        </p>
-        <p
-          className={`text-center ${
-            submittedIDDCoordinatorSuggestion ? "font-bold" : ""
-          }`}
-        >
-          IDD Coordinator Review
-        </p>
-        <p className={`text-center ${cITLRevision ? "font-bold" : ""}`}>
-          Revision
-        </p>
-        <p
-          className={`text-center ${
-            iDDCoordinatorEndorsement ? "font-bold" : ""
-          }`}
-        >
-          IDD Coordinator Endorsement
-        </p>
-        <p
-          className={`text-center ${
-            cITLDirectorEndorsement ? "font-bold" : ""
-          }`}
-        >
-          CITL Director Endorsement
-        </p>
-        <p
-          className={`text-center ${
-            cITLDirectorEndorsement ? "font-bold" : ""
-          }`}
-        >
-          Try-out
-        </p>
-        <p className={`text-center ${qAMISRevision ? "font-bold" : ""}`}>
-          Revision
-        </p>
-        <div className='flex flex-row justify-evenly'>
-          <p
-            className={`w-full text-center ${
-              qAMISChairpersonEndorsement ? "font-bold" : ""
-            }`}
-          >
-            Chairperson Endorsement
-          </p>
-          <p
-            className={`w-full text-center ${
-              qAMISCoordinatorEndorsement ? "font-bold" : ""
-            }`}
-          >
-            Coordinator Endorsement
-          </p>
-          <p
-            className={`w-full text-center ${
-              qAMISDeanEndorsement ? "font-bold" : ""
-            }`}
-          >
-            Dean Endorsement
-          </p>
-        </div>
-        <div className='flex flex-row justify-evenly'>
-          <p
-            className={`w-full text-center ${
-              submittedContentSpecialistSuggestion ? "font-bold" : ""
-            }`}
-          >
-            Content Specialist Review
-          </p>
-          <p
-            className={`w-full text-center ${
-              submittedContentEditorSuggestion ? "font-bold" : ""
-            }`}
-          >
-            Content Editor Review
-          </p>
-          <p
-            className={`w-full text-center ${
-              submittedIDDSpecialistSuggestionIM ? "font-bold" : ""
-            }`}
-          >
-            IDD Specialist Review
-          </p>
-        </div>
-        <p className={`text-center ${iMERCCITLRevision ? "font-bold" : ""}`}>
-          Revision
-        </p>
-        <p
-          className={`text-center ${
-            iMERCIDDCoordinatorEndorsement ? "font-bold" : ""
-          }`}
-        >
-          IDD Coordinator Endorsement
-        </p>
-        <p
-          className={`text-center ${
-            iMERCCITLDirectorEndorsement ? "font-bold" : ""
-          }`}
-        >
-          CITL Director Endorsement
-        </p>
-
-        <p
-          className={`text-center ${
-            iMERCCITLDirectorEndorsement ? "font-bold" : ""
-          }`}
-        >
-          Endorsed for Copyright
-        </p>
+          <Background />
+          <Controls showInteractive={false} />
+        </ReactFlow>
       </div>
+      {/* <div className="h-4 w-full -mt-4 bg-palette_white z-50 relative"></div> */}
     </MainLayout>
   );
 }

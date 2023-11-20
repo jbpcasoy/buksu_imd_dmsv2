@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { ActiveFacultyContextProvider } from "@/contexts/ActiveFacultyContext";
 import Head from "next/head";
+import "reactflow/dist/style.css";
 
 export default function App({
   Component,
