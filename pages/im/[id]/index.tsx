@@ -757,23 +757,41 @@ export default function ViewIM() {
               <IMContentEditorSuggestionItems id={iM.id} />
               <IMReturnedIMERCCITLRevisionSuggestionItems id={iM.id} />
 
-              <p>Plagiarism File:</p>
-              <input
-                type='file'
-                onChange={onPlagiarismFileChange}
-                accept='.pdf'
-              />
-              <br />
-              <p>IM File:</p>
-              <input
-                type='file'
-                id='im_file'
-                onChange={onFileChange}
-                accept='.pdf'
-              />
-              <br />
+              <div className='flex w-full space-x-1'>
+                <FileUpload
+                  label='UPLOAD PLAGIARISM FILE'
+                  onFileChange={(e) => {
+                    setState((prev) => ({
+                      ...prev,
+                      plagiarismFile: e.target.files?.item(0),
+                    }));
+                  }}
+                  onFileReset={() => {
+                    setState((prev) => ({
+                      ...prev,
+                      iMFile: undefined,
+                    }));
+                  }}
+                />
+                <FileUpload
+                  label='UPLOAD IM FILE'
+                  onFileChange={(e) => {
+                    setState((prev) => ({
+                      ...prev,
+                      iMFile: e.target.files?.item(0),
+                    }));
+                  }}
+                  onFileReset={() => {
+                    setState((prev) => ({
+                      ...prev,
+                      qAMISFile: undefined,
+                    }));
+                  }}
+                />
+              </div>
+
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 py-1 rounded mt-1 '
                 onClick={submitForIMERCCITLEndorsementHandler}
               >
                 Submit for endorsement
@@ -812,7 +830,7 @@ export default function ViewIM() {
           activeCITLDirector && (
             <div>
               <button
-                className='border rounded'
+                className='bg-palette_blue text-palette_white px-2 py-1 rounded'
                 onClick={iMERCCITLDirectorEndorsementHandler}
               >
                 Endorse IM
