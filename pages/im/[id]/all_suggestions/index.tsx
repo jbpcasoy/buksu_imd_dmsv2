@@ -17,15 +17,6 @@ export default function AllSuggestionsPage() {
 
   return (
     <MainLayout>
-      <div className='flex justify-end'>
-        <Link
-          href={`/api/im_file/im/${iMId}/pdf`}
-          className='underline'
-          target='_blank'
-        >
-          View PDF
-        </Link>
-      </div>
       <p className='text-center font-bold'>IMPLEMENTATION PHASE</p>
       <p className='text-center font-bold text-sm'>DEPARTMENT REVIEW</p>
       <IMPeerSuggestionItems id={iMId as string} editable={false} />

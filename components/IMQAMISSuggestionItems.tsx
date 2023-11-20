@@ -1,4 +1,5 @@
 import useQAMISSuggestionItemsIM from "@/hooks/useQAMISSuggestionItemsIM";
+import { DateTime } from "luxon";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -22,7 +23,7 @@ export default function IMQAMISSuggestionItems({
   }, [id]);
 
   const qAMISSuggestionItems = useQAMISSuggestionItemsIM(state);
-  
+
   const handleNext = () => {
     setState((prev) => {
       const nextVal = prev.skip + prev.take;
@@ -42,18 +43,16 @@ export default function IMQAMISSuggestionItems({
 
   return (
     <div>
-      <table>
+      <table className="w-full text-sm">
         <caption>QAMIS Suggestions</caption>
         <thead>
           <tr>
-            <th>id</th>
-            <th>createdAt</th>
-            <th>updatedAt</th>
-            <th>suggestion</th>
-            <th>pageNumber</th>
-            <th>actionTaken</th>
-            <th>remarks</th>
-            <th>qAMISSuggestionId</th>
+            <th>LAST ACTIVITY</th>
+            <th>SUGGESTION</th>
+            <th>PAGE NUMBER</th>
+            <th>ACTION TAKEN</th>
+            <th>REMARKS</th>
+            {editable && <th>ACTIONS</th>}
           </tr>
         </thead>
         <tbody>
@@ -61,18 +60,15 @@ export default function IMQAMISSuggestionItems({
             (qAMISSuggestionItem) => {
               return (
                 <tr key={qAMISSuggestionItem.id}>
-                  <td>{qAMISSuggestionItem.id}</td>
                   <td>
-                    {new Date(qAMISSuggestionItem.createdAt).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(qAMISSuggestionItem.updatedAt).toLocaleString()}
+                    {DateTime.fromJSDate(
+                      new Date(qAMISSuggestionItem.updatedAt)
+                    ).toRelative()}
                   </td>
                   <td>{qAMISSuggestionItem.suggestion}</td>
-                  <td>{qAMISSuggestionItem.pageNumber}</td>
+                  <td className="text-center">{qAMISSuggestionItem.pageNumber}</td>
                   <td>{qAMISSuggestionItem.actionTaken}</td>
                   <td>{qAMISSuggestionItem.remarks}</td>
-                  <td>{qAMISSuggestionItem.qAMISSuggestionId}</td>
                 </tr>
               );
             }
