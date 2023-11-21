@@ -94,7 +94,7 @@ export default function IMTable({
   };
 
   return (
-    <div className='text-sm border border-palette_grey rounded'>
+    <div className='text-sm border border-palette_grey rounded h-full flex flex-col overflow-auto'>
       <div className='p-1 bg-palette_grey bg-opacity-10'>
         <div className='flex'>
           <div className='flex-1 flex items-center space-x-1'>
@@ -110,7 +110,8 @@ export default function IMTable({
           <AddIM />
         </div>
       </div>
-      <table className='table-auto w-full'>
+      <div className="flex-1">
+      <table className='table-auto w-full overflow-auto'>
         <thead className='bg-palette_grey bg-opacity-10 p-1'>
           <tr>
             <th className='font-normal'>TITLE</th>
@@ -129,9 +130,10 @@ export default function IMTable({
           })}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1 p-1'>
-        <p>
-          {state.skip} - {state.skip + state.take} of {count}
+      </div>
+      <div className='flex justify-end items-center space-x-1 p-1'>
+        <p className="text-xs">
+          Showing {state.skip} - {state.skip + state.take} of {count}
         </p>
         <button className='border rounded' onClick={previousHandler}>
           prev
@@ -152,7 +154,7 @@ function IMItem({ iM }: { iM: IM }) {
   const college = useCollegeIM({ id: iM.id });
 
   return (
-    <tr key={iM.id}>
+    <tr key={iM.id} className="border-b">
       <td>
         <div className='py-1 pl-4'>{iM.title}</div>
       </td>
@@ -227,7 +229,10 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
 
   return (
     <div>
-      <select onChange={handleFieldChange} className='py-1 rounded-s bg-inherit'>
+      <select
+        onChange={handleFieldChange}
+        className='py-1 rounded-s bg-inherit'
+      >
         <option value=''>Select field</option>
         <option value='title'>Title</option>
         <option value='userName'>User Name</option>
@@ -266,14 +271,22 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
 
   return (
     <div>
-      <select onChange={handleFieldChange} value={selectedField} className='py-1 rounded-s bg-inherit'>
+      <select
+        onChange={handleFieldChange}
+        value={selectedField}
+        className='py-1 rounded-s bg-inherit'
+      >
         <option value='title'>Title</option>
         <option value='createdAt'>Date Created</option>
         <option value='userName'>Author</option>
         <option value='departmentName'>Department Name</option>
         <option value='collegeName'>College Name</option>
       </select>
-      <select onChange={handleDirectionChange} value={sortDirection} className='py-1 rounded-e bg-inherit'>
+      <select
+        onChange={handleDirectionChange}
+        value={sortDirection}
+        className='py-1 rounded-e bg-inherit'
+      >
         <option value='asc'>Ascending</option>
         <option value='desc'>Descending</option>
       </select>

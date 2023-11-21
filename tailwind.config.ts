@@ -23,6 +23,12 @@ const config: Config = {
       height: {
         "screen-3/4": "75vh",
       },
+      width: {
+        "1/20": "5%",
+        "1/10": "10%",
+        "3/10": "30%",
+        "1/8": "12.5%"
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],

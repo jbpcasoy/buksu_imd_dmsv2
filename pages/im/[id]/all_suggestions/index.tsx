@@ -7,8 +7,8 @@ import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggesti
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
+import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
 import MainLayout from "@/components/MainLayout";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 export default function AllSuggestionsPage() {
@@ -17,7 +17,7 @@ export default function AllSuggestionsPage() {
 
   return (
     <MainLayout>
-      <div className='space-y-1'>
+      <div className='space-y-1 px-1'>
         <p className='text-center font-bold'>IMPLEMENTATION PHASE</p>
         <p className='text-center font-bold text-sm'>DEPARTMENT REVIEW</p>
         <IMPeerSuggestionItems id={iMId as string} editable={false} />
@@ -37,6 +37,10 @@ export default function AllSuggestionsPage() {
           editable={false}
         />
         <IMContentEditorSuggestionItems id={iMId as string} editable={false} />
+        <IMReturnedIMERCCITLRevisionSuggestionItems
+          id={iMId as string}
+          editable={false}
+        />
       </div>
     </MainLayout>
   );

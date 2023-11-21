@@ -1,10 +1,8 @@
-import usePeerSuggestion from "@/hooks/usePeerSuggestion";
 import usePeerSuggestionItemActionTakenPeerSuggestionItem from "@/hooks/usePeerSuggestionItemActionTakenPeerSuggestionItem";
 import usePeerSuggestionItemsIM from "@/hooks/usePeerSuggestionItemsIM";
 import { PeerSuggestionItem } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
-import { DateTime } from "luxon";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -21,7 +19,7 @@ export default function IMPeerSuggestionItems({
 }: IMPeerSuggestionItemsProps) {
   const [state, setState] = useState({
     skip: 0,
-    take: 10,
+    take: 999,
     id,
   });
   const peerSuggestionItems = usePeerSuggestionItemsIM(state);
@@ -30,40 +28,22 @@ export default function IMPeerSuggestionItems({
     setState((prev) => ({ ...prev, id }));
   }, [id]);
 
-  const handleNext = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return {
-        ...prev,
-        skip: nextVal <= peerSuggestionItems.count ? nextVal : prev.skip,
-      };
-    });
-  };
-
-  const handlePrev = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
-  };
-
   return (
     <div className='border border-palette_orange rounded'>
       <table className='text-sm w-full p-1'>
-        <caption className='bg-palette_grey bg-opacity-10 p-1'>
+        <caption className='bg-palette_grey bg-opacity-10 p-2'>
           <p className='text-left font-bold'>PEER SUGGESTIONS</p>
         </caption>
         <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
           <tr>
-            <th className='font-normal'>LAST ACTIVITY</th>
-            <th className='font-normal'>SUGGESTION</th>
+            <th className='font-normal pl-2'>SUGGESTION</th>
             <th className='font-normal'>PAGE NUMBER</th>
             <th className='font-normal'>ACTION TAKEN</th>
-            <th className='font-normal'>REMARKS</th>
-            {editable && <th className="font-normal">ACTIONS</th>}
+            <th className={`font-normal ${editable ? "" : "pr-2"}`}>REMARKS</th>
+            {editable && <th className='font-normal pr-2'>ACTIONS</th>}
           </tr>
         </thead>
-        <tbody className="text-palette_grey">
+        <tbody className='text-palette_grey'>
           {peerSuggestionItems.peerSuggestionItems.map((peerSuggestionItem) => {
             return (
               <Item
@@ -75,18 +55,6 @@ export default function IMPeerSuggestionItems({
           })}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1 text-sm p-1'>
-        <p>
-          {state.skip} - {state.skip + state.take} of{" "}
-          {peerSuggestionItems.count}
-        </p>
-        <button className='border rounded' onClick={handlePrev}>
-          prev
-        </button>
-        <button className='border rounded' onClick={handleNext}>
-          next
-        </button>
-      </div>
     </div>
   );
 }
@@ -105,17 +73,20 @@ function Item({
 
   return (
     <tr>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(peerSuggestionItem.updatedAt)
-        ).toRelative()}
+      <td className={`pl-2 ${editable ? "w-1/4" : "w-3/10"}`}>
+        {peerSuggestionItem.suggestion}
       </td>
-      <td>{peerSuggestionItem.suggestion}</td>
-      <td className='text-center'>{peerSuggestionItem.pageNumber}</td>
-      <td>{peerSuggestionItemActionTaken?.value}</td>
-      <td>{peerSuggestionItem.remarks}</td>
+      <td className={`text-center ${editable ? "w-1/8" : "w-1/10"}`}>
+        {peerSuggestionItem.pageNumber}
+      </td>
+      <td className={`${editable ? "w-1/4" : "w-3/10"}`}>
+        {peerSuggestionItemActionTaken?.value}
+      </td>
+      <td className={`${editable ? "w-1/4" : "w-3/10 pr-2"}`}>
+        {peerSuggestionItem.remarks}
+      </td>
       {editable && (
-        <td>
+        <td className='w-1/8 pr-2'>
           <EditSuggestionItemActionTaken
             peerSuggestionItem={peerSuggestionItem}
           />
