@@ -815,7 +815,7 @@ export default function ViewIM() {
                 id={iM.id}
                 editable={false}
               />
-              <div className="space-x-1">
+              <div className='space-x-1'>
                 <button
                   className='rounded bg-palette_blue text-palette_white px-2 py-1'
                   onClick={iMERCIDDCoordinatorEndorsementHandler}
@@ -956,6 +956,30 @@ function ActionMenu({
               role='menuitem'
             >
               Track
+            </Link>
+            <Link
+              href={`/api/im_file/im/${iM.id}/pdf`}
+              target='_blank'
+              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+              role='menuitem'
+            >
+              View IM PDF
+            </Link>
+            <Link
+              href={`/api/qamis_file/im/${iM.id}/pdf`}
+              target='_blank'
+              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+              role='menuitem'
+            >
+              View QAMIS PDF
+            </Link>
+            <Link
+              href={`/api/plagiarism_file/im/${iM.id}/pdf`}
+              target='_blank'
+              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+              role='menuitem'
+            >
+              View Plagiarism PDF
             </Link>
             {iM.facultyId === activeFaculty?.facultyId &&
               iMStatus === "IMPLEMENTATION_DRAFT" && (
