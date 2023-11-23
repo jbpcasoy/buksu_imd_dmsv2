@@ -43,7 +43,10 @@ export default function IMQAMISSuggestionItems({
           {qAMISSuggestionItems.qAMISSuggestionItems.map(
             (qAMISSuggestionItem) => {
               return (
-                <tr key={qAMISSuggestionItem.id}>
+                <tr
+                  className='border-t border-b last:border-b-0'
+                  key={qAMISSuggestionItem.id}
+                >
                   <td className={`pl-2 ${editable ? "w-1/4" : "w-3/10"}`}>
                     {qAMISSuggestionItem.suggestion}
                   </td>

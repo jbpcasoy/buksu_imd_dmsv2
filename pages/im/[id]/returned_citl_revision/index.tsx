@@ -14,7 +14,6 @@ import useSubmittedReturnedCITLRevisionReturnedCITLRevision from "@/hooks/useSub
 import { ReturnedCITLRevision } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -29,7 +28,7 @@ export default function ReturnedCITLRevisionPage() {
   const [state, setState] =
     useState<useReturnedCITLRevisionSuggestionItemsIMParams>({
       skip: 0,
-      take: 10,
+      take: 999,
     });
   const cITLRevision = useCITLRevisionIM({ id: iMId as string });
   const submittedReturnedCITLRevision =
@@ -41,25 +40,6 @@ export default function ReturnedCITLRevisionPage() {
       ...state,
       id: returnedCITLRevision?.id,
     });
-  const handleNext = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return {
-        ...prev,
-        skip:
-          nextVal <= returnedCITLRevisionSuggestionItems.count
-            ? nextVal
-            : prev.skip,
-      };
-    });
-  };
-
-  const handlePrev = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
-  };
   const handleSubmitSuggestions = () => {
     if (!returnedCITLRevision) return;
     axios
@@ -183,79 +163,82 @@ export default function ReturnedCITLRevisionPage() {
 
   return (
     <MainLayout>
-      <div className="space-y-1 p-1">
-        <div className='flex justify-between'>
-          <div>
-            <h2 className='inline text-lg font-bold'>
-              Instructional Material Review{" "}
-              <span className='bg-palette_orange text-palette_white p-1 rounded'>
-                Returned CITL Revision
-              </span>
-            </h2>
-            <p className='text-sm'>Implementation Phase</p>
+      <div className='flex space-x-1 h-full overflow-auto'>
+        <div className='space-y-1 flex-1 flex flex-col h-full overflow-auto'>
+          <div className='flex justify-between'>
+            <div>
+              <h2 className='inline text-lg font-bold'>
+                Instructional Material Review{" "}
+                <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                  Returned CITL Revision
+                </span>
+              </h2>
+              <p className='text-sm'>Implementation Phase</p>
+            </div>
+
+            <div>
+              <AddSuggestion />
+            </div>
           </div>
 
-          <div>
-            <AddSuggestion />
+          <div className='flex-1 h-full overflow-auto space-y-1'>
+            <div>
+              <table className='text-sm w-full'>
+                <caption>SUGGESTIONS</caption>
+                <thead>
+                  <tr>
+                    <th>SUGGESTION</th>
+                    <th>PAGE NUMBER</th>
+                    <th>ACTION TAKEN</th>
+                    <th>REMARKS</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {returnedCITLRevisionSuggestionItems.returnedCITLRevisionSuggestionItems.map(
+                    (returnedCITLRevisionSuggestionItem) => {
+                      return (
+                        <ReturnedCITLRevisionItem
+                          returnedCITLRevisionSuggestionItem={
+                            returnedCITLRevisionSuggestionItem
+                          }
+                          key={returnedCITLRevisionSuggestionItem.id}
+                        />
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className='space-y-1'>
+              <IMCoordinatorSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+              <IMPeerSuggestionItems id={iMId as string} editable={false} />
+              <IMChairpersonSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+              <IMReturnedCITLRevisionSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+            </div>
+            <button
+              className='rounded bg-palette_blue text-palette_white px-2 py-1'
+              onClick={handleSubmitSuggestions}
+            >
+              Submit Review
+            </button>
           </div>
         </div>
-
-        <div>
-          <table className='text-sm w-full'>
-            <caption>SUGGESTIONS</caption>
-            <thead>
-              <tr>
-                <th>LAST ACTIVITY</th>
-                <th>SUGGESTION</th>
-                <th>PAGE NUMBER</th>
-                <th>ACTION TAKEN</th>
-                <th>REMARKS</th>
-                <th>ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {returnedCITLRevisionSuggestionItems.returnedCITLRevisionSuggestionItems.map(
-                (returnedCITLRevisionSuggestionItem) => {
-                  return (
-                    <ReturnedCITLRevisionItem
-                      returnedCITLRevisionSuggestionItem={
-                        returnedCITLRevisionSuggestionItem
-                      }
-                      key={returnedCITLRevisionSuggestionItem.id}
-                    />
-                  );
-                }
-              )}
-            </tbody>
-          </table>
-          <div className='flex justify-end space-x-1'>
-            <p>
-              {state.skip} - {state.skip + state.take} of{" "}
-              {returnedCITLRevisionSuggestionItems.count}
-            </p>
-            <button className='border rounded' onClick={handlePrev}>
-              prev
-            </button>
-            <button className='border rounded' onClick={handleNext}>
-              next
-            </button>
-          </div>
-        </div>
-        <div className="space-y-1">
-          <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
-          <IMPeerSuggestionItems id={iMId as string} editable={false} />
-          <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
-          <IMReturnedCITLRevisionSuggestionItems
-            id={iMId as string}
-            editable={false}
+        <div className='flex-1'>
+          <iframe
+            src={`/api/im_file/im/${iMId}/pdf`}
+            className='w-full h-full rounded'
           />
         </div>
-        <button
-          className='rounded bg-palette_blue text-palette_white px-2 py-1'
-          onClick={handleSubmitSuggestions}
-        >
-          Submit Review
-        </button>
       </div>
     </MainLayout>
   );

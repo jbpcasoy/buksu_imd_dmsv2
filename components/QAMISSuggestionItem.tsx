@@ -30,16 +30,11 @@ export default function QAMISSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(qAMISSuggestionItem.updatedAt)
-        ).toRelative()}
-      </td>
-      <td>{qAMISSuggestionItem.suggestion}</td>
-      <td>{qAMISSuggestionItem.pageNumber}</td>
-      <td>{qAMISSuggestionItem.actionTaken}</td>
-      <td className='text-center'>{qAMISSuggestionItem.remarks}</td>
-      <td className=''>
+      <td className='w-1/4'>{qAMISSuggestionItem.suggestion}</td>
+      <td className='text-center w-1/8'>{qAMISSuggestionItem.pageNumber}</td>
+      <td className='w-1/4'>{qAMISSuggestionItem.actionTaken}</td>
+      <td className='w-1/4'>{qAMISSuggestionItem.remarks}</td>
+      <td className='w-1/8'>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem qAMISSuggestionItem={qAMISSuggestionItem} />
           <button

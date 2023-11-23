@@ -14,7 +14,6 @@ import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecia
 import { IDDSpecialistSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -31,7 +30,7 @@ export default function IDDSpecialistSuggestionPage() {
     useSubmittedIDDSpecialistSuggestionIM({ id: iMId as string });
   const [state, setState] = useState<useIDDSpecialistSuggestionItemsOwnParams>({
     skip: 0,
-    take: 10,
+    take: 999,
   });
   const iDDSpecialistSuggestionItems =
     useIDDSpecialistSuggestionItemsOwn(state);
@@ -58,24 +57,6 @@ export default function IDDSpecialistSuggestionPage() {
       id: iDDSpecialistSuggestion.id,
     }));
   }, [iDDSpecialistSuggestion]);
-
-  const handleNext = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return {
-        ...prev,
-        skip:
-          nextVal <= iDDSpecialistSuggestionItems.count ? nextVal : prev.skip,
-      };
-    });
-  };
-
-  const handlePrev = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
-  };
 
   useEffect(() => {
     if (submittedIDDSpecialistSuggestion && iMERCCITLRevision) {
@@ -177,74 +158,77 @@ export default function IDDSpecialistSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className="space-y-1 px-1">
-        <div className='flex justify-between'>
-          <div>
-            <h2 className='inline text-lg font-bold'>
-              Instructional Material Review{" "}
-              <span className='bg-palette_orange text-palette_white p-1 rounded'>
-                IDD Specialist Specialist
-              </span>
-            </h2>
-            <p className='text-sm'>IMERC Phase</p>
+      <div className='flex space-x-1 h-full overflow-auto'>
+        <div className='space-y-1 flex-1 flex flex-col h-full overflow-auto'>
+          <div className='flex justify-between'>
+            <div>
+              <h2 className='inline text-lg font-bold'>
+                Instructional Material Review{" "}
+                <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                  IDD Specialist Specialist
+                </span>
+              </h2>
+              <p className='text-sm'>IMERC Phase</p>
+            </div>
+            <div>
+              <AddSuggestionItem />
+            </div>
           </div>
-          <div>
-            <AddSuggestionItem />
-          </div>
-        </div>
-        <div>
-          <table className='w-full text-sm'>
-            <caption>IDD Specialist Suggestions</caption>
-            <thead>
-              <tr>
-                <th>LAST ACTIVITY</th>
-                <th>SUGGESTION</th>
-                <th>PAGE NUMBER</th>
-                <th>ACTION TAKEN</th>
-                <th>REMARKS</th>
-                <th>ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map(
-                (iDDSpecialistSuggestionItem) => {
-                  return (
-                    <IDDSpecialistSuggestionItem
-                      iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
-                      key={iDDSpecialistSuggestionItem.id}
-                    />
-                  );
-                }
-              )}
-            </tbody>
-          </table>
-          <div className='flex justify-end space-x-1'>
-            <p>
-              {state.skip} - {state.skip + state.take} of{" "}
-              {iDDSpecialistSuggestionItems.count}
-            </p>
-            <button className='border rounded' onClick={handlePrev}>
-              prev
+
+          <div className='flex-1 h-full overflow-auto space-y-1'>
+            <div>
+              <table className='w-full text-sm'>
+                <caption>IDD Specialist Suggestions</caption>
+                <thead>
+                  <tr>
+                    <th>SUGGESTION</th>
+                    <th>PAGE NUMBER</th>
+                    <th>ACTION TAKEN</th>
+                    <th>REMARKS</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map(
+                    (iDDSpecialistSuggestionItem) => {
+                      return (
+                        <IDDSpecialistSuggestionItem
+                          iDDSpecialistSuggestionItem={
+                            iDDSpecialistSuggestionItem
+                          }
+                          key={iDDSpecialistSuggestionItem.id}
+                        />
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className='space-y-1'>
+              <IMQAMISSuggestionItems id={iMId as string} editable={false} />
+              <IMContentSpecialistSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+              <IMContentEditorSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+            </div>
+            <button
+              className='bg-palette_blue text-palette_white px-2 py-1 rounded'
+              onClick={handleSubmitReview}
+            >
+              Submit Review
             </button>
-            <button className='border rounded' onClick={handleNext}>
-              next
-            </button>
           </div>
         </div>
-        <div className="space-y-1">
-          <IMQAMISSuggestionItems id={iMId as string} editable={false} />
-          <IMContentSpecialistSuggestionItems
-            id={iMId as string}
-            editable={false}
-          />
-          <IMContentEditorSuggestionItems
-            id={iMId as string}
-            editable={false}
+        <div className='flex-1'>
+          <iframe
+            src={`/api/im_file/im/${iMId}/pdf`}
+            className='w-full h-full rounded'
           />
         </div>
-          <button className='bg-palette_blue text-palette_white px-2 py-1 rounded' onClick={handleSubmitReview}>
-            Submit Review
-          </button>
       </div>
     </MainLayout>
   );

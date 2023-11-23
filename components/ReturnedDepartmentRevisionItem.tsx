@@ -32,16 +32,19 @@ export default function ReturnedDepartmentRevisionSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(returnedDepartmentRevisionSuggestionItem.updatedAt)
-        ).toRelative()}
+      <td className='w-1/4'>
+        {returnedDepartmentRevisionSuggestionItem.suggestion}
       </td>
-      <td>{returnedDepartmentRevisionSuggestionItem.suggestion}</td>
-      <td>{returnedDepartmentRevisionSuggestionItem.pageNumber}</td>
-      <td>{returnedDepartmentRevisionSuggestionItem.actionTaken}</td>
-      <td>{returnedDepartmentRevisionSuggestionItem.remarks}</td>
-      <td className=''>
+      <td className='w-1/8 text-center'>
+        {returnedDepartmentRevisionSuggestionItem.pageNumber}
+      </td>
+      <td className='w-1/4'>
+        {returnedDepartmentRevisionSuggestionItem.actionTaken}
+      </td>
+      <td className='w-1/4'>
+        {returnedDepartmentRevisionSuggestionItem.remarks}
+      </td>
+      <td className='w-1/8'>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem
             returnedDepartmentRevisionSuggestionItem={

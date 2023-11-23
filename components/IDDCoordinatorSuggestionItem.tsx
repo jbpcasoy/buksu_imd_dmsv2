@@ -34,16 +34,13 @@ export default function IDDCoordinatorSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(iDDCoordinatorSuggestionItem.updatedAt)
-        ).toRelative()}
+      <td className='w-1/4'>{iDDCoordinatorSuggestionItem.suggestion}</td>
+      <td className='text-center w-1/8'>
+        {iDDCoordinatorSuggestionItem.pageNumber}
       </td>
-      <td>{iDDCoordinatorSuggestionItem.suggestion}</td>
-      <td className='text-center'>{iDDCoordinatorSuggestionItem.pageNumber}</td>
-      <td>{iDDCoordinatorSuggestionItem.actionTaken}</td>
-      <td>{iDDCoordinatorSuggestionItem.remarks}</td>
-      <td className=''>
+      <td className='w-1/4'>{iDDCoordinatorSuggestionItem.actionTaken}</td>
+      <td className='w-1/4'>{iDDCoordinatorSuggestionItem.remarks}</td>
+      <td className='w-1/8'>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem
             iDDCoordinatorSuggestionItem={iDDCoordinatorSuggestionItem}

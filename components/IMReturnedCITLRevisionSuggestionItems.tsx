@@ -21,7 +21,7 @@ export default function IMReturnedCITLRevisionSuggestionItems({
 }: IMReturnedCITLRevisionSuggestionItemsProps) {
   const [state, setState] = useState({
     skip: 0,
-    take: 10,
+    take: 999,
     id,
   });
 
@@ -32,26 +32,6 @@ export default function IMReturnedCITLRevisionSuggestionItems({
     setState((prev) => ({ ...prev, id }));
   }, [id]);
 
-  const handleNext = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return {
-        ...prev,
-        skip:
-          nextVal <= returnedCITLRevisionSuggestionItems.count
-            ? nextVal
-            : prev.skip,
-      };
-    });
-  };
-
-  const handlePrev = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
-  };
-
   return (
     <div className='border border-palette_orange rounded'>
       <table className='w-full text-sm'>
@@ -60,7 +40,6 @@ export default function IMReturnedCITLRevisionSuggestionItems({
         </caption>
         <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
           <tr>
-            <th className='font-normal'>LAST ACTIVITY</th>
             <th className='font-normal'>SUGGESTION</th>
             <th className='font-normal'>PAGE NUMBER</th>
             <th className='font-normal'>ACTION TAKEN</th>
@@ -68,7 +47,7 @@ export default function IMReturnedCITLRevisionSuggestionItems({
             {editable && <th className='font-normal'>ACTIONS</th>}
           </tr>
         </thead>
-        <tbody className="text-palette_grey">
+        <tbody className='text-palette_grey'>
           {returnedCITLRevisionSuggestionItems.returnedCITLRevisionSuggestionItems.map(
             (returnedCITLRevisionSuggestionItem) => {
               return (
@@ -84,18 +63,6 @@ export default function IMReturnedCITLRevisionSuggestionItems({
           )}
         </tbody>
       </table>
-      <div className='flex justify-end space-x-1 p-1'>
-        <p>
-          {state.skip} - {state.skip + state.take} of{" "}
-          {returnedCITLRevisionSuggestionItems.count}
-        </p>
-        <button className='border rounded' onClick={handlePrev}>
-          prev
-        </button>
-        <button className='border rounded' onClick={handleNext}>
-          next
-        </button>
-      </div>
     </div>
   );
 }
@@ -115,20 +82,21 @@ function Item({
     );
 
   return (
-    <tr>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(returnedCITLRevisionSuggestionItem.updatedAt)
-        ).toRelative()}
+    <tr className='border-t border-b last:border-b-0'>
+      <td className={`pl-2 ${editable ? "w-1/4" : "w-3/10"}`}>
+        {returnedCITLRevisionSuggestionItem.suggestion}
       </td>
-      <td>{returnedCITLRevisionSuggestionItem.suggestion}</td>
-      <td className='text-center'>
+      <td className={`text-center ${editable ? "w-1/8" : "w-1/10"}`}>
         {returnedCITLRevisionSuggestionItem.pageNumber}
       </td>
-      <td>{returnedCITLRevisionSuggestionItemActionTaken?.value}</td>
-      <td>{returnedCITLRevisionSuggestionItem.remarks}</td>
+      <td className={`${editable ? "w-1/4" : "w-3/10"}`}>
+        {returnedCITLRevisionSuggestionItemActionTaken?.value}
+      </td>
+      <td className={`${editable ? "w-1/4" : "w-3/10 pr-2"}`}>
+        {returnedCITLRevisionSuggestionItem.remarks}
+      </td>
       {editable && (
-        <td>
+        <td className='w-1/8 pr-2'>
           <EditSuggestionItemActionTaken
             returnedCITLRevisionSuggestionItem={
               returnedCITLRevisionSuggestionItem

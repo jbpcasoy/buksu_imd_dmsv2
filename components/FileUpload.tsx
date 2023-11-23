@@ -39,9 +39,9 @@ function FileUpload({
   };
 
   return (
-    <div className='my-1 w-full'>
+    <div className='my-1 '>
       {!state?.filePreview && (
-        <>
+        <div className="">
           <input
             hidden={true}
             id='implementation_draft_upload'
@@ -58,10 +58,10 @@ function FileUpload({
           >
             <span className='text-palette_grey text-sm'>{label}</span>
           </label>
-        </>
+        </div>
       )}
       {state?.filePreview && (
-        <div className='flex flex-col'>
+        <div className='flex flex-col w-full'>
           <div className='flex justify-end'>
             <button
               className='bg-palette_blue text-palette_white px-1 rounded mb-1'
@@ -72,7 +72,7 @@ function FileUpload({
           </div>
           <iframe
             src={state.filePreview}
-            className='w-full h-screen-3/4'
+            className='w-full h-screen-3/4 rounded'
           ></iframe>
         </div>
       )}

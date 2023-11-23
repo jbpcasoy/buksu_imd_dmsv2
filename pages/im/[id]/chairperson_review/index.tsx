@@ -139,7 +139,7 @@ export default function AddChairpersonReviewPage() {
         </div>
 
         <div className='flex-1 overflow-auto'>
-          <div className='flex h-full'>
+          <div className='flex h-full space-x-1'>
             <div className='flex-1 overflow-auto'>
               <form onSubmit={formik.handleSubmit} className=''>
                 <div className='space-y-2 mx-1'>
@@ -281,10 +281,10 @@ export default function AddChairpersonReviewPage() {
                 </div>
               </form>
             </div>
-            <div className='flex-1 sticky top-0'>
+            <div className='flex-1'>
               <iframe
                 src={`/api/im_file/im/${iMId}/pdf`}
-                className='w-full h-full'
+                className='w-full h-full rounded'
               />
             </div>
           </div>

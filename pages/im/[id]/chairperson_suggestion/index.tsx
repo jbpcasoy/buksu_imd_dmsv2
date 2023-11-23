@@ -1,5 +1,4 @@
 import ChairpersonSuggestionItemComponent from "@/components/ChairpersonSuggestionItem";
-import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import MainLayout from "@/components/MainLayout";
@@ -14,7 +13,6 @@ import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairperson
 import { ChairpersonSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -28,29 +26,14 @@ export default function ChairpersonSuggestionPage() {
   const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
   const [state, setState] = useState<useChairpersonSuggestionItemsOwnParams>({
     skip: 0,
-    take: 10,
+    take: 999,
   });
   const departmentRevision = useDepartmentRevisionIM({ id: iMId as string });
   const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
     id: iMId as string,
   });
   const chairpersonSuggestionItems = useChairpersonSuggestionItemsOwn(state);
-  const handleNext = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return {
-        ...prev,
-        skip: nextVal <= chairpersonSuggestionItems.count ? nextVal : prev.skip,
-      };
-    });
-  };
 
-  const handlePrev = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
-  };
   const handleSubmitReview = () => {
     if (!chairpersonSuggestion) return;
     axios
@@ -174,68 +157,71 @@ export default function ChairpersonSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className="space-y-1">
-        <div className='flex justify-between'>
-          <div>
-            <h2 className='inline text-lg font-bold'>
-              Instructional Material Review{" "}
-              <span className='bg-palette_orange text-palette_white p-1 rounded'>
-                Chairperson
-              </span>
-            </h2>
-            <p className='text-sm'>Implementation Phase</p>
+      <div className='flex space-x-1 h-full overflow-auto'>
+        <div className='space-y-1 flex-1 flex flex-col h-full overflow-auto'>
+          <div className='flex justify-between'>
+            <div>
+              <h2 className='inline text-lg font-bold'>
+                Instructional Material Review{" "}
+                <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                  Chairperson
+                </span>
+              </h2>
+              <p className='text-sm'>Implementation Phase</p>
+            </div>
+            <div>
+              <AddSuggestionItem />
+            </div>
           </div>
-          <div>
-            <AddSuggestionItem />
-          </div>
-        </div>
 
-        <div>
-          <table className='text-sm w-full'>
-            <caption className='text-xs'>CHAIRPERSON SUGGESTIONS</caption>
-            <thead>
-              <tr>
-                <th>LAST ACTIVITY</th>
-                <th>SUGGESTION</th>
-                <th>PAGE NUMBER</th>
-                <th>ACTION TAKEN</th>
-                <th>REMARKS</th>
-                <th>ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
-                (chairpersonSuggestionItem) => {
-                  return (
-                    <ChairpersonSuggestionItemComponent
-                      chairpersonSuggestionItem={chairpersonSuggestionItem}
-                      key={chairpersonSuggestionItem.id}
-                    />
-                  );
-                }
-              )}
-            </tbody>
-          </table>
-          <div className='flex justify-end space-x-1'>
-            <p>
-              {state.skip} - {state.skip + state.take} of{" "}
-              {chairpersonSuggestionItems.count}
-            </p>
-            <button className='border rounded' onClick={handlePrev}>
-              prev
-            </button>
-            <button className='border rounded' onClick={handleNext}>
-              next
+          <div className='flex-1 h-full overflow-auto space-y-1'>
+            <div>
+              <table className='text-sm w-full'>
+                <caption className='text-xs'>CHAIRPERSON SUGGESTIONS</caption>
+                <thead>
+                  <tr>
+                    <th>SUGGESTION</th>
+                    <th>PAGE NUMBER</th>
+                    <th>ACTION TAKEN</th>
+                    <th>REMARKS</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
+                    (chairpersonSuggestionItem) => {
+                      return (
+                        <ChairpersonSuggestionItemComponent
+                          chairpersonSuggestionItem={chairpersonSuggestionItem}
+                          key={chairpersonSuggestionItem.id}
+                        />
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className='space-y-1'>
+              <IMPeerSuggestionItems id={iMId as string} editable={false} />
+              <IMCoordinatorSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+            </div>
+            <button
+              className='rounded bg-palette_blue text-palette_white px-2 py-1'
+              onClick={handleSubmitReview}
+            >
+              Submit Review
             </button>
           </div>
         </div>
-        <div className="space-y-1">
-          <IMPeerSuggestionItems id={iMId as string} editable={false} />
-          <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
+        <div className='flex-1'>
+          <iframe
+            src={`/api/im_file/im/${iMId}/pdf`}
+            className='w-full h-full rounded'
+          />
         </div>
-        <button className='rounded bg-palette_blue text-palette_white px-2 py-1' onClick={handleSubmitReview}>
-          Submit Review
-        </button>
       </div>
     </MainLayout>
   );

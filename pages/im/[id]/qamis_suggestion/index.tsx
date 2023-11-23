@@ -13,7 +13,6 @@ import useSubmittedQAMISSuggestionIM from "@/hooks/useSubmittedQAMISSuggestionIM
 import { QAMISSuggestion, SubmittedQAMISSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -35,7 +34,7 @@ export default function QAMISSuggestionPage() {
   });
   const [state, setState] = useState<useQAMISSuggestionItemsOwnParams>({
     skip: 0,
-    take: 10,
+    take: 999,
   });
   const qAMISSuggestionItems = useQAMISSuggestionItemsOwn(state);
   const [files, setFiles] = useState<{ iMFile?: File; qAMISFile?: File }>({
@@ -45,16 +44,6 @@ export default function QAMISSuggestionPage() {
   useEffect(() => {
     console.log({ files });
   }, [files]);
-
-  const onIMFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setFiles((prev) => ({ ...prev, iMFile: e.target.files?.item(0) as File }));
-  };
-  const onQAMISFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setFiles((prev) => ({
-      ...prev,
-      qAMISFile: e.target.files?.item(0) as File,
-    }));
-  };
 
   const uploadFiles = async (submittedQAMISSuggestionId: string) => {
     console.log({ state });
@@ -117,23 +106,6 @@ export default function QAMISSuggestionPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submittedQAMISSuggestion, iMId]);
-
-  const handleNext = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return {
-        ...prev,
-        skip: nextVal <= qAMISSuggestionItems.count ? nextVal : prev.skip,
-      };
-    });
-  };
-
-  const handlePrev = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
-  };
 
   const AddSuggestionItem = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -233,100 +205,97 @@ export default function QAMISSuggestionPage() {
 
   return (
     <MainLayout>
-      <div>
-        <div className='flex justify-between'>
-          <div>
-            <h2 className='inline text-lg font-bold'>
-              Instructional Material Review{" "}
-              <span className='bg-palette_orange text-palette_white p-1 rounded'>
-                QAMIS
-              </span>
-            </h2>
-            <p className='text-sm'>IMERC Phase</p>
+      <div className='flex space-x-1 h-full overflow-auto'>
+        <div className='space-y-1 flex-1 flex flex-col h-full overflow-auto'>
+          <div className='flex justify-between'>
+            <div>
+              <h2 className='inline text-lg font-bold'>
+                Instructional Material Review{" "}
+                <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                  QAMIS
+                </span>
+              </h2>
+              <p className='text-sm'>IMERC Phase</p>
+            </div>
+            <div>
+              <AddSuggestionItem />
+            </div>
           </div>
-          <div>
-            <AddSuggestionItem />
-          </div>
-        </div>
 
-        <div>
-          <table className='w-full text-sm'>
-            <caption>QAMIS Suggestions</caption>
-            <thead>
-              <tr>
-                <th>LAST ACTIVITY</th>
-                <th>SUGGESTION</th>
-                <th>PAGE NUMBER</th>
-                <th>ACTION TAKEN</th>
-                <th>REMARKS</th>
-                <th>ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {qAMISSuggestionItems.qAMISSuggestionItems.map(
-                (qAMISSuggestionItem) => {
-                  return (
-                    <QAMISSuggestionItem
-                      qAMISSuggestionItem={qAMISSuggestionItem}
-                      key={qAMISSuggestionItem.id}
-                    />
-                  );
-                }
-              )}
-            </tbody>
-          </table>
-          <div className='flex justify-end space-x-1'>
-            <p>
-              {state.skip} - {state.skip + state.take} of{" "}
-              {qAMISSuggestionItems.count}
-            </p>
-            <button className='border rounded' onClick={handlePrev}>
-              prev
-            </button>
-            <button className='border rounded' onClick={handleNext}>
-              next
+          <div className='flex-1 h-full overflow-auto space-x-1 p-1'>
+            <div>
+              <table className='w-full text-sm'>
+                <caption>QAMIS Suggestions</caption>
+                <thead>
+                  <tr>
+                    <th>SUGGESTION</th>
+                    <th>PAGE NUMBER</th>
+                    <th>ACTION TAKEN</th>
+                    <th>REMARKS</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {qAMISSuggestionItems.qAMISSuggestionItems.map(
+                    (qAMISSuggestionItem) => {
+                      return (
+                        <QAMISSuggestionItem
+                          qAMISSuggestionItem={qAMISSuggestionItem}
+                          key={qAMISSuggestionItem.id}
+                        />
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className='flex flex-col space-x-1'>
+              <FileUpload
+                label='UPLOAD QAMIS FILE'
+                onFileChange={(e) => {
+                  setFiles((prev) => ({
+                    ...prev,
+                    iMFile: e.target.files?.item(0) as File,
+                  }));
+                }}
+                onFileReset={() => {
+                  setState((prev) => ({
+                    ...prev,
+                    iMFile: undefined,
+                  }));
+                }}
+              />
+              <FileUpload
+                label='UPLOAD IM FILE'
+                onFileChange={(e) => {
+                  setFiles((prev) => ({
+                    ...prev,
+                    qAMISFile: e.target.files?.item(0) as File,
+                  }));
+                }}
+                onFileReset={() => {
+                  setState((prev) => ({
+                    ...prev,
+                    qAMISFile: undefined,
+                  }));
+                }}
+              />
+            </div>
+            <button
+              className='rounded bg-palette_blue text-palette_white px-2 py-1'
+              onClick={handleSubmitSuggestion}
+            >
+              Submit for endorsement
             </button>
           </div>
         </div>
-
-        <div className='flex w-full space-x-1'>
-          <FileUpload
-            label='UPLOAD QAMIS FILE'
-            onFileChange={(e) => {
-              setFiles((prev) => ({
-                ...prev,
-                iMFile: e.target.files?.item(0) as File,
-              }));
-            }}
-            onFileReset={() => {
-              setState((prev) => ({
-                ...prev,
-                iMFile: undefined,
-              }));
-            }}
-          />
-          <FileUpload
-            label='UPLOAD IM FILE'
-            onFileChange={(e) => {
-              setFiles((prev) => ({
-                ...prev,
-                qAMISFile: e.target.files?.item(0) as File,
-              }));
-            }}
-            onFileReset={() => {
-              setState((prev) => ({
-                ...prev,
-                qAMISFile: undefined,
-              }));
-            }}
+        <div className='flex-1'>
+          <iframe
+            src={`/api/im_file/im/${iMId}/pdf`}
+            className='w-full h-full rounded'
           />
         </div>
-        <button
-          className='rounded bg-palette_blue text-palette_white px-2 py-1'
-          onClick={handleSubmitSuggestion}
-        >
-          Submit for endorsement
-        </button>
       </div>
     </MainLayout>
   );

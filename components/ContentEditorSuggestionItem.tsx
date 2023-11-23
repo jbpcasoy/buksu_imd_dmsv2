@@ -33,16 +33,13 @@ export default function ContentEditorSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(contentEditorSuggestionItem.updatedAt)
-        ).toRelative()}
+      <td className='w-1/4'>{contentEditorSuggestionItem.suggestion}</td>
+      <td className='text-center w-1/8'>
+        {contentEditorSuggestionItem.pageNumber}
       </td>
-      <td>{contentEditorSuggestionItem.suggestion}</td>
-      <td className='text-center'>{contentEditorSuggestionItem.pageNumber}</td>
-      <td>{contentEditorSuggestionItem.actionTaken}</td>
-      <td>{contentEditorSuggestionItem.remarks}</td>
-      <td className=''>
+      <td className='w-1/4'>{contentEditorSuggestionItem.actionTaken}</td>
+      <td className='w-1/4'>{contentEditorSuggestionItem.remarks}</td>
+      <td className='w-1/8'>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem
             contentEditorSuggestionItem={contentEditorSuggestionItem}

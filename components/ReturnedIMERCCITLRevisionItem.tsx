@@ -33,16 +33,19 @@ export default function ReturnedIMERCCITLRevisionSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(returnedIMERCCITLRevisionSuggestionItem.updatedAt)
-        ).toRelative()}
+      <td className='w-1/4'>
+        {returnedIMERCCITLRevisionSuggestionItem.suggestion}
       </td>
-      <td>{returnedIMERCCITLRevisionSuggestionItem.suggestion}</td>
-      <td>{returnedIMERCCITLRevisionSuggestionItem.pageNumber}</td>
-      <td>{returnedIMERCCITLRevisionSuggestionItem.actionTaken}</td>
-      <td>{returnedIMERCCITLRevisionSuggestionItem.remarks}</td>
-      <td className=''>
+      <td className='text-center w-1/8'>
+        {returnedIMERCCITLRevisionSuggestionItem.pageNumber}
+      </td>
+      <td className='w-1/4'>
+        {returnedIMERCCITLRevisionSuggestionItem.actionTaken}
+      </td>
+      <td className='w-1/4'>
+        {returnedIMERCCITLRevisionSuggestionItem.remarks}
+      </td>
+      <td className='w-1/8'>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem
             returnedIMERCCITLRevisionSuggestionItem={
@@ -133,7 +136,11 @@ function EditSuggestionItem({
                 {...formik.getFieldProps("remarks")}
                 className='rounded'
               />
-              <input type='submit' value='Submit' className='bg-palette_blue text-palette_white py-1 rounded' />
+              <input
+                type='submit'
+                value='Submit'
+                className='bg-palette_blue text-palette_white py-1 rounded'
+              />
             </div>
           </form>
         </Modal>

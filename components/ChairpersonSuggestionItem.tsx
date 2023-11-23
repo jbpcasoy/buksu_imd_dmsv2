@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import Modal from "./Modal";
-import { DateTime } from "luxon";
 
 export interface ChairpersonSuggestionItemProps {
   chairpersonSuggestionItem: ChairpersonSuggestionItem;
@@ -32,16 +31,13 @@ export default function ChairpersonSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(chairpersonSuggestionItem.updatedAt)
-        ).toRelative()}
+      <td className='w-1/4'>{chairpersonSuggestionItem.suggestion}</td>
+      <td className='text-center w-1/8'>
+        {chairpersonSuggestionItem.pageNumber}
       </td>
-      <td>{chairpersonSuggestionItem.suggestion}</td>
-      <td className="text-center">{chairpersonSuggestionItem.pageNumber}</td>
-      <td>{chairpersonSuggestionItem.actionTaken}</td>
-      <td>{chairpersonSuggestionItem.remarks}</td>
-      <td className=''>
+      <td className='w-1/4'>{chairpersonSuggestionItem.actionTaken}</td>
+      <td className='w-1/4'>{chairpersonSuggestionItem.remarks}</td>
+      <td className='w-1/8'>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem
             chairpersonSuggestionItem={chairpersonSuggestionItem}
@@ -110,10 +106,7 @@ function EditSuggestionItem({
         Edit
       </button>
       {openEdit && (
-        <Modal
-          title='Edit Suggestion Item'
-          onClose={() => setOpenEdit(false)}
-        >
+        <Modal title='Edit Suggestion Item' onClose={() => setOpenEdit(false)}>
           <form noValidate onSubmit={formik.handleSubmit}>
             <div className='flex flex-col space-y-1'>
               <textarea

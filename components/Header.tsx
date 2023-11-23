@@ -1,9 +1,11 @@
 import useAnnouncements from "@/hooks/useAnnouncements";
 import useEventCount from "@/hooks/useEventCount";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function Header() {
+  const router = useRouter();
   const eventCount = useEventCount();
   const [state, setState] = useState({
     skip: 0,
@@ -42,7 +44,7 @@ export default function Header() {
           Profile
         </Link>
       </div>
-      {announcements?.length > 0 && (
+      {announcements?.length > 0 && !router.pathname.startsWith("/im/[id]") && (
         <div className='flex justify-between items-center bg-palette_orange m-2 rounded p-1'>
           <button
             className='w-10 h-10 rounded-full bg-palette_grey bg-opacity-10 hover:bg-opacity-20 text-white'

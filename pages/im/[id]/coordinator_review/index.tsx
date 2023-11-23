@@ -1,19 +1,16 @@
 import MainLayout from "@/components/MainLayout";
-import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
+import ReviewItem from "@/components/ReviewItem";
+import ReviewSection from "@/components/ReviewSection";
+import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
+import useCoordinatorReviewIM from "@/hooks/useCoordinatorReviewIM";
 import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
-import useCoordinatorReviewMe from "@/hooks/useCoordinatorReviewMe";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
+import { useEffect } from "react";
 import * as Yup from "yup";
-import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
-import Link from "next/link";
-import useCoordinatorReviewIM from "@/hooks/useCoordinatorReviewIM";
-import ReviewItem from "@/components/ReviewItem";
-import ReviewSection from "@/components/ReviewSection";
 
 export default function AddCoordinatorReviewPage() {
   const router = useRouter();
@@ -142,7 +139,7 @@ export default function AddCoordinatorReviewPage() {
         </div>
 
         <div className='flex-1 overflow-auto'>
-          <div className='flex h-full'>
+          <div className='flex h-full space-x-1'>
             <div className='flex-1 overflow-auto'>
               <form onSubmit={formik.handleSubmit} className=''>
                 <div className='space-y-2 mx-1'>
@@ -284,10 +281,10 @@ export default function AddCoordinatorReviewPage() {
                 </div>
               </form>
             </div>
-            <div className='flex-1 sticky top-0'>
+            <div className='flex-1'>
               <iframe
                 src={`/api/im_file/im/${iMId}/pdf`}
-                className='w-full h-full'
+                className='w-full h-full rounded'
               />
             </div>
           </div>

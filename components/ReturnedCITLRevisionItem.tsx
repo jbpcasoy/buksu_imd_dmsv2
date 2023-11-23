@@ -33,18 +33,15 @@ export default function ReturnedCITLRevisionSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(returnedCITLRevisionSuggestionItem.updatedAt)
-        ).toRelative()}
-      </td>
-      <td>{returnedCITLRevisionSuggestionItem.suggestion}</td>
-      <td className='text-center'>
+      <td className='w-1/4'>{returnedCITLRevisionSuggestionItem.suggestion}</td>
+      <td className='text-center w-1/8'>
         {returnedCITLRevisionSuggestionItem.pageNumber}
       </td>
-      <td>{returnedCITLRevisionSuggestionItem.actionTaken}</td>
-      <td>{returnedCITLRevisionSuggestionItem.remarks}</td>
-      <td className=''>
+      <td className='w-1/4'>
+        {returnedCITLRevisionSuggestionItem.actionTaken}
+      </td>
+      <td className='w-1/4'>{returnedCITLRevisionSuggestionItem.remarks}</td>
+      <td className='w-1/8'>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem
             returnedCITLRevisionSuggestionItem={

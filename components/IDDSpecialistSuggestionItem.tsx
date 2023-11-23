@@ -32,16 +32,13 @@ export default function IDDSpecialistSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(iDDSpecialistSuggestionItem.updatedAt)
-        ).toRelative()}
+      <td className='w-1/4'>{iDDSpecialistSuggestionItem.suggestion}</td>
+      <td className='text-center w-1/8'>
+        {iDDSpecialistSuggestionItem.pageNumber}
       </td>
-      <td>{iDDSpecialistSuggestionItem.suggestion}</td>
-      <td className='text-center'>{iDDSpecialistSuggestionItem.pageNumber}</td>
-      <td>{iDDSpecialistSuggestionItem.actionTaken}</td>
-      <td>{iDDSpecialistSuggestionItem.remarks}</td>
-      <td className=''>
+      <td className='w-1/4'>{iDDSpecialistSuggestionItem.actionTaken}</td>
+      <td className='w-1/4'>{iDDSpecialistSuggestionItem.remarks}</td>
+      <td className='w-1/8'>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem
             iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
@@ -112,7 +109,7 @@ function EditSuggestionItem({
       {openEdit && (
         <Modal title='Edit Suggestion Item' onClose={() => setOpenEdit(false)}>
           <form noValidate onSubmit={formik.handleSubmit}>
-            <div className="flex flex-col space-y-1">
+            <div className='flex flex-col space-y-1'>
               <textarea
                 placeholder='Suggestion'
                 {...formik.getFieldProps("suggestion")}

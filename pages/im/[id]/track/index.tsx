@@ -101,6 +101,12 @@ export default function IMTrackingPage() {
 
   const nodes: Node<any, string | undefined>[] = [
     {
+      id: "0",
+      data: { label: "Empty" },
+      position: { x: 300, y: 10 },
+      hidden: Boolean(departmentReview),
+    },
+    {
       id: "1",
       data: { label: "Draft" },
       position: { x: 300, y: 10 },

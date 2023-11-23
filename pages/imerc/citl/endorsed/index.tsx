@@ -22,11 +22,13 @@ export default function IMERCCITLEndorsedPage() {
   const { iMs, count } = useIMERCCITLEndorsed(state);
 
   return (
-    <IMTable
-      count={count}
-      iMs={iMs}
-      title='Endorsed'
-      onChangeState={(state) => setState(state)}
-    />
+    <MainLayout>
+      <IMTable
+        count={count}
+        iMs={iMs}
+        title='Endorsed'
+        onChangeState={(state) => setState(state)}
+      />
+    </MainLayout>
   );
 }

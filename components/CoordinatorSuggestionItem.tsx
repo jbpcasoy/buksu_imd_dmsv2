@@ -32,16 +32,13 @@ export default function CoordinatorSuggestionItem({
   };
   return (
     <tr className=''>
-      <td>
-        {DateTime.fromJSDate(
-          new Date(coordinatorSuggestionItem.updatedAt)
-        ).toRelative()}
+      <td className='w-1/4'>{coordinatorSuggestionItem.suggestion}</td>
+      <td className='text-center w-1/8'>
+        {coordinatorSuggestionItem.pageNumber}
       </td>
-      <td>{coordinatorSuggestionItem.suggestion}</td>
-      <td className="text-center">{coordinatorSuggestionItem.pageNumber}</td>
-      <td>{coordinatorSuggestionItem.actionTaken}</td>
-      <td>{coordinatorSuggestionItem.remarks}</td>
-      <td className=''>
+      <td className='w-1/4'>{coordinatorSuggestionItem.actionTaken}</td>
+      <td className='w-1/4'>{coordinatorSuggestionItem.remarks}</td>
+      <td className='w-1/8'>
         <div className='flex flex-col space-y-1'>
           <EditSuggestionItem
             coordinatorSuggestionItem={coordinatorSuggestionItem}
@@ -110,10 +107,7 @@ function EditSuggestionItem({
         Edit
       </button>
       {openEdit && (
-        <Modal
-          title='Edit Suggestion Item'
-          onClose={() => setOpenEdit(false)}
-        >
+        <Modal title='Edit Suggestion Item' onClose={() => setOpenEdit(false)}>
           <form noValidate onSubmit={formik.handleSubmit}>
             <div className='flex flex-col space-y-1'>
               <textarea

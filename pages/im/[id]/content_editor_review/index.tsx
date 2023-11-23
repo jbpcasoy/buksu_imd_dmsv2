@@ -297,7 +297,7 @@ export default function AddContentEditorReviewPage() {
             <div className='flex-1 sticky top-0'>
               <iframe
                 src={`/api/im_file/im/${iMId}/pdf`}
-                className='w-full h-full'
+                className='w-full h-full rounded'
               />
             </div>
           </div>
