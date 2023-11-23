@@ -29,7 +29,7 @@ export default function AllSuggestionsPage() {
         />
         <p className='text-center font-bold text-sm'>CITL REVIEW</p>
         <IMIDDCoordinatorSuggestionItems id={iMId as string} editable={false} />
-        <p className='text-center font-bold text-sm'>IMERC</p>
+        <p className='text-center font-bold'>IMERC</p>
         <IMQAMISSuggestionItems id={iMId as string} editable={false} />
         <IMIDDSpecialistSuggestionItems id={iMId as string} editable={false} />
         <IMContentSpecialistSuggestionItems

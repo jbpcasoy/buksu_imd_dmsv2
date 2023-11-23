@@ -44,7 +44,7 @@ export default function DepartmentPage() {
 
   return (
     <MainLayout>
-      <div className="h-full overflow-auto border border-palette_grey rounded p-1 bg-opacity-10 flex flex-col">
+      <div className='h-full overflow-auto border border-palette_grey rounded p-1 bg-opacity-10 flex flex-col'>
         <div className='flex justify-between items-center space-x-1'>
           <div className='flex'>
             <h2 className='flex-1 border-b-2 pb-1 px-2 uppercase border-palette_orange'>
@@ -59,11 +59,11 @@ export default function DepartmentPage() {
             />
           </div>
         </div>
-        <table className='table-auto w-full flex-1 h-full'>
+        <table className='table-auto w-full flex-1 h-full text-sm'>
           <thead>
             <tr>
-              <th>IMAGE</th>
-              <th>NAME</th>
+              <th className='font-normal'>IMAGE</th>
+              <th className='font-normal'>NAME</th>
             </tr>
           </thead>
           <tbody>
@@ -113,9 +113,7 @@ function ActiveFacultyItem({
         </div>
       </td>
       <td>
-        <div className='flex items-center h-full'>
-          <p className='text-palette_grey'>{user?.name}</p>
-        </div>
+        <p className='text-palette_grey text-center'>{user?.name}</p>
       </td>
     </tr>
   );

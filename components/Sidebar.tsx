@@ -53,60 +53,62 @@ export default function Sidebar() {
 
   return (
     <div className='h-full overflow-y-auto flex flex-col pb-10 bg-palette_blue text-white'>
-      <div className="h-10 flex justify-center items-center border-b border-palette_white">
-        <Link
-          href={(activeCoordinator || activeChairperson || activeDean || activeIDDCoordinator || activeCITLDirector) ? '/' : '/department/my_ims'}
-          className='sticky top-0 bg-palette_blue text-lg block'
-        >
-          BUKSU IMD DMS
-        </Link>
-      </div>
       {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
         <div className='my-2 px-1'>
           <div className='flex flex-col'>
             {activeFaculty && (
+              // <Link
+              //   href='/department'
+              //   className='rounded hover:bg-palette_grey my-1 px-1'
+              // >
+              //   My Department
+              // </Link>
+
               <Link
                 href='/department'
-                className='rounded hover:bg-palette_grey my-1 px-1'
+                className='rounded hover:bg-palette_grey my-1 px-1 flex justify-between items-center py-1 px-2'
               >
-                My Department
+                <span className='flex items-center space-x-4'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    height='1em'
+                    viewBox='0 0 384 512'
+                    className="fill-palette_white"
+                  >
+                    <path d='M48 0C21.5 0 0 21.5 0 48V464c0 26.5 21.5 48 48 48h96V432c0-26.5 21.5-48 48-48s48 21.5 48 48v80h96c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48H48zM64 240c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V240zm112-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H176c-8.8 0-16-7.2-16-16V240c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V240zM80 96h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H176c-8.8 0-16-7.2-16-16V112zM272 96h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16z' />
+                  </svg>
+                  <span>My Department</span>
+                </span>
               </Link>
             )}
             {activeFaculty && (
-              <Link
-                href='/department/my_ims'
-                className='rounded hover:bg-palette_grey my-1 px-1'
-              >
-                <span className='font-normal'>{myIMsCount}</span> My IM&apos;s
-              </Link>
+              <MenuItem
+                count={myIMsCount}
+                label="My IM's"
+                link='/department/my_ims'
+              />
             )}
 
             {(activeCoordinator || activeChairperson) && (
-              <Link
-                href='/department/all_ims'
-                className='rounded hover:bg-palette_grey my-1 px-1'
-              >
-                <span className='font-normal'>{departmentIMsCount}</span>{" "}
-                Department IMs
-              </Link>
+              <MenuItem
+                count={departmentIMsCount}
+                label='Department IMs'
+                link='/department/all_ims'
+              />
             )}
             {activeDean && (
-              <Link
-                href='/college/all_ims'
-                className='rounded hover:bg-palette_grey my-1 px-1'
-              >
-                <span className='font-normal'>{collegeIMsCount}</span> College
-                IM&apos;s
-              </Link>
+              <MenuItem
+                count={collegeIMsCount}
+                label="College IM's"
+                link='/college/all_ims'
+              />
             )}
             {(activeCITLDirector || activeIDDCoordinator) && (
-              <Link
-                href='/citl/all_ims'
-                className='rounded hover:bg-palette_grey my-1 px-1'
-              >
-                <span className='font-normal'>{cITLIMsCount}</span> All
-                IM&apos;s
-              </Link>
+              <MenuItem
+                count={cITLIMsCount}
+                label="All IM's"
+                link='/citl/all_ims'
+              />
             )}
           </div>
           <hr />
@@ -115,50 +117,39 @@ export default function Sidebar() {
             <div className='flex flex-col'>
               <p className='font-bold text-sm'>DEPARTMENT</p>
               {activeFaculty && (
-                <Link
-                  href='/department/to_revise'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{toReviseCount}</span> To Revise
-                </Link>
+                <MenuItem
+                  count={toReviseCount}
+                  label='To Revise'
+                  link='/department/to_revise'
+                />
               )}
               {activeFaculty && (
-                <Link
-                  href='/department/to_review'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{toReviewCount}</span> To Review
-                </Link>
+                <MenuItem
+                  count={toReviewCount}
+                  label='To Review'
+                  link='/department/to_review'
+                />
               )}
               {activeFaculty && (
-                <Link
-                  href='/department/reviewed'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{reviewedCount}</span> Reviewed
-                </Link>
+                <MenuItem
+                  count={reviewedCount}
+                  label='Reviewed'
+                  link='/department/reviewed'
+                />
               )}
               {activeCoordinator && (
-                <Link
-                  href='/department/to_endorse'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>
-                    {coordinatorToEndorseCount}
-                  </span>{" "}
-                  To Endorse
-                </Link>
+                <MenuItem
+                  count={coordinatorToEndorseCount}
+                  label='To Endorse'
+                  link='/department/to_endorse'
+                />
               )}
               {activeCoordinator && (
-                <Link
-                  href='/department/endorsed'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>
-                    {coordinatorEndorsedCount}
-                  </span>{" "}
-                  Endorsed
-                </Link>
+                <MenuItem
+                  count={coordinatorEndorsedCount}
+                  label='Endorsed'
+                  link='/department/endorsed'
+                />
               )}
             </div>
           )}
@@ -167,22 +158,18 @@ export default function Sidebar() {
               <p className='font-bold text-sm'>COLLEGE</p>
 
               {activeDean && (
-                <Link
-                  href='/college/to_endorse'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{deanToEndorseCount}</span> To
-                  Endorse
-                </Link>
+                <MenuItem
+                  count={deanToEndorseCount}
+                  label='To Endorse'
+                  link='/college/to_endorse'
+                />
               )}
               {activeDean && (
-                <Link
-                  href='/college/endorsed'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{deanEndorsedCount}</span>{" "}
-                  Endorsed
-                </Link>
+                <MenuItem
+                  count={deanEndorsedCount}
+                  label='Endorsed'
+                  link='/college/endorsed'
+                />
               )}
             </div>
           )}
@@ -191,72 +178,54 @@ export default function Sidebar() {
               <p className='font-bold text-sm'>CITL</p>
 
               {activeFaculty && (
-                <Link
-                  href='/citl/to_revise'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{cITLToReviseCount}</span> To
-                  Revise
-                </Link>
+                <MenuItem
+                  count={cITLToReviseCount}
+                  label='To Revise'
+                  link='/citl/to_revise'
+                />
               )}
               {activeIDDCoordinator && (
                 <div className='flex flex-col'>
                   <p className='font-bold text-xs'>IDD Coordinator</p>
-                  <Link
-                    href='/citl/to_review'
-                    className='rounded hover:bg-palette_grey my-1 px-1'
-                  >
-                    <span className='font-normal'>{cITLToReviewCount}</span> To
-                    Review
-                  </Link>
-                  <Link
-                    href='/citl/reviewed'
-                    className='rounded hover:bg-palette_grey my-1 px-1'
-                  >
-                    <span className='font-normal'>{cITLReviewedCount}</span>{" "}
-                    Reviewed
-                  </Link>
+                  <MenuItem
+                    count={cITLToReviewCount}
+                    label='To Review'
+                    link='/citl/to_review'
+                  />
+                  <MenuItem
+                    count={cITLReviewedCount}
+                    label='Reviewed'
+                    link='/citl/reviewed'
+                  />
                 </div>
               )}
               {activeIDDCoordinator && (
-                <Link
-                  href='/citl/to_endorse'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{cITLIDDToEndorseCount}</span>{" "}
-                  To Endorse
-                </Link>
+                <MenuItem
+                  count={cITLIDDToEndorseCount}
+                  label='To Endorse'
+                  link='/citl/to_endorse'
+                />
               )}
               {activeIDDCoordinator && (
-                <Link
-                  href='/citl/endorsed'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{cITLIDDEndorsedCount}</span>{" "}
-                  Endorsed
-                </Link>
+                <MenuItem
+                  count={cITLIDDEndorsedCount}
+                  label='Endorsed'
+                  link='/citl/endorsed'
+                />
               )}
               {activeCITLDirector && (
                 <div className='flex flex-col'>
                   <p className='font-bold text-xs'>CITL Director</p>
-                  <Link
-                    href='/citl/citl_director_to_endorse'
-                    className='rounded hover:bg-palette_grey my-1 px-1'
-                  >
-                    <span className='font-normal'>
-                      {cITLDirectorToEndorseCount}
-                    </span>{" "}
-                    To Endorse
-                  </Link>{" "}
-                  <Link
-                    href='/citl/citl_director_endorsed'
-                    className='rounded hover:bg-palette_grey my-1 px-1'
-                  >
-                    <span className='font-normal'>
-                      {cITLDirectorEndorsedCount}
-                    </span>{" "}
-                    Endorsed
-                  </Link>
+                  <MenuItem
+                    count={cITLDirectorToEndorseCount}
+                    label='To Endorse'
+                    link='/citl/citl_director_to_endorse'
+                  />
+                  <MenuItem
+                    count={cITLDirectorEndorsedCount}
+                    label='Endorsed'
+                    link='/citl/citl_director_endorsed'
+                  />
                 </div>
               )}
             </div>
@@ -268,72 +237,55 @@ export default function Sidebar() {
               <p className='font-bold text-sm'>DEPARTMENT</p>
 
               {activeFaculty && (
-                <Link
-                  href='/imerc/department/to_revise'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{iMERCToReviseCount}</span> To
-                  Revise
-                </Link>
+                <MenuItem
+                  count={iMERCToReviseCount}
+                  label='To Revise'
+                  link='/imerc/department/to_revise'
+                />
               )}
               {activeContentSpecialist && (
-                <Link
-                  href='/imerc/department/to_review'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{iMERCToReviewCount}</span> To
-                  Review
-                </Link>
+                <MenuItem
+                  count={iMERCToReviewCount}
+                  label='To Review'
+                  link='/imerc/department/to_review'
+                />
               )}
               {activeContentSpecialist && (
-                <Link
-                  href='/imerc/department/reviewed'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{iMERCReviewedCount}</span>{" "}
-                  Reviewed
-                </Link>
+                <MenuItem
+                  count={iMERCReviewedCount}
+                  label='Reviewed'
+                  link='/imerc/department/reviewed'
+                />
               )}
               {(activeCoordinator || activeChairperson) && (
-                <Link
-                  href='/imerc/department/to_endorse'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{iMERCToEndorseCount}</span> To
-                  Endorse
-                </Link>
+                <MenuItem
+                  count={iMERCToEndorseCount}
+                  label='To Endorse'
+                  link='/imerc/department/to_endorse'
+                />
               )}
               {(activeCoordinator || activeChairperson) && (
-                <Link
-                  href='/imerc/department/endorsed'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{iMERCEndorsedCount}</span>{" "}
-                  Endorsed
-                </Link>
+                <MenuItem
+                  count={iMERCEndorsedCount}
+                  label='Endorsed'
+                  link='/imerc/department/endorsed'
+                />
               )}
             </div>
           )}
           {activeDean && (
             <div className='flex flex-col'>
               <p className='font-bold text-sm'>COLLEGE</p>
-
-              <Link
-                href='/imerc/college/to_endorse'
-                className='rounded hover:bg-palette_grey my-1 px-1'
-              >
-                <span className='font-normal'>
-                  {iMERCCollegeToEndorseCount}
-                </span>{" "}
-                To Endorse
-              </Link>
-              <Link
-                href='/imerc/college/endorsed'
-                className='rounded hover:bg-palette_grey my-1 px-1'
-              >
-                <span className='font-normal'>{iMERCCollegeEndorsedCount}</span>{" "}
-                Endorsed
-              </Link>
+              <MenuItem
+                count={iMERCCollegeToEndorseCount}
+                label='To Endorse'
+                link='/imerc/college/to_endorse'
+              />
+              <MenuItem
+                count={iMERCCollegeEndorsedCount}
+                label='Endorsed'
+                link='/imerc/college/endorsed'
+              />
             </div>
           )}
 
@@ -342,78 +294,54 @@ export default function Sidebar() {
               <p className='font-bold text-sm'>CITL</p>
 
               {activeFaculty && (
-                <Link
-                  href='/imerc/citl/to_revise'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{iMERCCITLToReviseCount}</span>{" "}
-                  To Revise
-                </Link>
+                <MenuItem
+                  count={iMERCCITLToReviseCount}
+                  label='To Revise'
+                  link='/imerc/citl/to_revise'
+                />
               )}
               {(activeIDDCoordinator || activeCITLDirector) && (
-                <Link
-                  href='/imerc/citl/to_review'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>{iMERCCITLToReviewCount}</span>{" "}
-                  To Review
-                </Link>
+                <MenuItem
+                  count={iMERCCITLToReviewCount}
+                  label='To Review'
+                  link='/imerc/citl/to_review'
+                />
               )}
               {(activeIDDCoordinator || activeCITLDirector) && (
-                <Link
-                  href='/imerc/citl/reviewed'
-                  className='rounded hover:bg-palette_grey my-1 px-1'
-                >
-                  <span className='font-normal'>
-                    {iMERCReviewedByCITLCount}
-                  </span>{" "}
-                  Reviewed
-                </Link>
+                <MenuItem
+                  count={iMERCReviewedByCITLCount}
+                  label='Reviewed'
+                  link='/imerc/citl/reviewed'
+                />
               )}
               {activeIDDCoordinator && (
                 <div className='flex flex-col'>
                   <p className='font-bold text-xs'>IDD Coordinator</p>
-                  <Link
-                    href='/imerc/citl/to_endorse'
-                    className='rounded hover:bg-palette_grey my-1 px-1'
-                  >
-                    <span className='font-normal'>
-                      {iMERCCITLToEndorseCount}
-                    </span>{" "}
-                    To Endorse
-                  </Link>
-                  <Link
-                    href='/imerc/citl/endorsed'
-                    className='rounded hover:bg-palette_grey my-1 px-1'
-                  >
-                    <span className='font-normal'>
-                      {iMERCCITLEndorsedCount}
-                    </span>{" "}
-                    Endorsed
-                  </Link>
+                  <MenuItem
+                    count={iMERCCITLToEndorseCount}
+                    label='To Endorse'
+                    link='/imerc/citl/to_endorse'
+                  />
+                  <MenuItem
+                    count={iMERCCITLEndorsedCount}
+                    label='Endorsed'
+                    link='/imerc/citl/endorsed'
+                  />
                 </div>
               )}
               {activeCITLDirector && (
                 <div className='flex flex-col'>
                   <p className='font-bold text-xs'>CITL Director</p>
-                  <Link
-                    href='/imerc/citl/citl_director_to_endorse'
-                    className='rounded hover:bg-palette_grey my-1 px-1'
-                  >
-                    <span className='font-normal'>
-                      {iMERCCITLDirectorToEndorseCount}
-                    </span>{" "}
-                    To Endorse
-                  </Link>
-                  <Link
-                    href='/imerc/citl/citl_director_endorsed'
-                    className='rounded hover:bg-palette_grey my-1 px-1'
-                  >
-                    <span className='font-normal'>
-                      {iMERCCITLDirectorEndorsedCount}
-                    </span>{" "}
-                    Endorsed
-                  </Link>
+                  <MenuItem
+                    count={iMERCCITLDirectorToEndorseCount}
+                    label='To Endorse'
+                    link='/imerc/citl/citl_director_to_endorse'
+                  />
+                  <MenuItem
+                    count={iMERCCITLDirectorEndorsedCount}
+                    label='Endorsed'
+                    link='/imerc/citl/citl_director_endorsed'
+                  />
                 </div>
               )}
             </div>
@@ -421,5 +349,35 @@ export default function Sidebar() {
         </div>
       )}
     </div>
+  );
+}
+interface MenuItemProps {
+  link: string;
+  label: string;
+  count: number;
+}
+function MenuItem({ count, label, link }: MenuItemProps) {
+  return (
+    <Link
+      href={link}
+      className='rounded hover:bg-palette_grey my-1 px-1 flex justify-between items-center py-1 px-2'
+    >
+      <span className='flex items-center space-x-4'>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='1.2em'
+          viewBox='0 0 448 512'
+          className='fill-palette_white'
+        >
+          <path d='M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z' />
+        </svg>
+        <span>{label}</span>
+      </span>
+      {count > 0 && (
+        <div className='inline-flex items-center justify-center px-1 bg-palette_orange rounded-full text-xs font-semibold text-palette_blue '>
+          {count <= 99 ? count : "99+"}
+        </div>
+      )}
+    </Link>
   );
 }

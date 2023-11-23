@@ -1,80 +1,59 @@
-import useAnnouncements from "@/hooks/useAnnouncements";
-import useEventCount from "@/hooks/useEventCount";
+import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
+import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
+import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
+import useActiveDeanMe from "@/hooks/useActiveDeanMe";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useState } from "react";
 
 export default function Header() {
-  const router = useRouter();
-  const eventCount = useEventCount();
-  const [state, setState] = useState({
-    skip: 0,
-    take: 1,
-  });
-
-  const { announcements, count } = useAnnouncements(state);
-
-  const handleNext = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return { ...prev, skip: nextVal < count ? nextVal : prev.skip };
-    });
-  };
-
-  const handlePrev = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
-  };
+  const { data: session } = useSession();
+  const activeIDDCoordinator = useActiveIDDCoordinatorMe();
+  const activeCITLDirector = useActiveCITLDirectorMe();
+  const activeCoordinator = useActiveCoordinatorMe();
+  const activeChairperson = useActiveChairpersonMe();
+  const activeDean = useActiveDeanMe();
 
   return (
     <div className=''>
-      <div className='flex justify-end items-center h-10 space-x-1 bg-palette_blue border-b border-palette_white sticky top-0'>
+      <div className='flex justify-between items-center h-12 space-x-2 bg-palette_blue border-b border-palette_white sticky top-0 px-2'>
         <Link
-          href='/notification'
-          className='rounded hover:bg-palette_grey text-white px-2'
+          href={
+            activeCoordinator ||
+            activeChairperson ||
+            activeDean ||
+            activeIDDCoordinator ||
+            activeCITLDirector
+              ? "/"
+              : "/department/my_ims"
+          }
+          className='w-48 bg-palette_blue text-lg block'
         >
-          <span className='font-normal '>{eventCount.count}</span> Notification
+          <img src='/images/logo.svg' alt='BukSU IMD DMS Logo' />
         </Link>
-        <Link
-          href='/profile'
-          className='rounded hover:bg-palette_grey text-white px-2'
-        >
-          Profile
-        </Link>
-      </div>
-      {announcements?.length > 0 && !router.pathname.startsWith("/im/[id]") && (
-        <div className='flex justify-between items-center bg-palette_orange m-2 rounded p-1'>
-          <button
-            className='w-10 h-10 rounded-full bg-palette_grey bg-opacity-10 hover:bg-opacity-20 text-white'
-            onClick={handlePrev}
+        <div className="flex justify-center items-center space-x-2">
+          <Link
+            href='/notification'
+            className='fill-palette_white hover:fill-palette_orange'
           >
-            {"<"}
-          </button>
-          <div className='flex-1 px-10'>
-            <p>{announcements?.[0].title}</p>
-            <p>{announcements?.[0].description}</p>
-            {announcements?.[0].url && (
-              <Link
-                href={announcements?.[0].url}
-                className='rounded border border-palette_blue px-10'
-              >
-                Go
-              </Link>
-            )}
-            <p className='text-center text-xs'>
-              {state.skip + 1}/{count}
-            </p>
-          </div>
-          <button
-            className='w-10 h-10 rounded-full bg-palette_grey bg-opacity-10 hover:bg-opacity-20 text-white'
-            onClick={handleNext}
-          >
-            {">"}
-          </button>
+            {/* <span className='font-normal '>{eventCount.count}</span> Notification */}
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='1em'
+              viewBox='0 0 448 512'
+            >
+              <path d='M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z' />
+            </svg>
+          </Link>
+          <Link href='/profile' className=''>
+            <img
+              src={session?.user?.image ?? ""}
+              alt={session?.user?.name ?? "Profile"}
+              className='h-6 w-6 rounded-full hover:opacity-90'
+            />
+          </Link>
         </div>
-      )}
+      </div>
     </div>
   );
 }
