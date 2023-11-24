@@ -54,7 +54,7 @@ export default function DepartmentPage() {
           <div>
             <input
               placeholder='Name'
-              className='py-1 rounded'
+              className='py-1 rounded focus:border-palette_grey focus:ring-palette_grey'
               onChange={handleNameChange}
             />
           </div>
@@ -77,15 +77,38 @@ export default function DepartmentPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
-          <p>
+        <div className='flex justify-end items-center space-x-1 text-sm'>
+          <p className='text-xs'>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={previousHandler}>
-            prev
+          <button
+            disabled={state.skip - state.take < 0}
+            className='rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50'
+            onClick={previousHandler}
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='1em'
+              viewBox='0 0 448 512'
+            >
+              <path d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z' />
+            </svg>
+            <span>Previous</span>
           </button>
-          <button className='border rounded' onClick={nextHandler}>
-            next
+          <button
+            disabled={state.skip + state.take >= count}
+            className='rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50'
+            onClick={nextHandler}
+          >
+            <span>Next</span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='1em'
+              viewBox='0 0 448 512'
+              className='fill-inherit'
+            >
+              <path d='M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z' />
+            </svg>
           </button>
         </div>
       </div>

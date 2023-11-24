@@ -1,18 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export interface ModalProps {
+export interface ConfirmationProps {
   onClose: () => void;
-  title: string;
+  onConfirm: () => void;
+  title?: string;
   shortDescription?: string;
-  children: React.ReactNode;
 }
 
-export default function Modal({
+export default function Confirmation({
   onClose,
-  children,
-  shortDescription,
-  title,
-}: ModalProps) {
+  onConfirm,
+  shortDescription = "This action cannot be undone.",
+  title = "Are you sure?",
+}: ConfirmationProps) {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -26,19 +26,24 @@ export default function Modal({
     };
   }, []);
 
+  const confirmHandler = () => {
+    onConfirm();
+    onClose();
+  }
+
   return (
     <div
       className='fixed inset-0 flex justify-center items-center bg-palette_black bg-opacity-40'
       onClick={onClose}
     >
       <div
-        className='border w-full max-w-sm bg-palette_white rounded'
+        className='border w-full max-w-sm bg-palette_white rounded flex flex-col'
         onClick={(e) => e.stopPropagation()}
       >
         <div className='flex justify-between px-5 py-2'>
           <div className=''>
-            <h1>{title}</h1>
-            {shortDescription && <p>{shortDescription}</p>}
+            <h1 className="text-lg">{title}</h1>
+            {shortDescription && <p className="text-palette_grey">{shortDescription}</p>}
           </div>
           <div>
             <button
@@ -56,7 +61,20 @@ export default function Modal({
             </button>
           </div>
         </div>
-        <div className='px-5 py-2'>{children}</div>
+        <div className='flex justify-end space-x-2 p-1'>
+          <button
+            className='px-4 py-1 bg-palette_error hover:bg-opacity-90 text-palette_white rounded'
+            onClick={confirmHandler}
+          >
+            Yes
+          </button>
+          <button
+            className='px-4 py-1 bg-palette_light_blue text-palette_white rounded hover:bg-opacity-90'
+            onClick={onClose}
+          >
+            No
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -88,43 +88,45 @@ export default function ProfilePage() {
 
         <div className='h-full'>
           <form noValidate onSubmit={formik.handleSubmit} className='h-full'>
-            <div className='space-x-1 flex flex-col justify-center items-center space-y-1 max-w-xs mx-auto h-full'>
-              <input
-                id='profile-picture'
-                type='file'
-                accept='image/*'
-                hidden={true}
-                onChange={showProfilePreview}
-              />
-              <label
-                htmlFor='profile-picture'
-                className='cursor-pointer hover:opacity-95'
-              >
-                <picture>
-                  <img
-                    src={state?.previewUrl ?? session?.user?.image ?? ""}
-                    className='h-32 w-32 rounded-full'
-                    alt='User avatar'
-                  />
-                </picture>
-              </label>
-              {department && college && (
-                <p className='text-sm'>
-                  {department?.name} | {college?.name}
-                </p>
-              )}
-              <p className='text-sm'>{session?.user?.email}</p>
-              <input
-                type='text'
-                placeholder='Name'
-                {...formik.getFieldProps("name")}
-                className='rounded w-full'
-              />
-              <input
-                type='submit'
-                value='Save'
-                className='bg-palette_blue text-palette_white w-full py-1 rounded'
-              />
+            <div className='h-full flex justify-center items-center'>
+              <div className='space-x-1 flex flex-col justify-center items-center space-y-1 mx-auto border p-10 rounded-lg shadow'>
+                <input
+                  id='profile-picture'
+                  type='file'
+                  accept='image/*'
+                  hidden={true}
+                  onChange={showProfilePreview}
+                />
+                <label
+                  htmlFor='profile-picture'
+                  className='cursor-pointer hover:opacity-95'
+                >
+                  <picture>
+                    <img
+                      src={state?.previewUrl ?? session?.user?.image ?? ""}
+                      className='h-32 w-32 rounded-full'
+                      alt='User avatar'
+                    />
+                  </picture>
+                </label>
+                {department && college && (
+                  <p className='text-sm'>
+                    {department?.name} | {college?.name}
+                  </p>
+                )}
+                <p className='text-sm'>{session?.user?.email}</p>
+                <input
+                  type='text'
+                  placeholder='Name'
+                  {...formik.getFieldProps("name")}
+                  className='rounded w-full'
+                />
+                <input
+                  type='submit'
+                  value='Save'
+                  className='bg-palette_blue text-palette_white w-full py-1 rounded'
+                />
+              </div>
             </div>
           </form>
         </div>

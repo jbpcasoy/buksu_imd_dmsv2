@@ -1,3 +1,4 @@
+import Confirmation from "@/components/Confirmation";
 import FileUpload from "@/components/FileUpload";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
@@ -12,6 +13,7 @@ import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturned
 import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
+import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
 import useActiveContentSpecialistMe from "@/hooks/useActiveContentSpecialistMe";
@@ -41,7 +43,7 @@ import { useFormik } from "formik";
 import { DateTime } from "luxon";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 
 export default function ViewIM() {
@@ -51,7 +53,10 @@ export default function ViewIM() {
   const [state, setState] = useState<{
     iMFile?: File | null;
     plagiarismFile?: File | null;
-  }>();
+    openConfirmation: boolean;
+  }>({
+    openConfirmation: false,
+  });
   const iMStatus = useIMStatus({ id: iMId as string });
   const activeFaculty = useActiveFacultyMe();
   const activeCoordinator = useActiveCoordinatorMe();
@@ -69,6 +74,21 @@ export default function ViewIM() {
   const user = useUserFaculty({
     id: iM?.facultyId,
   });
+  const { addSnackbar } = useContext(SnackbarContext);
+
+  const closeConfirmation = () => {
+    setState((prev) => ({
+      ...prev,
+      openConfirmation: false,
+    }));
+  };
+
+  const openConfirmation = () => {
+    setState((prev) => ({
+      ...prev,
+      openConfirmation: true,
+    }));
+  };
 
   const onQAMISChairpersonEndorsement = () => {
     axios
@@ -141,11 +161,14 @@ export default function ViewIM() {
             iMFileId: res.data.id,
           })
           .then(() => {
-            alert("IM has been submitted for review");
+            addSnackbar("IM has been submitted for review");
           });
       })
       .catch((err) => {
-        alert(err?.response?.data?.error?.message ?? err.message);
+        addSnackbar(
+          err?.response?.data?.error?.message ?? err.message,
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -491,12 +514,26 @@ export default function ViewIM() {
                       }}
                     />
                     <button
-                      className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50'
+                      className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2'
                       disabled={Boolean(!state?.iMFile)}
-                      onClick={submitForReviewHandler}
+                      onClick={openConfirmation}
                     >
-                      Submit for Review
+                      <span>Submit for Review</span>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        height='1em'
+                        viewBox='0 0 384 512'
+                        className='fill-palette_white'
+                      >
+                        <path d='M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM216 408c0 13.3-10.7 24-24 24s-24-10.7-24-24V305.9l-31 31c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l72-72c9.4-9.4 24.6-9.4 33.9 0l72 72c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-31-31V408z' />
+                      </svg>
                     </button>
+                    {state.openConfirmation && (
+                      <Confirmation
+                        onClose={closeConfirmation}
+                        onConfirm={submitForReviewHandler}
+                      />
+                    )}
                   </div>
                 )}
 
@@ -895,14 +932,42 @@ function ActionMenu({
 }: ActionMenuProps) {
   const [state, setState] = useState({
     openMenu: false,
+    openConfirmation: false,
   });
+  const menuRef: any = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setState((prev) => ({ ...prev, openMenu: false }));
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setState((prev) => ({ ...prev, openMenu: false }));
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
-    <div className='relative inline-block text-left'>
+    <div className='relative inline-block text-left' ref={menuRef}>
       <div>
         <button
           type='button'
-          className='inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50'
+          className='inline-flex justify-center items-center space-x-2 w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50'
           id='options-menu'
           aria-haspopup='true'
           aria-expanded='true'
@@ -910,21 +975,27 @@ function ActionMenu({
             setState((prev) => ({ ...prev, openMenu: !prev.openMenu }))
           }
         >
-          Actions
-          <svg
-            className='-mr-1 ml-2 h-5 w-5'
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 20 20'
-            fill='currentColor'
-            aria-hidden='true'
-          >
-            <path
-              fillRule='evenodd'
-              d='M10 6a4 4 0 100 8 4 4 0 000-8z'
-              clipRule='evenodd'
-            />
-            <path d='M10 4a6 6 0 100 12A6 6 0 0010 4z' />
-          </svg>
+          <span>Actions</span>
+          {!state.openMenu && (
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='1em'
+              viewBox='0 0 320 512'
+              className='fill-palette_blue'
+            >
+              <path d='M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z' />
+            </svg>
+          )}
+          {state.openMenu && (
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='1em'
+              viewBox='0 0 320 512'
+              className='fill-palette_blue'
+            >
+              <path d='M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z' />
+            </svg>
+          )}
         </button>
       </div>
 
@@ -991,13 +1062,31 @@ function ActionMenu({
               iMStatus === "IMPLEMENTATION_DRAFT" && <EditIM />}
             {iM.facultyId === activeFaculty?.facultyId &&
               iMStatus === "IMPLEMENTATION_DRAFT" && (
-                <button
-                  onClick={() => deleteHandler(iM.id)}
-                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left'
-                  role='menuitem'
-                >
-                  Delete
-                </button>
+                <>
+                  <button
+                    onClick={() =>
+                      setState((prev) => ({ ...prev, openConfirmation: true }))
+                    }
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left'
+                    role='menuitem'
+                  >
+                    Delete
+                  </button>
+
+                  {state.openConfirmation && (
+                    <Confirmation
+                      onClose={() =>
+                        setState((prev) => ({
+                          ...prev,
+                          openConfirmation: false,
+                        }))
+                      }
+                      onConfirm={() => {
+                        deleteHandler(iM.id);
+                      }}
+                    />
+                  )}
+                </>
               )}
           </div>
         </div>

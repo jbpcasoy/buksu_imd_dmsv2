@@ -4,6 +4,9 @@ import { SessionProvider } from "next-auth/react";
 import { ActiveFacultyContextProvider } from "@/contexts/ActiveFacultyContext";
 import Head from "next/head";
 import "reactflow/dist/style.css";
+import SnackbarContextProvider, {
+  SnackbarContext,
+} from "@/components/SnackbarProvider";
 
 export default function App({
   Component,
@@ -15,11 +18,13 @@ export default function App({
         <title>BukSU IMD DMS</title>
       </Head>
 
-      <SessionProvider session={session}>
-        <ActiveFacultyContextProvider>
-          <Component {...pageProps} />
-        </ActiveFacultyContextProvider>
-      </SessionProvider>
+      <SnackbarContextProvider>
+        <SessionProvider session={session}>
+          <ActiveFacultyContextProvider>
+            <Component {...pageProps} />
+          </ActiveFacultyContextProvider>
+        </SessionProvider>
+      </SnackbarContextProvider>
     </>
   );
 }
