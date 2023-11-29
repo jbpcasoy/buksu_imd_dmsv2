@@ -1,6 +1,7 @@
 import MainLayout from "@/components/MainLayout";
 import ReviewItem from "@/components/ReviewItem";
 import ReviewSection from "@/components/ReviewSection";
+import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useCoordinatorReviewIM from "@/hooks/useCoordinatorReviewIM";
 import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
@@ -9,7 +10,7 @@ import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import * as Yup from "yup";
 
 export default function AddCoordinatorReviewPage() {
@@ -18,6 +19,7 @@ export default function AddCoordinatorReviewPage() {
   const departmentReview = useDepartmentReviewIM({ id: iMId as string });
   const coordinatorReview = useCoordinatorReviewIM({ id: iMId as string });
   const activeFaculty = useActiveCoordinatorMe();
+  const { addSnackbar } = useContext(SnackbarContext);
   const formik = useFormik({
     initialValues: {
       q1_1: "",
@@ -105,7 +107,10 @@ export default function AddCoordinatorReviewPage() {
           router.push(`/im/${iMId}/coordinator_suggestion`);
         })
         .catch((error) => {
-          alert(error?.response?.data?.error?.message);
+          addSnackbar(
+            error.response.data?.error?.message ?? "Failed to submit review",
+            "error"
+          );
         });
     },
   });
@@ -272,12 +277,22 @@ export default function AddCoordinatorReviewPage() {
                   </ReviewSection>
                 </div>
                 <div className='flex justify-end p-1'>
-                  <input
-                    type='submit'
-                    value='Next'
+                  <button
                     disabled={formik.isSubmitting || !formik.isValid}
-                    className='bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded cursor-pointer'
-                  />
+                    className='bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded cursor-pointer inline-flex space-x-2 items-center hover:bg-opacity-90'
+                  >
+                    <span>Next</span>
+                    <span>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        height='1em'
+                        viewBox='0 0 448 512'
+                        className='fill-palette_white'
+                      >
+                        <path d='M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z' />
+                      </svg>
+                    </span>
+                  </button>
                 </div>
               </form>
             </div>

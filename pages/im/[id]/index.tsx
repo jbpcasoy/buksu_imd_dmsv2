@@ -96,9 +96,12 @@ export default function ViewIM() {
         qAMISRevisionId: qAMISRevision?.id,
         activeChairpersonId: activeChairperson?.id,
       })
-      .then(() => alert("Successfully endorsed IM"))
+      .then(() => addSnackbar("Successfully endorsed IM"))
       .catch((error) => {
-        alert(error?.response?.data?.error?.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -111,9 +114,12 @@ export default function ViewIM() {
         qAMISRevisionId: qAMISRevision?.id,
         activeCoordinatorId: activeCoordinator?.id,
       })
-      .then(() => alert("Successfully endorsed IM"))
+      .then(() => addSnackbar("Successfully endorsed IM"))
       .catch((error) => {
-        alert(error?.response?.data?.error?.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -126,9 +132,12 @@ export default function ViewIM() {
         qAMISRevisionId: qAMISRevision?.id,
         activeDeanId: activeDean?.id,
       })
-      .then(() => alert("Successfully endorsed IM"))
+      .then(() => addSnackbar("Successfully endorsed IM"))
       .catch((error) => {
-        alert(error?.response?.data?.error?.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -139,11 +148,14 @@ export default function ViewIM() {
     axios
       .delete(`/api/im/${id}`)
       .then(() => {
-        alert("IM deleted successfully");
+        addSnackbar("IM deleted successfully");
         router.push("/department/my_ims");
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to delete IM",
+          "error"
+        );
       });
   };
 
@@ -164,9 +176,9 @@ export default function ViewIM() {
             addSnackbar("IM has been submitted for review");
           });
       })
-      .catch((err) => {
+      .catch((error) => {
         addSnackbar(
-          err?.response?.data?.error?.message ?? err.message,
+          error.response.data?.error?.message ?? "Failed to submit for review",
           "error"
         );
       })
@@ -189,11 +201,15 @@ export default function ViewIM() {
             iMFileId: res.data.id,
           })
           .then(() => {
-            alert("IM has been submitted for endorsement");
+            addSnackbar("IM has been submitted for endorsement");
           });
       })
-      .catch((err) => {
-        alert(err?.response?.data?.error?.message ?? err.message);
+      .catch((error) => {
+        addSnackbar(
+          error.response.data?.error?.message ??
+            "Failed to submit IM for endorsement",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -214,11 +230,15 @@ export default function ViewIM() {
             iMFileId: res.data.id,
           })
           .then(() => {
-            alert("IM has been submitted for endorsement");
+            addSnackbar("IM has been submitted for endorsement");
           });
       })
-      .catch((err) => {
-        alert(err?.response?.data?.error?.message ?? err.message);
+      .catch((error) => {
+        addSnackbar(
+          error.response.data?.error?.message ??
+            "Failed to submit IM for endorsement",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -245,14 +265,22 @@ export default function ViewIM() {
           .post("/api/plagiarism_file", plagiarismFormData)
           .then((res) => {
             const plagiarismFile = res.data;
-            return axios.post("/api/imerc_citl_revision", {
-              iMFileId: iMFile.id,
-              plagiarismFileId: plagiarismFile.id,
-            });
+            return axios
+              .post("/api/imerc_citl_revision", {
+                iMFileId: iMFile.id,
+                plagiarismFileId: plagiarismFile.id,
+              })
+              .then(() => {
+                addSnackbar("IM has been submitted for endorsement");
+              });
           });
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ??
+            "Failed to submit IM for endorsement",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -273,12 +301,13 @@ export default function ViewIM() {
             departmentRevisionId: departmentRevision.id,
             activeCoordinatorId: activeCoordinator.id,
           })
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -303,12 +332,13 @@ export default function ViewIM() {
             coordinatorEndorsementId: coordinatorEndorsement.id,
             activeDeanId: activeDean.id,
           })
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -329,12 +359,13 @@ export default function ViewIM() {
             cITLRevisionId: cITLRevision.id,
             activeIDDCoordinatorId: activeIDDCoordinator.id,
           })
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -359,12 +390,13 @@ export default function ViewIM() {
             iDDCoordinatorEndorsementId: iDDCoordinatorEndorsement.id,
             activeCITLDirectorId: activeCITLDirector.id,
           })
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -388,12 +420,13 @@ export default function ViewIM() {
               activeIDDCoordinatorId: activeIDDCoordinator.id,
             }
           )
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -424,12 +457,13 @@ export default function ViewIM() {
               activeCITLDirectorId: activeCITLDirector.id,
             }
           )
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -542,27 +576,57 @@ export default function ViewIM() {
                   {iM.facultyId !== activeFaculty?.facultyId && (
                     <Link
                       href={`/im/${iM.id}/peer_review`}
-                      className='bg-palette_blue text-palette_white py-1 px-2 rounded'
+                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
                     >
-                      Peer Review
+                      <span>Peer Review</span>
+                      <span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 576 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                        </svg>
+                      </span>
                     </Link>
                   )}
 
                   {activeCoordinator && (
                     <Link
                       href={`/im/${iM.id}/coordinator_review`}
-                      className='bg-palette_blue text-palette_white py-1 px-2 rounded'
+                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
                     >
-                      Coordinator Review
+                      <span>Coordinator Review</span>
+                      <span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 576 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                        </svg>
+                      </span>
                     </Link>
                   )}
 
                   {activeChairperson && (
                     <Link
                       href={`/im/${iM.id}/chairperson_review`}
-                      className='bg-palette_blue text-palette_white py-1 px-2 rounded'
+                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
                     >
-                      Chairperson Review
+                      <span>Chairperson Review</span>
+                      <span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 576 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                        </svg>
+                      </span>
                     </Link>
                   )}
                 </div>
@@ -571,9 +635,9 @@ export default function ViewIM() {
               {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" &&
                 iM.facultyId === activeFaculty?.facultyId && (
                   <div className='space-y-1 px-1'>
+                    <IMPeerSuggestionItems id={iM.id} />
                     <IMChairpersonSuggestionItems id={iM.id} />
                     <IMCoordinatorSuggestionItems id={iM.id} />
-                    <IMPeerSuggestionItems id={iM.id} />
                     <IMReturnedDepartmentRevisionSuggestionItems id={iM.id} />
                     <FileUpload
                       onFileChange={(e) => {
@@ -589,13 +653,28 @@ export default function ViewIM() {
                         }));
                       }}
                     />
+
                     <button
-                      className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50'
+                      className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2'
                       disabled={Boolean(!state?.iMFile)}
-                      onClick={submitForEndorsementHandler}
+                      onClick={openConfirmation}
                     >
-                      Submit for endorsement
+                      <span>Submit for endorsement</span>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        height='1em'
+                        viewBox='0 0 384 512'
+                        className='fill-palette_white'
+                      >
+                        <path d='M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM216 408c0 13.3-10.7 24-24 24s-24-10.7-24-24V305.9l-31 31c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l72-72c9.4-9.4 24.6-9.4 33.9 0l72 72c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-31-31V408z' />
+                      </svg>
                     </button>
+                    {state.openConfirmation && (
+                      <Confirmation
+                        onClose={closeConfirmation}
+                        onConfirm={submitForEndorsementHandler}
+                      />
+                    )}
                   </div>
                 )}
 
@@ -611,18 +690,42 @@ export default function ViewIM() {
                       id={iM.id}
                       editable={false}
                     />
-                    <div className='space-x-1'>
+                    <div className='space-x-1 flex'>
+                      <>
+                        <button
+                          className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                          onClick={openConfirmation}
+                        >
+                          <span>Endorse IM</span>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            height='1em'
+                            viewBox='0 0 448 512'
+                            className='fill-palette_white'
+                          >
+                            <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                          </svg>
+                        </button>
+                        {state.openConfirmation && (
+                          <Confirmation
+                            onClose={closeConfirmation}
+                            onConfirm={coordinatorEndorsementHandler}
+                          />
+                        )}
+                      </>
                       <button
-                        className='bg-palette_blue text-palette_white rounded px-2 py-1'
-                        onClick={coordinatorEndorsementHandler}
-                      >
-                        Endorse IM
-                      </button>
-                      <button
-                        className='bg-palette_blue text-palette_white rounded px-2 py-1'
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
                         onClick={returnCoordinatorEndorsementHandler}
                       >
-                        Return Revision
+                        <span>Return Revision</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 512 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M48.5 224H40c-13.3 0-24-10.7-24-24V72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8H48.5z' />
+                        </svg>
                       </button>
                     </div>
                   </div>
@@ -631,12 +734,28 @@ export default function ViewIM() {
               {iMStatus === "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED" &&
                 activeDean && (
                   <div>
-                    <button
-                      className='bg-palette_blue text-palette_white rounded px-2 py-1'
-                      onClick={deanEndorsementHandler}
-                    >
-                      Endorse IM
-                    </button>
+                    <>
+                      <button
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                        onClick={openConfirmation}
+                      >
+                        <span>Endorse IM</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 448 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                        </svg>
+                      </button>
+                      {state.openConfirmation && (
+                        <Confirmation
+                          onClose={closeConfirmation}
+                          onConfirm={deanEndorsementHandler}
+                        />
+                      )}
+                    </>
                   </div>
                 )}
 
@@ -645,9 +764,19 @@ export default function ViewIM() {
                   <div>
                     <Link
                       href={`/im/${iM.id}/idd_coordinator_suggestion`}
-                      className='bg-palette_blue text-palette_white px-2 rounded py-1'
+                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
                     >
-                      IDD Coordinator Suggestion
+                      <span>IDD Coordinator Suggestion</span>
+                      <span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 576 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                        </svg>
+                      </span>
                     </Link>
                   </div>
                 )}
@@ -671,12 +800,30 @@ export default function ViewIM() {
                         }));
                       }}
                     />
-                    <button
-                      className='bg-palette_blue text-palette_white p-2 py-1 rounded'
-                      onClick={submitForCITLEndorsementHandler}
-                    >
-                      Submit for endorsement
-                    </button>
+
+                    <>
+                      <button
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                        onClick={openConfirmation}
+                        disabled={!Boolean(state.iMFile)}
+                      >
+                        <span>Submit for endorsement</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 448 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                        </svg>
+                      </button>
+                      {state.openConfirmation && (
+                        <Confirmation
+                          onClose={closeConfirmation}
+                          onConfirm={submitForCITLEndorsementHandler}
+                        />
+                      )}
+                    </>
                   </div>
                 )}
 
@@ -693,18 +840,43 @@ export default function ViewIM() {
                       id={iM.id}
                       editable={false}
                     />
-                    <div className='space-x-1'>
+
+                    <div className='space-x-1 flex'>
+                      <>
+                        <button
+                          className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                          onClick={openConfirmation}
+                        >
+                          <span>Endorse IM</span>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            height='1em'
+                            viewBox='0 0 448 512'
+                            className='fill-palette_white'
+                          >
+                            <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                          </svg>
+                        </button>
+                        {state.openConfirmation && (
+                          <Confirmation
+                            onClose={closeConfirmation}
+                            onConfirm={iDDCoordinatorEndorsementHandler}
+                          />
+                        )}
+                      </>
                       <button
-                        className='bg-palette_blue text-palette_white p-2 py-1 rounded'
-                        onClick={iDDCoordinatorEndorsementHandler}
-                      >
-                        Endorse IM
-                      </button>
-                      <button
-                        className='bg-palette_blue text-palette_white p-2 py-1 rounded'
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
                         onClick={returnIDDCoordinatorEndorsementHandler}
                       >
-                        Return revision
+                        <span>Return Revision</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 512 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M48.5 224H40c-13.3 0-24-10.7-24-24V72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8H48.5z' />
+                        </svg>
                       </button>
                     </div>
                   </div>
@@ -713,12 +885,28 @@ export default function ViewIM() {
               {iMStatus === "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" &&
                 activeCITLDirector && (
                   <div>
-                    <button
-                      className='bg-palette_blue text-palette_white px-2 py-1 rounded'
-                      onClick={cITLDirectorEndorsementHandler}
-                    >
-                      Endorse IM
-                    </button>
+                    <>
+                      <button
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                        onClick={openConfirmation}
+                      >
+                        <span>Endorse IM</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 448 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                        </svg>
+                      </button>
+                      {state.openConfirmation && (
+                        <Confirmation
+                          onClose={closeConfirmation}
+                          onConfirm={cITLDirectorEndorsementHandler}
+                        />
+                      )}
+                    </>
                   </div>
                 )}
 
@@ -727,9 +915,19 @@ export default function ViewIM() {
                   <div>
                     <Link
                       href={`/im/${iM.id}/qamis_suggestion`}
-                      className='rounded bg-palette_blue text-palette_white px-2 py-1'
+                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
                     >
-                      Input QAMIS suggestions
+                      <span>Input QAMIS suggestions</span>
+                      <span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 576 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                        </svg>
+                      </span>
                     </Link>
                   </div>
                 )}
@@ -738,28 +936,76 @@ export default function ViewIM() {
                 <div className='space-y-1'>
                   <IMQAMISSuggestionItems id={iM.id} editable={false} />
                   {activeCoordinator && (
-                    <button
-                      className='bg-palette_blue text-palette_white px-2 py-1 rounded'
-                      onClick={onQAMISCoordinatorEndorsement}
-                    >
-                      Coordinator Endorsement
-                    </button>
+                    <>
+                      <button
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                        onClick={openConfirmation}
+                      >
+                        <span>Coordinator Endorsement</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 448 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                        </svg>
+                      </button>
+                      {state.openConfirmation && (
+                        <Confirmation
+                          onClose={closeConfirmation}
+                          onConfirm={onQAMISCoordinatorEndorsement}
+                        />
+                      )}
+                    </>
                   )}
                   {activeChairperson && (
-                    <button
-                      className='bg-palette_blue text-palette_white px-2 py-1 rounded'
-                      onClick={onQAMISChairpersonEndorsement}
-                    >
-                      Chairperson Endorsement
-                    </button>
+                    <>
+                      <button
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                        onClick={openConfirmation}
+                      >
+                        <span>Chairperson Endorsement</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 448 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                        </svg>
+                      </button>
+                      {state.openConfirmation && (
+                        <Confirmation
+                          onClose={closeConfirmation}
+                          onConfirm={onQAMISChairpersonEndorsement}
+                        />
+                      )}
+                    </>
                   )}
                   {activeDean && (
-                    <button
-                      className='bg-palette_blue text-palette_white px-2 py-1 rounded'
-                      onClick={onQAMISDeanEndorsement}
-                    >
-                      Dean Endorsement
-                    </button>
+                    <>
+                      <button
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                        onClick={openConfirmation}
+                      >
+                        <span>Dean Endorsement</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 448 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                        </svg>
+                      </button>
+                      {state.openConfirmation && (
+                        <Confirmation
+                          onClose={closeConfirmation}
+                          onConfirm={onQAMISDeanEndorsement}
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               )}
@@ -769,27 +1015,57 @@ export default function ViewIM() {
                   {activeContentSpecialist && (
                     <Link
                       href={`/im/${iM.id}/content_specialist_review`}
-                      className='bg-palette_blue text-palette_white px-2 py-1 rounded'
+                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
                     >
-                      Content Specialist Review
+                      <span>Content Specialist Review</span>
+                      <span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 576 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                        </svg>
+                      </span>
                     </Link>
                   )}
 
                   {activeCITLDirector && (
                     <Link
                       href={`/im/${iM.id}/content_editor_review`}
-                      className='bg-palette_blue text-palette_white px-2 py-1 rounded'
+                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
                     >
-                      Content Editor Review
+                      <span>Content Editor Review</span>
+                      <span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 576 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                        </svg>
+                      </span>
                     </Link>
                   )}
 
                   {activeIDDCoordinator && (
                     <Link
                       href={`/im/${iM.id}/idd_specialist_review`}
-                      className='bg-palette_blue text-palette_white px-2 py-1 rounded'
+                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
                     >
-                      IDD Specialist Review
+                      <span>IDD Specialist Review</span>
+                      <span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 576 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                        </svg>
+                      </span>
                     </Link>
                   )}
                 </div>
@@ -836,12 +1112,29 @@ export default function ViewIM() {
                       />
                     </div>
 
-                    <button
-                      className='bg-palette_blue text-palette_white px-2 py-1 rounded mt-1 '
-                      onClick={submitForIMERCCITLEndorsementHandler}
-                    >
-                      Submit for endorsement
-                    </button>
+                    <>
+                      <button
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                        onClick={openConfirmation}
+                        disabled={!Boolean(state.iMFile)}
+                      >
+                        <span>Submit for endorsement</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 448 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                        </svg>
+                      </button>
+                      {state.openConfirmation && (
+                        <Confirmation
+                          onClose={closeConfirmation}
+                          onConfirm={submitForIMERCCITLEndorsementHandler}
+                        />
+                      )}
+                    </>
                   </div>
                 )}
 
@@ -866,18 +1159,42 @@ export default function ViewIM() {
                       id={iM.id}
                       editable={false}
                     />
-                    <div className='space-x-1'>
+                    <div className='space-x-1 flex'>
+                      <>
+                        <button
+                          className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                          onClick={openConfirmation}
+                        >
+                          <span>Endorse IM</span>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            height='1em'
+                            viewBox='0 0 448 512'
+                            className='fill-palette_white'
+                          >
+                            <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                          </svg>
+                        </button>
+                        {state.openConfirmation && (
+                          <Confirmation
+                            onClose={closeConfirmation}
+                            onConfirm={iMERCIDDCoordinatorEndorsementHandler}
+                          />
+                        )}
+                      </>
                       <button
-                        className='rounded bg-palette_blue text-palette_white px-2 py-1'
-                        onClick={iMERCIDDCoordinatorEndorsementHandler}
-                      >
-                        Endorse IM
-                      </button>
-                      <button
-                        className='rounded bg-palette_blue text-palette_white px-2 py-1'
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
                         onClick={returnIMERCIDDCoordinatorEndorsementHandler}
                       >
-                        Return revision
+                        <span>Return Revision</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 512 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M48.5 224H40c-13.3 0-24-10.7-24-24V72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8H48.5z' />
+                        </svg>
                       </button>
                     </div>
                   </div>
@@ -886,12 +1203,28 @@ export default function ViewIM() {
               {iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" &&
                 activeCITLDirector && (
                   <div>
-                    <button
-                      className='bg-palette_blue text-palette_white px-2 py-1 rounded'
-                      onClick={iMERCCITLDirectorEndorsementHandler}
-                    >
-                      Endorse IM
-                    </button>
+                    <>
+                      <button
+                        className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                        onClick={openConfirmation}
+                      >
+                        <span>Endorse IM</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1em'
+                          viewBox='0 0 448 512'
+                          className='fill-palette_white'
+                        >
+                          <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                        </svg>
+                      </button>
+                      {state.openConfirmation && (
+                        <Confirmation
+                          onClose={closeConfirmation}
+                          onConfirm={iMERCCITLDirectorEndorsementHandler}
+                        />
+                      )}
+                    </>
                   </div>
                 )}
             </div>
@@ -1100,6 +1433,7 @@ function EditIM() {
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
   const [openEdit, setOpenEdit] = useState(false);
+  const { addSnackbar } = useContext(SnackbarContext);
 
   const formik = useFormik({
     initialValues: {
@@ -1117,11 +1451,16 @@ function EditIM() {
       axios
         .put(`/api/im/${iMId}`, values)
         .then(() => {
-          alert("IM Updated");
-          router.reload();
+          addSnackbar("IM Updated successfully");
         })
         .catch((error) => {
-          alert(error.response.data.error.message);
+          addSnackbar(
+            error.response.data?.error?.message ?? "Failed to update IM",
+            "error"
+          );
+        })
+        .finally(() => {
+          router.reload();
         });
     },
   });
@@ -1164,12 +1503,23 @@ function EditIM() {
                 <option value='WORKTEXT'>Worktext</option>
                 <option value='TEXTBOOK'>Textbook</option>
               </select>
-              <input
+              <button
                 type='submit'
-                value='Submit'
                 disabled={!formik.isValid}
-                className='border rounded py-1 bg-palette_blue text-palette_white'
-              />
+                className='bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90 disabled:bg-opacity-50'
+              >
+                <span>Submit</span>
+                <span>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    height='1em'
+                    viewBox='0 0 448 512'
+                    className='fill-palette_white'
+                  >
+                    <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                  </svg>
+                </span>
+              </button>
             </div>
           </form>
         </Modal>

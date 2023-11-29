@@ -69,7 +69,7 @@ export default function Confirmation({
             Yes
           </button>
           <button
-            className='px-4 py-1 bg-palette_light_blue text-palette_white rounded hover:bg-opacity-90'
+            className='px-4 py-1 bg-palette_blue text-palette_white rounded hover:bg-opacity-90'
             onClick={onClose}
           >
             No

@@ -1,6 +1,7 @@
 import MainLayout from "@/components/MainLayout";
 import ReviewItem from "@/components/ReviewItem";
 import ReviewSection from "@/components/ReviewSection";
+import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
 import usePeerReviewIM from "@/hooks/usePeerReviewIM";
@@ -9,7 +10,12 @@ import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
+import {
+  DetailedHTMLProps,
+  SelectHTMLAttributes,
+  useContext,
+  useEffect,
+} from "react";
 import * as Yup from "yup";
 
 export default function AddPeerReviewPage() {
@@ -18,6 +24,7 @@ export default function AddPeerReviewPage() {
   const departmentReview = useDepartmentReviewIM({ id: iMId as string });
   const peerReview = usePeerReviewIM({ id: iMId as string });
   const activeFaculty = useActiveFacultyMe();
+  const { addSnackbar } = useContext(SnackbarContext);
   const formik = useFormik({
     initialValues: {
       q1_1: "",
@@ -105,7 +112,7 @@ export default function AddPeerReviewPage() {
           router.push(`/im/${iMId}/peer_suggestion`);
         })
         .catch((error) => {
-          alert(error?.response?.data?.error?.message);
+          addSnackbar("Failed to submit review", "error");
         });
     },
   });
@@ -272,12 +279,23 @@ export default function AddPeerReviewPage() {
                   </ReviewSection>
                 </div>
                 <div className='flex justify-end p-1'>
-                  <input
+                  <button
                     type='submit'
-                    value='Next'
                     disabled={formik.isSubmitting || !formik.isValid}
-                    className='bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded cursor-pointer'
-                  />
+                    className='bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
+                  >
+                    <span>Next</span>
+                    <span>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        height='1em'
+                        viewBox='0 0 448 512'
+                        className='fill-palette_white'
+                      >
+                        <path d='M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z' />
+                      </svg>
+                    </span>
+                  </button>
                 </div>
               </form>
             </div>

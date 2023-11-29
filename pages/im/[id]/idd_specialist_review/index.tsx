@@ -1,22 +1,27 @@
 import MainLayout from "@/components/MainLayout";
 import ReviewItem from "@/components/ReviewItem";
 import ReviewSection from "@/components/ReviewSection";
+import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useIDDSpecialistReviewIM from "@/hooks/useIDDSpecialistReviewIM";
-import useIDDSpecialistReviewMe from "@/hooks/useIDDSpecialistReviewMe";
 import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
+import {
+  DetailedHTMLProps,
+  SelectHTMLAttributes,
+  useContext,
+  useEffect,
+} from "react";
 import * as Yup from "yup";
 
 export default function AddIDDSpecialistReviewPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const { addSnackbar } = useContext(SnackbarContext);
   const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
     id: iMId as string,
   });
@@ -110,11 +115,13 @@ export default function AddIDDSpecialistReviewPage() {
           activeIDDCoordinatorId: activeIDDCoordinator.id,
         })
         .then(() => {
-          alert("IDDSpecialistReview Added Successfully");
           router.push(`/im/${iMId}/idd_specialist_suggestion`);
         })
         .catch((error) => {
-          alert(error?.response?.data?.error?.message);
+          addSnackbar(
+            error?.response?.data?.error?.message ?? "Failed to submit review",
+            "error"
+          );
         });
     },
   });

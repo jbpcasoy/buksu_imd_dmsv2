@@ -1,6 +1,7 @@
 import MainLayout from "@/components/MainLayout";
 import ReviewItem from "@/components/ReviewItem";
 import ReviewSection from "@/components/ReviewSection";
+import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useContentEditorReviewIM from "@/hooks/useContentEditorReviewIM";
 import useContentEditorReviewMe from "@/hooks/useContentEditorReviewMe";
@@ -11,11 +12,17 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
+import {
+  DetailedHTMLProps,
+  SelectHTMLAttributes,
+  useContext,
+  useEffect,
+} from "react";
 import * as Yup from "yup";
 
 export default function AddContentEditorReviewPage() {
   const router = useRouter();
+  const { addSnackbar } = useContext(SnackbarContext);
   const iMId = router.query.id;
   const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
     id: iMId as string,
@@ -110,11 +117,13 @@ export default function AddContentEditorReviewPage() {
           activeCITLDirectorId: activeCITLDirector.id,
         })
         .then(() => {
-          alert("ContentEditorReview Added Successfully");
           router.push(`/im/${iMId}/content_editor_suggestion`);
         })
         .catch((error) => {
-          alert(error?.response?.data?.error?.message);
+          addSnackbar(
+            error?.response?.data?.error?.message ?? "Failed to submit review",
+            "error"
+          );
         });
     },
   });
@@ -285,12 +294,23 @@ export default function AddContentEditorReviewPage() {
                   </ReviewSection>
                 </div>
                 <div className='flex justify-end p-1'>
-                  <input
+                  <button
                     type='submit'
-                    value='Next'
                     disabled={formik.isSubmitting || !formik.isValid}
-                    className='bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded cursor-pointer'
-                  />
+                    className='bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90'
+                  >
+                    <span>Submit</span>
+                    <span>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        height='1em'
+                        viewBox='0 0 448 512'
+                        className='fill-palette_white'
+                      >
+                        <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                      </svg>
+                    </span>
+                  </button>
                 </div>
               </form>
             </div>

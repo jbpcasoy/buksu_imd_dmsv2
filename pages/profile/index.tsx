@@ -1,4 +1,5 @@
 import MainLayout from "@/components/MainLayout";
+import { SnackbarContext } from "@/components/SnackbarProvider";
 import useCollege from "@/hooks/useCollege";
 import useDepartment from "@/hooks/useDepartment";
 import useDepartmentMe from "@/hooks/useDepartmentMe";
@@ -7,17 +8,20 @@ import axios from "axios";
 import { resolveObjectURL } from "buffer";
 import { useFormik } from "formik";
 import { signOut, useSession } from "next-auth/react";
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { ChangeEventHandler, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function ProfilePage() {
   const { data: session } = useSession({
     required: true,
   });
+  const router = useRouter();
   const department = useDepartmentMe();
   const college = useCollege({
     id: department?.collegeId,
   });
+  const { addSnackbar } = useContext(SnackbarContext);
 
   const [state, setState] = useState<{ previewUrl?: string; file?: File }>();
 
@@ -48,7 +52,16 @@ export default function ProfilePage() {
           image: `/api/profile_picture_file/${profilePicture?.id}/image`,
         })
         .then((res) => {
-          alert("Profile updated successfully");
+          addSnackbar("Profile updated successfully");
+        })
+        .catch((error) => {
+          addSnackbar(
+            error.response.data?.error?.message ?? "Failed to update profile",
+            "error"
+          );
+        })
+        .finally(() => {
+          router.reload();
         });
     },
   });

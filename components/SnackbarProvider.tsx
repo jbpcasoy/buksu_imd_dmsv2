@@ -11,9 +11,7 @@ export const SnackbarContext = createContext<{
   addSnackbar: (message: string, type?: "error" | "success") => void;
 }>({
   snackbars: [],
-  addSnackbar: (message: string, type?: "error" | "success") => {
-    console.log("add snackbar");
-  },
+  addSnackbar: (message: string, type?: "error" | "success") => {},
 });
 
 interface SnackbarContextProviderProps {
@@ -35,14 +33,12 @@ export default function SnackbarContextProvider({
     setState((prev) => ({
       ...prev,
       snackbars: [
+        ...prev.snackbars.slice(-2),
         {
           id: uuidv4(),
           message,
           type: type ?? "success",
         },
-        ...(prev.snackbars.length > 1
-          ? prev.snackbars.slice(-2)
-          : prev.snackbars),
       ],
     }));
   };
@@ -67,7 +63,13 @@ export default function SnackbarContextProvider({
     const rawSnackbars = localStorage.getItem("snackbars");
     if (rawSnackbars) {
       const parsedSnackbars = JSON.parse(rawSnackbars);
-      setState({ snackbars: parsedSnackbars, initialState: false });
+      setState((prev) => ({
+        ...prev,
+        snackbars: parsedSnackbars,
+        initialState: false,
+      }));
+    } else {
+      setState((prev) => ({ ...prev, initialState: false }));
     }
   }, []);
 
@@ -85,7 +87,7 @@ export default function SnackbarContextProvider({
             return (
               <div
                 key={snackbar.id}
-                className={`w-96 rounded bg-palette_white m-2 py-2 px-4 flex justify-between items-center space-x-2 ${
+                className={`w-96 rounded m-2 py-2 px-4 flex justify-between items-center space-x-2 ${
                   snackbar.type === "success"
                     ? "bg-palette_success"
                     : "bg-palette_error"
