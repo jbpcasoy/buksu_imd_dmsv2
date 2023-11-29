@@ -82,7 +82,7 @@ export default function SnackbarContextProvider({
     >
       <div className='h-full'>
         <div className='h-full'>{children}</div>
-        <div className='absolute bottom-0 right-0'>
+        <div className='absolute bottom-0 right-0 p-2'>
           {state.snackbars.map((snackbar) => {
             return (
               <div

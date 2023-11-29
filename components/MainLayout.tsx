@@ -54,7 +54,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <div className='w-56'>
           <Sidebar />
         </div>
-        <div className='flex-1 flex flex-col h-full pb-3'>
+        <div className='flex-1 flex flex-col h-full'>
           {announcements?.length > 0 &&
             !router.pathname.startsWith("/im/[id]") && (
               <div className='flex justify-between items-center m-2 rounded py-5 px-2 bg-gradient-to-r from-palette_orange shadow'>

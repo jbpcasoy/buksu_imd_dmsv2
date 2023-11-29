@@ -655,7 +655,7 @@ export default function ViewIM() {
                     />
 
                     <button
-                      className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2'
+                      className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
                       disabled={Boolean(!state?.iMFile)}
                       onClick={openConfirmation}
                     >
