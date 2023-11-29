@@ -16,6 +16,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   });
   const router = useRouter();
   const activeFaculty = useContext(ActiveFacultyContext);
+  const [openSidebar, setOpenSidebar] = useState(true);
   const [state, setState] = useState({
     skip: 0,
     take: 1,
@@ -49,11 +50,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className='flex flex-col h-screen'>
-      <Header />
+      <Header onToggleSidebar={setOpenSidebar} />
       <div className='flex-1 flex h-full overflow-y-clip overflow-x-auto'>
-        <div className='w-56'>
+        {openSidebar && <div className='w-56'>
           <Sidebar />
-        </div>
+        </div>}
         <div className='flex-1 flex flex-col h-full'>
           {announcements?.length > 0 &&
             !router.pathname.startsWith("/im/[id]") && (
