@@ -137,21 +137,6 @@ export default function IDDCoordinatorSuggestionPage() {
       },
     });
 
-    if (iM === null) {
-      return (
-        <MainLayout>
-          <Error statusCode={404} title='IM Not Found' />
-        </MainLayout>
-      );
-    }
-    if (iM === undefined) {
-      return (
-        <MainLayout>
-          <Loading />
-        </MainLayout>
-      );
-    }
-
     return (
       <>
         <button
@@ -213,6 +198,22 @@ export default function IDDCoordinatorSuggestionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
+  
   return (
     <MainLayout>
       <div className='flex space-x-1 h-full overflow-auto'>

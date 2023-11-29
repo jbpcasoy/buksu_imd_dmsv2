@@ -12,6 +12,7 @@ import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Modal from "./Modal";
+import { SnackbarContext } from "./SnackbarProvider";
 
 export interface IMTableProps {
   count: number;
@@ -327,6 +328,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
 }
 
 function AddIM() {
+  const { addSnackbar } = useContext(SnackbarContext);
   const activeFaculty = useContext(ActiveFacultyContext);
   const router = useRouter();
   const [state, setState] = useState({ addIMOpen: false });
@@ -348,8 +350,14 @@ function AddIM() {
         .post<IM>("/api/im", { ...values, activeFacultyId: activeFaculty?.id })
         .then((res) => {
           const iM = res.data;
-          alert("IM Uploaded");
+          addSnackbar("IM created successfully");
           router.push(`/im/${iM.id}`);
+        })
+        .catch((error) => {
+          addSnackbar(
+            error.response.data?.error?.message ?? "Failed to create IM",
+            "error"
+          );
         });
     },
   });

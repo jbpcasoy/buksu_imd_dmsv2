@@ -29,7 +29,16 @@ import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import useIMLatestPlagiarismFile from "@/hooks/useIMLatestPlagiarismFile";
 import useIMLatestQAMISFile from "@/hooks/useIMLatestQAMISFile";
 import useIMStatus from "@/hooks/useIMStatus";
+import useQAMISChairpersonEndorsementIM from "@/hooks/useQAMISChairpersonEndorsementIM";
+import useQAMISCoordinatorEndorsementIM from "@/hooks/useQAMISCoordinatorEndorsementIM";
+import useQAMISDeanEndorsementIM from "@/hooks/useQAMISDeanEndorsementIM";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
+import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
+import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
+import useSubmittedContentSpecialistSuggestionIM from "@/hooks/useSubmittedContentSpecialistSuggestionIM";
+import useSubmittedCoordinatorSuggestionIM from "@/hooks/useSubmittedCoordinatorSuggestionIM";
+import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
+import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
 import useUserFaculty from "@/hooks/useUserFaculty";
 import {
   ActiveFaculty,
@@ -76,6 +85,37 @@ export default function ViewIM() {
   const user = useUserFaculty({
     id: iM?.facultyId,
   });
+  const submittedPeerSuggestion = useSubmittedPeerSuggestionIM({
+    id: iMId as string,
+  });
+  const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
+    id: iMId as string,
+  });
+  const submittedCoordinatorSuggestion = useSubmittedCoordinatorSuggestionIM({
+    id: iMId as string,
+  });
+  const chairpersonEndorsement = useQAMISChairpersonEndorsementIM({
+    id: iMId as string,
+  });
+  const coordinatorEndorsement = useQAMISCoordinatorEndorsementIM({
+    id: iMId as string,
+  });
+  const deanEndorsement = useQAMISDeanEndorsementIM({
+    id: iMId as string,
+  });
+  const submittedContentSpecialistSuggestion =
+    useSubmittedContentSpecialistSuggestionIM({
+      id: iMId as string,
+    });
+  const submittedIDDSpecialistSuggestion =
+    useSubmittedIDDSpecialistSuggestionIM({
+      id: iMId as string,
+    });
+  const submittedContentEditorSuggestion =
+    useSubmittedContentEditorSuggestionIM({
+      id: iMId as string,
+    });
+
   const { addSnackbar } = useContext(SnackbarContext);
 
   const closeConfirmation = () => {
@@ -588,26 +628,27 @@ export default function ViewIM() {
 
               {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
                 <div className='space-x-2 my-1'>
-                  {iM.facultyId !== activeFaculty?.facultyId && (
-                    <Link
-                      href={`/im/${iM.id}/peer_review`}
-                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
-                    >
-                      <span>Peer Review</span>
-                      <span>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          height='1em'
-                          viewBox='0 0 576 512'
-                          className='fill-palette_white'
-                        >
-                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
-                        </svg>
-                      </span>
-                    </Link>
-                  )}
+                  {iM.facultyId !== activeFaculty?.facultyId &&
+                    !submittedPeerSuggestion && (
+                      <Link
+                        href={`/im/${iM.id}/peer_review`}
+                        className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
+                      >
+                        <span>Peer Review</span>
+                        <span>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            height='1em'
+                            viewBox='0 0 576 512'
+                            className='fill-palette_white'
+                          >
+                            <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                          </svg>
+                        </span>
+                      </Link>
+                    )}
 
-                  {activeCoordinator && (
+                  {activeCoordinator && !submittedCoordinatorSuggestion && (
                     <Link
                       href={`/im/${iM.id}/coordinator_review`}
                       className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
@@ -626,7 +667,7 @@ export default function ViewIM() {
                     </Link>
                   )}
 
-                  {activeChairperson && (
+                  {activeChairperson && !submittedChairpersonSuggestion && (
                     <Link
                       href={`/im/${iM.id}/chairperson_review`}
                       className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
@@ -950,7 +991,7 @@ export default function ViewIM() {
               {iMStatus === "IMERC_QAMIS_REVISED" && (
                 <div className='space-y-1'>
                   <IMQAMISSuggestionItems id={iM.id} editable={false} />
-                  {activeCoordinator && (
+                  {activeCoordinator && !coordinatorEndorsement && (
                     <>
                       <button
                         className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
@@ -974,7 +1015,7 @@ export default function ViewIM() {
                       )}
                     </>
                   )}
-                  {activeChairperson && (
+                  {activeChairperson && !chairpersonEndorsement && (
                     <>
                       <button
                         className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
@@ -998,7 +1039,7 @@ export default function ViewIM() {
                       )}
                     </>
                   )}
-                  {activeDean && (
+                  {activeDean && !deanEndorsement && (
                     <>
                       <button
                         className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
@@ -1027,26 +1068,27 @@ export default function ViewIM() {
 
               {iMStatus === "IMERC_QAMIS_DEPARTMENT_ENDORSED" && (
                 <div className='space-x-2'>
-                  {activeContentSpecialist && (
-                    <Link
-                      href={`/im/${iM.id}/content_specialist_review`}
-                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
-                    >
-                      <span>Content Specialist Review</span>
-                      <span>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          height='1em'
-                          viewBox='0 0 576 512'
-                          className='fill-palette_white'
-                        >
-                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
-                        </svg>
-                      </span>
-                    </Link>
-                  )}
+                  {activeContentSpecialist &&
+                    !submittedContentSpecialistSuggestion && (
+                      <Link
+                        href={`/im/${iM.id}/content_specialist_review`}
+                        className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
+                      >
+                        <span>Content Specialist Review</span>
+                        <span>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            height='1em'
+                            viewBox='0 0 576 512'
+                            className='fill-palette_white'
+                          >
+                            <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                          </svg>
+                        </span>
+                      </Link>
+                    )}
 
-                  {activeCITLDirector && (
+                  {activeCITLDirector && !submittedContentEditorSuggestion && (
                     <Link
                       href={`/im/${iM.id}/content_editor_review`}
                       className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
@@ -1065,24 +1107,25 @@ export default function ViewIM() {
                     </Link>
                   )}
 
-                  {activeIDDCoordinator && (
-                    <Link
-                      href={`/im/${iM.id}/idd_specialist_review`}
-                      className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
-                    >
-                      <span>IDD Specialist Review</span>
-                      <span>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          height='1em'
-                          viewBox='0 0 576 512'
-                          className='fill-palette_white'
-                        >
-                          <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
-                        </svg>
-                      </span>
-                    </Link>
-                  )}
+                  {activeIDDCoordinator &&
+                    !submittedIDDSpecialistSuggestion && (
+                      <Link
+                        href={`/im/${iM.id}/idd_specialist_review`}
+                        className='bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90'
+                      >
+                        <span>IDD Specialist Review</span>
+                        <span>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            height='1em'
+                            viewBox='0 0 576 512'
+                            className='fill-palette_white'
+                          >
+                            <path d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z' />
+                          </svg>
+                        </span>
+                      </Link>
+                    )}
                 </div>
               )}
 
