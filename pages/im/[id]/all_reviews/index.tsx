@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import ReviewItem from "@/components/ReviewItem";
 import ReviewSection from "@/components/ReviewSection";
@@ -6,6 +7,7 @@ import useContentEditorReviewIM from "@/hooks/useContentEditorReviewIM";
 import useContentSpecialistReviewIM from "@/hooks/useContentSpecialistReviewIM";
 import useCoordinatorReviewIM from "@/hooks/useCoordinatorReviewIM";
 import useIDDSpecialistReviewIM from "@/hooks/useIDDSpecialistReviewIM";
+import useIM from "@/hooks/useIM";
 import usePeerReviewIM from "@/hooks/usePeerReviewIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
@@ -17,7 +19,7 @@ import {
   IDDSpecialistReview,
   PeerReview,
 } from "@prisma/client";
-import Link from "next/link";
+import Error from "next/error";
 import { useRouter } from "next/router";
 
 export default function AllReviewsPage() {
@@ -29,6 +31,22 @@ export default function AllReviewsPage() {
   const contentSpecialistReview = useContentSpecialistReviewIM({ id: iMId });
   const contentEditorReview = useContentEditorReviewIM({ id: iMId });
   const iDDSpecialistReview = useIDDSpecialistReviewIM({ id: iMId });
+  const iM = useIM({ id: iMId as string });
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

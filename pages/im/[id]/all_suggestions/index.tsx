@@ -8,12 +8,31 @@ import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
 import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
+import useIM from "@/hooks/useIM";
+import Error from "next/error";
 import { useRouter } from "next/router";
 
 export default function AllSuggestionsPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

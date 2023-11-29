@@ -3,12 +3,14 @@ import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionIt
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import ReturnedDepartmentRevisionItem from "@/components/ReturnedDepartmentRevisionItem";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
+import useIM from "@/hooks/useIM";
 import useReturnedDepartmentRevisionMe from "@/hooks/useReturnedDepartmentRevisionMe";
 import { useReturnedDepartmentRevisionSuggestionItemsIMParams } from "@/hooks/useReturnedDepartmentRevisionSuggestionItemsIM";
 import useReturnedDepartmentRevisionSuggestionItemsOwn from "@/hooks/useReturnedDepartmentRevisionSuggestionItemsOwn";
@@ -16,6 +18,7 @@ import useSubmittedReturnedDepartmentRevisionReturnedDepartmentRevision from "@/
 import { ReturnedDepartmentRevision } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -24,6 +27,7 @@ import * as Yup from "yup";
 export default function ReturnedDepartmentRevisionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const returnedDepartmentRevision = useReturnedDepartmentRevisionMe({
     id: iMId as string,
   });
@@ -197,6 +201,21 @@ export default function ReturnedDepartmentRevisionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

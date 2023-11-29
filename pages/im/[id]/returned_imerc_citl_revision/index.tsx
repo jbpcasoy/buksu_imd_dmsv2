@@ -3,11 +3,13 @@ import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionIt
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import ReturnedIMERCCITLRevisionItem from "@/components/ReturnedIMERCCITLRevisionItem";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import useIM from "@/hooks/useIM";
 import useIMERCCITLRevisionIM from "@/hooks/useIMERCCITLRevisionIM";
 import useReturnedIMERCCITLRevisionMe from "@/hooks/useReturnedIMERCCITLRevisionMe";
 import { useReturnedIMERCCITLRevisionSuggestionItemsIMParams } from "@/hooks/useReturnedIMERCCITLRevisionSuggestionItemsIM";
@@ -16,6 +18,7 @@ import useSubmittedReturnedIMERCCITLRevisionReturnedIMERCCITLRevision from "@/ho
 import { ReturnedIMERCCITLRevision } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -23,6 +26,7 @@ import * as Yup from "yup";
 export default function ReturnedIMERCCITLRevisionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const returnedIMERCCITLRevision = useReturnedIMERCCITLRevisionMe({
     id: iMId as string,
   });
@@ -203,6 +207,21 @@ export default function ReturnedIMERCCITLRevisionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

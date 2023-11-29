@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import ReviewItem from "@/components/ReviewItem";
 import ReviewSection from "@/components/ReviewSection";
@@ -5,10 +6,12 @@ import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useCoordinatorReviewIM from "@/hooks/useCoordinatorReviewIM";
 import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
+import useIM from "@/hooks/useIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import * as Yup from "yup";
@@ -16,6 +19,7 @@ import * as Yup from "yup";
 export default function AddCoordinatorReviewPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const departmentReview = useDepartmentReviewIM({ id: iMId as string });
   const coordinatorReview = useCoordinatorReviewIM({ id: iMId as string });
   const activeFaculty = useActiveCoordinatorMe();
@@ -123,6 +127,21 @@ export default function AddCoordinatorReviewPage() {
     router.replace(`/im/${iMId}/coordinator_suggestion`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinatorReview, iMId]);
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   if (!departmentReview || !activeFaculty) {
     return null;

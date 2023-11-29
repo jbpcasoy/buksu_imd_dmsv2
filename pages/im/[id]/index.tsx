@@ -11,6 +11,7 @@ import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
 import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
@@ -41,6 +42,7 @@ import {
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
+import Error from "next/error";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -470,7 +472,20 @@ export default function ViewIM() {
       });
   };
 
-  if (!iM) return null;
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

@@ -31,6 +31,7 @@ export default function ReviewItem({
       <div className='mt-2 flex'>
         {ratings.map((rating, index) => (
           <label
+            key={rating.label}
             className={`bg-palette_white bg-opacity-40 px-2 flex-1 border border-palette_grey border-opacity-10 ${
               index === 0 ? "rounded-s" : ""
             } ${

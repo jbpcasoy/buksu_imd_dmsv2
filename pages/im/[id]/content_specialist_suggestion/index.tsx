@@ -19,10 +19,14 @@ import useSubmittedContentSpecialistSuggestionIM from "@/hooks/useSubmittedConte
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import Confirmation from "@/components/Confirmation";
+import Error from "next/error";
+import Loading from "@/components/Loading";
+import useIM from "@/hooks/useIM";
 
 export default function ContentSpecialistSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const contentSpecialistSuggestion = useContentSpecialistSuggestionMe({
     id: iMId as string,
   });
@@ -200,6 +204,21 @@ export default function ContentSpecialistSuggestionPage() {
       </div>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

@@ -3,12 +3,14 @@ import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionIt
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import ReturnedCITLRevisionItem from "@/components/ReturnedCITLRevisionItem";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useCITLRevisionIM from "@/hooks/useCITLRevisionIM";
+import useIM from "@/hooks/useIM";
 import useReturnedCITLRevisionMe from "@/hooks/useReturnedCITLRevisionMe";
 import { useReturnedCITLRevisionSuggestionItemsIMParams } from "@/hooks/useReturnedCITLRevisionSuggestionItemsIM";
 import useReturnedCITLRevisionSuggestionItemsOwn from "@/hooks/useReturnedCITLRevisionSuggestionItemsOwn";
@@ -16,6 +18,7 @@ import useSubmittedReturnedCITLRevisionReturnedCITLRevision from "@/hooks/useSub
 import { ReturnedCITLRevision } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -23,6 +26,9 @@ import * as Yup from "yup";
 export default function ReturnedCITLRevisionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({
+    id: iMId as string,
+  });
   const returnedCITLRevision = useReturnedCITLRevisionMe({
     id: iMId as string,
   });
@@ -197,6 +203,21 @@ export default function ReturnedCITLRevisionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

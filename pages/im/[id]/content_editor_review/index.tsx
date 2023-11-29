@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import ReviewItem from "@/components/ReviewItem";
 import ReviewSection from "@/components/ReviewSection";
@@ -5,11 +6,13 @@ import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useContentEditorReviewIM from "@/hooks/useContentEditorReviewIM";
 import useContentEditorReviewMe from "@/hooks/useContentEditorReviewMe";
+import useIM from "@/hooks/useIM";
 import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -24,6 +27,7 @@ export default function AddContentEditorReviewPage() {
   const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
     id: iMId as string,
   });
@@ -136,6 +140,21 @@ export default function AddContentEditorReviewPage() {
     router.replace(`/im/${iMId}/content_editor_suggestion`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentEditorReview, iMId]);
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   if (!qAMISDepartmentEndorsement || !activeCITLDirector) {
     return null;

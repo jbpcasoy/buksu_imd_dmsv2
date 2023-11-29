@@ -3,6 +3,7 @@ import IDDSpecialistSuggestionItem from "@/components/IDDSpecialistSuggestionIte
 import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
 import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
@@ -11,11 +12,13 @@ import useIDDSpecialistSuggestionItemsOwn, {
   useIDDSpecialistSuggestionItemsOwnParams,
 } from "@/hooks/useIDDSpecialistSuggestionItemsOwn";
 import useIDDSpecialistSuggestionMe from "@/hooks/useIDDSpecialistSuggestionMe";
+import useIM from "@/hooks/useIM";
 import useIMERCCITLRevisionIM from "@/hooks/useIMERCCITLRevisionIM";
 import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
 import { IDDSpecialistSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -23,6 +26,7 @@ import * as Yup from "yup";
 export default function IDDSpecialistSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({id: iMId as string});
   const iDDSpecialistSuggestion = useIDDSpecialistSuggestionMe({
     id: iMId as string,
   });
@@ -31,7 +35,7 @@ export default function IDDSpecialistSuggestionPage() {
   const iMERCCITLRevision = useIMERCCITLRevisionIM({ id: iMId as string });
   const submittedIDDSpecialistSuggestion =
     useSubmittedIDDSpecialistSuggestionIM({ id: iMId as string });
-    const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
   const [state, setState] = useState<useIDDSpecialistSuggestionItemsOwnParams>({
     skip: 0,
     take: 999,
@@ -193,6 +197,21 @@ export default function IDDSpecialistSuggestionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

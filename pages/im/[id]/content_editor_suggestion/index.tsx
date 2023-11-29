@@ -3,6 +3,7 @@ import ContentEditorSuggestionItem from "@/components/ContentEditorSuggestionIte
 import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
@@ -11,10 +12,12 @@ import useContentEditorSuggestionItemsOwn, {
   useContentEditorSuggestionItemsOwnParams,
 } from "@/hooks/useContentEditorSuggestionItemsOwn";
 import useContentEditorSuggestionMe from "@/hooks/useContentEditorSuggestionMe";
+import useIM from "@/hooks/useIM";
 import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
 import { ContentEditorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -22,6 +25,7 @@ import * as Yup from "yup";
 export default function ContentEditorSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const contentEditorSuggestion = useContentEditorSuggestionMe({
     id: iMId as string,
   });
@@ -192,6 +196,21 @@ export default function ContentEditorSuggestionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

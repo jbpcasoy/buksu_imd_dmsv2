@@ -2,6 +2,7 @@ import ChairpersonSuggestionItemComponent from "@/components/ChairpersonSuggesti
 import Confirmation from "@/components/Confirmation";
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
@@ -11,10 +12,12 @@ import useChairpersonSuggestionItemsOwn, {
 } from "@/hooks/useChairpersonSuggestionItemsOwn";
 import useChairpersonSuggestionMe from "@/hooks/useChairpersonSuggestionMe";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
+import useIM from "@/hooks/useIM";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import { ChairpersonSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -22,6 +25,7 @@ import * as Yup from "yup";
 export default function ChairpersonSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({id: iMId as string});
   const chairpersonSuggestion = useChairpersonSuggestionMe({
     id: iMId as string,
   });
@@ -186,6 +190,21 @@ export default function ChairpersonSuggestionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

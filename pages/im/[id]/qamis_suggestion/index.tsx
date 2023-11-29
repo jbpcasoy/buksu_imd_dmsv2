@@ -1,10 +1,12 @@
 import Confirmation from "@/components/Confirmation";
 import FileUpload from "@/components/FileUpload";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import QAMISSuggestionItem from "@/components/QAMISSuggestionItem";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useCITLDirectorEndorsementIM from "@/hooks/useCITLDirectorEndorsementIM";
+import useIM from "@/hooks/useIM";
 import useQAMISSuggestionItemsOwn, {
   useQAMISSuggestionItemsOwnParams,
 } from "@/hooks/useQAMISSuggestionItemsOwn";
@@ -13,6 +15,7 @@ import useSubmittedQAMISSuggestionIM from "@/hooks/useSubmittedQAMISSuggestionIM
 import { QAMISSuggestion, SubmittedQAMISSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -20,6 +23,7 @@ import * as Yup from "yup";
 export default function QAMISSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const { addSnackbar } = useContext(SnackbarContext);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const qAMISSuggestion = useQAMISSuggestionMe({
@@ -235,6 +239,21 @@ export default function QAMISSuggestionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

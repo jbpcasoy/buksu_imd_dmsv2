@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import useCITLDirectorEndorsementIM from "@/hooks/useCITLDirectorEndorsementIM";
 import useCITLRevisionIM from "@/hooks/useCITLRevisionIM";
@@ -21,9 +22,16 @@ import useSubmittedCoordinatorSuggestionIM from "@/hooks/useSubmittedCoordinator
 import useSubmittedIDDCoordinatorSuggestionIM from "@/hooks/useSubmittedIDDCoordinatorSuggestionIM";
 import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
 import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
+import Error from "next/error";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import ReactFlow, { Background, Controls, Edge, Node, PanOnScrollMode } from "reactflow";
+import ReactFlow, {
+  Background,
+  Controls,
+  Edge,
+  Node,
+  PanOnScrollMode,
+} from "reactflow";
 
 export default function IMTrackingPage() {
   const router = useRouter();
@@ -398,6 +406,21 @@ export default function IMTrackingPage() {
     },
   ];
 
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
+
   return (
     <MainLayout>
       <div className='h-full w-full mr-50'>
@@ -408,7 +431,10 @@ export default function IMTrackingPage() {
           elementsSelectable={false}
           panOnScroll={true}
           panOnScrollMode={PanOnScrollMode.Vertical}
-          translateExtent={[[0,0], [800, 1700]]}
+          translateExtent={[
+            [0, 0],
+            [800, 1700],
+          ]}
         >
           <Background />
           <Controls showInteractive={false} />

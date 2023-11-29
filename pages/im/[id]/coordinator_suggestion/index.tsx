@@ -2,6 +2,7 @@ import Confirmation from "@/components/Confirmation";
 import CoordinatorSuggestionItem from "@/components/CoordinatorSuggestionItem";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
@@ -11,10 +12,12 @@ import useCoordinatorSuggestionItemsOwn, {
 } from "@/hooks/useCoordinatorSuggestionItemsOwn";
 import useCoordinatorSuggestionMe from "@/hooks/useCoordinatorSuggestionMe";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
+import useIM from "@/hooks/useIM";
 import useSubmittedCoordinatorSuggestionIM from "@/hooks/useSubmittedCoordinatorSuggestionIM";
 import { CoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -22,6 +25,7 @@ import * as Yup from "yup";
 export default function CoordinatorSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const coordinatorSuggestion = useCoordinatorSuggestionMe({
     id: iMId as string,
@@ -182,6 +186,21 @@ export default function CoordinatorSuggestionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

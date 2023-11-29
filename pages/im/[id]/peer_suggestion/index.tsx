@@ -1,11 +1,13 @@
 import Confirmation from "@/components/Confirmation";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import PeerSuggestionItemComponent from "@/components/PeerSuggestionItem";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
+import useIM from "@/hooks/useIM";
 import usePeerReviewMe from "@/hooks/usePeerReviewMe";
 import usePeerSuggestionItemsOwn, {
   usePeerSuggestionItemsOwnParams,
@@ -15,6 +17,7 @@ import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
 import { PeerSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -22,6 +25,7 @@ import * as Yup from "yup";
 export default function PeerSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const peerSuggestion = usePeerSuggestionMe({
     id: iMId as string,
   });
@@ -182,6 +186,21 @@ export default function PeerSuggestionPage() {
       </>
     );
   };
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

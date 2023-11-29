@@ -1,14 +1,17 @@
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import ReviewItem from "@/components/ReviewItem";
 import ReviewSection from "@/components/ReviewSection";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveContentSpecialistMe from "@/hooks/useActiveContentSpecialistMe";
 import useContentSpecialistReviewIM from "@/hooks/useContentSpecialistReviewIM";
+import useIM from "@/hooks/useIM";
 import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
+import Error from "next/error";
 import { useRouter } from "next/router";
 import {
   DetailedHTMLProps,
@@ -22,6 +25,7 @@ export default function AddContentSpecialistReviewPage() {
   const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
     id: iMId as string,
   });
@@ -134,6 +138,21 @@ export default function AddContentSpecialistReviewPage() {
     router.replace(`/im/${iMId}/content_specialist_suggestion`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentSpecialistReview, iMId]);
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   if (!qAMISDepartmentEndorsement || !activeContentSpecialist) {
     return null;
