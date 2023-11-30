@@ -25,7 +25,7 @@ import * as Yup from "yup";
 export default function ChairpersonSuggestionPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const iM = useIM({id: iMId as string});
+  const iM = useIM({ id: iMId as string });
   const chairpersonSuggestion = useChairpersonSuggestionMe({
     id: iMId as string,
   });
@@ -287,6 +287,7 @@ export default function ChairpersonSuggestionPage() {
         </div>
         <div className='flex-1'>
           <iframe
+            loading='lazy'
             src={`/api/im_file/im/${iMId}/pdf`}
             className='w-full h-full rounded'
           />

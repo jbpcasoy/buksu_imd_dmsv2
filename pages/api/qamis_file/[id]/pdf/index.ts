@@ -40,15 +40,14 @@ export default async function handler(
         },
       });
 
-
-      res.setHeader("Content-Disposition", `inline`);
       res.setHeader("Content-Type", `application/pdf`);
 
-      const destination = path.join(process.cwd(), `/files/qamis/${qAMISFile.filename}`);
-      const readFile = promisify(fs.readFile);
-      const file = await readFile(destination);
-
-      return res.send(file);
+      const destination = path.join(
+        process.cwd(),
+        `/files/qamis/${qAMISFile.filename}`
+      );
+      const file = fs.createReadStream(destination);
+      file.pipe(res);
     } catch (error: any) {
       logger.error(error);
       return res
@@ -56,7 +55,6 @@ export default async function handler(
         .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
-
 
   switch (req.method) {
     case "GET":

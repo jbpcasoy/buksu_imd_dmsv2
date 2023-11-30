@@ -1402,6 +1402,7 @@ export default function ViewIM() {
         <div className='flex flex-1 h-full'>
           {iMFile && (
             <iframe
+              loading='lazy'
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
               className='w-full h-full rounded'

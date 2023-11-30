@@ -9,7 +9,6 @@ import fs from "fs";
 import path from "path";
 import { promisify } from "util";
 
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -40,14 +39,14 @@ export default async function handler(
         },
       });
 
-      res.setHeader("Content-Disposition", `inline`);
       res.setHeader("Content-Type", `application/pdf`);
 
-      const destination = path.join(process.cwd(), `/files/im/${iMFile.filename}`);
-      const readFile = promisify(fs.readFile);
-      const file = await readFile(destination);
-
-      return res.send(file);
+      const destination = path.join(
+        process.cwd(),
+        `/files/im/${iMFile.filename}`
+      );
+      const file = fs.createReadStream(destination);
+      file.pipe(res);
     } catch (error: any) {
       logger.error(error);
       return res

@@ -79,9 +79,10 @@ function FileUpload({
             </button>
           </div>
           <iframe
+            loading='lazy'
             src={state.filePreview}
             className='w-full h-screen-3/4 rounded'
-          ></iframe>
+          />
         </div>
       )}
     </div>

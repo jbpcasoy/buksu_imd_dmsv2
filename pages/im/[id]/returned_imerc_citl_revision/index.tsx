@@ -314,6 +314,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
         </div>
         <div className='flex-1'>
           <iframe
+            loading='lazy'
             src={`/api/im_file/im/${iMId}/pdf`}
             className='w-full h-full rounded'
           />

@@ -13,16 +13,13 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Error from "next/error";
 import { useRouter } from "next/router";
-import {
-  useContext,
-  useEffect
-} from "react";
+import { useContext, useEffect } from "react";
 import * as Yup from "yup";
 
 export default function AddPeerReviewPage() {
   const router = useRouter();
   const iMId = router.query.id;
-  const iM = useIM({id: iMId as string});
+  const iM = useIM({ id: iMId as string });
   const departmentReview = useDepartmentReviewIM({ id: iMId as string });
   const peerReview = usePeerReviewIM({ id: iMId as string });
   const activeFaculty = useActiveFacultyMe();
@@ -319,6 +316,7 @@ export default function AddPeerReviewPage() {
             </div>
             <div className='flex-1'>
               <iframe
+                loading='lazy'
                 src={`/api/im_file/im/${iMId}/pdf`}
                 className='w-full h-full rounded'
               />

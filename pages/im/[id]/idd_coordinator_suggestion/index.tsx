@@ -213,7 +213,7 @@ export default function IDDCoordinatorSuggestionPage() {
       </MainLayout>
     );
   }
-  
+
   return (
     <MainLayout>
       <div className='flex space-x-1 h-full overflow-auto'>
@@ -301,6 +301,7 @@ export default function IDDCoordinatorSuggestionPage() {
         </div>
         <div className='flex-1'>
           <iframe
+            loading='lazy'
             src={`/api/im_file/im/${iMId}/pdf`}
             className='w-full h-full rounded'
           />
