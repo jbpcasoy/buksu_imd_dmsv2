@@ -5,6 +5,8 @@ import ReviewSection from "@/components/ReviewSection";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useCoordinatorReviewIM from "@/hooks/useCoordinatorReviewIM";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
 import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
 import useIM from "@/hooks/useIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
@@ -23,6 +25,11 @@ export default function AddCoordinatorReviewPage() {
   const departmentReview = useDepartmentReviewIM({ id: iMId as string });
   const coordinatorReview = useCoordinatorReviewIM({ id: iMId as string });
   const activeFaculty = useActiveCoordinatorMe();
+  const activeCoordinator = useActiveCoordinatorMe();
+  const myDepartment = useDepartmentMe();
+  const ownerDepartment = useDepartmentIM({
+    id: iMId as string,
+  });
   const { addSnackbar } = useContext(SnackbarContext);
   const formik = useFormik({
     initialValues: {
@@ -120,6 +127,28 @@ export default function AddCoordinatorReviewPage() {
   });
 
   useEffect(() => {
+    if (!myDepartment || !ownerDepartment) {
+      return;
+    }
+
+    if (myDepartment.id !== ownerDepartment.id) {
+      addSnackbar("Cannot review IM from other department", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [myDepartment, ownerDepartment]);
+
+  useEffect(() => {
+    if (activeCoordinator === undefined) {
+      return;
+    }
+
+    if (activeCoordinator === null) {
+      addSnackbar("Only coordinators are allowed for this action", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeCoordinator]);
+
+  useEffect(() => {
     if (!coordinatorReview) {
       return;
     }
@@ -141,10 +170,6 @@ export default function AddCoordinatorReviewPage() {
         <Loading />
       </MainLayout>
     );
-  }
-
-  if (!departmentReview || !activeFaculty) {
-    return null;
   }
 
   return (

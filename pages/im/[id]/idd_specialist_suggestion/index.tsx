@@ -7,6 +7,7 @@ import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useIDDSpecialistReviewMe from "@/hooks/useIDDSpecialistReviewMe";
 import useIDDSpecialistSuggestionItemsOwn, {
   useIDDSpecialistSuggestionItemsOwnParams,
@@ -42,6 +43,7 @@ export default function IDDSpecialistSuggestionPage() {
   });
   const iDDSpecialistSuggestionItems =
     useIDDSpecialistSuggestionItemsOwn(state);
+  const activeIDDCoordinator = useActiveIDDCoordinatorMe();
   const handleSubmitReview = () => {
     if (!iDDSpecialistSuggestion) return;
     axios
@@ -197,6 +199,20 @@ export default function IDDSpecialistSuggestionPage() {
       </>
     );
   };
+
+  useEffect(() => {
+    if (activeIDDCoordinator === undefined) {
+      return;
+    }
+
+    if (activeIDDCoordinator === null) {
+      addSnackbar(
+        "Only the IDD coordinator is allowed for this action",
+        "error"
+      );
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeIDDCoordinator]);
 
   if (iM === null) {
     return (

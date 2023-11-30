@@ -6,6 +6,7 @@ import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import PeerSuggestionItemComponent from "@/components/PeerSuggestionItem";
 import { SnackbarContext } from "@/components/SnackbarProvider";
+import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useIM from "@/hooks/useIM";
 import usePeerReviewMe from "@/hooks/usePeerReviewMe";
@@ -40,6 +41,7 @@ export default function PeerSuggestionPage() {
     id: iMId as string,
   });
   const peerSuggestionItems = usePeerSuggestionItemsOwn(state);
+  const activeFaculty = useActiveFacultyMe();
   const { addSnackbar } = useContext(SnackbarContext);
 
   const handleSubmitReview = () => {
@@ -186,6 +188,16 @@ export default function PeerSuggestionPage() {
       </>
     );
   };
+
+  useEffect(() => {
+    if (!iM || !activeFaculty) {
+      return;
+    }
+
+    if (iM.facultyId === activeFaculty.facultyId) {
+      router.replace(`/im/${iMId}`);
+    }
+  }, [iM, activeFaculty]);
 
   if (iM === null) {
     return (

@@ -6,11 +6,14 @@ import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
+import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useCoordinatorReviewMe from "@/hooks/useCoordinatorReviewMe";
 import useCoordinatorSuggestionItemsOwn, {
   useCoordinatorSuggestionItemsOwnParams,
 } from "@/hooks/useCoordinatorSuggestionItemsOwn";
 import useCoordinatorSuggestionMe from "@/hooks/useCoordinatorSuggestionMe";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useIM from "@/hooks/useIM";
 import useSubmittedCoordinatorSuggestionIM from "@/hooks/useSubmittedCoordinatorSuggestionIM";
@@ -40,6 +43,11 @@ export default function CoordinatorSuggestionPage() {
     id: iMId as string,
   });
   const coordinatorSuggestionItems = useCoordinatorSuggestionItemsOwn(state);
+  const activeCoordinator = useActiveCoordinatorMe();
+  const myDepartment = useDepartmentMe();
+  const ownerDepartment = useDepartmentIM({
+    id: iMId as string,
+  });
   const { addSnackbar } = useContext(SnackbarContext);
 
   const handleSubmitReview = () => {
@@ -72,6 +80,28 @@ export default function CoordinatorSuggestionPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submittedCoordinatorSuggestion, departmentRevision, iMId]);
+
+  useEffect(() => {
+    if (!myDepartment || !ownerDepartment) {
+      return;
+    }
+
+    if (myDepartment.id !== ownerDepartment.id) {
+      addSnackbar("Cannot review IM from other department", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [myDepartment, ownerDepartment]);
+
+  useEffect(() => {
+    if (activeCoordinator === undefined) {
+      return;
+    }
+
+    if (activeCoordinator === null) {
+      addSnackbar("Only coordinators are allowed for this action", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeCoordinator]);
 
   const AddSuggestionItem = () => {
     const [openAdd, setOpenAdd] = useState(false);

@@ -22,6 +22,10 @@ import Confirmation from "@/components/Confirmation";
 import Error from "next/error";
 import Loading from "@/components/Loading";
 import useIM from "@/hooks/useIM";
+import useActiveContentSpecialist from "@/hooks/useActiveContentSpecialist";
+import useActiveContentSpecialistMe from "@/hooks/useActiveContentSpecialistMe";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
 
 export default function ContentSpecialistSuggestionPage() {
   const router = useRouter();
@@ -44,6 +48,10 @@ export default function ContentSpecialistSuggestionPage() {
     useSubmittedContentSpecialistSuggestionIM({ id: iMId as string });
   const contentSpecialistSuggestionItems =
     useContentSpecialistSuggestionItemsOwn(state);
+    const activeContentSpecialist = useActiveContentSpecialistMe();
+    const myDepartment = useDepartmentMe();
+    const ownerDepartment = useDepartmentIM({id: iMId as string});
+
   const handleSubmitReview = () => {
     if (!contentSpecialistSuggestion) return;
     axios
@@ -204,6 +212,31 @@ export default function ContentSpecialistSuggestionPage() {
       </div>
     );
   };
+
+  useEffect(() => {
+    if (!myDepartment || !ownerDepartment) {
+      return;
+    }
+
+    if (myDepartment.id !== ownerDepartment.id) {
+      addSnackbar("Cannot review IM from other department", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [myDepartment, ownerDepartment]);
+
+  useEffect(() => {
+    if (activeContentSpecialist === undefined) {
+      return;
+    }
+
+    if (activeContentSpecialist === null) {
+      addSnackbar(
+        "Only content specialists are allowed for this action",
+        "error"
+      );
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeContentSpecialist]);
 
   if (iM === null) {
     return (

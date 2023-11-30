@@ -113,7 +113,7 @@ export default function SnackbarContextProvider({
                     <path d='M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V320c0 17.7 14.3 32 32 32s32-14.3 32-32V64zM32 480a40 40 0 1 0 0-80 40 40 0 1 0 0 80z' />
                   </svg>
                 )}
-                <p className='text-palette_white flex-1'>{snackbar.message}</p>
+                <p className='text-palette_white flex-1 text-ellipsis overflow-hidden'>{snackbar.message}</p>
                 <button
                   className='w-7 h-7 flex rounded-full justify-center items-center hover:bg-palette_white hover:bg-opacity-30'
                   onClick={() => closeSnackbar(snackbar.id)}

@@ -5,6 +5,7 @@ import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import QAMISSuggestionItem from "@/components/QAMISSuggestionItem";
 import { SnackbarContext } from "@/components/SnackbarProvider";
+import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useCITLDirectorEndorsementIM from "@/hooks/useCITLDirectorEndorsementIM";
 import useIM from "@/hooks/useIM";
 import useQAMISSuggestionItemsOwn, {
@@ -45,6 +46,7 @@ export default function QAMISSuggestionPage() {
     iMFile: undefined,
     qAMISFile: undefined,
   });
+  const activeFaculty = useActiveFacultyMe();
   useEffect(() => {
     console.log({ files });
   }, [files]);
@@ -239,6 +241,18 @@ export default function QAMISSuggestionPage() {
       </>
     );
   };
+
+  useEffect(() => {
+    if (!iM || !activeFaculty) {
+      return;
+    }
+
+    if (iM.facultyId !== activeFaculty.facultyId) {
+      addSnackbar("Can only review own IM", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [iM, activeFaculty]);
+
 
   if (iM === null) {
     return (

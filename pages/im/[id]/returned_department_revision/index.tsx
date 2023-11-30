@@ -9,6 +9,8 @@ import Modal from "@/components/Modal";
 import ReturnedDepartmentRevisionItem from "@/components/ReturnedDepartmentRevisionItem";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useIM from "@/hooks/useIM";
 import useReturnedDepartmentRevisionMe from "@/hooks/useReturnedDepartmentRevisionMe";
@@ -48,6 +50,10 @@ export default function ReturnedDepartmentRevisionPage() {
       ...state,
       id: returnedDepartmentRevision?.id,
     });
+  const myDepartment = useDepartmentMe();
+  const ownerDepartment = useDepartmentIM({
+    id: iMId as string,
+  });
   const { addSnackbar } = useContext(SnackbarContext);
 
   const handleSubmitSuggestions = () => {
@@ -201,6 +207,28 @@ export default function ReturnedDepartmentRevisionPage() {
       </>
     );
   };
+
+  useEffect(() => {
+    if (!myDepartment || !ownerDepartment) {
+      return;
+    }
+
+    if (myDepartment.id !== ownerDepartment.id) {
+      addSnackbar("Cannot review IM from other department", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [myDepartment, ownerDepartment]);
+
+  useEffect(() => {
+    if (activeCoordinator === undefined) {
+      return;
+    }
+
+    if (activeCoordinator === null) {
+      addSnackbar("Only coordinators are allowed for this action", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeCoordinator]);
 
   if (iM === null) {
     return (

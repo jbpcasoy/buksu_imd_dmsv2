@@ -7,6 +7,8 @@ import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
+import useActiveCITLDirector from "@/hooks/useActiveCITLDirector";
+import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useContentEditorReviewMe from "@/hooks/useContentEditorReviewMe";
 import useContentEditorSuggestionItemsOwn, {
   useContentEditorSuggestionItemsOwnParams,
@@ -40,6 +42,7 @@ export default function ContentEditorSuggestionPage() {
   });
   const contentEditorSuggestionItems =
     useContentEditorSuggestionItemsOwn(state);
+  const activeCITLDirector = useActiveCITLDirectorMe();
   const handleSubmitReview = () => {
     if (!contentEditorSuggestion) return;
     axios
@@ -196,6 +199,17 @@ export default function ContentEditorSuggestionPage() {
       </>
     );
   };
+
+  useEffect(() => {
+    if (activeCITLDirector === undefined) {
+      return;
+    }
+
+    if (activeCITLDirector === null) {
+      addSnackbar("Only the CITL director is allowed for this action", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeCITLDirector]);
 
   if (iM === null) {
     return (

@@ -5,6 +5,8 @@ import ReviewSection from "@/components/ReviewSection";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
 import useChairpersonReviewIM from "@/hooks/useChairpersonReviewIM";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
 import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
 import useIM from "@/hooks/useIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
@@ -23,6 +25,11 @@ export default function AddChairpersonReviewPage() {
   const departmentReview = useDepartmentReviewIM({ id: iMId as string });
   const chairpersonReview = useChairpersonReviewIM({ id: iMId as string });
   const activeFaculty = useActiveChairpersonMe();
+  const activeChairperson = useActiveChairpersonMe();
+  const myDepartment = useDepartmentMe();
+  const ownerDepartment = useDepartmentIM({
+    id: iMId as string,
+  });
   const { addSnackbar } = useContext(SnackbarContext);
   const formik = useFormik({
     initialValues: {
@@ -115,6 +122,28 @@ export default function AddChairpersonReviewPage() {
         });
     },
   });
+
+  useEffect(() => {
+    if (!myDepartment || !ownerDepartment) {
+      return;
+    }
+
+    if (myDepartment.id !== ownerDepartment.id) {
+      addSnackbar("Cannot review IM from other department", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [myDepartment, ownerDepartment]);
+
+  useEffect(() => {
+    if (activeChairperson === undefined) {
+      return;
+    }
+
+    if (activeChairperson === null) {
+      addSnackbar("Only chairpersons are allowed for this action", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeChairperson]);
 
   useEffect(() => {
     if (!chairpersonReview) {

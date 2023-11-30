@@ -204,6 +204,20 @@ export default function ReturnedCITLRevisionPage() {
     );
   };
 
+  useEffect(() => {
+    if (activeIDDCoordinator === undefined) {
+      return;
+    }
+
+    if (activeIDDCoordinator === null) {
+      addSnackbar(
+        "Only the IDD coordinator is allowed for this action",
+        "error"
+      );
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeIDDCoordinator]);
+
   if (iM === null) {
     return (
       <MainLayout>

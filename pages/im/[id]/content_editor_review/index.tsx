@@ -133,6 +133,20 @@ export default function AddContentEditorReviewPage() {
   });
 
   useEffect(() => {
+    if (activeCITLDirector === undefined) {
+      return;
+    }
+
+    if (activeCITLDirector === null) {
+      addSnackbar(
+        "Only the CITL director is allowed for this action",
+        "error"
+      );
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeCITLDirector]);
+
+  useEffect(() => {
     if (!contentEditorReview) {
       return;
     }
@@ -154,10 +168,6 @@ export default function AddContentEditorReviewPage() {
         <Loading />
       </MainLayout>
     );
-  }
-
-  if (!qAMISDepartmentEndorsement || !activeCITLDirector) {
-    return null;
   }
 
   return (

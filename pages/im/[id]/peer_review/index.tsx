@@ -4,6 +4,8 @@ import ReviewItem from "@/components/ReviewItem";
 import ReviewSection from "@/components/ReviewSection";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
 import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
 import useIM from "@/hooks/useIM";
 import usePeerReviewIM from "@/hooks/usePeerReviewIM";
@@ -23,6 +25,8 @@ export default function AddPeerReviewPage() {
   const departmentReview = useDepartmentReviewIM({ id: iMId as string });
   const peerReview = usePeerReviewIM({ id: iMId as string });
   const activeFaculty = useActiveFacultyMe();
+  const myDepartment = useDepartmentMe();
+  const ownerDepartment = useDepartmentIM({ id: iMId as string });
   const { addSnackbar } = useContext(SnackbarContext);
   const formik = useFormik({
     initialValues: {
@@ -115,6 +119,28 @@ export default function AddPeerReviewPage() {
         });
     },
   });
+
+  useEffect(() => {
+    if (!myDepartment || !ownerDepartment) {
+      return;
+    }
+
+    if (myDepartment.id !== ownerDepartment.id) {
+      addSnackbar("Cannot review IM from other department", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [myDepartment, ownerDepartment]);
+
+  useEffect(() => {
+    if (!iM || !activeFaculty) {
+      return;
+    }
+
+    if (iM.facultyId === activeFaculty.facultyId) {
+      addSnackbar("Cannot review own IM", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [iM, activeFaculty]);
 
   useEffect(() => {
     if (!peerReview) {

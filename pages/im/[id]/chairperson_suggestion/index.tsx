@@ -6,11 +6,14 @@ import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
+import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
 import useChairpersonReviewMe from "@/hooks/useChairpersonReviewMe";
 import useChairpersonSuggestionItemsOwn, {
   useChairpersonSuggestionItemsOwnParams,
 } from "@/hooks/useChairpersonSuggestionItemsOwn";
 import useChairpersonSuggestionMe from "@/hooks/useChairpersonSuggestionMe";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useIM from "@/hooks/useIM";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
@@ -41,6 +44,9 @@ export default function ChairpersonSuggestionPage() {
   });
   const chairpersonSuggestionItems = useChairpersonSuggestionItemsOwn(state);
   const { addSnackbar } = useContext(SnackbarContext);
+  const activeChairperson = useActiveChairpersonMe();
+  const myDepartment = useDepartmentMe();
+  const ownerDepartment = useDepartmentIM({id: iMId as string});
 
   const handleSubmitReview = () => {
     if (!chairpersonSuggestion) return;
@@ -190,6 +196,28 @@ export default function ChairpersonSuggestionPage() {
       </>
     );
   };
+
+  useEffect(() => {
+    if (!myDepartment || !ownerDepartment) {
+      return;
+    }
+
+    if (myDepartment.id !== ownerDepartment.id) {
+      addSnackbar("Cannot review IM from other department", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [myDepartment, ownerDepartment]);
+
+  useEffect(() => {
+    if (activeChairperson === undefined) {
+      return;
+    }
+
+    if (activeChairperson === null) {
+      addSnackbar("Only chairpersons are allowed for this action", "error");
+      router.replace(`/im/${iMId}`);
+    }
+  }, [activeChairperson]);
 
   if (iM === null) {
     return (
