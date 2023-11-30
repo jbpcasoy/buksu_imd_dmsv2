@@ -7,6 +7,7 @@ import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useTabCount from "@/hooks/useTabCount";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Sidebar() {
   const activeFaculty = useActiveFacultyMe();
@@ -16,6 +17,7 @@ export default function Sidebar() {
   const activeCoordinator = useActiveCoordinatorMe();
   const activeChairperson = useActiveChairpersonMe();
   const activeContentSpecialist = useActiveContentSpecialistMe();
+  const router = useRouter();
   const {
     cITLDirectorEndorsedCount,
     cITLDirectorToEndorseCount,
@@ -58,16 +60,10 @@ export default function Sidebar() {
           <div>
             <div className='flex flex-col'>
               {activeFaculty && (
-                // <Link
-                //   href='/department'
-                //   className='rounded hover:bg-palette_grey my-1 px-1'
-                // >
-                //   My Department
-                // </Link>
-
                 <Link
-                  href='/department'
-                  className='rounded hover:bg-palette_grey my-1 px-1 flex justify-between items-center py-1 px-2'
+                  href='/department'className={`rounded my-1 px-1 flex justify-between items-center py-1 px-2 hover:bg-palette_grey ${
+                    router.pathname === "/department" ? "border border-palette_orange" : ""
+                  }`}
                 >
                   <span className='flex items-center space-x-4'>
                     <svg
@@ -400,10 +396,13 @@ interface MenuItemProps {
   count: number;
 }
 function MenuItem({ count, label, link }: MenuItemProps) {
+  const router = useRouter();
   return (
     <Link
       href={link}
-      className='rounded hover:bg-palette_grey my-1 px-1 flex justify-between items-center py-1 px-2'
+      className={`rounded my-1 px-1 flex justify-between items-center py-1 px-2 hover:bg-palette_grey ${
+        router.pathname === link ? "border border-palette_orange" : ""
+      }`}
     >
       <span className='flex items-center space-x-4'>
         <svg
