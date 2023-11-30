@@ -30,6 +30,7 @@
     "next": "13.5.4",
     "next-auth": "^4.23.2",
     "next-connect": "^1.0.0-next.4",
+    "next-pwa": "^5.6.0",
     "pino": "^8.16.0",
     "pino-express": "^1.1.1",
     "react": "^18",
