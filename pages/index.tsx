@@ -77,6 +77,10 @@ export default function Home() {
   )
     return null;
 
+    if(!(activeCoordinator || activeChairperson || activeIDDCoordinator || activeCITLDirector || activeDean)) {
+      router.replace("/department/my_ims")
+    }
+
   return (
     <MainLayout>
       <div className='flex flex-col h-full'>
@@ -165,18 +169,6 @@ export default function Home() {
             </div>
           </div>
         )}
-        {activeFaculty &&
-          !(
-            activeDean ||
-            activeCITLDirector ||
-            activeIDDCoordinator ||
-            activeCoordinator ||
-            activeChairperson
-          ) && (
-            <div>
-              <p>Welcome Faculty!</p>
-            </div>
-          )}
       </div>
     </MainLayout>
   );
