@@ -170,7 +170,7 @@ export default function IDDSpecialistSuggestionPage() {
                   className='rounded'
                 />
                 <textarea
-                  placeholder='Remarks'
+                  placeholder='Remarks (optional)'
                   {...formik.getFieldProps("remarks")}
                   className='rounded'
                 />

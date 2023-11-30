@@ -130,6 +130,7 @@ export default function ProfilePage() {
                 <p className='text-sm'>{session?.user?.email}</p>
                 <input
                   type='text'
+                  required
                   placeholder='Name'
                   {...formik.getFieldProps("name")}
                   className='rounded w-full'

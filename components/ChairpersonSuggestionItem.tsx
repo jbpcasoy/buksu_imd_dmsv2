@@ -158,7 +158,7 @@ function EditSuggestionItem({
                 className='rounded'
               />
               <textarea
-                placeholder='remarks'
+                placeholder='Remarks (optional)'
                 {...formik.getFieldProps("remarks")}
                 className='rounded'
               />

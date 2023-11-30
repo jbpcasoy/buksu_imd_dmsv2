@@ -159,7 +159,7 @@ export default function CoordinatorSuggestionPage() {
                   className='w-full rounded'
                 />
                 <textarea
-                  placeholder='Remarks'
+                  placeholder='Remarks (optional)'
                   {...formik.getFieldProps("remarks")}
                   className='w-full rounded'
                 />

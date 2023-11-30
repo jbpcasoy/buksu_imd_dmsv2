@@ -174,7 +174,7 @@ export default function ReturnedDepartmentRevisionPage() {
                   className='w-full rounded'
                 />
                 <textarea
-                  placeholder='Remarks'
+                  placeholder='Remarks (optional)'
                   {...formik.getFieldProps("remarks")}
                   className='w-full rounded'
                 />
