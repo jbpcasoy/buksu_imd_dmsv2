@@ -1,11 +1,9 @@
 import MainLayout from "@/components/MainLayout";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useCollege from "@/hooks/useCollege";
-import useDepartment from "@/hooks/useDepartment";
 import useDepartmentMe from "@/hooks/useDepartmentMe";
 import { ProfilePictureFile } from "@prisma/client";
 import axios from "axios";
-import { resolveObjectURL } from "buffer";
 import { useFormik } from "formik";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";

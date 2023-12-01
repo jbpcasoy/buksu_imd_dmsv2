@@ -46,7 +46,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
 
   return (
     <div className=''>
-      <div className='flex justify-between items-center h-12 space-x-2 bg-palette_blue border-b border-palette_white sticky top-0 px-2'>
+      <div className='flex justify-between items-center h-12 space-x-2 bg-palette_blue border-b border-palette_white px-2'>
         <div className='flex space-x-2 justify-center items-center'>
           <button
             className='h-6 w-6 rounded-full fill-palette_white hover:bg-palette_white hover:fill-palette_blue flex justify-center items-center'

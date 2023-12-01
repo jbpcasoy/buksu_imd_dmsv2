@@ -23,13 +23,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <div className='flex flex-col h-screen'>
-      <div className='flex-1 flex h-full overflow-y-clip overflow-x-auto'>
-        <div className='w-40'>
-          <AdminSidebar />
-        </div>
-        <div className='flex-1 flex flex-col h-full overflow-auto'>
-          <AdminHeader />
-          <div className=''>{children}</div>
+      <div className='flex flex-col h-full overflow-auto'>
+        <AdminHeader />
+
+        <div className='flex-1 flex h-full overflow-y-clip overflow-x-auto'>
+          <div className='w-56 h-full overflow-auto'>
+            <AdminSidebar />
+          </div>
+          <div className='flex-1 flex flex-col h-full overflow-auto m-2'>
+            {children}
+          </div>
         </div>
       </div>
     </div>
