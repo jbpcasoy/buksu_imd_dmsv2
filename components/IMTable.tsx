@@ -19,6 +19,7 @@ export interface IMTableProps {
   iMs: IM[];
   title: string;
   onChangeState: (state: any) => any;
+  enableAdd?: boolean;
 }
 
 export default function IMTable({
@@ -26,6 +27,7 @@ export default function IMTable({
   iMs,
   title,
   onChangeState,
+  enableAdd = true,
 }: IMTableProps) {
   const [state, setState] = useState({
     take: 10,
@@ -108,7 +110,7 @@ export default function IMTable({
               <SortSelector onSortChange={handleSortChange} />
             </div>
           </div>
-          <AddIM />
+          {enableAdd && <AddIM />}
         </div>
       </div>
       <div className='flex-1 h-full overflow-auto'>

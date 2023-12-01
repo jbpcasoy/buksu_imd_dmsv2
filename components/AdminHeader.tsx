@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function AdminHeader() {
-  const {data: session} = useSession();
+  const { data: session } = useSession();
   return (
     // <div className='flex justify-end p-1 bg-palette_blue border-b border-palette_white'>
     // <Link href='/admin/profile' className=''>
@@ -46,15 +46,27 @@ export default function AdminHeader() {
               </svg>
             )}
           </button> */}
-          <Link
-            href="/"
-            className='w-48 bg-palette_blue text-lg block'
-          >
-            <img src='/images/logo.svg' alt='BukSU IMD DMS Logo' />
-          </Link>
+          <div className='flex justify-center items-center space-x-1'>
+            <Link href='/' className='w-48 bg-palette_blue text-lg block'>
+              <img src='/images/logo.svg' alt='BukSU IMD DMS Logo' />
+            </Link>
+            <p className='bg-palette_orange px-2 rounded text-palette_white flex justify-center items-center space-x-1 text-sm'>
+              <span>ADMIN</span>
+              <span>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  height='16'
+                  width='18'
+                  viewBox='0 0 576 512'
+                  className="fill-palette_white"
+                >
+                  <path d='M288 64C64 64 0 160 0 272S80 448 176 448h8.4c24.2 0 46.4-13.7 57.2-35.4l23.2-46.3c4.4-8.8 13.3-14.3 23.2-14.3s18.8 5.5 23.2 14.3l23.2 46.3c10.8 21.7 33 35.4 57.2 35.4H400c96 0 176-64 176-176s-64-208-288-208zM96 256a64 64 0 1 1 128 0A64 64 0 1 1 96 256zm320-64a64 64 0 1 1 0 128 64 64 0 1 1 0-128z' />
+                </svg>
+              </span>
+            </p>
+          </div>
         </div>
         <div className='flex justify-center items-center space-x-2'>
-          
           <Link href='/admin/profile' className=''>
             <img
               src={session?.user?.image ?? ""}
