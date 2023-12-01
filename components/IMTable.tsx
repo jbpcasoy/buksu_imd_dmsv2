@@ -111,8 +111,8 @@ export default function IMTable({
           <AddIM />
         </div>
       </div>
-      <div className='flex-1'>
-        <table className='table-auto w-full overflow-auto'>
+      <div className='flex-1 h-full overflow-auto'>
+        <table className='table-auto h-full w-full overflow-auto '>
           <thead className='bg-palette_grey bg-opacity-10 p-1'>
             <tr>
               <th className='font-normal'>TITLE</th>
@@ -125,7 +125,7 @@ export default function IMTable({
               <th className='font-normal'>ACTIONS</th>
             </tr>
           </thead>
-          <tbody className='py-1'>
+          <tbody className='py-1 h-full overflow-auto'>
             {iMs.map((iM) => {
               return <IMItem iM={iM} key={iM.id} />;
             })}

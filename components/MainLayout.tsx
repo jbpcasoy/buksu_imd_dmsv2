@@ -112,7 +112,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </button>
               </div>
             )}
-          <div className='flex-1 overflow-auto h-full m-2'>{children}</div>
+          <div className='flex-1 overflow-auto h-full p-2'>{children}</div>
         </div>
       </div>
     </div>
