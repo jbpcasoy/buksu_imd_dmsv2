@@ -203,6 +203,7 @@ function CITLDirectorItem({ cITLDirector }: CITLDirectorItemProps) {
           className='rounded text-palette_blue focus:border-palette_blue focus:ring focus:ring-offset-0 focus:ring-palette_blue focus:ring-opacity-10 cursor-pointer h-5 w-5'
           checked={Boolean(activeCITLDirector)}
           onChange={(e) => toggleHandler(e.target.checked)}
+          title="Active"
         />
 
         <>
