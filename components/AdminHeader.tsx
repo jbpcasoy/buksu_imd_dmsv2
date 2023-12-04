@@ -1,8 +1,38 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function AdminHeader() {
+export interface AdminHeaderProps {
+  onToggleSidebar: (open: boolean) => any;
+}
+export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
   const { data: session } = useSession();
+  const [state, setState] = useState({
+    initialized: false,
+    openSidebar: true,
+  });
+
+  useEffect(() => {
+    if (!state.initialized) {
+      return;
+    }
+
+    localStorage.setItem("openSidebar", JSON.stringify(state.openSidebar));
+    onToggleSidebar(state.openSidebar);
+  }, [state]);
+
+  useEffect(() => {
+    const rawOpenSidebar = localStorage.getItem("openSidebar");
+    if (rawOpenSidebar) {
+      setState((prev) => ({
+        ...prev,
+        openSidebar: JSON.parse(rawOpenSidebar),
+        initialized: true,
+      }));
+    } else {
+      setState((prev) => ({ ...prev, initialized: true }));
+    }
+  }, []);
   return (
     // <div className='flex justify-end p-1 bg-palette_blue border-b border-palette_white'>
     // <Link href='/admin/profile' className=''>
@@ -17,7 +47,7 @@ export default function AdminHeader() {
     <div className=''>
       <div className='flex justify-between items-center h-12 space-x-2 bg-palette_blue border-b border-palette_white px-2'>
         <div className='flex space-x-2 justify-center items-center'>
-          {/* <button
+          <button
             className='h-6 w-6 rounded-full fill-palette_white hover:bg-palette_white hover:fill-palette_blue flex justify-center items-center'
             onClick={() => {
               setState((prev) => ({ ...prev, openSidebar: !prev.openSidebar }));
@@ -45,7 +75,7 @@ export default function AdminHeader() {
                 <path d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z' />
               </svg>
             )}
-          </button> */}
+          </button>
           <div className='flex justify-center items-center space-x-1'>
             <Link href='/' className='w-48 bg-palette_blue text-lg block'>
               <img src='/images/logo.svg' alt='BukSU IMD DMS Logo' />
@@ -58,7 +88,7 @@ export default function AdminHeader() {
                   height='16'
                   width='18'
                   viewBox='0 0 576 512'
-                  className="fill-palette_white"
+                  className='fill-palette_white'
                 >
                   <path d='M288 64C64 64 0 160 0 272S80 448 176 448h8.4c24.2 0 46.4-13.7 57.2-35.4l23.2-46.3c4.4-8.8 13.3-14.3 23.2-14.3s18.8 5.5 23.2 14.3l23.2 46.3c10.8 21.7 33 35.4 57.2 35.4H400c96 0 176-64 176-176s-64-208-288-208zM96 256a64 64 0 1 1 128 0A64 64 0 1 1 96 256zm320-64a64 64 0 1 1 0 128 64 64 0 1 1 0-128z' />
                 </svg>
