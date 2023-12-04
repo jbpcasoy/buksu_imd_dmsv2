@@ -13,6 +13,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 
 export interface AdminIMTableProps {
   count: number;
@@ -114,7 +115,7 @@ export default function AdminIMTable({
         </div>
       </div>
       <div className='flex-1 h-full overflow-auto'>
-        <table className='table-auto h-full w-full overflow-auto '>
+        <table className='table-auto w-full overflow-auto '>
           <thead className='bg-palette_grey bg-opacity-10 p-1'>
             <tr>
               <th className='font-normal'>TITLE</th>
@@ -183,27 +184,27 @@ function IMItem({ iM }: { iM: IM }) {
   return (
     <tr key={iM.id} className='border-b'>
       <td>
-        <div className='py-1 pl-4'>{iM.title}</div>
+        <div className='py-1 px-2 pl-4'>{iM.title}</div>
       </td>
       <td>
-        <div className='py-1'>{iM.type}</div>
+        <div className='py-1 px-2'>{iM.type}</div>
       </td>
       <td>
-        <div className='py-1'>{user?.name}</div>
+        <div className='py-1 px-2'>{user?.name}</div>
       </td>
       <td>
-        <div className='py-1'>{department?.name}</div>
+        <div className='py-1 px-2'>{department?.name}</div>
       </td>
       <td>
-        <div className='py-1'>{college?.name}</div>
+        <div className='py-1 px-2'>{college?.name}</div>
       </td>
       <td>
-        <div className='py-1'>
+        <div className='py-1 px-2'>
           <IMStatus iM={iM} />
         </div>
       </td>
       <td>
-        <div className='py-1'>
+        <div className='py-1 px-2'>
           {DateTime.fromJSDate(new Date(iM.createdAt)).toRelative()}
         </div>
       </td>
@@ -231,7 +232,7 @@ function IMItem({ iM }: { iM: IM }) {
 
 function IMStatus({ iM }: { iM: IM }) {
   const iMStatus = useIMStatus({ id: iM.id });
-  return <>{iMStatus}</>;
+  return <>{iMStatusNormalizer(iMStatus)}</>;
 }
 
 // FilterSelector.tsx

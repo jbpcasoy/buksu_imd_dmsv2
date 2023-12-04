@@ -12,6 +12,7 @@ import useIMLatestPlagiarismFile from "@/hooks/useIMLatestPlagiarismFile";
 import useIMLatestQAMISFile from "@/hooks/useIMLatestQAMISFile";
 import useIMStatus from "@/hooks/useIMStatus";
 import useUser from "@/hooks/useUser";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 import { ActiveFaculty, IM } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
@@ -105,7 +106,7 @@ export default function IMPage() {
                   Type: {iM.type}
                 </span>
                 <span className='text-xs text-palette_grey'>
-                  Status: {iMStatus}
+                  Status: {iMStatusNormalizer(iMStatus)}
                 </span>
               </div>
               <p className='text-xs text-palette_grey'>

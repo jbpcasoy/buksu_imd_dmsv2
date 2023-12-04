@@ -55,6 +55,7 @@ import useSubmittedIDDCoordinatorSuggestionIM from "@/hooks/useSubmittedIDDCoord
 import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
 import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
 import useUserFaculty from "@/hooks/useUserFaculty";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 import {
   ActiveFaculty,
   CoordinatorEndorsement,
@@ -588,7 +589,7 @@ export default function ViewIM() {
                         Type: {iM.type}
                       </span>
                       <span className='text-xs text-palette_grey'>
-                        Status: {iMStatus}
+                        Status: {iMStatusNormalizer(iMStatus)}
                       </span>
                     </div>
                     <p className='text-xs text-palette_grey'>
