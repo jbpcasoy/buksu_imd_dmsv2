@@ -47,7 +47,9 @@ export default function ProfilePage() {
       return axios
         .put(`/api/user/${session.user.id}`, {
           ...values,
-          image: `/api/profile_picture_file/${profilePicture?.id}/image`,
+          image: profilePicture
+            ? `/api/profile_picture_file/${profilePicture?.id}/image`
+            : undefined,
         })
         .then((res) => {
           addSnackbar("Profile updated successfully");
