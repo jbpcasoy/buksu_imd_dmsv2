@@ -40,7 +40,7 @@ export default function AdminUsersPage() {
             <tbody>
               {users.map((user) => {
                 return (
-                  <tr key={user.id} className="border-b">
+                  <tr key={user.id} className='border-b'>
                     <td className='py-1 pl-4'>{user.name}</td>
                     <td className='py-1'>{user.email}</td>
                     <td className='py-1 flex justify-center items-center'>

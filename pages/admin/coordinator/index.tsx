@@ -1,9 +1,17 @@
 import AdminLayout from "@/components/AdminLayout";
+import { SnackbarContext } from "@/components/SnackbarProvider";
+import useActiveCoordinatorByCoordinatorId from "@/hooks/useActiveCoordinatorByCoordinatorId";
+import useActiveFacultyByFacultyId from "@/hooks/useActiveFacultyByFacultyId";
+import useCollege from "@/hooks/useCollege";
 import useCoordinators from "@/hooks/useCoordinators";
+import useDepartment from "@/hooks/useDepartment";
+import useFaculty from "@/hooks/useFaculty";
 import useUserFaculty from "@/hooks/useUserFaculty";
 import { Coordinator } from "@prisma/client";
+import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
 
 export default function CoordinatorsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
@@ -49,7 +57,9 @@ export default function CoordinatorsPage() {
           <table className='table-auto w-full text-sm'>
             <thead className='bg-palette_grey bg-opacity-10'>
               <tr>
-                <th className='font-normal'>FACULTY</th>
+                <th className='font-normal'>USER</th>
+                <th className='font-normal'>DEPARTMENT</th>
+                <th className='font-normal'>COLLEGE</th>
                 <th className='font-normal'>ACTION</th>
               </tr>
             </thead>
@@ -110,37 +120,123 @@ interface CoordinatorItemProps {
 
 function CoordinatorItem({ coordinator }: CoordinatorItemProps) {
   const user = useUserFaculty({ id: coordinator.facultyId });
+  const faculty = useFaculty({
+    id: coordinator.facultyId,
+  });
+  const activeCoordinator = useActiveCoordinatorByCoordinatorId({
+    id: coordinator.id,
+  });
+  const department = useDepartment({
+    id: faculty?.departmentId,
+  });
+  const college = useCollege({
+    id: department?.collegeId,
+  });
+  const router = useRouter();
+  const activeFaculty = useActiveFacultyByFacultyId({
+    id: coordinator.facultyId,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+
+  const deleteHandler = () => {
+    const ok = confirm("Are you sure?");
+
+    if (!ok) {
+      return;
+    }
+
+    axios
+      .delete(`/api/coordinator/${coordinator.id}`)
+      .then(() => {
+        addSnackbar("Coordinator deleted successfully.");
+      })
+      .catch((error) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete Coordinator",
+          "error"
+        );
+      });
+  };
+
+  const activateHandler = async () => {
+    return axios
+      .post(`/api/active_coordinator`, {
+        activeFacultyId: activeFaculty?.id,
+      })
+      .then(() => {
+        addSnackbar("Coordinator has been activated successfully");
+      })
+      .catch((error) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to deactivate Coordinator",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
+  const deactivateHandler = async () => {
+    return axios
+      .delete(`/api/active_coordinator/${activeCoordinator?.id}`)
+      .then(() => {
+        addSnackbar("Coordinator has been deactivated successfully");
+      })
+      .catch((error) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to deactivate Coordinator",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
+  const toggleHandler = (active: boolean) => {
+    if (active) {
+      activateHandler();
+    } else {
+      deactivateHandler();
+    }
+  };
 
   return (
     <tr key={coordinator.id} className='border-b'>
       <td className='py-1 pl-4'>
-        <Link
-          href={`/admin/faculty/${coordinator.facultyId}`}
-          className='underline'
-        >
+        <Link href={`/admin/user/${faculty?.userId}`} className='underline'>
           {user?.name}
         </Link>
       </td>
-      <td className='py-1 flex justify-center items-center'>
-        <Link
-          href={`/admin/coordinator/${coordinator.id}`}
-          className='rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1 hover:bg-opacity-90'
+      <td className='py-1 pl-4'>{department?.name}</td>
+      <td className='py-1 pl-4'>{college?.name}</td>
+      <td className='py-1 flex justify-center items-center space-x-1'>
+        <input
+          type='checkbox'
+          id='toggleSwitch'
+          className='rounded text-palette_blue focus:border-palette_blue focus:ring focus:ring-offset-0 focus:ring-palette_blue focus:ring-opacity-10 cursor-pointer h-5 w-5'
+          checked={Boolean(activeCoordinator)}
+          onChange={(e) => toggleHandler(e.target.checked)}
+        />
+
+        <button
+          className='rounded px-4 py-1 bg-palette_blue text-palette_white'
+          onClick={() => deleteHandler()}
         >
-          <span className='flex items-center space-x-1'>
-            <span>View</span>
-            <span>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                height='16'
-                width='16'
-                viewBox='0 0 512 512'
-                className='fill-palette_white'
-              >
-                <path d='M352 0c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9L370.7 96 201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L416 141.3l41.4 41.4c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V32c0-17.7-14.3-32-32-32H352zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
-              </svg>
-            </span>
-          </span>
-        </Link>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            height='16'
+            width='14'
+            viewBox='0 0 448 512'
+            className='fill-palette_white'
+          >
+            <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
+          </svg>
+        </button>
       </td>
     </tr>
   );

@@ -3,7 +3,7 @@ import { Department, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useDepartmentParams {
-  id: string;
+  id?: string;
 }
 export default function useDepartment({ id }: useDepartmentParams) {
   const [state, setState] = useState<Department | null>();

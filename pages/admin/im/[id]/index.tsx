@@ -1,15 +1,17 @@
 import AdminLayout from "@/components/AdminLayout";
+import { SnackbarContext } from "@/components/SnackbarProvider";
 import useIM from "@/hooks/useIM";
 import useIMs from "@/hooks/useIMs";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 export default function IMPage() {
   const router = useRouter();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
+  const { addSnackbar } = useContext(SnackbarContext);
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -21,11 +23,14 @@ export default function IMPage() {
     axios
       .delete(`/api/im/${iMId}`)
       .then(() => {
-        alert("IM deleted successfully.");
+        addSnackbar("IM deleted successfully");
         router.push("/admin/im");
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to delete IM",
+          "error"
+        );
       });
   };
 
