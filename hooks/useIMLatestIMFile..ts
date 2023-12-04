@@ -1,4 +1,4 @@
-import { IDDCoordinatorSuggestionItem, IMFile } from "@prisma/client";
+import { IMFile } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -12,6 +12,7 @@ export default function useIMLatestIMFile({ id }: useIMLatestIMFileParams) {
     if (!id) {
       return;
     }
+    
     axios
       .get(`/api/im_file/im/${id}`)
       .then((res) => {

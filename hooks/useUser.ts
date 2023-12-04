@@ -3,7 +3,7 @@ import { User, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useUserParams {
-  id: string;
+  id?: string;
 }
 export default function useUser({ id }: useUserParams) {
   const [state, setState] = useState<User | null>();
