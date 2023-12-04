@@ -23,7 +23,7 @@ export default function ReturnedIMERCCITLRevisionSuggestionItemActionTakenPage()
         `/api/returned_imerc_citl_revision_suggestion_item_action_taken/${returnedIMERCCITLRevisionSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ReturnedIMERCCITLRevisionSuggestionItemActionTaken deleted successfully.");
+        alert("ReturnedIMERCCITLRevisionSuggestionItemActionTaken deleted successfully");
       })
       .catch((error) => {
         alert(error.message);

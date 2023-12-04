@@ -24,7 +24,7 @@ export default function SubmittedReturnedIMERCCITLRevisionPage() {
         `/api/submitted_returned_imerc_citl_revision/${submittedReturnedIMERCCITLRevisionId}`
       )
       .then(() => {
-        alert("SubmittedReturnedIMERCCITLRevision deleted successfully.");
+        alert("SubmittedReturnedIMERCCITLRevision deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

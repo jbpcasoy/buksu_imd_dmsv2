@@ -22,7 +22,7 @@ export default function CoordinatorReviewPage() {
     axios
       .delete(`/api/coordinator_review/${coordinatorReviewId}`)
       .then(() => {
-        alert("CoordinatorReview deleted successfully.");
+        alert("CoordinatorReview deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

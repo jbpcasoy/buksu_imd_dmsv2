@@ -21,7 +21,7 @@ export default function QAMISDepartmentEndorsementPage() {
     axios
       .delete(`/api/qamis_department_endorsement/${qAMISDepartmentEndorsementId}`)
       .then(() => {
-        alert("QAMISDepartmentEndorsement deleted successfully.");
+        alert("QAMISDepartmentEndorsement deleted successfully");
       })
       .catch((error) => {
         alert(error.message);

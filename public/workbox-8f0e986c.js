@@ -1992,7 +1992,7 @@ define(['exports'], (function (exports) { 'use strict';
        * `event.waitUntil()` as part of performing the strategy have completed.
        *
        * You can await the `done` promise to ensure any extra work performed by
-       * the strategy (usually caching responses) completes successfully.
+       * the strategy (usually caching responses) completes successfully
        *
        * @param {FetchEvent|Object} options A `FetchEvent` or an object with the
        *     properties listed below.

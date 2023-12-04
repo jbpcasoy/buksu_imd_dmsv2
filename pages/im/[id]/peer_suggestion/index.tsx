@@ -96,7 +96,7 @@ export default function PeerSuggestionPage() {
               peerSuggestionId,
             })
             .then(() => {
-              addSnackbar("Suggestion added successfully.");
+              addSnackbar("Suggestion added successfully");
             })
             .catch(() => {
               addSnackbar("Failed to add suggestion", "error");

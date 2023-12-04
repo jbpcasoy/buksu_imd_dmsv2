@@ -22,7 +22,7 @@ export default function SubmittedPeerSuggestionPage() {
     axios
       .delete(`/api/submitted_peer_suggestion/${submittedPeerSuggestionId}`)
       .then(() => {
-        alert("SubmittedPeerSuggestion deleted successfully.");
+        alert("SubmittedPeerSuggestion deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

@@ -23,7 +23,7 @@ export default function PeerSuggestionItemActionTakenPage() {
         `/api/peer_suggestion_item_action_taken/${peerSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("PeerSuggestionItemActionTaken deleted successfully.");
+        alert("PeerSuggestionItemActionTaken deleted successfully");
       })
       .catch((error) => {
         alert(error.message);

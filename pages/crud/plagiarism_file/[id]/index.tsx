@@ -19,7 +19,7 @@ export default function PlagiarismFilePage() {
     axios
       .delete(`/api/plagiarism_file/${plagiarismFileId}`)
       .then(() => {
-        alert("PlagiarismFile deleted successfully.");
+        alert("PlagiarismFile deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

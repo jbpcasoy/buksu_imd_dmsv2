@@ -24,7 +24,7 @@ export default function ContentSpecialistReviewPage() {
     axios
       .delete(`/api/content_specialist_review/${contentSpecialistReviewId}`)
       .then(() => {
-        alert("ContentSpecialistReview deleted successfully.");
+        alert("ContentSpecialistReview deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

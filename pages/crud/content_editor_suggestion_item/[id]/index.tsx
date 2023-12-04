@@ -21,7 +21,7 @@ export default function ContentEditorSuggestionItemPage() {
     axios
       .delete(`/api/content_editor_suggestion_item/${contentEditorSuggestionItemId}`)
       .then(() => {
-        alert("ContentEditorSuggestionItem deleted successfully.");
+        alert("ContentEditorSuggestionItem deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

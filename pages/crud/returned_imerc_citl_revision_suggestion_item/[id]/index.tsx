@@ -24,7 +24,7 @@ export default function ReturnedIMERCCITLRevisionSuggestionItemPage() {
         `/api/returned_imerc_citl_revision_suggestion_item/${returnedIMERCCITLRevisionSuggestionItemId}`
       )
       .then(() => {
-        alert("ReturnedIMERCCITLRevisionSuggestionItem deleted successfully.");
+        alert("ReturnedIMERCCITLRevisionSuggestionItem deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

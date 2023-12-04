@@ -110,7 +110,7 @@ export default function ReturnedDepartmentRevisionPage() {
               returnedDepartmentRevisionId,
             })
             .then(() => {
-              addSnackbar("Suggestion added successfully.");
+              addSnackbar("Suggestion added successfully");
             })
             .catch(() => {
               addSnackbar("Failed to add suggestion", "error");

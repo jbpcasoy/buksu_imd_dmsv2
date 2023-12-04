@@ -23,7 +23,7 @@ export default function IMERCIDDCoordinatorEndorsementPage() {
         `/api/imerc_idd_coordinator_endorsement/${iMERCIDDCoordinatorEndorsementId}`
       )
       .then(() => {
-        alert("IMERCIDDCoordinatorEndorsement deleted successfully.");
+        alert("IMERCIDDCoordinatorEndorsement deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

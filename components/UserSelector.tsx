@@ -20,9 +20,14 @@ export default function UserSelector(props: FieldInputProps<any>) {
   };
 
   return (
-    <div>
-      <input type='text' onChange={onSearch} placeholder="search"/>
-      <select {...props}>
+    <div className='flex flex-col'>
+      <input
+        type='text'
+        onChange={onSearch}
+        placeholder='Search User Email'
+        className='rounded-t py-1'
+      />
+      <select {...props} className='rounded-b py-1'>
         <option value=''>Select</option>
         {users.map((user) => {
           return (

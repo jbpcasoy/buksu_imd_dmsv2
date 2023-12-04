@@ -19,7 +19,7 @@ export default function IDDCoordinatorEndorsementPage() {
     axios
       .delete(`/api/idd_coordinator_endorsement/${iDDCoordinatorEndorsementId}`)
       .then(() => {
-        alert("IDDCoordinatorEndorsement deleted successfully.");
+        alert("IDDCoordinatorEndorsement deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

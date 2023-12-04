@@ -19,7 +19,7 @@ export default function AnnouncementPage() {
     axios
       .delete(`/api/announcement/${announcementId}`)
       .then(() => {
-        alert("Announcement deleted successfully.");
+        alert("Announcement deleted successfully");
       })
       .catch((error) => {
         alert(error.message);

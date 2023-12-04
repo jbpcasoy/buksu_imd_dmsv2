@@ -19,7 +19,7 @@ export default function QAMISFilePage() {
     axios
       .delete(`/api/qamis_file/${qAMISFileId}`)
       .then(() => {
-        alert("QAMISFile deleted successfully.");
+        alert("QAMISFile deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

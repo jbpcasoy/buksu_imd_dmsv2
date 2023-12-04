@@ -24,7 +24,7 @@ export default function ReturnedDepartmentRevisionSuggestionItemPage() {
         `/api/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItemId}`
       )
       .then(() => {
-        alert("ReturnedDepartmentRevisionSuggestionItem deleted successfully.");
+        alert("ReturnedDepartmentRevisionSuggestionItem deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

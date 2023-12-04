@@ -1,6 +1,10 @@
 import AdminLayout from "@/components/AdminLayout";
+import Confirmation from "@/components/Confirmation";
+import DepartmentSelector from "@/components/DepartmentSelector";
+import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import ToggleSwitch from "@/components/ToggleSwitch";
+import UserSelector from "@/components/UserSelector";
 import useActiveFacultyByFacultyId from "@/hooks/useActiveFacultyByFacultyId";
 import useCollege from "@/hooks/useCollege";
 import useDepartment from "@/hooks/useDepartment";
@@ -8,9 +12,11 @@ import useFaculties from "@/hooks/useFaculties";
 import useUser from "@/hooks/useUser";
 import { Faculty } from "@prisma/client";
 import axios from "axios";
+import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
+import * as Yup from "yup";
 
 export default function FacultiesPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
@@ -36,20 +42,7 @@ export default function FacultiesPage() {
         <div className='flex justify-between bg-palette_grey bg-opacity-10 p-1'>
           <h2 className='px-2 border-b-2 border-palette_orange'>Faculty</h2>
 
-          <Link
-            className='rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1 hover:bg-opacity-90'
-            href={`/admin/faculty/add`}
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='1em'
-              viewBox='0 0 448 512'
-              className='fill-palette_white'
-            >
-              <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
-            </svg>
-            <span>Add</span>
-          </Link>
+          <AddModal />
         </div>
 
         <div className='flex-1 h-full'>
@@ -113,6 +106,9 @@ interface FacultyItemProps {
   faculty: Faculty;
 }
 function FacultyItem({ faculty }: FacultyItemProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
   const user = useUser({ id: faculty.userId });
   const { addSnackbar } = useContext(SnackbarContext);
   const activeFaculty = useActiveFacultyByFacultyId({
@@ -160,23 +156,20 @@ function FacultyItem({ faculty }: FacultyItemProps) {
       });
   };
 
-  const deleteHandler = (facultyId: string) => {
-    const ok = confirm("Are you sure?");
-
-    if (!ok) {
-      return;
-    }
-
+  const deleteHandler = () => {
     axios
-      .delete(`/api/faculty/${facultyId}`)
+      .delete(`/api/faculty/${faculty.id}`)
       .then(() => {
-        addSnackbar("Faculty deleted successfully.");
+        addSnackbar("Faculty deleted successfully");
       })
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ?? "Failed to delete faculty",
           "error"
         );
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -204,23 +197,123 @@ function FacultyItem({ faculty }: FacultyItemProps) {
           className='rounded text-palette_blue focus:border-palette_blue focus:ring focus:ring-offset-0 focus:ring-palette_blue focus:ring-opacity-10 cursor-pointer h-5 w-5'
           checked={Boolean(activeFaculty)}
           onChange={(e) => toggleHandler(e.target.checked)}
+          title="Active"
         />
 
-        <button
-          className='rounded px-4 py-1 bg-palette_blue text-palette_white'
-          onClick={() => deleteHandler(faculty.id)}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            height='16'
-            width='14'
-            viewBox='0 0 448 512'
-            className='fill-palette_white'
+        <>
+          <button
+            className='rounded px-4 py-1 bg-palette_blue text-palette_white'
+            onClick={() =>
+              setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+            }
           >
-            <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
-          </svg>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='14'
+              viewBox='0 0 448 512'
+              className='fill-palette_white'
+            >
+              <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
+            </svg>
+          </button>
+          {state.openDeleteConfirmation && (
+            <Confirmation
+              onClose={() =>
+                setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+              }
+              onConfirm={deleteHandler}
+            />
+          )}
+        </>
       </td>
     </tr>
+  );
+}
+
+function AddModal() {
+  const { addSnackbar } = useContext(SnackbarContext);
+  const [state, setState] = useState({
+    openAddModal: false,
+  });
+  const router = useRouter();
+
+  const formik = useFormik({
+    initialValues: {
+      userId: "",
+      departmentId: "",
+    },
+    validationSchema: Yup.object({
+      userId: Yup.string().required(),
+      departmentId: Yup.string().required(),
+    }),
+    onSubmit: (values) => {
+      axios
+        .post("/api/faculty", values)
+        .then(() => {
+          addSnackbar("Faculty added successfully");
+        })
+        .catch((error) => {
+          addSnackbar(
+            error.response.data?.error?.message ?? "Failed to add faculty",
+            "error"
+          );
+        })
+        .finally(() => {
+          router.reload();
+        });
+    },
+  });
+
+  const handleClose = () => {
+    setState((prev) => ({ ...prev, openAddModal: false }));
+  };
+  const handleOpen = () => {
+    setState((prev) => ({ ...prev, openAddModal: true }));
+  };
+
+  return (
+    <>
+      <button
+        className='rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1 hover:bg-opacity-90'
+        onClick={handleOpen}
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='1em'
+          viewBox='0 0 448 512'
+          className='fill-palette_white'
+        >
+          <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
+        </svg>
+        <span>Add</span>
+      </button>
+      {state.openAddModal && (
+        <Modal title='Add Faculty' onClose={handleClose}>
+          <form onSubmit={formik.handleSubmit} noValidate>
+            <div className='flex flex-col space-y-1'>
+              <DepartmentSelector {...formik.getFieldProps("departmentId")} />
+              <UserSelector {...formik.getFieldProps("userId")} />
+              <button
+                type='submit'
+                className='bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90'
+              >
+                <span>Submit</span>
+                <span>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    height='1em'
+                    viewBox='0 0 448 512'
+                    className='fill-palette_white'
+                  >
+                    <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
+    </>
   );
 }

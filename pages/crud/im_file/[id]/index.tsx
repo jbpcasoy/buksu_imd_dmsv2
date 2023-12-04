@@ -19,7 +19,7 @@ export default function IMFilePage() {
     axios
       .delete(`/api/im_file/${iMFileId}`)
       .then(() => {
-        alert("IMFile deleted successfully.");
+        alert("IMFile deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

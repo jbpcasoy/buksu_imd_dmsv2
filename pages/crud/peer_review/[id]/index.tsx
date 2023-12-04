@@ -22,7 +22,7 @@ export default function PeerReviewPage() {
     axios
       .delete(`/api/peer_review/${peerReviewId}`)
       .then(() => {
-        alert("PeerReview deleted successfully.");
+        alert("PeerReview deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

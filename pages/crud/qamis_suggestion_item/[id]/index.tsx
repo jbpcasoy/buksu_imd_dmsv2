@@ -21,7 +21,7 @@ export default function QAMISSuggestionItemPage() {
     axios
       .delete(`/api/qamis_suggestion_item/${qAMISSuggestionItemId}`)
       .then(() => {
-        alert("QAMISSuggestionItem deleted successfully.");
+        alert("QAMISSuggestionItem deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

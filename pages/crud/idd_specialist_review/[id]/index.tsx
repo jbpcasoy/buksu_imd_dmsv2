@@ -24,7 +24,7 @@ export default function IDDSpecialistReviewPage() {
     axios
       .delete(`/api/idd_specialist_review/${iDDSpecialistReviewId}`)
       .then(() => {
-        alert("IDDSpecialistReview deleted successfully.");
+        alert("IDDSpecialistReview deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

@@ -20,7 +20,7 @@ export default function ChairpersonPage() {
     axios
       .delete(`/api/chairperson/${chairpersonId}`)
       .then(() => {
-        alert("Chairperson deleted successfully.");
+        alert("Chairperson deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

@@ -19,7 +19,7 @@ export default function ActiveFacultyPage() {
     axios
       .delete(`/api/active_faculty/${activeFacultyId}`)
       .then(() => {
-        alert("ActiveFaculty deleted successfully.");
+        alert("ActiveFaculty deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

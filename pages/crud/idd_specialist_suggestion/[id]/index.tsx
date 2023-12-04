@@ -19,7 +19,7 @@ export default function IDDSpecialistSuggestionPage() {
     axios
       .delete(`/api/idd_specialist_suggestion/${iDDSpecialistSuggestionId}`)
       .then(() => {
-        alert("IDDSpecialistSuggestion deleted successfully.");
+        alert("IDDSpecialistSuggestion deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

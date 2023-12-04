@@ -21,7 +21,7 @@ export default function NotificationReadPage() {
     axios
       .delete(`/api/notification_read/${notificationReadId}`)
       .then(() => {
-        alert("NotificationRead deleted successfully.");
+        alert("NotificationRead deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

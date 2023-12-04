@@ -1,6 +1,8 @@
+import ActiveFacultySelector from "@/components/ActiveFacultySelector";
 import AdminLayout from "@/components/AdminLayout";
+import Confirmation from "@/components/Confirmation";
+import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
-import useActiveDean from "@/hooks/useActiveDean";
 import useActiveDeanByDeanId from "@/hooks/useActiveDeanByDeanId";
 import useActiveFacultyByFacultyId from "@/hooks/useActiveFacultyByFacultyId";
 import useCollege from "@/hooks/useCollege";
@@ -10,9 +12,11 @@ import useFaculty from "@/hooks/useFaculty";
 import useUserFaculty from "@/hooks/useUserFaculty";
 import { Dean } from "@prisma/client";
 import axios from "axios";
+import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
+import * as Yup from "yup";
 
 export default function DeansPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
@@ -38,20 +42,7 @@ export default function DeansPage() {
         <div className='flex justify-between bg-palette_grey bg-opacity-10 p-1'>
           <h2 className='border-b-2 border-palette_orange px-2'>Dean</h2>
 
-          <Link
-            className='rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1 hover:bg-opacity-90'
-            href={`/admin/dean/add`}
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='1em'
-              viewBox='0 0 448 512'
-              className='fill-palette_white'
-            >
-              <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
-            </svg>
-            <span>Add</span>
-          </Link>
+          <AddModal />
         </div>
 
         <div className='flex-1 h-full'>
@@ -114,6 +105,9 @@ interface DeanItemProps {
 }
 
 function DeanItem({ dean }: DeanItemProps) {
+  const [state, setState] = useState({
+    openDelete: false,
+  });
   const user = useUserFaculty({
     id: dean.facultyId,
   });
@@ -135,23 +129,27 @@ function DeanItem({ dean }: DeanItemProps) {
     id: dean.id,
   });
 
+  const handleOpen = () => {
+    setState((prev) => ({ ...prev, openDelete: true }));
+  };
+  const handleClose = () => {
+    setState((prev) => ({ ...prev, openDelete: false }));
+  };
+
   const deleteHandler = () => {
-    const ok = confirm("Are you sure?");
-
-    if (!ok) {
-      return;
-    }
-
     axios
-      .delete(`/api/user/${user?.id}`)
+      .delete(`/api/dean/${dean.id}`)
       .then(() => {
-        addSnackbar("Dean deleted successfully.");
+        addSnackbar("Dean deleted successfully");
       })
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ?? "Failed to delete Dean",
           "error"
         );
+      })
+      .finally(() => {
+        router.reload();
       });
   };
 
@@ -215,22 +213,113 @@ function DeanItem({ dean }: DeanItemProps) {
           checked={Boolean(activeDean)}
           onChange={(e) => toggleHandler(e.target.checked)}
         />
-
-        <button
-          className='rounded px-4 py-1 bg-palette_blue text-palette_white'
-          onClick={() => deleteHandler()}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            height='16'
-            width='14'
-            viewBox='0 0 448 512'
-            className='fill-palette_white'
+        <>
+          <button
+            className='rounded px-4 py-1 bg-palette_blue text-palette_white'
+            onClick={handleOpen}
           >
-            <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
-          </svg>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='14'
+              viewBox='0 0 448 512'
+              className='fill-palette_white'
+            >
+              <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
+            </svg>
+          </button>
+          {state.openDelete && (
+            <Confirmation onClose={handleClose} onConfirm={deleteHandler} />
+          )}
+        </>
       </td>
     </tr>
+  );
+}
+
+function AddModal() {
+  const [state, setState] = useState({
+    openAdd: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
+  const formik = useFormik({
+    initialValues: {
+      activeFacultyId: "",
+    },
+    validationSchema: Yup.object({
+      activeFacultyId: Yup.string().required(),
+    }),
+    onSubmit: (values) => {
+      axios
+        .post("/api/dean", values)
+        .then(() => {
+          addSnackbar("Dean added successfully");
+        })
+        .catch((error) => {
+          addSnackbar(
+            error.response.data?.error?.message ?? "Failed to add dean",
+            "error"
+          );
+        })
+        .finally(() => {
+          router.reload();
+        });
+    },
+  });
+
+  const handleClose = () => {
+    setState((prev) => ({ ...prev, openAdd: false }));
+  };
+
+  const handleOpen = () => {
+    setState((prev) => ({ ...prev, openAdd: true }));
+  };
+
+  return (
+    <>
+      <button
+        onClick={handleOpen}
+        className='rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1 hover:bg-opacity-90'
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='1em'
+          viewBox='0 0 448 512'
+          className='fill-palette_white'
+        >
+          <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
+        </svg>
+        <span>Add</span>
+      </button>
+      {state.openAdd && (
+        <Modal onClose={handleClose} title='Add Dean'>
+          <form onSubmit={formik.handleSubmit}>
+            <div className='flex flex-col space-y-1'>
+              <ActiveFacultySelector
+                {...formik.getFieldProps("activeFacultyId")}
+              />
+              <button
+                type='submit'
+                className='bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90'
+              >
+                <span>Submit</span>
+                <span>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    height='1em'
+                    viewBox='0 0 448 512'
+                    className='fill-palette_white'
+                  >
+                    <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
+    </>
   );
 }

@@ -23,7 +23,7 @@ export default function QAMISCoordinatorEndorsementPage() {
         `/api/qamis_coordinator_endorsement/${qAMISCoordinatorEndorsementId}`
       )
       .then(() => {
-        alert("QAMISCoordinatorEndorsement deleted successfully.");
+        alert("QAMISCoordinatorEndorsement deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
