@@ -14,6 +14,7 @@ import useIMERCIDDCoordinatorEndorsementIM from "@/hooks/useIMERCIDDCoordinatorE
 import useQAMISChairpersonEndorsementIM from "@/hooks/useQAMISChairpersonEndorsementIM";
 import useQAMISCoordinatorEndorsementIM from "@/hooks/useQAMISCoordinatorEndorsementIM";
 import useQAMISDeanEndorsementIM from "@/hooks/useQAMISDeanEndorsementIM";
+import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
@@ -85,6 +86,9 @@ export default function IMTrackingPage() {
   const qAMISDeanEndorsement = useQAMISDeanEndorsementIM({
     id: iM?.id,
   });
+  const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
+    id: iM?.id,
+  });
   const submittedContentSpecialistSuggestion =
     useSubmittedContentSpecialistSuggestionIM({
       id: iM?.id,
@@ -116,7 +120,12 @@ export default function IMTrackingPage() {
     },
     {
       id: "1",
-      data: { label: "Draft" },
+      data: {
+        label: "Draft",
+        object: {
+          departmentReview,
+        },
+      },
       position: { x: 300, y: 10 },
       hidden: !Boolean(departmentReview),
     },
@@ -140,7 +149,7 @@ export default function IMTrackingPage() {
     },
     {
       id: "3",
-      data: { label: "Revision" },
+      data: { label: "Department Revision" },
       position: { x: 300, y: 200 },
       hidden: !Boolean(departmentRevision),
     },
@@ -164,7 +173,7 @@ export default function IMTrackingPage() {
     },
     {
       id: "7",
-      data: { label: "Revision" },
+      data: { label: "CITL Revision" },
       position: { x: 300, y: 600 },
       hidden: !Boolean(cITLRevision),
     },
@@ -188,25 +197,25 @@ export default function IMTrackingPage() {
     },
     {
       id: "11",
-      data: { label: "Revision" },
+      data: { label: "QAMIS Revision" },
       position: { x: 300, y: 1000 },
       hidden: !Boolean(qAMISRevision),
     },
     {
       id: "12_1",
-      data: { label: "Chairperson Endorsement" },
+      data: { label: "QAMIS Chairperson Endorsement" },
       position: { x: 100, y: 1100 },
       hidden: !Boolean(qAMISChairpersonEndorsement),
     },
     {
       id: "12_2",
-      data: { label: "Coordinator Endorsement" },
+      data: { label: "QAMIS Coordinator Endorsement" },
       position: { x: 300, y: 1100 },
       hidden: !Boolean(qAMISCoordinatorEndorsement),
     },
     {
       id: "12_3",
-      data: { label: "Dean Endorsement" },
+      data: { label: "QAMIS Dean Endorsement" },
       position: { x: 500, y: 1100 },
       hidden: !Boolean(qAMISDeanEndorsement),
     },
@@ -214,11 +223,7 @@ export default function IMTrackingPage() {
       id: "13",
       data: { label: "Department Endorsement" },
       position: { x: 300, y: 1200 },
-      hidden: !Boolean(
-        qAMISDeanEndorsement &&
-          qAMISCoordinatorEndorsement &&
-          qAMISCoordinatorEndorsement
-      ),
+      hidden: !Boolean(qAMISDepartmentEndorsement),
     },
     {
       id: "14_1",
@@ -240,19 +245,19 @@ export default function IMTrackingPage() {
     },
     {
       id: "15",
-      data: { label: "Revision" },
+      data: { label: "IMERC Revision" },
       position: { x: 300, y: 1400 },
       hidden: !Boolean(iMERCCITLRevision),
     },
     {
       id: "16",
-      data: { label: "IDD Coordinator Endorsement" },
+      data: { label: "IMERC IDD Coordinator Endorsement" },
       position: { x: 300, y: 1500 },
       hidden: !Boolean(iMERCIDDCoordinatorEndorsement),
     },
     {
       id: "17",
-      data: { label: "CITL Director Endorsement" },
+      data: { label: "IMERC CITL Director Endorsement" },
       position: { x: 300, y: 1600 },
       hidden: !Boolean(iMERCCITLDirectorEndorsement),
     },

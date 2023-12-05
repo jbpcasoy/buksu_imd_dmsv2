@@ -32,8 +32,39 @@ import ReactFlow, {
   Node,
   PanOnScrollMode,
 } from "reactflow";
+import { useState } from "react";
+import Modal, { ModalProps } from "@/components/Modal";
+import { DateTime } from "luxon";
+import {
+  CITLDirectorEndorsement,
+  CITLRevision,
+  CoordinatorEndorsement,
+  DeanEndorsement,
+  DepartmentReview,
+  DepartmentRevision,
+  IDDCoordinatorEndorsement,
+  IMERCCITLDirectorEndorsement,
+  IMERCCITLRevision,
+  IMERCIDDCoordinatorEndorsement,
+  QAMISChairpersonEndorsement,
+  QAMISCoordinatorEndorsement,
+  QAMISDeanEndorsement,
+  QAMISDepartmentEndorsement,
+  QAMISRevision,
+  SubmittedChairpersonSuggestion,
+  SubmittedContentEditorSuggestion,
+  SubmittedContentSpecialistSuggestion,
+  SubmittedCoordinatorSuggestion,
+  SubmittedIDDCoordinatorSuggestion,
+  SubmittedIDDSpecialistSuggestion,
+  SubmittedPeerSuggestion,
+} from "@prisma/client";
+import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 
 export default function IMTrackingPage() {
+  const [state, setState] = useState({
+    openModal: "",
+  });
   const router = useRouter();
   const iMId = router.query.id as string;
   const iM = useIM({
@@ -85,6 +116,9 @@ export default function IMTrackingPage() {
   const qAMISDeanEndorsement = useQAMISDeanEndorsementIM({
     id: iM?.id,
   });
+  const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
+    id: iM?.id,
+  });
   const submittedContentSpecialistSuggestion =
     useSubmittedContentSpecialistSuggestionIM({
       id: iM?.id,
@@ -116,7 +150,12 @@ export default function IMTrackingPage() {
     },
     {
       id: "1",
-      data: { label: "Draft" },
+      data: {
+        label: "Draft",
+        object: {
+          departmentReview,
+        },
+      },
       position: { x: 300, y: 10 },
       hidden: !Boolean(departmentReview),
     },
@@ -140,7 +179,7 @@ export default function IMTrackingPage() {
     },
     {
       id: "3",
-      data: { label: "Revision" },
+      data: { label: "Department Revision" },
       position: { x: 300, y: 200 },
       hidden: !Boolean(departmentRevision),
     },
@@ -164,7 +203,7 @@ export default function IMTrackingPage() {
     },
     {
       id: "7",
-      data: { label: "Revision" },
+      data: { label: "CITL Revision" },
       position: { x: 300, y: 600 },
       hidden: !Boolean(cITLRevision),
     },
@@ -188,25 +227,25 @@ export default function IMTrackingPage() {
     },
     {
       id: "11",
-      data: { label: "Revision" },
+      data: { label: "QAMIS Revision" },
       position: { x: 300, y: 1000 },
       hidden: !Boolean(qAMISRevision),
     },
     {
       id: "12_1",
-      data: { label: "Chairperson Endorsement" },
+      data: { label: "QAMIS Chairperson Endorsement" },
       position: { x: 100, y: 1100 },
       hidden: !Boolean(qAMISChairpersonEndorsement),
     },
     {
       id: "12_2",
-      data: { label: "Coordinator Endorsement" },
+      data: { label: "QAMIS Coordinator Endorsement" },
       position: { x: 300, y: 1100 },
       hidden: !Boolean(qAMISCoordinatorEndorsement),
     },
     {
       id: "12_3",
-      data: { label: "Dean Endorsement" },
+      data: { label: "QAMIS Dean Endorsement" },
       position: { x: 500, y: 1100 },
       hidden: !Boolean(qAMISDeanEndorsement),
     },
@@ -214,11 +253,7 @@ export default function IMTrackingPage() {
       id: "13",
       data: { label: "Department Endorsement" },
       position: { x: 300, y: 1200 },
-      hidden: !Boolean(
-        qAMISDeanEndorsement &&
-          qAMISCoordinatorEndorsement &&
-          qAMISCoordinatorEndorsement
-      ),
+      hidden: !Boolean(qAMISDepartmentEndorsement),
     },
     {
       id: "14_1",
@@ -240,19 +275,19 @@ export default function IMTrackingPage() {
     },
     {
       id: "15",
-      data: { label: "Revision" },
+      data: { label: "IMERC Revision" },
       position: { x: 300, y: 1400 },
       hidden: !Boolean(iMERCCITLRevision),
     },
     {
       id: "16",
-      data: { label: "IDD Coordinator Endorsement" },
+      data: { label: "IMERC IDD Coordinator Endorsement" },
       position: { x: 300, y: 1500 },
       hidden: !Boolean(iMERCIDDCoordinatorEndorsement),
     },
     {
       id: "17",
-      data: { label: "CITL Director Endorsement" },
+      data: { label: "IMERC CITL Director Endorsement" },
       position: { x: 300, y: 1600 },
       hidden: !Boolean(iMERCCITLDirectorEndorsement),
     },
@@ -406,6 +441,13 @@ export default function IMTrackingPage() {
     },
   ];
 
+  const closeModal = () => {
+    setState((prev) => ({
+      ...prev,
+      openModal: "",
+    }));
+  };
+
   if (iM === null) {
     return (
       <AdminLayout>
@@ -434,13 +476,769 @@ export default function IMTrackingPage() {
           translateExtent={[
             [0, 0],
             [800, 1700],
-          ]}
+          ]
+        }
+          onNodeClick={(e, node) => {
+            setState((prev) => ({ ...prev, openModal: node.data.label }));
+          }}
         >
           <Background />
           <Controls showInteractive={false} />
         </ReactFlow>
       </div>
-      {/* <div className="h-4 w-full -mt-4 bg-palette_white z-50 relative"></div> */}
+
+      {state.openModal !== "" && (
+        <Modal onClose={closeModal} title={state.openModal}>
+          {state.openModal === "Draft" && departmentReview && (
+            <DepartmentReviewModal departmentReview={departmentReview} />
+          )}
+          {state.openModal === "Peer Review" && submittedPeerSuggestion && (
+            <PeerReviewModal
+              iMId={iMId}
+              submittedPeerSuggestion={submittedPeerSuggestion}
+            />
+          )}
+          {state.openModal === "Chairperson Review" &&
+            submittedChairpersonSuggestion && (
+              <ChairpersonReviewModal
+                iMId={iMId}
+                submittedChairpersonSuggestion={submittedChairpersonSuggestion}
+              />
+            )}
+          {state.openModal === "Coordinator Review" &&
+            submittedCoordinatorSuggestion && (
+              <CoordinatorReviewModal
+                iMId={iMId}
+                submittedCoordinatorSuggestion={submittedCoordinatorSuggestion}
+              />
+            )}
+
+          {state.openModal === "Department Revision" && departmentRevision && (
+            <DepartmentRevisionModal departmentRevision={departmentRevision} />
+          )}
+
+          {state.openModal === "Coordinator Endorsement" &&
+            coordinatorEndorsement && (
+              <CoordinatorEndorsementModal
+                coordinatorEndorsement={coordinatorEndorsement}
+              />
+            )}
+          {state.openModal === "Dean Endorsement" && deanEndorsement && (
+            <DeanEndorsementModal deanEndorsement={deanEndorsement} />
+          )}
+          {state.openModal === "IDD Coordinator Review" &&
+            submittedIDDCoordinatorSuggestion && (
+              <IDDCoordinatorReviewModal
+                iMId={iMId}
+                submittedIDDCoordinatorSuggestion={
+                  submittedIDDCoordinatorSuggestion
+                }
+              />
+            )}
+          {state.openModal === "CITL Revision" && cITLRevision && (
+            <CITLRevisionModal cITLRevision={cITLRevision} />
+          )}
+          {state.openModal === "IDD Coordinator Endorsement" &&
+            iDDCoordinatorEndorsement && (
+              <IDDCoordinatorEndorsementModal
+                iDDCoordinatorEndorsement={iDDCoordinatorEndorsement}
+              />
+            )}
+          {state.openModal === "CITL Director Endorsement" &&
+            cITLDirectorEndorsement && (
+              <CITLDirectorEndorsementModal
+                cITLDirectorEndorsement={cITLDirectorEndorsement}
+              />
+            )}
+          {state.openModal === "Try-out" && cITLDirectorEndorsement && (
+            <TryOutModal cITLDirectorEndorsement={cITLDirectorEndorsement} />
+          )}
+          {state.openModal === "QAMIS Revision" && qAMISRevision && (
+            <QAMISRevisionModal qAMISRevision={qAMISRevision} />
+          )}
+          {state.openModal === "QAMIS Chairperson Endorsement" &&
+            qAMISChairpersonEndorsement && (
+              <QAMISChairpersonEndorsementModal
+                qAMISChairpersonEndorsement={qAMISChairpersonEndorsement}
+              />
+            )}
+          {state.openModal === "QAMIS Coordinator Endorsement" &&
+            qAMISCoordinatorEndorsement && (
+              <QAMISCoordinatorEndorsementModal
+                qAMISCoordinatorEndorsement={qAMISCoordinatorEndorsement}
+              />
+            )}
+          {state.openModal === "QAMIS Dean Endorsement" &&
+            qAMISDeanEndorsement && (
+              <QAMISDeanEndorsementModal
+                qAMISDeanEndorsement={qAMISDeanEndorsement}
+              />
+            )}
+          {state.openModal === "QAMIS Department Endorsement" &&
+            qAMISDepartmentEndorsement && (
+              <QAMISDepartmentEndorsementModal
+                qAMISDepartmentEndorsement={qAMISDepartmentEndorsement}
+              />
+            )}
+          {state?.openModal === "Content Specialist Review" &&
+            submittedContentSpecialistSuggestion && (
+              <ContentSpecialistReviewModal
+                iMId={iMId}
+                submittedContentSpecialistSuggestion={
+                  submittedContentSpecialistSuggestion
+                }
+              />
+            )}
+          {state?.openModal === "IDD Specialist Review" &&
+            submittedIDDSpecialistSuggestion && (
+              <IDDSpecialistReviewModal
+                iMId={iMId}
+                submittedIDDSpecialistSuggestion={
+                  submittedIDDSpecialistSuggestion
+                }
+              />
+            )}
+          {state?.openModal === "Content Editor Review" &&
+            submittedContentEditorSuggestion && (
+              <ContentEditorReviewModal
+                iMId={iMId}
+                submittedContentEditorSuggestion={
+                  submittedContentEditorSuggestion
+                }
+              />
+            )}
+          {state?.openModal === "IMERC Revision" && iMERCCITLRevision && (
+            <IMERCCITLRevisionModal iMERCCITLRevision={iMERCCITLRevision} />
+          )}
+          {state?.openModal === "IMERC IDD Coordinator Endorsement" &&
+            iMERCIDDCoordinatorEndorsement && (
+              <IMERCIDDCoordinatorEndorsementModal
+                iMERCIDDCoordinatorEndorsement={iMERCIDDCoordinatorEndorsement}
+              />
+            )}
+          {state?.openModal === "IMERC CITL Director Endorsement" &&
+            iMERCCITLDirectorEndorsement && (
+              <IMERCCITLDirectorEndorsementModal
+                iMERCCITLDirectorEndorsement={iMERCCITLDirectorEndorsement}
+              />
+            )}
+        </Modal>
+      )}
     </AdminLayout>
+  );
+}
+
+interface DepartmentReviewModalProps {
+  departmentReview: DepartmentReview;
+}
+
+function DepartmentReviewModal({
+  departmentReview,
+}: DepartmentReviewModalProps) {
+  return (
+    <p className='text-sm'>
+      Submitted for review{" "}
+      <span className='text-palette_light_blue'>
+        {DateTime.fromJSDate(
+          new Date(departmentReview?.updatedAt ?? "")
+        ).toRelative()}
+      </span>
+    </p>
+  );
+}
+
+interface PeerReviewModalProps {
+  submittedPeerSuggestion: SubmittedPeerSuggestion;
+  iMId: string;
+}
+
+function PeerReviewModal({
+  submittedPeerSuggestion,
+  iMId,
+}: PeerReviewModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Reviewed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(submittedPeerSuggestion?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_reviews`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view evaluation.
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_suggestions`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view suggestion.
+      </p>
+    </div>
+  );
+}
+
+interface ChairpersonReviewModalProps {
+  submittedChairpersonSuggestion: SubmittedChairpersonSuggestion;
+  iMId: string;
+}
+
+function ChairpersonReviewModal({
+  submittedChairpersonSuggestion,
+  iMId,
+}: ChairpersonReviewModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Reviewed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(submittedChairpersonSuggestion?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_reviews`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view evaluation.
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_suggestions`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view suggestion.
+      </p>
+    </div>
+  );
+}
+
+interface CoordinatorReviewModalProps {
+  submittedCoordinatorSuggestion: SubmittedCoordinatorSuggestion;
+  iMId: string;
+}
+
+function CoordinatorReviewModal({
+  submittedCoordinatorSuggestion,
+  iMId,
+}: CoordinatorReviewModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Reviewed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(submittedCoordinatorSuggestion?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_reviews`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view evaluation.
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_suggestions`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view suggestion.
+      </p>
+    </div>
+  );
+}
+
+interface DepartmentRevisionModalProps {
+  departmentRevision: DepartmentRevision;
+}
+
+function DepartmentRevisionModal({
+  departmentRevision,
+}: DepartmentRevisionModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Revised{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(departmentRevision?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface CoordinatorEndorsementModalProps {
+  coordinatorEndorsement: CoordinatorEndorsement;
+}
+
+function CoordinatorEndorsementModal({
+  coordinatorEndorsement,
+}: CoordinatorEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(coordinatorEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface DeanEndorsementModalProps {
+  deanEndorsement: DeanEndorsement;
+}
+
+function DeanEndorsementModal({ deanEndorsement }: DeanEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(deanEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface IDDCoordinatorReviewModalProps {
+  submittedIDDCoordinatorSuggestion: SubmittedIDDCoordinatorSuggestion;
+  iMId: string;
+}
+function IDDCoordinatorReviewModal({
+  iMId,
+  submittedIDDCoordinatorSuggestion,
+}: IDDCoordinatorReviewModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Reviewed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(submittedIDDCoordinatorSuggestion?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_reviews`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view evaluation.
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_suggestions`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view suggestion.
+      </p>
+    </div>
+  );
+}
+
+interface CITLRevisionModalProps {
+  cITLRevision: CITLRevision;
+}
+function CITLRevisionModal({ cITLRevision }: CITLRevisionModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Revised{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(cITLRevision?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface IDDCoordinatorEndorsementModalProps {
+  iDDCoordinatorEndorsement: IDDCoordinatorEndorsement;
+}
+
+function IDDCoordinatorEndorsementModal({
+  iDDCoordinatorEndorsement,
+}: IDDCoordinatorEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(iDDCoordinatorEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface CITLDirectorEndorsementModalProps {
+  cITLDirectorEndorsement: CITLDirectorEndorsement;
+}
+
+function CITLDirectorEndorsementModal({
+  cITLDirectorEndorsement,
+}: CITLDirectorEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(cITLDirectorEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface TryOutModalProps {
+  cITLDirectorEndorsement: CITLDirectorEndorsement;
+}
+function TryOutModal({ cITLDirectorEndorsement }: TryOutModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        On try-out until{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(cITLDirectorEndorsement?.updatedAt ?? "")
+          )
+            .plus({
+              months: 5,
+            })
+            .toLocaleString(DateTime.DATE_FULL)}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface QAMISRevisionModalProps {
+  qAMISRevision: QAMISRevision;
+}
+function QAMISRevisionModal({ qAMISRevision }: QAMISRevisionModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Revised{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(qAMISRevision?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface QAMISChairpersonEndorsementModalProps {
+  qAMISChairpersonEndorsement: QAMISChairpersonEndorsement;
+}
+function QAMISChairpersonEndorsementModal({
+  qAMISChairpersonEndorsement,
+}: QAMISChairpersonEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(qAMISChairpersonEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface QAMISCoordinatorEndorsementModalProps {
+  qAMISCoordinatorEndorsement: QAMISCoordinatorEndorsement;
+}
+function QAMISCoordinatorEndorsementModal({
+  qAMISCoordinatorEndorsement,
+}: QAMISCoordinatorEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(qAMISCoordinatorEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface QAMISDeanEndorsementModalProps {
+  qAMISDeanEndorsement: QAMISDeanEndorsement;
+}
+function QAMISDeanEndorsementModal({
+  qAMISDeanEndorsement,
+}: QAMISDeanEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(qAMISDeanEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface QAMISDepartmentEndorsementModalProps {
+  qAMISDepartmentEndorsement: QAMISDepartmentEndorsement;
+}
+function QAMISDepartmentEndorsementModal({
+  qAMISDepartmentEndorsement,
+}: QAMISDepartmentEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(qAMISDepartmentEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface ContentSpecialistReviewModalProps {
+  submittedContentSpecialistSuggestion: SubmittedContentSpecialistSuggestion;
+  iMId: string;
+}
+function ContentSpecialistReviewModal({
+  iMId,
+  submittedContentSpecialistSuggestion,
+}: ContentSpecialistReviewModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Reviewed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(submittedContentSpecialistSuggestion?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_reviews`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view evaluation.
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_suggestions`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view suggestion.
+      </p>
+    </div>
+  );
+}
+
+interface IDDSpecialistReviewModalProps {
+  submittedIDDSpecialistSuggestion: SubmittedIDDSpecialistSuggestion;
+  iMId: string;
+}
+function IDDSpecialistReviewModal({
+  iMId,
+  submittedIDDSpecialistSuggestion,
+}: IDDSpecialistReviewModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Reviewed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(submittedIDDSpecialistSuggestion?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_reviews`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view evaluation.
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_suggestions`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view suggestion.
+      </p>
+    </div>
+  );
+}
+
+interface ContentEditorReviewModalProps {
+  submittedContentEditorSuggestion: SubmittedContentEditorSuggestion;
+  iMId: string;
+}
+function ContentEditorReviewModal({
+  iMId,
+  submittedContentEditorSuggestion,
+}: ContentEditorReviewModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Reviewed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(submittedContentEditorSuggestion?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_reviews`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view evaluation.
+      </p>
+      <p>
+        Click{" "}
+        <Link
+          href={`/admin/im/${iMId}/all_suggestions`}
+          className='hover:underline text-palette_light_blue'
+        >
+          here
+        </Link>{" "}
+        to view suggestion.
+      </p>
+    </div>
+  );
+}
+
+interface IMERCCITLRevisionModal {
+  iMERCCITLRevision: IMERCCITLRevision;
+}
+function IMERCCITLRevisionModal({ iMERCCITLRevision }: IMERCCITLRevisionModal) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Revised{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(iMERCCITLRevision?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface IMERCIDDCoordinatorEndorsementModalProps {
+  iMERCIDDCoordinatorEndorsement: IMERCIDDCoordinatorEndorsement;
+}
+function IMERCIDDCoordinatorEndorsementModal({
+  iMERCIDDCoordinatorEndorsement,
+}: IMERCIDDCoordinatorEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(iMERCIDDCoordinatorEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+interface IMERCCITLDirectorEndorsementModalProps {
+  iMERCCITLDirectorEndorsement: IMERCCITLDirectorEndorsement;
+}
+function IMERCCITLDirectorEndorsementModal({
+  iMERCCITLDirectorEndorsement,
+}: IMERCCITLDirectorEndorsementModalProps) {
+  return (
+    <div className='text-sm'>
+      <p>
+        Endorsed{" "}
+        <span className='text-palette_light_blue'>
+          {DateTime.fromJSDate(
+            new Date(iMERCCITLDirectorEndorsement?.updatedAt ?? "")
+          ).toRelative()}
+        </span>
+      </p>
+    </div>
   );
 }

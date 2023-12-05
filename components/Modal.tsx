@@ -37,7 +37,7 @@ export default function Modal({
       >
         <div className='flex justify-between px-5 py-2'>
           <div className=''>
-            <h1>{title}</h1>
+            <h1 className='font-bold'>{title}</h1>
             {shortDescription && <p>{shortDescription}</p>}
           </div>
           <div>
@@ -56,6 +56,10 @@ export default function Modal({
             </button>
           </div>
         </div>
+        <div className='px-2'>
+          <hr />
+        </div>
+
         <div className='px-5 py-2'>{children}</div>
       </div>
     </div>
