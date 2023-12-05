@@ -64,6 +64,7 @@ export default function ContentSpecialistsPage() {
                 return (
                   <ContentSpecialistItem
                     contentSpecialist={contentSpecialist}
+                    key={contentSpecialist.id}
                   />
                 );
               })}

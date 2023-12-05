@@ -48,7 +48,7 @@ export default function CollegesPage() {
             </thead>
             <tbody>
               {colleges.map((college) => {
-                return <CollegeItem college={college} />;
+                return <CollegeItem college={college} key={college.id} />;
               })}
             </tbody>
           </table>

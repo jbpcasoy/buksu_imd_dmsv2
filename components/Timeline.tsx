@@ -13,7 +13,10 @@ export default function Timeline({ events }: TimelineProps) {
 
         {events.map((event) => {
           return (
-            <div className='flex items-center w-full my-6 -ml-1.5'>
+            <div
+              className='flex items-center w-full my-6 -ml-1.5'
+              key={event.id}
+            >
               <div className='w-1/12 z-10'>
                 <div className='w-3.5 h-3.5 bg-palette_light_blue rounded-full'></div>
               </div>
