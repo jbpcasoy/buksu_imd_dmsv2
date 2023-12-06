@@ -4,7 +4,7 @@ import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { Prisma, PrismaClient, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -68,6 +68,10 @@ export default async function handler(
         take: Yup.number().required(),
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
+        "filter[departmentName]": Yup.string().optional(),
+        "filter[collegeName]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -76,6 +80,10 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
+        "filter[departmentName]": filterDepartmentName,
+        "filter[collegeName]": filterCollegeName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
       const coordinators = await prisma.coordinator.findMany({
         skip,
@@ -93,15 +101,98 @@ export default async function handler(
                 },
               },
             },
+            {
+              Faculty: {
+                Department: {
+                  name: {
+                    contains: filterDepartmentName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
           ],
         },
-        orderBy: {
-          updatedAt: "desc",
-        },
+        orderBy:
+          sortField === "name"
+            ? ({
+                Faculty: {
+                  User: {
+                    name: sortDirection ?? "asc",
+                  },
+                },
+              } as Prisma.FacultyOrderByWithRelationInput)
+            : sortField === "departmentName"
+            ? ({
+                Faculty: {
+                  Department: {
+                    name: sortDirection ?? "asc",
+                  },
+                },
+              } as Prisma.FacultyOrderByWithRelationInput)
+            : sortField === "collegeName"
+            ? ({
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection ?? "asc",
+                    },
+                  },
+                },
+              } as Prisma.FacultyOrderByWithRelationInput)
+            : ({
+                updatedAt: "desc",
+              } as Prisma.FacultyOrderByWithRelationInput),
       });
       const count = await prisma.coordinator.count({
         where: {
-          AND: [accessibleBy(ability).Coordinator],
+          AND: [
+            accessibleBy(ability).Coordinator,
+            {
+              Faculty: {
+                User: {
+                  name: {
+                    contains: filterName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  name: {
+                    contains: filterDepartmentName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
       });
 

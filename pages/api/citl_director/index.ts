@@ -4,7 +4,7 @@ import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -59,6 +59,8 @@ export default async function handler(
         take: Yup.number().required(),
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -67,6 +69,8 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
       const cITLDirectors = await prisma.cITLDirector.findMany({
         skip,
@@ -84,9 +88,18 @@ export default async function handler(
             },
           ],
         },
-        orderBy: {
-          updatedAt: "desc",
-        },
+        orderBy:
+          sortField === "name"
+            ? ({
+                User: {
+                  name: sortDirection ?? "asc",
+                },
+              } as Prisma.CITLDirectorOrderByWithRelationInput)
+            : ({
+                User: {
+                  name: sortDirection ?? "asc",
+                },
+              } as Prisma.CITLDirectorOrderByWithRelationInput),
       });
       const count = await prisma.cITLDirector.count({
         where: {

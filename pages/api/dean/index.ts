@@ -4,7 +4,7 @@ import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { Prisma, PrismaClient, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -68,6 +68,9 @@ export default async function handler(
         take: Yup.number().required(),
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
+        "filter[collegeName]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -76,6 +79,9 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
+        "filter[collegeName]": filterCollegeName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
 
       const deans = await prisma.dean.findMany({
@@ -94,11 +100,46 @@ export default async function handler(
                 },
               },
             },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
           ],
         },
-        orderBy: {
-          updatedAt: "desc",
-        },
+        orderBy:
+          sortField === "name"
+            ? ({
+                Faculty: {
+                  User: {
+                    name: sortDirection ?? "asc",
+                  },
+                },
+              } as Prisma.DeanOrderByWithRelationInput)
+            : sortField === "collegeName"
+            ? ({
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection ?? "asc",
+                    },
+                  },
+                },
+              } as Prisma.DeanOrderByWithRelationInput)
+            : ({
+                Faculty: {
+                  User: {
+                    name: sortDirection ?? "asc",
+                  },
+                },
+              } as Prisma.DeanOrderByWithRelationInput),
       });
       const count = await prisma.dean.count({
         where: {

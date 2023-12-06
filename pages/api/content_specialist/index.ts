@@ -29,7 +29,10 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "ContentSpecialist");
+      ForbiddenError.from(ability).throwUnlessCan(
+        "create",
+        "ContentSpecialist"
+      );
 
       const { activeFacultyId } = validator.cast(req.body);
 
@@ -68,6 +71,8 @@ export default async function handler(
         take: Yup.number().required(),
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
+        "filter[departmentName]": Yup.string().optional(),
+        "filter[collegeName]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -76,6 +81,8 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
+        "filter[departmentName]": filterDepartmentName,
+        "filter[collegeName]": filterCollegeName,
       } = validator.cast(req.query);
       const contentSpecialists = await prisma.contentSpecialist.findMany({
         skip,
@@ -89,6 +96,28 @@ export default async function handler(
                   name: {
                     contains: filterName,
                     mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  name: {
+                    contains: filterDepartmentName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName,
+                      mode: "insensitive",
+                    },
                   },
                 },
               },

@@ -4,7 +4,7 @@ import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { Prisma, PrismaClient, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -69,6 +69,9 @@ export default async function handler(
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
         "filter[collegeId]": Yup.string().optional(),
+        "filter[collegeName]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -77,7 +80,10 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
-        "filter[collegeId]": filterCollege,
+        "filter[collegeId]": filterCollegeId,
+        "filter[collegeName]": filterCollegeName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
 
       const departments = await prisma.department.findMany({
@@ -95,15 +101,34 @@ export default async function handler(
             {
               College: {
                 id: {
-                  contains: filterCollege,
+                  contains: filterCollegeId,
+                },
+              },
+            },
+            {
+              College: {
+                name: {
+                  contains: filterCollegeName,
+                  mode: "insensitive",
                 },
               },
             },
           ],
         },
-        orderBy: {
-          updatedAt: "desc",
-        },
+        orderBy:
+          sortField === "name"
+            ? ({
+                name: sortDirection ?? "asc",
+              } as Prisma.DepartmentOrderByWithRelationInput)
+            : sortField === "collegeName"
+            ? ({
+                College: {
+                  name: sortDirection ?? "asc",
+                },
+              } as Prisma.DepartmentOrderByWithRelationInput)
+            : ({
+                name: sortDirection ?? "asc",
+              } as Prisma.DepartmentOrderByWithRelationInput),
       });
       const count = await prisma.department.count({
         where: {
@@ -113,6 +138,21 @@ export default async function handler(
               name: {
                 contains: filterName,
                 mode: "insensitive",
+              },
+            },
+            {
+              College: {
+                id: {
+                  contains: filterCollegeId,
+                },
+              },
+            },
+            {
+              College: {
+                name: {
+                  contains: filterCollegeId,
+                  mode: "insensitive",
+                },
               },
             },
           ],

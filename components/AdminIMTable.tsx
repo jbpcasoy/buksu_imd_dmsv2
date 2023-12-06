@@ -80,8 +80,12 @@ export default function AdminIMTable({
       setState((prev) => ({
         ...prev,
         filter: {
-          ...prev.filter,
-          [field]: value,
+          ...(Object.fromEntries(
+            Object.entries(prev.filter).map(([key]) => [
+              key,
+              key === field ? value : "",
+            ])
+          ) as any),
         },
       }));
     }

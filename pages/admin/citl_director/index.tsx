@@ -11,11 +11,21 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { ChangeEventHandler, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function CITLDirectorsPage() {
-  const [state, setState] = useState({ skip: 0, take: 10 });
+  const [state, setState] = useState({
+    skip: 0,
+    take: 10,
+    filter: {
+      name: "",
+    },
+    sort: {
+      field: "name",
+      direction: "asc",
+    },
+  });
   const { cITLDirectors, count } = useCITLDirectors(state);
 
   const nextHandler = () => {
@@ -31,14 +41,55 @@ export default function CITLDirectorsPage() {
       return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
     });
   };
+  const handleFilterChange = (field: string, value: string) => {
+    if (field === "") {
+      setState((prev) => ({
+        ...prev,
+        filter: {
+          ...(Object.fromEntries(
+            Object.entries(prev.filter).map(([key]) => [
+              key,
+              key === field ? value : "",
+            ])
+          ) as any),
+        },
+      }));
+    } else {
+      setState((prev) => ({
+        ...prev,
+        filter: {
+          ...prev.filter,
+          [field]: value,
+        },
+      }));
+    }
+  };
+
+  const handleSortChange = (field: string, direction: "asc" | "desc") => {
+    setState((prev) => ({
+      ...prev,
+      sort: {
+        field,
+        direction,
+      },
+    }));
+  };
 
   return (
     <AdminLayout>
       <div className='h-full flex flex-col rounded border border-palette_grey'>
         <div className='flex justify-between bg-palette_grey bg-opacity-10 p-1'>
-          <h2 className='border-b-2 border-palette_orange px-2'>
-            CITL Director
-          </h2>
+          <div className='flex space-x-1 justify-center items-end'>
+            <h2 className='border-b-2 border-palette_orange px-2'>
+              CITL Director
+            </h2>
+
+            <div className='flex flex-row space-x-1'>
+              <FilterSelector onFilterChange={handleFilterChange} />
+
+              <SortSelector onSortChange={handleSortChange} />
+            </div>
+          </div>
           <AddModal />
         </div>
 
@@ -203,7 +254,7 @@ function CITLDirectorItem({ cITLDirector }: CITLDirectorItemProps) {
           className='rounded text-palette_blue focus:border-palette_blue focus:ring focus:ring-offset-0 focus:ring-palette_blue focus:ring-opacity-10 cursor-pointer h-5 w-5'
           checked={Boolean(activeCITLDirector)}
           onChange={(e) => toggleHandler(e.target.checked)}
-          title="Active"
+          title='Active'
         />
 
         <>
@@ -311,5 +362,88 @@ function AddModal() {
         </Modal>
       )}
     </>
+  );
+}
+
+interface FilterSelectorProps {
+  onFilterChange: (field: string, value: string) => void;
+}
+function FilterSelector({ onFilterChange }: FilterSelectorProps) {
+  const [selectedField, setSelectedField] = useState("");
+  const [filterValue, setFilterValue] = useState("");
+
+  const handleFieldChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    if (e.target.value === "") {
+      setSelectedField("");
+      setFilterValue("");
+    } else {
+      setSelectedField(e.target.value);
+    }
+  };
+
+  const handleValueChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setFilterValue(e.target.value ?? "");
+  };
+
+  useEffect(() => {
+    onFilterChange(selectedField, filterValue);
+  }, [selectedField, filterValue]);
+
+  return (
+    <div>
+      <select
+        onChange={handleFieldChange}
+        className='py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+      >
+        <option value=''>Select field</option>
+        <option value='name'>Name</option>
+      </select>
+      <input
+        type='text'
+        placeholder='Search'
+        value={filterValue}
+        className='bg-inherit border-b py-1 rounded-e focus:border-palette_grey focus:ring-palette_grey'
+        onChange={handleValueChange}
+      />
+    </div>
+  );
+}
+interface SortSelectorProps {
+  onSortChange: (field: string, direction: "asc" | "desc") => void;
+}
+function SortSelector({ onSortChange }: SortSelectorProps) {
+  const [selectedField, setSelectedField] = useState("name");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  const handleFieldChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setSelectedField(e.target.value);
+  };
+
+  const handleDirectionChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setSortDirection(e.target.value as "asc" | "desc");
+  };
+
+  useEffect(() => {
+    onSortChange(selectedField, sortDirection);
+  }, [selectedField, sortDirection]);
+
+  return (
+    <div>
+      <select
+        onChange={handleFieldChange}
+        value={selectedField}
+        className='py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+      >
+        <option value='name'>Name</option>
+      </select>
+      <select
+        onChange={handleDirectionChange}
+        value={sortDirection}
+        className='py-1 rounded-e bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+      >
+        <option value='asc'>Ascending</option>
+        <option value='desc'>Descending</option>
+      </select>
+    </div>
   );
 }

@@ -6,11 +6,17 @@ export interface useFacultiesParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useDeans({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{deans: Dean[], count: number}>({
+export default function useDeans({
+  skip,
+  take,
+  filter,
+  sort,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{ deans: Dean[]; count: number }>({
     count: 0,
-    deans: []
+    deans: [],
   });
 
   useEffect(() => {
@@ -19,7 +25,8 @@ export default function useDeans({ skip, take, filter }: useFacultiesParams) {
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +35,7 @@ export default function useDeans({ skip, take, filter }: useFacultiesParams) {
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

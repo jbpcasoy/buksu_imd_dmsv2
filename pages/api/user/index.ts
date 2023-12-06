@@ -29,6 +29,8 @@ export default async function handler(
         take: Yup.number().required(),
         "filter[email]": Yup.string().optional(),
         "filter[name]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().oneOf(["asc", "desc"]).optional(),
       });
 
       await validator.validate(req.query);
@@ -38,6 +40,8 @@ export default async function handler(
         take,
         "filter[email]": filterEmail,
         "filter[name]": filterName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
 
       const users = await prisma.user.findMany({
@@ -47,15 +51,17 @@ export default async function handler(
           AND: [
             accessibleBy(ability).User,
             {
-              OR: [
+              AND: [
                 {
                   email: {
                     contains: filterEmail,
+                    mode: "insensitive",
                   },
                 },
                 {
                   name: {
                     contains: filterName,
+                    mode: "insensitive",
                   },
                 },
               ],
@@ -63,7 +69,7 @@ export default async function handler(
           ],
         },
         orderBy: {
-          name: "desc"
+          [sortField || "name"]: sortDirection || "asc",
         },
       });
       const count = await prisma.user.count({
@@ -71,7 +77,7 @@ export default async function handler(
           AND: [
             accessibleBy(ability).User,
             {
-              OR: [
+              AND: [
                 {
                   email: {
                     contains: filterEmail,

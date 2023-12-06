@@ -15,11 +15,22 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { ChangeEventHandler, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function DeansPage() {
-  const [state, setState] = useState({ skip: 0, take: 10 });
+  const [state, setState] = useState({
+    skip: 0,
+    take: 10,
+    filter: {
+      name: "",
+      collegeName: "",
+    },
+    sort: {
+      field: "name",
+      direction: "asc",
+    },
+  });
   const { deans, count } = useDeans(state);
 
   const nextHandler = () => {
@@ -36,11 +47,54 @@ export default function DeansPage() {
     });
   };
 
+  const handleFilterChange = (field: string, value: string) => {
+    if (field === "") {
+      setState((prev) => ({
+        ...prev,
+        filter: {
+          name: "",
+          collegeName: "",
+          departmentName: "",
+        },
+      }));
+    } else {
+      setState((prev) => ({
+        ...prev,
+        filter: {
+          ...(Object.fromEntries(
+            Object.entries(prev.filter).map(([key]) => [
+              key,
+              key === field ? value : "",
+            ])
+          ) as any),
+        },
+      }));
+    }
+  };
+
+  const handleSortChange = (field: string, direction: "asc" | "desc") => {
+    setState((prev) => ({
+      ...prev,
+      sort: {
+        field,
+        direction,
+      },
+    }));
+  };
+
   return (
     <AdminLayout>
       <div className='border border-palette_grey rounded flex flex-col h-full'>
         <div className='flex justify-between bg-palette_grey bg-opacity-10 p-1'>
-          <h2 className='border-b-2 border-palette_orange px-2'>Dean</h2>
+          <div className='flex space-x-1 justify-center items-end'>
+            <h2 className='border-b-2 border-palette_orange px-2'>Dean</h2>
+
+            <div className='flex flex-row space-x-1'>
+              <FilterSelector onFilterChange={handleFilterChange} />
+
+              <SortSelector onSortChange={handleSortChange} />
+            </div>
+          </div>
 
           <AddModal />
         </div>
@@ -212,7 +266,7 @@ function DeanItem({ dean }: DeanItemProps) {
           className='rounded text-palette_blue focus:border-palette_blue focus:ring focus:ring-offset-0 focus:ring-palette_blue focus:ring-opacity-10 cursor-pointer h-5 w-5'
           checked={Boolean(activeDean)}
           onChange={(e) => toggleHandler(e.target.checked)}
-          title="Active"
+          title='Active'
         />
         <>
           <button
@@ -322,5 +376,92 @@ function AddModal() {
         </Modal>
       )}
     </>
+  );
+}
+
+interface FilterSelectorProps {
+  onFilterChange: (field: string, value: string) => void;
+}
+
+function FilterSelector({ onFilterChange }: FilterSelectorProps) {
+  const [selectedField, setSelectedField] = useState("");
+  const [filterValue, setFilterValue] = useState("");
+
+  const handleFieldChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    if (e.target.value === "") {
+      setSelectedField("");
+      setFilterValue("");
+    } else {
+      setSelectedField(e.target.value);
+    }
+  };
+
+  const handleValueChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setFilterValue(e.target.value ?? "");
+  };
+
+  useEffect(() => {
+    onFilterChange(selectedField, filterValue);
+  }, [selectedField, filterValue]);
+
+  return (
+    <div>
+      <select
+        onChange={handleFieldChange}
+        className='py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+      >
+        <option value=''>Select field</option>
+        <option value='name'>Name</option>
+        <option value='collegeName'>College</option>
+      </select>
+      <input
+        type='text'
+        placeholder='Search'
+        value={filterValue}
+        className='bg-inherit border-b py-1 rounded-e focus:border-palette_grey focus:ring-palette_grey'
+        onChange={handleValueChange}
+      />
+    </div>
+  );
+}
+
+interface SortSelectorProps {
+  onSortChange: (field: string, direction: "asc" | "desc") => void;
+}
+function SortSelector({ onSortChange }: SortSelectorProps) {
+  const [selectedField, setSelectedField] = useState("name");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  const handleFieldChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setSelectedField(e.target.value);
+  };
+
+  const handleDirectionChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setSortDirection(e.target.value as "asc" | "desc");
+  };
+
+  useEffect(() => {
+    onSortChange(selectedField, sortDirection);
+  }, [selectedField, sortDirection]);
+
+  return (
+    <div>
+      <select
+        onChange={handleFieldChange}
+        value={selectedField}
+        className='py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+      >
+        <option value='name'>Name</option>
+        <option value='collegeName'>College</option>
+      </select>
+      <select
+        onChange={handleDirectionChange}
+        value={sortDirection}
+        className='py-1 rounded-e bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+      >
+        <option value='asc'>Ascending</option>
+        <option value='desc'>Descending</option>
+      </select>
+    </div>
   );
 }

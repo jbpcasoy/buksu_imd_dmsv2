@@ -57,20 +57,53 @@ export default async function handler(
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
+        "filter[title]": Yup.string().optional(),
+        "filter[description]": Yup.string().optional(),
+        "filter[url]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
 
-      const { skip, take } = validator.cast(req.query);
+      const {
+        skip,
+        take,
+        "filter[title]": filterTitle,
+        "filter[description]": filterDescription,
+        "filter[url]": filterUrl,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
+      } = validator.cast(req.query);
 
       const announcements = await prisma.announcement.findMany({
         skip,
         take,
         where: {
-          AND: [accessibleBy(ability).Announcement],
+          AND: [
+            accessibleBy(ability).Announcement,
+            {
+              title: {
+                contains: filterTitle,
+                mode: "insensitive",
+              },
+            },
+            {
+              description: {
+                contains: filterDescription,
+                mode: "insensitive",
+              },
+            },
+            {
+              url: {
+                contains: filterUrl,
+                mode: "insensitive",
+              },
+            },
+          ],
         },
         orderBy: {
-          updatedAt: "desc",
+          [sortField || "title"]: sortDirection || "asc",
         },
       });
       const count = await prisma.announcement.count({

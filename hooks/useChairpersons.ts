@@ -6,11 +6,20 @@ export interface useFacultiesParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useChairpersons({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{chairpersons: Chairperson[], count: number}>({
+export default function useChairpersons({
+  skip,
+  take,
+  filter,
+  sort,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    chairpersons: Chairperson[];
+    count: number;
+  }>({
     count: 0,
-    chairpersons: []
+    chairpersons: [],
   });
 
   useEffect(() => {
@@ -19,7 +28,8 @@ export default function useChairpersons({ skip, take, filter }: useFacultiesPara
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +38,7 @@ export default function useChairpersons({ skip, take, filter }: useFacultiesPara
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

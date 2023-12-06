@@ -55,6 +55,8 @@ export default async function handler(
         take: Yup.number().required(),
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -63,8 +65,10 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
-      
+
       const colleges = await prisma.college.findMany({
         skip,
         take,
@@ -80,7 +84,7 @@ export default async function handler(
           ],
         },
         orderBy: {
-          updatedAt: "desc",
+          [sortField || "name"]: sortDirection || "asc",
         },
       });
       const count = await prisma.college.count({
