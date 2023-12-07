@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 import submittedReturnedDepartmentRevisionAbility from "@/services/ability/submittedReturnedDepartmentRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
+import mailTransporter from "@/services/mailTransporter";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
@@ -102,6 +103,52 @@ export default async function handler(
             },
           },
         });
+
+      const iM = await prisma.iM.findFirst({
+        where: {
+          IMFile: {
+            some: {
+              DepartmentRevision: {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    id: {
+                      equals: submittedReturnedDepartmentRevision.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      const iMOwner = await prisma.user.findFirst({
+        where: {
+          Faculty: {
+            some: {
+              IM: {
+                some: {
+                  id: {
+                    equals: iM?.id,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (iMOwner?.email) {
+        mailTransporter.sendMail(
+          {
+            subject: "Returned IM Department Revision",
+            text: `Unfortunately the revision for your IM titled "${iM?.title}" has been returned and is now ready for your revision.`,
+            to: iMOwner.email,
+          },
+          (err) => {
+            logger.error(err);
+          }
+        );
+      }
 
       return res.json(submittedReturnedDepartmentRevision);
     } catch (error: any) {

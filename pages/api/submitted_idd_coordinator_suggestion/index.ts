@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 import submittedIDDCoordinatorSuggestionAbility from "@/services/ability/submittedIDDCoordinatorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
+import mailTransporter from "@/services/mailTransporter";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
@@ -56,6 +57,66 @@ export default async function handler(
             },
           },
         });
+
+      const iM = await prisma.iM.findFirst({
+        where: {
+          IMFile: {
+            some: {
+              DepartmentReview: {
+                CoordinatorReview: {
+                  CoordinatorSuggestion: {
+                    SubmittedCoordinatorSuggestion: {
+                      DepartmentReviewed: {
+                        DepartmentRevision: {
+                          some: {
+                            CoordinatorEndorsement: {
+                              DeanEndorsement: {
+                                IDDCoordinatorSuggestion: {
+                                  id: {
+                                    equals: iDDCoordinatorSuggestionId,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      const iMOwner = await prisma.user.findFirst({
+        where: {
+          Faculty: {
+            some: {
+              IM: {
+                some: {
+                  id: {
+                    equals: iM?.id,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (iMOwner?.email) {
+        mailTransporter.sendMail(
+          {
+            subject: "IM CITL Review",
+            text: `We are pleased to inform you that the CITL review process for your IM titled "${iM?.title}" has been successfully completed and is now ready for your revision.`,
+            to: iMOwner.email,
+          },
+          (err) => {
+            logger.error(err);
+          }
+        );
+      }
 
       return res.json(submittedIDDCoordinatorSuggestion);
     } catch (error: any) {

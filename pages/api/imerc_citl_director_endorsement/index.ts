@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 import iMERCCITLDirectorEndorsementAbility from "@/services/ability/iMERCCITLDirectorEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
+import mailTransporter from "@/services/mailTransporter";
 import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
@@ -73,6 +74,52 @@ export default async function handler(
             },
           },
         });
+
+      const iM = await prisma.iM.findFirst({
+        where: {
+          IMFile: {
+            some: {
+              IMERCCITLRevision: {
+                IMERCIDDCoordinatorEndorsement: {
+                  IMERCCITLDirectorEndorsement: {
+                    id: {
+                      equals: iMERCCITLDirectorEndorsement.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      const iMOwner = await prisma.user.findFirst({
+        where: {
+          Faculty: {
+            some: {
+              IM: {
+                some: {
+                  id: {
+                    equals: iM?.id,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (iMOwner?.email) {
+        mailTransporter.sendMail(
+          {
+            subject: "IM Endorsed to IPTTU",
+            text: `We are pleased to inform you that your IM titled "${iM?.title}" has been endorsed by the CITL to IPPTU for copyright application process.`,
+            to: iMOwner.email,
+          },
+          (err) => {
+            logger.error(err);
+          }
+        );
+      }
 
       return res.json(iMERCCITLDirectorEndorsement);
     } catch (error: any) {
