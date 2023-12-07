@@ -344,7 +344,7 @@ function AddModal() {
       {state.openAddModal && (
         <Modal title='Add Faculty' onClose={handleClose}>
           <form onSubmit={formik.handleSubmit} noValidate>
-            <div className='flex flex-col space-y-1'>
+            <div className='flex flex-col space-y-1 w-full'>
               <DepartmentSelector {...formik.getFieldProps("departmentId")} />
               <UserSelector {...formik.getFieldProps("userId")} />
               <button

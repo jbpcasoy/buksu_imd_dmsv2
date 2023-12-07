@@ -131,7 +131,7 @@ export default function Home() {
                   <StatusSelector {...formik.getFieldProps("status")} />
                   <div className='flex space-x-1'>
                     <div className='text-sm'>
-                      <label htmlFor='start'>START </label>
+                      <label htmlFor='start'>FROM </label>
                       <br />
                       <input
                         type='datetime-local'
@@ -142,7 +142,7 @@ export default function Home() {
                       />
                     </div>
                     <div className='text-sm'>
-                      <label htmlFor='end'>END </label>
+                      <label htmlFor='end'>TO </label>
                       <br />
                       <input
                         type='datetime-local'

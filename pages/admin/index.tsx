@@ -60,7 +60,7 @@ export default function AdminDashboard() {
                 <div className='flex space-x-1'>
                   <div>
                     <label htmlFor='start' className='text-sm'>
-                      START
+                      FROM
                     </label>
                     <input
                       type='datetime-local'
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
                   </div>
                   <div>
                     <label htmlFor='end' className='text-sm'>
-                      END
+                      TO
                     </label>
                     <input
                       type='datetime-local'
