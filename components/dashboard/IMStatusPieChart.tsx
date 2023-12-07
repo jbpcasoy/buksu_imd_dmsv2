@@ -1,4 +1,5 @@
 import useDepartment from "@/hooks/useDepartment";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 import axios from "axios";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
@@ -60,7 +61,7 @@ export function IMStatusPieChart({
   }, [filter]);
 
   const data = {
-    labels,
+    labels: labels.map(label => iMStatusNormalizer(label)),
     datasets: [
       {
         label: `# of ${department?.name ?? ""} IM's`,

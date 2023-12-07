@@ -77,9 +77,17 @@ export default function Home() {
   )
     return null;
 
-    if(!(activeCoordinator || activeChairperson || activeIDDCoordinator || activeCITLDirector || activeDean)) {
-      router.replace("/department/my_ims")
-    }
+  if (
+    !(
+      activeCoordinator ||
+      activeChairperson ||
+      activeIDDCoordinator ||
+      activeCITLDirector ||
+      activeDean
+    )
+  ) {
+    router.replace("/department/my_ims");
+  }
 
   return (
     <MainLayout>
@@ -101,51 +109,60 @@ export default function Home() {
           activeChairperson) && (
           <div className='flex-1 flex flex-col h-full'>
             <form noValidate onSubmit={formik.handleSubmit}>
-              <div className='space-y-1 flex flex-col w-2/3'>
-                <CollegeSelector
-                  {...formik.getFieldProps("collegeId")}
-                  disabled={!(activeCITLDirector || activeIDDCoordinator)}
-                />
-                <DepartmentSelector
-                  {...formik.getFieldProps("departmentId")}
-                  collegeId={formik.values.collegeId}
-                  disabled={
-                    !(activeDean || activeCITLDirector || activeIDDCoordinator)
-                  }
-                />
-                <StatusSelector {...formik.getFieldProps("status")} />
-                <div className='flex space-x-1'>
-                  <div className='text-sm'>
-                    <label htmlFor='start'>START </label>
-                    <br />
-                    <input
-                      type='datetime-local'
-                      id='start'
-                      max={formik.values.end}
-                      {...formik.getFieldProps("start")}
-                      className='rounded w-full py-1'
-                    />
-                  </div>
-                  <div className='text-sm'>
-                    <label htmlFor='end'>END </label>
-                    <br />
-                    <input
-                      type='datetime-local'
-                      id='end'
-                      min={formik.values.start}
-                      {...formik.getFieldProps("end")}
-                      className='rounded w-full py-1'
-                    />
+              <div className='space-y-1 flex flex-col'>
+                <div className='flex space-x-1 w-full'>
+                  <CollegeSelector
+                    {...formik.getFieldProps("collegeId")}
+                    disabled={!(activeCITLDirector || activeIDDCoordinator)}
+                  />
+                  <DepartmentSelector
+                    {...formik.getFieldProps("departmentId")}
+                    collegeId={formik.values.collegeId}
+                    disabled={
+                      !(
+                        activeDean ||
+                        activeCITLDirector ||
+                        activeIDDCoordinator
+                      )
+                    }
+                  />
+                </div>
+                <div className='flex space-x-1 items-end'>
+                  <StatusSelector {...formik.getFieldProps("status")} />
+                  <div className='flex space-x-1'>
+                    <div className='text-sm'>
+                      <label htmlFor='start'>START </label>
+                      <br />
+                      <input
+                        type='datetime-local'
+                        id='start'
+                        max={formik.values.end}
+                        {...formik.getFieldProps("start")}
+                        className='rounded w-full py-1'
+                      />
+                    </div>
+                    <div className='text-sm'>
+                      <label htmlFor='end'>END </label>
+                      <br />
+                      <input
+                        type='datetime-local'
+                        id='end'
+                        min={formik.values.start}
+                        {...formik.getFieldProps("end")}
+                        className='rounded w-full py-1'
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className='space-x-1'>
-                  <input
-                    type='submit'
-                    value='Refresh'
-                    className='bg-palette_blue text-palette_white px-2 rounded'
-                  />
                   <button
+                    type='submit'
                     className='bg-palette_blue text-palette_white px-2 rounded'
+                  >
+                    Refresh
+                  </button>
+                  <button
+                    className='bg-palette_blue text-palette_white px-2 rounded hover:bg-opacity-90'
                     onClick={router.reload}
                   >
                     Reset

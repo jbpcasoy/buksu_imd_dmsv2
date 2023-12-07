@@ -42,48 +42,77 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <h2>Admin Dashboard</h2>
-      <form noValidate onSubmit={formik.handleSubmit}>
-        <CollegeSelector
-          {...formik.getFieldProps("collegeId")}
-        />
-        <DepartmentSelector
-          {...formik.getFieldProps("departmentId")}
-          collegeId={formik.values.collegeId}
-        />
-        <StatusSelector {...formik.getFieldProps("status")} />
-        <label htmlFor='start'>start: </label>
-        <input
-          type='datetime-local'
-          id='start'
-          max={formik.values.end}
-          {...formik.getFieldProps("start")}
-        />
-        <br />
-        <label htmlFor='end'>end: </label>
-        <input
-          type='datetime-local'
-          id='end'
-          min={formik.values.start}
-          {...formik.getFieldProps("end")}
-        />
-        <br />
-        <div>
-          <input type='submit' value='Refresh' className='border rounded' />
-          <button className='border rounded' onClick={router.reload}>
-            Reset
-          </button>
-        </div>
-      </form>
+      <div className='flex flex-col h-full'>
+        <h2>Dashboard</h2>
 
-      <div>
-        <IMStatusDepartmentLineChart filter={state} />
-        <div className='flex flex-row justify-center items-center space-y-2'>
-          <div className='w-1/2 xs:w-full'>
-            <IMStatusPieChart filter={state} />
-          </div>
-          <div className='w-1/2 xs:w-full'>
-            <IMDepartmentPieChart filter={state} />
+        <div className='flex-1 flex flex-col h-full'>
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <div className='flex flex-col space-y-1'>
+              <div className='flex space-x-1'>
+                <CollegeSelector {...formik.getFieldProps("collegeId")} />
+                <DepartmentSelector
+                  {...formik.getFieldProps("departmentId")}
+                  collegeId={formik.values.collegeId}
+                />
+              </div>
+              <div className='flex space-x-1 items-end'>
+                <StatusSelector {...formik.getFieldProps("status")} />
+                <div className='flex space-x-1'>
+                  <div>
+                    <label htmlFor='start' className='text-sm'>
+                      START
+                    </label>
+                    <input
+                      type='datetime-local'
+                      id='start'
+                      max={formik.values.end}
+                      className='rounded py-1'
+                      {...formik.getFieldProps("start")}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor='end' className='text-sm'>
+                      END
+                    </label>
+                    <input
+                      type='datetime-local'
+                      id='end'
+                      min={formik.values.start}
+                      className='rounded py-1'
+                      {...formik.getFieldProps("end")}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className='space-x-1'>
+                <button
+                  type='submit'
+                  className='rounded bg-palette_blue text-palette_white px-1 hover:bg-opacity-90'
+                >
+                  Refresh
+                </button>
+                <button
+                  className='rounded bg-palette_blue text-palette_white px-1 hover:bg-opacity-90'
+                  onClick={router.reload}
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <div className='flex-1 flex w-full h-full'>
+            <div className='flex-1 relative h-full'>
+              <IMStatusDepartmentLineChart filter={state} />
+            </div>
+            <div className='flex flex-col justify-center items-center space-y-2  h-full'>
+              <div className='h-1/2 relative'>
+                <IMStatusPieChart filter={state} />
+              </div>
+              <div className='h-1/2 relative'>
+                <IMDepartmentPieChart filter={state} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

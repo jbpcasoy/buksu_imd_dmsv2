@@ -16,6 +16,7 @@ import { Line } from "react-chartjs-2";
 import autocolors from "chartjs-plugin-autocolors";
 import useDepartments from "@/hooks/useDepartments";
 import useCollege from "@/hooks/useCollege";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 
 ChartJS.register(
   CategoryScale,
@@ -103,13 +104,15 @@ export function IMStatusDepartmentLineChart({
   }, [filter]);
 
   const data: ChartData<"line", (number | undefined)[], string> = {
-    labels,
+    labels: labels.map((label) => iMStatusNormalizer(label)),
     datasets: departments.map((department) => {
       return {
         label: department.name,
+        fill: true,
         data: labels.map((label) => {
           return state?.[department.name]?.[label];
         }),
+        tension: 0.4,
       };
     }),
   };

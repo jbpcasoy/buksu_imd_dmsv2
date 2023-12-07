@@ -29,7 +29,7 @@ export default function CollegeSelector({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <input
         type='text'
         onChange={onSearch}
