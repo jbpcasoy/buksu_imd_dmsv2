@@ -70,15 +70,6 @@ export async function coordinatorEndorsedCount(user: User) {
       AND: [
         accessibleBy(ability).IM,
         {
-          Faculty: {
-            Department: {
-              id: {
-                equals: department.id,
-              },
-            },
-          },
-        },
-        {
           IMFile: {
             some: {
               DepartmentRevision: {

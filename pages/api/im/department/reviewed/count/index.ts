@@ -70,15 +70,6 @@ export async function reviewedCount(user: User) {
       AND: [
         accessibleBy(ability).IM,
         {
-          Faculty: {
-            Department: {
-              id: {
-                equals: department.id,
-              },
-            },
-          },
-        },
-        {
           OR: [
             {
               IMFile: {

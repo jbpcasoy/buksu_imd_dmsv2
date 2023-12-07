@@ -69,7 +69,6 @@ export default async function handler(
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
 
-
       const orderBy: Prisma.IMOrderByWithRelationInput =
         sortField === "title"
           ? {
@@ -115,15 +114,6 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
-            {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
             {
               IMFile: {
                 some: {
@@ -189,15 +179,6 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
-            {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
             {
               IMFile: {
                 some: {

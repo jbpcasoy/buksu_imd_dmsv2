@@ -61,27 +61,6 @@ export async function iMERCCollegeEndorsedCount(user: User) {
       AND: [
         accessibleBy(ability).IM,
         {
-          Faculty: {
-            Department: {
-              College: {
-                Department: {
-                  some: {
-                    Faculty: {
-                      some: {
-                        User: {
-                          id: {
-                            equals: user.id,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
           IMFile: {
             some: {
               QAMISRevision: {

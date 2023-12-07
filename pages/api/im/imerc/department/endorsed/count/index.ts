@@ -61,21 +61,6 @@ export async function iMERCEndorsedCount(user: User) {
       AND: [
         accessibleBy(ability).IM,
         {
-          Faculty: {
-            Department: {
-              Faculty: {
-                some: {
-                  User: {
-                    id: {
-                      equals: user.id,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
           IMFile: {
             some: {
               QAMISRevision: {

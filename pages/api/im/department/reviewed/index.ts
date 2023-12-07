@@ -115,15 +115,6 @@ export default async function handler(
           AND: [
             accessibleBy(ability).IM,
             {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
-            {
               OR: [
                 {
                   IMFile: {
@@ -252,15 +243,6 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
-            {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
             {
               OR: [
                 {

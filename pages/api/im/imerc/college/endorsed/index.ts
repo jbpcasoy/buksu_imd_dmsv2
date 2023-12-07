@@ -106,27 +106,6 @@ export default async function handler(
           AND: [
             accessibleBy(ability).IM,
             {
-              Faculty: {
-                Department: {
-                  College: {
-                    Department: {
-                      some: {
-                        Faculty: {
-                          some: {
-                            User: {
-                              id: {
-                                equals: user.id,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
               IMFile: {
                 some: {
                   QAMISRevision: {
