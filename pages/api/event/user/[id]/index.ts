@@ -482,7 +482,7 @@ export default async function handler(
                 }
               );
             event.url = `/im/${submittedContentSpecialist.ContentSpecialistSuggestion.ContentSpecialistReview.QAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
-            event.message = "Yor IM has been reviewed by a Content Specialist.";
+            event.message = "Yor IM has been reviewed by a Content specialist.";
             break;
           case "SUBMITTED_IDD_SPECIALIST_SUGGESTION_CREATED":
             const submittedIDDSpecialistSuggestion =

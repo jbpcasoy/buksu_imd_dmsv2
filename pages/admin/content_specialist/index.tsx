@@ -200,7 +200,7 @@ function ContentSpecialistItem({
     axios
       .delete(`/api/content_specialist/${contentSpecialist.id}`)
       .then(() => {
-        addSnackbar("Content Specialist has been deleted successfully");
+        addSnackbar("Content specialist has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(
@@ -222,12 +222,12 @@ function ContentSpecialistItem({
         activeFacultyId: activeFaculty?.id,
       })
       .then(() => {
-        addSnackbar("Content Specialist has been activated successfully");
+        addSnackbar("Content specialist has been activated successfully");
       })
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to activate Content Specialist",
+            "Failed to activate Content specialist",
           "error"
         );
       })
@@ -240,12 +240,12 @@ function ContentSpecialistItem({
     return axios
       .delete(`/api/active_content_specialist/${activeContentSpecialist?.id}`)
       .then(() => {
-        addSnackbar("Content Specialist has been deactivated successfully");
+        addSnackbar("Content specialist has been deactivated successfully");
       })
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to deactivate Content Specialist"
+            "Failed to deactivate Content specialist"
         );
       })
       .finally(() => {
@@ -328,12 +328,12 @@ function AddModal() {
       axios
         .post("/api/content_specialist", values)
         .then(() => {
-          addSnackbar("Content Specialist Added Successfully");
+          addSnackbar("Content specialist Added Successfully");
         })
         .catch((error) => {
           addSnackbar(
             error.response.data?.error?.message ??
-              "Failed to add Content Specialist",
+              "Failed to add Content specialist",
             "error"
           );
         })
@@ -367,7 +367,7 @@ function AddModal() {
         <span>Add</span>
       </button>
       {state.openAdd && (
-        <Modal onClose={handleClose} title='Add Content Specialist'>
+        <Modal onClose={handleClose} title='Add Content specialist'>
           <form onSubmit={formik.handleSubmit}>
             <div className='flex flex-col space-y-1'>
               <ActiveFacultySelector
