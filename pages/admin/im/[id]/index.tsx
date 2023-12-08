@@ -288,6 +288,7 @@ function ActionMenu({
 
               {state.openConfirmation && (
                 <Confirmation
+                  matchText={iM.title}
                   onClose={() =>
                     setState((prev) => ({
                       ...prev,

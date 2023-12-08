@@ -5,14 +5,19 @@ export interface ConfirmationProps {
   onConfirm: () => void;
   title?: string;
   shortDescription?: string;
+  matchText?: string;
 }
 
 export default function Confirmation({
+  matchText,
   onClose,
   onConfirm,
   shortDescription = "This action cannot be undone.",
   title = "Are you sure?",
 }: ConfirmationProps) {
+  const [state, setState] = useState({
+    typedText: "",
+  });
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -29,7 +34,7 @@ export default function Confirmation({
   const confirmHandler = () => {
     onConfirm();
     onClose();
-  }
+  };
 
   return (
     <div
@@ -42,8 +47,10 @@ export default function Confirmation({
       >
         <div className='flex justify-between px-5 py-2'>
           <div className=''>
-            <h1 className="text-lg">{title}</h1>
-            {shortDescription && <p className="text-palette_grey">{shortDescription}</p>}
+            <h1 className='text-lg'>{title}</h1>
+            {shortDescription && (
+              <p className='text-palette_grey'>{shortDescription}</p>
+            )}
           </div>
           <div>
             <button
@@ -61,10 +68,24 @@ export default function Confirmation({
             </button>
           </div>
         </div>
+        {matchText && (
+          <div className='flex flex-col space-y-1 px-2'>
+            <p className='text-center select-none'>{matchText}</p>
+            <input
+              type='text'
+              placeholder='Retype text to confirm'
+              className='rounded py-1'
+              onChange={(e) =>
+                setState((prev) => ({ ...prev, typedText: e.target.value }))
+              }
+            />
+          </div>
+        )}
         <div className='flex justify-end space-x-2 p-1'>
           <button
-            className='px-4 py-1 bg-palette_error hover:bg-opacity-90 text-palette_white rounded'
+            className='px-4 py-1 bg-palette_error hover:bg-opacity-90 text-palette_white rounded disabled:bg-palette_grey'
             onClick={confirmHandler}
+            disabled={Boolean(matchText) && matchText !== state.typedText}
           >
             Yes
           </button>
