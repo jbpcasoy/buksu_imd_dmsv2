@@ -192,12 +192,12 @@ function CITLDirectorItem({ cITLDirector }: CITLDirectorItemProps) {
         cITLDirectorId: cITLDirector.id,
       })
       .then(() => {
-        addSnackbar("CITL Director has been activated successfully");
+        addSnackbar("CITL director has been activated successfully");
       })
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to activate CITL Director",
+            "Failed to activate CITL director",
           "error"
         );
       })
@@ -210,12 +210,12 @@ function CITLDirectorItem({ cITLDirector }: CITLDirectorItemProps) {
     return axios
       .delete(`/api/active_citl_director/${activeCITLDirector?.id}`)
       .then(() => {
-        addSnackbar("CITL Director has been deactivated successfully");
+        addSnackbar("CITL director has been deactivated successfully");
       })
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to deactivate CITL Director",
+            "Failed to deactivate CITL director",
           "error"
         );
       })
@@ -297,12 +297,12 @@ function AddModal() {
       axios
         .post("/api/citl_director", values)
         .then(() => {
-          addSnackbar("CITL Director has been added successfully");
+          addSnackbar("CITL director has been added successfully");
         })
         .catch((error) => {
           addSnackbar(
             error.response.data?.error?.message ??
-              "Failed to add CITL Director",
+              "Failed to add CITL director",
             "error"
           );
         })

@@ -50,7 +50,7 @@ export default async function handler(
 
       if (userActiveCITLDirectorCount > 0) {
         return res.status(409).json({
-          error: { message: "There can only be one active CITL Director" },
+          error: { message: "There can only be one active CITL director" },
         });
       }
 

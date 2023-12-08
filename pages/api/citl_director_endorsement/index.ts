@@ -113,7 +113,7 @@ export default async function handler(
         mailTransporter.sendMail(
           {
             subject: "CITL Director Endorsed",
-            text: `We are pleased to inform you that your IM titled "${iM?.title}" has been endorsed by the CITL Director. It is now ready for a try-out, and QAMIS revision can then be accomplished.`,
+            text: `We are pleased to inform you that your IM titled "${iM?.title}" has been endorsed by the CITL director. It is now ready for a try-out, and QAMIS revision can then be accomplished.`,
             to: iMOwner.email,
           },
           (err) => {

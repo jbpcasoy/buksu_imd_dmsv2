@@ -1698,7 +1698,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${cITLDirectorEndorsement.IDDCoordinatorEndorsement.CITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been endorsed by the CITL Director.";
+            event.message = "An IM has been endorsed by the CITL director.";
             break;
           case "QAMIS_REVISION_CREATED":
             const qAMISRevision = await prisma.qAMISRevision.findUniqueOrThrow({
@@ -2001,7 +2001,7 @@ export default async function handler(
               });
             event.url = `/im/${iMERCCITLDirectorEndorsement.IMERCIDDCoordinatorEndorsement.IMERCCITLRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the CITL Director. (IMERC review)";
+              "An IM has been endorsed by the CITL director. (IMERC review)";
             break;
         }
       }
