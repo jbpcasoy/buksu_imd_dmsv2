@@ -284,9 +284,9 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
       >
         <option value=''>Select field</option>
         <option value='title'>Title</option>
-        <option value='userName'>User Name</option>
-        <option value='departmentName'>Department Name</option>
-        <option value='collegeName'>College Name</option>
+        <option value='userName'>Author</option>
+        <option value='departmentName'>Department</option>
+        <option value='collegeName'>College</option>
       </select>
       <input
         type='text'
