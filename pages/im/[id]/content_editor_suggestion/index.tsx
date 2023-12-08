@@ -55,8 +55,7 @@ export default function ContentEditorSuggestionPage() {
       })
       .catch((error: any) => {
         addSnackbar(
-          error?.response?.data?.error?.message ??
-            "Failed to submit suggestion",
+          error.response.data?.error?.message ?? "Failed to submit review",
           "error"
         );
       });
@@ -273,6 +272,12 @@ export default function ContentEditorSuggestionPage() {
                   )}
                 </tbody>
               </table>
+
+              {contentEditorSuggestionItems.count < 1 && (
+                <p className='text-center text-xs text-palette_error w-full'>
+                  Suggestions are required
+                </p>
+              )}
             </div>
             <div className='space-y-1'>
               <IMQAMISSuggestionItems id={iMId as string} editable={false} />
@@ -287,7 +292,8 @@ export default function ContentEditorSuggestionPage() {
             </div>
             <>
               <button
-                className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex items-center space-x-2 hover:bg-opacity-90'
+                className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey'
+                disabled={!Boolean(contentEditorSuggestion)}
                 onClick={() => setOpenConfirmation(true)}
               >
                 <span>Submit Review</span>

@@ -36,6 +36,17 @@ export default async function handler(
       );
 
       const { returnedDepartmentRevisionId } = validator.cast(req.body);
+      const returnedDepartmentRevisionSuggestionItemCount =
+        await prisma.returnedDepartmentRevisionSuggestionItem.count({
+          where: {
+            returnedDepartmentRevisionId: {
+              equals: returnedDepartmentRevisionId,
+            },
+          },
+        });
+      if (returnedDepartmentRevisionSuggestionItemCount < 1) {
+        throw new Error("Suggestions are required upon submitting");
+      }
 
       const coordinatorEndorsement =
         await prisma.coordinatorEndorsement.findFirst({

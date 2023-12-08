@@ -36,6 +36,17 @@ export default async function handler(
       );
 
       const { returnedCITLRevisionId } = validator.cast(req.body);
+      const returnedCITLRevisionSuggestionItemCount =
+        await prisma.returnedCITLRevisionSuggestionItem.count({
+          where: {
+            returnedCITLRevisionId: {
+              equals: returnedCITLRevisionId,
+            },
+          },
+        });
+      if (returnedCITLRevisionSuggestionItemCount < 1) {
+        throw new Error("Suggestions are required upon submitting");
+      }
 
       const iDDCoordinatorEndorsement =
         await prisma.iDDCoordinatorEndorsement.findFirst({

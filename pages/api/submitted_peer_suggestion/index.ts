@@ -35,6 +35,16 @@ export default async function handler(
         "SubmittedPeerSuggestion"
       );
       const { peerSuggestionId } = validator.cast(req.body);
+      const peerSuggestionItemCount = await prisma.peerSuggestionItem.count({
+        where: {
+          peerSuggestionId: {
+            equals: peerSuggestionId,
+          },
+        },
+      });
+      if (peerSuggestionItemCount < 1) {
+        throw new Error("Suggestions are required upon submitting");
+      }
       const submittedPeerSuggestion =
         await prisma.submittedPeerSuggestion.create({
           data: {

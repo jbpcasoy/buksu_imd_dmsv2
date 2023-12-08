@@ -55,7 +55,10 @@ export default function PeerSuggestionPage() {
         router.push(`/im/${iMId}`);
       })
       .catch((error: any) => {
-        addSnackbar("Failed to submit review", "error");
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to submit review",
+          "error"
+        );
       });
   };
 
@@ -259,6 +262,12 @@ export default function PeerSuggestionPage() {
                   )}
                 </tbody>
               </table>
+
+              {peerSuggestionItems.count < 1 && (
+                <p className='text-center text-xs text-palette_error w-full'>
+                  Suggestions are required
+                </p>
+              )}
             </div>
             <div className='space-y-1'>
               <IMCoordinatorSuggestionItems
@@ -272,7 +281,8 @@ export default function PeerSuggestionPage() {
             </div>
             <>
               <button
-                className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90'
+                className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey'
+                disabled={!Boolean(peerSuggestion)}
                 onClick={() => setOpenConfirmation(true)}
               >
                 <span>Submit Review</span>

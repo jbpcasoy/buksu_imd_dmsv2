@@ -36,6 +36,17 @@ export default async function handler(
 
       const { qAMISSuggestionId } = validator.cast(req.body);
 
+      const qAMISSuggestionItemCount = await prisma.qAMISSuggestionItem.count({
+        where: {
+          qAMISSuggestionId: {
+            equals: qAMISSuggestionId,
+          },
+        },
+      });
+      if (qAMISSuggestionItemCount < 1) {
+        throw new Error("Suggestions are required upon submitting");
+      }
+
       const submittedQAMISSuggestion =
         await prisma.submittedQAMISSuggestion.create({
           data: {

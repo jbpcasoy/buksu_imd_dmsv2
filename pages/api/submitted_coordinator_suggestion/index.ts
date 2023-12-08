@@ -36,6 +36,16 @@ export default async function handler(
       );
 
       const { coordinatorSuggestionId } = validator.cast(req.body);
+      const coordinatorSuggestionItemCount = await prisma.coordinatorSuggestionItem.count({
+        where: {
+          coordinatorSuggestionId: {
+            equals: coordinatorSuggestionId,
+          },
+        },
+      });
+      if (coordinatorSuggestionItemCount < 1) {
+        throw new Error("Suggestions are required upon submitting");
+      }
 
       const submittedCoordinatorSuggestion =
         await prisma.submittedCoordinatorSuggestion.create({

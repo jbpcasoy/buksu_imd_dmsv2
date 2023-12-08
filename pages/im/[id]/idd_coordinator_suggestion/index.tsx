@@ -60,7 +60,7 @@ export default function IDDCoordinatorSuggestionPage() {
       })
       .catch((error: any) => {
         addSnackbar(
-          error?.response?.data?.error?.message ?? "Failed to submit review",
+          error.response.data?.error?.message ?? "Failed to submit review",
           "error"
         );
       });
@@ -205,7 +205,10 @@ export default function IDDCoordinatorSuggestionPage() {
     }
 
     if (activeIDDCoordinator === null) {
-      addSnackbar("Only the IDD coordinator is allowed for this action", "error");
+      addSnackbar(
+        "Only the IDD coordinator is allowed for this action",
+        "error"
+      );
       router.replace(`/im/${iMId}`);
     }
   }, [activeIDDCoordinator]);
@@ -272,6 +275,11 @@ export default function IDDCoordinatorSuggestionPage() {
                   )}
                 </tbody>
               </table>
+              {iDDCoordinatorSuggestionItems.count < 1 && (
+                <p className='text-center text-xs text-palette_error w-full'>
+                  Suggestions are required
+                </p>
+              )}
             </div>
             <div className='space-y-1'>
               <IMPeerSuggestionItems id={iMId as string} editable={false} />
@@ -286,7 +294,8 @@ export default function IDDCoordinatorSuggestionPage() {
             </div>
             <>
               <button
-                className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex items-center space-x-2 hover:bg-opacity-90'
+                className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey'
+                disabled={!Boolean(iDDCoordinatorSuggestion)}
                 onClick={() => setOpenConfirmation(true)}
               >
                 <span>Submit Review</span>

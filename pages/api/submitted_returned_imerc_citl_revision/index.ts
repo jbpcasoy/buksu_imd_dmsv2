@@ -36,7 +36,17 @@ export default async function handler(
       );
 
       const { returnedIMERCCITLRevisionId } = validator.cast(req.body);
-
+      const returnedIMERCCITLRevisionSuggestionItemCount =
+        await prisma.returnedIMERCCITLRevisionSuggestionItem.count({
+          where: {
+            returnedIMERCCITLRevisionId: {
+              equals: returnedIMERCCITLRevisionId,
+            },
+          },
+        });
+      if (returnedIMERCCITLRevisionSuggestionItemCount < 1) {
+        throw new Error("Suggestions are required upon submitting");
+      }
       const iMERCIDDCoordinatorEndorsement =
         await prisma.iMERCIDDCoordinatorEndorsement.findFirst({
           where: {

@@ -36,6 +36,16 @@ export default async function handler(
       );
 
       const { chairpersonSuggestionId } = validator.cast(req.body);
+      const chairpersonSuggestionItemCount = await prisma.chairpersonSuggestionItem.count({
+        where: {
+          chairpersonSuggestionId: {
+            equals: chairpersonSuggestionId,
+          },
+        },
+      });
+      if (chairpersonSuggestionItemCount < 1) {
+        throw new Error("Suggestions are required upon submitting");
+      }
 
       const submittedChairpersonSuggestion =
         await prisma.submittedChairpersonSuggestion.create({
