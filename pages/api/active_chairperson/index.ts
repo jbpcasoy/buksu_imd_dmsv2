@@ -62,7 +62,10 @@ export default async function handler(
 
       if (userActiveChairpersonCount > 0) {
         return res.status(409).json({
-          error: { message: "User can only have one active chairperson" },
+          error: {
+            message:
+              "Faculty can only be an active chairperson on one department",
+          },
         });
       }
 

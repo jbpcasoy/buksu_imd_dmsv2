@@ -81,7 +81,7 @@ export default function IDDCoordinatorsPage() {
         <div className='flex justify-between p-1 bg-palette_grey bg-opacity-10'>
           <div className='flex space-x-1 justify-center items-end'>
             <h2 className='border-b-2 border-palette_orange px-2'>
-              IDD Coordinator
+              IDD coordinator
             </h2>
 
             <div className='flex flex-row space-x-1'>
@@ -179,12 +179,11 @@ function IDDCoordinatorItem({ iDDCoordinator }: IDDCoordinatorItemProps) {
     axios
       .delete(`/api/idd_coordinator/${iDDCoordinator.id}`)
       .then(() => {
-        addSnackbar("IDD Coordinator deleted successfully");
+        addSnackbar("IDD coordinator deleted successfully");
       })
       .catch((error) => {
         addSnackbar(
-          error?.response?.data?.error?.message ??
-            "Failed to delete IDD Coordinator",
+          "Failed to delete IDD coordinator, it is linked to a resource",
           "error"
         );
       })
@@ -199,12 +198,12 @@ function IDDCoordinatorItem({ iDDCoordinator }: IDDCoordinatorItemProps) {
         iDDCoordinatorId: iDDCoordinator.id,
       })
       .then(() => {
-        addSnackbar("IDD Coordinator has been activated successfully");
+        addSnackbar("IDD coordinator has been activated successfully");
       })
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to activate IDD Coordinator",
+            "Failed to activate IDD coordinator",
           "error"
         );
       })
@@ -217,12 +216,12 @@ function IDDCoordinatorItem({ iDDCoordinator }: IDDCoordinatorItemProps) {
     return axios
       .delete(`/api/active_idd_coordinator/${activeIDDCoordinator?.id}`)
       .then(() => {
-        addSnackbar("IDD Coordinator has been deactivated successfully");
+        addSnackbar("IDD coordinator has been deactivated successfully");
       })
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to deactivate IDD Coordinator",
+            "Failed to deactivate IDD coordinator",
           "error"
         );
       })
@@ -294,7 +293,7 @@ function AddModal() {
     setState((prev) => ({ ...prev, openAdd: true }));
   };
   const handleClose = () => {
-    setState((prev) => ({ ...prev, openAdd: true }));
+    setState((prev) => ({ ...prev, openAdd: false }));
   };
 
   const formik = useFormik({
@@ -308,12 +307,12 @@ function AddModal() {
       axios
         .post("/api/idd_coordinator", values)
         .then(() => {
-          addSnackbar("IDD Coordinator added successfully");
+          addSnackbar("IDD coordinator added successfully");
         })
         .catch((error) => {
           addSnackbar(
             error.response.data?.error?.message ??
-              "Failed to add IDD Coordinator",
+              "Failed to add IDD coordinator",
             "error"
           );
         })

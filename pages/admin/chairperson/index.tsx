@@ -199,8 +199,7 @@ function ChairpersonItem({ chairperson }: ChairpersonItemProps) {
       })
       .catch((error) => {
         addSnackbar(
-          error?.response?.data?.error?.message ??
-            "Failed to delete chairperson",
+          "Failed to delete chairperson, it is linked to a resource",
           "error"
         );
       })
@@ -210,6 +209,9 @@ function ChairpersonItem({ chairperson }: ChairpersonItemProps) {
   };
 
   const activateHandler = async () => {
+    if (!activeFaculty) {
+      return addSnackbar("Faculty must be active", "error");
+    }
     return axios
       .post(`/api/active_chairperson`, {
         activeFacultyId: activeFaculty?.id,

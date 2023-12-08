@@ -32,6 +32,20 @@ export default async function handler(
       ForbiddenError.from(ability).throwUnlessCan("create", "Dean");
 
       const { activeFacultyId } = validator.cast(req.body);
+      const existingDean = await prisma.dean.findFirst({
+        where: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: activeFacultyId,
+              },
+            },
+          },
+        },
+      });
+      if (existingDean) {
+        throw new Error("Dean already exists");
+      }
 
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {

@@ -199,8 +199,7 @@ function FacultyItem({ faculty }: FacultyItemProps) {
       })
       .catch((error) => {
         addSnackbar(
-          error?.response?.data?.error?.message ??
-            "Failed to deactivate faculty",
+          error.response.data?.error?.message ?? "Failed to deactivate faculty",
           "error"
         );
       })
@@ -217,7 +216,7 @@ function FacultyItem({ faculty }: FacultyItemProps) {
       })
       .catch((error) => {
         addSnackbar(
-          error?.response?.data?.error?.message ?? "Failed to delete faculty",
+          "Failed to delete faculty, it is linked to a resource",
           "error"
         );
       })

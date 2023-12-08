@@ -132,7 +132,7 @@ function EditSuggestionItemActionTaken({
           })
           .catch((error) => {
             addSnackbar(
-              error.response.data?.error?.name ?? "Failed to update suggestion",
+              error.response.data?.error?.message ?? "Failed to update suggestion",
               "error"
             );
           })
@@ -150,7 +150,7 @@ function EditSuggestionItemActionTaken({
           })
           .catch((error) => {
             addSnackbar(
-              error.response.data?.error?.name ?? "Failed to update suggestion",
+              error.response.data?.error?.message ?? "Failed to update suggestion",
               "error"
             );
           })

@@ -60,7 +60,10 @@ export default async function handler(
 
       if (userActiveDeanCount > 0) {
         return res.status(409).json({
-          error: { message: "User can only have one active dean" },
+          error: {
+            message:
+              "Faculty can only be an active dean on one college",
+          },
         });
       }
 

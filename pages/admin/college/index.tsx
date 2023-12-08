@@ -322,7 +322,7 @@ function EditModal({ college }: EditModalProps) {
         })
         .catch((error) => {
           addSnackbar(
-            error.response.data?.error?.message ?? "Failed to update college",
+            "Failed to delete College, it linked to a resource",
             "error"
           );
         })

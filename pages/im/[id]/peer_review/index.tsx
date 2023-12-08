@@ -115,7 +115,10 @@ export default function AddPeerReviewPage() {
           router.push(`/im/${iMId}/peer_suggestion`);
         })
         .catch((error) => {
-          addSnackbar("Failed to submit review", "error");
+          addSnackbar(
+            error.response.data?.error?.message ?? "Failed to submit review",
+            "error"
+          );
         });
     },
   });

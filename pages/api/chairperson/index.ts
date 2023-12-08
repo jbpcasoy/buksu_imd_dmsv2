@@ -34,6 +34,20 @@ export default async function handler(
 
       const { activeFacultyId } = validator.cast(req.body);
 
+      const existingChairperson = await prisma.chairperson.findFirst({
+        where: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: activeFacultyId,
+              },
+            },
+          },
+        },
+      });
+      if (existingChairperson) {
+        throw new Error("Chairperson already exists");
+      }
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {
           ActiveFaculty: {

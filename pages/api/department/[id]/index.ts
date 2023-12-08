@@ -95,7 +95,27 @@ export default async function handler(
       const { id } = req.query;
       const { name } = validator.cast(req.body);
 
-      const college = await prisma.department.update({
+      const existingDepartment = await prisma.department.findFirst({
+        where: {
+          AND: [
+            {
+              name: {
+                equals: name,
+              },
+            },
+            {
+              id: {
+                not: id as string,
+              },
+            },
+          ],
+        },
+      });
+      if (existingDepartment) {
+        throw new Error("Department name is already used");
+      }
+
+      const department = await prisma.department.update({
         where: {
           id: id as string,
         },
@@ -104,7 +124,7 @@ export default async function handler(
         },
       });
 
-      return res.json(college);
+      return res.json(department);
     } catch (error: any) {
       logger.error(error);
       return res

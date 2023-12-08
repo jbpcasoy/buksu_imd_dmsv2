@@ -35,6 +35,20 @@ export default async function handler(
 
       const { userId, departmentId } = validator.cast(req.body);
 
+      const existingFaculty = await prisma.faculty.findFirst({
+        where: {
+          userId: {
+            equals: userId,
+          },
+          departmentId: {
+            equals: departmentId,
+          },
+        },
+      });
+      if(existingFaculty) {
+        throw new Error("Faculty already exists")
+      }
+
       const faculty = await prisma.faculty.create({
         data: {
           User: {

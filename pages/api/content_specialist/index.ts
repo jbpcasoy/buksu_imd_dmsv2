@@ -36,6 +36,21 @@ export default async function handler(
 
       const { activeFacultyId } = validator.cast(req.body);
 
+      const existingContentSpecialist =
+        await prisma.contentSpecialist.findFirst({
+          where: {
+            Faculty: {
+              ActiveFaculty: {
+                id: {
+                  equals: activeFacultyId,
+                },
+              },
+            },
+          },
+        });
+      if (existingContentSpecialist) {
+        throw new Error("Content specialist already exists");
+      }
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {
           ActiveFaculty: {

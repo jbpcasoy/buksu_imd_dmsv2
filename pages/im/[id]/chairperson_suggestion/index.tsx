@@ -46,7 +46,7 @@ export default function ChairpersonSuggestionPage() {
   const { addSnackbar } = useContext(SnackbarContext);
   const activeChairperson = useActiveChairpersonMe();
   const myDepartment = useDepartmentMe();
-  const ownerDepartment = useDepartmentIM({id: iMId as string});
+  const ownerDepartment = useDepartmentIM({ id: iMId as string });
 
   const handleSubmitReview = () => {
     if (!chairpersonSuggestion) return;
@@ -108,8 +108,12 @@ export default function ChairpersonSuggestionPage() {
             .then(() => {
               addSnackbar("Suggestion added successfully");
             })
-            .catch(() => {
-              addSnackbar("Failed to add suggestion", "error");
+            .catch((error) => {
+              addSnackbar(
+                error.response.data?.error?.message ??
+                  "Failed to add suggestion",
+                "error"
+              );
             })
             .finally(() => {
               router.reload();

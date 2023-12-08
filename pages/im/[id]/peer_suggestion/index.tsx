@@ -101,8 +101,12 @@ export default function PeerSuggestionPage() {
             .then(() => {
               addSnackbar("Suggestion added successfully");
             })
-            .catch(() => {
-              addSnackbar("Failed to add suggestion", "error");
+            .catch((error) => {
+              addSnackbar(
+                error.response.data?.error?.message ??
+                  "Failed to add suggestion",
+                "error"
+              );
             })
             .finally(() => {
               router.reload();

@@ -109,7 +109,7 @@ export default function ReturnedCITLRevisionPage() {
             })
             .catch((error) => {
               addSnackbar(
-                error.response.data?.eror?.message ??
+                error.response.data?.error?.message ??
                   "Failed to add suggestion",
                 "error"
               );

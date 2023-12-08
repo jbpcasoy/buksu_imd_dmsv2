@@ -118,7 +118,10 @@ export default function AddChairpersonReviewPage() {
           router.push(`/im/${iMId}/chairperson_suggestion`);
         })
         .catch((error) => {
-          addSnackbar("Failed to submit review", "error");
+          addSnackbar(
+            error.response.data?.error?.message ?? "Failed to submit review",
+            "error"
+          );
         });
     },
   });

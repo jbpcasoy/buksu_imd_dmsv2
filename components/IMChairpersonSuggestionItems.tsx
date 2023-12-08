@@ -130,8 +130,12 @@ function EditSuggestionItemActionTaken({
           .then(() => {
             addSnackbar("Suggestion updated successfully");
           })
-          .catch(() => {
-            addSnackbar("Failed to update suggestion", "error");
+          .catch((error) => {
+            addSnackbar(
+              error.response.data?.error?.message ??
+                "Failed to update suggestion",
+              "error"
+            );
           })
           .finally(() => {
             router.reload();
@@ -145,8 +149,12 @@ function EditSuggestionItemActionTaken({
           .then(() => {
             addSnackbar("Suggestion updated successfully");
           })
-          .catch(() => {
-            addSnackbar("Failed to update suggestion", "error");
+          .catch((error) => {
+            addSnackbar(
+              error.response.data?.error?.message ??
+                "Failed to update suggestion",
+              "error"
+            );
           })
           .finally(() => {
             router.reload();

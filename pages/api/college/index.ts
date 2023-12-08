@@ -34,6 +34,17 @@ export default async function handler(
 
       const { name } = validator.cast(req.body);
 
+      const existingCollege = await prisma.college.findFirst({
+        where: {
+          name: {
+            equals: name,
+          },
+        },
+      });
+      if (existingCollege) {
+        throw new Error("College name is already used");
+      }
+
       const college = await prisma.college.create({
         data: {
           name,

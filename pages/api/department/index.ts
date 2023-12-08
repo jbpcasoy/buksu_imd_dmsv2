@@ -35,6 +35,17 @@ export default async function handler(
 
       const { name, collegeId } = validator.cast(req.body);
 
+      const existingDepartment = await prisma.department.findFirst({
+        where: {
+          name: {
+            equals: name,
+          },
+        },
+      });
+      if (existingDepartment) {
+        throw new Error("Department name is already used");
+      }
+
       const college = await prisma.college.findFirstOrThrow({
         where: {
           id: {

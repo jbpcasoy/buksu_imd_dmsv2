@@ -105,7 +105,9 @@ function EditSuggestionItem({ qAMISSuggestionItem }: EditSuggestionItemProps) {
         })
         .catch((error) => {
           addSnackbar(
-            error.response.data?.error?.message ?? "Failed to update suggestion"
+            error.response.data?.error?.message ??
+              "Failed to update suggestion",
+            "error"
           );
         })
         .finally(() => {

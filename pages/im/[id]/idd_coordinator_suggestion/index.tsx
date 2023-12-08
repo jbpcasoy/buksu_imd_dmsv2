@@ -108,6 +108,13 @@ export default function IDDCoordinatorSuggestionPage() {
             .then(() => {
               addSnackbar("Suggestion added successfully");
               router.reload();
+            })
+            .catch((error) => {
+              addSnackbar(
+                error.response.data?.error?.message ??
+                  "Failed to add suggestion",
+                "error"
+              );
             });
         };
 

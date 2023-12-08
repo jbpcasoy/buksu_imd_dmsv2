@@ -132,7 +132,11 @@ function EditSuggestionItemActionTaken({
             addSnackbar("Suggestion updated successfully");
           })
           .catch((error) => {
-            addSnackbar("Suggestion updated successfully");
+            addSnackbar(
+              error.response.data?.error?.message ??
+                "Suggestion updated successfully",
+              "error"
+            );
           })
           .finally(() => {
             router.reload();
@@ -147,7 +151,11 @@ function EditSuggestionItemActionTaken({
             addSnackbar("Suggestion updated successfully");
           })
           .catch((error) => {
-            addSnackbar("Suggestion updated successfully");
+            addSnackbar(
+              error.response.data?.error?.message ??
+                "Suggestion updated successfully",
+              "error"
+            );
           })
           .finally(() => {
             router.reload();

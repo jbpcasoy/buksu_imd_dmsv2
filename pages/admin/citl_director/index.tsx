@@ -177,8 +177,7 @@ function CITLDirectorItem({ cITLDirector }: CITLDirectorItemProps) {
       })
       .catch((error) => {
         addSnackbar(
-          error?.response?.data?.error?.message ??
-            "Failed to delete CITL Director",
+          "Failed to delete CITL director, it is linked to a resource",
           "error"
         );
       })

@@ -33,6 +33,20 @@ export default async function handler(
 
       const { activeFacultyId } = validator.cast(req.body);
 
+      const existingCoordinator = await prisma.coordinator.findFirst({
+        where: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: activeFacultyId,
+              },
+            },
+          },
+        },
+      });
+      if (existingCoordinator) {
+        throw new Error("Coordinator already exists");
+      }
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {
           ActiveFaculty: {

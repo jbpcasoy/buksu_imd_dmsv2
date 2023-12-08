@@ -198,8 +198,7 @@ function CoordinatorItem({ coordinator }: CoordinatorItemProps) {
       })
       .catch((error) => {
         addSnackbar(
-          error?.response?.data?.error?.message ??
-            "Failed to delete Coordinator",
+          "Failed to delete coordinator, it is linked to a resource",
           "error"
         );
       })
@@ -209,6 +208,9 @@ function CoordinatorItem({ coordinator }: CoordinatorItemProps) {
   };
 
   const activateHandler = async () => {
+    if (!activeFaculty) {
+      return addSnackbar("Faculty must be active", "error");
+    }
     return axios
       .post(`/api/active_coordinator`, {
         activeFacultyId: activeFaculty?.id,

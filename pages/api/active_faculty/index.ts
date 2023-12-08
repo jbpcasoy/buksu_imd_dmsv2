@@ -56,7 +56,7 @@ export default async function handler(
 
       if (userActiveFacultyCount > 0) {
         return res.status(409).json({
-          error: { message: "User can only have one active faculty" },
+          error: { message: "Faculty can only belong to one department" },
         });
       }
 

@@ -33,6 +33,18 @@ export default async function handler(
       ForbiddenError.from(ability).throwUnlessCan("create", "CITLDirector");
 
       const { userId } = validator.cast(req.body);
+      const existingCITLDirector = await prisma.cITLDirector.findFirst({
+        where: {
+          User: {
+            id: {
+              equals: userId,
+            },
+          },
+        },
+      });
+      if(existingCITLDirector) {
+        throw new Error("CITL director already exists");
+      }
 
       const cITLDirector = await prisma.cITLDirector.create({
         data: {

@@ -198,7 +198,7 @@ function DeanItem({ dean }: DeanItemProps) {
       })
       .catch((error) => {
         addSnackbar(
-          error?.response?.data?.error?.message ?? "Failed to delete Dean",
+          "Failed to delete dean, it is linked to a resource",
           "error"
         );
       })
@@ -208,6 +208,9 @@ function DeanItem({ dean }: DeanItemProps) {
   };
 
   const activateHandler = async () => {
+    if (!activeFaculty) {
+      return addSnackbar("Faculty must be active", "error");
+    }
     return axios
       .post(`/api/active_dean`, {
         activeFacultyId: activeFaculty?.id,

@@ -26,7 +26,10 @@ export default function PeerSuggestionItem({
         addSnackbar("Suggestion deleted successfully");
       })
       .catch((error) => {
-        addSnackbar("Failed to delete suggestion");
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to delete suggestion",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -98,7 +101,11 @@ function EditSuggestionItem({ peerSuggestionItem }: EditSuggestionItemProps) {
           addSnackbar("Suggestion updated successfully");
         })
         .catch((error) => {
-          addSnackbar("Failed to update suggestion", "error");
+          addSnackbar(
+            error.response.data?.error?.message ??
+              "Failed to update suggestion",
+            "error"
+          );
         })
         .finally(() => {
           router.reload();

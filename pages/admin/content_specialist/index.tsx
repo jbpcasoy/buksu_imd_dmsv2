@@ -204,8 +204,7 @@ function ContentSpecialistItem({
       })
       .catch((error) => {
         addSnackbar(
-          error?.response?.data?.error?.message ??
-            "Failed to delete Active Specialist",
+          "Failed to delete content specialist, it is linked to a resource",
           "error"
         );
       })
@@ -215,6 +214,9 @@ function ContentSpecialistItem({
   };
 
   const activateHandler = async () => {
+    if (!activeFaculty) {
+      return addSnackbar("Faculty must be active", "error");
+    }
     return axios
       .post(`/api/active_content_specialist`, {
         activeFacultyId: activeFaculty?.id,

@@ -34,6 +34,18 @@ export default async function handler(
 
       const { userId } = validator.cast(req.body);
 
+      const existingIDDCoordinator = await prisma.iDDCoordinator.findFirst({
+        where: {
+          User: {
+            id: {
+              equals: userId,
+            },
+          },
+        },
+      });
+      if (existingIDDCoordinator) {
+        throw new Error("IDD coordinator already exists");
+      }
       const iDDCoordinator = await prisma.iDDCoordinator.create({
         data: {
           User: {

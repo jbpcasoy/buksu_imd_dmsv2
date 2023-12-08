@@ -170,7 +170,7 @@ function DepartmentItem({ department }: DepartmentItemProps) {
       })
       .catch((error) => {
         addSnackbar(
-          error.response.data?.error?.message ?? "Failed to delete Department",
+          "Failed to delete Department, it linked to a resource",
           "error"
         );
       })
@@ -244,7 +244,10 @@ function AddModal() {
           addSnackbar("Department Added Successfully");
         })
         .catch((error) => {
-          addSnackbar(error?.response?.data?.error?.message);
+          addSnackbar(
+            error?.response?.data?.error?.message ?? "Failed to add department",
+            "error"
+          );
         })
         .finally(() => {
           router.reload();
