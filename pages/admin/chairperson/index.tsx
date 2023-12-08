@@ -222,7 +222,7 @@ function ChairpersonItem({ chairperson }: ChairpersonItemProps) {
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to activate Chairperson",
+            "Failed to activate chairperson",
           "error"
         );
       })
@@ -240,7 +240,7 @@ function ChairpersonItem({ chairperson }: ChairpersonItemProps) {
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to deactivate Chairperson",
+            "Failed to deactivate chairperson",
           "error"
         );
       })

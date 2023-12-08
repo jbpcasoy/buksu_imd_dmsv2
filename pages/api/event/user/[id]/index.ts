@@ -131,7 +131,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedCoordinatorSuggestion.CoordinatorSuggestion.CoordinatorReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the Coordinator.";
+            event.message = "An IM has been reviewed by the coordinator.";
             break;
           case "SUBMITTED_CHAIRPERSON_SUGGESTION_CREATED":
             const submittedChairpersonSuggestion =
@@ -156,7 +156,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedChairpersonSuggestion.ChairpersonSuggestion.ChairpersonReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the Chairperson.";
+            event.message = "An IM has been reviewed by the chairperson.";
             break;
           case "DEPARTMENT_REVIEWED_CREATED":
             const departmentReviewed =
@@ -238,7 +238,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${coordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been endorsed by the Coordinator.";
+            event.message = "An IM has been endorsed by the coordinator.";
             break;
           case "DEAN_ENDORSEMENT_CREATED":
             const deanEndorsement =
@@ -259,7 +259,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${deanEndorsement.CoordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been endorsed by the Dean.";
+            event.message = "An IM has been endorsed by the dean.";
             break;
           case "SUBMITTED_IDD_COORDINATOR_SUGGESTION_CREATED":
             const submittedIDDCoordinatorSuggestion =
@@ -389,7 +389,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISCoordinatorEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the Coordinator for IMERC review.";
+              "An IM has been endorsed by the coordinator for IMERC review.";
             break;
           case "QAMIS_CHAIRPERSON_ENDORSEMENT_CREATED":
             const qAMISChairpersonEndorsement =
@@ -407,7 +407,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISChairpersonEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the Chairperson for IMERC review.";
+              "An IM has been endorsed by the chairperson for IMERC review.";
             break;
           case "QAMIS_DEAN_ENDORSEMENT_CREATED":
             const qAMISDeanEndorsement =
@@ -425,7 +425,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the Dean for IMERC review.";
+              "An IM has been endorsed by the dean for IMERC review.";
             break;
           case "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED":
             const qAMISDepartmentEndorsement =

@@ -221,7 +221,7 @@ function CoordinatorItem({ coordinator }: CoordinatorItemProps) {
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to deactivate Coordinator",
+            "Failed to deactivate coordinator",
           "error"
         );
       })
@@ -239,7 +239,7 @@ function CoordinatorItem({ coordinator }: CoordinatorItemProps) {
       .catch((error) => {
         addSnackbar(
           error?.response?.data?.error?.message ??
-            "Failed to deactivate Coordinator",
+            "Failed to deactivate coordinator",
           "error"
         );
       })
