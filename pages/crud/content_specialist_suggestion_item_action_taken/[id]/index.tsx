@@ -24,7 +24,7 @@ export default function ContentSpecialistSuggestionItemActionTakenPage() {
         `/api/content_specialist_suggestion_item_action_taken/${contentSpecialistSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ContentSpecialistSuggestionItemActionTaken deleted successfully");
+        alert("ContentSpecialistSuggestionItemActionTaken has been deleted successfully");
       })
       .catch((error) => {
         alert(error.message);

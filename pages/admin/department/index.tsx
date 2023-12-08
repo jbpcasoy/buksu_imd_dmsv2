@@ -166,7 +166,7 @@ function DepartmentItem({ department }: DepartmentItemProps) {
     axios
       .delete(`/api/department/${department.id}`)
       .then(() => {
-        addSnackbar("Department deleted successfully");
+        addSnackbar("Department has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

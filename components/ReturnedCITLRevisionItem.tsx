@@ -27,7 +27,7 @@ export default function ReturnedCITLRevisionSuggestionItem({
         `/api/returned_citl_revision_suggestion_item/${returnedCITLRevisionSuggestionItem.id}`
       )
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

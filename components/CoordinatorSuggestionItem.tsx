@@ -26,7 +26,7 @@ export default function CoordinatorSuggestionItem({
           `/api/coordinator_suggestion_item/${coordinatorSuggestionItem.id}`
         )
         .then(() => {
-          addSnackbar("Suggestion deleted successfully");
+          addSnackbar("Suggestion has been deleted successfully");
         })
         .catch((error) => {
           addSnackbar("Failed to delete suggestion", "error");

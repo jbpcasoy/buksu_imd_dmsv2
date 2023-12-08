@@ -24,7 +24,7 @@ export default function QAMISSuggestionItem({
     axios
       .delete(`/api/qamis_suggestion_item/${qAMISSuggestionItem.id}`)
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

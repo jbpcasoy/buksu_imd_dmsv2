@@ -200,7 +200,7 @@ function ContentSpecialistItem({
     axios
       .delete(`/api/content_specialist/${contentSpecialist.id}`)
       .then(() => {
-        addSnackbar("Content Specialist deleted successfully");
+        addSnackbar("Content Specialist has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

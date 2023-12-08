@@ -19,7 +19,7 @@ export default function IMERCCITLDirectorEndorsementPage() {
     axios
       .delete(`/api/imerc_citl_director_endorsement/${iMERCCITLDirectorEndorsementId}`)
       .then(() => {
-        alert("IMERCCITLDirectorEndorsement deleted successfully");
+        alert("IMERCCITLDirectorEndorsement has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

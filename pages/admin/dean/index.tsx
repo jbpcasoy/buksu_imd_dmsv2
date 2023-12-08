@@ -194,7 +194,7 @@ function DeanItem({ dean }: DeanItemProps) {
     axios
       .delete(`/api/dean/${dean.id}`)
       .then(() => {
-        addSnackbar("Dean deleted successfully");
+        addSnackbar("Dean has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

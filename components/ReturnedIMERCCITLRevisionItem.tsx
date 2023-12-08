@@ -27,7 +27,7 @@ export default function ReturnedIMERCCITLRevisionSuggestionItem({
         `/api/returned_imerc_citl_revision_suggestion_item/${returnedIMERCCITLRevisionSuggestionItem.id}`
       )
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

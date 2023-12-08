@@ -28,7 +28,7 @@ export default function IDDCoordinatorSuggestionItem({
         `/api/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}`
       )
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
         router.reload();
       })
       .catch((error) => {

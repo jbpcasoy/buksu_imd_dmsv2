@@ -288,7 +288,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedIDDCoordinatorSuggestion.IDDCoordinatorSuggestion.DeanEndorsement.CoordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the IDD Coordinator.";
+            event.message = "An IM has been reviewed by the IDD coordinator.";
             break;
           case "CITL_REVISION_CREATED":
             const cITLRevision = await prisma.cITLRevision.findUniqueOrThrow({
@@ -338,7 +338,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${iDDCoordinatorEndorsement.CITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the IDD Coordinator.";
+            event.message = "An IM has been reviewed by the IDD coordinator.";
             break;
           case "CITL_DIRECTOR_ENDORSEMENT_CREATED":
             const cITLDirectorEndorsement =
@@ -640,7 +640,7 @@ export default async function handler(
               });
             event.url = `/im/${iMERCIDDCoordinatorEndorsement.IMERCCITLRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the IDD Coordinator. (IMERC review)";
+              "An IM has been endorsed by the IDD coordinator. (IMERC review)";
             break;
           case "IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED":
             const iMERCCITLDirectorEndorsement =

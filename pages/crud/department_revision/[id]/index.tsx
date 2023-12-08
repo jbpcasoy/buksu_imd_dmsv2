@@ -21,7 +21,7 @@ export default function DepartmentRevisionPage() {
     axios
       .delete(`/api/department_revision/${departmentRevisionId}`)
       .then(() => {
-        alert("DepartmentRevision deleted successfully");
+        alert("DepartmentRevision has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

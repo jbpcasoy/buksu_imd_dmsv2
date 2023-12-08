@@ -26,7 +26,7 @@ export default function ReturnedDepartmentRevisionSuggestionItem({
         `/api/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItem.id}`
       )
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

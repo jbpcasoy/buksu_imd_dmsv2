@@ -206,7 +206,7 @@ export default function ViewIM() {
     axios
       .delete(`/api/im/${id}`)
       .then(() => {
-        addSnackbar("IM deleted successfully");
+        addSnackbar("IM has been deleted successfully");
         router.push("/department/my_ims");
       })
       .catch((error) => {

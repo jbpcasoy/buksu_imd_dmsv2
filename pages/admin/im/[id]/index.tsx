@@ -54,7 +54,7 @@ export default function IMPage() {
     axios
       .delete(`/api/im/${iMId}`)
       .then(() => {
-        addSnackbar("IM deleted successfully");
+        addSnackbar("IM has been deleted successfully");
         router.push("/admin/im");
       })
       .catch((error) => {

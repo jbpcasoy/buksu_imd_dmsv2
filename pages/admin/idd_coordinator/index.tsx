@@ -179,7 +179,7 @@ function IDDCoordinatorItem({ iDDCoordinator }: IDDCoordinatorItemProps) {
     axios
       .delete(`/api/idd_coordinator/${iDDCoordinator.id}`)
       .then(() => {
-        addSnackbar("IDD coordinator deleted successfully");
+        addSnackbar("IDD coordinator has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

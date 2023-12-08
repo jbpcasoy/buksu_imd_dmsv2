@@ -90,7 +90,7 @@ export default async function handler(
         });
 
       if (iMERCIDDCoordinatorEndorsement) {
-        throw new Error("IM already endorsed by IDD Coordinator");
+        throw new Error("IM already endorsed by IDD coordinator");
       }
 
       const submittedReturnedIMERCCITLRevision =

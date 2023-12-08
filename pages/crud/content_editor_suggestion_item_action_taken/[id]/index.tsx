@@ -24,7 +24,7 @@ export default function ContentEditorSuggestionItemActionTakenPage() {
         `/api/content_editor_suggestion_item_action_taken/${contentEditorSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ContentEditorSuggestionItemActionTaken deleted successfully");
+        alert("ContentEditorSuggestionItemActionTaken has been deleted successfully");
       })
       .catch((error) => {
         alert(error.message);

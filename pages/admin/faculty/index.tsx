@@ -212,7 +212,7 @@ function FacultyItem({ faculty }: FacultyItemProps) {
     axios
       .delete(`/api/faculty/${faculty.id}`)
       .then(() => {
-        addSnackbar("Faculty deleted successfully");
+        addSnackbar("Faculty has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

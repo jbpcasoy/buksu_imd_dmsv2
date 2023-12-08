@@ -25,7 +25,7 @@ export default function ContentEditorSuggestionItem({
         `/api/content_editor_suggestion_item/${contentEditorSuggestionItem.id}`
       )
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
         router.reload();
       })
       .catch((error) => {

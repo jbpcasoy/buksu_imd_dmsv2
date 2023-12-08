@@ -155,7 +155,7 @@ function CollegeItem({ college }: CollegeItemProps) {
     axios
       .delete(`/api/college/${college.id}`)
       .then(() => {
-        addSnackbar("College deleted successfully");
+        addSnackbar("College has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

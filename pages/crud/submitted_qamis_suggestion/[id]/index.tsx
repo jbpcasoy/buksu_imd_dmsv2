@@ -23,7 +23,7 @@ export default function SubmittedQAMISSuggestionPage() {
         `/api/submitted_qamis_suggestion/${submittedQAMISSuggestionId}`
       )
       .then(() => {
-        alert("SubmittedQAMISSuggestion deleted successfully");
+        alert("SubmittedQAMISSuggestion has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

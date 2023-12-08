@@ -21,7 +21,7 @@ export default function IMERCCITLRevisionPage() {
     axios
       .delete(`/api/imerc_citl_revision/${iMERCCITLRevisionId}`)
       .then(() => {
-        alert("IMERCCITLRevision deleted successfully");
+        alert("IMERCCITLRevision has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

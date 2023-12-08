@@ -23,7 +23,7 @@ export default function SubmittedChairpersonSuggestionPage() {
         `/api/submitted_chairperson_suggestion/${submittedChairpersonSuggestionId}`
       )
       .then(() => {
-        alert("SubmittedChairpersonSuggestion deleted successfully");
+        alert("SubmittedChairpersonSuggestion has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

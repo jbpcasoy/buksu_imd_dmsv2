@@ -24,7 +24,7 @@ export default function SubmittedReturnedDepartmentRevisionPage() {
         `/api/submitted_returned_department_revision/${submittedReturnedDepartmentRevisionId}`
       )
       .then(() => {
-        alert("SubmittedReturnedDepartmentRevision deleted successfully");
+        alert("SubmittedReturnedDepartmentRevision has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

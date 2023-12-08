@@ -21,7 +21,7 @@ export default function ReturnedCITLRevisionPage() {
     axios
       .delete(`/api/returned_citl_revision/${returnedCITLRevisionId}`)
       .then(() => {
-        alert("ReturnedCITLRevision deleted successfully");
+        alert("ReturnedCITLRevision has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

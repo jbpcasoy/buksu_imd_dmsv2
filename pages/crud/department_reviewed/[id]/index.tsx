@@ -23,7 +23,7 @@ export default function DepartmentReviewedPage() {
     axios
       .delete(`/api/department_reviewed/${departmentReviewedId}`)
       .then(() => {
-        alert("DepartmentReviewed deleted successfully");
+        alert("DepartmentReviewed has been deleted successfully");
       })
       .catch((error) => {
         alert(error.message);

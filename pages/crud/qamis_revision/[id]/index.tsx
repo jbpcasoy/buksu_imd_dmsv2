@@ -21,7 +21,7 @@ export default function QAMISRevisionPage() {
     axios
       .delete(`/api/qamis_revision/${qAMISRevisionId}`)
       .then(() => {
-        alert("QAMISRevision deleted successfully");
+        alert("QAMISRevision has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

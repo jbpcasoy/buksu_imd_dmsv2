@@ -173,7 +173,7 @@ function CITLDirectorItem({ cITLDirector }: CITLDirectorItemProps) {
     axios
       .delete(`/api/citl_director/${cITLDirector.id}`)
       .then(() => {
-        addSnackbar("CITL Director deleted successfully");
+        addSnackbar("CITL director has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

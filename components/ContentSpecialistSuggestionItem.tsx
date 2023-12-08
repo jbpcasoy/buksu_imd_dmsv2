@@ -27,7 +27,7 @@ export default function ContentSpecialistSuggestionItem({
         `/api/content_specialist_suggestion_item/${contentSpecialistSuggestionItem.id}`
       )
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

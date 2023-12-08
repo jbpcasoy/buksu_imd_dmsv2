@@ -80,7 +80,7 @@ export default async function handler(
         });
 
       if (coordinatorEndorsement) {
-        throw new Error("IM already endorsed by IDD Coordinator");
+        throw new Error("IM already endorsed by IDD coordinator");
       }
 
       const activeCoordinator = await prisma.activeCoordinator.findFirstOrThrow(

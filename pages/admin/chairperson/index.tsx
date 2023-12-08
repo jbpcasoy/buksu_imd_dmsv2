@@ -195,7 +195,7 @@ function ChairpersonItem({ chairperson }: ChairpersonItemProps) {
     axios
       .delete(`/api/chairperson/${chairperson.id}`)
       .then(() => {
-        addSnackbar("Chairperson deleted successfully");
+        addSnackbar("Chairperson has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

@@ -19,7 +19,7 @@ export default function IDDCoordinatorPage() {
     axios
       .delete(`/api/iDDCoordinator/${iDDCoordinatorId}`)
       .then(() => {
-        alert("IDDCoordinator deleted successfully");
+        alert("IDDCoordinator has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

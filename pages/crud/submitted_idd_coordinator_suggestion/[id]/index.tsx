@@ -23,7 +23,7 @@ export default function SubmittedIDDCoordinatorSuggestionPage() {
         `/api/submitted_idd_coordinator_suggestion/${submittedIDDCoordinatorSuggestionId}`
       )
       .then(() => {
-        alert("SubmittedIDDCoordinatorSuggestion deleted successfully");
+        alert("SubmittedIDDCoordinatorSuggestion has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

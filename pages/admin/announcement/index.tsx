@@ -166,7 +166,7 @@ function AnnouncementItem({ announcement }: AnnouncementItemProps) {
     axios
       .delete(`/api/announcement/${announcement.id}`)
       .then(() => {
-        addSnackbar("Announcement deleted successfully");
+        addSnackbar("Announcement has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

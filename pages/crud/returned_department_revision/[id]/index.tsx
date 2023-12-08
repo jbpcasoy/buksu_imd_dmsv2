@@ -23,7 +23,7 @@ export default function ReturnedDepartmentRevisionPage() {
         `/api/returned_department_revision/${returnedDepartmentRevisionId}`
       )
       .then(() => {
-        alert("ReturnedDepartmentRevision deleted successfully");
+        alert("ReturnedDepartmentRevision has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

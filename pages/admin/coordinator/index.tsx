@@ -194,7 +194,7 @@ function CoordinatorItem({ coordinator }: CoordinatorItemProps) {
     axios
       .delete(`/api/coordinator/${coordinator.id}`)
       .then(() => {
-        addSnackbar("Coordinator deleted successfully");
+        addSnackbar("Coordinator has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

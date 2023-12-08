@@ -25,7 +25,7 @@ export default function ChairpersonSuggestionItem({
         `/api/chairperson_suggestion_item/${chairpersonSuggestionItem.id}`
       )
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar("Failed to delete suggestion", "error");

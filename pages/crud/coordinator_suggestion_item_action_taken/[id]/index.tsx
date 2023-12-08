@@ -24,7 +24,7 @@ export default function CoordinatorSuggestionItemActionTakenPage() {
         `/api/coordinator_suggestion_item_action_taken/${coordinatorSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("CoordinatorSuggestionItemActionTaken deleted successfully");
+        alert("CoordinatorSuggestionItemActionTaken has been deleted successfully");
       })
       .catch((error) => {
         alert(error.message);

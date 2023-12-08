@@ -24,7 +24,7 @@ export default function ChairpersonSuggestionItemActionTakenPage() {
         `/api/chairperson_suggestion_item_action_taken/${chairpersonSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ChairpersonSuggestionItemActionTaken deleted successfully");
+        alert("ChairpersonSuggestionItemActionTaken has been deleted successfully");
       })
       .catch((error) => {
         alert(error.message);

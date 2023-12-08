@@ -19,7 +19,7 @@ export default function ContentSpecialistSuggestionPage() {
     axios
       .delete(`/api/content_specialist_suggestion/${contentSpecialistSuggestionId}`)
       .then(() => {
-        alert("ContentSpecialistSuggestion deleted successfully");
+        alert("ContentSpecialistSuggestion has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

@@ -23,7 +23,7 @@ export default function PeerSuggestionItem({
     axios
       .delete(`/api/peer_suggestion_item/${peerSuggestionItem.id}`)
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

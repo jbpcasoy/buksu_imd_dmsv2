@@ -24,7 +24,7 @@ export default function SubmittedReturnedCITLRevisionPage() {
         `/api/submitted_returned_citl_revision/${submittedReturnedCITLRevisionId}`
       )
       .then(() => {
-        alert("SubmittedReturnedCITLRevision deleted successfully");
+        alert("SubmittedReturnedCITLRevision has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

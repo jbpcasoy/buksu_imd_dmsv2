@@ -24,7 +24,7 @@ export default function ReturnedCITLRevisionSuggestionItemPage() {
         `/api/returned_citl_revision_suggestion_item/${returnedCITLRevisionSuggestionItemId}`
       )
       .then(() => {
-        alert("ReturnedCITLRevisionSuggestionItem deleted successfully");
+        alert("ReturnedCITLRevisionSuggestionItem has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

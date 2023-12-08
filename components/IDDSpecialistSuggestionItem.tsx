@@ -26,7 +26,7 @@ export default function IDDSpecialistSuggestionItem({
         `/api/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}`
       )
       .then(() => {
-        addSnackbar("Suggestion deleted successfully");
+        addSnackbar("Suggestion has been deleted successfully");
       })
       .catch((error) => {
         addSnackbar(

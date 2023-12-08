@@ -23,7 +23,7 @@ export default function ReturnedDepartmentRevisionSuggestionItemActionTakenPage(
         `/api/returned_department_revision_suggestion_item_action_taken/${returnedDepartmentRevisionSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ReturnedDepartmentRevisionSuggestionItemActionTaken deleted successfully");
+        alert("ReturnedDepartmentRevisionSuggestionItemActionTaken has been deleted successfully");
       })
       .catch((error) => {
         alert(error.message);
