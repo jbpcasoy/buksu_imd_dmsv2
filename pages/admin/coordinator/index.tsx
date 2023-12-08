@@ -330,7 +330,7 @@ function AddModal() {
       axios
         .post("/api/coordinator", values)
         .then(() => {
-          addSnackbar("Coordinator Added Successfully");
+          addSnackbar("Coordinator has been added successfully");
         })
         .catch((error) => {
           addSnackbar(

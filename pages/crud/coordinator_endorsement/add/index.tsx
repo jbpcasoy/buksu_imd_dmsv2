@@ -17,7 +17,7 @@ export default function AddCoordinatorEndorsementPage() {
       axios
         .post("/api/coordinator_endorsement", values)
         .then(() => {
-          alert("CoordinatorEndorsement Added Successfully");
+          alert("CoordinatorEndorsement has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

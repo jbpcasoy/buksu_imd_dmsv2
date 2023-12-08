@@ -15,7 +15,7 @@ export default function AddSubmittedCoordinatorSuggestionPage() {
       axios
         .post("/api/submitted_coordinator_suggestion", values)
         .then(() => {
-          alert("SubmittedCoordinatorSuggestion Added Successfully");
+          alert("SubmittedCoordinatorSuggestion has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

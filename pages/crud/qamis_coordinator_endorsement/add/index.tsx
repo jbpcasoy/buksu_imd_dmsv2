@@ -17,7 +17,7 @@ export default function AddQAMISCoordinatorEndorsementPage() {
       axios
         .post("/api/qamis_coordinator_endorsement", values)
         .then(() => {
-          alert("QAMISCoordinatorEndorsement Added Successfully");
+          alert("QAMISCoordinatorEndorsement has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

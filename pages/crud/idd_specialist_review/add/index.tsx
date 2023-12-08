@@ -89,7 +89,7 @@ export default function AddIDDSpecialistReviewPage() {
       axios
         .post("/api/idd_specialist_review", values)
         .then(() => {
-          alert("IDDSpecialistReview Added Successfully");
+          alert("IDDSpecialistReview has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

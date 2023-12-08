@@ -15,7 +15,7 @@ export default function AddSubmittedPeerSuggestionPage() {
       axios
         .post("/api/submitted_peer_suggestion", values)
         .then(() => {
-          alert("SubmittedPeerSuggestion Added Successfully");
+          alert("SubmittedPeerSuggestion has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

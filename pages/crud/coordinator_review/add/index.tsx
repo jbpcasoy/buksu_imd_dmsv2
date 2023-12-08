@@ -87,7 +87,7 @@ export default function AddCoordinatorReviewPage() {
       axios
         .post("/api/coordinator_review", values)
         .then(() => {
-          alert("CoordinatorReview Added Successfully");
+          alert("CoordinatorReview has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

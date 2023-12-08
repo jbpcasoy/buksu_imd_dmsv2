@@ -16,7 +16,7 @@ export default function AddCITLDirectorPage() {
       axios
         .post("/api/citl_director", values)
         .then(() => {
-          alert("CITLDirector Added Successfully");
+          alert("CITLDirector has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -23,7 +23,7 @@ export default function AddReturnedDepartmentRevisionSuggestionItemPage() {
       axios
         .post("/api/returned_department_revision_suggestion_item", values)
         .then(() => {
-          alert("ReturnedDepartmentRevisionSuggestionItem Added Successfully");
+          alert("ReturnedDepartmentRevisionSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -17,7 +17,7 @@ export default function AddReturnedCITLRevisionSuggestionItemActionTakenPage() {
       axios
         .post("/api/returned_citl_revision_suggestion_item_action_taken", values)
         .then(() => {
-          alert("ReturnedCITLRevisionSuggestionItemActionTaken Added Successfully");
+          alert("ReturnedCITLRevisionSuggestionItemActionTaken has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -23,7 +23,7 @@ export default function AddReturnedIMERCCITLRevisionSuggestionItemPage() {
       axios
         .post("/api/returned_imerc_citl_revision_suggestion_item", values)
         .then(() => {
-          alert("ReturnedIMERCCITLRevisionSuggestionItem Added Successfully");
+          alert("ReturnedIMERCCITLRevisionSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -23,7 +23,7 @@ export default function AddPeerSuggestionItemPage() {
       axios
         .post("/api/peer_suggestion_item", values)
         .then(() => {
-          alert("PeerSuggestionItem Added Successfully");
+          alert("PeerSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

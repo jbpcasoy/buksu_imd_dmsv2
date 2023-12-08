@@ -23,7 +23,7 @@ export default function AddChairpersonSuggestionItemPage() {
       axios
         .post("/api/chairperson_suggestion_item", values)
         .then(() => {
-          alert("ChairpersonSuggestionItem Added Successfully");
+          alert("ChairpersonSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

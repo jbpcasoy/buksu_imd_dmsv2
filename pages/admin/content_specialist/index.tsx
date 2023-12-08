@@ -328,7 +328,7 @@ function AddModal() {
       axios
         .post("/api/content_specialist", values)
         .then(() => {
-          addSnackbar("Content specialist Added Successfully");
+          addSnackbar("Content specialist has been added successfully");
         })
         .catch((error) => {
           addSnackbar(

@@ -19,7 +19,7 @@ export default function AddAnnouncementPage() {
       axios
         .post("/api/announcement", values)
         .then(() => {
-          alert("Announcement Added Successfully");
+          alert("Announcement has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

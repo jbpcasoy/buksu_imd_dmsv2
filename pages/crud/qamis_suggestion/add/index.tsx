@@ -15,7 +15,7 @@ export default function AddQAMISSuggestionPage() {
       axios
         .post("/api/qamis_suggestion", values)
         .then(() => {
-          alert("QAMISSuggestion Added Successfully");
+          alert("QAMISSuggestion has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

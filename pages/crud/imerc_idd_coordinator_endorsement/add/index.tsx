@@ -17,7 +17,7 @@ export default function AddIMERCIDDCoordinatorEndorsementPage() {
       axios
         .post("/api/imerc_idd_coordinator_endorsement", values)
         .then(() => {
-          alert("IMERCIDDCoordinatorEndorsement Added Successfully");
+          alert("IMERCIDDCoordinatorEndorsement has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -23,7 +23,7 @@ export default function AddCoordinatorSuggestionItemPage() {
       axios
         .post("/api/coordinator_suggestion_item", values)
         .then(() => {
-          alert("CoordinatorSuggestionItem Added Successfully");
+          alert("CoordinatorSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

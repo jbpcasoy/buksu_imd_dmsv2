@@ -15,7 +15,7 @@ export default function AddSubmittedReturnedDepartmentRevisionPage() {
       axios
         .post("/api/submitted_returned_department_revision", values)
         .then(() => {
-          alert("SubmittedReturnedDepartmentRevision Added Successfully");
+          alert("SubmittedReturnedDepartmentRevision has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

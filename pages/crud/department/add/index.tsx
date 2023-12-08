@@ -18,7 +18,7 @@ export default function AddDepartmentPage() {
       axios
         .post("/api/department", values)
         .then(() => {
-          alert("Department Added Successfully");
+          alert("Department has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -15,7 +15,7 @@ export default function AddIMERCCITLRevisionPage() {
       axios
         .post("/api/imerc_citl_revision", values)
         .then(() => {
-          alert("IMERCCITLRevision Added Successfully");
+          alert("IMERCCITLRevision has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

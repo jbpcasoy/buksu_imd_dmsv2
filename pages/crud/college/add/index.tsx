@@ -15,7 +15,7 @@ export default function AddCollegePage() {
       axios
         .post("/api/college", values)
         .then(() => {
-          alert("College Added Successfully");
+          alert("College has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

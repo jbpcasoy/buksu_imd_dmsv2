@@ -17,7 +17,7 @@ export default function AddQAMISChairpersonEndorsementPage() {
       axios
         .post("/api/qamis_chairperson_endorsement", values)
         .then(() => {
-          alert("QAMISChairpersonEndorsement Added Successfully");
+          alert("QAMISChairpersonEndorsement has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -17,7 +17,7 @@ export default function AddIDDCoordinatorEndorsementPage() {
       axios
         .post("/api/idd_coordinator_endorsement", values)
         .then(() => {
-          alert("IDDCoordinatorEndorsement Added Successfully");
+          alert("IDDCoordinatorEndorsement has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

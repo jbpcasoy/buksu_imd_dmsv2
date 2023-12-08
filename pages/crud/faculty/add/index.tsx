@@ -18,7 +18,7 @@ export default function AddFacultyPage() {
       axios
         .post("/api/faculty", values)
         .then(() => {
-          alert("Faculty Added Successfully");
+          alert("Faculty has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

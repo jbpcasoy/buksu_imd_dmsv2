@@ -22,7 +22,7 @@ export default function AddIMPage() {
       axios
         .post("/api/im", values)
         .then(() => {
-          alert("IM Added Successfully");
+          alert("IM has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

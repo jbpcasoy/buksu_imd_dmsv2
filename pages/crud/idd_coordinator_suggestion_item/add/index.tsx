@@ -23,7 +23,7 @@ export default function AddIDDCoordinatorSuggestionItemPage() {
       axios
         .post("/api/idd_coordinator_suggestion_item", values)
         .then(() => {
-          alert("IDDCoordinatorSuggestionItem Added Successfully");
+          alert("IDDCoordinatorSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

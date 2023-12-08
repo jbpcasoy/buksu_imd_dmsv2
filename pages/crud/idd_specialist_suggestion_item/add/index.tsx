@@ -23,7 +23,7 @@ export default function AddIDDSpecialistSuggestionItemPage() {
       axios
         .post("/api/idd_specialist_suggestion_item", values)
         .then(() => {
-          alert("IDDSpecialistSuggestionItem Added Successfully");
+          alert("IDDSpecialistSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

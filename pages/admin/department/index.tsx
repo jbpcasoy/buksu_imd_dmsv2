@@ -241,7 +241,7 @@ function AddModal() {
       axios
         .post("/api/department", values)
         .then(() => {
-          addSnackbar("Department Added Successfully");
+          addSnackbar("Department has been added successfully");
         })
         .catch((error) => {
           addSnackbar(

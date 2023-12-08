@@ -16,7 +16,7 @@ export default function AddIDDCoordinatorPage() {
       axios
         .post("/api/idd_coordinator", values)
         .then(() => {
-          alert("IDDCoordinator Added Successfully");
+          alert("IDDCoordinator has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

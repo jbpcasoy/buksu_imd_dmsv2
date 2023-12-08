@@ -17,7 +17,7 @@ export default function AddCITLDirectorEndorsementPage() {
       axios
         .post("/api/citl_director_endorsement", values)
         .then(() => {
-          alert("CITLDirectorEndorsement Added Successfully");
+          alert("CITLDirectorEndorsement has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

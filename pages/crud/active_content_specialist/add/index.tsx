@@ -15,7 +15,7 @@ export default function AddActiveContentSpecialistPage() {
       axios
         .post("/api/active_content_specialist", values)
         .then(() => {
-          alert("ActiveContentSpecialist Added Successfully");
+          alert("ActiveContentSpecialist has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
