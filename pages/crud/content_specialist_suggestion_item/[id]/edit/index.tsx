@@ -33,7 +33,7 @@ export default function EditContentSpecialistSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ContentSpecialistSuggestionItem Updated Successfully");
+          alert("ContentSpecialistSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

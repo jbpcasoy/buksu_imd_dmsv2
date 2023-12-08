@@ -33,7 +33,7 @@ export default function EditContentEditorSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ContentEditorSuggestionItem Updated Successfully");
+          alert("ContentEditorSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

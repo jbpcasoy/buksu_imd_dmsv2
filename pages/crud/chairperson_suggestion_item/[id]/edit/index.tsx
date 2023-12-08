@@ -33,7 +33,7 @@ export default function EditChairpersonSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ChairpersonSuggestionItem Updated Successfully");
+          alert("ChairpersonSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

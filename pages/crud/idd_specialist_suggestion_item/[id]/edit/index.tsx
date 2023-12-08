@@ -33,7 +33,7 @@ export default function EditIDDSpecialistSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("IDDSpecialistSuggestionItem Updated Successfully");
+          alert("IDDSpecialistSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

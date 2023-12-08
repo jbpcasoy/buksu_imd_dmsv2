@@ -89,7 +89,7 @@ export default function EditChairpersonReviewPage() {
       axios
         .put(`/api/chairperson_review/${chairpersonReviewId}`, values)
         .then(() => {
-          alert("ChairpersonReview Updated Successfully");
+          alert("ChairpersonReview has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

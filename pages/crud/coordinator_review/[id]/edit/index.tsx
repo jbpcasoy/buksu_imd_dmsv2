@@ -91,7 +91,7 @@ export default function EditCoordinatorReviewPage() {
       axios
         .put(`/api/coordinator_review/${coordinatorReviewId}`, values)
         .then(() => {
-          alert("CoordinatorReview Updated Successfully");
+          alert("CoordinatorReview has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

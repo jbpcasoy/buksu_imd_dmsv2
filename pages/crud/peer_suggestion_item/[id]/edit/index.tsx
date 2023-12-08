@@ -33,7 +33,7 @@ export default function EditPeerSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("PeerSuggestionItem Updated Successfully");
+          alert("PeerSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

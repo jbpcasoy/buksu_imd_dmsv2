@@ -33,7 +33,7 @@ export default function EditReturnedDepartmentRevisionSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ReturnedDepartmentRevisionSuggestionItem Updated Successfully");
+          alert("ReturnedDepartmentRevisionSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

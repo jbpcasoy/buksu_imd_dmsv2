@@ -33,7 +33,7 @@ export default function EditReturnedIMERCCITLRevisionSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ReturnedIMERCCITLRevisionSuggestionItem Updated Successfully");
+          alert("ReturnedIMERCCITLRevisionSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

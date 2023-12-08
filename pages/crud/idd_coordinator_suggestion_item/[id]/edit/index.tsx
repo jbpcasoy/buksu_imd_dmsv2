@@ -33,7 +33,7 @@ export default function EditIDDCoordinatorSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("IDDCoordinatorSuggestionItem Updated Successfully");
+          alert("IDDCoordinatorSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

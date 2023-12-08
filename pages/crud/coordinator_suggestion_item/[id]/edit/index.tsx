@@ -33,7 +33,7 @@ export default function EditCoordinatorSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("CoordinatorSuggestionItem Updated Successfully");
+          alert("CoordinatorSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

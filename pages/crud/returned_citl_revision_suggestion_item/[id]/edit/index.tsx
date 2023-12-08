@@ -33,7 +33,7 @@ export default function EditReturnedCITLRevisionSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ReturnedCITLRevisionSuggestionItem Updated Successfully");
+          alert("ReturnedCITLRevisionSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
