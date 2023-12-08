@@ -98,7 +98,7 @@ function EditSuggestionItem({ peerSuggestionItem }: EditSuggestionItemProps) {
       axios
         .put(`/api/peer_suggestion_item/${peerSuggestionItem.id}`, values)
         .then(() => {
-          addSnackbar("Suggestion updated successfully");
+          addSnackbar("Suggestion has been updated successfully");
         })
         .catch((error) => {
           addSnackbar(

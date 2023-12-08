@@ -52,7 +52,7 @@ export default function ProfilePage() {
             : undefined,
         })
         .then((res) => {
-          addSnackbar("Profile updated successfully");
+          addSnackbar("Profile has been updated successfully");
         })
         .catch((error) => {
           addSnackbar(

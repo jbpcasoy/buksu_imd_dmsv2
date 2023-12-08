@@ -347,7 +347,7 @@ function EditModal({ announcement }: EditModalProps) {
       axios
         .put(`/api/announcement/${announcement.id}`, values)
         .then(() => {
-          addSnackbar("Announcement updated successfully");
+          addSnackbar("Announcement has been updated successfully");
         })
         .catch((error) => {
           addSnackbar(

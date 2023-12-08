@@ -22,7 +22,7 @@ export default function EditDepartmentPage() {
       axios
         .put(`/api/department/${departmentId}`, values)
         .then(() => {
-          alert("Department updated successfully");
+          alert("Department has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

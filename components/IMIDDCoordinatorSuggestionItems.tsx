@@ -129,12 +129,12 @@ function EditSuggestionItemActionTaken({
             values
           )
           .then(() => {
-            addSnackbar("Suggestion updated successfully");
+            addSnackbar("Suggestion has been updated successfully");
           })
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Suggestion updated successfully",
+                "Suggestion has been updated successfully",
               "error"
             );
           })
@@ -148,12 +148,12 @@ function EditSuggestionItemActionTaken({
             value: values.value,
           })
           .then(() => {
-            addSnackbar("Suggestion updated successfully");
+            addSnackbar("Suggestion has been updated successfully");
           })
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Suggestion updated successfully",
+                "Suggestion has been updated successfully",
               "error"
             );
           })

@@ -128,7 +128,7 @@ function EditSuggestionItemActionTaken({
             values
           )
           .then(() => {
-            addSnackbar("Suggestion updated successfully");
+            addSnackbar("Suggestion has been updated successfully");
           })
           .catch((error) => {
             addSnackbar(
@@ -146,7 +146,7 @@ function EditSuggestionItemActionTaken({
             value: values.value,
           })
           .then(() => {
-            addSnackbar("Suggestion updated successfully");
+            addSnackbar("Suggestion has been updated successfully");
           })
           .catch((error) => {
             addSnackbar(

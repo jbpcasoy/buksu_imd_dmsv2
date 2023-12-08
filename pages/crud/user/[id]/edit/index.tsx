@@ -22,7 +22,7 @@ export default function EditUserPage() {
       axios
         .put(`/api/user/${userId}`, values)
         .then(() => {
-          alert("User updated successfully");
+          alert("User has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

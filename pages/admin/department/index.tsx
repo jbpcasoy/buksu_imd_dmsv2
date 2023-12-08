@@ -333,7 +333,7 @@ function EditModal({ department }: EditModalProps) {
       axios
         .put(`/api/department/${department.id}`, values)
         .then(() => {
-          addSnackbar("Department updated successfully");
+          addSnackbar("Department has been updated successfully");
         })
         .catch((error) => {
           addSnackbar(

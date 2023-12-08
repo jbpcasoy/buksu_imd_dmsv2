@@ -29,7 +29,7 @@ export default function EditReturnedCITLRevisionSuggestionItemActionTakenPage() 
         )
         .then(() => {
           alert(
-            "ReturnedCITLRevisionSuggestionItemActionTaken updated successfully"
+            "ReturnedCITLRevisionSuggestionItemActionTaken has been updated successfully"
           );
         })
         .catch((error) => {

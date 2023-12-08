@@ -22,7 +22,7 @@ export default function EditCollegePage() {
       axios
         .put(`/api/college/${collegeId}`, values)
         .then(() => {
-          alert("College updated successfully");
+          alert("College has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -101,7 +101,7 @@ function EditSuggestionItem({ qAMISSuggestionItem }: EditSuggestionItemProps) {
       axios
         .put(`/api/qamis_suggestion_item/${qAMISSuggestionItem.id}`, values)
         .then(() => {
-          addSnackbar("Suggestion updated successfully");
+          addSnackbar("Suggestion has been updated successfully");
         })
         .catch((error) => {
           addSnackbar(

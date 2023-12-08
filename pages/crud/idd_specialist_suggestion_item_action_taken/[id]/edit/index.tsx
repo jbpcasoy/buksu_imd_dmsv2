@@ -29,7 +29,7 @@ export default function EditIDDSpecialistSuggestionItemActionTakenPage() {
         )
         .then(() => {
           alert(
-            "IDDSpecialistSuggestionItemActionTaken updated successfully"
+            "IDDSpecialistSuggestionItemActionTaken has been updated successfully"
           );
         })
         .catch((error) => {

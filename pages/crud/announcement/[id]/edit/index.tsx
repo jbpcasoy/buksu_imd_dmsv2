@@ -26,7 +26,7 @@ export default function EditAnnouncementPage() {
       axios
         .put(`/api/announcement/${announcementId}`, values)
         .then(() => {
-          alert("Announcement updated successfully");
+          alert("Announcement has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

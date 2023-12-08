@@ -117,7 +117,7 @@ function EditSuggestionItem({
           values
         )
         .then(() => {
-          addSnackbar("Suggestion updated successfully");
+          addSnackbar("Suggestion has been updated successfully");
         })
         .catch((error) => {
           addSnackbar(

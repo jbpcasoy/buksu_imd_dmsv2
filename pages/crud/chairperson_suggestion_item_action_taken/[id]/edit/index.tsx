@@ -28,7 +28,7 @@ export default function EditChairpersonSuggestionItemActionTakenPage() {
           values
         )
         .then(() => {
-          alert("ChairpersonSuggestionItemActionTaken updated successfully");
+          alert("ChairpersonSuggestionItemActionTaken has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
