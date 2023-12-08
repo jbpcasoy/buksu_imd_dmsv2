@@ -106,7 +106,7 @@ export default function IDDCoordinatorSuggestionPage() {
               iDDCoordinatorSuggestionId,
             })
             .then(() => {
-              addSnackbar("Suggestion added successfully");
+              addSnackbar("Suggestion has been added successfully");
               router.reload();
             })
             .catch((error) => {

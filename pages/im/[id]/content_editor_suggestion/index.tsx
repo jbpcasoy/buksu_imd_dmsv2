@@ -101,12 +101,12 @@ export default function ContentEditorSuggestionPage() {
               contentEditorSuggestionId,
             })
             .then(() => {
-              addSnackbar("Suggestion added successfully");
+              addSnackbar("Suggestion has been added successfully");
             })
             .catch((error) => {
               addSnackbar(
                 error.response.data?.error?.message ??
-                  "Suggestion added successfully",
+                  "Suggestion has been added successfully",
                 "error"
               );
             })

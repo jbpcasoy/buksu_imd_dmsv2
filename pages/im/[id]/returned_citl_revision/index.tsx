@@ -105,7 +105,7 @@ export default function ReturnedCITLRevisionPage() {
               returnedCITLRevisionId,
             })
             .then(() => {
-              addSnackbar("Suggestion added successfully");
+              addSnackbar("Suggestion has been added successfully");
             })
             .catch((error) => {
               addSnackbar(

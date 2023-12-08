@@ -130,7 +130,7 @@ export default function CoordinatorSuggestionPage() {
               coordinatorSuggestionId,
             })
             .then(() => {
-              addSnackbar("Suggestion added successfully");
+              addSnackbar("Suggestion has been added successfully");
               router.reload();
             });
         };

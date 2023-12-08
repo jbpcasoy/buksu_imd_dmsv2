@@ -106,7 +106,7 @@ export default function ChairpersonSuggestionPage() {
               chairpersonSuggestionId,
             })
             .then(() => {
-              addSnackbar("Suggestion added successfully");
+              addSnackbar("Suggestion has been added successfully");
             })
             .catch((error) => {
               addSnackbar(

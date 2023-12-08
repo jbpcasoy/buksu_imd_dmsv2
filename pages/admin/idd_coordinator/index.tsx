@@ -307,7 +307,7 @@ function AddModal() {
       axios
         .post("/api/idd_coordinator", values)
         .then(() => {
-          addSnackbar("IDD coordinator added successfully");
+          addSnackbar("IDD coordinator has been added successfully");
         })
         .catch((error) => {
           addSnackbar(

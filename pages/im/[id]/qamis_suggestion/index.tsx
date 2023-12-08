@@ -139,7 +139,7 @@ export default function QAMISSuggestionPage() {
               qAMISSuggestionId,
             })
             .then(() => {
-              addSnackbar("Suggestion added successfully");
+              addSnackbar("Suggestion has been added successfully");
             })
             .catch((error) => {
               addSnackbar(

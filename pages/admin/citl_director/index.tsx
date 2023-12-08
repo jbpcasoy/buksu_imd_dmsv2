@@ -297,7 +297,7 @@ function AddModal() {
       axios
         .post("/api/citl_director", values)
         .then(() => {
-          addSnackbar("CITL Director added successfully");
+          addSnackbar("CITL Director has been added successfully");
         })
         .catch((error) => {
           addSnackbar(

@@ -226,7 +226,7 @@ function AddModal() {
       axios
         .post("/api/college", values)
         .then(() => {
-          addSnackbar("College added successfully");
+          addSnackbar("College has been added successfully");
         })
         .catch((error) => {
           addSnackbar(

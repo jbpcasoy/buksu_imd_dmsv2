@@ -325,7 +325,7 @@ function AddModal() {
       axios
         .post("/api/chairperson", values)
         .then(() => {
-          addSnackbar("Chairperson added successfully");
+          addSnackbar("Chairperson has been added successfully");
         })
         .catch((error) => {
           addSnackbar(
