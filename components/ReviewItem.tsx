@@ -26,9 +26,9 @@ export default function ReviewItem({
   ];
 
   return (
-    <div className='text-sm'>
+    <div className='text-sm overflow-auto'>
       <p className='text-palette_grey'>{question}</p>
-      <div className='mt-2 flex'>
+      <div className='mt-2 flex flex-col sm:flex-row'>
         {ratings.map((rating, index) => (
           <label
             key={rating.label}
@@ -45,7 +45,7 @@ export default function ReviewItem({
               value={rating.value}
               defaultChecked={checkedValue === rating.value}
             />
-            <span className='ml-2 text-palette_grey text-xs'>
+            <span className='ml-2 text-palette_grey text-xs whitespace-nowrap'>
               {rating.label}
             </span>
           </label>

@@ -1,6 +1,9 @@
 import Confirmation from "@/components/Confirmation";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
+import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
+import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
 import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionItems";
+import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
 import Loading from "@/components/Loading";
@@ -239,8 +242,8 @@ export default function ReturnedIMERCCITLRevisionPage() {
 
   return (
     <MainLayout>
-      <div className='flex space-x-1 h-full overflow-auto'>
-        <div className='space-y-1 flex-1 flex flex-col h-full overflow-auto'>
+      <div className='flex flex-col sm:flex-row space-x-1 h-full overflow-auto'>
+        <div className='space-y-1 sm:flex-1 flex flex-col sm:h-full overflow-auto'>
           <div className='flex justify-between'>
             <div>
               <h2 className='inline text-lg font-bold'>
@@ -257,8 +260,8 @@ export default function ReturnedIMERCCITLRevisionPage() {
           </div>
 
           <div className='flex-1 h-full overflow-auto space-y-1'>
-            <div>
-              <table className='w-full text-sm'>
+            <div className='overflow-auto'>
+              <table className='w-full text-sm overflow-auto'>
                 <caption>Suggestions</caption>
                 <thead>
                   <tr>
@@ -292,15 +295,19 @@ export default function ReturnedIMERCCITLRevisionPage() {
               )}
             </div>
             <div className='space-y-1'>
-              <IMCoordinatorSuggestionItems
+              <IMContentSpecialistSuggestionItems
                 id={iMId as string}
                 editable={false}
               />
-              <IMPeerSuggestionItems id={iMId as string} editable={false} />
-              <IMChairpersonSuggestionItems
+              <IMIDDSpecialistSuggestionItems
                 id={iMId as string}
                 editable={false}
               />
+              <IMContentEditorSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+
               <IMReturnedIMERCCITLRevisionSuggestionItems
                 id={iMId as string}
                 editable={false}
@@ -333,7 +340,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
             </>
           </div>
         </div>
-        <div className='flex-1'>
+        <div className='sm:flex-1 h-screen-3/4 sm:h-auto'>
           <iframe
             loading='lazy'
             src={`/api/im_file/im/${iMId}/pdf`}

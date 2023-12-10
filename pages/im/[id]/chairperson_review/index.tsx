@@ -180,8 +180,8 @@ export default function AddChairpersonReviewPage() {
     <MainLayout>
       <div className='flex flex-col h-full'>
         <div className='flex-1 overflow-auto'>
-          <div className='flex h-full space-x-1'>
-            <div className='flex flex-col flex-1'>
+          <div className='flex flex-col sm:flex-row h-full space-x-1'>
+            <div className='flex flex-col sm:flex-1'>
               <div className='flex justify-between pb-2'>
                 <div>
                   <h2 className='inline text-lg font-bold'>
@@ -346,7 +346,7 @@ export default function AddChairpersonReviewPage() {
                 </form>
               </div>
             </div>
-            <div className='flex-1'>
+            <div className='sm:flex-1 h-screen-3/4 sm:h-auto'>
               <iframe
                 loading='lazy'
                 src={`/api/im_file/im/${iMId}/pdf`}

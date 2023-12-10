@@ -25,7 +25,7 @@ export default function IMQAMISSuggestionItems({
   const qAMISSuggestionItems = useQAMISSuggestionItemsIM(state);
 
   return (
-    <div className='border border-palette_orange rounded'>
+    <div className='border border-palette_orange rounded overflow-auto'>
       <table className='w-full text-sm'>
         <caption className='bg-palette_grey bg-opacity-10 p-2 text-left font-bold'>
           QAMIS SUGGESTIONS

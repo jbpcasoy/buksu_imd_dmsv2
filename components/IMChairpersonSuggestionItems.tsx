@@ -31,7 +31,7 @@ export default function IMChairpersonSuggestionItems({
   }, [id]);
 
   return (
-    <div className='border border-palette_orange rounded'>
+    <div className='border border-palette_orange rounded overflow-auto'>
       <table className='text-sm w-full'>
         <caption className='text-left font-bold p-2 bg-palette_grey bg-opacity-10'>
           CHAIRPERSON SUGGESTIONS

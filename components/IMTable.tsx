@@ -104,9 +104,9 @@ export default function IMTable({
   return (
     <div className='text-sm border border-palette_grey rounded h-full flex flex-col overflow-auto'>
       <div className='p-1 bg-palette_grey bg-opacity-10'>
-        <div className='flex'>
+        <div className='flex overflow-auto space-x-1'>
           <div className='flex-1 flex items-center space-x-1'>
-            <h2 className='text-base border-b-2 border-palette_orange inline pb-1 px-2'>
+            <h2 className='text-base border-b-2 border-palette_orange inline pb-1 px-2 whitespace-nowrap'>
               {title}
             </h2>
             <div className='flex flex-row space-x-1'>
@@ -118,7 +118,7 @@ export default function IMTable({
           {enableAdd && <AddIM />}
         </div>
       </div>
-      <div className='flex-1 h-full overflow-auto'>
+      <div className='sm:flex-1 sm:h-full overflow-auto'>
         <table className='table-auto w-full overflow-auto '>
           <thead className='bg-palette_grey bg-opacity-10 p-1'>
             <tr>
@@ -277,7 +277,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
   }, [selectedField, filterValue]);
 
   return (
-    <div>
+    <div className='flex space-x-1'>
       <select
         onChange={handleFieldChange}
         className='py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey'
@@ -319,7 +319,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
   }, [selectedField, sortDirection]);
 
   return (
-    <div>
+    <div className='flex space-x-1'>
       <select
         onChange={handleFieldChange}
         value={selectedField}
@@ -392,7 +392,7 @@ function AddIM() {
         >
           <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
         </svg>
-        <span>Add IM</span>
+        <span className="whitespace-nowrap">Add IM</span>
       </button>
       {state.addIMOpen && (
         <Modal title='ADD IM' onClose={() => setState({ addIMOpen: false })}>

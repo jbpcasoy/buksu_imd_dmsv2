@@ -28,7 +28,7 @@ export default function Modal({
 
   return (
     <div
-      className='fixed inset-0 flex justify-center items-center bg-palette_black bg-opacity-40'
+      className='fixed inset-0 flex justify-center items-center bg-palette_black bg-opacity-40 px-1 sm:p-0'
       onClick={onClose}
     >
       <div

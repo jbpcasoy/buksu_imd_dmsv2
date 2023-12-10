@@ -30,7 +30,7 @@ export default function IMPeerSuggestionItems({
   }, [id]);
 
   return (
-    <div className='border border-palette_orange rounded'>
+    <div className='border border-palette_orange rounded overflow-auto'>
       <table className='text-sm w-full p-1'>
         <caption className='bg-palette_grey bg-opacity-10 p-2'>
           <p className='text-left font-bold'>PEER SUGGESTIONS</p>

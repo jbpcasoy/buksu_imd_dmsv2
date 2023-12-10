@@ -5,7 +5,7 @@ export interface ReviewSectionProps {
 
 export default function ReviewSection({ children, title }: ReviewSectionProps) {
   return (
-    <div className="rounded border">
+    <div className="rounded border overflow-auto">
       <h1 className='font-bold bg-palette_grey bg-opacity-10 text-palette_grey p-2'>
         {title}
       </h1>

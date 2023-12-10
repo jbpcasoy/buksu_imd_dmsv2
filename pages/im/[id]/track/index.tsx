@@ -428,7 +428,7 @@ export default function IMTrackingPage() {
 
   return (
     <MainLayout>
-      <div className='h-full w-full mr-50'>
+      <div className='h-screen-3/4 sm:h-full sm:w-full sm:mr-50'>
         <ReactFlow
           nodes={nodes}
           edges={edges}

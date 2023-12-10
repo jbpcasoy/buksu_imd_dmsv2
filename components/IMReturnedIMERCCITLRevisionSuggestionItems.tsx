@@ -33,7 +33,7 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
   }, [id]);
 
   return (
-    <div className='border border-palette_orange rounded'>
+    <div className='border border-palette_orange rounded overflow-auto'>
       <table className='w-full text-sm'>
         <caption className='bg-palette_grey bg-opacity-10 text-left font-bold p-2'>
           RETURNED IMERC CITL REVISION SUGGESTIONS

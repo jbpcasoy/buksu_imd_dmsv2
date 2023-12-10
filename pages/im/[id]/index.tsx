@@ -547,9 +547,9 @@ export default function ViewIM() {
 
   return (
     <MainLayout>
-      <div className='flex h-full border rounded p-1 overflow-auto space-x-1'>
-        <div className='flex-1 px-1 h-full overflow-auto'>
-          <div className='flex flex-col h-full overflow-auto'>
+      <div className='flex flex-col sm:flex-row space-y-1 sm:space-y-0 h-full border rounded p-1 overflow-auto space-x-1'>
+        <div className='sm:flex-1 px-1 sm:h-full sm:overflow-auto'>
+          <div className='flex flex-col h-full sm:overflow-auto'>
             <div className='flex mb-2'>
               <div className='flex-1'>
                 <div className='flex'>
@@ -791,10 +791,10 @@ export default function ViewIM() {
                           id={iM.id}
                           editable={false}
                         />
-                        <div className='space-x-1 flex'>
+                        <div className='space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row'>
                           <>
                             <button
-                              className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                              className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90'
                               onClick={openConfirmation}
                             >
                               <span>Endorse IM</span>
@@ -815,7 +815,7 @@ export default function ViewIM() {
                             )}
                           </>
                           <button
-                            className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                            className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90'
                             onClick={returnCoordinatorEndorsementHandler}
                           >
                             <span>Return Revision</span>
@@ -836,15 +836,15 @@ export default function ViewIM() {
 
                 {iMStatus ===
                   "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED" && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1 p-1'>
                     <div>
                       <DepartmentEndorsementStatus iMId={iMId as string} />
                     </div>
                     {activeDean && (
-                      <div>
+                      <div className='flex flex-col sm:flex-row'>
                         <>
                           <button
-                            className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                            className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90'
                             onClick={openConfirmation}
                           >
                             <span>Endorse IM</span>
@@ -870,7 +870,7 @@ export default function ViewIM() {
                 )}
 
                 {iMStatus === "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED" && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1 px-1'>
                     <div>
                       <CITLReviewStatus iMId={iMId as string} />
                     </div>
@@ -898,12 +898,12 @@ export default function ViewIM() {
                 )}
 
                 {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1'>
                     <div>
                       <CITLReviewStatus iMId={iMId as string} />
                     </div>
                     {iM.facultyId === activeFaculty?.facultyId && (
-                      <div className='space-y-1 px-1'>
+                      <div className='space-y-1'>
                         <IMIDDCoordinatorSuggestionItems id={iM.id} />
                         <IMReturnedCITLRevisionSuggestionItems id={iM.id} />
                         <FileUpload
@@ -952,12 +952,12 @@ export default function ViewIM() {
                 {(iMStatus === "IMPLEMENTATION_CITL_REVISED" ||
                   iMStatus ===
                     "IMPLEMENTATION_CITL_RETURNED_REVISION_NOT_SUBMITTED") && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1'>
                     <div>
                       <CITLReviewStatus iMId={iMId as string} />
                     </div>
                     {activeIDDCoordinator && (
-                      <div className='space-y-1 px-1'>
+                      <div className='space-y-1'>
                         <IMIDDCoordinatorSuggestionItems
                           id={iM.id}
                           editable={false}
@@ -967,10 +967,10 @@ export default function ViewIM() {
                           editable={false}
                         />
 
-                        <div className='space-x-1 flex'>
+                        <div className='space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row'>
                           <>
                             <button
-                              className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                              className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90'
                               onClick={openConfirmation}
                             >
                               <span>Endorse IM</span>
@@ -991,7 +991,7 @@ export default function ViewIM() {
                             )}
                           </>
                           <button
-                            className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                            className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90'
                             onClick={returnIDDCoordinatorEndorsementHandler}
                           >
                             <span>Return Revision</span>
@@ -1012,7 +1012,7 @@ export default function ViewIM() {
 
                 {iMStatus ===
                   "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1'>
                     <div>
                       <CITLReviewStatus iMId={iMId as string} />
                     </div>
@@ -1046,7 +1046,7 @@ export default function ViewIM() {
                 )}
 
                 {iMStatus === "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED" && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1'>
                     <div>
                       <CITLReviewStatus iMId={iMId as string} />
                     </div>
@@ -1074,7 +1074,7 @@ export default function ViewIM() {
                 )}
 
                 {iMStatus === "IMERC_QAMIS_REVISED" && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1'>
                     <div>
                       <QAMISCollegeEndorsementStatus iMId={iMId as string} />
                     </div>
@@ -1157,7 +1157,7 @@ export default function ViewIM() {
                 )}
 
                 {iMStatus === "IMERC_QAMIS_DEPARTMENT_ENDORSED" && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1'>
                     <div>
                       <IMERCReviewStatus iMId={iMId as string} />
                     </div>
@@ -1226,12 +1226,12 @@ export default function ViewIM() {
                 )}
 
                 {iMStatus === "IMERC_CITL_REVIEWED" && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1'>
                     <div>
                       <IMERCReviewStatus iMId={iMId as string} />
                     </div>
                     {iM.facultyId === activeFaculty?.facultyId && (
-                      <div className='space-y-1 px-1'>
+                      <div className='space-y-1'>
                         <IMContentSpecialistSuggestionItems id={iM.id} />
                         <IMIDDSpecialistSuggestionItems id={iM.id} />
                         <IMContentEditorSuggestionItems id={iM.id} />
@@ -1272,29 +1272,31 @@ export default function ViewIM() {
                           />
                         </div>
 
-                        <>
-                          <button
-                            className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
-                            onClick={openConfirmation}
-                            disabled={!Boolean(state.iMFile)}
-                          >
-                            <span>Submit for endorsement</span>
-                            <svg
-                              xmlns='http://www.w3.org/2000/svg'
-                              height='1em'
-                              viewBox='0 0 448 512'
-                              className='fill-palette_white'
+                        <div className='flex flex-col sm:flex-row'>
+                          <>
+                            <button
+                              className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90'
+                              onClick={openConfirmation}
+                              disabled={!Boolean(state.iMFile)}
                             >
-                              <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
-                            </svg>
-                          </button>
-                          {state.openConfirmation && (
-                            <Confirmation
-                              onClose={closeConfirmation}
-                              onConfirm={submitForIMERCCITLEndorsementHandler}
-                            />
-                          )}
-                        </>
+                              <span>Submit for endorsement</span>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                height='1em'
+                                viewBox='0 0 448 512'
+                                className='fill-palette_white'
+                              >
+                                <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                              </svg>
+                            </button>
+                            {state.openConfirmation && (
+                              <Confirmation
+                                onClose={closeConfirmation}
+                                onConfirm={submitForIMERCCITLEndorsementHandler}
+                              />
+                            )}
+                          </>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -1303,12 +1305,12 @@ export default function ViewIM() {
                 {(iMStatus === "IMERC_CITL_REVISED" ||
                   iMStatus ===
                     "IMPLEMENTATION_IMERC_CITL_RETURNED_REVISION_NOT_SUBMITTED") && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1'>
                     <div>
                       <IMERCEndorsementStatus iMId={iMId as string} />
                     </div>
                     {activeIDDCoordinator && (
-                      <div className='space-y-1 px-1'>
+                      <div className='space-y-1'>
                         <IMContentSpecialistSuggestionItems
                           id={iM.id}
                           editable={false}
@@ -1325,10 +1327,10 @@ export default function ViewIM() {
                           id={iM.id}
                           editable={false}
                         />
-                        <div className='space-x-1 flex'>
+                        <div className='space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row'>
                           <>
                             <button
-                              className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                              className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90'
                               onClick={openConfirmation}
                             >
                               <span>Endorse IM</span>
@@ -1351,7 +1353,7 @@ export default function ViewIM() {
                             )}
                           </>
                           <button
-                            className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90'
+                            className='rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90'
                             onClick={
                               returnIMERCIDDCoordinatorEndorsementHandler
                             }
@@ -1416,16 +1418,16 @@ export default function ViewIM() {
           </div>
         </div>
 
-        <div className='flex flex-1 h-full'>
-          {iMFile && (
+        {iMFile && (
+          <div className='sm:flex-1 h-screen-3/4 sm:h-full'>
             <iframe
               loading='lazy'
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
               className='w-full h-full rounded'
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </MainLayout>
   );
@@ -1729,7 +1731,7 @@ function DepartmentReviewStatus({ iMId }: DepartmentReviewStatusProps) {
     id: iMId,
   });
   return (
-    <div className='grid grid-cols-2'>
+    <div className='grid grid-cols-1 sm:grid-cols-2'>
       <StatusItem label='Peer Review' success={Boolean(peerReview)} />
       <StatusItem
         label='Peer Suggestion'
@@ -1811,7 +1813,7 @@ function DepartmentEndorsementStatus({
   });
 
   return (
-    <div className='grid grid-cols-2'>
+    <div className='grid grid-cols-1 sm:grid-cols-2'>
       <StatusItem
         label='Coordinator Endorsement'
         success={Boolean(coordinatorEndorsement)}
@@ -1837,8 +1839,8 @@ function CITLReviewStatus({ iMId }: CITLReviewStatusProps) {
   });
 
   return (
-    <div className='grid grid-cols-2'>
-      <div className='col-span-2'>
+    <div className='grid grid-cols-1 sm:grid-cols-2'>
+      <div className='col-span-1 sm:col-span-2'>
         <StatusItem
           label='IDD Coordinator Review'
           success={Boolean(submittedIDDCoordinatorSuggestion)}
@@ -1873,7 +1875,7 @@ function QAMISCollegeEndorsementStatus({
   });
 
   return (
-    <div className='grid grid-cols-2'>
+    <div className='grid grid-cols-1 sm:grid-cols-2'>
       <StatusItem
         label='Chairperson Endorsement'
         success={Boolean(chairpersonEndorsement)}
@@ -1912,7 +1914,7 @@ function IMERCReviewStatus({ iMId }: IMERCReviewStatusProps) {
     id: iMId,
   });
   return (
-    <div className='grid grid-cols-2'>
+    <div className='grid grid-cols-1 sm:grid-cols-2'>
       <StatusItem
         label='Content Specialist Review'
         success={Boolean(contentSpecialistReview)}

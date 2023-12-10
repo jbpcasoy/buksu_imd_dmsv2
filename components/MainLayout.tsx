@@ -51,11 +51,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className='flex flex-col h-screen'>
       <Header onToggleSidebar={setOpenSidebar} />
-      <div className='flex-1 flex h-full overflow-y-clip overflow-x-auto'>
-        {openSidebar && <div className='w-56'>
+      <div className='flex-1 flex sm:flex-row flex-col h-full overflow-auto'>
+        <div
+          className={`w-full sm:w-56 ${
+            openSidebar ? "block" : "block sm:hidden"
+          } `}
+        >
           <Sidebar />
-        </div>}
-        <div className='flex-1 flex flex-col h-full'>
+        </div>
+        <div className='flex-1 flex flex-col sm:h-full'>
           {announcements?.length > 0 &&
             !router.pathname.startsWith("/im/[id]") && (
               <div className='flex justify-between items-center m-2 rounded py-5 px-2 bg-gradient-to-r from-palette_orange shadow'>
@@ -72,11 +76,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <path d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z' />
                   </svg>
                 </button>
-                <div className='flex-1 px-10  text-palette_blue'>
-                  <p className='text-lg font-bold'>
+                <div className='flex-1 sm:px-10 text-palette_blue overflow-auto'>
+                  <p className='text-lg font-bold whitespace-nowrap overflow-auto'>
                     {announcements?.[0].title}
                   </p>
-                  <p>{announcements?.[0].description}</p>
+                  <p className="whitespace-nowrap overflow-auto">{announcements?.[0].description}</p>
                   {announcements?.[0].url && (
                     <Link
                       href={announcements?.[0].url}

@@ -30,7 +30,7 @@ export default function IMContentEditorSuggestionItems({
     setState((prev) => ({ ...prev, id }));
   }, [id]);
   return (
-    <div className='border border-palette_orange rounded'>
+    <div className='border border-palette_orange rounded overflow-auto'>
       <table className='w-full text-sm'>
         <caption className='font-bold text-left p-2 bg-palette_grey bg-opacity-10'>
           CONTENT EDITOR SUGGESTIONS

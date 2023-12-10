@@ -243,8 +243,8 @@ export default function ChairpersonSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className='flex space-x-1 h-full overflow-auto'>
-        <div className='space-y-1 flex-1 flex flex-col h-full overflow-auto'>
+      <div className='flex flex-col sm:flex-row space-x-1 h-full overflow-auto'>
+        <div className='space-y-1 sm:flex-1 flex flex-col h-full overflow-auto'>
           <div className='flex justify-between'>
             <div>
               <h2 className='inline text-lg font-bold'>
@@ -261,8 +261,8 @@ export default function ChairpersonSuggestionPage() {
           </div>
 
           <div className='flex-1 h-full overflow-auto space-y-1'>
-            <div>
-              <table className='text-sm w-full'>
+            <div className="overflow-auto">
+              <table className='text-sm w-full overflow-auto'>
                 <caption className='text-xs'>CHAIRPERSON SUGGESTIONS</caption>
                 <thead>
                   <tr>
@@ -326,7 +326,7 @@ export default function ChairpersonSuggestionPage() {
             </>
           </div>
         </div>
-        <div className='flex-1'>
+        <div className='sm:flex-1 h-screen-3/4 sm:auto'>
           <iframe
             loading='lazy'
             src={`/api/im_file/im/${iMId}/pdf`}

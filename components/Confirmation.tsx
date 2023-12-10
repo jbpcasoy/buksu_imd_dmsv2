@@ -38,11 +38,11 @@ export default function Confirmation({
 
   return (
     <div
-      className='fixed inset-0 flex justify-center items-center bg-palette_black bg-opacity-40'
+      className='fixed inset-0 flex justify-center items-center bg-palette_black bg-opacity-40 px-1 sm:px-0'
       onClick={onClose}
     >
       <div
-        className='border w-full max-w-sm bg-palette_white rounded flex flex-col'
+        className='border w-full max-w-sm bg-palette_white rounded flex flex-col '
         onClick={(e) => e.stopPropagation()}
       >
         <div className='flex justify-between px-5 py-2'>

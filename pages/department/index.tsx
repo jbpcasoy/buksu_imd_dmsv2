@@ -45,9 +45,9 @@ export default function DepartmentPage() {
   return (
     <MainLayout>
       <div className='h-full overflow-auto border border-palette_grey rounded p-1 bg-opacity-10 flex flex-col'>
-        <div className='flex justify-between items-center space-x-1'>
+        <div className='flex justify-between items-center space-x-1 overflow-auto'>
           <div className='flex'>
-            <h2 className='flex-1 border-b-2 pb-1 px-2 uppercase border-palette_orange'>
+            <h2 className='flex-1 border-b-2 pb-1 px-2 uppercase border-palette_orange whitespace-nowrap'>
               {department?.name}
             </h2>
           </div>

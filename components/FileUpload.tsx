@@ -64,7 +64,7 @@ function FileUpload({
         <div className='flex flex-col w-full'>
           <div className='flex justify-end'>
             <button
-              className='bg-palette_blue text-palette_white px-1 rounded mb-1 flex items-center space-x-2'
+              className='bg-palette_blue text-palette_white rounded mb-1 flex items-center space-x-2'
               onClick={handleFileReset}
             >
               <svg

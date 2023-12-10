@@ -33,7 +33,7 @@ export default function IMContentSpecialistSuggestionItems({
   }, [id]);
 
   return (
-    <div className='border border-palette_orange rounded'>
+    <div className='border border-palette_orange rounded overflow-auto'>
       <table className='w-full text-sm'>
         <caption className='text-left font-bold bg-palette_grey bg-opacity-10 p-2'>
           CONTENT SPECIALIST SUGGESTIONS
