@@ -81,7 +81,13 @@ function Item({
         {peerSuggestionItem.pageNumber}
       </td>
       <td className={`${editable ? "w-1/4" : "w-3/10"}`}>
-        {peerSuggestionItemActionTaken?.value}
+        {peerSuggestionItemActionTaken?.value ?? (
+          <>
+            {editable && (
+              <p className='text-palette_error text-xs'>Required *</p>
+            )}
+          </>
+        )}
       </td>
       <td className={`${editable ? "w-1/4" : "w-3/10 pr-2"}`}>
         {peerSuggestionItem.remarks}

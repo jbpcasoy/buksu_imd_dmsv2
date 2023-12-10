@@ -85,7 +85,13 @@ function Item({
         {iDDCoordinatorSuggestionItem.pageNumber}
       </td>
       <td className={`${editable ? "w-1/4" : "w-3/10"}`}>
-        {iDDCoordinatorSuggestionItemActionTaken?.value}
+        {iDDCoordinatorSuggestionItemActionTaken?.value ?? (
+          <>
+            {editable && (
+              <p className='text-palette_error text-xs'>Required *</p>
+            )}
+          </>
+        )}
       </td>
       <td className={`${editable ? "w-1/4" : "w-3/10 pr-2"}`}>
         {iDDCoordinatorSuggestionItem.remarks}

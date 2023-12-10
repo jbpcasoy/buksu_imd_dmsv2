@@ -83,7 +83,13 @@ function Item({
         {contentEditorSuggestionItem.pageNumber}
       </td>
       <td className={`${editable ? "w-1/4" : "w-3/10"}`}>
-        {contentEditorSuggestionItemActionTaken?.value}
+        {contentEditorSuggestionItemActionTaken?.value ?? (
+          <>
+            {editable && (
+              <p className='text-palette_error text-xs'>Required *</p>
+            )}
+          </>
+        )}
       </td>
       <td className={`${editable ? "w-1/4" : "w-3/10 pr-2"}`}>
         {contentEditorSuggestionItem.remarks}
@@ -132,7 +138,8 @@ function EditSuggestionItemActionTaken({
           })
           .catch((error) => {
             addSnackbar(
-              error.response.data?.error?.message ?? "Failed to update suggestion",
+              error.response.data?.error?.message ??
+                "Failed to update suggestion",
               "error"
             );
           })
@@ -150,7 +157,8 @@ function EditSuggestionItemActionTaken({
           })
           .catch((error) => {
             addSnackbar(
-              error.response.data?.error?.message ?? "Failed to update suggestion",
+              error.response.data?.error?.message ??
+                "Failed to update suggestion",
               "error"
             );
           })
