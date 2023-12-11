@@ -3,7 +3,7 @@ import { ContentEditorReview, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useContentEditorReviewParams {
-  id: string;
+  id?: string;
 }
 export default function useContentEditorReview({ id }: useContentEditorReviewParams) {
   const [state, setState] = useState<ContentEditorReview | null>();

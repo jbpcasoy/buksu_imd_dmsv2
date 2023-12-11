@@ -4,7 +4,7 @@ import { IDDSpecialistReview, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useIDDSpecialistReviewParams {
-  id: string;
+  id?: string;
 }
 export default function useIDDSpecialistReview({ id }: useIDDSpecialistReviewParams) {
   const [state, setState] = useState<IDDSpecialistReview | null>();

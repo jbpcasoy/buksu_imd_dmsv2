@@ -3,7 +3,7 @@ import { IDDSpecialistSuggestion, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useIDDSpecialistSuggestionParams {
-  id: string;
+  id?: string;
 }
 export default function useIDDSpecialistSuggestion({ id }: useIDDSpecialistSuggestionParams) {
   const [state, setState] = useState<IDDSpecialistSuggestion | null | undefined>(undefined);

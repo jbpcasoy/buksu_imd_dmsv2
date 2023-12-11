@@ -3,7 +3,7 @@ import { CoordinatorReview, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useCoordinatorReviewParams {
-  id: string;
+  id?: string;
 }
 export default function useCoordinatorReview({ id }: useCoordinatorReviewParams) {
   const [state, setState] = useState<CoordinatorReview | null>();

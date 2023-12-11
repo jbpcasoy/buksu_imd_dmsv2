@@ -60,6 +60,28 @@ import {
   SubmittedPeerSuggestion,
 } from "@prisma/client";
 import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
+import usePeerSuggestion from "@/hooks/usePeerSuggestion";
+import usePeerReview from "@/hooks/usePeerReview";
+import useFaculty from "@/hooks/useFaculty";
+import useUser from "@/hooks/useUser";
+import useChairpersonSuggestion from "@/hooks/useChairpersonSuggestion";
+import useChairpersonReview from "@/hooks/useChairpersonReview";
+import useChairperson from "@/hooks/useChairperson";
+import useCoordinatorSuggestion from "@/hooks/useCoordinatorSuggestion";
+import useCoordinatorReview from "@/hooks/useCoordinatorReview";
+import useCoordinator from "@/hooks/useCoordinator";
+import useIMFile from "@/hooks/useIMFile";
+import useDean from "@/hooks/useDean";
+import useIDDCoordinatorSuggestion from "@/hooks/useIDDCoordinatorSuggestion";
+import useIDDCoordinator from "@/hooks/useIDDCoordinator";
+import useCITLDirector from "@/hooks/useCITLDirector";
+import useContentSpecialist from "@/hooks/useContentSpecialist";
+import useContentSpecialistSuggestion from "@/hooks/useContentSpecialistSuggestion";
+import useContentSpecialistReview from "@/hooks/useContentSpecialistReview";
+import useIDDSpecialistSuggestion from "@/hooks/useIDDSpecialistSuggestion";
+import useIDDSpecialistReview from "@/hooks/useIDDSpecialistReview";
+import useContentEditorSuggestion from "@/hooks/useContentEditorSuggestion";
+import useContentEditorReview from "@/hooks/useContentEditorReview";
 
 export default function IMTrackingPage() {
   const [state, setState] = useState({
@@ -476,8 +498,7 @@ export default function IMTrackingPage() {
           translateExtent={[
             [0, 0],
             [800, 1700],
-          ]
-        }
+          ]}
           onNodeClick={(e, node) => {
             setState((prev) => ({ ...prev, openModal: node.data.label }));
           }}
@@ -514,7 +535,10 @@ export default function IMTrackingPage() {
             )}
 
           {state.openModal === "Department Revision" && departmentRevision && (
-            <DepartmentRevisionModal departmentRevision={departmentRevision} />
+            <DepartmentRevisionModal
+              departmentRevision={departmentRevision}
+              iMId={iMId}
+            />
           )}
 
           {state.openModal === "Coordinator Endorsement" &&
@@ -536,7 +560,7 @@ export default function IMTrackingPage() {
               />
             )}
           {state.openModal === "CITL Revision" && cITLRevision && (
-            <CITLRevisionModal cITLRevision={cITLRevision} />
+            <CITLRevisionModal cITLRevision={cITLRevision} iMId={iMId} />
           )}
           {state.openModal === "IDD Coordinator Endorsement" &&
             iDDCoordinatorEndorsement && (
@@ -554,7 +578,7 @@ export default function IMTrackingPage() {
             <TryOutModal cITLDirectorEndorsement={cITLDirectorEndorsement} />
           )}
           {state.openModal === "QAMIS Revision" && qAMISRevision && (
-            <QAMISRevisionModal qAMISRevision={qAMISRevision} />
+            <QAMISRevisionModal qAMISRevision={qAMISRevision} iMId={iMId} />
           )}
           {state.openModal === "QAMIS Chairperson Endorsement" &&
             qAMISChairpersonEndorsement && (
@@ -574,7 +598,7 @@ export default function IMTrackingPage() {
                 qAMISDeanEndorsement={qAMISDeanEndorsement}
               />
             )}
-          {state.openModal === "QAMIS Department Endorsement" &&
+          {state.openModal === "Department Endorsement" &&
             qAMISDepartmentEndorsement && (
               <QAMISDepartmentEndorsementModal
                 qAMISDepartmentEndorsement={qAMISDepartmentEndorsement}
@@ -608,7 +632,10 @@ export default function IMTrackingPage() {
               />
             )}
           {state?.openModal === "IMERC Revision" && iMERCCITLRevision && (
-            <IMERCCITLRevisionModal iMERCCITLRevision={iMERCCITLRevision} />
+            <IMERCCITLRevisionModal
+              iMERCCITLRevision={iMERCCITLRevision}
+              iMId={iMId}
+            />
           )}
           {state?.openModal === "IMERC IDD Coordinator Endorsement" &&
             iMERCIDDCoordinatorEndorsement && (
@@ -656,36 +683,76 @@ function PeerReviewModal({
   submittedPeerSuggestion,
   iMId,
 }: PeerReviewModalProps) {
+  const peerSuggestion = usePeerSuggestion({
+    id: submittedPeerSuggestion.peerSuggestionId,
+  });
+  const peerReview = usePeerReview({
+    id: peerSuggestion?.peerReviewId,
+  });
+  const faculty = useFaculty({
+    id: peerReview?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
   return (
-    <div className='text-sm'>
-      <p>
-        Reviewed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(submittedPeerSuggestion?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
-      <p>
-        Click{" "}
+    <div className='text-sm flex flex-col space-y-4'>
+      {user && (
+        <p>
+          Reviewed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(submittedPeerSuggestion?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
+      <div className='flex justify-start space-x-2'>
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view evaluation.
-      </p>
-      <p>
-        Click{" "}
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white w-3 h-3'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Evaluation</span>
+        </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view suggestion.
-      </p>
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white w-3 h-3'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Suggestion</span>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -699,36 +766,78 @@ function ChairpersonReviewModal({
   submittedChairpersonSuggestion,
   iMId,
 }: ChairpersonReviewModalProps) {
+  const chairpersonSuggestion = useChairpersonSuggestion({
+    id: submittedChairpersonSuggestion.chairpersonSuggestionId,
+  });
+  const chairpersonReview = useChairpersonReview({
+    id: chairpersonSuggestion?.chairpersonReviewId,
+  });
+  const chairperson = useChairperson({
+    id: chairpersonReview?.chairpersonId,
+  });
+  const faculty = useFaculty({
+    id: chairperson?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
   return (
-    <div className='text-sm'>
-      <p>
-        Reviewed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(submittedChairpersonSuggestion?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
-      <p>
-        Click{" "}
+    <div className='text-sm flex flex-col space-y-4'>
+      {user && (
+        <p>
+          Reviewed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(submittedChairpersonSuggestion?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
+      <div className='flex justify-start space-x-2'>
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view evaluation.
-      </p>
-      <p>
-        Click{" "}
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Evaluation</span>
+        </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view suggestion.
-      </p>
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Suggestion</span>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -742,57 +851,120 @@ function CoordinatorReviewModal({
   submittedCoordinatorSuggestion,
   iMId,
 }: CoordinatorReviewModalProps) {
+  const coordinatorSuggestion = useCoordinatorSuggestion({
+    id: submittedCoordinatorSuggestion.coordinatorSuggestionId,
+  });
+  const coordinatorReview = useCoordinatorReview({
+    id: coordinatorSuggestion?.coordinatorReviewId,
+  });
+  const coordinator = useCoordinator({
+    id: coordinatorReview?.coordinatorId,
+  });
+  const faculty = useFaculty({
+    id: coordinator?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
   return (
-    <div className='text-sm'>
-      <p>
-        Reviewed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(submittedCoordinatorSuggestion?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
-      <p>
-        Click{" "}
+    <div className='text-sm flex flex-col space-y-4'>
+      {user && (
+        <p>
+          Reviewed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(submittedCoordinatorSuggestion?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
+      <div className='flex justify-start space-x-2'>
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view evaluation.
-      </p>
-      <p>
-        Click{" "}
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Evaluation</span>
+        </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view suggestion.
-      </p>
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Suggestion</span>
+        </Link>
+      </div>
     </div>
   );
 }
 
 interface DepartmentRevisionModalProps {
   departmentRevision: DepartmentRevision;
+  iMId: string;
 }
 
 function DepartmentRevisionModal({
   departmentRevision,
+  iMId,
 }: DepartmentRevisionModalProps) {
+  const iM = useIM({
+    id: iMId,
+  });
+  const faculty = useFaculty({ id: iM?.facultyId });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
   return (
     <div className='text-sm'>
-      <p>
-        Revised{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(departmentRevision?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Revised by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(departmentRevision?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -804,16 +976,34 @@ interface CoordinatorEndorsementModalProps {
 function CoordinatorEndorsementModal({
   coordinatorEndorsement,
 }: CoordinatorEndorsementModalProps) {
+  const coordinator = useCoordinator({
+    id: coordinatorEndorsement.coordinatorId,
+  });
+  const faculty = useFaculty({ id: coordinator?.facultyId });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
   return (
     <div className='text-sm'>
-      <p>
-        Endorsed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(coordinatorEndorsement?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Endorsed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(coordinatorEndorsement?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -823,16 +1013,30 @@ interface DeanEndorsementModalProps {
 }
 
 function DeanEndorsementModal({ deanEndorsement }: DeanEndorsementModalProps) {
+  const dean = useDean({ id: deanEndorsement.deanId });
+  const faculty = useFaculty({ id: dean?.facultyId });
+  const user = useUser({ id: faculty?.userId });
+
   return (
     <div className='text-sm'>
-      <p>
-        Endorsed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(deanEndorsement?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Endorsed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(deanEndorsement?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -845,54 +1049,93 @@ function IDDCoordinatorReviewModal({
   iMId,
   submittedIDDCoordinatorSuggestion,
 }: IDDCoordinatorReviewModalProps) {
+  const iDDCoordinatorSuggestion = useIDDCoordinatorSuggestion({
+    id: submittedIDDCoordinatorSuggestion.iDDCoordinatorSuggestionId,
+  });
+  const iDDCoordinator = useIDDCoordinator({
+    id: iDDCoordinatorSuggestion?.iDDCoordinatorId,
+  });
+  const user = useUser({
+    id: iDDCoordinator?.userId,
+  });
+
   return (
-    <div className='text-sm'>
-      <p>
-        Reviewed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(submittedIDDCoordinatorSuggestion?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
-      <p>
-        Click{" "}
-        <Link
-          href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:underline text-palette_light_blue'
-        >
-          here
-        </Link>{" "}
-        to view evaluation.
-      </p>
-      <p>
-        Click{" "}
+    <div className='text-sm space-y-4'>
+      {user && (
+        <p>
+          Reviewed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(submittedIDDCoordinatorSuggestion?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
+      <div className='flex justify-start space-x-2'>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view suggestion.
-      </p>
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white w-3 h-3'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Suggestion</span>
+        </Link>
+      </div>
     </div>
   );
 }
 
 interface CITLRevisionModalProps {
   cITLRevision: CITLRevision;
+  iMId: string;
 }
-function CITLRevisionModal({ cITLRevision }: CITLRevisionModalProps) {
+function CITLRevisionModal({ cITLRevision, iMId }: CITLRevisionModalProps) {
+  const iM = useIM({ id: iMId });
+  const faculty = useFaculty({
+    id: iM?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
   return (
     <div className='text-sm'>
-      <p>
-        Revised{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(cITLRevision?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Revised by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(cITLRevision?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -904,16 +1147,30 @@ interface IDDCoordinatorEndorsementModalProps {
 function IDDCoordinatorEndorsementModal({
   iDDCoordinatorEndorsement,
 }: IDDCoordinatorEndorsementModalProps) {
+  const iDDCoordinator = useIDDCoordinator({
+    id: iDDCoordinatorEndorsement.iDDCoordinatorId,
+  });
+  const user = useUser({ id: iDDCoordinator?.userId });
   return (
     <div className='text-sm'>
-      <p>
-        Endorsed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(iDDCoordinatorEndorsement?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Endorsed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(iDDCoordinatorEndorsement?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -925,16 +1182,33 @@ interface CITLDirectorEndorsementModalProps {
 function CITLDirectorEndorsementModal({
   cITLDirectorEndorsement,
 }: CITLDirectorEndorsementModalProps) {
+  const cITLDirector = useCITLDirector({
+    id: cITLDirectorEndorsement.cITLDirectorId,
+  });
+  const user = useUser({
+    id: cITLDirector?.userId,
+  });
+
   return (
     <div className='text-sm'>
-      <p>
-        Endorsed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(cITLDirectorEndorsement?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Endorsed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(cITLDirectorEndorsement?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -963,18 +1237,35 @@ function TryOutModal({ cITLDirectorEndorsement }: TryOutModalProps) {
 
 interface QAMISRevisionModalProps {
   qAMISRevision: QAMISRevision;
+  iMId: string;
 }
-function QAMISRevisionModal({ qAMISRevision }: QAMISRevisionModalProps) {
+function QAMISRevisionModal({ qAMISRevision, iMId }: QAMISRevisionModalProps) {
+  const iM = useIM({ id: iMId });
+  const faculty = useFaculty({
+    id: iM?.facultyId,
+  });
+  const user = useUser({ id: faculty?.userId });
   return (
     <div className='text-sm'>
-      <p>
-        Revised{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(qAMISRevision?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Revised by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(qAMISRevision?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -985,16 +1276,33 @@ interface QAMISChairpersonEndorsementModalProps {
 function QAMISChairpersonEndorsementModal({
   qAMISChairpersonEndorsement,
 }: QAMISChairpersonEndorsementModalProps) {
+  const chairperson = useChairperson({
+    id: qAMISChairpersonEndorsement.chairpersonId,
+  });
+  const faculty = useFaculty({ id: chairperson?.facultyId });
+  const user = useUser({ id: faculty?.userId });
+
   return (
     <div className='text-sm'>
-      <p>
-        Endorsed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(qAMISChairpersonEndorsement?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Revised by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(qAMISChairpersonEndorsement?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -1005,16 +1313,32 @@ interface QAMISCoordinatorEndorsementModalProps {
 function QAMISCoordinatorEndorsementModal({
   qAMISCoordinatorEndorsement,
 }: QAMISCoordinatorEndorsementModalProps) {
+  const coordinator = useCoordinator({
+    id: qAMISCoordinatorEndorsement.coordinatorId,
+  });
+  const faculty = useFaculty({ id: coordinator?.facultyId });
+  const user = useUser({ id: faculty?.userId });
   return (
     <div className='text-sm'>
-      <p>
-        Endorsed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(qAMISCoordinatorEndorsement?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Revised by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(qAMISCoordinatorEndorsement?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -1025,16 +1349,32 @@ interface QAMISDeanEndorsementModalProps {
 function QAMISDeanEndorsementModal({
   qAMISDeanEndorsement,
 }: QAMISDeanEndorsementModalProps) {
+  const dean = useDean({
+    id: qAMISDeanEndorsement.deanId,
+  });
+  const faculty = useFaculty({ id: dean?.facultyId });
+  const user = useUser({ id: faculty?.userId });
   return (
     <div className='text-sm'>
-      <p>
-        Endorsed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(qAMISDeanEndorsement?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Revised by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(qAMISDeanEndorsement?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -1067,36 +1407,79 @@ function ContentSpecialistReviewModal({
   iMId,
   submittedContentSpecialistSuggestion,
 }: ContentSpecialistReviewModalProps) {
+  const contentSpecialistSuggestion = useContentSpecialistSuggestion({
+    id: submittedContentSpecialistSuggestion.contentSpecialistSuggestionId,
+  });
+  const contentSpecialistReview = useContentSpecialistReview({
+    id: contentSpecialistSuggestion?.contentSpecialistReviewId,
+  });
+  const contentSpecialist = useContentSpecialist({
+    id: contentSpecialistReview?.contentSpecialistId,
+  });
+  const faculty = useFaculty({
+    id: contentSpecialist?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
   return (
-    <div className='text-sm'>
-      <p>
-        Reviewed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(submittedContentSpecialistSuggestion?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
-      <p>
-        Click{" "}
+    <div className='text-sm flex flex-col space-y-4'>
+      {user && (
+        <p>
+          Reviewed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(submittedContentSpecialistSuggestion?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
+      <div className='flex justify-start space-x-2'>
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view evaluation.
-      </p>
-      <p>
-        Click{" "}
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Evaluation</span>
+        </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view suggestion.
-      </p>
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Suggestion</span>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -1109,36 +1492,76 @@ function IDDSpecialistReviewModal({
   iMId,
   submittedIDDSpecialistSuggestion,
 }: IDDSpecialistReviewModalProps) {
+  const iDDSpecialistSuggestion = useIDDSpecialistSuggestion({
+    id: submittedIDDSpecialistSuggestion.iDDSpecialistSuggestionId,
+  });
+  const iDDSpecialistReview = useIDDSpecialistReview({
+    id: iDDSpecialistSuggestion?.iDDSpecialistReviewId,
+  });
+  const iDDCoordinator = useIDDCoordinator({
+    id: iDDSpecialistReview?.iDDCoordinatorId,
+  });
+  const user = useUser({
+    id: iDDCoordinator?.userId,
+  });
+
   return (
-    <div className='text-sm'>
-      <p>
-        Reviewed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(submittedIDDSpecialistSuggestion?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
-      <p>
-        Click{" "}
+    <div className='text-sm flex flex-col space-y-4'>
+      {user && (
+        <p>
+          Reviewed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(submittedIDDSpecialistSuggestion?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
+      <div className='flex justify-start space-x-2'>
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view evaluation.
-      </p>
-      <p>
-        Click{" "}
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Evaluation</span>
+        </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view suggestion.
-      </p>
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Suggestion</span>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -1151,54 +1574,115 @@ function ContentEditorReviewModal({
   iMId,
   submittedContentEditorSuggestion,
 }: ContentEditorReviewModalProps) {
+  const contentEditorSuggestion = useContentEditorSuggestion({
+    id: submittedContentEditorSuggestion.contentEditorSuggestionId,
+  });
+  const contentEditorReview = useContentEditorReview({
+    id: contentEditorSuggestion?.contentEditorReviewId,
+  });
+  const cITLDirector = useCITLDirector({
+    id: contentEditorReview?.cITLDirectorId,
+  });
+  const user = useUser({
+    id: cITLDirector?.userId,
+  });
   return (
-    <div className='text-sm'>
-      <p>
-        Reviewed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(submittedContentEditorSuggestion?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
-      <p>
-        Click{" "}
+    <div className='text-sm flex flex-col space-y-4'>
+      {user && (
+        <p>
+          Reviewed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(submittedContentEditorSuggestion?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+          .
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
+      <div className='flex justify-start space-x-2'>
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view evaluation.
-      </p>
-      <p>
-        Click{" "}
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Evaluation</span>
+        </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:underline text-palette_light_blue'
+          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
         >
-          here
-        </Link>{" "}
-        to view suggestion.
-      </p>
+          <span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='16'
+              viewBox='0 0 512 512'
+              className='fill-palette_white'
+            >
+              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+            </svg>
+          </span>
+          <span>Suggestion</span>
+        </Link>
+      </div>
     </div>
   );
 }
 
 interface IMERCCITLRevisionModal {
   iMERCCITLRevision: IMERCCITLRevision;
+  iMId: string;
 }
-function IMERCCITLRevisionModal({ iMERCCITLRevision }: IMERCCITLRevisionModal) {
+function IMERCCITLRevisionModal({
+  iMERCCITLRevision,
+  iMId,
+}: IMERCCITLRevisionModal) {
+  const iM = useIM({ id: iMId });
+  const faculty = useFaculty({
+    id: iM?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
   return (
     <div className='text-sm'>
-      <p>
-        Revised{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(iMERCCITLRevision?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Revised by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(iMERCCITLRevision?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -1209,16 +1693,33 @@ interface IMERCIDDCoordinatorEndorsementModalProps {
 function IMERCIDDCoordinatorEndorsementModal({
   iMERCIDDCoordinatorEndorsement,
 }: IMERCIDDCoordinatorEndorsementModalProps) {
+  const iDDCoordinator = useIDDCoordinator({
+    id: iMERCIDDCoordinatorEndorsement.iDDCoordinatorId,
+  });
+  const user = useUser({
+    id: iDDCoordinator?.userId,
+  });
+
   return (
     <div className='text-sm'>
-      <p>
-        Endorsed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(iMERCIDDCoordinatorEndorsement?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Endorsed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(iMERCIDDCoordinatorEndorsement?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }
@@ -1229,16 +1730,33 @@ interface IMERCCITLDirectorEndorsementModalProps {
 function IMERCCITLDirectorEndorsementModal({
   iMERCCITLDirectorEndorsement,
 }: IMERCCITLDirectorEndorsementModalProps) {
+
+  const cITLDirector = useCITLDirector({
+    id: iMERCCITLDirectorEndorsement.cITLDirectorId,
+  });
+  const user = useUser({
+    id: cITLDirector?.userId,
+  });
   return (
     <div className='text-sm'>
-      <p>
-        Endorsed{" "}
-        <span className='text-palette_light_blue'>
-          {DateTime.fromJSDate(
-            new Date(iMERCCITLDirectorEndorsement?.updatedAt ?? "")
-          ).toRelative()}
-        </span>
-      </p>
+      {user && (
+        <p>
+          Endorsed by{" "}
+          <Link
+            href={`/admin/user/${user.id}`}
+            className='text-palette_light_blue hover:underline'
+          >
+            {user.name}
+          </Link>{" "}
+          |{" "}
+          <span className='text-palette_light_blue'>
+            {DateTime.fromJSDate(
+              new Date(iMERCCITLDirectorEndorsement?.updatedAt ?? "")
+            ).toRelative()}
+          </span>
+        </p>
+      )}
+      {!user && <p className='animate-pulse'>Loading...</p>}
     </div>
   );
 }

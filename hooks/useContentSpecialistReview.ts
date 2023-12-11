@@ -3,7 +3,7 @@ import { ContentSpecialistReview, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useContentSpecialistReviewParams {
-  id: string;
+  id?: string;
 }
 export default function useContentSpecialistReview({ id }: useContentSpecialistReviewParams) {
   const [state, setState] = useState<ContentSpecialistReview | null>();
