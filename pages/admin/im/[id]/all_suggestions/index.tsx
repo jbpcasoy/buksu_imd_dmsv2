@@ -13,11 +13,18 @@ import AdminLayout from "@/components/AdminLayout";
 import useIM from "@/hooks/useIM";
 import Error from "next/error";
 import { useRouter } from "next/router";
+import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
+import { useState } from "react";
 
 export default function AllSuggestionsPage() {
   const router = useRouter();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
+  const [state, setState] = useState<{
+    tab: string;
+  }>({
+    tab: "DEPARTMENT REVIEW",
+  });
 
   if (iM === null) {
     return (
@@ -37,29 +44,91 @@ export default function AllSuggestionsPage() {
   return (
     <AdminLayout>
       <div className='space-y-1 px-1'>
-        <p className='text-center font-bold'>IMPLEMENTATION PHASE</p>
-        <p className='text-center font-bold text-sm'>DEPARTMENT REVIEW</p>
-        <IMPeerSuggestionItems id={iMId as string} editable={false} />
-        <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
-        <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
-        <IMReturnedDepartmentRevisionSuggestionItems
-          id={iMId as string}
-          editable={false}
-        />
-        <p className='text-center font-bold text-sm'>CITL REVIEW</p>
-        <IMIDDCoordinatorSuggestionItems id={iMId as string} editable={false} />
-        <p className='text-center font-bold'>IMERC</p>
-        <IMQAMISSuggestionItems id={iMId as string} editable={false} />
-        <IMIDDSpecialistSuggestionItems id={iMId as string} editable={false} />
-        <IMContentSpecialistSuggestionItems
-          id={iMId as string}
-          editable={false}
-        />
-        <IMContentEditorSuggestionItems id={iMId as string} editable={false} />
-        <IMReturnedIMERCCITLRevisionSuggestionItems
-          id={iMId as string}
-          editable={false}
-        />
+        <div className='flex space-x-4 justify-center'>
+          <p
+            className={`text-center font-bold text-sm cursor-pointer hover:border-b hover:border-b-2 px-2 border-palette_orange ${
+              state.tab === "DEPARTMENT REVIEW" ? "border-b" : ""
+            }`}
+            onClick={() => {
+              setState((prev) => ({ ...prev, tab: "DEPARTMENT REVIEW" }));
+            }}
+          >
+            DEPARTMENT REVIEW
+          </p>
+          <p
+            className={`text-center font-bold text-sm cursor-pointer hover:border-b hover:border-b-2 px-2 border-palette_orange ${
+              state.tab === "CITL REVIEW" ? "border-b" : ""
+            }`}
+            onClick={() => {
+              setState((prev) => ({ ...prev, tab: "CITL REVIEW" }));
+            }}
+          >
+            CITL REVIEW
+          </p>
+          <p
+            className={`text-center font-bold text-sm cursor-pointer hover:border-b hover:border-b-2 px-2 border-palette_orange ${
+              state.tab === "IMERC REVIEW" ? "border-b" : ""
+            }`}
+            onClick={() => {
+              setState((prev) => ({ ...prev, tab: "IMERC REVIEW" }));
+            }}
+          >
+            IMERC REVIEW
+          </p>
+        </div>
+
+        {state.tab === "DEPARTMENT REVIEW" && (
+          <>
+            <IMPeerSuggestionItems id={iMId as string} editable={false} />
+            <IMChairpersonSuggestionItems
+              id={iMId as string}
+              editable={false}
+            />
+            <IMCoordinatorSuggestionItems
+              id={iMId as string}
+              editable={false}
+            />
+            <IMReturnedDepartmentRevisionSuggestionItems
+              id={iMId as string}
+              editable={false}
+            />
+          </>
+        )}
+
+        {state.tab === "CITL REVIEW" && (
+          <>
+            <IMIDDCoordinatorSuggestionItems
+              id={iMId as string}
+              editable={false}
+            />
+            <IMReturnedCITLRevisionSuggestionItems
+              id={iMId as string}
+              editable={false}
+            />
+          </>
+        )}
+
+        {state.tab === "IMERC REVIEW" && (
+          <>
+            <IMQAMISSuggestionItems id={iMId as string} editable={false} />
+            <IMIDDSpecialistSuggestionItems
+              id={iMId as string}
+              editable={false}
+            />
+            <IMContentSpecialistSuggestionItems
+              id={iMId as string}
+              editable={false}
+            />
+            <IMContentEditorSuggestionItems
+              id={iMId as string}
+              editable={false}
+            />
+            <IMReturnedIMERCCITLRevisionSuggestionItems
+              id={iMId as string}
+              editable={false}
+            />
+          </>
+        )}
       </div>
     </AdminLayout>
   );

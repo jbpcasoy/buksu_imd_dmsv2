@@ -3,7 +3,7 @@ import { ReturnedDepartmentRevision, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useReturnedDepartmentRevisionParams {
-  id: string;
+  id?: string;
 }
 export default function useReturnedDepartmentRevision({ id }: useReturnedDepartmentRevisionParams) {
   const [state, setState] = useState<ReturnedDepartmentRevision | null>();

@@ -3,7 +3,7 @@ import { ReturnedCITLRevision, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useReturnedCITLRevisionParams {
-  id: string;
+  id?: string;
 }
 export default function useReturnedCITLRevision({ id }: useReturnedCITLRevisionParams) {
   const [state, setState] = useState<ReturnedCITLRevision | null>();

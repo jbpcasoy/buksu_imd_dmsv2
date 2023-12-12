@@ -94,7 +94,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             }
             className='w-48 bg-palette_blue text-lg block'
           >
-            <img src='/images/logo.svg' alt='BukSU IMD DMS Logo' />
+            <img src='/images/logo.svg' alt='BukSU IMD DMS Logo'  />
           </Link>
         </div>
         <div className='flex justify-center items-center space-x-2'>
@@ -132,7 +132,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             <img
               src={session?.user?.image ?? ""}
               alt={session?.user?.name ?? "Profile"}
-              className='h-6 w-6 rounded-full hover:opacity-90'
+              className='h-6 w-6 rounded-full hover:opacity-90 object-cover'
             />
           </Link>
         </div>

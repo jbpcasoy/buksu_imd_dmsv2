@@ -88,7 +88,7 @@ export default function IMPage() {
           </div>
           <div className='flex space-x-10'>
             <div className='flex space-x-2 mt-2'>
-              <img className='w-10 h-10 rounded-full' src={user?.image ?? ""} />
+              <img className='w-10 h-10 rounded-full object-cover' src={user?.image ?? ""} />
               <div className='text-xs text-palette_grey'>
                 <p className='uppercase font-bold'>{user?.name}</p>
                 {iM?.createdAt && (

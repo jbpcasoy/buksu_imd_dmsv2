@@ -3,7 +3,7 @@ import { IDDCoordinatorEndorsement, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useIDDCoordinatorEndorsementParams {
-  id: string;
+  id?: string;
 }
 export default function useIDDCoordinatorEndorsement({ id }: useIDDCoordinatorEndorsementParams) {
   const [state, setState] = useState<IDDCoordinatorEndorsement | null>();

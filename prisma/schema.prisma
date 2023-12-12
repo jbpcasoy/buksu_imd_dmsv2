@@ -1268,6 +1268,7 @@ model ReturnedCITLRevisionSuggestionItem {
     ReturnedCITLRevision                          ReturnedCITLRevision                           @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
     returnedCITLRevisionId                        String
     suggestion                                    String
+    // TODO remove actionTaken
     actionTaken                                   String?
     remarks                                       String?
     pageNumber                                    Int

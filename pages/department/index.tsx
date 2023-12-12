@@ -129,7 +129,7 @@ function ActiveFacultyItem({
           <picture>
             <img
               src={user?.image ?? ""}
-              className='h-10 w-10 rounded-full m-1'
+              className='h-10 w-10 rounded-full m-1 object-cover'
               alt='User avatar'
             />
           </picture>

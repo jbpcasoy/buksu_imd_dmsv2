@@ -3,7 +3,7 @@ import { CITLDirectorEndorsement, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useCITLDirectorEndorsementParams {
-  id: string;
+  id?: string;
 }
 export default function useCITLDirectorEndorsement({ id }: useCITLDirectorEndorsementParams) {
   const [state, setState] = useState<CITLDirectorEndorsement | null>();

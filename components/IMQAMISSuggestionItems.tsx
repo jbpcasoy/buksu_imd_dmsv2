@@ -1,4 +1,14 @@
+import useCITLDirectorEndorsement from "@/hooks/useCITLDirectorEndorsement";
+import useCITLRevision from "@/hooks/useCITLRevision";
+import useFaculty from "@/hooks/useFaculty";
+import useIDDCoordinatorEndorsement from "@/hooks/useIDDCoordinatorEndorsement";
+import useIM from "@/hooks/useIM";
+import useIMFile from "@/hooks/useIMFile";
+import useQAMISSuggestion from "@/hooks/useQAMISSuggestion";
 import useQAMISSuggestionItemsIM from "@/hooks/useQAMISSuggestionItemsIM";
+import useSubmittedQAMISSuggestionIM from "@/hooks/useSubmittedQAMISSuggestionIM";
+import useUser from "@/hooks/useUser";
+import { QAMISSuggestionItem } from "@prisma/client";
 import { DateTime } from "luxon";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -24,49 +34,95 @@ export default function IMQAMISSuggestionItems({
 
   const qAMISSuggestionItems = useQAMISSuggestionItemsIM(state);
 
+  const submittedQAMISSuggestion = useSubmittedQAMISSuggestionIM({
+    id,
+  });
+  const qAMISSuggestion = useQAMISSuggestion({
+    id: submittedQAMISSuggestion?.qAMISSuggestionId,
+  });
+  const cITLDirectorEndorsement = useCITLDirectorEndorsement({
+    id: qAMISSuggestion?.cITLDirectorEndorsementId,
+  });
+  const iDDCoordinatorEndorsement = useIDDCoordinatorEndorsement({
+    id: cITLDirectorEndorsement?.iDDCoordinatorEndorsementId,
+  });
+  const cITLRevision = useCITLRevision({
+    id: iDDCoordinatorEndorsement?.cITLRevisionId,
+  });
+  const iMFile = useIMFile({
+    id: cITLRevision?.iMFileId,
+  });
+  const iM = useIM({
+    id: iMFile?.iMId,
+  });
+  const faculty = useFaculty({
+    id: iM?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
   return (
-    <div className='border border-palette_orange rounded overflow-auto'>
-      <table className='w-full text-sm'>
-        <caption className='bg-palette_grey bg-opacity-10 p-2 text-left font-bold'>
-          QAMIS SUGGESTIONS
-        </caption>
-        <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
-          <tr>
-            <th className='font-normal pl-2'>SUGGESTION</th>
-            <th className='font-normal'>PAGE NUMBER</th>
-            <th className='font-normal'>ACTION TAKEN</th>
-            <th className={`font-normal ${editable ? "" : "pr-2"}`}>REMARKS</th>
-            {editable && <th className='font-normal pr-2'>ACTIONS</th>}
-          </tr>
-        </thead>
-        <tbody className='text-palette_grey'>
-          {qAMISSuggestionItems.qAMISSuggestionItems.map(
-            (qAMISSuggestionItem) => {
-              return (
-                <tr
-                  className='border-t border-b last:border-b-0'
-                  key={qAMISSuggestionItem.id}
-                >
-                  <td className={`pl-2 ${editable ? "w-1/4" : "w-3/10"}`}>
-                    {qAMISSuggestionItem.suggestion}
-                  </td>
-                  <td
-                    className={`text-center ${editable ? "w-1/8" : "w-1/10"}`}
-                  >
-                    {qAMISSuggestionItem.pageNumber}
-                  </td>
-                  <td className={`${editable ? "w-1/4" : "w-3/10"}`}>
-                    {qAMISSuggestionItem.actionTaken}
-                  </td>
-                  <td className={`${editable ? "w-1/4" : "w-3/10 pr-2"}`}>
-                    {qAMISSuggestionItem.remarks}
-                  </td>
-                </tr>
-              );
-            }
-          )}
-        </tbody>
-      </table>
+    <div className='border border-palette_orange rounded text-sm'>
+      <div className='p-2 bg-palette_grey bg-opacity-10'>
+        <p className='text-left font-bold'>QAMIS SUGGESTIONS</p>
+        {submittedQAMISSuggestion && (
+          <div className='flex flex-row items-center space-x-2'>
+            <img
+              src={user?.image ?? ""}
+              alt='User profile picture'
+              className='h-8 w-8 rounded-full object-cover'
+            />
+            <div className='flex flex-col justify-between'>
+              <p>{user?.name}</p>
+              <p className='text-xs'>
+                {DateTime.fromJSDate(
+                  new Date(submittedQAMISSuggestion?.updatedAt ?? "")
+                ).toRelative()}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+      <hr />
+      {qAMISSuggestionItems.qAMISSuggestionItems.map((qAMISSuggestionItem) => {
+        return (
+          <Item
+            qAMISSuggestionItem={qAMISSuggestionItem}
+            key={qAMISSuggestionItem.id}
+            editable={editable}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function Item({
+  qAMISSuggestionItem,
+  editable,
+}: {
+  qAMISSuggestionItem: QAMISSuggestionItem;
+  editable: boolean;
+}) {
+  return (
+    <div className='px-1 py-2'>
+      <div className='grid grid-cols-5'>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+          {qAMISSuggestionItem.pageNumber}
+        </p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+          {qAMISSuggestionItem.suggestion}
+        </p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>{qAMISSuggestionItem.remarks}</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Action Taken</p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+          {qAMISSuggestionItem?.actionTaken}
+        </p>
+      </div>
     </div>
   );
 }

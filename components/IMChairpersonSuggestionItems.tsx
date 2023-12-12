@@ -1,8 +1,15 @@
+import useChairperson from "@/hooks/useChairperson";
+import useChairpersonReview from "@/hooks/useChairpersonReview";
+import useChairpersonSuggestion from "@/hooks/useChairpersonSuggestion";
 import useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem from "@/hooks/useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem";
 import useChairpersonSuggestionItemsIM from "@/hooks/useChairpersonSuggestionItemsIM";
+import useFaculty from "@/hooks/useFaculty";
+import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
+import useUser from "@/hooks/useUser";
 import { ChairpersonSuggestionItem } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
+import { DateTime } from "luxon";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -25,40 +32,63 @@ export default function IMChairpersonSuggestionItems({
   });
 
   const chairpersonSuggestionItems = useChairpersonSuggestionItemsIM(state);
+  const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
+    id,
+  });
+  const chairpersonSuggestion = useChairpersonSuggestion({
+    id: submittedChairpersonSuggestion?.chairpersonSuggestionId,
+  });
+  const chairpersonReview = useChairpersonReview({
+    id: chairpersonSuggestion?.chairpersonReviewId,
+  });
+  const chairperson = useChairperson({
+    id: chairpersonReview?.chairpersonId,
+  });
+  const faculty = useFaculty({
+    id: chairperson?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
   }, [id]);
 
   return (
-    <div className='border border-palette_orange rounded overflow-auto'>
-      <table className='text-sm w-full'>
-        <caption className='text-left font-bold p-2 bg-palette_grey bg-opacity-10'>
-          CHAIRPERSON SUGGESTIONS
-        </caption>
-        <thead className='bg-palette_grey bg-opacity-10 text-palette_grey'>
-          <tr>
-            <th className='font-normal'>SUGGESTION</th>
-            <th className='font-normal'>PAGE NUMBER</th>
-            <th className='font-normal'>ACTION TAKEN</th>
-            <th className={`font-normal ${editable ? "" : "pr-2"}`}>REMARKS</th>
-            {editable && <th className='font-normal pr-2'>ACTIONS</th>}
-          </tr>
-        </thead>
-        <tbody className='text-palette_grey'>
-          {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
-            (chairpersonSuggestionItem) => {
-              return (
-                <Item
-                  chairpersonSuggestionItem={chairpersonSuggestionItem}
-                  editable={editable}
-                  key={chairpersonSuggestionItem.id}
-                />
-              );
-            }
-          )}
-        </tbody>
-      </table>
+    <div className='border border-palette_orange rounded text-sm'>
+      <div className='p-2 bg-palette_grey bg-opacity-10'>
+        <p className='text-left font-bold'>CHAIRPERSON SUGGESTIONS</p>
+        {submittedChairpersonSuggestion && (
+          <div className='flex flex-row items-center space-x-2'>
+            <img
+              src={user?.image ?? ""}
+              alt='User profile picture'
+              className='h-8 w-8 rounded-full object-cover'
+            />
+            <div className='flex flex-col justify-between'>
+              <p>{user?.name}</p>
+              <p className='text-xs'>
+                {DateTime.fromJSDate(
+                  new Date(submittedChairpersonSuggestion?.updatedAt ?? "")
+                ).toRelative()}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+      <hr />
+      {chairpersonSuggestionItems.chairpersonSuggestionItems.map(
+        (chairpersonSuggestionItem) => {
+          return (
+            <Item
+              chairpersonSuggestionItem={chairpersonSuggestionItem}
+              key={chairpersonSuggestionItem.id}
+              editable={editable}
+            />
+          );
+        }
+      )}
     </div>
   );
 }
@@ -76,33 +106,39 @@ function Item({
     });
 
   return (
-    <tr className='border-t border-b last:border-b-0'>
-      <td className={`pl-2 ${editable ? "w-1/4" : "w-3/10"}`}>
-        {chairpersonSuggestionItem.suggestion}
-      </td>
-      <td className={`text-center ${editable ? "w-1/8" : "w-1/10"}`}>
-        {chairpersonSuggestionItem.pageNumber}
-      </td>
-      <td className={`${editable ? "w-1/4" : "w-3/10"}`}>
-        {chairpersonSuggestionItemActionTaken?.value ?? (
-          <>
-            {editable && (
-              <p className='text-palette_error text-xs'>Required *</p>
-            )}
-          </>
-        )}
-      </td>
-      <td className={`${editable ? "w-1/4" : "w-3/10 pr-2"}`}>
-        {chairpersonSuggestionItem.remarks}
-      </td>
+    <div className='px-1 py-2'>
       {editable && (
-        <td className='w-1/8 pr-2'>
+        <div className='flex justify-end'>
           <EditSuggestionItemActionTaken
             chairpersonSuggestionItem={chairpersonSuggestionItem}
           />
-        </td>
+        </div>
       )}
-    </tr>
+      <div className='grid grid-cols-5'>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+          {chairpersonSuggestionItem.pageNumber}
+        </p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+          {chairpersonSuggestionItem.suggestion}
+        </p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+          {chairpersonSuggestionItem.remarks}
+        </p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Action Taken</p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+          {chairpersonSuggestionItemActionTaken?.value ?? (
+            <>
+              {editable && (
+                <p className='text-palette_error text-xs'>Required *</p>
+              )}
+            </>
+          )}
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -180,7 +216,7 @@ function EditSuggestionItemActionTaken({
   return (
     <div>
       <button
-        className='bg-palette_blue text-palette_white px-1 rounded text-sm w-full py-1 inline-flex justify-center hover:bg-opacity-90'
+        className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
         onClick={() => setOpenEditActionTaken(true)}
       >
         <svg
@@ -191,6 +227,7 @@ function EditSuggestionItemActionTaken({
         >
           <path d='M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z' />
         </svg>
+        <span>Edit</span>
       </button>
       {openEditActionTaken && (
         <Modal

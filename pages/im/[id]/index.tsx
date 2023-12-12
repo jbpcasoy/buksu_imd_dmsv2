@@ -571,7 +571,7 @@ export default function ViewIM() {
                 <div className='flex space-x-10'>
                   <div className='flex space-x-2 mt-2'>
                     <img
-                      className='w-10 h-10 rounded-full'
+                      className='w-10 h-10 rounded-full object-cover'
                       src={user?.image ?? ""}
                     />
                     <div className='text-xs text-palette_grey'>
@@ -716,7 +716,7 @@ export default function ViewIM() {
                 )}
 
                 {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col space-y-1'>
                     <div>
                       <DepartmentReviewStatus iMId={iMId as string} />
                     </div>

@@ -117,7 +117,7 @@ export default function ProfilePage() {
                   <picture>
                     <img
                       src={state?.previewUrl ?? session?.user?.image ?? ""}
-                      className='h-32 w-32 rounded-full'
+                      className='h-32 w-32 rounded-full object-cover'
                       alt='User avatar'
                     />
                   </picture>

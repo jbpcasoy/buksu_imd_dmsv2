@@ -3,7 +3,7 @@ import { ReturnedIMERCCITLRevision, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useReturnedIMERCCITLRevisionParams {
-  id: string;
+  id?: string;
 }
 export default function useReturnedIMERCCITLRevision({ id }: useReturnedIMERCCITLRevisionParams) {
   const [state, setState] = useState<ReturnedIMERCCITLRevision | null>();

@@ -338,7 +338,7 @@ export default function AddContentEditorReviewPage() {
             </form>
           </div>
         </div>
-        <div className='sm:flex-1 h-screen-3/4 sm:auto'>
+        <div className='sm:flex-1 h-screen-3/4 sm:h-auto'>
           <iframe
             loading='lazy'
             src={`/api/im_file/im/${iMId}/pdf`}

@@ -3,7 +3,7 @@ import { QAMISSuggestion, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useQAMISSuggestionParams {
-  id: string;
+  id?: string;
 }
 export default function useQAMISSuggestion({ id }: useQAMISSuggestionParams) {
   const [state, setState] = useState<QAMISSuggestion | null>();

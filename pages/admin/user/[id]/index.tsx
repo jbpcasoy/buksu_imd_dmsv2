@@ -35,7 +35,7 @@ export default function UserPage() {
             <div className='h-full flex-1 flex flex-col justify-center items-center space-y-2 '>
               <img
                 src={user?.image ?? ""}
-                className='w-32 h-32 shadow rounded-full'
+                className='w-32 h-32 shadow rounded-full object-cover'
               />
               <div className='flex flex-col justify-center items-center'>
                 <p className=''>{user?.name}</p>
