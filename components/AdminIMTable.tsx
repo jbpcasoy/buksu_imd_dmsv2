@@ -100,6 +100,15 @@ export default function AdminIMTable({
       },
     }));
   };
+  const handleStatusChange = (status: string) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        status,
+      },
+    }));
+  };
 
   return (
     <div className='text-sm border border-palette_grey rounded h-full flex flex-col overflow-auto'>
@@ -113,6 +122,7 @@ export default function AdminIMTable({
               <FilterSelector onFilterChange={handleFilterChange} />
 
               <SortSelector onSortChange={handleSortChange} />
+              <StatusSelector onStatusChange={handleStatusChange} />
             </div>
           </div>
           {enableAdd && <AddIM />}
@@ -425,5 +435,44 @@ function AddIM() {
         </Modal>
       )}
     </>
+  );
+}
+
+interface StatusSelectorProps {
+  onStatusChange: (status: string) => void;
+}
+function StatusSelector({ onStatusChange }: StatusSelectorProps) {
+  const statuses = [
+    "IMPLEMENTATION_DRAFT",
+    "IMPLEMENTATION_DEPARTMENT_REVIEW",
+    "IMPLEMENTATION_DEPARTMENT_REVIEWED",
+    "IMPLEMENTATION_DEPARTMENT_REVISED",
+    "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED",
+    "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED",
+    "IMPLEMENTATION_CITL_REVIEWED",
+    "IMPLEMENTATION_CITL_REVISED",
+    "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED",
+    "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED",
+    "IMERC_QAMIS_REVISED",
+    "IMERC_QAMIS_DEPARTMENT_ENDORSED",
+    "IMERC_CITL_REVIEWED",
+    "IMERC_CITL_REVISED",
+    "IMERC_CITL_IDD_COORDINATOR_ENDORSED",
+    "IMERC_CITL_DIRECTOR_ENDORSED",
+  ];
+  return (
+    <select
+      onChange={(e) => onStatusChange(e.target.value)}
+      className='py-1 rounded bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+    >
+      <option value=''>Select Status</option>
+      {statuses.map((status) => {
+        return (
+          <option value={status} key={status}>
+            {iMStatusNormalizer(status)}
+          </option>
+        );
+      })}
+    </select>
   );
 }

@@ -100,6 +100,15 @@ export default function IMTable({
       },
     }));
   };
+  const handleStatusChange = (status: string) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        status,
+      },
+    }));
+  };
 
   return (
     <div className='text-sm border border-palette_grey rounded h-full flex flex-col overflow-auto'>
@@ -113,6 +122,7 @@ export default function IMTable({
               <FilterSelector onFilterChange={handleFilterChange} />
 
               <SortSelector onSortChange={handleSortChange} />
+              <StatusSelector onStatusChange={handleStatusChange} />
             </div>
           </div>
           {enableAdd && <AddIM />}
@@ -328,8 +338,8 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
         <option value='title'>Title</option>
         <option value='createdAt'>Date Created</option>
         <option value='userName'>Author</option>
-        <option value='departmentName'>Department Name</option>
-        <option value='collegeName'>College Name</option>
+        <option value='departmentName'>Department</option>
+        <option value='collegeName'>College</option>
       </select>
       <select
         onChange={handleDirectionChange}
@@ -392,7 +402,7 @@ function AddIM() {
         >
           <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
         </svg>
-        <span className="whitespace-nowrap">Add IM</span>
+        <span className='whitespace-nowrap'>Add IM</span>
       </button>
       {state.addIMOpen && (
         <Modal title='ADD IM' onClose={() => setState({ addIMOpen: false })}>
@@ -434,5 +444,44 @@ function AddIM() {
         </Modal>
       )}
     </>
+  );
+}
+
+interface StatusSelectorProps {
+  onStatusChange: (status: string) => void;
+}
+function StatusSelector({ onStatusChange }: StatusSelectorProps) {
+  const statuses = [
+    "IMPLEMENTATION_DRAFT",
+    "IMPLEMENTATION_DEPARTMENT_REVIEW",
+    "IMPLEMENTATION_DEPARTMENT_REVIEWED",
+    "IMPLEMENTATION_DEPARTMENT_REVISED",
+    "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED",
+    "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED",
+    "IMPLEMENTATION_CITL_REVIEWED",
+    "IMPLEMENTATION_CITL_REVISED",
+    "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED",
+    "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED",
+    "IMERC_QAMIS_REVISED",
+    "IMERC_QAMIS_DEPARTMENT_ENDORSED",
+    "IMERC_CITL_REVIEWED",
+    "IMERC_CITL_REVISED",
+    "IMERC_CITL_IDD_COORDINATOR_ENDORSED",
+    "IMERC_CITL_DIRECTOR_ENDORSED",
+  ];
+  return (
+    <select
+      onChange={(e) => onStatusChange(e.target.value)}
+      className='py-1 rounded bg-inherit focus:border-palette_grey focus:ring-palette_grey w-40'
+    >
+      <option value=''>Select Status</option>
+      {statuses.map((status) => {
+        return (
+          <option value={status} key={status}>
+            {iMStatusNormalizer(status)}
+          </option>
+        );
+      })}
+    </select>
   );
 }

@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 import { AppAbility } from "@/services/ability/abilityBuilder";
 import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
+import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
 import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
 import { Prisma, User } from "@prisma/client";
@@ -30,6 +31,7 @@ export default async function handler(
         "filter[userName]": Yup.string().optional(),
         "filter[collegeName]": Yup.string().optional(),
         "filter[departmentName]": Yup.string().optional(),
+        "filter[status]": Yup.string().optional(),
         "sort[field]": Yup.string().optional(),
         "sort[direction]": Yup.string().oneOf(["asc", "desc"]).optional(),
       });
@@ -46,9 +48,11 @@ export default async function handler(
         "filter[departmentName]": filterDepartmentName,
         "filter[title]": filterTitle,
         "filter[userName]": filterUserName,
+        "filter[status]": filterStatus,
         "sort[field]": sortField,
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
+      let statusQuery = iMStatusQueryBuilder(filterStatus);
 
       const orderBy: Prisma.IMOrderByWithRelationInput =
         sortField === "title"
@@ -95,6 +99,7 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
+            statusQuery,
             {
               Faculty: {
                 User: {
@@ -141,6 +146,7 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
+            statusQuery,
             {
               Faculty: {
                 User: {

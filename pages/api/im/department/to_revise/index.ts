@@ -7,6 +7,7 @@ import logger from "@/services/logger";
 import iMAbility from "@/services/ability/iMAbility";
 import { accessibleBy } from "@casl/prisma";
 import { AppAbility } from "@/services/ability/abilityBuilder";
+import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,6 +31,7 @@ export default async function handler(
         "filter[userName]": Yup.string().optional(),
         "filter[collegeName]": Yup.string().optional(),
         "filter[departmentName]": Yup.string().optional(),
+        "filter[status]": Yup.string().optional(),
         "sort[field]": Yup.string().optional(),
         "sort[direction]": Yup.string().oneOf(["asc", "desc"]).optional(),
       });
@@ -47,15 +49,6 @@ export default async function handler(
           },
         },
       });
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              id: userActiveFaculty.facultyId,
-            },
-          },
-        },
-      });
       ability = iMAbility({ user });
 
       const {
@@ -65,9 +58,11 @@ export default async function handler(
         "filter[departmentName]": filterDepartmentName,
         "filter[title]": filterTitle,
         "filter[userName]": filterUserName,
+        "filter[status]": filterStatus,
         "sort[field]": sortField,
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
+      let statusQuery = iMStatusQueryBuilder(filterStatus);
 
       const orderBy: Prisma.IMOrderByWithRelationInput =
         sortField === "title"
@@ -114,6 +109,7 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
+            statusQuery,
             {
               Faculty: {
                 id: {
@@ -275,6 +271,7 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
+            statusQuery,
             {
               Faculty: {
                 id: {
