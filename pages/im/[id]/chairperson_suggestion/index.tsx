@@ -15,6 +15,7 @@ import useDepartmentIM from "@/hooks/useDepartmentIM";
 import useDepartmentMe from "@/hooks/useDepartmentMe";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useIM from "@/hooks/useIM";
+import useRefresh from "@/hooks/useRefresh";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import {
   ChairpersonSuggestion,
@@ -28,12 +29,13 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function ChairpersonSuggestionPage() {
+  const { refresh, refreshFlag } = useRefresh();
   const router = useRouter();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
   const chairpersonSuggestion = useChairpersonSuggestionMe({
     id: iMId as string,
-  });
+  }, refreshFlag);
   const chairpersonReview = useChairpersonReviewMe({ id: iMId as string });
   const [state, setState] = useState<useChairpersonSuggestionItemsOwnParams>({
     skip: 0,
@@ -44,7 +46,10 @@ export default function ChairpersonSuggestionPage() {
   const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
     id: iMId as string,
   });
-  const chairpersonSuggestionItems = useChairpersonSuggestionItemsOwn(state);
+  const chairpersonSuggestionItems = useChairpersonSuggestionItemsOwn(
+    state,
+    refreshFlag
+  );
   const { addSnackbar } = useContext(SnackbarContext);
   const activeChairperson = useActiveChairpersonMe();
   const myDepartment = useDepartmentMe();
@@ -118,7 +123,8 @@ export default function ChairpersonSuggestionPage() {
               );
             })
             .finally(() => {
-              router.reload();
+              setOpenAdd(false);
+              refresh();
             });
         };
 
@@ -274,6 +280,7 @@ export default function ChairpersonSuggestionPage() {
                     return (
                       <Item
                         chairpersonSuggestionItem={chairpersonSuggestionItem}
+                        refresh={refresh}
                         key={chairpersonSuggestionItem.id}
                       />
                     );
@@ -334,12 +341,12 @@ export default function ChairpersonSuggestionPage() {
 
 export interface ItemProps {
   chairpersonSuggestionItem: ChairpersonSuggestionItem;
+  refresh: () => any;
 }
-export function Item({ chairpersonSuggestionItem }: ItemProps) {
+export function Item({ chairpersonSuggestionItem, refresh }: ItemProps) {
   const [state, setState] = useState({
     openConfirmation: false,
   });
-  const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
   const handleDelete = () => {
     axios
@@ -353,7 +360,7 @@ export function Item({ chairpersonSuggestionItem }: ItemProps) {
         addSnackbar("Failed to delete suggestion", "error");
       })
       .finally(() => {
-        router.reload();
+        refresh();
       });
   };
   return (
@@ -361,33 +368,52 @@ export function Item({ chairpersonSuggestionItem }: ItemProps) {
       <div className='flex justify-end items-center space-x-1'>
         <EditSuggestionItem
           chairpersonSuggestionItem={chairpersonSuggestionItem}
+          refresh={refresh}
         />
-        <button
-          className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
-          onClick={() => handleDelete()}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            height='16'
-            width='14'
-            viewBox='0 0 448 512'
-            className='fill-palette_white'
+        <>
+          <button
+            className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
+            onClick={() =>
+              setState((prev) => ({ ...prev, openConfirmation: true }))
+            }
           >
-            <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
-          </svg>
-          <span>Delete</span>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='14'
+              viewBox='0 0 448 512'
+              className='fill-palette_white'
+            >
+              <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
+            </svg>
+            <span>Delete</span>
+          </button>
+          {state.openConfirmation && (
+            <Confirmation
+              onClose={() =>
+                setState((prev) => ({ ...prev, openConfirmation: false }))
+              }
+              onConfirm={handleDelete}
+            />
+          )}
+        </>
       </div>
       <div className='grid grid-cols-5'>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Page No.
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {chairpersonSuggestionItem.pageNumber}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Suggestion
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {chairpersonSuggestionItem.suggestion}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Remarks
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {chairpersonSuggestionItem.remarks}
         </p>
@@ -398,11 +424,12 @@ export function Item({ chairpersonSuggestionItem }: ItemProps) {
 
 interface EditSuggestionItemProps {
   chairpersonSuggestionItem: ChairpersonSuggestionItem;
+  refresh: () => any
 }
 function EditSuggestionItem({
   chairpersonSuggestionItem,
+  refresh
 }: EditSuggestionItemProps) {
-  const router = useRouter();
   const [openEdit, setOpenEdit] = useState(false);
   const { addSnackbar } = useContext(SnackbarContext);
 
@@ -430,7 +457,8 @@ function EditSuggestionItem({
           addSnackbar("Failed to update suggestion", "error");
         })
         .finally(() => {
-          router.reload();
+          setOpenEdit(false);
+          refresh();
         });
     },
   });

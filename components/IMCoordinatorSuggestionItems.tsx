@@ -15,6 +15,7 @@ import useCoordinator from "@/hooks/useCoordinator";
 import useFaculty from "@/hooks/useFaculty";
 import useUser from "@/hooks/useUser";
 import { DateTime } from "luxon";
+import useRefresh from "@/hooks/useRefresh";
 
 export interface IMCoordinatorSuggestionItemsProps {
   id: string;
@@ -101,10 +102,14 @@ function Item({
   coordinatorSuggestionItem: CoordinatorSuggestionItem;
   editable: boolean;
 }) {
+  const { refresh, refreshFlag } = useRefresh();
   const coordinatorSuggestionItemActionTaken =
-    useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem({
-      id: coordinatorSuggestionItem.id,
-    });
+    useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem(
+      {
+        id: coordinatorSuggestionItem.id,
+      },
+      refreshFlag
+    );
 
   return (
     <div className='px-1 py-2'>
@@ -112,23 +117,33 @@ function Item({
         <div className='flex justify-end'>
           <EditSuggestionItemActionTaken
             coordinatorSuggestionItem={coordinatorSuggestionItem}
+            refresh={refresh}
+            refreshFlag={refreshFlag}
           />
         </div>
       )}
       <div className='grid grid-cols-5'>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Page No.
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {coordinatorSuggestionItem.pageNumber}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Suggestion
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {coordinatorSuggestionItem.suggestion}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Remarks
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {coordinatorSuggestionItem.remarks}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Action Taken</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Action Taken
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {coordinatorSuggestionItemActionTaken?.value ?? (
             <>
@@ -145,9 +160,13 @@ function Item({
 
 interface EditSuggestionItemActionTakenProps {
   coordinatorSuggestionItem: CoordinatorSuggestionItem;
+  refresh: () => any;
+  refreshFlag?: number;
 }
 function EditSuggestionItemActionTaken({
   coordinatorSuggestionItem,
+  refresh,
+  refreshFlag,
 }: EditSuggestionItemActionTakenProps) {
   const router = useRouter();
   const [openEditActionTaken, setOpenEditActionTaken] = useState(false);
@@ -155,7 +174,9 @@ function EditSuggestionItemActionTaken({
   const coordinatorSuggestionItemActionTaken =
     useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem({
       id: coordinatorSuggestionItem.id,
-    });
+    },
+    refreshFlag,
+  );
   const formik = useFormik({
     initialValues: {
       value: "",
@@ -181,7 +202,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEditActionTaken(false);
           });
       } else {
         axios
@@ -200,7 +222,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEditActionTaken(false);
           });
       }
     },

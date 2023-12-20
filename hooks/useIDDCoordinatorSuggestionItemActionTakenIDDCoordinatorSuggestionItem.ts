@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItemParams {
   id: string;
 }
-export default function useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem({ id }: useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItemParams) {
+export default function useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem({ id }: useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItemParams, refreshFlag?: number) {
   const [state, setState] = useState<IDDCoordinatorSuggestionItemActionTaken | null>();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function useIDDCoordinatorSuggestionItemActionTakenIDDCoordinator
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

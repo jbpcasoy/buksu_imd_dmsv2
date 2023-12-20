@@ -14,6 +14,7 @@ import useIDDCoordinatorSuggestionItemsOwn, {
 } from "@/hooks/useIDDCoordinatorSuggestionItemsOwn";
 import useIDDCoordinatorSuggestionMe from "@/hooks/useIDDCoordinatorSuggestionMe";
 import useIM from "@/hooks/useIM";
+import useRefresh from "@/hooks/useRefresh";
 import useSubmittedIDDCoordinatorSuggestionIM from "@/hooks/useSubmittedIDDCoordinatorSuggestionIM";
 import {
   IDDCoordinatorSuggestion,
@@ -27,12 +28,13 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function IDDCoordinatorSuggestionPage() {
+  const { refresh, refreshFlag } = useRefresh();
   const router = useRouter();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
   const iDDCoordinatorSuggestion = useIDDCoordinatorSuggestionMe({
     id: iMId as string,
-  });
+  }, refreshFlag);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const { addSnackbar } = useContext(SnackbarContext);
   const submittedIDDCoordinatorSuggestion =
@@ -47,8 +49,10 @@ export default function IDDCoordinatorSuggestionPage() {
       take: 999,
     }
   );
-  const iDDCoordinatorSuggestionItems =
-    useIDDCoordinatorSuggestionItemsOwn(state);
+  const iDDCoordinatorSuggestionItems = useIDDCoordinatorSuggestionItemsOwn(
+    state,
+    refreshFlag
+  );
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();
   const handleSubmitReview = () => {
     if (!iDDCoordinatorSuggestion) return;
@@ -109,7 +113,8 @@ export default function IDDCoordinatorSuggestionPage() {
             })
             .then(() => {
               addSnackbar("Suggestion has been added successfully");
-              router.reload();
+              refresh();
+              setOpenAdd(false);
             })
             .catch((error) => {
               addSnackbar(
@@ -272,6 +277,7 @@ export default function IDDCoordinatorSuggestionPage() {
                         iDDCoordinatorSuggestionItem={
                           iDDCoordinatorSuggestionItem
                         }
+                        refresh={refresh}
                         key={iDDCoordinatorSuggestionItem.id}
                       />
                     );
@@ -336,8 +342,9 @@ export default function IDDCoordinatorSuggestionPage() {
 
 export interface ItemProps {
   iDDCoordinatorSuggestionItem: IDDCoordinatorSuggestionItem;
+  refresh: () => any;
 }
-export function Item({ iDDCoordinatorSuggestionItem }: ItemProps) {
+export function Item({ iDDCoordinatorSuggestionItem, refresh }: ItemProps) {
   const { addSnackbar } = useContext(SnackbarContext);
   const router = useRouter();
   const [state, setState] = useState({
@@ -350,7 +357,8 @@ export function Item({ iDDCoordinatorSuggestionItem }: ItemProps) {
       )
       .then(() => {
         addSnackbar("Suggestion has been deleted successfully");
-        router.reload();
+        refresh();
+        setState((prev) => ({ ...prev, openConfirmation: false }));
       })
       .catch((error) => {
         console.error(error);
@@ -365,33 +373,52 @@ export function Item({ iDDCoordinatorSuggestionItem }: ItemProps) {
       <div className='flex justify-end items-center space-x-1'>
         <EditSuggestionItem
           iDDCoordinatorSuggestionItem={iDDCoordinatorSuggestionItem}
+          refresh={refresh}
         />
-        <button
-          className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
-          onClick={() => handleDelete()}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            height='16'
-            width='14'
-            viewBox='0 0 448 512'
-            className='fill-palette_white'
+        <>
+          <button
+            className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
+            onClick={() =>
+              setState((prev) => ({ ...prev, openConfirmation: true }))
+            }
           >
-            <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
-          </svg>
-          <span>Delete</span>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='14'
+              viewBox='0 0 448 512'
+              className='fill-palette_white'
+            >
+              <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
+            </svg>
+            <span>Delete</span>
+          </button>
+          {state.openConfirmation && (
+            <Confirmation
+              onClose={() =>
+                setState((prev) => ({ ...prev, openConfirmation: false }))
+              }
+              onConfirm={handleDelete}
+            />
+          )}
+        </>
       </div>
       <div className='grid grid-cols-5'>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Page No.
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {iDDCoordinatorSuggestionItem.pageNumber}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Suggestion
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {iDDCoordinatorSuggestionItem.suggestion}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Remarks
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {iDDCoordinatorSuggestionItem.remarks}
         </p>
@@ -402,9 +429,11 @@ export function Item({ iDDCoordinatorSuggestionItem }: ItemProps) {
 
 interface EditSuggestionItemProps {
   iDDCoordinatorSuggestionItem: IDDCoordinatorSuggestionItem;
+  refresh: () => any;
 }
 function EditSuggestionItem({
   iDDCoordinatorSuggestionItem,
+  refresh,
 }: EditSuggestionItemProps) {
   const { addSnackbar } = useContext(SnackbarContext);
   const router = useRouter();
@@ -428,7 +457,8 @@ function EditSuggestionItem({
         )
         .then(() => {
           addSnackbar("Suggestion has been updated successfully");
-          router.reload();
+          refresh();
+          setOpenEdit(false);
         })
         .catch((error) => {
           addSnackbar(

@@ -15,6 +15,7 @@ import useReturnedDepartmentRevision from "@/hooks/useReturnedDepartmentRevision
 import useCoordinator from "@/hooks/useCoordinator";
 import useFaculty from "@/hooks/useFaculty";
 import useUser from "@/hooks/useUser";
+import useRefresh from "@/hooks/useRefresh";
 
 export interface IMReturnedDepartmentRevisionSuggestionItemsProps {
   id: string;
@@ -102,11 +103,13 @@ function Item({
   returnedDepartmentRevisionSuggestionItem: ReturnedDepartmentRevisionSuggestionItem;
   editable: boolean;
 }) {
+  const { refresh, refreshFlag } = useRefresh();
   const returnedDepartmentRevisionSuggestionItemActionTaken =
     useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem(
       {
         id: returnedDepartmentRevisionSuggestionItem.id,
-      }
+      },
+      refreshFlag
     );
 
   return (
@@ -117,23 +120,33 @@ function Item({
             returnedDepartmentRevisionSuggestionItem={
               returnedDepartmentRevisionSuggestionItem
             }
+            refresh={refresh}
+            refreshFlag={refreshFlag}
           />
         </div>
       )}
       <div className='grid grid-cols-5'>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Page No.
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {returnedDepartmentRevisionSuggestionItem.pageNumber}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Suggestion
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {returnedDepartmentRevisionSuggestionItem.suggestion}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Remarks
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {returnedDepartmentRevisionSuggestionItem.remarks}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Action Taken</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Action Taken
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {returnedDepartmentRevisionSuggestionItemActionTaken?.value ?? (
             <>
@@ -150,9 +163,13 @@ function Item({
 
 interface EditSuggestionItemActionTakenProps {
   returnedDepartmentRevisionSuggestionItem: ReturnedDepartmentRevisionSuggestionItem;
+  refresh: () => any;
+  refreshFlag?: number;
 }
 function EditSuggestionItemActionTaken({
   returnedDepartmentRevisionSuggestionItem,
+  refresh,
+  refreshFlag,
 }: EditSuggestionItemActionTakenProps) {
   const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
@@ -161,7 +178,8 @@ function EditSuggestionItemActionTaken({
     useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem(
       {
         id: returnedDepartmentRevisionSuggestionItem.id,
-      }
+      },
+      refreshFlag,
     );
   const formik = useFormik({
     initialValues: {
@@ -188,7 +206,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEditActionTaken(false);
           });
       } else {
         axios
@@ -211,7 +230,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEditActionTaken(false);
           });
       }
     },

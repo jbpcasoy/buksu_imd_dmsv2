@@ -14,6 +14,7 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
+import useRefresh from "@/hooks/useRefresh";
 
 export interface IMPeerSuggestionItemsProps {
   id: string;
@@ -91,10 +92,11 @@ function Item({
   peerSuggestionItem: PeerSuggestionItem;
   editable: boolean;
 }) {
+  const {refresh, refreshFlag} = useRefresh();
   const peerSuggestionItemActionTaken =
     usePeerSuggestionItemActionTakenPeerSuggestionItem({
       id: peerSuggestionItem.id,
-    });
+    }, refreshFlag);
 
   return (
     <div className='px-1 py-2'>
@@ -102,21 +104,33 @@ function Item({
         <div className='flex justify-end'>
           <EditSuggestionItemActionTaken
             peerSuggestionItem={peerSuggestionItem}
+            refresh={refresh}
+            refreshFlag={refreshFlag}
           />
         </div>
       )}
       <div className='grid grid-cols-5'>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Page No.
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {peerSuggestionItem.pageNumber}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Suggestion
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {peerSuggestionItem.suggestion}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
-        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>{peerSuggestionItem.remarks}</p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Action Taken</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Remarks
+        </p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+          {peerSuggestionItem.remarks}
+        </p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Action Taken
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {peerSuggestionItemActionTaken?.value ?? (
             <>
@@ -133,9 +147,13 @@ function Item({
 
 interface EditSuggestionItemActionTakenProps {
   peerSuggestionItem: PeerSuggestionItem;
+  refresh: () => any;
+  refreshFlag?: number;
 }
 function EditSuggestionItemActionTaken({
   peerSuggestionItem,
+  refresh,
+  refreshFlag,
 }: EditSuggestionItemActionTakenProps) {
   const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
@@ -143,7 +161,9 @@ function EditSuggestionItemActionTaken({
   const peerSuggestionItemActionTaken =
     usePeerSuggestionItemActionTakenPeerSuggestionItem({
       id: peerSuggestionItem.id,
-    });
+    },
+    refreshFlag,
+  );
   const formik = useFormik({
     initialValues: {
       value: "",
@@ -165,7 +185,8 @@ function EditSuggestionItemActionTaken({
             addSnackbar("Failed to update suggestion", "error");
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEditActionTaken(false);
           });
       } else {
         axios
@@ -180,7 +201,8 @@ function EditSuggestionItemActionTaken({
             addSnackbar("Failed to update suggestion", "error");
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEditActionTaken(false);
           });
       }
     },

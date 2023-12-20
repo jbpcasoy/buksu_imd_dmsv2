@@ -47,6 +47,7 @@ import useQAMISChairpersonEndorsementIM from "@/hooks/useQAMISChairpersonEndorse
 import useQAMISCoordinatorEndorsementIM from "@/hooks/useQAMISCoordinatorEndorsementIM";
 import useQAMISDeanEndorsementIM from "@/hooks/useQAMISDeanEndorsementIM";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
+import useRefresh from "@/hooks/useRefresh";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
 import useSubmittedContentSpecialistSuggestionIM from "@/hooks/useSubmittedContentSpecialistSuggestionIM";
@@ -74,9 +75,10 @@ import { useContext, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 
 export default function ViewIM() {
+  const {refresh, refreshFlag} = useRefresh();
   const router = useRouter();
   const iMId = router.query.id;
-  const iM = useIM({ id: iMId as string });
+  const iM = useIM({ id: iMId as string, refreshFlag });
   const [state, setState] = useState<{
     iMFile?: File | null;
     plagiarismFile?: File | null;
@@ -564,6 +566,7 @@ export default function ViewIM() {
                         showIMPDF={Boolean(iMFile)}
                         showQAMISPDF={Boolean(qAMISFile)}
                         showPlagiarismPDF={Boolean(plagiarismFile)}
+                        refresh={refresh}
                       />
                     }
                   </div>
@@ -1304,7 +1307,7 @@ export default function ViewIM() {
 
                 {(iMStatus === "IMERC_CITL_REVISED" ||
                   iMStatus ===
-                    "IMPLEMENTATION_IMERC_CITL_RETURNED_REVISION_NOT_SUBMITTED") && (
+                    "IMERC_CITL_RETURNED_REVISION_NOT_SUBMITTED") && (
                   <div className='flex flex-col space-y-1'>
                     <div>
                       <IMERCEndorsementStatus iMId={iMId as string} />
@@ -1441,6 +1444,7 @@ interface ActionMenuProps {
   showIMPDF: boolean;
   showQAMISPDF: boolean;
   showPlagiarismPDF: boolean;
+  refresh?: () => any;
 }
 function ActionMenu({
   iM,
@@ -1450,6 +1454,7 @@ function ActionMenu({
   showIMPDF,
   showPlagiarismPDF,
   showQAMISPDF,
+  refresh = () => {},
 }: ActionMenuProps) {
   const [state, setState] = useState({
     openMenu: false,
@@ -1580,7 +1585,7 @@ function ActionMenu({
               </Link>
             )}
             {iM.facultyId === activeFaculty?.facultyId &&
-              iMStatus === "IMPLEMENTATION_DRAFT" && <EditIM />}
+              iMStatus === "IMPLEMENTATION_DRAFT" && <EditIM onUpdate={refresh} />}
             {iM.facultyId === activeFaculty?.facultyId &&
               iMStatus === "IMPLEMENTATION_DRAFT" && (
                 <>
@@ -1616,7 +1621,10 @@ function ActionMenu({
   );
 }
 
-function EditIM() {
+interface EditIMProps {
+  onUpdate?: () => any;
+}
+function EditIM({ onUpdate = () => {} }: EditIMProps) {
   const router = useRouter();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
@@ -1648,7 +1656,8 @@ function EditIM() {
           );
         })
         .finally(() => {
-          router.reload();
+          setOpenEdit(false);
+          onUpdate();
         });
     },
   });

@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useReturnedIMERCCITLRevisionMeParams {
   id: string;
 }
-export default function useReturnedIMERCCITLRevisionMe({ id }: useReturnedIMERCCITLRevisionMeParams) {
+export default function useReturnedIMERCCITLRevisionMe({ id }: useReturnedIMERCCITLRevisionMeParams, refreshFlag?: number) {
   const [state, setState] = useState<ReturnedIMERCCITLRevision | null>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function useReturnedIMERCCITLRevisionMe({ id }: useReturnedIMERCC
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

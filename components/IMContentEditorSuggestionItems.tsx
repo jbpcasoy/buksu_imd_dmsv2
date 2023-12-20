@@ -14,6 +14,7 @@ import useContentEditorReview from "@/hooks/useContentEditorReview";
 import useCITLDirector from "@/hooks/useCITLDirector";
 import useUser from "@/hooks/useUser";
 import { DateTime } from "luxon";
+import useRefresh from "@/hooks/useRefresh";
 
 export interface IMContentEditorSuggestionItemsProps {
   id: string;
@@ -96,10 +97,11 @@ function Item({
   contentEditorSuggestionItem: ContentEditorSuggestionItem;
   editable: boolean;
 }) {
+  const {refresh, refreshFlag} = useRefresh();
   const contentEditorSuggestionItemActionTaken =
     useContentEditorSuggestionItemActionTakenContentEditorSuggestionItem({
       id: contentEditorSuggestionItem.id,
-    });
+    }, refreshFlag);
 
   return (
     <div className='px-1 py-2'>
@@ -107,6 +109,8 @@ function Item({
         <div className='flex justify-end'>
           <EditSuggestionItemActionTaken
             contentEditorSuggestionItem={contentEditorSuggestionItem}
+            refresh={refresh}
+            refreshFlag={refreshFlag}
           />
         </div>
       )}
@@ -140,10 +144,14 @@ function Item({
 
 interface EditSuggestionItemActionProps {
   contentEditorSuggestionItem: ContentEditorSuggestionItem;
+  refresh: () => any;
+  refreshFlag?: number;
 }
 
 function EditSuggestionItemActionTaken({
   contentEditorSuggestionItem,
+  refresh,
+  refreshFlag,
 }: EditSuggestionItemActionProps) {
   const [openEdit, setOpenEdit] = useState(false);
   const { addSnackbar } = useContext(SnackbarContext);
@@ -151,7 +159,9 @@ function EditSuggestionItemActionTaken({
   const contentEditorSuggestionItemActionTaken =
     useContentEditorSuggestionItemActionTakenContentEditorSuggestionItem({
       id: contentEditorSuggestionItem.id as string,
-    });
+    },
+    refreshFlag,
+  );
   const formik = useFormik({
     initialValues: {
       value: "",
@@ -177,7 +187,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEdit(false);
           });
       } else {
         axios
@@ -196,7 +207,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEdit(false);
           });
       }
     },

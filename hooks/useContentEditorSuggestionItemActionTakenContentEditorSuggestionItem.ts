@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useContentEditorSuggestionItemActionTakenContentEditorSuggestionItemParams {
   id: string;
 }
-export default function useContentEditorSuggestionItemActionTakenContentEditorSuggestionItem({ id }: useContentEditorSuggestionItemActionTakenContentEditorSuggestionItemParams) {
+export default function useContentEditorSuggestionItemActionTakenContentEditorSuggestionItem({ id }: useContentEditorSuggestionItemActionTakenContentEditorSuggestionItemParams, refreshFlag?: number) {
   const [state, setState] = useState<ContentEditorSuggestionItemActionTaken | null>();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function useContentEditorSuggestionItemActionTakenContentEditorSu
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

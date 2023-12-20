@@ -10,6 +10,7 @@ import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useCITLRevisionIM from "@/hooks/useCITLRevisionIM";
 import useIM from "@/hooks/useIM";
+import useRefresh from "@/hooks/useRefresh";
 import useReturnedCITLRevisionMe from "@/hooks/useReturnedCITLRevisionMe";
 import { useReturnedCITLRevisionSuggestionItemsIMParams } from "@/hooks/useReturnedCITLRevisionSuggestionItemsIM";
 import useReturnedCITLRevisionSuggestionItemsOwn from "@/hooks/useReturnedCITLRevisionSuggestionItemsOwn";
@@ -31,9 +32,13 @@ export default function ReturnedCITLRevisionPage() {
   const iM = useIM({
     id: iMId as string,
   });
-  const returnedCITLRevision = useReturnedCITLRevisionMe({
-    id: iMId as string,
-  });
+  const {refresh, refreshFlag} = useRefresh();
+  const returnedCITLRevision = useReturnedCITLRevisionMe(
+    {
+      id: iMId as string,
+    },
+    refreshFlag,
+  );
   const { addSnackbar } = useContext(SnackbarContext);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();
@@ -51,7 +56,9 @@ export default function ReturnedCITLRevisionPage() {
     useReturnedCITLRevisionSuggestionItemsOwn({
       ...state,
       id: returnedCITLRevision?.id,
-    });
+    },
+    refreshFlag,
+  );
   const handleSubmitSuggestions = () => {
     if (!returnedCITLRevision) return;
     axios
@@ -117,7 +124,8 @@ export default function ReturnedCITLRevisionPage() {
               );
             })
             .finally(() => {
-              router.reload();
+              refresh();
+              setOpenAdd(false);
             });
         };
 
@@ -270,6 +278,7 @@ export default function ReturnedCITLRevisionPage() {
                           returnedCITLRevisionSuggestionItem
                         }
                         key={returnedCITLRevisionSuggestionItem.id}
+                        refresh={refresh}
                       />
                     );
                   }
@@ -338,8 +347,9 @@ export default function ReturnedCITLRevisionPage() {
 
 export interface ItemProps {
   returnedCITLRevisionSuggestionItem: ReturnedCITLRevisionSuggestionItem;
+  refresh: () => any;
 }
-export function Item({ returnedCITLRevisionSuggestionItem }: ItemProps) {
+export function Item({ returnedCITLRevisionSuggestionItem, refresh }: ItemProps) {
   const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
   const [state, setState] = useState({
@@ -360,7 +370,8 @@ export function Item({ returnedCITLRevisionSuggestionItem }: ItemProps) {
         );
       })
       .finally(() => {
-        router.reload();
+        refresh();
+        setState(prev => ({...prev, openConfirmation: false}))
       });
   };
   return (
@@ -370,22 +381,30 @@ export function Item({ returnedCITLRevisionSuggestionItem }: ItemProps) {
           returnedCITLRevisionSuggestionItem={
             returnedCITLRevisionSuggestionItem
           }
+          refresh={refresh}
         />
-        <button
-          className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
-          onClick={() => handleDelete()}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            height='16'
-            width='14'
-            viewBox='0 0 448 512'
-            className='fill-palette_white'
+        <>
+          <button
+            className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
+            onClick={() => setState(prev => ({...prev, openConfirmation: true}))}
           >
-            <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
-          </svg>
-          <span>Delete</span>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='14'
+              viewBox='0 0 448 512'
+              className='fill-palette_white'
+            >
+              <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
+            </svg>
+            <span>Delete</span>
+          </button>
+          {state.openConfirmation && 
+            <Confirmation
+              onClose={() => setState(prev => ({...prev, openConfirmation: false}))}
+              onConfirm={handleDelete} />
+          }
+        </>
       </div>
       <div className='grid grid-cols-5'>
         <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
@@ -407,9 +426,11 @@ export function Item({ returnedCITLRevisionSuggestionItem }: ItemProps) {
 
 interface EditSuggestionItemProps {
   returnedCITLRevisionSuggestionItem: ReturnedCITLRevisionSuggestionItem;
+  refresh: () => any;
 }
 function EditSuggestionItem({
   returnedCITLRevisionSuggestionItem,
+  refresh
 }: EditSuggestionItemProps) {
   const { addSnackbar } = useContext(SnackbarContext);
   const [openEdit, setOpenEdit] = useState(false);
@@ -442,7 +463,8 @@ function EditSuggestionItem({
           );
         })
         .finally(() => {
-          router.reload();
+          refresh();
+          setOpenEdit(false);
         });
     },
   });

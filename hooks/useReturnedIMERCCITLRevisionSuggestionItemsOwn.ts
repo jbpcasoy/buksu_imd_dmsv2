@@ -7,7 +7,7 @@ export interface useReturnedIMERCCITLRevisionSuggestionItemsOwnParams {
   take: number;
   id?: string
 }
-export default function useReturnedIMERCCITLRevisionSuggestionItemsOwn({ skip, take, id }: useReturnedIMERCCITLRevisionSuggestionItemsOwnParams) {
+export default function useReturnedIMERCCITLRevisionSuggestionItemsOwn({ skip, take, id }: useReturnedIMERCCITLRevisionSuggestionItemsOwnParams, refreshFlag?: number) {
   const [state, setState] = useState<{returnedIMERCCITLRevisionSuggestionItems: ReturnedIMERCCITLRevisionSuggestionItem[], count: number}>({
     count: 0,
     returnedIMERCCITLRevisionSuggestionItems: []
@@ -33,7 +33,7 @@ export default function useReturnedIMERCCITLRevisionSuggestionItemsOwn({ skip, t
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

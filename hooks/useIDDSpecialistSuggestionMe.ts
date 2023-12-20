@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useIDDSpecialistSuggestionMeParams {
   id: string;
 }
-export default function useIDDSpecialistSuggestionMe({ id }: useIDDSpecialistSuggestionMeParams) {
+export default function useIDDSpecialistSuggestionMe({ id }: useIDDSpecialistSuggestionMeParams, refreshFlag?: number) {
   const [state, setState] = useState<IDDSpecialistSuggestion | null>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function useIDDSpecialistSuggestionMe({ id }: useIDDSpecialistSug
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

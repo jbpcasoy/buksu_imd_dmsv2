@@ -4,8 +4,9 @@ import axios from "axios";
 
 export interface useIMParams {
   id?: string;
+  refreshFlag?: number;
 }
-export default function useIM({ id }: useIMParams) {
+export default function useIM({ id, refreshFlag }: useIMParams) {
   const [state, setState] = useState<IM | null>();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export default function useIM({ id }: useIMParams) {
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

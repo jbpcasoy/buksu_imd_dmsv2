@@ -15,6 +15,7 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
+import useRefresh from "@/hooks/useRefresh";
 
 export interface IMChairpersonSuggestionItemsProps {
   id: string;
@@ -100,10 +101,14 @@ function Item({
   chairpersonSuggestionItem: ChairpersonSuggestionItem;
   editable: boolean;
 }) {
+  const { refreshFlag, refresh } = useRefresh();
   const chairpersonSuggestionItemActionTaken =
-    useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem({
-      id: chairpersonSuggestionItem.id,
-    });
+    useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem(
+      {
+        id: chairpersonSuggestionItem.id,
+      },
+      refreshFlag
+    );
 
   return (
     <div className='px-1 py-2'>
@@ -111,23 +116,33 @@ function Item({
         <div className='flex justify-end'>
           <EditSuggestionItemActionTaken
             chairpersonSuggestionItem={chairpersonSuggestionItem}
+            refresh={refresh}
+            refreshFlag={refreshFlag}
           />
         </div>
       )}
       <div className='grid grid-cols-5'>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Page No.
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {chairpersonSuggestionItem.pageNumber}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Suggestion
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {chairpersonSuggestionItem.suggestion}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Remarks
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {chairpersonSuggestionItem.remarks}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Action Taken</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Action Taken
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {chairpersonSuggestionItemActionTaken?.value ?? (
             <>
@@ -144,9 +159,13 @@ function Item({
 
 interface EditSuggestionItemActionTakenProps {
   chairpersonSuggestionItem: ChairpersonSuggestionItem;
+  refresh: () => any;
+  refreshFlag?: number;
 }
 function EditSuggestionItemActionTaken({
   chairpersonSuggestionItem,
+  refresh,
+  refreshFlag,
 }: EditSuggestionItemActionTakenProps) {
   const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
@@ -154,7 +173,9 @@ function EditSuggestionItemActionTaken({
   const chairpersonSuggestionItemActionTaken =
     useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem({
       id: chairpersonSuggestionItem.id,
-    });
+    },
+    refreshFlag,
+  );
   const formik = useFormik({
     initialValues: {
       value: "",
@@ -180,7 +201,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEditActionTaken(false);
           });
       } else {
         axios
@@ -199,7 +221,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEditActionTaken(false);
           });
       }
     },

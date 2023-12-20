@@ -14,6 +14,7 @@ import useContentEditorSuggestionItemsOwn, {
 } from "@/hooks/useContentEditorSuggestionItemsOwn";
 import useContentEditorSuggestionMe from "@/hooks/useContentEditorSuggestionMe";
 import useIM from "@/hooks/useIM";
+import useRefresh from "@/hooks/useRefresh";
 import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
 import {
   ContentEditorSuggestion,
@@ -27,12 +28,13 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function ContentEditorSuggestionPage() {
+  const {refresh, refreshFlag} = useRefresh();
   const router = useRouter();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
   const contentEditorSuggestion = useContentEditorSuggestionMe({
     id: iMId as string,
-  });
+  }, refreshFlag);
   const submittedContentEditorSuggestion =
     useSubmittedContentEditorSuggestionIM({ id: iMId as string });
   const contentEditorReview = useContentEditorReviewMe({ id: iMId as string });
@@ -43,7 +45,7 @@ export default function ContentEditorSuggestionPage() {
     take: 999,
   });
   const contentEditorSuggestionItems =
-    useContentEditorSuggestionItemsOwn(state);
+    useContentEditorSuggestionItemsOwn(state, refreshFlag);
   const activeCITLDirector = useActiveCITLDirectorMe();
   const handleSubmitReview = () => {
     if (!contentEditorSuggestion) return;
@@ -113,7 +115,8 @@ export default function ContentEditorSuggestionPage() {
               );
             })
             .finally(() => {
-              router.reload();
+              refresh();
+              setOpenAdd(false);
             });
         };
 
@@ -263,6 +266,7 @@ export default function ContentEditorSuggestionPage() {
                           contentEditorSuggestionItem
                         }
                         key={contentEditorSuggestionItem.id}
+                        refresh={refresh}
                       />
                     );
                   }
@@ -326,9 +330,11 @@ export default function ContentEditorSuggestionPage() {
 
 export interface ContentEditorSuggestionItemProps {
   contentEditorSuggestionItem: ContentEditorSuggestionItem;
+  refresh: () => any;
 }
 export function Item({
   contentEditorSuggestionItem,
+  refresh,
 }: ContentEditorSuggestionItemProps) {
   const [state, setState] = useState({
     openConfirmation: false,
@@ -342,7 +348,8 @@ export function Item({
       )
       .then(() => {
         addSnackbar("Suggestion has been deleted successfully");
-        router.reload();
+        refresh();
+        setState(prev => ({...prev, openConfirmation: false}));
       })
       .catch((error) => {
         addSnackbar(
@@ -356,22 +363,26 @@ export function Item({
       <div className='flex justify-end items-center space-x-1'>
         <EditSuggestionItem
           contentEditorSuggestionItem={contentEditorSuggestionItem}
+          refresh={refresh}
         />
-        <button
-          className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
-          onClick={() => handleDelete()}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            height='16'
-            width='14'
-            viewBox='0 0 448 512'
-            className='fill-palette_white'
+        <>
+          <button
+            className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
+            onClick={() => setState(prev => ({...prev, openConfirmation: true}))}
           >
-            <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
-          </svg>
-          <span>Delete</span>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='14'
+              viewBox='0 0 448 512'
+              className='fill-palette_white'
+            >
+              <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
+            </svg>
+            <span>Delete</span>
+          </button>
+          {state.openConfirmation && <Confirmation onClose={() => setState(prev => ({...prev, openConfirmation: false}))} onConfirm={handleDelete} />}
+        </>
       </div>
       <div className='grid grid-cols-5'>
         <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
@@ -393,10 +404,12 @@ export function Item({
 
 interface EditSuggestionItemProps {
   contentEditorSuggestionItem: ContentEditorSuggestionItem;
+  refresh: () => any;
 }
 
 function EditSuggestionItem({
   contentEditorSuggestionItem,
+  refresh,
 }: EditSuggestionItemProps) {
   const [openEdit, setOpenEdit] = useState(false);
   const router = useRouter();
@@ -429,7 +442,8 @@ function EditSuggestionItem({
           );
         })
         .finally(() => {
-          router.reload();
+          refresh();
+          setOpenEdit(false);
         });
     },
   });

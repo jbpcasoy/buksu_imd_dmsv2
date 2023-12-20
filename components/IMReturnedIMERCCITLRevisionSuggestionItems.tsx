@@ -15,6 +15,7 @@ import useIDDCoordinator from "@/hooks/useIDDCoordinator";
 import useFaculty from "@/hooks/useFaculty";
 import useUser from "@/hooks/useUser";
 import useSubmittedReturnedIMERCCITLRevisionIM from "@/hooks/useSubmittedReturnedIMERCCITLRevisionIM";
+import useRefresh from "@/hooks/useRefresh";
 
 export interface IMReturnedIMERCCITLRevisionSuggestionItemsProps {
   id: string;
@@ -99,11 +100,13 @@ function Item({
   returnedIMERCCITLRevisionSuggestionItem: ReturnedIMERCCITLRevisionSuggestionItem;
   editable: boolean;
 }) {
+  const {refresh, refreshFlag} = useRefresh();
   const returnedIMERCCITLRevisionSuggestionItemActionTaken =
     useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem(
       {
         id: returnedIMERCCITLRevisionSuggestionItem.id,
-      }
+      },
+      refreshFlag
     );
 
   return (
@@ -114,6 +117,8 @@ function Item({
             returnedIMERCCITLRevisionSuggestionItem={
               returnedIMERCCITLRevisionSuggestionItem
             }
+            refresh={refresh}
+            refreshFlag={refreshFlag}
           />
         </div>
       )}
@@ -147,10 +152,14 @@ function Item({
 
 interface EditSuggestionItemActionTakenProps {
   returnedIMERCCITLRevisionSuggestionItem: ReturnedIMERCCITLRevisionSuggestionItem;
+  refresh: () => any;
+  refreshFlag?: number;
 }
 
 function EditSuggestionItemActionTaken({
   returnedIMERCCITLRevisionSuggestionItem,
+  refresh,
+  refreshFlag,
 }: EditSuggestionItemActionTakenProps) {
   const router = useRouter();
   const [openEdit, setOpenEdit] = useState(false);
@@ -158,7 +167,8 @@ function EditSuggestionItemActionTaken({
     useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem(
       {
         id: returnedIMERCCITLRevisionSuggestionItem.id as string,
-      }
+      },
+      refreshFlag,
     );
   const { addSnackbar } = useContext(SnackbarContext);
   const formik = useFormik({
@@ -186,7 +196,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEdit(false);
           });
       } else {
         axios
@@ -209,7 +220,8 @@ function EditSuggestionItemActionTaken({
             );
           })
           .finally(() => {
-            router.reload();
+            refresh();
+            setOpenEdit(false);
           });
       }
     },

@@ -13,6 +13,7 @@ import usePeerSuggestionItemsOwn, {
   usePeerSuggestionItemsOwnParams,
 } from "@/hooks/usePeerSuggestionItemsOwn";
 import usePeerSuggestionMe from "@/hooks/usePeerSuggestionMe";
+import useRefresh from "@/hooks/useRefresh";
 import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
 import { PeerSuggestion, PeerSuggestionItem } from "@prisma/client";
 import axios from "axios";
@@ -24,11 +25,9 @@ import * as Yup from "yup";
 
 export default function PeerSuggestionPage() {
   const router = useRouter();
+  const { refresh, refreshFlag } = useRefresh();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
-  const peerSuggestion = usePeerSuggestionMe({
-    id: iMId as string,
-  });
   const peerReview = usePeerReviewMe({ id: iMId as string });
   const [state, setState] = useState<usePeerSuggestionItemsOwnParams>({
     skip: 0,
@@ -39,7 +38,10 @@ export default function PeerSuggestionPage() {
   const submittedPeerSuggestion = useSubmittedPeerSuggestionIM({
     id: iMId as string,
   });
-  const peerSuggestionItems = usePeerSuggestionItemsOwn(state);
+  const peerSuggestion = usePeerSuggestionMe({
+    id: iMId as string,
+  }, refreshFlag);
+  const peerSuggestionItems = usePeerSuggestionItemsOwn(state, refreshFlag);
   const activeFaculty = useActiveFacultyMe();
   const { addSnackbar } = useContext(SnackbarContext);
 
@@ -108,7 +110,7 @@ export default function PeerSuggestionPage() {
               );
             })
             .finally(() => {
-              router.reload();
+              refresh();
             });
         };
 
@@ -251,6 +253,7 @@ export default function PeerSuggestionPage() {
                     return (
                       <Item
                         peerSuggestionItem={peerSuggestionItem}
+                        refresh={refresh}
                         key={peerSuggestionItem.id}
                       />
                     );
@@ -314,12 +317,12 @@ export default function PeerSuggestionPage() {
 
 export interface ItemProps {
   peerSuggestionItem: PeerSuggestionItem;
+  refresh?: () => any;
 }
-export function Item({ peerSuggestionItem }: ItemProps) {
+export function Item({ peerSuggestionItem, refresh = () => {} }: ItemProps) {
   const [state, setState] = useState({
     openConfirmation: false,
   });
-  const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
   const handleDelete = () => {
     axios
@@ -334,40 +337,63 @@ export function Item({ peerSuggestionItem }: ItemProps) {
         );
       })
       .finally(() => {
-        router.reload();
+        refresh();
       });
   };
   return (
     <div className='px-1 py-2'>
-      <div className='flex justify-end items-center space-x-1'>
-        <EditSuggestionItem peerSuggestionItem={peerSuggestionItem} />
-        <button
-          className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
-          onClick={() => handleDelete()}
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            height='16'
-            width='14'
-            viewBox='0 0 448 512'
-            className='fill-palette_white'
+      <div className='flex justify-end item-center space-x-1'>
+        <EditSuggestionItem
+          peerSuggestionItem={peerSuggestionItem}
+          refresh={refresh}
+        />
+        <>
+          <button
+            className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
+            onClick={() =>
+              setState((prev) => ({ ...prev, openConfirmation: true }))
+            }
           >
-            <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
-          </svg>
-          <span>Delete</span>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='16'
+              width='14'
+              viewBox='0 0 448 512'
+              className='fill-palette_white'
+            >
+              <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
+            </svg>
+            <span>Delete</span>
+          </button>
+          {state.openConfirmation && (
+            <Confirmation
+              onClose={() =>
+                setState((prev) => ({ ...prev, openConfirmation: false }))
+              }
+              onConfirm={handleDelete}
+            />
+          )}
+        </>
       </div>
       <div className='grid grid-cols-5'>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Page No.</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Page No.
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {peerSuggestionItem.pageNumber}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Suggestion
+        </p>
         <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
           {peerSuggestionItem.suggestion}
         </p>
-        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
-        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>{peerSuggestionItem.remarks}</p>
+        <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>
+          Remarks
+        </p>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+          {peerSuggestionItem.remarks}
+        </p>
       </div>
     </div>
   );
@@ -375,9 +401,12 @@ export function Item({ peerSuggestionItem }: ItemProps) {
 
 interface EditSuggestionItemProps {
   peerSuggestionItem: PeerSuggestionItem;
+  refresh?: () => any;
 }
-function EditSuggestionItem({ peerSuggestionItem }: EditSuggestionItemProps) {
-  const router = useRouter();
+function EditSuggestionItem({
+  peerSuggestionItem,
+  refresh = () => {},
+}: EditSuggestionItemProps) {
   const [openEdit, setOpenEdit] = useState(false);
   const { addSnackbar } = useContext(SnackbarContext);
 
@@ -406,7 +435,8 @@ function EditSuggestionItem({ peerSuggestionItem }: EditSuggestionItemProps) {
           );
         })
         .finally(() => {
-          router.reload();
+          setOpenEdit(false);
+          refresh();
         });
     },
   });
@@ -422,7 +452,7 @@ function EditSuggestionItem({ peerSuggestionItem }: EditSuggestionItemProps) {
   }, [peerSuggestionItem]);
 
   return (
-    <div>
+    <>
       <button
         className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
         onClick={() => setOpenEdit(true)}
@@ -477,6 +507,6 @@ function EditSuggestionItem({ peerSuggestionItem }: EditSuggestionItemProps) {
           </form>
         </Modal>
       )}
-    </div>
+    </>
   );
 }

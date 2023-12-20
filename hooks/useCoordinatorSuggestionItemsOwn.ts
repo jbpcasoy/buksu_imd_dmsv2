@@ -7,7 +7,7 @@ export interface useCoordinatorSuggestionItemsOwnParams {
   take: number;
   id?: string
 }
-export default function useCoordinatorSuggestionItemsOwn({ skip, take, id }: useCoordinatorSuggestionItemsOwnParams) {
+export default function useCoordinatorSuggestionItemsOwn({ skip, take, id }: useCoordinatorSuggestionItemsOwnParams, refreshFlag: number) {
   const [state, setState] = useState<{coordinatorSuggestionItems: CoordinatorSuggestionItem[], count: number}>({
     count: 0,
     coordinatorSuggestionItems: []
@@ -33,7 +33,7 @@ export default function useCoordinatorSuggestionItemsOwn({ skip, take, id }: use
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

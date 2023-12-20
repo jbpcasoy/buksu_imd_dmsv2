@@ -7,7 +7,7 @@ export interface useChairpersonSuggestionItemsOwnParams {
   take: number;
   id?: string
 }
-export default function useChairpersonSuggestionItemsOwn({ skip, take, id }: useChairpersonSuggestionItemsOwnParams) {
+export default function useChairpersonSuggestionItemsOwn({ skip, take, id }: useChairpersonSuggestionItemsOwnParams, refreshFlag?: number) {
   const [state, setState] = useState<{chairpersonSuggestionItems: ChairpersonSuggestionItem[], count: number}>({
     count: 0,
     chairpersonSuggestionItems: []
@@ -33,7 +33,7 @@ export default function useChairpersonSuggestionItemsOwn({ skip, take, id }: use
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

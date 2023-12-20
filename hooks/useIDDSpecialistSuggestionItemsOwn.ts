@@ -11,7 +11,7 @@ export default function useIDDSpecialistSuggestionItemsOwn({
   skip,
   take,
   id,
-}: useIDDSpecialistSuggestionItemsOwnParams) {
+}: useIDDSpecialistSuggestionItemsOwnParams, refreshFlag?: number) {
   const [state, setState] = useState<{
     iDDSpecialistSuggestionItems: IDDSpecialistSuggestionItem[];
     count: number;
@@ -40,7 +40,7 @@ export default function useIDDSpecialistSuggestionItemsOwn({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

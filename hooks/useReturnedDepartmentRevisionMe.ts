@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useReturnedDepartmentRevisionMeParams {
   id: string;
 }
-export default function useReturnedDepartmentRevisionMe({ id }: useReturnedDepartmentRevisionMeParams) {
+export default function useReturnedDepartmentRevisionMe({ id }: useReturnedDepartmentRevisionMeParams, refreshFlag?: number) {
   const [state, setState] = useState<ReturnedDepartmentRevision | null>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function useReturnedDepartmentRevisionMe({ id }: useReturnedDepar
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

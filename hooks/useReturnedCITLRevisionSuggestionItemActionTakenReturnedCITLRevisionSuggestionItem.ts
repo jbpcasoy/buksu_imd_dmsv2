@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItemParams {
   id: string;
 }
-export default function useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem({ id }: useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItemParams) {
+export default function useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem({ id }: useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItemParams, refreshFlag?: number) {
   const [state, setState] = useState<ReturnedCITLRevisionSuggestionItemActionTaken | null>();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function useReturnedCITLRevisionSuggestionItemActionTakenReturned
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

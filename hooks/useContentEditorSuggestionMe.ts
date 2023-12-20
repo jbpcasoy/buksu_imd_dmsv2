@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useContentEditorSuggestionMeParams {
   id: string;
 }
-export default function useContentEditorSuggestionMe({ id }: useContentEditorSuggestionMeParams) {
+export default function useContentEditorSuggestionMe({ id }: useContentEditorSuggestionMeParams, refreshFlag?: number) {
   const [state, setState] = useState<ContentEditorSuggestion | null>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function useContentEditorSuggestionMe({ id }: useContentEditorSug
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

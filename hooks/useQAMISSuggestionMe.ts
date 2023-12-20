@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useQAMISSuggestionMeParams {
   id: string;
 }
-export default function useQAMISSuggestionMe({ id }: useQAMISSuggestionMeParams) {
+export default function useQAMISSuggestionMe({ id }: useQAMISSuggestionMeParams, refreshFlag?: number) {
   const [state, setState] = useState<QAMISSuggestion | null>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function useQAMISSuggestionMe({ id }: useQAMISSuggestionMeParams)
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }
