@@ -136,15 +136,15 @@ function Item({
           {returnedIMERCCITLRevisionSuggestionItem.pageNumber}
         </p>
         <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Suggestion</p>
-        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap'>
           {returnedIMERCCITLRevisionSuggestionItem.suggestion}
         </p>
         <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Remarks</p>
-        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap'>
           {returnedIMERCCITLRevisionSuggestionItem.remarks}
         </p>
         <p className='px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1'>Action Taken</p>
-        <p className='px-5 flex-1 col-span-2 sm:col-span-4'>
+        <p className='px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap'>
           {returnedIMERCCITLRevisionSuggestionItemActionTaken?.value ?? (
             <>
               {editable && (
