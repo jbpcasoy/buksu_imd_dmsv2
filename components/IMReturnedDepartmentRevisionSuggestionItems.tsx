@@ -1,6 +1,6 @@
 import useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem from "@/hooks/useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem";
 import useReturnedDepartmentRevisionSuggestionItemsIM from "@/hooks/useReturnedDepartmentRevisionSuggestionItemsIM";
-import { ReturnedDepartmentRevisionSuggestionItem } from "@prisma/client";
+import { ReturnedDepartmentRevision, ReturnedDepartmentRevisionSuggestionItem, SubmittedReturnedDepartmentRevision } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
@@ -16,6 +16,7 @@ import useCoordinator from "@/hooks/useCoordinator";
 import useFaculty from "@/hooks/useFaculty";
 import useUser from "@/hooks/useUser";
 import useRefresh from "@/hooks/useRefresh";
+import { useSession } from "next-auth/react";
 
 export interface IMReturnedDepartmentRevisionSuggestionItemsProps {
   id: string;
@@ -31,26 +32,13 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
     take: 999,
     id,
   });
-
+  const {data: session} = useSession();
   const returnedDepartmentRevisionSuggestionItems =
     useReturnedDepartmentRevisionSuggestionItemsIM(state);
-
   const submittedReturnedDepartmentRevision =
     useSubmittedReturnedDepartmentRevisionIM({
       id,
     });
-  const returnedDepartmentRevision = useReturnedDepartmentRevision({
-    id: submittedReturnedDepartmentRevision?.returnedDepartmentRevisionId,
-  });
-  const coordinator = useCoordinator({
-    id: returnedDepartmentRevision?.coordinatorId,
-  });
-  const faculty = useFaculty({
-    id: coordinator?.facultyId,
-  });
-  const user = useUser({
-    id: faculty?.userId,
-  });
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -60,22 +48,8 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
     <div className='border border-palette_orange rounded text-sm'>
       <div className='p-2 bg-palette_grey bg-opacity-10'>
         <p className='text-left font-bold'>RETURNED DEPARTMENT REVISION</p>
-        {submittedReturnedDepartmentRevision && (
-          <div className='flex flex-row items-center space-x-2'>
-            <img
-              src={user?.image ?? ""}
-              alt='User profile picture'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <div className='flex flex-col justify-between'>
-              <p>{user?.name}</p>
-              <p className='text-xs'>
-                {DateTime.fromJSDate(
-                  new Date(submittedReturnedDepartmentRevision?.updatedAt ?? "")
-                ).toRelative()}
-              </p>
-            </div>
-          </div>
+        {submittedReturnedDepartmentRevision && session?.user?.isAdmin && (
+          <UserInformation submittedReturnedDepartmentRevision={submittedReturnedDepartmentRevision} />
         )}
       </div>
       <hr />
@@ -94,6 +68,39 @@ export default function IMReturnedDepartmentRevisionSuggestionItems({
       )}
     </div>
   );
+}
+
+interface UserInformationProps {
+  submittedReturnedDepartmentRevision: SubmittedReturnedDepartmentRevision;
+}
+function UserInformation({submittedReturnedDepartmentRevision}: UserInformationProps) {
+  const returnedDepartmentRevision = useReturnedDepartmentRevision({
+    id: submittedReturnedDepartmentRevision?.returnedDepartmentRevisionId,
+  });
+  const coordinator = useCoordinator({
+    id: returnedDepartmentRevision?.coordinatorId,
+  });
+  const faculty = useFaculty({
+    id: coordinator?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedReturnedDepartmentRevision?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
+    </div>
+  </div>
 }
 
 function Item({

@@ -6,7 +6,7 @@ import useChairpersonSuggestionItemsIM from "@/hooks/useChairpersonSuggestionIte
 import useFaculty from "@/hooks/useFaculty";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import useUser from "@/hooks/useUser";
-import { ChairpersonSuggestionItem } from "@prisma/client";
+import { ChairpersonSuggestionItem, SubmittedChairpersonSuggestion, User } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
@@ -16,6 +16,7 @@ import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
 import useRefresh from "@/hooks/useRefresh";
+import { useSession } from "next-auth/react";
 
 export interface IMChairpersonSuggestionItemsProps {
   id: string;
@@ -36,21 +37,7 @@ export default function IMChairpersonSuggestionItems({
   const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
     id,
   });
-  const chairpersonSuggestion = useChairpersonSuggestion({
-    id: submittedChairpersonSuggestion?.chairpersonSuggestionId,
-  });
-  const chairpersonReview = useChairpersonReview({
-    id: chairpersonSuggestion?.chairpersonReviewId,
-  });
-  const chairperson = useChairperson({
-    id: chairpersonReview?.chairpersonId,
-  });
-  const faculty = useFaculty({
-    id: chairperson?.facultyId,
-  });
-  const user = useUser({
-    id: faculty?.userId,
-  });
+  const {data: session} = useSession();
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -60,22 +47,8 @@ export default function IMChairpersonSuggestionItems({
     <div className='border border-palette_orange rounded text-sm'>
       <div className='p-2 bg-palette_grey bg-opacity-10'>
         <p className='text-left font-bold'>CHAIRPERSON SUGGESTIONS</p>
-        {submittedChairpersonSuggestion && (
-          <div className='flex flex-row items-center space-x-2'>
-            <img
-              src={user?.image ?? ""}
-              alt='User profile picture'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <div className='flex flex-col justify-between'>
-              <p>{user?.name}</p>
-              <p className='text-xs'>
-                {DateTime.fromJSDate(
-                  new Date(submittedChairpersonSuggestion?.updatedAt ?? "")
-                ).toRelative()}
-              </p>
-            </div>
-          </div>
+        {submittedChairpersonSuggestion && session?.user?.isAdmin && (
+          <UserInformation submittedChairpersonSuggestion={submittedChairpersonSuggestion} />
         )}
       </div>
       <hr />
@@ -92,6 +65,42 @@ export default function IMChairpersonSuggestionItems({
       )}
     </div>
   );
+}
+
+interface UserInformationProps {
+  submittedChairpersonSuggestion: SubmittedChairpersonSuggestion;
+}
+function UserInformation({submittedChairpersonSuggestion}: UserInformationProps) {
+  const chairpersonSuggestion = useChairpersonSuggestion({
+    id: submittedChairpersonSuggestion?.chairpersonSuggestionId,
+  });
+  const chairpersonReview = useChairpersonReview({
+    id: chairpersonSuggestion?.chairpersonReviewId,
+  });
+  const chairperson = useChairperson({
+    id: chairpersonReview?.chairpersonId,
+  });
+  const faculty = useFaculty({
+    id: chairperson?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedChairpersonSuggestion?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
+    </div>
+  </div>
 }
 
 function Item({

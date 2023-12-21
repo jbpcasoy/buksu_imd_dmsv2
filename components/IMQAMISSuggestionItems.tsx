@@ -8,8 +8,9 @@ import useQAMISSuggestion from "@/hooks/useQAMISSuggestion";
 import useQAMISSuggestionItemsIM from "@/hooks/useQAMISSuggestionItemsIM";
 import useSubmittedQAMISSuggestionIM from "@/hooks/useSubmittedQAMISSuggestionIM";
 import useUser from "@/hooks/useUser";
-import { QAMISSuggestionItem } from "@prisma/client";
+import { QAMISSuggestionItem, SubmittedQAMISSuggestion } from "@prisma/client";
 import { DateTime } from "luxon";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -32,11 +33,39 @@ export default function IMQAMISSuggestionItems({
     setState((prev) => ({ ...prev, id }));
   }, [id]);
 
+  const {data: session} = useSession();
   const qAMISSuggestionItems = useQAMISSuggestionItemsIM(state);
-
   const submittedQAMISSuggestion = useSubmittedQAMISSuggestionIM({
     id,
   });
+
+  return (
+    <div className='border border-palette_orange rounded text-sm'>
+      <div className='p-2 bg-palette_grey bg-opacity-10'>
+        <p className='text-left font-bold'>QAMIS SUGGESTIONS</p>
+        {submittedQAMISSuggestion && session?.user?.isAdmin && (
+          <UserInformation submittedQAMISSuggestion={submittedQAMISSuggestion}/>
+        )}
+      </div>
+      <hr />
+      {qAMISSuggestionItems.qAMISSuggestionItems.map((qAMISSuggestionItem) => {
+        return (
+          <Item
+            qAMISSuggestionItem={qAMISSuggestionItem}
+            key={qAMISSuggestionItem.id}
+            editable={editable}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+interface UserInformationProps {
+  submittedQAMISSuggestion: SubmittedQAMISSuggestion;
+}
+
+function UserInformation({submittedQAMISSuggestion}: UserInformationProps) {
   const qAMISSuggestion = useQAMISSuggestion({
     id: submittedQAMISSuggestion?.qAMISSuggestionId,
   });
@@ -62,40 +91,21 @@ export default function IMQAMISSuggestionItems({
     id: faculty?.userId,
   });
 
-  return (
-    <div className='border border-palette_orange rounded text-sm'>
-      <div className='p-2 bg-palette_grey bg-opacity-10'>
-        <p className='text-left font-bold'>QAMIS SUGGESTIONS</p>
-        {submittedQAMISSuggestion && (
-          <div className='flex flex-row items-center space-x-2'>
-            <img
-              src={user?.image ?? ""}
-              alt='User profile picture'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <div className='flex flex-col justify-between'>
-              <p>{user?.name}</p>
-              <p className='text-xs'>
-                {DateTime.fromJSDate(
-                  new Date(submittedQAMISSuggestion?.updatedAt ?? "")
-                ).toRelative()}
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-      <hr />
-      {qAMISSuggestionItems.qAMISSuggestionItems.map((qAMISSuggestionItem) => {
-        return (
-          <Item
-            qAMISSuggestionItem={qAMISSuggestionItem}
-            key={qAMISSuggestionItem.id}
-            editable={editable}
-          />
-        );
-      })}
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedQAMISSuggestion?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
     </div>
-  );
+  </div>
 }
 
 function Item({

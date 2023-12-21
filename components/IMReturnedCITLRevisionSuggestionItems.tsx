@@ -1,6 +1,6 @@
 import useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem from "@/hooks/useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem";
 import useReturnedCITLRevisionSuggestionItemsIM from "@/hooks/useReturnedCITLRevisionSuggestionItemsIM";
-import { ReturnedCITLRevisionSuggestionItem } from "@prisma/client";
+import { ReturnedCITLRevisionSuggestionItem, SubmittedReturnedCITLRevision } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
@@ -16,6 +16,7 @@ import useIDDCoordinator from "@/hooks/useIDDCoordinator";
 import useUser from "@/hooks/useUser";
 import useSubmittedReturnedCITLRevisionIM from "@/hooks/useSubmittedReturnedCITLRevisionIM";
 import useRefresh from "@/hooks/useRefresh";
+import { useSession } from "next-auth/react";
 
 export interface IMReturnedCITLRevisionSuggestionItemsProps {
   id: string;
@@ -32,19 +33,11 @@ export default function IMReturnedCITLRevisionSuggestionItems({
     id,
   });
 
+  const {data: session} = useSession();
   const returnedCITLRevisionSuggestionItems =
     useReturnedCITLRevisionSuggestionItemsIM(state);
   const submittedReturnedCITLRevision = useSubmittedReturnedCITLRevisionIM({
     id,
-  });
-  const returnedCITLRevision = useReturnedCITLRevision({
-    id: submittedReturnedCITLRevision?.returnedCITLRevisionId,
-  });
-  const iDDCoordinator = useIDDCoordinator({
-    id: returnedCITLRevision?.iDDCoordinatorId,
-  });
-  const user = useUser({
-    id: iDDCoordinator?.userId,
   });
 
   useEffect(() => {
@@ -55,22 +48,8 @@ export default function IMReturnedCITLRevisionSuggestionItems({
     <div className='border border-palette_orange rounded text-sm'>
       <div className='p-2 bg-palette_grey bg-opacity-10'>
         <p className='text-left font-bold'>RETURNED CITL REVISION</p>
-        {submittedReturnedCITLRevision && (
-          <div className='flex flex-row items-center space-x-2'>
-            <img
-              src={user?.image ?? ""}
-              alt='User profile picture'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <div className='flex flex-col justify-between'>
-              <p>{user?.name}</p>
-              <p className='text-xs'>
-                {DateTime.fromJSDate(
-                  new Date(submittedReturnedCITLRevision?.updatedAt ?? "")
-                ).toRelative()}
-              </p>
-            </div>
-          </div>
+        {submittedReturnedCITLRevision && session?.user?.isAdmin && (
+          <UserInformation submittedReturnedCITLRevision={submittedReturnedCITLRevision} />
         )}
       </div>
       <hr />
@@ -89,6 +68,37 @@ export default function IMReturnedCITLRevisionSuggestionItems({
       )}
     </div>
   );
+}
+
+interface UserInformationProps {
+  submittedReturnedCITLRevision: SubmittedReturnedCITLRevision
+}
+function UserInformation({submittedReturnedCITLRevision}: UserInformationProps) {
+  const returnedCITLRevision = useReturnedCITLRevision({
+    id: submittedReturnedCITLRevision?.returnedCITLRevisionId,
+  });
+  const iDDCoordinator = useIDDCoordinator({
+    id: returnedCITLRevision?.iDDCoordinatorId,
+  });
+  const user = useUser({
+    id: iDDCoordinator?.userId,
+  });
+
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedReturnedCITLRevision?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
+    </div>
+  </div>
 }
 
 function Item({

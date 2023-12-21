@@ -1,6 +1,6 @@
 import useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem from "@/hooks/useIDDCoordinatorSuggestionItemActionTakenIDDCoordinatorSuggestionItem";
 import useIDDCoordinatorSuggestionItemsIM from "@/hooks/useIDDCoordinatorSuggestionItemsIM";
-import { IDDCoordinatorSuggestionItem } from "@prisma/client";
+import { IDDCoordinatorSuggestionItem, SubmittedIDDCoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -15,6 +15,7 @@ import useFaculty from "@/hooks/useFaculty";
 import useUser from "@/hooks/useUser";
 import { DateTime } from "luxon";
 import useRefresh from "@/hooks/useRefresh";
+import { useSession } from "next-auth/react";
 
 export interface IMIDDCoordinatorSuggestionItemsProps {
   id: string;
@@ -31,21 +32,13 @@ export default function IMIDDCoordinatorSuggestionItems({
     id,
   });
 
+  const {data: session} = useSession();
   const iDDCoordinatorSuggestionItems =
     useIDDCoordinatorSuggestionItemsIM(state);
   const submittedIDDCoordinatorSuggestion =
     useSubmittedIDDCoordinatorSuggestionIM({
       id,
     });
-  const iDDCoordinatorSuggestion = useIDDCoordinatorSuggestion({
-    id: submittedIDDCoordinatorSuggestion?.iDDCoordinatorSuggestionId,
-  });
-  const iDDCoordinator = useIDDCoordinator({
-    id: iDDCoordinatorSuggestion?.iDDCoordinatorId,
-  });
-  const user = useUser({
-    id: iDDCoordinator?.userId,
-  });
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -55,22 +48,10 @@ export default function IMIDDCoordinatorSuggestionItems({
     <div className='border border-palette_orange rounded text-sm'>
       <div className='p-2 bg-palette_grey bg-opacity-10'>
         <p className='text-left font-bold'>IDD COORDINATOR SUGGESTIONS</p>
-        {submittedIDDCoordinatorSuggestion && (
-          <div className='flex flex-row items-center space-x-2'>
-            <img
-              src={user?.image ?? ""}
-              alt='User profile picture'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <div className='flex flex-col justify-between'>
-              <p>{user?.name}</p>
-              <p className='text-xs'>
-                {DateTime.fromJSDate(
-                  new Date(submittedIDDCoordinatorSuggestion?.updatedAt ?? "")
-                ).toRelative()}
-              </p>
-            </div>
-          </div>
+        {submittedIDDCoordinatorSuggestion && session?.user?.isAdmin && (
+          <UserInformation
+            submittedIDDCoordinatorSuggestion={submittedIDDCoordinatorSuggestion}
+          />
         )}
       </div>
       <hr />
@@ -87,6 +68,37 @@ export default function IMIDDCoordinatorSuggestionItems({
       )}
     </div>
   );
+}
+
+interface UserInformationProps {
+  submittedIDDCoordinatorSuggestion: SubmittedIDDCoordinatorSuggestion;
+}
+function UserInformation({submittedIDDCoordinatorSuggestion}: UserInformationProps) {
+  const iDDCoordinatorSuggestion = useIDDCoordinatorSuggestion({
+    id: submittedIDDCoordinatorSuggestion?.iDDCoordinatorSuggestionId,
+  });
+  const iDDCoordinator = useIDDCoordinator({
+    id: iDDCoordinatorSuggestion?.iDDCoordinatorId,
+  });
+  const user = useUser({
+    id: iDDCoordinator?.userId,
+  });
+
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedIDDCoordinatorSuggestion?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
+    </div>
+  </div>
 }
 
 function Item({

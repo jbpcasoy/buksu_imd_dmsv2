@@ -1,6 +1,6 @@
 import useContentSpecialistSuggestionItemActionTakenContentSpecialistSuggestionItem from "@/hooks/useContentSpecialistSuggestionItemActionTakenContentSpecialistSuggestionItem";
 import useContentSpecialistSuggestionItemsIM from "@/hooks/useContentSpecialistSuggestionItemsIM";
-import { ContentSpecialistSuggestionItem } from "@prisma/client";
+import { ContentSpecialistSuggestionItem, SubmittedContentSpecialistSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
@@ -16,6 +16,7 @@ import useContentSpecialist from "@/hooks/useContentSpecialist";
 import useFaculty from "@/hooks/useFaculty";
 import useUser from "@/hooks/useUser";
 import useRefresh from "@/hooks/useRefresh";
+import { useSession } from "next-auth/react";
 
 export interface IMContentSpecialistSuggestionItemsProps {
   id: string;
@@ -31,7 +32,7 @@ export default function IMContentSpecialistSuggestionItems({
     take: 999,
     id,
   });
-
+  const {data: session} = useSession();
   const contentSpecialistSuggestionItems =
     useContentSpecialistSuggestionItemsIM(state);
 
@@ -39,21 +40,6 @@ export default function IMContentSpecialistSuggestionItems({
     useSubmittedContentSpecialistSuggestionIM({
       id,
     });
-  const contentSpecialistSuggestion = useContentSpecialistSuggestion({
-    id: submittedContentSpecialistSuggestion?.contentSpecialistSuggestionId,
-  });
-  const contentSpecialistReview = useContentSpecialistReview({
-    id: contentSpecialistSuggestion?.contentSpecialistReviewId,
-  });
-  const contentSpecialist = useContentSpecialist({
-    id: contentSpecialistReview?.contentSpecialistId,
-  });
-  const faculty = useFaculty({
-    id: contentSpecialist?.facultyId,
-  });
-  const user = useUser({
-    id: faculty?.userId,
-  });
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -63,21 +49,11 @@ export default function IMContentSpecialistSuggestionItems({
     <div className='border border-palette_orange rounded text-sm'>
       <div className='p-2 bg-palette_grey bg-opacity-10'>
         <p className='text-left font-bold'>CONTENT SPECIALIST SUGGESTIONS</p>
-        {submittedContentSpecialistSuggestion && <div className='flex flex-row items-center space-x-2'>
-          <img
-            src={user?.image ?? ""}
-            alt='User profile picture'
-            className='h-8 w-8 rounded-full object-cover'
+        {submittedContentSpecialistSuggestion && session?.user?.isAdmin && 
+          <UserInformation 
+            submittedContentSpecialistSuggestion={submittedContentSpecialistSuggestion}
           />
-          <div className='flex flex-col justify-between'>
-            <p>{user?.name}</p>
-            <p className='text-xs'>
-              {DateTime.fromJSDate(
-                new Date(submittedContentSpecialistSuggestion?.updatedAt ?? "")
-              ).toRelative()}
-            </p>
-          </div>
-        </div>}
+        }
       </div>
       <hr />
       {contentSpecialistSuggestionItems.contentSpecialistSuggestionItems.map(
@@ -93,6 +69,42 @@ export default function IMContentSpecialistSuggestionItems({
       )}
     </div>
   );
+}
+
+interface UserInformationProps {
+  submittedContentSpecialistSuggestion: SubmittedContentSpecialistSuggestion;
+}
+function UserInformation({submittedContentSpecialistSuggestion}: UserInformationProps) {
+  const contentSpecialistSuggestion = useContentSpecialistSuggestion({
+    id: submittedContentSpecialistSuggestion?.contentSpecialistSuggestionId,
+  });
+  const contentSpecialistReview = useContentSpecialistReview({
+    id: contentSpecialistSuggestion?.contentSpecialistReviewId,
+  });
+  const contentSpecialist = useContentSpecialist({
+    id: contentSpecialistReview?.contentSpecialistId,
+  });
+  const faculty = useFaculty({
+    id: contentSpecialist?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedContentSpecialistSuggestion?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
+    </div>
+  </div>
 }
 
 function Item({

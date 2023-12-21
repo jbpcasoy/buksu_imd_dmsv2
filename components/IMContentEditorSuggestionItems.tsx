@@ -1,6 +1,6 @@
 import useContentEditorSuggestionItemActionTakenContentEditorSuggestionItem from "@/hooks/useContentEditorSuggestionItemActionTakenContentEditorSuggestionItem";
 import useContentEditorSuggestionItemsIM from "@/hooks/useContentEditorSuggestionItemsIM";
-import { ContentEditorSuggestionItem } from "@prisma/client";
+import { ContentEditorSuggestionItem, SubmittedContentEditorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -15,6 +15,7 @@ import useCITLDirector from "@/hooks/useCITLDirector";
 import useUser from "@/hooks/useUser";
 import { DateTime } from "luxon";
 import useRefresh from "@/hooks/useRefresh";
+import { useSession } from "next-auth/react";
 
 export interface IMContentEditorSuggestionItemsProps {
   id: string;
@@ -30,24 +31,12 @@ export default function IMContentEditorSuggestionItems({
     take: 999,
     id,
   });
-
+  const {data: session} = useSession();
   const contentEditorSuggestionItems = useContentEditorSuggestionItemsIM(state);
   const submittedContentEditorSuggestion =
     useSubmittedContentEditorSuggestionIM({
       id,
     });
-  const contentEditorSuggestion = useContentEditorSuggestion({
-    id: submittedContentEditorSuggestion?.contentEditorSuggestionId,
-  });
-  const contentEditorReview = useContentEditorReview({
-    id: contentEditorSuggestion?.contentEditorReviewId,
-  });
-  const cITLDirector = useCITLDirector({
-    id: contentEditorReview?.cITLDirectorId,
-  });
-  const user = useUser({
-    id: cITLDirector?.userId,
-  });
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -56,22 +45,8 @@ export default function IMContentEditorSuggestionItems({
     <div className='border border-palette_orange rounded text-sm'>
       <div className='p-2 bg-palette_grey bg-opacity-10'>
         <p className='text-left font-bold'>CONTENT EDITOR SUGGESTIONS</p>
-        {submittedContentEditorSuggestion && (
-          <div className='flex flex-row items-center space-x-2'>
-            <img
-              src={user?.image ?? ""}
-              alt='User profile picture'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <div className='flex flex-col justify-between'>
-              <p>{user?.name}</p>
-              <p className='text-xs'>
-                {DateTime.fromJSDate(
-                  new Date(submittedContentEditorSuggestion?.updatedAt ?? "")
-                ).toRelative()}
-              </p>
-            </div>
-          </div>
+        {submittedContentEditorSuggestion && session?.user?.isAdmin && (
+          <UserInformation submittedContentEditorSuggestion={submittedContentEditorSuggestion}/>
         )}
       </div>
       <hr />
@@ -88,6 +63,38 @@ export default function IMContentEditorSuggestionItems({
       )}
     </div>
   );
+}
+interface UserInformationProps {
+  submittedContentEditorSuggestion: SubmittedContentEditorSuggestion;
+}
+function UserInformation({submittedContentEditorSuggestion}: UserInformationProps) {
+  const contentEditorSuggestion = useContentEditorSuggestion({
+    id: submittedContentEditorSuggestion?.contentEditorSuggestionId,
+  });
+  const contentEditorReview = useContentEditorReview({
+    id: contentEditorSuggestion?.contentEditorReviewId,
+  });
+  const cITLDirector = useCITLDirector({
+    id: contentEditorReview?.cITLDirectorId,
+  });
+  const user = useUser({
+    id: cITLDirector?.userId,
+  });
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedContentEditorSuggestion?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
+    </div>
+  </div>
 }
 
 function Item({

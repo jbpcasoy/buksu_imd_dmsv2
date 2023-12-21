@@ -6,6 +6,7 @@ import IMIDDCoordinatorSuggestionItems from "@/components/IMIDDCoordinatorSugges
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
+import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
 import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
 import Loading from "@/components/Loading";
@@ -48,6 +49,7 @@ export default function AllSuggestionsPage() {
         />
         <p className='text-center font-bold text-sm'>CITL REVIEW</p>
         <IMIDDCoordinatorSuggestionItems id={iMId as string} editable={false} />
+        <IMReturnedCITLRevisionSuggestionItems id={iMId as string} editable={false} />
         <p className='text-center font-bold'>IMERC</p>
         <IMQAMISSuggestionItems id={iMId as string} editable={false} />
         <IMIDDSpecialistSuggestionItems id={iMId as string} editable={false} />

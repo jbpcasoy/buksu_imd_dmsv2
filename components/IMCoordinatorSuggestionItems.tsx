@@ -1,6 +1,6 @@
 import useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem from "@/hooks/useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem";
 import useCoordinatorSuggestionItemsIM from "@/hooks/useCoordinatorSuggestionItemsIM";
-import { CoordinatorSuggestionItem } from "@prisma/client";
+import { CoordinatorSuggestionItem, SubmittedCoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -16,6 +16,7 @@ import useFaculty from "@/hooks/useFaculty";
 import useUser from "@/hooks/useUser";
 import { DateTime } from "luxon";
 import useRefresh from "@/hooks/useRefresh";
+import { useSession } from "next-auth/react";
 
 export interface IMCoordinatorSuggestionItemsProps {
   id: string;
@@ -33,25 +34,10 @@ export default function IMCoordinatorSuggestionItems({
   });
 
   const coordinatorSuggestionItems = useCoordinatorSuggestionItemsIM(state);
-
   const submittedCoordinatorSuggestion = useSubmittedCoordinatorSuggestionIM({
     id,
   });
-  const coordinatorSuggestion = useCoordinatorSuggestion({
-    id: submittedCoordinatorSuggestion?.coordinatorSuggestionId,
-  });
-  const coordinatorReview = useCoordinatorReview({
-    id: coordinatorSuggestion?.coordinatorReviewId,
-  });
-  const coordinator = useCoordinator({
-    id: coordinatorReview?.coordinatorId,
-  });
-  const faculty = useFaculty({
-    id: coordinator?.facultyId,
-  });
-  const user = useUser({
-    id: faculty?.userId,
-  });
+  const {data: session} = useSession();
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -61,22 +47,8 @@ export default function IMCoordinatorSuggestionItems({
     <div className='border border-palette_orange rounded text-sm'>
       <div className='p-2 bg-palette_grey bg-opacity-10'>
         <p className='text-left font-bold'>COORDINATOR SUGGESTIONS</p>
-        {submittedCoordinatorSuggestion && (
-          <div className='flex flex-row items-center space-x-2'>
-            <img
-              src={user?.image ?? ""}
-              alt='User profile picture'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <div className='flex flex-col justify-between'>
-              <p>{user?.name}</p>
-              <p className='text-xs'>
-                {DateTime.fromJSDate(
-                  new Date(submittedCoordinatorSuggestion?.updatedAt ?? "")
-                ).toRelative()}
-              </p>
-            </div>
-          </div>
+        {submittedCoordinatorSuggestion && session?.user?.isAdmin && (
+          <UserInformation submittedCoordinatorSuggestion={submittedCoordinatorSuggestion} />
         )}
       </div>
       <hr />
@@ -93,6 +65,42 @@ export default function IMCoordinatorSuggestionItems({
       )}
     </div>
   );
+}
+
+interface UserInformationProps {
+  submittedCoordinatorSuggestion: SubmittedCoordinatorSuggestion;
+}
+function UserInformation({submittedCoordinatorSuggestion}: UserInformationProps) {
+  const coordinatorSuggestion = useCoordinatorSuggestion({
+    id: submittedCoordinatorSuggestion?.coordinatorSuggestionId,
+  });
+  const coordinatorReview = useCoordinatorReview({
+    id: coordinatorSuggestion?.coordinatorReviewId,
+  });
+  const coordinator = useCoordinator({
+    id: coordinatorReview?.coordinatorId,
+  });
+  const faculty = useFaculty({
+    id: coordinator?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedCoordinatorSuggestion?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
+    </div>
+  </div>
 }
 
 function Item({

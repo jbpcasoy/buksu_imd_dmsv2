@@ -5,7 +5,7 @@ import usePeerSuggestionItemActionTakenPeerSuggestionItem from "@/hooks/usePeerS
 import usePeerSuggestionItemsIM from "@/hooks/usePeerSuggestionItemsIM";
 import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
 import useUser from "@/hooks/useUser";
-import { PeerSuggestionItem } from "@prisma/client";
+import { PeerSuggestionItem, SubmittedPeerSuggestion } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
 import useRefresh from "@/hooks/useRefresh";
+import { useSession } from "next-auth/react";
 
 export interface IMPeerSuggestionItemsProps {
   id: string;
@@ -32,18 +33,7 @@ export default function IMPeerSuggestionItems({
   });
   const peerSuggestionItems = usePeerSuggestionItemsIM(state);
   const submittedPeerSuggestion = useSubmittedPeerSuggestionIM({ id });
-  const peerSuggestion = usePeerSuggestion({
-    id: submittedPeerSuggestion?.peerSuggestionId,
-  });
-  const peerReview = usePeerReview({
-    id: peerSuggestion?.peerReviewId,
-  });
-  const faculty = useFaculty({
-    id: peerReview?.facultyId,
-  });
-  const user = useUser({
-    id: faculty?.userId,
-  });
+  const {data: session} = useSession();
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -53,22 +43,8 @@ export default function IMPeerSuggestionItems({
     <div className='border border-palette_orange rounded text-sm'>
       <div className='p-2 bg-palette_grey bg-opacity-10'>
         <p className='text-left font-bold'>PEER SUGGESTIONS</p>
-        {submittedPeerSuggestion && (
-          <div className='flex flex-row items-center space-x-2'>
-            <img
-              src={user?.image ?? ""}
-              alt='User profile picture'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <div className='flex flex-col justify-between'>
-              <p>{user?.name}</p>
-              <p className='text-xs'>
-                {DateTime.fromJSDate(
-                  new Date(submittedPeerSuggestion?.updatedAt ?? "")
-                ).toRelative()}
-              </p>
-            </div>
-          </div>
+        {submittedPeerSuggestion && session?.user?.isAdmin && (
+          <UserInformation submittedPeerSuggestion={submittedPeerSuggestion} />
         )}
       </div>
       <hr />
@@ -83,6 +59,39 @@ export default function IMPeerSuggestionItems({
       })}
     </div>
   );
+}
+
+interface UserInformationProps {
+  submittedPeerSuggestion: SubmittedPeerSuggestion
+}
+function UserInformation({submittedPeerSuggestion}: UserInformationProps) {
+  const peerSuggestion = usePeerSuggestion({
+    id: submittedPeerSuggestion?.peerSuggestionId,
+  });
+  const peerReview = usePeerReview({
+    id: peerSuggestion?.peerReviewId,
+  });
+  const faculty = useFaculty({
+    id: peerReview?.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedPeerSuggestion?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
+    </div>
+  </div>
 }
 
 function Item({

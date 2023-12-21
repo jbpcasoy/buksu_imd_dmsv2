@@ -1,6 +1,6 @@
 import useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem from "@/hooks/useReturnedIMERCCITLRevisionSuggestionItemActionTakenReturnedIMERCCITLRevisionSuggestionItem";
 import useReturnedIMERCCITLRevisionSuggestionItemsIM from "@/hooks/useReturnedIMERCCITLRevisionSuggestionItemsIM";
-import { ReturnedIMERCCITLRevisionSuggestionItem } from "@prisma/client";
+import { ReturnedIMERCCITLRevisionSuggestionItem, SubmittedReturnedIMERCCITLRevision } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
@@ -16,6 +16,7 @@ import useFaculty from "@/hooks/useFaculty";
 import useUser from "@/hooks/useUser";
 import useSubmittedReturnedIMERCCITLRevisionIM from "@/hooks/useSubmittedReturnedIMERCCITLRevisionIM";
 import useRefresh from "@/hooks/useRefresh";
+import { useSession } from "next-auth/react";
 
 export interface IMReturnedIMERCCITLRevisionSuggestionItemsProps {
   id: string;
@@ -32,22 +33,13 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
     id,
   });
 
+  const {data: session} = useSession();
   const returnedIMERCCITLRevisionSuggestionItems =
     useReturnedIMERCCITLRevisionSuggestionItemsIM(state);
-
   const submittedReturnedIMERCCITLRevision =
     useSubmittedReturnedIMERCCITLRevisionIM({
       id,
     });
-  const returnedIMERCCITLRevision = useReturnedIMERCCITLRevision({
-    id: submittedReturnedIMERCCITLRevision?.returnedIMERCCITLRevisionId,
-  });
-  const iDDCoordinator = useIDDCoordinator({
-    id: returnedIMERCCITLRevision?.iDDCoordinatorId,
-  });
-  const user = useUser({
-    id: iDDCoordinator?.userId,
-  });
 
   useEffect(() => {
     setState((prev) => ({ ...prev, id }));
@@ -57,22 +49,8 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
     <div className='border border-palette_orange rounded text-sm'>
       <div className='p-2 bg-palette_grey bg-opacity-10'>
         <p className='text-left font-bold'>RETURNED IMERC CITL REVISION</p>
-        {submittedReturnedIMERCCITLRevision && (
-          <div className='flex flex-row items-center space-x-2'>
-            <img
-              src={user?.image ?? ""}
-              alt='User profile picture'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <div className='flex flex-col justify-between'>
-              <p>{user?.name}</p>
-              <p className='text-xs'>
-                {DateTime.fromJSDate(
-                  new Date(submittedReturnedIMERCCITLRevision?.updatedAt ?? "")
-                ).toRelative()}
-              </p>
-            </div>
-          </div>
+        {submittedReturnedIMERCCITLRevision && session?.user?.isAdmin && (
+          <UserInformation submittedReturnedIMERCCITLRevision={submittedReturnedIMERCCITLRevision} />
         )}
       </div>
       <hr />
@@ -91,6 +69,36 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
       )}
     </div>
   );
+}
+
+interface UserInformationProps {
+  submittedReturnedIMERCCITLRevision: SubmittedReturnedIMERCCITLRevision;
+}
+function UserInformation({submittedReturnedIMERCCITLRevision}: UserInformationProps) {
+  const returnedIMERCCITLRevision = useReturnedIMERCCITLRevision({
+    id: submittedReturnedIMERCCITLRevision?.returnedIMERCCITLRevisionId,
+  });
+  const iDDCoordinator = useIDDCoordinator({
+    id: returnedIMERCCITLRevision?.iDDCoordinatorId,
+  });
+  const user = useUser({
+    id: iDDCoordinator?.userId,
+  });
+  return <div className='flex flex-row items-center space-x-2'>
+    <img
+      src={user?.image ?? ""}
+      alt='User profile picture'
+      className='h-8 w-8 rounded-full object-cover'
+    />
+    <div className='flex flex-col justify-between'>
+      <p>{user?.name}</p>
+      <p className='text-xs'>
+        {DateTime.fromJSDate(
+          new Date(submittedReturnedIMERCCITLRevision?.updatedAt ?? "")
+        ).toRelative()}
+      </p>
+    </div>
+  </div>
 }
 
 function Item({
