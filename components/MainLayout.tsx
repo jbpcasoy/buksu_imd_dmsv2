@@ -53,13 +53,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <Header onToggleSidebar={setOpenSidebar} />
       <div className='flex-1 flex sm:flex-row flex-col h-full overflow-auto'>
         <div
-          className={`w-full sm:w-56 ${
+          className={`w-56 flex-none ${
             openSidebar ? "block" : "block sm:hidden"
-          } `}
+          }`}
         >
           <Sidebar />
         </div>
-        <div className='flex-1 flex flex-col sm:h-full'>
+        <div className='flex-1 flex flex-col sm:h-full overflow-auto'>
           {announcements?.length > 0 &&
             !router.pathname.startsWith("/im/[id]") && (
               <div className='flex justify-between items-center m-2 rounded py-5 px-2 bg-gradient-to-r from-palette_orange shadow'>

@@ -54,7 +54,7 @@ export default function Sidebar() {
   } = useTabCount();
 
   return (
-    <div className='h-full overflow-auto flex flex-col bg-palette_blue text-white px-1'>
+    <div className='h-full w-full overflow-auto flex flex-col bg-palette_blue text-white px-1'>
       <div className='my-2 flex-1 h-full overflow-auto w-full'>
         {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
           <div>

@@ -17,7 +17,7 @@ export default function CollegeSelector({
   });
   const { colleges, count } = useColleges({
     skip: 0,
-    take: 10,
+    take: 999,
     filter: state,
   });
 
@@ -30,14 +30,14 @@ export default function CollegeSelector({
 
   return (
     <div className="flex flex-col w-full">
-      <input
+      {/* <input
         type='text'
         onChange={onSearch}
         placeholder='Search College'
         disabled={disabled}
         className='rounded-t p-1'
-      />
-      <select {...props} disabled={disabled} className='rounded-b py-1'>
+      /> */}
+      <select {...props} disabled={disabled} className='rounded py-1'>
         <option value=''>Select</option>
         {colleges.map((college) => {
           return (

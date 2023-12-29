@@ -109,49 +109,51 @@ export default function Home() {
           activeChairperson) && (
           <div className='flex-1 flex flex-col h-full'>
             <form noValidate onSubmit={formik.handleSubmit}>
-              <div className='space-y-1 flex flex-col'>
-                <div className='flex space-x-1 w-full'>
-                  <CollegeSelector
-                    {...formik.getFieldProps("collegeId")}
-                    disabled={!(activeCITLDirector || activeIDDCoordinator)}
-                  />
-                  <DepartmentSelector
-                    {...formik.getFieldProps("departmentId")}
-                    collegeId={formik.values.collegeId}
-                    disabled={
-                      !(
-                        activeDean ||
-                        activeCITLDirector ||
-                        activeIDDCoordinator
-                      )
-                    }
-                  />
-                </div>
-                <div className='flex space-x-1 items-end'>
-                  <StatusSelector {...formik.getFieldProps("status")} />
-                  <div className='flex space-x-1'>
-                    <div className='text-sm'>
-                      <label htmlFor='start'>FROM </label>
-                      <br />
-                      <input
-                        type='datetime-local'
-                        id='start'
-                        max={formik.values.end}
-                        {...formik.getFieldProps("start")}
-                        className='rounded w-full py-1'
-                      />
+              <div className="flex flex-col space-y-1">
+                <div className='space-x-1 flex flex'>
+                  <div className='flex flex-col space-y-1 w-full justify-end'>
+                    <CollegeSelector
+                      {...formik.getFieldProps("collegeId")}
+                      disabled={!(activeCITLDirector || activeIDDCoordinator)}
+                    />
+                    <DepartmentSelector
+                      {...formik.getFieldProps("departmentId")}
+                      collegeId={formik.values.collegeId}
+                      disabled={
+                        !(
+                          activeDean ||
+                          activeCITLDirector ||
+                          activeIDDCoordinator
+                        )
+                      }
+                    />
+                  </div>
+                  <div className='flex flex-col space-y-1 items-start'>
+                    <div className='flex space-x-1'>
+                      <div className='text-sm'>
+                        <label htmlFor='start'>FROM </label>
+                        <br />
+                        <input
+                          type='datetime-local'
+                          id='start'
+                          max={formik.values.end}
+                          {...formik.getFieldProps("start")}
+                          className='rounded w-full py-1'
+                        />
+                      </div>
+                      <div className='text-sm'>
+                        <label htmlFor='end'>TO </label>
+                        <br />
+                        <input
+                          type='datetime-local'
+                          id='end'
+                          min={formik.values.start}
+                          {...formik.getFieldProps("end")}
+                          className='rounded w-full py-1'
+                        />
+                      </div>
                     </div>
-                    <div className='text-sm'>
-                      <label htmlFor='end'>TO </label>
-                      <br />
-                      <input
-                        type='datetime-local'
-                        id='end'
-                        min={formik.values.start}
-                        {...formik.getFieldProps("end")}
-                        className='rounded w-full py-1'
-                      />
-                    </div>
+                    <StatusSelector {...formik.getFieldProps("status")} />
                   </div>
                 </div>
                 <div className='space-x-1'>

@@ -346,8 +346,8 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
         value={sortDirection}
         className='py-1 rounded-e bg-inherit focus:border-palette_grey focus:ring-palette_grey'
       >
-        <option value='asc'>Ascending</option>
-        <option value='desc'>Descending</option>
+        <option value='asc'>↑</option>
+        <option value='desc'>↓</option>
       </select>
     </div>
   );
