@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import submittedReturnedDepartmentRevisionAbility from "@/services/ability/submittedReturnedDepartmentRevisionAbility";
+import departmentReviewedAbility from "@/services/ability/departmentReviewedAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
@@ -16,12 +16,12 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
-    981;
   } catch (error) {
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedReturnedDepartmentRevisionAbility({ user });
+
+  const ability = departmentReviewedAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -32,32 +32,33 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const submittedReturnedDepartmentRevision =
-        await prisma.submittedReturnedDepartmentRevision.findFirstOrThrow({
-          where: {
-            AND: [
-              accessibleBy(ability).SubmittedReturnedDepartmentRevision,
-              {
-                ReturnedDepartmentRevision: {
-                  DepartmentRevision: {
-                    IMFile: {
-                      IM: {
-                        id: {
-                          equals: id,
+
+      const departmentReviewed = await prisma.departmentReviewed.findFirstOrThrow({
+        where: {
+          AND: [
+            accessibleBy(ability).DepartmentReviewed,
+            {
+              SubmittedCoordinatorSuggestion: {
+                CoordinatorSuggestion: {
+                  CoordinatorReview: {
+                    DepartmentReview: {
+                      IMFile: {
+                        IM: {
+                          id: {
+                            equals: id,
+                          },
                         },
                       },
                     },
                   },
                 },
               },
-            ],
-          },
-          orderBy: {
-            updatedAt: "desc",
-          },
-        });
+            },
+          ],
+        },
+      });
 
-      return res.json(submittedReturnedDepartmentRevision);
+      return res.json(departmentReviewed);
     } catch (error: any) {
       logger.error(error);
       return res

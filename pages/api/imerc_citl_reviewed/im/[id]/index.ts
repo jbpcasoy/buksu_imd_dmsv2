@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import submittedReturnedDepartmentRevisionAbility from "@/services/ability/submittedReturnedDepartmentRevisionAbility";
+import iMERCCITLReviewedAbility from "@/services/ability/iMERCCITLReviewedAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
@@ -16,12 +16,12 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
-    981;
   } catch (error) {
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedReturnedDepartmentRevisionAbility({ user });
+
+  const ability = iMERCCITLReviewedAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -32,18 +32,27 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const submittedReturnedDepartmentRevision =
-        await prisma.submittedReturnedDepartmentRevision.findFirstOrThrow({
+
+      const iMERCCITLReviewed = await prisma.iMERCCITLReviewed.findFirstOrThrow(
+        {
           where: {
             AND: [
-              accessibleBy(ability).SubmittedReturnedDepartmentRevision,
+              accessibleBy(ability).IMERCCITLReviewed,
               {
-                ReturnedDepartmentRevision: {
-                  DepartmentRevision: {
-                    IMFile: {
-                      IM: {
-                        id: {
-                          equals: id,
+                SubmittedContentEditorSuggestion: {
+                  ContentEditorSuggestion: {
+                    ContentEditorReview: {
+                      QAMISDepartmentEndorsement: {
+                        QAMISDeanEndorsement: {
+                          QAMISRevision: {
+                            IMFile: {
+                              IM: {
+                                id: {
+                                  equals: id,
+                                },
+                              },
+                            },
+                          },
                         },
                       },
                     },
@@ -52,12 +61,10 @@ export default async function handler(
               },
             ],
           },
-          orderBy: {
-            updatedAt: "desc",
-          },
-        });
+        }
+      );
 
-      return res.json(submittedReturnedDepartmentRevision);
+      return res.json(iMERCCITLReviewed);
     } catch (error: any) {
       logger.error(error);
       return res

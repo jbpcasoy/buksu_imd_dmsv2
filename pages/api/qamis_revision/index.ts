@@ -47,10 +47,8 @@ export default async function handler(
         await prisma.submittedQAMISSuggestion.findFirstOrThrow({
           where: {
             QAMISFile: {
-              some: {
-                id: {
-                  equals: qAMISFile.id,
-                },
+              id: {
+                equals: qAMISFile.id,
               },
             },
           },

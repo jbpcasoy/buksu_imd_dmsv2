@@ -52,6 +52,9 @@ export default async function handler(
               },
             ],
           },
+          orderBy: {
+            updatedAt: "desc",
+          }
         });
 
       return res.json(submittedReturnedIMERCCITLRevision);

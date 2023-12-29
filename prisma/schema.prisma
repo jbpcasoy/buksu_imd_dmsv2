@@ -135,17 +135,31 @@ model IMFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM                 IM                  @relation(fields: [iMId], references: [id], onDelete: Cascade)
-    iMId               String
-    filename           String
-    size               Int
-    mimetype           String
-    originalFilename   String
-    DepartmentReview   DepartmentReview?
-    DepartmentRevision DepartmentRevision?
-    CITLRevision       CITLRevision?
-    QAMISRevision      QAMISRevision?
-    IMERCCITLRevision  IMERCCITLRevision?
+    IM                                    IM                                   @relation(fields: [iMId], references: [id], onDelete: Cascade)
+    iMId                                  String
+    filename                              String
+    size                                  Int
+    mimetype                              String
+    originalFilename                      String
+    DepartmentReview                      DepartmentReview?
+    DepartmentRevision                    DepartmentRevision?
+    CITLRevision                          CITLRevision?
+    QAMISRevision                         QAMISRevision?
+    IMERCCITLRevision                     IMERCCITLRevision?
+    DepartmentReviewed                    DepartmentReviewed?                  @relation(fields: [departmentReviewedId], references: [id])
+    departmentReviewedId                  String?                              @unique
+    SubmittedReturnedDepartmentRevision   SubmittedReturnedDepartmentRevision? @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id])
+    submittedReturnedDepartmentRevisionId String?                              @unique
+    SubmittedIDDCoordinatorSuggestion     SubmittedIDDCoordinatorSuggestion?   @relation(fields: [submittedIDDCoordinatorSuggestionId], references: [id])
+    submittedIDDCoordinatorSuggestionId   String?                              @unique
+    SubmittedReturnedCITLRevision         SubmittedReturnedCITLRevision?       @relation(fields: [submittedReturnedCITLRevisionId], references: [id])
+    submittedReturnedCITLRevisionId       String?                              @unique
+    SubmittedQAMISSuggestion              SubmittedQAMISSuggestion?            @relation(fields: [submittedQAMISSuggestionId], references: [id])
+    submittedQAMISSuggestionId            String?                              @unique
+    IMERCCITLReviewed                     IMERCCITLReviewed?                   @relation(fields: [iMERCCITLReviewedId], references: [id])
+    iMERCCITLReviewedId                   String?                              @unique
+    SubmittedReturnedIMERCCITLRevision    SubmittedReturnedIMERCCITLRevision?  @relation(fields: [submittedReturnedIMERCCITLRevisionId], references: [id])
+    submittedReturnedIMERCCITLRevisionId  String?                              @unique
 }
 
 model Chairperson {
@@ -472,6 +486,7 @@ model DepartmentReviewed {
     submittedPeerSuggestionId        String                         @unique
     DepartmentRevision               DepartmentRevision[]
     Event                            Event[]
+    IMFile                           IMFile?
 }
 
 model DepartmentRevision {
@@ -597,6 +612,7 @@ model SubmittedIDDCoordinatorSuggestion {
     iDDCoordinatorSuggestionId String                   @unique
     CITLRevision               CITLRevision[]
     Event                      Event[]
+    IMFile                     IMFile?
 }
 
 model CITLRevision {
@@ -671,7 +687,8 @@ model SubmittedQAMISSuggestion {
     QAMISSuggestion   QAMISSuggestion @relation(fields: [qAMISSuggestionId], references: [id], onDelete: Cascade)
     qAMISSuggestionId String          @unique
     QAMISRevision     QAMISRevision?
-    QAMISFile         QAMISFile[]
+    QAMISFile         QAMISFile?
+    IMFile            IMFile?
 }
 
 model QAMISFile {
@@ -684,7 +701,7 @@ model QAMISFile {
     mimetype                   String
     originalFilename           String
     SubmittedQAMISSuggestion   SubmittedQAMISSuggestion @relation(fields: [submittedQAMISSuggestionId], references: [id], onDelete: Cascade)
-    submittedQAMISSuggestionId String
+    submittedQAMISSuggestionId String                   @unique
     QAMISRevision              QAMISRevision?
 }
 
@@ -999,6 +1016,7 @@ model IMERCCITLReviewed {
     submittedContentSpecialistSuggestionId String                               @unique
     IMERCCITLRevision                      IMERCCITLRevision[]
     Event                                  Event[]
+    IMFile                                 IMFile?
 }
 
 model IMERCCITLRevision {
@@ -1245,6 +1263,7 @@ model SubmittedReturnedDepartmentRevision {
     ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     returnedDepartmentRevisionId String                     @unique
     Event                        Event[]
+    IMFile                       IMFile?
 }
 
 model ReturnedCITLRevision {
@@ -1283,6 +1302,7 @@ model SubmittedReturnedCITLRevision {
     ReturnedCITLRevision   ReturnedCITLRevision @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
     returnedCITLRevisionId String               @unique
     Event                  Event[]
+    IMFile                 IMFile?
 }
 
 model ReturnedIMERCCITLRevision {
@@ -1303,7 +1323,7 @@ model ReturnedIMERCCITLRevisionSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedIMERCCITLRevision                          ReturnedIMERCCITLRevision                            @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
+    ReturnedIMERCCITLRevision                          ReturnedIMERCCITLRevision                           @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
     returnedIMERCCITLRevisionId                        String
     suggestion                                         String
     actionTaken                                        String?
@@ -1320,6 +1340,7 @@ model SubmittedReturnedIMERCCITLRevision {
     ReturnedIMERCCITLRevision   ReturnedIMERCCITLRevision @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
     returnedIMERCCITLRevisionId String                    @unique
     Event                       Event[]
+    IMFile                      IMFile?
 }
 
 model PeerSuggestionItemActionTaken {

@@ -63,6 +63,10 @@ export default function QAMISSuggestionPage() {
     const iMFormData = new FormData();
     iMFormData.append("file", files.iMFile);
     iMFormData.append("iMId", iMId as string);
+    iMFormData.append(
+      "submittedQAMISSuggestionId",
+      submittedQAMISSuggestionId as string
+    );
     return axios.post("/api/im_file", iMFormData).then((res) => {
       const iMFile = res.data;
       if (!files?.qAMISFile) return;

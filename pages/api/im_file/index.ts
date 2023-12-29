@@ -53,15 +53,254 @@ export default async function handler(
       });
       // Parse request body
       const fields: Fields = data.fields;
+      console.log(JSON.stringify(fields, null, 4));
       const body = {
         iMId: fields?.iMId?.at(0),
+        departmentReviewedId: fields?.departmentReviewedId?.at(0),
+        submittedReturnedDepartmentRevisionId:
+          fields?.submittedReturnedDepartmentRevisionId?.at(0),
+        submittedIDDCoordinatorSuggestionId:
+          fields?.submittedIDDCoordinatorSuggestionId?.at(0),
+        submittedReturnedCITLRevisionId:
+          fields?.submittedReturnedCITLRevisionId?.at(0),
+        submittedQAMISSuggestionId: fields?.submittedQAMISSuggestionId?.at(0),
+        iMERCCITLReviewedId: fields?.iMERCCITLReviewedId?.at(0),
+        submittedReturnedIMERCCITLRevisionId:
+          fields?.submittedReturnedIMERCCITLRevisionId?.at(0),
       };
       // Validate request body
       const validator = Yup.object({
         iMId: Yup.string().required(),
+        departmentReviewedId: Yup.string(),
+        submittedReturnedDepartmentRevisionId: Yup.string(),
+        submittedIDDCoordinatorSuggestionId: Yup.string(),
+        submittedReturnedCITLRevisionId: Yup.string(),
+        submittedQAMISSuggestionId: Yup.string(),
+        iMERCCITLReviewedId: Yup.string(),
+        submittedReturnedIMERCCITLRevisionId: Yup.string(),
       });
       await validator.validate(body);
-      const { iMId } = validator.cast(body);
+      const {
+        iMId,
+        departmentReviewedId,
+        submittedReturnedDepartmentRevisionId,
+        submittedIDDCoordinatorSuggestionId,
+        submittedReturnedCITLRevisionId,
+        submittedQAMISSuggestionId,
+        iMERCCITLReviewedId,
+        submittedReturnedIMERCCITLRevisionId,
+      } = validator.cast(body);
+
+      if (
+        !departmentReviewedId &&
+        !submittedReturnedDepartmentRevisionId &&
+        !submittedIDDCoordinatorSuggestionId &&
+        !submittedReturnedCITLRevisionId &&
+        !submittedQAMISSuggestionId &&
+        !iMERCCITLReviewedId &&
+        !submittedReturnedIMERCCITLRevisionId
+      ) {
+        console.log("Testing im file existence");
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+            ],
+          },
+        });
+
+        console.log(existingIMFile);
+        if (existingIMFile) {
+          return res
+            .status(400)
+            .json({ error: { message: "IM already had a file" } });
+        }
+      } else if (departmentReviewedId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                DepartmentReviewed: {
+                  id: {
+                    equals: departmentReviewedId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        console.log({ existingIMFile });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: { message: "IM already had a department revision file" },
+          });
+        }
+      } else if (submittedReturnedDepartmentRevisionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedReturnedDepartmentRevision: {
+                  id: {
+                    equals: submittedReturnedDepartmentRevisionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: {
+              message: "IM already had a returned department revision file",
+            },
+          });
+        }
+      } else if (submittedIDDCoordinatorSuggestionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedIDDCoordinatorSuggestion: {
+                  id: {
+                    equals: submittedIDDCoordinatorSuggestionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: { message: "IM already had a CITL revision file" },
+          });
+        }
+      } else if (submittedReturnedCITLRevisionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedReturnedCITLRevision: {
+                  id: {
+                    equals: submittedReturnedCITLRevisionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: {
+              message: "IM already had a returned citl revision file",
+            },
+          });
+        }
+      } else if (submittedQAMISSuggestionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedQAMISSuggestion: {
+                  id: {
+                    equals: submittedQAMISSuggestionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: { message: "IM already had a QAMIS revision file" },
+          });
+        }
+      } else if (iMERCCITLReviewedId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                IMERCCITLReviewed: {
+                  id: {
+                    equals: iMERCCITLReviewedId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: { message: "IM already had an IMERC CITL revision file" },
+          });
+        }
+      } else if (submittedReturnedIMERCCITLRevisionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedReturnedIMERCCITLRevision: {
+                  id: {
+                    equals: submittedReturnedIMERCCITLRevisionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res
+            .status(400)
+            .json({ error: { message: "IM already had a returned IMERC CITL revision file" } });
+        }
+      }
 
       // Find IM
       let iM: IM;
@@ -111,6 +350,57 @@ export default async function handler(
               id: iM.id,
             },
           },
+          DepartmentReviewed: departmentReviewedId
+            ? {
+                connect: {
+                  id: departmentReviewedId,
+                },
+              }
+            : undefined,
+          SubmittedReturnedDepartmentRevision:
+            submittedReturnedDepartmentRevisionId
+              ? {
+                  connect: {
+                    id: submittedReturnedDepartmentRevisionId,
+                  },
+                }
+              : undefined,
+          SubmittedIDDCoordinatorSuggestion: submittedIDDCoordinatorSuggestionId
+            ? {
+                connect: {
+                  id: submittedIDDCoordinatorSuggestionId,
+                },
+              }
+            : undefined,
+          SubmittedReturnedCITLRevision: submittedReturnedCITLRevisionId
+            ? {
+                connect: {
+                  id: submittedReturnedCITLRevisionId,
+                },
+              }
+            : undefined,
+          SubmittedQAMISSuggestion: submittedQAMISSuggestionId
+            ? {
+                connect: {
+                  id: submittedQAMISSuggestionId,
+                },
+              }
+            : undefined,
+          IMERCCITLReviewed: iMERCCITLReviewedId
+            ? {
+                connect: {
+                  id: iMERCCITLReviewedId,
+                },
+              }
+            : undefined,
+          SubmittedReturnedIMERCCITLRevision:
+            submittedReturnedIMERCCITLRevisionId
+              ? {
+                  connect: {
+                    id: submittedReturnedIMERCCITLRevisionId,
+                  },
+                }
+              : undefined,
           filename,
           mimetype: file.mimetype,
           size: file.size,
@@ -120,6 +410,7 @@ export default async function handler(
       res.status(200).json(iMFile);
     } catch (error: any) {
       logger.error(error);
+      console.log(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });
