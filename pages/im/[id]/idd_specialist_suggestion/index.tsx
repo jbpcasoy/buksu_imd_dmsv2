@@ -48,6 +48,7 @@ export default function IDDSpecialistSuggestionPage() {
   const iDDSpecialistSuggestionItems =
     useIDDSpecialistSuggestionItemsOwn(state, refreshFlag);
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();
+  const [openAdd, setOpenAdd] = useState(false);
   const handleSubmitReview = () => {
     if (!iDDSpecialistSuggestion) return;
     axios
@@ -83,7 +84,6 @@ export default function IDDSpecialistSuggestionPage() {
   }, [submittedIDDSpecialistSuggestion, iMERCCITLRevision, iMId]);
 
   const AddSuggestionItem = () => {
-    const [openAdd, setOpenAdd] = useState(false);
     const formik = useFormik({
       initialValues: {
         suggestion: "",

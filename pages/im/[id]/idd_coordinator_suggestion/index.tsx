@@ -54,6 +54,7 @@ export default function IDDCoordinatorSuggestionPage() {
     refreshFlag
   );
   const activeIDDCoordinator = useActiveIDDCoordinatorMe();
+  const [openAdd, setOpenAdd] = useState(false);
   const handleSubmitReview = () => {
     if (!iDDCoordinatorSuggestion) return;
     axios
@@ -89,8 +90,6 @@ export default function IDDCoordinatorSuggestionPage() {
   }, [submittedIDDCoordinatorSuggestion, cITLRevision, iMId]);
 
   const AddSuggestionItem = () => {
-    const [openAdd, setOpenAdd] = useState(false);
-
     const formik = useFormik({
       initialValues: {
         suggestion: "",

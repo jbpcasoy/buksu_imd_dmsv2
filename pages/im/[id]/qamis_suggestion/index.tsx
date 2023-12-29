@@ -34,6 +34,7 @@ export default function QAMISSuggestionPage() {
   const submittedQAMISSuggestion = useSubmittedQAMISSuggestionIM({
     id: iMId as string,
   });
+  const [openAdd, setOpenAdd] = useState(false);
 
   const cITLDirectorEndorsement = useCITLDirectorEndorsementIM({
     id: iMId as string,
@@ -126,7 +127,6 @@ export default function QAMISSuggestionPage() {
   }, [submittedQAMISSuggestion, iMId]);
 
   const AddSuggestionItem = () => {
-    const [openAdd, setOpenAdd] = useState(false);
     const formik = useFormik({
       initialValues: {
         suggestion: "",

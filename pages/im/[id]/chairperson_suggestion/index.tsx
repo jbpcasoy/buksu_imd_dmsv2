@@ -54,6 +54,7 @@ export default function ChairpersonSuggestionPage() {
   const activeChairperson = useActiveChairpersonMe();
   const myDepartment = useDepartmentMe();
   const ownerDepartment = useDepartmentIM({ id: iMId as string });
+  const [openAdd, setOpenAdd] = useState(false);
 
   const handleSubmitReview = () => {
     if (!chairpersonSuggestion) return;
@@ -90,7 +91,6 @@ export default function ChairpersonSuggestionPage() {
   }, [submittedChairpersonSuggestion, departmentRevision, iMId]);
 
   const AddSuggestionItem = () => {
-    const [openAdd, setOpenAdd] = useState(false);
     const { addSnackbar } = useContext(SnackbarContext);
     const formik = useFormik({
       initialValues: {

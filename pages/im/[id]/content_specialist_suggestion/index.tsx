@@ -53,6 +53,7 @@ export default function ContentSpecialistSuggestionPage() {
   const activeContentSpecialist = useActiveContentSpecialistMe();
   const myDepartment = useDepartmentMe();
   const ownerDepartment = useDepartmentIM({ id: iMId as string });
+  const [openAdd, setOpenAdd] = useState(false);
 
   const handleSubmitReview = () => {
     if (!contentSpecialistSuggestion) return;
@@ -89,7 +90,6 @@ export default function ContentSpecialistSuggestionPage() {
   }, [submittedContentSpecialistSuggestion, iMId]);
 
   const AddSuggestionItem = () => {
-    const [openAdd, setOpenAdd] = useState(false);
     const formik = useFormik({
       initialValues: {
         suggestion: "",

@@ -47,6 +47,7 @@ export default function ContentEditorSuggestionPage() {
   const contentEditorSuggestionItems =
     useContentEditorSuggestionItemsOwn(state, refreshFlag);
   const activeCITLDirector = useActiveCITLDirectorMe();
+  const [openAdd, setOpenAdd] = useState(false);
   const handleSubmitReview = () => {
     if (!contentEditorSuggestion) return;
     axios
@@ -82,7 +83,6 @@ export default function ContentEditorSuggestionPage() {
   }, [submittedContentEditorSuggestion, iMId]);
 
   const AddSuggestionItem = () => {
-    const [openAdd, setOpenAdd] = useState(false);
     const formik = useFormik({
       initialValues: {
         suggestion: "",

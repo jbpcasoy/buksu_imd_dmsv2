@@ -56,6 +56,7 @@ export default function CoordinatorSuggestionPage() {
     id: iMId as string,
   });
   const { addSnackbar } = useContext(SnackbarContext);
+  const [openAdd, setOpenAdd] = useState(false);
 
   const handleSubmitReview = () => {
     if (!coordinatorSuggestion) return;
@@ -114,7 +115,6 @@ export default function CoordinatorSuggestionPage() {
   }, [activeCoordinator]);
 
   const AddSuggestionItem = () => {
-    const [openAdd, setOpenAdd] = useState(false);
     const { addSnackbar } = useContext(SnackbarContext);
     const formik = useFormik({
       initialValues: {
