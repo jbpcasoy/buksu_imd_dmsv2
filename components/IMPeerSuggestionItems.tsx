@@ -88,7 +88,7 @@ function UserInformation({submittedPeerSuggestion}: UserInformationProps) {
       <p className='text-xs'>
         {DateTime.fromJSDate(
           new Date(submittedPeerSuggestion?.updatedAt ?? "")
-        ).toRelative()}
+        ).toFormat( "D | t")}
       </p>
     </div>
   </div>

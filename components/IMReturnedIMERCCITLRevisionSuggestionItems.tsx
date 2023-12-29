@@ -95,7 +95,7 @@ function UserInformation({submittedReturnedIMERCCITLRevision}: UserInformationPr
       <p className='text-xs'>
         {DateTime.fromJSDate(
           new Date(submittedReturnedIMERCCITLRevision?.updatedAt ?? "")
-        ).toRelative()}
+        ).toFormat( "D | t")}
       </p>
     </div>
   </div>

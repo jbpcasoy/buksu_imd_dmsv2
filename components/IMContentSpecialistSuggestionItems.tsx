@@ -101,7 +101,7 @@ function UserInformation({submittedContentSpecialistSuggestion}: UserInformation
       <p className='text-xs'>
         {DateTime.fromJSDate(
           new Date(submittedContentSpecialistSuggestion?.updatedAt ?? "")
-        ).toRelative()}
+        ).toFormat( "D | t")}
       </p>
     </div>
   </div>

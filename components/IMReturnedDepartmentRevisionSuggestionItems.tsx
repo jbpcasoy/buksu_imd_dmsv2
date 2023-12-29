@@ -97,7 +97,7 @@ function UserInformation({submittedReturnedDepartmentRevision}: UserInformationP
       <p className='text-xs'>
         {DateTime.fromJSDate(
           new Date(submittedReturnedDepartmentRevision?.updatedAt ?? "")
-        ).toRelative()}
+        ).toFormat( "D | t")}
       </p>
     </div>
   </div>

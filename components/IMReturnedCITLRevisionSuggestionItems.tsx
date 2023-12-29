@@ -95,7 +95,7 @@ function UserInformation({submittedReturnedCITLRevision}: UserInformationProps) 
       <p className='text-xs'>
         {DateTime.fromJSDate(
           new Date(submittedReturnedCITLRevision?.updatedAt ?? "")
-        ).toRelative()}
+        ).toFormat( "D | t")}
       </p>
     </div>
   </div>

@@ -218,8 +218,8 @@ function IMItem({ iM }: { iM: IM }) {
         </div>
       </td>
       <td>
-        <div className='py-1 px-2'>
-          {DateTime.fromJSDate(new Date(iM.createdAt)).toRelative()}
+        <div className='py-1 px-2 '>
+          {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat( "D | t")}
         </div>
       </td>
       <td>

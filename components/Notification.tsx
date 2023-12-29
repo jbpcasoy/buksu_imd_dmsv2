@@ -51,7 +51,7 @@ export default function Notification({ event }: NotificationProps) {
         <div>
           <p className='text-sm text-palette_blue'>{event.message}</p>
           <p className='text-xs text-palette_light_blue'>
-            {DateTime.fromJSDate(new Date(event.createdAt)).toRelative()}
+            {DateTime.fromJSDate(new Date(event.createdAt)).toFormat( "D | t")}
           </p>
         </div>
       </div>

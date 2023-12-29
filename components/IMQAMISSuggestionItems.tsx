@@ -102,7 +102,7 @@ function UserInformation({submittedQAMISSuggestion}: UserInformationProps) {
       <p className='text-xs'>
         {DateTime.fromJSDate(
           new Date(submittedQAMISSuggestion?.updatedAt ?? "")
-        ).toRelative()}
+        ).toFormat( "D | t")}
       </p>
     </div>
   </div>

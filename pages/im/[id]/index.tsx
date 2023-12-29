@@ -639,9 +639,7 @@ export default function ViewIM() {
                       <p className="uppercase font-bold">{user?.name}</p>
                       {iM?.createdAt && (
                         <p>
-                          {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat(
-                            "DD | t"
-                          )}
+                          {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
                         </p>
                       )}
                     </div>

@@ -91,7 +91,7 @@ function UserInformation({submittedContentEditorSuggestion}: UserInformationProp
       <p className='text-xs'>
         {DateTime.fromJSDate(
           new Date(submittedContentEditorSuggestion?.updatedAt ?? "")
-        ).toRelative()}
+        ).toFormat( "D | t")}
       </p>
     </div>
   </div>

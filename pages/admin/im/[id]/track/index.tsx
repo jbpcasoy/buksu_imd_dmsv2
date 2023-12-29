@@ -668,7 +668,7 @@ function DepartmentReviewModal({
       <span className='text-palette_light_blue'>
         {DateTime.fromJSDate(
           new Date(departmentReview?.updatedAt ?? "")
-        ).toRelative()}
+        ).toFormat( "D | t")}
       </span>
     </p>
   );
@@ -711,7 +711,7 @@ function PeerReviewModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(submittedPeerSuggestion?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -796,7 +796,7 @@ function ChairpersonReviewModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(submittedChairpersonSuggestion?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -882,7 +882,7 @@ function CoordinatorReviewModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(submittedCoordinatorSuggestion?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -960,7 +960,7 @@ function DepartmentRevisionModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(departmentRevision?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
         </p>
       )}
@@ -999,7 +999,7 @@ function CoordinatorEndorsementModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(coordinatorEndorsement?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
         </p>
       )}
@@ -1032,7 +1032,7 @@ function DeanEndorsementModal({ deanEndorsement }: DeanEndorsementModalProps) {
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(deanEndorsement?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
         </p>
       )}
@@ -1074,7 +1074,7 @@ function IDDCoordinatorReviewModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(submittedIDDCoordinatorSuggestion?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
         </p>
       )}
@@ -1130,7 +1130,7 @@ function CITLRevisionModal({ cITLRevision, iMId }: CITLRevisionModalProps) {
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(cITLRevision?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -1166,7 +1166,7 @@ function IDDCoordinatorEndorsementModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(iDDCoordinatorEndorsement?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
         </p>
       )}
@@ -1204,7 +1204,7 @@ function CITLDirectorEndorsementModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(cITLDirectorEndorsement?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
         </p>
       )}
@@ -1260,7 +1260,7 @@ function QAMISRevisionModal({ qAMISRevision, iMId }: QAMISRevisionModalProps) {
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(qAMISRevision?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -1297,7 +1297,7 @@ function QAMISChairpersonEndorsementModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(qAMISChairpersonEndorsement?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -1333,7 +1333,7 @@ function QAMISCoordinatorEndorsementModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(qAMISCoordinatorEndorsement?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -1369,7 +1369,7 @@ function QAMISDeanEndorsementModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(qAMISDeanEndorsement?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -1392,7 +1392,7 @@ function QAMISDepartmentEndorsementModal({
         <span className='text-palette_light_blue'>
           {DateTime.fromJSDate(
             new Date(qAMISDepartmentEndorsement?.updatedAt ?? "")
-          ).toRelative()}
+          ).toFormat( "D | t")}
         </span>
       </p>
     </div>
@@ -1438,7 +1438,7 @@ function ContentSpecialistReviewModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(submittedContentSpecialistSuggestion?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -1520,7 +1520,7 @@ function IDDSpecialistReviewModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(submittedIDDSpecialistSuggestion?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -1601,7 +1601,7 @@ function ContentEditorReviewModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(submittedContentEditorSuggestion?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
           .
         </p>
@@ -1678,7 +1678,7 @@ function IMERCCITLRevisionModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(iMERCCITLRevision?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
         </p>
       )}
@@ -1715,7 +1715,7 @@ function IMERCIDDCoordinatorEndorsementModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(iMERCIDDCoordinatorEndorsement?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
         </p>
       )}
@@ -1752,7 +1752,7 @@ function IMERCCITLDirectorEndorsementModal({
           <span className='text-palette_light_blue'>
             {DateTime.fromJSDate(
               new Date(iMERCCITLDirectorEndorsement?.updatedAt ?? "")
-            ).toRelative()}
+            ).toFormat( "D | t")}
           </span>
         </p>
       )}

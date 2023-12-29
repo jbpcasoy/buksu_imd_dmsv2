@@ -97,7 +97,7 @@ function UserInformation({submittedChairpersonSuggestion}: UserInformationProps)
       <p className='text-xs'>
         {DateTime.fromJSDate(
           new Date(submittedChairpersonSuggestion?.updatedAt ?? "")
-        ).toRelative()}
+        ).toFormat( "D | t")}
       </p>
     </div>
   </div>
