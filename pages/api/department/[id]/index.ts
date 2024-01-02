@@ -63,7 +63,11 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "Department");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to delete this department" },
+        });
+      }
 
       const { id } = validator.cast(req.query);
 
@@ -90,7 +94,11 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("update", "Department");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to update this department" },
+        });
+      }
 
       const { id } = req.query;
       const { name } = validator.cast(req.body);
@@ -112,7 +120,9 @@ export default async function handler(
         },
       });
       if (existingDepartment) {
-        throw new Error("Department name is already used");
+        return res
+          .status(409)
+          .json({ error: { message: "Department name is already used" } });
       }
 
       const department = await prisma.department.update({

@@ -31,7 +31,11 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "Department");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to create a department" },
+        });
+      }
 
       const { name, collegeId } = validator.cast(req.body);
 
@@ -43,7 +47,11 @@ export default async function handler(
         },
       });
       if (existingDepartment) {
-        throw new Error("Department name is already used");
+        return res.status(409).json({
+          error: {
+            message: "Department name is already used",
+          },
+        });
       }
 
       const college = await prisma.college.findFirstOrThrow({
@@ -161,7 +169,7 @@ export default async function handler(
             {
               College: {
                 name: {
-                  contains: filterCollegeId,
+                  contains: filterCollegeName,
                   mode: "insensitive",
                 },
               },

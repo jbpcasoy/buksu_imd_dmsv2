@@ -18,22 +18,30 @@ export default function DepartmentPage() {
       return;
     }
 
-    axios.delete(`/api/department/${departmentId}`).then(() => {
-      alert("Department has been deleted successfully");
-    }).catch(error => {
-      alert(error.message)
-    });
+    axios
+      .delete(`/api/department/${departmentId}`)
+      .then(() => {
+        alert("Department has been deleted successfully");
+      })
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      });
   };
 
   if (!department) return null;
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>Department</h2>
-        <div className='space-x-1'>
-          <Link className='border rounded' href={`/crud/department/${departmentId}/edit`}>edit</Link>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">Department</h2>
+        <div className="space-x-1">
+          <Link
+            className="border rounded"
+            href={`/crud/department/${departmentId}/edit`}
+          >
+            edit
+          </Link>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -42,7 +50,15 @@ export default function DepartmentPage() {
       <p>createdAt: {new Date(department.createdAt).toLocaleString()}</p>
       <p>updatedAt: {new Date(department.updatedAt).toLocaleString()}</p>
       <p>name: {department.name}</p>
-      <p>collegeId: <Link href={`/crud/college/${department.collegeId}`} className="underline">{department.collegeId}</Link></p>
+      <p>
+        collegeId:{" "}
+        <Link
+          href={`/crud/college/${department.collegeId}`}
+          className="underline"
+        >
+          {department.collegeId}
+        </Link>
+      </p>
     </CrudLayout>
   );
 }
