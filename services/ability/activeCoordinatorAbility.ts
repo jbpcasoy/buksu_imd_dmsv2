@@ -5,9 +5,11 @@ export default function activeCoordinatorAbility({ user }: { user: User }) {
   const ability = abilityBuilder((can, cannot) => {
     // implement security 
     can("read", "ActiveCoordinator");
-    can("create", "ActiveCoordinator");
-    can("update", "ActiveCoordinator");
-    can("delete", "ActiveCoordinator");
+    if (user.isAdmin) {
+      can("create", "ActiveCoordinator");
+      can("update", "ActiveCoordinator");
+      can("delete", "ActiveCoordinator");
+    }
   });
 
   return ability;

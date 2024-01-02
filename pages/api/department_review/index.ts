@@ -1,8 +1,10 @@
 import prisma from "@/prisma/client";
 import departmentReviewAbility from "@/services/ability/departmentReviewAbility";
+import iMAbility from "@/services/ability/iMAbility";
+import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
+import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -20,25 +22,51 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = departmentReviewAbility({ user });
 
   const postHandler = async () => {
     try {
+      const ability = iMFileAbility({ user });
       const validator = Yup.object({
         iMFileId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan("create", "DepartmentReview");
-
       const { iMFileId } = validator.cast(req.body);
+
       const iMFile = await prisma.iMFile.findFirstOrThrow({
         where: {
-          id: {
-            equals: iMFileId,
+          AND: [
+            accessibleBy(ability).IMFile,
+            {
+              id: {
+                equals: iMFileId as string,
+              },
+            },
+          ],
+        },
+        include: {
+          IM: {
+            include: {
+              Faculty: {
+                include: {
+                  ActiveFaculty: {
+                    include: {
+                      Faculty: {
+                        include: {
+                          User: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       });
+      ForbiddenError.from(ability).throwUnlessCan(
+        "connectToDepartmentReview",
+        subject("IMFile", iMFile)
+      );
 
       const existingDepartmentReview = await prisma.departmentReview.findFirst({
         where: {
@@ -89,6 +117,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
+      const ability = departmentReviewAbility({ user });
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),

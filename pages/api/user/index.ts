@@ -81,11 +81,13 @@ export default async function handler(
                 {
                   email: {
                     contains: filterEmail,
+                    mode: "insensitive",
                   },
                 },
                 {
                   name: {
                     contains: filterName,
+                    mode: "insensitive",
                   },
                 },
               ],

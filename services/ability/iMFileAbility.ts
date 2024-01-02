@@ -30,6 +30,7 @@ export default function iMFileAbility({ user }: { user: User }) {
 
   const ability = abilityBuilder((can, cannot) => {
     can("read", "IMFile");
+    can("connectToDepartmentReview", "IMFile", where);
     can("delete", "IMFile", where);
 
     if (user.isAdmin) {

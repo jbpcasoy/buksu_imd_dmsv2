@@ -5,9 +5,11 @@ export default function activeChairpersonAbility({ user }: { user: User }) {
   const ability = abilityBuilder((can, cannot) => {
     // implement security 
     can("read", "ActiveChairperson");
-    can("create", "ActiveChairperson");
-    can("update", "ActiveChairperson");
-    can("delete", "ActiveChairperson");
+    if (user.isAdmin) {
+      can("create", "ActiveChairperson");
+      can("update", "ActiveChairperson");
+      can("delete", "ActiveChairperson");
+    }
   });
 
   return ability;

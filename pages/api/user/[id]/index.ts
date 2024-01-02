@@ -65,8 +65,7 @@ export default async function handler(
       const { id } = req.query;
       const { name, image } = validator.cast(req.body);
 
-      let userToUpdate;
-      userToUpdate = await prisma.user.findFirstOrThrow({
+      const userToUpdate = await prisma.user.findFirstOrThrow({
         where: {
           id: {
             equals: id as string,
@@ -74,12 +73,17 @@ export default async function handler(
         },
       });
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        subject("User", userToUpdate)
-      );
+      if (!user.isAdmin) {
+        if (id !== user.id) {
+          return res
+            .status(403)
+            .json({
+              error: { message: "You are not allowed to update that user" },
+            });
+        }
+      }
 
-      const user = await prisma.user.update({
+      const updatedUser = await prisma.user.update({
         where: {
           id: id as string,
         },
@@ -89,7 +93,7 @@ export default async function handler(
         },
       });
 
-      return res.json(user);
+      return res.json(updatedUser);
     } catch (error: any) {
       logger.error(error);
       return res

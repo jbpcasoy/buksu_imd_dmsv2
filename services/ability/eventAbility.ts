@@ -6,8 +6,11 @@ export default function eventAbility({ user }: { user: User }) {
     // implement security 
     can("read", "Event");
     can("create", "Event");
-    can("update", "Event");
-    can("delete", "Event");
+
+    if (user.isAdmin) {
+      can("update", "Event");
+      can("delete", "Event");
+    }
   });
 
   return ability;

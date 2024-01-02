@@ -3,7 +3,7 @@ import abilityBuilder from "./abilityBuilder";
 
 export default function iMAbility({ user }: { user: User }) {
   const ability = abilityBuilder((can, cannot) => {
-    const where: Prisma.IMWhereInput = {
+    const iMOwnerWhere: Prisma.IMWhereInput = {
       Faculty: {
         is: {
           ActiveFaculty: {
@@ -25,10 +25,11 @@ export default function iMAbility({ user }: { user: User }) {
       },
     };
     can("read", "IM");
-    can("connectToIMFile", "IM", where);
-    can("connectToPlagiarismFile", "IM", where);
-    can("update", "IM", where);
-    can("delete", "IM", where);
+    can("connectToIMFile", "IM", iMOwnerWhere);
+    can("connectToPlagiarismFile", "IM", iMOwnerWhere);
+    can("connectToDepartmentReview", "IM", iMOwnerWhere);
+    can("update", "IM", iMOwnerWhere);
+    can("delete", "IM", iMOwnerWhere);
 
     if (user.isAdmin) {
       can("connectToIMFile", "IM");
