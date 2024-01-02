@@ -6,9 +6,8 @@ export default function cITLDirectorAbility({ user }: { user: User }) {
     can("read", "CITLDirector");
 
     if (user.isAdmin) {
+      // TODO remove this
       can("connectToIM", "CITLDirector");
-      can("create", "CITLDirector");
-      can("delete", "CITLDirector");
     }
   });
 

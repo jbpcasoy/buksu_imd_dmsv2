@@ -63,7 +63,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "CITLDirector");
+      if (!user.isAdmin) {
+        return res
+          .status(403)
+          .json({
+            error: { message: "You are not allowed to delete CITL director" },
+          });
+      }
 
       const { id } = validator.cast(req.query);
 

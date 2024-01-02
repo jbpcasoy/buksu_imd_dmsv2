@@ -30,7 +30,11 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "CITLDirector");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to create a CITL director" },
+        });
+      }
 
       const { userId } = validator.cast(req.body);
       const existingCITLDirector = await prisma.cITLDirector.findFirst({
@@ -42,8 +46,10 @@ export default async function handler(
           },
         },
       });
-      if(existingCITLDirector) {
-        throw new Error("CITL director already exists");
+      if (existingCITLDirector) {
+        return res
+          .status(409)
+          .json({ error: { message: "CITL director already exists" } });
       }
 
       const cITLDirector = await prisma.cITLDirector.create({
@@ -108,14 +114,22 @@ export default async function handler(
                 },
               } as Prisma.CITLDirectorOrderByWithRelationInput)
             : ({
-                User: {
-                  name: sortDirection ?? "asc",
-                },
+                updatedAt: "desc"
               } as Prisma.CITLDirectorOrderByWithRelationInput),
       });
       const count = await prisma.cITLDirector.count({
         where: {
-          AND: [accessibleBy(ability).CITLDirector],
+          AND: [
+            accessibleBy(ability).CITLDirector,
+            {
+              User: {
+                name: {
+                  contains: filterName,
+                  mode: "insensitive",
+                },
+              },
+            },
+          ],
         },
       });
 
