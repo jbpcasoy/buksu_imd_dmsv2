@@ -29,10 +29,13 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ContentSpecialist"
-      );
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to create a content specialist",
+          },
+        });
+      }
 
       const { activeFacultyId } = validator.cast(req.body);
 
@@ -49,7 +52,9 @@ export default async function handler(
           },
         });
       if (existingContentSpecialist) {
-        throw new Error("Content specialist already exists");
+        return res
+          .status(409)
+          .json({ error: { message: "Content specialist already exists" } });
       }
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {
@@ -145,7 +150,41 @@ export default async function handler(
       });
       const count = await prisma.contentSpecialist.count({
         where: {
-          AND: [accessibleBy(ability).ContentSpecialist],
+          AND: [
+            accessibleBy(ability).ContentSpecialist,
+            {
+              Faculty: {
+                User: {
+                  name: {
+                    contains: filterName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  name: {
+                    contains: filterDepartmentName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
       });
 

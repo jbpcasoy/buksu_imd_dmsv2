@@ -33,18 +33,20 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).ContentSpecialist,
-            {
-              id: {
-                equals: id,
+      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow(
+        {
+          where: {
+            AND: [
+              accessibleBy(ability).ContentSpecialist,
+              {
+                id: {
+                  equals: id,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        }
+      );
 
       return res.json(contentSpecialist);
     } catch (error: any) {
@@ -63,7 +65,15 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "ContentSpecialist");
+      if (!user.isAdmin) {
+        return res
+          .status(403)
+          .json({
+            error: {
+              message: "You are not allowed to delete this content specialist",
+            },
+          });
+      }
 
       const { id } = validator.cast(req.query);
 
