@@ -29,7 +29,11 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "Dean");
+      if (!user.isAdmin) {
+        return res
+          .status(403)
+          .json({ error: { message: "You are not allowed to create a dean" } });
+      }
 
       const { activeFacultyId } = validator.cast(req.body);
       const existingDean = await prisma.dean.findFirst({
@@ -44,7 +48,9 @@ export default async function handler(
         },
       });
       if (existingDean) {
-        throw new Error("Dean already exists");
+        return res
+          .status(409)
+          .json({ error: { message: "Dean already exists" } });
       }
 
       const faculty = await prisma.faculty.findFirstOrThrow({
@@ -148,16 +154,36 @@ export default async function handler(
                 },
               } as Prisma.DeanOrderByWithRelationInput)
             : ({
-                Faculty: {
-                  User: {
-                    name: sortDirection ?? "asc",
-                  },
-                },
+                updatedAt: "desc",
               } as Prisma.DeanOrderByWithRelationInput),
       });
       const count = await prisma.dean.count({
         where: {
-          AND: [accessibleBy(ability).Dean],
+          AND: [
+            accessibleBy(ability).Dean,
+            {
+              Faculty: {
+                User: {
+                  name: {
+                    contains: filterName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
       });
 

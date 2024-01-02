@@ -62,7 +62,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "Dean");
+      if (!user.isAdmin) {
+        return res
+          .status(403)
+          .json({
+            error: { message: "You are not allowed to delete this dean" },
+          });
+      }
 
       const { id } = validator.cast(req.query);
 
