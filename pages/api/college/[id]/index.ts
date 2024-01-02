@@ -61,7 +61,11 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "College");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to delete this college" },
+        });
+      }
 
       const { id } = validator.cast(req.query);
 
@@ -88,7 +92,11 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("update", "College");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to update this college" },
+        });
+      }
 
       const { id } = req.query;
       const { name } = validator.cast(req.body);
@@ -110,7 +118,9 @@ export default async function handler(
         },
       });
       if (existingCollege) {
-        throw new Error("College name is already used");
+        return res
+          .status(409)
+          .json({ error: { message: "College name is already used" } });
       }
       const college = await prisma.college.update({
         where: {

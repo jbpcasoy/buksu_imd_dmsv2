@@ -20,9 +20,10 @@ export default function CrudLayout({ children }: CrudLayoutProps) {
 
   if (!session?.user) {
     return null;
-  } else if (!session.user.isAdmin) {
-    return <Error statusCode={404} />;
-  }
+  } 
+  // else if (!session.user.isAdmin) {
+  //   return <Error statusCode={404} />;
+  // }
 
   return (
     <div className='flex flex-col h-screen'>

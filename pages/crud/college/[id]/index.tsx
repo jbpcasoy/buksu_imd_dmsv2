@@ -21,7 +21,7 @@ export default function CollegePage() {
     axios.delete(`/api/college/${collegeId}`).then(() => {
       alert("College has been deleted successfully");
     }).catch(error => {
-      alert(error.message)
+      alert(error.response?.data?.error?.message)
     });
   };
 

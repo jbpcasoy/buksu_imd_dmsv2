@@ -30,7 +30,9 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "College");
+      if(!user.isAdmin) {
+        return res.status(403).json({error:{message: "You are not allowed to create a college"}})
+      }
 
       const { name } = validator.cast(req.body);
 
@@ -42,7 +44,7 @@ export default async function handler(
         },
       });
       if (existingCollege) {
-        throw new Error("College name is already used");
+        return res.status(409).json({error:{message:"College name is already used"}});
       }
 
       const college = await prisma.college.create({
