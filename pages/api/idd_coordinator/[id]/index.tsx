@@ -63,7 +63,15 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "IDDCoordinator");
+      if (!user.isAdmin) {
+        return res
+          .status(403)
+          .json({
+            error: {
+              message: "You are not allowed to delete this IDD coordinator",
+            },
+          });
+      }
 
       const { id } = validator.cast(req.query);
 

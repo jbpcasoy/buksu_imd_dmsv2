@@ -30,7 +30,13 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "IDDCoordinator");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to create an IDD coordinator",
+          },
+        });
+      }
 
       const { userId } = validator.cast(req.body);
 
@@ -44,7 +50,9 @@ export default async function handler(
         },
       });
       if (existingIDDCoordinator) {
-        throw new Error("IDD coordinator already exists");
+        return res
+          .status(409)
+          .json({ error: { message: "IDD coordinator already exists" } });
       }
       const iDDCoordinator = await prisma.iDDCoordinator.create({
         data: {
@@ -115,7 +123,17 @@ export default async function handler(
       });
       const count = await prisma.iDDCoordinator.count({
         where: {
-          AND: [accessibleBy(ability).IDDCoordinator],
+          AND: [
+            accessibleBy(ability).IDDCoordinator,
+            {
+              User: {
+                name: {
+                  contains: filterName,
+                  mode: "insensitive",
+                },
+              },
+            },
+          ],
         },
       });
 
