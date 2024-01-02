@@ -29,7 +29,11 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "Coordinator");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to create a coordinator" },
+        });
+      }
 
       const { activeFacultyId } = validator.cast(req.body);
 
@@ -45,7 +49,9 @@ export default async function handler(
         },
       });
       if (existingCoordinator) {
-        throw new Error("Coordinator already exists");
+        return res
+          .status(409)
+          .json({ error: { message: "Coordinator already exists" } });
       }
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {
