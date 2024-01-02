@@ -5,6 +5,7 @@ import prisma from "@/prisma/client";
 export default function facultyAbility({ user }: { user: User }) {
   const ability = abilityBuilder((can, cannot) => {
     can("read", "Faculty");
+    // TODO remove this
     can("connectToIM", "Faculty", {
       userId: {
         equals: user.id,
@@ -12,9 +13,8 @@ export default function facultyAbility({ user }: { user: User }) {
     });
 
     if (user.isAdmin) {
+      // TODO remove this
       can("connectToIM", "Faculty");
-      can("create", "Faculty");
-      can("delete", "Faculty");
     }
   });
 

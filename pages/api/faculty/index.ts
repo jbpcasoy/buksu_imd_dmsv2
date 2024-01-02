@@ -31,7 +31,11 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "Faculty");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to create a faculty" },
+        });
+      }
 
       const { userId, departmentId } = validator.cast(req.body);
 
@@ -45,8 +49,10 @@ export default async function handler(
           },
         },
       });
-      if(existingFaculty) {
-        throw new Error("Faculty already exists")
+      if (existingFaculty) {
+        return res
+          .status(409)
+          .json({ error: { message: "Faculty already exists" } });
       }
 
       const faculty = await prisma.faculty.create({
@@ -157,7 +163,35 @@ export default async function handler(
       });
       const count = await prisma.faculty.count({
         where: {
-          AND: [accessibleBy(ability).Faculty],
+          AND: [
+            accessibleBy(ability).Faculty,
+            {
+              User: {
+                name: {
+                  contains: filterName,
+                  mode: "insensitive",
+                },
+              },
+            },
+            {
+              Department: {
+                name: {
+                  contains: filterDepartmentName,
+                  mode: "insensitive",
+                },
+              },
+            },
+            {
+              Department: {
+                College: {
+                  name: {
+                    contains: filterCollegeName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
         },
       });
 
