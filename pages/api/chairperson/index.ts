@@ -30,7 +30,11 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "Chairperson");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to create a chairperson" },
+        });
+      }
 
       const { activeFacultyId } = validator.cast(req.body);
 
@@ -46,7 +50,9 @@ export default async function handler(
         },
       });
       if (existingChairperson) {
-        throw new Error("Chairperson already exists");
+        return res
+          .status(409)
+          .json({ error: { message: "Chairperson already exists" } });
       }
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {
