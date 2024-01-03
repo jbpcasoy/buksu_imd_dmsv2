@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import facultyAbility from "@/services/ability/facultyAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,8 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-
-  let ability = facultyAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -107,7 +102,6 @@ export default async function handler(
         take,
         where: {
           AND: [
-            accessibleBy(ability).Faculty,
             {
               User: {
                 name: {
@@ -164,7 +158,6 @@ export default async function handler(
       const count = await prisma.faculty.count({
         where: {
           AND: [
-            accessibleBy(ability).Faculty,
             {
               User: {
                 name: {
