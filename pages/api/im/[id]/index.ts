@@ -53,26 +53,10 @@ export default async function handler(
     try {
       const { id } = req.query;
 
-      let iMToDelete: IM | null;
-      iMToDelete = await prisma.iM.findFirstOrThrow({
+      const iMToDelete = await prisma.iM.findFirstOrThrow({
         where: {
           id: {
             equals: id as string,
-          },
-        },
-        include: {
-          Faculty: {
-            include: {
-              ActiveFaculty: {
-                include: {
-                  Faculty: {
-                    include: {
-                      User: true,
-                    },
-                  },
-                },
-              },
-            },
           },
         },
       });
@@ -82,7 +66,7 @@ export default async function handler(
           IMFile: {
             IM: {
               id: {
-                equals: iMToDelete.id,
+                equals: id as string,
               },
             },
           },
@@ -90,13 +74,38 @@ export default async function handler(
       });
 
       if (departmentReview && !user.isAdmin) {
-        throw new Error("Cannot delete IMs submitted for review.");
+        return res.status(400).json({
+          error: { message: "Cannot delete IMs submitted for review." },
+        });
       }
-      
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        subject("IM", iMToDelete)
-      );
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "You must be an active faculty to perform this action",
+            },
+          });
+        }
+        if (faculty?.id !== iMToDelete.facultyId) {
+          return res
+            .status(403)
+            .json({ error: { message: "You cannot delete this IM" } });
+        }
+      }
 
       const iM = await prisma.iM.delete({
         where: {
@@ -125,49 +134,52 @@ export default async function handler(
       const { title, type } = validator.cast(req.body);
 
       const { id } = req.query;
-      const iMToUpdate = await prisma.iM.findFirstOrThrow({
-        where: {
-          id: {
-            equals: id as string,
-          },
-        },
-        include: {
-          Faculty: {
-            include: {
-              ActiveFaculty: {
-                include: {
-                  Faculty: {
-                    include: {
-                      User: true,
+
+      if (!user.isAdmin) {
+        const iMOwner = await prisma.faculty.findFirst({
+          where: {
+            IM: {
+              some: {
+                Faculty: {
+                  ActiveFaculty: {
+                    Faculty: {
+                      IM: {
+                        some: {
+                          id: {
+                            equals: id as string,
+                          },
+                        },
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-      });
+        });
+        if (iMOwner?.userId !== user.id) {
+          return res.status(403).json({
+            error: { message: "You are not allowed to update this IM" },
+          });
+        }
 
-      const departmentReview = await prisma.departmentReview.findFirst({
-        where: {
-          IMFile: {
-            IM: {
-              id: {
-                equals: iMToUpdate.id,
+        const departmentReview = await prisma.departmentReview.findFirst({
+          where: {
+            IMFile: {
+              IM: {
+                id: {
+                  equals: id as string,
+                },
               },
             },
           },
-        },
-      });
-
-      if (departmentReview && !user.isAdmin) {
-        throw new Error("Cannot update IMs submitted for review.");
+        });
+        if (departmentReview) {
+          return res.status(400).json({
+            error: { message: "Cannot update IMs submitted for review" },
+          });
+        }
       }
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        subject("IM", iMToUpdate)
-      );
 
       const iM = await prisma.iM.update({
         where: {

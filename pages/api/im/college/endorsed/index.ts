@@ -257,7 +257,7 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  DepartmentRevision: {
+                  DepartmentReview: {
                     isNot: null,
                   },
                 },

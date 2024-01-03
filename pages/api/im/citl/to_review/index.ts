@@ -182,12 +182,27 @@ export default async function handler(
             {
               IMFile: {
                 some: {
-                  DepartmentReview: {
-                    IMFile: {
-                      DepartmentRevision: {
-                        CoordinatorEndorsement: {
-                          DeanEndorsement: {
-                            isNot: null,
+                  DepartmentRevision: {
+                    CoordinatorEndorsement: {
+                      DeanEndorsement: {
+                        isNot: null,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              NOT: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      CoordinatorEndorsement: {
+                        DeanEndorsement: {
+                          IDDCoordinatorSuggestion: {
+                            SubmittedIDDCoordinatorSuggestion: {
+                              isNot: null,
+                            },
                           },
                         },
                       },

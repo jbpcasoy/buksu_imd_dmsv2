@@ -248,6 +248,7 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
+            statusQuery,
             {
               OR: [
                 {

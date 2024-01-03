@@ -25,6 +25,7 @@ export default function iMAbility({ user }: { user: User }) {
       },
     };
     can("read", "IM");
+    // TODO remove these
     can("connectToIMFile", "IM", iMOwnerWhere);
     can("connectToPlagiarismFile", "IM", iMOwnerWhere);
     can("connectToDepartmentReview", "IM", iMOwnerWhere);
@@ -32,9 +33,9 @@ export default function iMAbility({ user }: { user: User }) {
     can("delete", "IM", iMOwnerWhere);
 
     if (user.isAdmin) {
+      // TODO remove these
       can("connectToIMFile", "IM");
       can("connectToPlagiarismFile", "IM");
-      can("read", "IM");
       can("update", "IM");
       can("delete", "IM");
     }

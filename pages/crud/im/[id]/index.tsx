@@ -21,7 +21,7 @@ export default function IMPage() {
     axios.delete(`/api/im/${iMId}`).then(() => {
       alert("IM has been deleted successfully");
     }).catch(error => {
-      alert(error.message)
+      alert(error.response?.data?.error?.message)
     });
   };
 

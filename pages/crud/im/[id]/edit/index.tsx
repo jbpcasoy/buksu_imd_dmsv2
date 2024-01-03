@@ -25,7 +25,7 @@ export default function EditIMPage() {
       axios
         .put(`/api/im/${iMId}`, values)
         .then(() => {
-          alert("IM has been added successfully");
+          alert("IM has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -50,7 +50,7 @@ export default function EditIMPage() {
 
   return (
     <CrudLayout>
-      <h2>Add IM</h2>
+      <h2>Edit IM</h2>
 
       <form onSubmit={formik.handleSubmit} noValidate>
         <input

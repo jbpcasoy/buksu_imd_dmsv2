@@ -46,12 +46,17 @@ export default async function handler(
         },
       });
 
-      const ability = facultyAbility({ user });
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToIM",
-        subject("Faculty", faculty)
-      );
+      if (!user.isAdmin) {
+        if (faculty.userId !== user.id) {
+          return res
+            .status(403)
+            .json({
+              error: {
+                message: "You are not allowed to create an IM for this user",
+              },
+            });
+        }
+      }
 
       const iM = await prisma.iM.create({
         data: {
@@ -169,7 +174,7 @@ export default async function handler(
         where: {
           AND: [
             accessibleBy(ability).IM,
-
+            statusQuery,
             {
               Faculty: {
                 User: {

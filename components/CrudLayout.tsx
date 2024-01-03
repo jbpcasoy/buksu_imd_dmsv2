@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import { ReactNode, useContext, useEffect } from "react";
 import CrudHeader from "./CrudHeader";
 import CrudSidebar from "./CrudSidebar";
-import Error from "next/error";
 
 export interface CrudLayoutProps {
   children: ReactNode;
