@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import cITLDirectorAbility from "@/services/ability/cITLDirectorAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = cITLDirectorAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -36,7 +31,6 @@ export default async function handler(
       const cITLDirector = await prisma.cITLDirector.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).CITLDirector,
             {
               id: {
                 equals: id,
@@ -64,11 +58,9 @@ export default async function handler(
       await validator.validate(req.query);
 
       if (!user.isAdmin) {
-        return res
-          .status(403)
-          .json({
-            error: { message: "You are not allowed to delete CITL director" },
-          });
+        return res.status(403).json({
+          error: { message: "You are not allowed to delete CITL director" },
+        });
       }
 
       const { id } = validator.cast(req.query);
