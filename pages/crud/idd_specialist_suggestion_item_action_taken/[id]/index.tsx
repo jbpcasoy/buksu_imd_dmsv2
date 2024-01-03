@@ -27,7 +27,7 @@ export default function IDDSpecialistSuggestionItemActionTakenPage() {
         alert("IDDSpecialistSuggestionItemActionTaken has been deleted successfully");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error.response?.data?.error?.message);
       });
   };
 

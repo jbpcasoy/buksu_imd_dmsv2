@@ -24,7 +24,7 @@ export default function QAMISDepartmentEndorsementPage() {
         alert("QAMISDepartmentEndorsement has been deleted successfully");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error.response?.data?.error?.message);
       });
   };
 
