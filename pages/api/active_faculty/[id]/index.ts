@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import activeFacultyAbility from "@/services/ability/activeFacultyAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeFacultyAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
       const activeFaculty = await prisma.activeFaculty.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).ActiveFaculty,
             {
               id: {
                 equals: id,
@@ -62,7 +57,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "ActiveFaculty");
+      if(!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to remove this active faculty"
+          }
+        })
+      }
 
       const { id } = validator.cast(req.query);
 
