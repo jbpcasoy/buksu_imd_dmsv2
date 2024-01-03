@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import announcementAbility from "@/services/ability/announcementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = announcementAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -31,7 +27,13 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "Announcement");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to create an announcement.",
+          },
+        });
+      }
 
       const { description, title, url } = validator.cast(req.body);
 
@@ -81,7 +83,6 @@ export default async function handler(
         take,
         where: {
           AND: [
-            accessibleBy(ability).Announcement,
             {
               title: {
                 contains: filterTitle,
@@ -103,12 +104,31 @@ export default async function handler(
           ],
         },
         orderBy: {
-          [sortField || "title"]: sortDirection || "asc",
+          [sortField || "updatedAt"]: sortDirection || "desc",
         },
       });
       const count = await prisma.announcement.count({
         where: {
-          AND: [accessibleBy(ability).Announcement],
+          AND: [
+            {
+              title: {
+                contains: filterTitle,
+                mode: "insensitive",
+              },
+            },
+            {
+              description: {
+                contains: filterDescription,
+                mode: "insensitive",
+              },
+            },
+            {
+              url: {
+                contains: filterUrl,
+                mode: "insensitive",
+              },
+            },
+          ],
         },
       });
 
