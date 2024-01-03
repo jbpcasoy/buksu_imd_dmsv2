@@ -1,13 +1,10 @@
 import prisma from "@/prisma/client";
-import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
+import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
-import { promisify } from "util";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iMFileAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -29,7 +25,6 @@ export default async function handler(
       const iMFile = await prisma.iMFile.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).IMFile,
             {
               id: {
                 equals: id as string,

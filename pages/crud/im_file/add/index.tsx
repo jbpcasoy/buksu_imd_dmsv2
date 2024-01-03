@@ -19,19 +19,24 @@ export default function AddIMFile() {
     const formData = new FormData();
     formData.append("file", state.file);
     formData.append("iMId", state.iMId as string);
-    axios.post("/api/im_file", formData).then(() => {
-      alert("IMFile created successfully")
-    });
+    axios
+      .post("/api/im_file", formData)
+      .then(() => {
+        alert("IMFile created successfully");
+      })
+      .catch((error) => {
+        alert(error?.response?.data?.error?.message);
+      });
   };
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>Add IMFile</h2>
+      <div className="flex">
+        <h2 className="flex-1">Add IMFile</h2>
       </div>
       <input type="text" placeholder="iMId" onChange={onIMChange} />
-      <input type='file' onChange={onFileChange} accept=".pdf" />
-      <button className='border rounded' onClick={uploadFileHandler}>
+      <input type="file" onChange={onFileChange} accept=".pdf" />
+      <button className="border rounded" onClick={uploadFileHandler}>
         Upload file
       </button>
     </CrudLayout>

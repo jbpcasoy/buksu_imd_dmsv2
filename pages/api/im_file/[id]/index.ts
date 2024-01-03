@@ -1,14 +1,10 @@
 import prisma from "@/prisma/client";
-import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
+import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
-import * as Yup from "yup";
-import fs from "fs";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iMFileAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -30,7 +25,6 @@ export default async function handler(
       const iMFile = await prisma.iMFile.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).IMFile,
             {
               id: {
                 equals: id as string,
@@ -53,11 +47,9 @@ export default async function handler(
     try {
       const { id } = req.query;
 
-      let iMFileToDelete;
-      iMFileToDelete = await prisma.iMFile.findFirstOrThrow({
+      const iMFileToDelete = await prisma.iMFile.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).IMFile,
             {
               id: {
                 equals: id as string,
@@ -65,31 +57,44 @@ export default async function handler(
             },
           ],
         },
-        include: {
-          IM: {
-            include: {
-              Faculty: {
-                include: {
-                  ActiveFaculty: {
-                    include: {
-                      Faculty: {
-                        include: {
-                          User: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
       });
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        subject("IMFile", iMFileToDelete)
-      );
+      if(!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id
+                  }
+                }
+              }
+            }
+          }
+        })
+
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            id: iMFileToDelete.iMId
+          }
+        })
+
+        if(!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action"
+            }
+          })
+        }
+        if(iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to delete this IM file"
+            }
+          })
+        }
+      }
 
       const filePath = path.join(
         process.cwd(),

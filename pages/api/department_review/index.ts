@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
 import departmentReviewAbility from "@/services/ability/departmentReviewAbility";
-import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -24,7 +22,6 @@ export default async function handler(
 
   const postHandler = async () => {
     try {
-      const ability = iMFileAbility({ user });
       const validator = Yup.object({
         iMFileId: Yup.string().required(),
       });
@@ -34,7 +31,6 @@ export default async function handler(
       const iMFile = await prisma.iMFile.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).IMFile,
             {
               id: {
                 equals: iMFileId as string,
@@ -42,30 +38,45 @@ export default async function handler(
             },
           ],
         },
-        include: {
-          IM: {
-            include: {
+      });
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
               Faculty: {
-                include: {
-                  ActiveFaculty: {
-                    include: {
-                      Faculty: {
-                        include: {
-                          User: true,
-                        },
-                      },
-                    },
+                User: {
+                  id: {
+                    equals: user.id,
                   },
                 },
               },
             },
           },
-        },
-      });
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToDepartmentReview",
-        subject("IMFile", iMFile)
-      );
+        });
+
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            id: iMFile.iMId,
+          },
+        });
+
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create a department review for this IM file",
+            },
+          });
+        }
+      }
 
       const existingDepartmentReview = await prisma.departmentReview.findFirst({
         where: {

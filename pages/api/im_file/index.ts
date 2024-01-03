@@ -1,8 +1,6 @@
 import prisma from "@/prisma/client";
-import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
@@ -121,7 +119,7 @@ export default async function handler(
         if (iM.facultyId !== faculty.id) {
           return res.status(403).json({
             error: {
-              message: "You cant submit an im file for this IM",
+              message: "You are not allowed to submit a file for this IM",
             },
           });
         }
@@ -433,22 +431,16 @@ export default async function handler(
       await validator.validate(req.query);
       const { skip, take } = validator.cast(req.query);
 
-      const ability = iMFileAbility({ user });
-
       const iMFiles = await prisma.iMFile.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).IMFile],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.iMFile.count({
-        where: {
-          AND: [accessibleBy(ability).IMFile],
-        },
+        where: {},
       });
 
       return res.json({ iMFiles, count });
