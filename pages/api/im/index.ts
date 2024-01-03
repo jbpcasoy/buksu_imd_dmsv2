@@ -1,12 +1,10 @@
 import prisma from "@/prisma/client";
-import facultyAbility from "@/services/ability/facultyAbility";
 import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
 import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
-import { ActiveFaculty, Faculty, User } from "@prisma/client";
+import { Faculty, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
