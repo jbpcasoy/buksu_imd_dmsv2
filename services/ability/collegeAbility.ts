@@ -3,7 +3,6 @@ import abilityBuilder from "./abilityBuilder";
 
 export default function collegeAbility({ user }: { user: User }) {
   const ability = abilityBuilder((can, cannot) => {
-    can("read", "College");
   });
 
   return ability;
