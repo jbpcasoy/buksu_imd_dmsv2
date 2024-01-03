@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import activeContentSpecialistAbility from "@/services/ability/activeContentSpecialistAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeContentSpecialistAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -32,11 +27,10 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const activeContentSpecialist = await prisma.activeContentSpecialist.findFirstOrThrow(
-        {
+      const activeContentSpecialist =
+        await prisma.activeContentSpecialist.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ActiveContentSpecialist,
               {
                 id: {
                   equals: id,
@@ -44,8 +38,7 @@ export default async function handler(
               },
             ],
           },
-        }
-      );
+        });
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {
@@ -64,17 +57,22 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ActiveContentSpecialist"
-      );
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message:
+              "You are not allowed to remove an active content specialist",
+          },
+        });
+      }
 
       const { id } = validator.cast(req.query);
-      const activeContentSpecialist = await prisma.activeContentSpecialist.delete({
-        where: {
-          id,
-        },
-      });
+      const activeContentSpecialist =
+        await prisma.activeContentSpecialist.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {

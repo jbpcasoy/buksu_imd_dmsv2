@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import activeContentSpecialistAbility from "@/services/ability/activeContentSpecialistAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeContentSpecialistAbility({ user });
-
   const postHandler = async () => {
     try {
       const validator = Yup.object({
@@ -30,10 +25,13 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ActiveContentSpecialist"
-      );
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to set an active content specialist",
+          },
+        });
+      }
 
       const { activeFacultyId } = validator.cast(req.body);
       const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow(
@@ -66,7 +64,8 @@ export default async function handler(
       if (userActiveContentSpecialistCount > 0) {
         return res.status(409).json({
           error: {
-            message: "Faculty can only be an active content specialist on one department",
+            message:
+              "Faculty can only be an active content specialist on one department",
           },
         });
       }
@@ -149,7 +148,6 @@ export default async function handler(
           take,
           where: {
             AND: [
-              accessibleBy(ability).ActiveContentSpecialist,
               {
                 ContentSpecialist: {
                   Faculty: {
@@ -170,7 +168,20 @@ export default async function handler(
         });
       const count = await prisma.activeContentSpecialist.count({
         where: {
-          AND: [accessibleBy(ability).ActiveContentSpecialist],
+          AND: [
+            {
+              ContentSpecialist: {
+                Faculty: {
+                  User: {
+                    name: {
+                      contains: filterName,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
       });
 

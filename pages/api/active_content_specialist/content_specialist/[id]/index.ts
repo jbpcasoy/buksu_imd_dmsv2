@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import activeContentSpecialistAbility from "@/services/ability/activeContentSpecialistAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeContentSpecialistAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -36,7 +31,6 @@ export default async function handler(
         await prisma.activeContentSpecialist.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ActiveContentSpecialist,
               {
                 ContentSpecialist: {
                   id: {
