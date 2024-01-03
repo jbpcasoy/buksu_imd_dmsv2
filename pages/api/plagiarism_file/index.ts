@@ -3,14 +3,12 @@ import plagiarismFileAbility from "@/services/ability/plagiarismFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
-import { ActiveFaculty, IM, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import * as Yup from "yup";
-import { ForbiddenError, subject } from "@casl/ability";
-import iMAbility from "@/services/ability/iMAbility";
 
 //set bodyParser
 export const config = {
@@ -54,43 +52,52 @@ export default async function handler(
       });
       await validator.validate(body);
       const { iMId } = validator.cast(body);
-
-      // Find IM
-      let iM: IM;
-      iM = await prisma.iM.findFirstOrThrow({
+      const iM = await prisma.iM.findFirstOrThrow({
         where: {
           id: {
             equals: iMId,
           },
         },
-        include: {
-          Faculty: {
-            include: {
-              ActiveFaculty: {
-                include: {
-                  Faculty: {
-                    include: {
-                      User: true,
-                    },
+      });
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
                   },
                 },
               },
             },
           },
-        },
-      });
-
-      const ability = iMAbility({ user });
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToPlagiarismFile",
-        subject("IM", iM)
-      );
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You cant submit a plagiarism file for this IM",
+            },
+          });
+        }
+      }
 
       // Save file to server
       const file = data.files.file[0];
       const filename = `${file.newFilename}.pdf`;
       const filePath = file.filepath;
-      const destination = path.join(process.cwd(), `/files/plagiarism/${filename}`);
+      const destination = path.join(
+        process.cwd(),
+        `/files/plagiarism/${filename}`
+      );
       fs.copyFile(filePath, destination, (err) => {
         if (err) throw err;
       });

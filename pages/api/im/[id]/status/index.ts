@@ -1,13 +1,8 @@
 import prisma from "@/prisma/client";
-import { AppAbility } from "@/services/ability/abilityBuilder";
-import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { Faculty, IM, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,

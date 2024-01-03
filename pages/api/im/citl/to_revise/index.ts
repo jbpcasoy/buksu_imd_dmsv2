@@ -1,13 +1,11 @@
 import prisma from "@/prisma/client";
-import { ActiveFaculty, Faculty, Prisma, User } from "@prisma/client";
+import { AppAbility } from "@/services/ability/abilityBuilder";
+import getServerUser from "@/services/getServerUser";
+import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
+import logger from "@/services/logger";
+import { ActiveFaculty, Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
-import getServerUser from "@/services/getServerUser";
-import logger from "@/services/logger";
-import iMAbility from "@/services/ability/iMAbility";
-import { accessibleBy } from "@casl/prisma";
-import { AppAbility } from "@/services/ability/abilityBuilder";
-import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
 
 export default async function handler(
   req: NextApiRequest,
@@ -49,7 +47,6 @@ export default async function handler(
           },
         },
       });
-      ability = iMAbility({ user });
 
       const {
         skip,
@@ -108,7 +105,6 @@ export default async function handler(
         take,
         where: {
           AND: [
-            accessibleBy(ability).IM,
             statusQuery,
             {
               Faculty: {
@@ -227,7 +223,6 @@ export default async function handler(
       const count = await prisma.iM.count({
         where: {
           AND: [
-            accessibleBy(ability).IM,
             statusQuery,
             {
               Faculty: {

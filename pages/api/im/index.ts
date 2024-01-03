@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
-import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
 import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { Faculty, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -46,13 +44,11 @@ export default async function handler(
 
       if (!user.isAdmin) {
         if (faculty.userId !== user.id) {
-          return res
-            .status(403)
-            .json({
-              error: {
-                message: "You are not allowed to create an IM for this user",
-              },
-            });
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to create an IM for this user",
+            },
+          });
         }
       }
 
@@ -115,14 +111,11 @@ export default async function handler(
       } = validator.cast(req.query);
       let statusQuery = iMStatusQueryBuilder(filterStatus);
 
-      const ability = iMAbility({ user });
-
       const iMs = await prisma.iM.findMany({
         skip,
         take,
         where: {
           AND: [
-            accessibleBy(ability).IM,
             statusQuery,
             {
               Faculty: {
@@ -171,7 +164,6 @@ export default async function handler(
       const count = await prisma.iM.count({
         where: {
           AND: [
-            accessibleBy(ability).IM,
             statusQuery,
             {
               Faculty: {

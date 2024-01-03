@@ -1,10 +1,8 @@
 import prisma from "@/prisma/client";
 import { AppAbility } from "@/services/ability/abilityBuilder";
-import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
 import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -39,7 +37,6 @@ export default async function handler(
       await validator.validate(req.query);
 
       let ability: AppAbility;
-      ability = iMAbility({ user });
 
       const {
         skip,
@@ -98,7 +95,6 @@ export default async function handler(
         take,
         where: {
           AND: [
-            accessibleBy(ability).IM,
             statusQuery,
             {
               Faculty: {
@@ -145,7 +141,6 @@ export default async function handler(
       const count = await prisma.iM.count({
         where: {
           AND: [
-            accessibleBy(ability).IM,
             statusQuery,
             {
               Faculty: {

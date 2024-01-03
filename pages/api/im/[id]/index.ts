@@ -1,11 +1,7 @@
 import prisma from "@/prisma/client";
-import { AppAbility } from "@/services/ability/abilityBuilder";
-import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { Faculty, IM, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -21,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iMAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -30,7 +25,6 @@ export default async function handler(
       const iM = await prisma.iM.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).IM,
             {
               id: {
                 equals: id as string,

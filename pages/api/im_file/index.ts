@@ -3,14 +3,12 @@ import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
-import { ActiveFaculty, IM, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import * as Yup from "yup";
-import { ForbiddenError, subject } from "@casl/ability";
-import iMAbility from "@/services/ability/iMAbility";
 
 //set bodyParser
 export const config = {
@@ -90,6 +88,44 @@ export default async function handler(
         iMERCCITLReviewedId,
         submittedReturnedIMERCCITLRevisionId,
       } = validator.cast(body);
+
+      const iM = await prisma.iM.findFirstOrThrow({
+        where: {
+          id: {
+            equals: iMId as string,
+          },
+        },
+      });
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You cant submit an im file for this IM",
+            },
+          });
+        }
+      }
 
       if (
         !departmentReviewedId &&
@@ -296,42 +332,13 @@ export default async function handler(
         });
 
         if (existingIMFile) {
-          return res
-            .status(400)
-            .json({ error: { message: "IM already had a returned IMERC CITL revision file" } });
+          return res.status(400).json({
+            error: {
+              message: "IM already had a returned IMERC CITL revision file",
+            },
+          });
         }
       }
-
-      // Find IM
-      let iM: IM;
-      iM = await prisma.iM.findFirstOrThrow({
-        where: {
-          id: {
-            equals: iMId,
-          },
-        },
-        include: {
-          Faculty: {
-            include: {
-              ActiveFaculty: {
-                include: {
-                  Faculty: {
-                    include: {
-                      User: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      const ability = iMAbility({ user });
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToIMFile",
-        subject("IM", iM)
-      );
 
       // Save file to server
       const file = data.files.file[0];

@@ -1,6 +1,5 @@
 import prisma from "@/prisma/client";
 import departmentReviewAbility from "@/services/ability/departmentReviewAbility";
-import iMAbility from "@/services/ability/iMAbility";
 import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
