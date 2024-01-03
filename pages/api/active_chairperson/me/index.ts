@@ -1,12 +1,9 @@
 import prisma from "@/prisma/client";
-import activeChairpersonAbility from "@/services/ability/activeChairpersonAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,15 +17,12 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeChairpersonAbility({ user });
-
   const getHandler = async () => {
     try {
       const activeChairperson = await prisma.activeChairperson.findFirstOrThrow(
         {
           where: {
             AND: [
-              accessibleBy(ability).ActiveChairperson,
               {
                 Chairperson: {
                   Faculty: {

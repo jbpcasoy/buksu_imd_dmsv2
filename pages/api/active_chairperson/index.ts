@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import activeChairpersonAbility from "@/services/ability/activeChairpersonAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeChairpersonAbility({ user });
-
   const postHandler = async () => {
     try {
       const validator = Yup.object({
@@ -30,10 +25,13 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ActiveChairperson"
-      );
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to set an active chairperson",
+          },
+        });
+      }
 
       const { activeFacultyId } = validator.cast(req.body);
       const chairperson = await prisma.chairperson.findFirstOrThrow({
@@ -143,7 +141,6 @@ export default async function handler(
         take,
         where: {
           AND: [
-            accessibleBy(ability).ActiveChairperson,
             {
               Chairperson: {
                 Faculty: {
@@ -164,7 +161,20 @@ export default async function handler(
       });
       const count = await prisma.activeChairperson.count({
         where: {
-          AND: [accessibleBy(ability).ActiveChairperson],
+          AND: [
+            {
+              Chairperson: {
+                Faculty: {
+                  User: {
+                    name: {
+                      contains: filterName,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
       });
 

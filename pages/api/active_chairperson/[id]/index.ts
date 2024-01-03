@@ -1,5 +1,4 @@
 import prisma from "@/prisma/client";
-import activeChairpersonAbility from "@/services/ability/activeChairpersonAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -21,8 +20,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeChairpersonAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -36,7 +33,6 @@ export default async function handler(
         {
           where: {
             AND: [
-              accessibleBy(ability).ActiveChairperson,
               {
                 id: {
                   equals: id,
@@ -64,10 +60,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ActiveChairperson"
-      );
+      if(!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to remove an active chairperson"
+          }
+        })
+      }
 
       const { id } = validator.cast(req.query);
       const activeChairperson = await prisma.activeChairperson.delete({
