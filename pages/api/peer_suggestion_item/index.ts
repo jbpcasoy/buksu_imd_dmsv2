@@ -69,21 +69,24 @@ export default async function handler(
             },
           });
         }
-      }
 
-      const submittedPeerSuggestion =
-        await prisma.submittedPeerSuggestion.findFirst({
-          where: {
-            PeerSuggestion: {
-              id: {
-                equals: peerSuggestionId,
+        const submittedPeerSuggestion =
+          await prisma.submittedPeerSuggestion.findFirst({
+            where: {
+              PeerSuggestion: {
+                id: {
+                  equals: peerSuggestionId,
+                },
               },
             },
-          },
-        });
-
-      if (submittedPeerSuggestion) {
-        throw new Error("Peer Suggestion is already submitted");
+          });
+        if (submittedPeerSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "Peer suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const peerSuggestionItem = await prisma.peerSuggestionItem.create({
