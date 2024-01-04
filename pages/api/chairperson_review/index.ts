@@ -67,11 +67,6 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      // ForbiddenError.from(ability).throwUnlessCan(
-      //   "create",
-      //   "ChairpersonReview"
-      // );
-
       const {
         q1_1,
         q1_2,
