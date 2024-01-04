@@ -1,12 +1,8 @@
 import prisma from "@/prisma/client";
-import eventAbility from "@/services/ability/eventAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,7 +16,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = eventAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -1285,7 +1280,6 @@ export default async function handler(
       const count = await prisma.event.count({
         where: {
           AND: [
-            accessibleBy(ability).Event,
             whereQuery,
             {
               NotificationRead: {
