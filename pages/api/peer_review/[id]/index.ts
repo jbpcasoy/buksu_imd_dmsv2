@@ -81,9 +81,9 @@ export default async function handler(
         if (peerReviewToUpdate.facultyId !== faculty.id) {
           return res.status(403).json({
             error: {
-              message: "You are not allowed to delete this peer review"
-            }
-          })
+              message: "You are not allowed to delete this peer review",
+            },
+          });
         }
 
         const submittedPeerSuggestion =
@@ -196,23 +196,23 @@ export default async function handler(
         if (peerReviewToUpdate.facultyId !== faculty.id) {
           return res.status(403).json({
             error: {
-              message: "You are not allowed to update this peer review"
-            }
-          })
+              message: "You are not allowed to update this peer review",
+            },
+          });
         }
 
-          const submittedPeerSuggestion =
-            await prisma.submittedPeerSuggestion.findFirst({
-              where: {
-                PeerSuggestion: {
-                  PeerReview: {
-                    id: {
-                      equals: id as string,
-                    },
+        const submittedPeerSuggestion =
+          await prisma.submittedPeerSuggestion.findFirst({
+            where: {
+              PeerSuggestion: {
+                PeerReview: {
+                  id: {
+                    equals: id as string,
                   },
                 },
               },
-            });
+            },
+          });
 
         if (submittedPeerSuggestion) {
           return res.status(400).json({
