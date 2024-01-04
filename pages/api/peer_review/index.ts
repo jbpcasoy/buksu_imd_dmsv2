@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import peerReviewAbility from "@/services/ability/peerReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerReviewAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -71,8 +67,6 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "PeerReview");
-
       const {
         q1_1,
         q1_2,
@@ -114,25 +108,74 @@ export default async function handler(
         },
       });
 
-      const departmentReview = await prisma.departmentReview.findFirstOrThrow({
-        where: {
-          id: {
-            equals: departmentReviewId,
-          },
-        },
-        include: {
-          IMFile: {
-            include: {
-              IM: true,
+      if (!user.isAdmin) {
+        if (faculty.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create a peer review for this user",
+            },
+          });
+        }
+
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  id: {
+                    equals: departmentReviewId,
+                  },
+                },
+              },
             },
           },
-        },
-      });
+        });
 
-      if (faculty.id === departmentReview.IMFile.IM.facultyId) {
-        throw new Error("Cannot peer review own IM");
+        const iMDepartment = await prisma.department.findFirstOrThrow({
+          where: {
+            Faculty: {
+              some: {
+                IM: {
+                  some: {
+                    id: iM.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        const ownDepartment = await prisma.department.findFirstOrThrow({
+          where: {
+            Faculty: {
+              some: {
+                id: {
+                  equals: faculty.id,
+                },
+              },
+            },
+          },
+        });
+
+        if (ownDepartment.id !== iMDepartment.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create a peer review for IMs outside your department",
+            },
+          });
+        }
+        if (faculty.id === iM.facultyId) {
+          // throw new Error("Cannot peer review own IM");
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create a peer review for your own IM",
+            },
+          });
+        }
       }
-      
+
       const peerReview = await prisma.peerReview.create({
         data: {
           q1_1,
@@ -201,17 +244,13 @@ export default async function handler(
       const peerReviews = await prisma.peerReview.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).PeerReview],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.peerReview.count({
-        where: {
-          AND: [accessibleBy(ability).PeerReview],
-        },
+        where: {},
       });
 
       return res.json({ peerReviews, count });

@@ -1,8 +1,6 @@
 import prisma from "@/prisma/client";
-import peerReviewAbility from "@/services/ability/peerReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -19,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerReviewAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -32,7 +29,6 @@ export default async function handler(
       const peerReview = await prisma.peerReview.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).PeerReview,
             {
               DepartmentReview: {
                 IMFile: {

@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import peerReviewAbility from "@/services/ability/peerReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerReviewAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -34,7 +30,6 @@ export default async function handler(
       const peerReview = await prisma.peerReview.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).PeerReview,
             {
               id: {
                 equals: id,
@@ -60,10 +55,58 @@ export default async function handler(
       });
 
       await validator.validate(req.query);
-
-      ForbiddenError.from(ability).throwUnlessCan("delete", "PeerReview");
-
       const { id } = validator.cast(req.query);
+
+      if (!user.isAdmin) {
+        const peerReviewToUpdate = await prisma.peerReview.findFirstOrThrow({
+          where: {
+            id: {
+              equals: id as string,
+            },
+          },
+        });
+        const faculty = await prisma.faculty.findFirstOrThrow({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (peerReviewToUpdate.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to delete this peer review"
+            }
+          })
+        }
+
+        const submittedPeerSuggestion =
+          await prisma.submittedPeerSuggestion.findFirst({
+            where: {
+              PeerSuggestion: {
+                PeerReview: {
+                  id: {
+                    equals: id,
+                  },
+                },
+              },
+            },
+          });
+
+        if (submittedPeerSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "You are not allowed to delete a submitted peer review",
+            },
+          });
+        }
+      }
 
       const peerReview = await prisma.peerReview.delete({
         where: {
@@ -107,30 +150,79 @@ export default async function handler(
         q7_4: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q7_5: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q8_1: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_2: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_3: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
       });
 
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan("update", "PeerReview");
-
       const { id } = req.query;
+
+      if (!user.isAdmin) {
+        const peerReviewToUpdate = await prisma.peerReview.findFirstOrThrow({
+          where: {
+            id: {
+              equals: id as string,
+            },
+          },
+        });
+        const faculty = await prisma.faculty.findFirstOrThrow({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (peerReviewToUpdate.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to update this peer review"
+            }
+          })
+        }
+
+          const submittedPeerSuggestion =
+            await prisma.submittedPeerSuggestion.findFirst({
+              where: {
+                PeerSuggestion: {
+                  PeerReview: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            });
+
+        if (submittedPeerSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "You are not allowed to update a submitted peer review",
+            },
+          });
+        }
+      }
+
       const {
         q1_1,
         q1_2,
