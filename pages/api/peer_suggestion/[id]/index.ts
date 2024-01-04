@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import peerSuggestionAbility from "@/services/ability/peerSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerSuggestionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -33,7 +29,6 @@ export default async function handler(
       const peerSuggestion = await prisma.peerSuggestion.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).PeerSuggestion,
             {
               id: {
                 equals: id,
@@ -59,10 +54,64 @@ export default async function handler(
       });
 
       await validator.validate(req.query);
-
-      ForbiddenError.from(ability).throwUnlessCan("delete", "PeerSuggestion");
-
       const { id } = validator.cast(req.query);
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if(!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty is allowed to perform this action"
+            }
+          })
+        }
+
+        const peerReview = await prisma.peerReview.findFirstOrThrow({
+          where: {
+            PeerSuggestion: {
+              id: {
+                equals: id,
+              },
+            },
+          },
+        });
+        if(peerReview.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to delete this peer suggestion"
+            }
+          })
+        }
+
+        const submittedPeerSuggestion = await prisma.submittedPeerSuggestion.findFirst({
+          where: {
+            PeerSuggestion: {
+              id: {
+                equals: id
+              }
+            }
+          }
+        })
+        if(submittedPeerSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "You are not allowed to delete a submitted peer suggestion"
+            }
+          })
+        }
+      }
 
       const peerSuggestion = await prisma.peerSuggestion.delete({
         where: {
