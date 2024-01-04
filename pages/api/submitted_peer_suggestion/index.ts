@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedPeerSuggestionAbility from "@/services/ability/submittedPeerSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import mailTransporter from "@/services/mailTransporter";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedPeerSuggestionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,11 +26,49 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "SubmittedPeerSuggestion"
-      );
       const { peerSuggestionId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active faculty is allowed to perform this action",
+            },
+          });
+        }
+
+        const peerReview = await prisma.peerReview.findFirstOrThrow({
+          where: {
+            PeerSuggestion: {
+              id: {
+                equals: peerSuggestionId,
+              },
+            },
+          },
+        });
+        if (peerReview.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to submit this peer suggestion",
+            },
+          });
+        }
+      }
+
       const peerSuggestionItemCount = await prisma.peerSuggestionItem.count({
         where: {
           peerSuggestionId: {
@@ -43,7 +77,11 @@ export default async function handler(
         },
       });
       if (peerSuggestionItemCount < 1) {
-        throw new Error("Suggestions are required upon submitting");
+        return res.status(400).json({
+          error: {
+            message: "Suggestions are required upon submitting",
+          },
+        });
       }
       const submittedPeerSuggestion =
         await prisma.submittedPeerSuggestion.create({
@@ -203,7 +241,6 @@ export default async function handler(
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
-        "filter[name]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -211,24 +248,19 @@ export default async function handler(
       const {
         skip,
         take,
-        "filter[name]": filterName,
       } = validator.cast(req.query);
 
       const submittedPeerSuggestions =
         await prisma.submittedPeerSuggestion.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).SubmittedPeerSuggestion],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.submittedPeerSuggestion.count({
-        where: {
-          AND: [accessibleBy(ability).SubmittedPeerSuggestion],
-        },
+        where: {},
       });
 
       return res.json({ submittedPeerSuggestions, count });

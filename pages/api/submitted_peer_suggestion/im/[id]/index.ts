@@ -1,12 +1,8 @@
 import prisma from "@/prisma/client";
-import submittedPeerSuggestionAbility from "@/services/ability/submittedPeerSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,12 +12,10 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
-    981;
   } catch (error) {
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedPeerSuggestionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -31,7 +25,6 @@ export default async function handler(
         await prisma.submittedPeerSuggestion.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).SubmittedPeerSuggestion,
               {
                 PeerSuggestion: {
                   PeerReview: {
