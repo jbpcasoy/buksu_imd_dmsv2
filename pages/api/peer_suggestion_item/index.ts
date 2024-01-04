@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import peerSuggestionItemAbility from "@/services/ability/peerSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerSuggestionItemAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -33,15 +29,49 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "PeerSuggestionItem"
-      );
-
       const { actionTaken, peerSuggestionId, remarks, suggestion, pageNumber } =
         validator.cast(req.body);
 
-        const submittedPeerSuggestion =
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: user.id,
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+
+        const peerReview = await prisma.peerReview.findFirstOrThrow({
+          where: {
+            PeerSuggestion: {
+              id: {
+                equals: peerSuggestionId,
+              },
+            },
+          },
+        });
+        if (peerReview.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create this peer suggestion item",
+            },
+          });
+        }
+      }
+
+      const submittedPeerSuggestion =
         await prisma.submittedPeerSuggestion.findFirst({
           where: {
             PeerSuggestion: {
@@ -55,7 +85,7 @@ export default async function handler(
       if (submittedPeerSuggestion) {
         throw new Error("Peer Suggestion is already submitted");
       }
-      
+
       const peerSuggestionItem = await prisma.peerSuggestionItem.create({
         data: {
           actionTaken,
@@ -99,7 +129,6 @@ export default async function handler(
         take,
         where: {
           AND: [
-            accessibleBy(ability).PeerSuggestionItem,
             {
               PeerSuggestion: {
                 id: {
@@ -116,7 +145,6 @@ export default async function handler(
       const count = await prisma.peerSuggestionItem.count({
         where: {
           AND: [
-            accessibleBy(ability).PeerSuggestionItem,
             {
               PeerSuggestion: {
                 id: {

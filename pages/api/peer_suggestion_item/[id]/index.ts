@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
-import peerSuggestionItemAbility from "@/services/ability/peerSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerSuggestionItemAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -36,7 +33,6 @@ export default async function handler(
         await prisma.peerSuggestionItem.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).PeerSuggestionItem,
               {
                 id: {
                   equals: id,
@@ -62,13 +58,50 @@ export default async function handler(
       });
 
       await validator.validate(req.query);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "PeerSuggestionItem"
-      );
-
       const { id } = validator.cast(req.query);
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: user.id,
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+
+        const peerReview = await prisma.peerReview.findFirstOrThrow({
+          where: {
+            PeerSuggestion: {
+              PeerSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (peerReview.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this peer suggestion item",
+            },
+          });
+        }
+      }
 
       const submittedPeerSuggestion =
         await prisma.submittedPeerSuggestion.findFirst({
@@ -115,14 +148,53 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "PeerSuggestionItem"
-      );
       const { id } = req.query;
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: user.id,
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+
+        const peerReview = await prisma.peerReview.findFirstOrThrow({
+          where: {
+            PeerSuggestion: {
+              PeerSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (peerReview.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update this peer suggestion item",
+            },
+          });
+        }
+      }
 
       const submittedPeerSuggestion =
         await prisma.submittedPeerSuggestion.findFirst({
