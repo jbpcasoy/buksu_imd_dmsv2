@@ -21,7 +21,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedChairpersonSuggestionAbility({ user });
 
   const postHandler = async () => {
     try {

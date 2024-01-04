@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import chairpersonSuggestionAbility from "@/services/ability/chairpersonSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = chairpersonSuggestionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -29,12 +25,50 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ChairpersonSuggestion"
-      );
-
       const { chairpersonReviewId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const chairperson = await prisma.chairperson.findFirst({
+          where: {
+            ActiveChairperson: {
+              Chairperson: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!chairperson) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active chairperson is allowed to perform this action",
+            },
+          });
+        }
+
+        const chairpersonReview =
+          await prisma.chairpersonReview.findFirstOrThrow({
+            where: {
+              id: {
+                equals: chairpersonReviewId,
+              },
+            },
+          });
+        if (chairpersonReview.chairpersonId !== chairperson.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create a chairperson suggestion for this chairperson review",
+            },
+          });
+        }
+      }
 
       const chairpersonSuggestion = await prisma.chairpersonSuggestion.create({
         data: {
@@ -75,17 +109,13 @@ export default async function handler(
         await prisma.chairpersonSuggestion.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).ChairpersonSuggestion],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.chairpersonSuggestion.count({
-        where: {
-          AND: [accessibleBy(ability).ChairpersonSuggestion],
-        },
+        where: {},
       });
 
       return res.json({ chairpersonSuggestions, count });
