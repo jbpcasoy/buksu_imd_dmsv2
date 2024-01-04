@@ -60,20 +60,14 @@ export default async function handler(
       const { id } = validator.cast(req.query);
 
       if (!user.isAdmin) {
-        const faculty = await prisma.faculty.findFirst({
+        const chairperson = await prisma.chairperson.findFirst({
           where: {
-            ActiveFaculty: {
-              Faculty: {
-                Chairperson: {
-                  ActiveChairperson: {
-                    Chairperson: {
-                      Faculty: {
-                        User: {
-                          id: {
-                            equals: user.id,
-                          },
-                        },
-                      },
+            ActiveChairperson: {
+              Chairperson: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
                     },
                   },
                 },
@@ -81,7 +75,7 @@ export default async function handler(
             },
           },
         });
-        if (!faculty) {
+        if (!chairperson) {
           return res.status(403).json({
             error: {
               message: "Only an active chairperson can perform this action",
@@ -89,26 +83,16 @@ export default async function handler(
           });
         }
 
-        const iMOwner = await prisma.faculty.findFirstOrThrow({
-          where: {
-            IM: {
-              some: {
-                IMFile: {
-                  some: {
-                    DepartmentReview: {
-                      ChairpersonReview: {
-                        id: {
-                          equals: id,
-                        },
-                      },
-                    },
-                  },
-                },
+        const chairpersonReviewToDelete =
+          await prisma.chairpersonReview.findFirstOrThrow({
+            where: {
+              id: {
+                equals: id as string,
               },
             },
-          },
-        });
-        if (iMOwner.id !== faculty.id) {
+          });
+
+        if (chairpersonReviewToDelete.chairpersonId !== chairperson.id) {
           return res.status(403).json({
             error: {
               message: "You are not allowed to delete this chairperson review",
@@ -122,7 +106,7 @@ export default async function handler(
               ChairpersonSuggestion: {
                 ChairpersonReview: {
                   id: {
-                    equals: id,
+                    equals: id as string,
                   },
                 },
               },
@@ -232,20 +216,14 @@ export default async function handler(
       } = validator.cast(req.body);
 
       if (!user.isAdmin) {
-        const faculty = await prisma.faculty.findFirst({
+        const chairperson = await prisma.chairperson.findFirst({
           where: {
-            ActiveFaculty: {
-              Faculty: {
-                Chairperson: {
-                  ActiveChairperson: {
-                    Chairperson: {
-                      Faculty: {
-                        User: {
-                          id: {
-                            equals: user.id,
-                          },
-                        },
-                      },
+            ActiveChairperson: {
+              Chairperson: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
                     },
                   },
                 },
@@ -253,7 +231,7 @@ export default async function handler(
             },
           },
         });
-        if (!faculty) {
+        if (!chairperson) {
           return res.status(403).json({
             error: {
               message: "Only an active chairperson can perform this action",
@@ -261,27 +239,16 @@ export default async function handler(
           });
         }
 
-        const iMOwner = await prisma.faculty.findFirstOrThrow({
-          where: {
-            IM: {
-              some: {
-                IMFile: {
-                  some: {
-                    DepartmentReview: {
-                      ChairpersonReview: {
-                        id: {
-                          equals: id as string,
-                        },
-                      },
-                    },
-                  },
-                },
+        const chairpersonReviewToUpdate =
+          await prisma.chairpersonReview.findFirstOrThrow({
+            where: {
+              id: {
+                equals: id as string,
               },
             },
-          },
-        });
+          });
 
-        if (iMOwner.id !== faculty.id) {
+        if (chairpersonReviewToUpdate.chairpersonId !== chairperson.id) {
           return res.status(403).json({
             error: {
               message: "You are not allowed to update this chairperson review",
@@ -305,7 +272,7 @@ export default async function handler(
           return res.status(400).json({
             error: {
               message:
-                "You are not allowed to delete a submitted chairperson review",
+                "You are not allowed to update a submitted chairperson review",
             },
           });
         }

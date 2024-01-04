@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedChairpersonSuggestionAbility from "@/services/ability/submittedChairpersonSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import mailTransporter from "@/services/mailTransporter";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -28,20 +25,57 @@ export default async function handler(
         chairpersonSuggestionId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "SubmittedChairpersonSuggestion"
-      );
-
       const { chairpersonSuggestionId } = validator.cast(req.body);
-      const chairpersonSuggestionItemCount = await prisma.chairpersonSuggestionItem.count({
-        where: {
-          chairpersonSuggestionId: {
-            equals: chairpersonSuggestionId,
+
+      if (!user.isAdmin) {
+        const chairperson = await prisma.chairperson.findFirst({
+          where: {
+            ActiveChairperson: {
+              Chairperson: {
+                Faculty: {
+                  User: {
+                    id: user.id,
+                  },
+                },
+              },
+            },
           },
-        },
-      });
+        });
+        if (!chairperson) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active chairperson can perform this action",
+            },
+          });
+        }
+
+        const chairpersonReview =
+          await prisma.chairpersonReview.findFirstOrThrow({
+            where: {
+              ChairpersonSuggestion: {
+                id: {
+                  equals: chairpersonSuggestionId,
+                },
+              },
+            },
+          });
+        if (chairpersonReview.chairpersonId !== chairperson.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to submit this chairperson suggestion",
+            },
+          });
+        }
+      }
+
+      const chairpersonSuggestionItemCount =
+        await prisma.chairpersonSuggestionItem.count({
+          where: {
+            chairpersonSuggestionId: {
+              equals: chairpersonSuggestionId,
+            },
+          },
+        });
       if (chairpersonSuggestionItemCount < 1) {
         throw new Error("Suggestions are required upon submitting");
       }
@@ -221,17 +255,13 @@ export default async function handler(
         await prisma.submittedChairpersonSuggestion.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).SubmittedChairpersonSuggestion],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.submittedChairpersonSuggestion.count({
-        where: {
-          AND: [accessibleBy(ability).SubmittedChairpersonSuggestion],
-        },
+        where: {},
       });
 
       return res.json({ submittedChairpersonSuggestions, count });

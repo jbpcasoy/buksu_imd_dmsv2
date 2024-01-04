@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import submittedChairpersonSuggestionAbility from "@/services/ability/submittedChairpersonSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -16,12 +13,10 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
-    
   } catch (error) {
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedChairpersonSuggestionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -36,7 +31,6 @@ export default async function handler(
         await prisma.submittedChairpersonSuggestion.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).SubmittedChairpersonSuggestion,
               {
                 id: {
                   equals: id,
@@ -62,13 +56,54 @@ export default async function handler(
       });
 
       await validator.validate(req.query);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "SubmittedChairpersonSuggestion"
-      );
-
       const { id } = validator.cast(req.query);
+
+      if (!user.isAdmin) {
+        const chairperson = await prisma.chairperson.findFirst({
+          where: {
+            ActiveChairperson: {
+              Chairperson: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!chairperson) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active chairperson can perform this action",
+            },
+          });
+        }
+
+        const chairpersonReview =
+          await prisma.chairpersonReview.findFirstOrThrow({
+            where: {
+              ChairpersonSuggestion: {
+                SubmittedChairpersonSuggestion: {
+                  id: {
+                    equals: id,
+                  },
+                },
+              },
+            },
+          });
+        if (chairpersonReview.chairpersonId !== chairperson.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to unsubmit this chairperson suggestion",
+            },
+          });
+        }
+      }
+
       const submittedChairpersonSuggestion =
         await prisma.submittedChairpersonSuggestion.delete({
           where: {
