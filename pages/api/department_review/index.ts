@@ -1,8 +1,6 @@
 import prisma from "@/prisma/client";
-import departmentReviewAbility from "@/services/ability/departmentReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -57,7 +55,9 @@ export default async function handler(
 
         const iM = await prisma.iM.findFirstOrThrow({
           where: {
-            id: iMFile.iMId,
+            id: {
+              equals: iMFile.iMId
+            },
           },
         });
 
@@ -127,7 +127,6 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const ability = departmentReviewAbility({ user });
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
@@ -144,17 +143,13 @@ export default async function handler(
       const departmentReviews = await prisma.departmentReview.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).DepartmentReview],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.departmentReview.count({
-        where: {
-          AND: [accessibleBy(ability).DepartmentReview],
-        },
+        where: {},
       });
 
       return res.json({ departmentReviews, count });
