@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedCoordinatorSuggestionAbility from "@/services/ability/submittedCoordinatorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import mailTransporter from "@/services/mailTransporter";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedCoordinatorSuggestionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -29,20 +25,58 @@ export default async function handler(
         coordinatorSuggestionId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "SubmittedCoordinatorSuggestion"
-      );
-
       const { coordinatorSuggestionId } = validator.cast(req.body);
-      const coordinatorSuggestionItemCount = await prisma.coordinatorSuggestionItem.count({
-        where: {
-          coordinatorSuggestionId: {
-            equals: coordinatorSuggestionId,
+
+      if (!user.isAdmin) {
+        const coordinator = await prisma.coordinator.findFirst({
+          where: {
+            ActiveCoordinator: {
+              Coordinator: {
+                Faculty: {
+                  User: {
+                    id: user.id,
+                  },
+                },
+              },
+            },
           },
-        },
-      });
+        });
+        if (!coordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active coordinator can perform this action",
+            },
+          });
+        }
+
+        const coordinatorReview =
+          await prisma.coordinatorReview.findFirstOrThrow({
+            where: {
+              CoordinatorSuggestion: {
+                id: {
+                  equals: coordinatorSuggestionId,
+                },
+              },
+            },
+          });
+        if (coordinatorReview.coordinatorId !== coordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to submit this coordinator suggestion",
+            },
+          });
+        }
+      }
+
+      const coordinatorSuggestionItemCount =
+        await prisma.coordinatorSuggestionItem.count({
+          where: {
+            coordinatorSuggestionId: {
+              equals: coordinatorSuggestionId,
+            },
+          },
+        });
       if (coordinatorSuggestionItemCount < 1) {
         throw new Error("Suggestions are required upon submitting");
       }
@@ -220,17 +254,13 @@ export default async function handler(
         await prisma.submittedCoordinatorSuggestion.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).SubmittedCoordinatorSuggestion],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.submittedCoordinatorSuggestion.count({
-        where: {
-          AND: [accessibleBy(ability).SubmittedCoordinatorSuggestion],
-        },
+        where: {},
       });
 
       return res.json({ submittedCoordinatorSuggestions, count });
