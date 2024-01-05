@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import peerSuggestionItemActionTakenAbility from "@/services/ability/peerSuggestionItemActionTakenAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = peerSuggestionItemActionTakenAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,12 +26,65 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "PeerSuggestionItemActionTaken"
-      );
+      // ForbiddenError.from(ability).throwUnlessCan(
+      //   "create",
+      //   "PeerSuggestionItemActionTaken"
+      // );
 
       const { value, peerSuggestionItemId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  PeerReview: {
+                    PeerSuggestion: {
+                      PeerSuggestionItem: {
+                        some: {
+                          id: peerSuggestionItemId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active faculty is allowed to perform this action",
+            },
+          });
+        }
+
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create this peer suggestion item action taken",
+            },
+          });
+        }
+      }
 
       const departmentRevision = await prisma.departmentRevision.findFirst({
         where: {
@@ -73,7 +122,7 @@ export default async function handler(
       if (departmentRevision) {
         throw new Error("IM already revised.");
       }
-      
+
       const peerSuggestionItemActionTaken =
         await prisma.peerSuggestionItemActionTaken.create({
           data: {
@@ -100,30 +149,19 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      const {
-        skip,
-        take,
-      } = validator.cast(req.query);
+      const { skip, take } = validator.cast(req.query);
 
       const peerSuggestionItemActionTakens =
         await prisma.peerSuggestionItemActionTaken.findMany({
           skip,
           take,
-          where: {
-            AND: [
-              accessibleBy(ability).PeerSuggestionItemActionTaken,
-            ],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.peerSuggestionItemActionTaken.count({
-        where: {
-          AND: [
-            accessibleBy(ability).PeerSuggestionItemActionTaken,
-          ],
-        },
+        where: {},
       });
 
       return res.json({ peerSuggestionItemActionTakens, count });
