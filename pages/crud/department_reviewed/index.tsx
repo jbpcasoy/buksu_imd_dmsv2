@@ -24,7 +24,7 @@ export default function DepartmentReviewedsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>DepartmentReviewed Reviewed</h2>
+        <h2>DepartmentReviewed</h2>
       </div>
 
       <div>
