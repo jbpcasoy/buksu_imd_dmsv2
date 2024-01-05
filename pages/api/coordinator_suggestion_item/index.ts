@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
-import coordinatorSuggestionItemAbility from "@/services/ability/coordinatorSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = coordinatorSuggestionItemAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -33,11 +30,6 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "CoordinatorSuggestionItem"
-      );
-
       const {
         actionTaken,
         coordinatorSuggestionId,
@@ -45,6 +37,68 @@ export default async function handler(
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const coordinator = await prisma.coordinator.findFirst({
+          where: {
+            ActiveCoordinator: {
+              Coordinator: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!coordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active coordinator can perform this action",
+            },
+          });
+        }
+
+        const coordinatorReview =
+          await prisma.coordinatorReview.findFirstOrThrow({
+            where: {
+              CoordinatorSuggestion: {
+                id: {
+                  equals: coordinatorSuggestionId,
+                },
+              },
+            },
+          });
+        if (coordinatorReview.coordinatorId !== coordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create this coordinator suggestion item",
+            },
+          });
+        }
+
+        const submittedCoordinatorSuggestion =
+          await prisma.submittedCoordinatorSuggestion.findFirst({
+            where: {
+              CoordinatorSuggestion: {
+                id: {
+                  equals: coordinatorSuggestionId,
+                },
+              },
+            },
+          });
+        if (submittedCoordinatorSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "Coordinator suggestion is already submitted",
+            },
+          });
+        }
+      }
 
       const submittedCoordinatorSuggestion =
         await prisma.submittedCoordinatorSuggestion.findFirst({
@@ -106,7 +160,6 @@ export default async function handler(
           take,
           where: {
             AND: [
-              accessibleBy(ability).CoordinatorSuggestionItem,
               {
                 CoordinatorSuggestion: {
                   id: {
@@ -123,7 +176,6 @@ export default async function handler(
       const count = await prisma.coordinatorSuggestionItem.count({
         where: {
           AND: [
-            accessibleBy(ability).CoordinatorSuggestionItem,
             {
               CoordinatorSuggestion: {
                 id: {
