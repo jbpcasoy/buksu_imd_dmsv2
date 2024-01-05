@@ -100,20 +100,6 @@ export default async function handler(
         }
       }
 
-      const submittedCoordinatorSuggestion =
-        await prisma.submittedCoordinatorSuggestion.findFirst({
-          where: {
-            CoordinatorSuggestion: {
-              id: {
-                equals: coordinatorSuggestionId,
-              },
-            },
-          },
-        });
-
-      if (submittedCoordinatorSuggestion) {
-        throw new Error("Coordinator Suggestion is already submitted");
-      }
 
       const coordinatorSuggestionItem =
         await prisma.coordinatorSuggestionItem.create({
