@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import chairpersonSuggestionItemActionTakenAbility from "@/services/ability/chairpersonSuggestionItemActionTakenAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = chairpersonSuggestionItemActionTakenAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -75,7 +71,6 @@ export default async function handler(
         await prisma.chairpersonSuggestionItemActionTaken.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ChairpersonSuggestionItemActionTaken,
               {
                 id: {
                   equals: id,
@@ -102,24 +97,23 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ChairpersonSuggestionItemActionTaken"
-      );
-
       const { id } = validator.cast(req.query);
 
-      const departmentRevision = await prisma.departmentRevision.findFirst({
-        where: {
-          IMFile: {
-            DepartmentReview: {
-              ChairpersonReview: {
-                ChairpersonSuggestion: {
-                  ChairpersonSuggestionItem: {
-                    some: {
-                      ChairpersonSuggestionItemActionTaken: {
-                        id: {
-                          equals: id,
+      if (!user.isAdmin) {
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  ChairpersonReview: {
+                    ChairpersonSuggestion: {
+                      ChairpersonSuggestionItem: {
+                        some: {
+                          ChairpersonSuggestionItemActionTaken: {
+                            id: {
+                              equals: id,
+                            },
+                          },
                         },
                       },
                     },
@@ -128,24 +122,80 @@ export default async function handler(
               },
             },
           },
-          OR: [
-            {
-              ReturnedDepartmentRevision: {
-                is: null,
-              },
-            },
-            {
-              ReturnedDepartmentRevision: {
-                SubmittedReturnedDepartmentRevision: {
-                  is: null,
+        });
+
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
                 },
               },
             },
-          ],
-        },
-      });
-      if (departmentRevision) {
-        throw new Error("IM already revised.");
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this chairperson suggestion item action taken",
+            },
+          });
+        }
+
+        const departmentRevision = await prisma.departmentRevision.findFirst({
+          where: {
+            IMFile: {
+              DepartmentReview: {
+                ChairpersonReview: {
+                  ChairpersonSuggestion: {
+                    ChairpersonSuggestionItem: {
+                      some: {
+                        ChairpersonSuggestionItemActionTaken: {
+                          id: {
+                            equals: id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            OR: [
+              {
+                ReturnedDepartmentRevision: {
+                  is: null,
+                },
+              },
+              {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+              },
+            ],
+          },
+        });
+        if (departmentRevision) {
+          return res.status(400).json({
+            error: {
+              message: "IM is already revised",
+            },
+          });
+        }
       }
 
       const chairpersonSuggestionItemActionTaken =
@@ -172,13 +222,107 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "ChairpersonSuggestionItemActionTaken"
-      );
-
       const { id } = req.query;
       const { value } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  ChairpersonReview: {
+                    ChairpersonSuggestion: {
+                      ChairpersonSuggestionItem: {
+                        some: {
+                          ChairpersonSuggestionItemActionTaken: {
+                            id: {
+                              equals: id as string,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update this chairperson suggestion item action taken",
+            },
+          });
+        }
+
+        const departmentRevision = await prisma.departmentRevision.findFirst({
+          where: {
+            IMFile: {
+              DepartmentReview: {
+                ChairpersonReview: {
+                  ChairpersonSuggestion: {
+                    ChairpersonSuggestionItem: {
+                      some: {
+                        ChairpersonSuggestionItemActionTaken: {
+                          id: {
+                            equals: id as string,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            OR: [
+              {
+                ReturnedDepartmentRevision: {
+                  is: null,
+                },
+              },
+              {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+              },
+            ],
+          },
+        });
+        if (departmentRevision) {
+          return res.status(400).json({
+            error: {
+              message: "IM is already revised",
+            },
+          });
+        }
+      }
 
       const chairpersonSuggestionItemActionTaken =
         await prisma.chairpersonSuggestionItemActionTaken.update({
