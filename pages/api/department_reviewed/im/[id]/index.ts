@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import departmentReviewedAbility from "@/services/ability/departmentReviewedAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = departmentReviewedAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -33,19 +28,20 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const departmentReviewed = await prisma.departmentReviewed.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).DepartmentReviewed,
-            {
-              SubmittedCoordinatorSuggestion: {
-                CoordinatorSuggestion: {
-                  CoordinatorReview: {
-                    DepartmentReview: {
-                      IMFile: {
-                        IM: {
-                          id: {
-                            equals: id,
+      const departmentReviewed =
+        await prisma.departmentReviewed.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                SubmittedCoordinatorSuggestion: {
+                  CoordinatorSuggestion: {
+                    CoordinatorReview: {
+                      DepartmentReview: {
+                        IMFile: {
+                          IM: {
+                            id: {
+                              equals: id,
+                            },
                           },
                         },
                       },
@@ -53,10 +49,9 @@ export default async function handler(
                   },
                 },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
       return res.json(departmentReviewed);
     } catch (error: any) {

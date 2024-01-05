@@ -13,34 +13,13 @@ export default function DepartmentReviewedPage() {
     id: departmentReviewedId as string,
   });
 
-  const deleteHandler = () => {
-    const ok = confirm("Are you sure?");
-
-    if (!ok) {
-      return;
-    }
-
-    axios
-      .delete(`/api/department_reviewed/${departmentReviewedId}`)
-      .then(() => {
-        alert("DepartmentReviewed has been deleted successfully");
-      })
-      .catch((error) => {
-        alert(error.response?.data?.error?.message);
-      });
-  };
-
   if (!departmentReviewed) return null;
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>DepartmentReviewed</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
-            delete
-          </button>
-        </div>
+      <div className="flex">
+        <h2 className="flex-1">DepartmentReviewed</h2>
+        <div className="space-x-1"></div>
       </div>
       <p>id: {departmentReviewed.id}</p>
       <p>
@@ -53,7 +32,7 @@ export default function DepartmentReviewedPage() {
         submittedChairpersonSuggestionId:
         <Link
           href={`/crud/submitted_chairperson_suggestion/${departmentReviewed.submittedChairpersonSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {departmentReviewed.submittedChairpersonSuggestionId}
         </Link>
@@ -62,7 +41,7 @@ export default function DepartmentReviewedPage() {
         submittedCoordinatorSuggestionId:
         <Link
           href={`/crud/submitted_coordinator_suggestion/${departmentReviewed.submittedCoordinatorSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {departmentReviewed.submittedCoordinatorSuggestionId}
         </Link>
@@ -71,7 +50,7 @@ export default function DepartmentReviewedPage() {
         submittedPeerSuggestionId:
         <Link
           href={`/crud/submitted_peer_suggestion/${departmentReviewed.submittedPeerSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {departmentReviewed.submittedPeerSuggestionId}
         </Link>
