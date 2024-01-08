@@ -156,16 +156,14 @@ export default async function handler(
 
         const departmentRevision = await prisma.departmentRevision.findFirst({
           where: {
-            IMFile: {
-              DepartmentReview: {
-                ChairpersonReview: {
-                  ChairpersonSuggestion: {
-                    ChairpersonSuggestionItem: {
-                      some: {
-                        ChairpersonSuggestionItemActionTaken: {
-                          id: {
-                            equals: id,
-                          },
+            DepartmentReviewed: {
+              SubmittedChairpersonSuggestion: {
+                ChairpersonSuggestion: {
+                  ChairpersonSuggestionItem: {
+                    some: {
+                      ChairpersonSuggestionItemActionTaken: {
+                        id: {
+                          equals: id as string,
                         },
                       },
                     },
@@ -173,20 +171,6 @@ export default async function handler(
                 },
               },
             },
-            OR: [
-              {
-                ReturnedDepartmentRevision: {
-                  is: null,
-                },
-              },
-              {
-                ReturnedDepartmentRevision: {
-                  SubmittedReturnedDepartmentRevision: {
-                    is: null,
-                  },
-                },
-              },
-            ],
           },
         });
         if (departmentRevision) {
@@ -282,16 +266,14 @@ export default async function handler(
 
         const departmentRevision = await prisma.departmentRevision.findFirst({
           where: {
-            IMFile: {
-              DepartmentReview: {
-                ChairpersonReview: {
-                  ChairpersonSuggestion: {
-                    ChairpersonSuggestionItem: {
-                      some: {
-                        ChairpersonSuggestionItemActionTaken: {
-                          id: {
-                            equals: id as string,
-                          },
+            DepartmentReviewed: {
+              SubmittedChairpersonSuggestion: {
+                ChairpersonSuggestion: {
+                  ChairpersonSuggestionItem: {
+                    some: {
+                      ChairpersonSuggestionItemActionTaken: {
+                        id: {
+                          equals: id as string,
                         },
                       },
                     },
@@ -299,20 +281,6 @@ export default async function handler(
                 },
               },
             },
-            OR: [
-              {
-                ReturnedDepartmentRevision: {
-                  is: null,
-                },
-              },
-              {
-                ReturnedDepartmentRevision: {
-                  SubmittedReturnedDepartmentRevision: {
-                    is: null,
-                  },
-                },
-              },
-            ],
           },
         });
         if (departmentRevision) {
