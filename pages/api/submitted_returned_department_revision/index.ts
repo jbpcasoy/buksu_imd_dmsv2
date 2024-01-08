@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedReturnedDepartmentRevisionAbility from "@/services/ability/submittedReturnedDepartmentRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import mailTransporter from "@/services/mailTransporter";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedReturnedDepartmentRevisionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,12 +26,51 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "SubmittedReturnedDepartmentRevision"
-      );
-
       const { returnedDepartmentRevisionId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const coordinator = await prisma.coordinator.findFirst({
+          where: {
+            ActiveCoordinator: {
+              Coordinator: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!coordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        const returnedDepartmentRevision =
+          await prisma.returnedDepartmentRevision.findFirstOrThrow({
+            where: {
+              id: {
+                equals: returnedDepartmentRevisionId,
+              },
+            },
+          });
+        if (returnedDepartmentRevision.coordinatorId !== coordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to submit this returned department revision suggestion",
+            },
+          });
+        }
+      }
+
       const returnedDepartmentRevisionSuggestionItemCount =
         await prisma.returnedDepartmentRevisionSuggestionItem.count({
           where: {
@@ -189,17 +224,13 @@ export default async function handler(
         await prisma.submittedReturnedDepartmentRevision.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).SubmittedReturnedDepartmentRevision],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.submittedReturnedDepartmentRevision.count({
-        where: {
-          AND: [accessibleBy(ability).SubmittedReturnedDepartmentRevision],
-        },
+        where: {},
       });
 
       return res.json({ submittedReturnedDepartmentRevisions, count });
