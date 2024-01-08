@@ -116,16 +116,14 @@ export default async function handler(
 
         const departmentRevision = await prisma.departmentRevision.findFirst({
           where: {
-            IMFile: {
-              DepartmentReview: {
-                PeerReview: {
-                  PeerSuggestion: {
-                    PeerSuggestionItem: {
-                      some: {
-                        PeerSuggestionItemActionTaken: {
-                          id: {
-                            equals: id,
-                          },
+            DepartmentReviewed: {
+              SubmittedPeerSuggestion: {
+                PeerSuggestion: {
+                  PeerSuggestionItem: {
+                    some: {
+                      PeerSuggestionItemActionTaken: {
+                        id: {
+                          equals: id as string,
                         },
                       },
                     },
@@ -133,20 +131,6 @@ export default async function handler(
                 },
               },
             },
-            OR: [
-              {
-                ReturnedDepartmentRevision: {
-                  is: null,
-                },
-              },
-              {
-                ReturnedDepartmentRevision: {
-                  SubmittedReturnedDepartmentRevision: {
-                    is: null,
-                  },
-                },
-              },
-            ],
           },
         });
         if (departmentRevision) {
@@ -241,16 +225,14 @@ export default async function handler(
 
         const departmentRevision = await prisma.departmentRevision.findFirst({
           where: {
-            IMFile: {
-              DepartmentReview: {
-                PeerReview: {
-                  PeerSuggestion: {
-                    PeerSuggestionItem: {
-                      some: {
-                        PeerSuggestionItemActionTaken: {
-                          id: {
-                            equals: id as string,
-                          },
+            DepartmentReviewed: {
+              SubmittedPeerSuggestion: {
+                PeerSuggestion: {
+                  PeerSuggestionItem: {
+                    some: {
+                      PeerSuggestionItemActionTaken: {
+                        id: {
+                          equals: id as string,
                         },
                       },
                     },
@@ -258,20 +240,6 @@ export default async function handler(
                 },
               },
             },
-            OR: [
-              {
-                ReturnedDepartmentRevision: {
-                  is: null,
-                },
-              },
-              {
-                ReturnedDepartmentRevision: {
-                  SubmittedReturnedDepartmentRevision: {
-                    is: null,
-                  },
-                },
-              },
-            ],
           },
         });
         if (departmentRevision) {
