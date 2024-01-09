@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import CoordinatorEndorsementAbility from "@/services/ability/coordinatorEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = CoordinatorEndorsementAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -31,18 +27,18 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const CoordinatorEndorsement = await prisma.coordinatorEndorsement.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).CoordinatorEndorsement,
-            {
-              id: {
-                equals: id,
+      const CoordinatorEndorsement =
+        await prisma.coordinatorEndorsement.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                id: {
+                  equals: id,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
       return res.json(CoordinatorEndorsement);
     } catch (error: any) {
@@ -61,15 +57,23 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "CoordinatorEndorsement");
-
       const { id } = validator.cast(req.query);
 
-      const CoordinatorEndorsement = await prisma.coordinatorEndorsement.delete({
-        where: {
-          id,
-        },
-      });
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to perform this action",
+          },
+        });
+      }
+
+      const CoordinatorEndorsement = await prisma.coordinatorEndorsement.delete(
+        {
+          where: {
+            id,
+          },
+        }
+      );
 
       return res.json(CoordinatorEndorsement);
     } catch (error: any) {
@@ -79,7 +83,6 @@ export default async function handler(
         .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
-
 
   switch (req.method) {
     case "DELETE":
