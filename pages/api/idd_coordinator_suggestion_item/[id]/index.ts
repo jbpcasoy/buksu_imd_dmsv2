@@ -86,7 +86,11 @@ export default async function handler(
         });
 
       if (submittedIDDCoordinatorSuggestion) {
-        throw new Error("IDDCoordinator Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: IDD coordinator Suggestion is already submitted",
+          },
+        });
       }
 
       const iDDCoordinatorSuggestionItem =
@@ -142,7 +146,11 @@ export default async function handler(
         });
 
       if (submittedIDDCoordinatorSuggestion) {
-        throw new Error("IDDCoordinator Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: IDD coordinator Suggestion is already submitted",
+          },
+        });
       }
 
       const iDDCoordinatorSuggestionItem =

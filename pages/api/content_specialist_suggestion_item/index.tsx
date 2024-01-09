@@ -38,10 +38,15 @@ export default async function handler(
         "ContentSpecialistSuggestionItem"
       );
 
-      const { actionTaken, contentSpecialistSuggestionId, remarks, suggestion, pageNumber } =
-        validator.cast(req.body);
+      const {
+        actionTaken,
+        contentSpecialistSuggestionId,
+        remarks,
+        suggestion,
+        pageNumber,
+      } = validator.cast(req.body);
 
-        const submittedContentSpecialistSuggestion =
+      const submittedContentSpecialistSuggestion =
         await prisma.submittedContentSpecialistSuggestion.findFirst({
           where: {
             ContentSpecialistSuggestion: {
@@ -53,22 +58,28 @@ export default async function handler(
         });
 
       if (submittedContentSpecialistSuggestion) {
-        throw new Error("ContentSpecialist Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message:
+              "Error: Content specialist suggestion is already submitted",
+          },
+        });
       }
 
-      const contentSpecialistSuggestionItem = await prisma.contentSpecialistSuggestionItem.create({
-        data: {
-          actionTaken,
-          remarks,
-          suggestion,
-          pageNumber,
-          ContentSpecialistSuggestion: {
-            connect: {
-              id: contentSpecialistSuggestionId,
+      const contentSpecialistSuggestionItem =
+        await prisma.contentSpecialistSuggestionItem.create({
+          data: {
+            actionTaken,
+            remarks,
+            suggestion,
+            pageNumber,
+            ContentSpecialistSuggestion: {
+              connect: {
+                id: contentSpecialistSuggestionId,
+              },
             },
           },
-        },
-      });
+        });
 
       return res.json(contentSpecialistSuggestionItem);
     } catch (error: any) {
@@ -92,27 +103,29 @@ export default async function handler(
       const {
         skip,
         take,
-        "filter[contentSpecialistSuggestionId]": filterContentSpecialistSuggestionId,
+        "filter[contentSpecialistSuggestionId]":
+          filterContentSpecialistSuggestionId,
       } = validator.cast(req.query);
-      const contentSpecialistSuggestionItems = await prisma.contentSpecialistSuggestionItem.findMany({
-        skip,
-        take,
-        where: {
-          AND: [
-            accessibleBy(ability).ContentSpecialistSuggestionItem,
-            {
-              ContentSpecialistSuggestion: {
-                id: {
-                  equals: filterContentSpecialistSuggestionId,
+      const contentSpecialistSuggestionItems =
+        await prisma.contentSpecialistSuggestionItem.findMany({
+          skip,
+          take,
+          where: {
+            AND: [
+              accessibleBy(ability).ContentSpecialistSuggestionItem,
+              {
+                ContentSpecialistSuggestion: {
+                  id: {
+                    equals: filterContentSpecialistSuggestionId,
+                  },
                 },
               },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+            ],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
       const count = await prisma.contentSpecialistSuggestionItem.count({
         where: {
           AND: [

@@ -93,7 +93,7 @@ export default async function handler(
         if (submittedChairpersonSuggestion) {
           return res.status(400).json({
             error: {
-              message: "Chairperson suggestion is already submitted",
+              message: "Error: Chairperson suggestion is already submitted",
             },
           });
         }

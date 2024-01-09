@@ -45,36 +45,39 @@ export default async function handler(
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
-      
-      const submittedQAMISSuggestion =
-      await prisma.submittedQAMISSuggestion.findFirst({
-        where: {
-          QAMISSuggestion: {
-            id: {
-              equals: qAMISSuggestionId,
-            },
-          },
-        },
-      });
 
-    if (submittedQAMISSuggestion) {
-      throw new Error("QAMIS Suggestion is already submitted");
-    }
-    
-      const qAMISSuggestionItem =
-        await prisma.qAMISSuggestionItem.create({
-          data: {
-            actionTaken,
-            remarks,
-            suggestion,
-            pageNumber,
+      const submittedQAMISSuggestion =
+        await prisma.submittedQAMISSuggestion.findFirst({
+          where: {
             QAMISSuggestion: {
-              connect: {
-                id: qAMISSuggestionId,
+              id: {
+                equals: qAMISSuggestionId,
               },
             },
           },
         });
+
+      if (submittedQAMISSuggestion) {
+        return res.status(400).json({
+          error: {
+            message: "Error: QAMIS Suggestion is already submitted",
+          },
+        });
+      }
+
+      const qAMISSuggestionItem = await prisma.qAMISSuggestionItem.create({
+        data: {
+          actionTaken,
+          remarks,
+          suggestion,
+          pageNumber,
+          QAMISSuggestion: {
+            connect: {
+              id: qAMISSuggestionId,
+            },
+          },
+        },
+      });
 
       return res.json(qAMISSuggestionItem);
     } catch (error: any) {
@@ -85,7 +88,6 @@ export default async function handler(
     }
   };
 
- 
   const getHandler = async () => {
     try {
       const validator = Yup.object({

@@ -83,7 +83,7 @@ export default async function handler(
         if (submittedPeerSuggestion) {
           return res.status(400).json({
             error: {
-              message: "Peer suggestion is already submitted",
+              message: "Error: Peer suggestion is already submitted",
             },
           });
         }

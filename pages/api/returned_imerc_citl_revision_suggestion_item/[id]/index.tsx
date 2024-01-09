@@ -85,7 +85,11 @@ export default async function handler(
         });
 
       if (submittedReturnedIMERCCITLRevision) {
-        throw new Error("Peer Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: Peer Suggestion is already submitted",
+          },
+        });
       }
 
       const returnedIMERCCITLRevisionSuggestionItem =
@@ -141,7 +145,11 @@ export default async function handler(
         });
 
       if (submittedReturnedIMERCCITLRevision) {
-        throw new Error("Peer Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: Peer suggestion is already submitted"
+          }
+        })
       }
 
       const returnedIMERCCITLRevisionSuggestionItem =

@@ -86,7 +86,11 @@ export default async function handler(
         });
 
       if (submittedQAMISSuggestion) {
-        throw new Error("QAMIS Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: QAMIS Suggestion is already submitted",
+          },
+        });
       }
 
       const qAMISSuggestionItem = await prisma.qAMISSuggestionItem.delete({
@@ -124,7 +128,7 @@ export default async function handler(
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
-      
+
       const submittedQAMISSuggestion =
         await prisma.submittedQAMISSuggestion.findFirst({
           where: {
@@ -141,7 +145,11 @@ export default async function handler(
         });
 
       if (submittedQAMISSuggestion) {
-        throw new Error("QAMIS Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: QAMIS Suggestion is already submitted",
+          },
+        });
       }
 
       const qAMISSuggestionItem = await prisma.qAMISSuggestionItem.update({

@@ -58,7 +58,11 @@ export default async function handler(
         });
 
       if (submittedContentEditorSuggestion) {
-        throw new Error("ContentEditor Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: Content editor suggestion is already submitted"
+          }
+        })
       }
 
       const contentEditorSuggestionItem =

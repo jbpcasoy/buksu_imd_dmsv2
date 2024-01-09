@@ -58,7 +58,11 @@ export default async function handler(
       });
 
     if (submittedReturnedCITLRevision) {
-      throw new Error("Peer Suggestion is already submitted");
+      return res.status(400).json({
+        error: {
+          message: "Error: Peer suggestion is already submitted"
+        }
+      })
     }
 
       const returnedCITLRevisionSuggestionItem =

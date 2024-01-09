@@ -86,7 +86,11 @@ export default async function handler(
         });
 
       if (submittedIDDSpecialistSuggestion) {
-        throw new Error("IDDSpecialist Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: IDD specialist suggestion is already submitted",
+          },
+        });
       }
       const iDDSpecialistSuggestionItem =
         await prisma.iDDSpecialistSuggestionItem.delete({
@@ -140,7 +144,11 @@ export default async function handler(
         });
 
       if (submittedIDDSpecialistSuggestion) {
-        throw new Error("IDDSpecialist Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: IDD specialist suggestion is already submitted"
+          }
+        })
       }
 
       const iDDSpecialistSuggestionItem =

@@ -93,7 +93,7 @@ export default async function handler(
         if (submittedReturnedDepartmentRevision) {
           return res.status(400).json({
             error: {
-              message: "Returned department suggestions are already submitted",
+              message: "Error: Returned department suggestion is already submitted",
             },
           });
         }

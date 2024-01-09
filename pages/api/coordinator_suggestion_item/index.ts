@@ -94,7 +94,7 @@ export default async function handler(
         if (submittedCoordinatorSuggestion) {
           return res.status(400).json({
             error: {
-              message: "Coordinator suggestion is already submitted",
+              message: "Error: Coordinator suggestion is already submitted",
             },
           });
         }

@@ -119,7 +119,7 @@ export default async function handler(
         if (submittedPeerSuggestion) {
           return res.status(400).json({
             error: {
-              message: "Peer suggestion is already submitted",
+              message: "Error: Peer suggestion is already submitted",
             },
           });
         }
@@ -215,7 +215,11 @@ export default async function handler(
         });
 
       if (submittedPeerSuggestion) {
-        throw new Error("Peer Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: Peer Suggestion is already submitted"
+          }
+        })
       }
 
       const peerSuggestionItem = await prisma.peerSuggestionItem.update({

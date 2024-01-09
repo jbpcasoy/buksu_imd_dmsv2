@@ -58,10 +58,13 @@ export default async function handler(
         });
 
       if (submittedIDDCoordinatorSuggestion) {
-        throw new Error("IDDCoordinator Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: IDD coordinator Suggestion is already submitted",
+          },
+        });
       }
 
-      
       const iDDCoordinatorSuggestionItem =
         await prisma.iDDCoordinatorSuggestionItem.create({
           data: {
@@ -86,7 +89,6 @@ export default async function handler(
     }
   };
 
- 
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -102,25 +104,26 @@ export default async function handler(
         take,
         "filter[iDDCoordinatorSuggestionId]": filterIDDCoordinatorSuggestionId,
       } = validator.cast(req.query);
-      const iDDCoordinatorSuggestionItems = await prisma.iDDCoordinatorSuggestionItem.findMany({
-        skip,
-        take,
-        where: {
-          AND: [
-            accessibleBy(ability).IDDCoordinatorSuggestionItem,
-            {
-              IDDCoordinatorSuggestion: {
-                id: {
-                  equals: filterIDDCoordinatorSuggestionId,
+      const iDDCoordinatorSuggestionItems =
+        await prisma.iDDCoordinatorSuggestionItem.findMany({
+          skip,
+          take,
+          where: {
+            AND: [
+              accessibleBy(ability).IDDCoordinatorSuggestionItem,
+              {
+                IDDCoordinatorSuggestion: {
+                  id: {
+                    equals: filterIDDCoordinatorSuggestionId,
+                  },
                 },
               },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+            ],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
       const count = await prisma.iDDCoordinatorSuggestionItem.count({
         where: {
           AND: [

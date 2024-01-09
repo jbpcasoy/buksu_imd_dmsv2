@@ -122,7 +122,7 @@ export default async function handler(
         if (submittedReturnedDepartmentRevision) {
           return res.status(403).json({
             error: {
-              message: "Returned department revision is already submitted",
+              message: "Error: Returned department revision is already submitted",
             },
           });
         }
@@ -222,7 +222,7 @@ export default async function handler(
         if (submittedReturnedDepartmentRevision) {
           return res.status(403).json({
             error: {
-              message: "Returned department revision is already submitted",
+              message: "Error: Returned department revision is already submitted",
             },
           });
         }
