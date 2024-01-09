@@ -42,57 +42,57 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <div className='flex flex-col h-full'>
+      <div className="flex flex-col h-full">
         <h2>Dashboard</h2>
 
-        <div className='flex-1 flex flex-col h-full'>
+        <div className="flex-1 flex flex-col h-full">
           <form noValidate onSubmit={formik.handleSubmit}>
-            <div className='flex flex-col space-y-1'>
-              <div className='flex space-x-1'>
-                <CollegeSelector {...formik.getFieldProps("collegeId")} />
-                <DepartmentSelector
-                  {...formik.getFieldProps("departmentId")}
-                  collegeId={formik.values.collegeId}
-                />
-              </div>
-              <div className='flex space-x-1 items-end'>
-                <StatusSelector {...formik.getFieldProps("status")} />
-                <div className='flex space-x-1'>
-                  <div>
-                    <label htmlFor='start' className='text-sm'>
-                      FROM
-                    </label>
-                    <input
-                      type='datetime-local'
-                      id='start'
-                      max={formik.values.end}
-                      className='rounded py-1'
-                      {...formik.getFieldProps("start")}
-                    />
+            <div className="flex flex-col space-y-1">
+              <div className="space-x-1 flex flex">
+                <div className="flex flex-col space-y-1 w-full justify-end">
+                  <CollegeSelector {...formik.getFieldProps("collegeId")} />
+                  <DepartmentSelector
+                    {...formik.getFieldProps("departmentId")}
+                    collegeId={formik.values.collegeId}
+                  />
+                </div>
+                <div className="flex flex-col space-y-1 items-start">
+                  <div className="flex space-x-1">
+                    <div className="text-sm">
+                      <label htmlFor="start">FROM </label>
+                      <br />
+                      <input
+                        type="datetime-local"
+                        id="start"
+                        max={formik.values.end}
+                        {...formik.getFieldProps("start")}
+                        className="rounded w-full py-1"
+                      />
+                    </div>
+                    <div className="text-sm">
+                      <label htmlFor="end">TO </label>
+                      <br />
+                      <input
+                        type="datetime-local"
+                        id="end"
+                        min={formik.values.start}
+                        {...formik.getFieldProps("end")}
+                        className="rounded w-full py-1"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label htmlFor='end' className='text-sm'>
-                      TO
-                    </label>
-                    <input
-                      type='datetime-local'
-                      id='end'
-                      min={formik.values.start}
-                      className='rounded py-1'
-                      {...formik.getFieldProps("end")}
-                    />
-                  </div>
+                  <StatusSelector {...formik.getFieldProps("status")} />
                 </div>
               </div>
-              <div className='space-x-1'>
+              <div className="space-x-1">
                 <button
-                  type='submit'
-                  className='rounded bg-palette_blue text-palette_white px-1 hover:bg-opacity-90'
+                  type="submit"
+                  className="bg-palette_blue text-palette_white px-2 rounded"
                 >
                   Refresh
                 </button>
                 <button
-                  className='rounded bg-palette_blue text-palette_white px-1 hover:bg-opacity-90'
+                  className="bg-palette_blue text-palette_white px-2 rounded hover:bg-opacity-90"
                   onClick={router.reload}
                 >
                   Reset
@@ -101,15 +101,15 @@ export default function AdminDashboard() {
             </div>
           </form>
 
-          <div className='flex-1 flex w-full h-full'>
-            <div className='flex-1 relative h-full'>
+          <div className="flex-1 flex w-full h-full">
+            <div className="flex-1 relative h-full">
               <IMStatusDepartmentLineChart filter={state} />
             </div>
-            <div className='flex flex-col justify-center items-center space-y-2  h-full'>
-              <div className='h-1/2 relative'>
+            <div className="flex flex-col justify-center items-center space-y-2  h-full">
+              <div className="h-1/2 relative">
                 <IMStatusPieChart filter={state} />
               </div>
-              <div className='h-1/2 relative'>
+              <div className="h-1/2 relative">
                 <IMDepartmentPieChart filter={state} />
               </div>
             </div>
