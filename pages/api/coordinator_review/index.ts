@@ -105,14 +105,8 @@ export default async function handler(
               Faculty: {
                 Coordinator: {
                   ActiveCoordinator: {
-                    Coordinator: {
-                      Faculty: {
-                        User: {
-                          id: {
-                            equals: user.id,
-                          },
-                        },
-                      },
+                    id: {
+                      equals: activeCoordinatorId,
                     },
                   },
                 },

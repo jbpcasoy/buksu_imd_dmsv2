@@ -115,14 +115,8 @@ export default async function handler(
               Faculty: {
                 Chairperson: {
                   ActiveChairperson: {
-                    Chairperson: {
-                      Faculty: {
-                        User: {
-                          id: {
-                            equals: user.id,
-                          },
-                        },
-                      },
+                    id: {
+                      equals: activeChairpersonId,
                     },
                   },
                 },
