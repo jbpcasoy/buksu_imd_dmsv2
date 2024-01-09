@@ -146,14 +146,6 @@ export default async function handler(
             },
           },
         });
-        if (faculty.id === iMOwner.id) {
-          return res.status(400).json({
-            error: {
-              message:
-                "You are not allowed to create a coordinator review for your own IM",
-            },
-          });
-        }
 
         if (faculty.departmentId !== iMOwner.departmentId) {
           return res.status(400).json({
