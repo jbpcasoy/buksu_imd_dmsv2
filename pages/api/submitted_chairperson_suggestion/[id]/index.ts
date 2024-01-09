@@ -59,49 +59,11 @@ export default async function handler(
       const { id } = validator.cast(req.query);
 
       if (!user.isAdmin) {
-        const chairperson = await prisma.chairperson.findFirst({
-          where: {
-            ActiveChairperson: {
-              Chairperson: {
-                Faculty: {
-                  User: {
-                    id: {
-                      equals: user.id,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        });
-        if (!chairperson) {
-          return res.status(403).json({
-            error: {
-              message: "Only an active chairperson can perform this action",
-            },
-          });
-        }
-
-        const chairpersonReview =
-          await prisma.chairpersonReview.findFirstOrThrow({
-            where: {
-              ChairpersonSuggestion: {
-                SubmittedChairpersonSuggestion: {
-                  id: {
-                    equals: id,
-                  },
-                },
-              },
-            },
-          });
-        if (chairpersonReview.chairpersonId !== chairperson.id) {
-          return res.status(403).json({
-            error: {
-              message:
-                "You are not allowed to unsubmit this chairperson suggestion",
-            },
-          });
-        }
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to perform this action"
+          }
+        })
       }
 
       const submittedChairpersonSuggestion =

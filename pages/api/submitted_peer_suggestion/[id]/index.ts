@@ -60,46 +60,11 @@ export default async function handler(
       const { id } = validator.cast(req.query);
 
       if (!user.isAdmin) {
-        const faculty = await prisma.faculty.findFirst({
-          where: {
-            ActiveFaculty: {
-              Faculty: {
-                User: {
-                  id: {
-                    equals: user.id,
-                  },
-                },
-              },
-            },
-          },
-        });
-        if (!faculty) {
-          return res.status(403).json({
-            error: {
-              message:
-                "Only an active faculty is allowed to perform this action",
-            },
-          });
-        }
-
-        const peerReview = await prisma.peerReview.findFirstOrThrow({
-          where: {
-            PeerSuggestion: {
-              SubmittedPeerSuggestion: {
-                id: {
-                  equals: id,
-                },
-              },
-            },
-          },
-        });
-        if (peerReview.facultyId !== faculty.id) {
-          return res.status(403).json({
-            error: {
-              message: "You are not allowed to unsubmit this peer suggestion",
-            },
-          });
-        }
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to perform this action"
+          }
+        })
       }
 
       const submittedPeerSuggestion =

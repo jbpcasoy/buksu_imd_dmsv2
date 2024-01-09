@@ -59,49 +59,11 @@ export default async function handler(
       const { id } = validator.cast(req.query);
 
       if (!user.isAdmin) {
-        const coordinator = await prisma.coordinator.findFirst({
-          where: {
-            ActiveCoordinator: {
-              Coordinator: {
-                Faculty: {
-                  User: {
-                    id: {
-                      equals: user.id,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        });
-        if (!coordinator) {
-          return res.status(403).json({
-            error: {
-              message: "Only an active coordinator can perform this action",
-            },
-          });
-        }
-
-        const coordinatorReview =
-          await prisma.coordinatorReview.findFirstOrThrow({
-            where: {
-              CoordinatorSuggestion: {
-                SubmittedCoordinatorSuggestion: {
-                  id: {
-                    equals: id,
-                  },
-                },
-              },
-            },
-          });
-        if (coordinatorReview.coordinatorId !== coordinator.id) {
-          return res.status(403).json({
-            error: {
-              message:
-                "You are not allowed to unsubmit this coordinator suggestion",
-            },
-          });
-        }
+        return res.status(400).json({
+          error: {
+            message: "You are not allowed to perform this action"
+          }
+        })
       }
 
       const submittedCoordinatorSuggestion =
