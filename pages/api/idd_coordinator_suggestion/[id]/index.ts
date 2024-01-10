@@ -114,7 +114,7 @@ export default async function handler(
           return res.status(400).json({
             error: {
               message:
-                "You are not allowed to delete a submitted idd coordinator",
+                "You are not allowed to delete a submitted idd coordinator suggestion",
             },
           });
         }
