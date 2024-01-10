@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import iDDCoordinatorEndorsementAbility from "@/services/ability/iDDCoordinatorEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iDDCoordinatorEndorsementAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,14 +26,54 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "IDDCoordinatorEndorsement"
-      );
-
       const { cITLRevisionId, activeIDDCoordinatorId } = validator.cast(
         req.body
       );
+
+      if (!user.isAdmin) {
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        const submittedReturnedCITLRevision =
+          await prisma.submittedReturnedCITLRevision.findFirst({
+            where: {
+              ReturnedCITLRevision: {
+                CITLRevision: {
+                  id: {
+                    equals: cITLRevisionId,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedReturnedCITLRevision) {
+          return res.status(400).json({
+            error: {
+              message: "Error: This CITL revision is returned",
+            },
+          });
+        }
+      }
 
       const iDDCoordinator = await prisma.iDDCoordinator.findFirstOrThrow({
         where: {
@@ -98,17 +134,13 @@ export default async function handler(
         await prisma.iDDCoordinatorEndorsement.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).IDDCoordinatorEndorsement],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.iDDCoordinatorEndorsement.count({
-        where: {
-          AND: [accessibleBy(ability).IDDCoordinatorEndorsement],
-        },
+        where: {},
       });
 
       return res.json({ iDDCoordinatorEndorsements, count });
