@@ -119,56 +119,6 @@ export default async function handler(
             },
           });
         }
-
-        const coordinatorEndorsement =
-          await prisma.coordinatorEndorsement.findFirst({
-            where: {
-              DepartmentRevision: {
-                AND: [
-                  {
-                    IMFile: {
-                      IM: {
-                        IMFile: {
-                          some: {
-                            DepartmentRevision: {
-                              CoordinatorEndorsement: {
-                                isNot: null,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                  {
-                    IMFile: {
-                      IM: {
-                        IMFile: {
-                          some: {
-                            DepartmentRevision: {
-                              ReturnedDepartmentRevision: {
-                                id: {
-                                  equals: id,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                ],
-              },
-            },
-          });
-
-        if (coordinatorEndorsement) {
-          return res.status(400).json({
-            error: {
-              message: "IM is already endorsed by the coordinator",
-            },
-          });
-        }
       }
 
       const returnedDepartmentRevision =
