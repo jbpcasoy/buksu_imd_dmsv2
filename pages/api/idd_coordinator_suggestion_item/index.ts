@@ -1,5 +1,4 @@
 import prisma from "@/prisma/client";
-import iDDCoordinatorSuggestionItemAbility from "@/services/ability/iDDCoordinatorSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
@@ -20,7 +19,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iDDCoordinatorSuggestionItemAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -33,11 +31,6 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "IDDCoordinatorSuggestionItem"
-      );
-
       const {
         actionTaken,
         iDDCoordinatorSuggestionId,
@@ -45,6 +38,47 @@ export default async function handler(
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        const iDDCoordinatorSuggestion =
+          await prisma.iDDCoordinatorSuggestion.findFirstOrThrow({
+            where: {
+              id: {
+                equals: iDDCoordinatorSuggestionId,
+              },
+            },
+          });
+        if (iDDCoordinatorSuggestion.iDDCoordinatorId !== iDDCoordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create this IDD coordinator suggestion item",
+            },
+          });
+        }
+      }
 
       const submittedIDDCoordinatorSuggestion =
         await prisma.submittedIDDCoordinatorSuggestion.findFirst({
@@ -110,7 +144,6 @@ export default async function handler(
           take,
           where: {
             AND: [
-              accessibleBy(ability).IDDCoordinatorSuggestionItem,
               {
                 IDDCoordinatorSuggestion: {
                   id: {
@@ -127,7 +160,6 @@ export default async function handler(
       const count = await prisma.iDDCoordinatorSuggestionItem.count({
         where: {
           AND: [
-            accessibleBy(ability).IDDCoordinatorSuggestionItem,
             {
               IDDCoordinatorSuggestion: {
                 id: {
