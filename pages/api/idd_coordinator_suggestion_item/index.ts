@@ -94,7 +94,7 @@ export default async function handler(
       if (submittedIDDCoordinatorSuggestion) {
         return res.status(400).json({
           error: {
-            message: "Error: IDD coordinator Suggestion is already submitted",
+            message: "Error: IDD coordinator suggestion is already submitted",
           },
         });
       }

@@ -55,7 +55,7 @@ export default async function handler(
     if (submittedIDDSpecialistSuggestion) {
       return res.status(400).json({
         error: {
-          message: "Error: IDD specialist Suggestion is already submitted"
+          message: "Error: IDD specialist suggestion is already submitted"
         }
       })
     }

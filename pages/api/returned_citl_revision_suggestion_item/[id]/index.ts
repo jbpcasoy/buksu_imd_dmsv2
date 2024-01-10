@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import returnedCITLRevisionSuggestionItemAbility from "@/services/ability/returnedCITLRevisionSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedCITLRevisionSuggestionItemAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
         await prisma.returnedCITLRevisionSuggestionItem.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ReturnedCITLRevisionSuggestionItem,
               {
                 id: {
                   equals: id,
@@ -62,21 +57,29 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ReturnedCITLRevisionSuggestionItem"
-      );
-
       const { id } = validator.cast(req.query);
 
-      const submittedReturnedCITLRevision =
-        await prisma.submittedReturnedCITLRevision.findFirst({
-          where: {
-            ReturnedCITLRevision: {
+      if (!user.isAdmin) {
+        const returnedCITLRevision =
+          await prisma.returnedCITLRevision.findFirst({
+            where: {
               ReturnedCITLRevisionSuggestionItem: {
                 some: {
                   id: {
-                    equals: id as string,
+                    equals: id,
+                  },
+                },
+              },
+            },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
                   },
                 },
               },
@@ -84,12 +87,46 @@ export default async function handler(
           },
         });
 
-      if (submittedReturnedCITLRevision) {
-        return res.status(400).json({
-          error: {
-            message: "Error: Peer suggestion is already submitted"
-          }
-        })
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        if (returnedCITLRevision?.iDDCoordinatorId !== iDDCoordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this returned CITL revision suggestion item",
+            },
+          });
+        }
+
+        const submittedReturnedCITLRevision =
+          await prisma.submittedReturnedCITLRevision.findFirst({
+            where: {
+              ReturnedCITLRevision: {
+                ReturnedCITLRevisionSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        if (submittedReturnedCITLRevision) {
+          return res.status(400).json({
+            error: {
+              message: "Error: Peer suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const returnedCITLRevisionSuggestionItem =
@@ -119,15 +156,80 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "ReturnedCITLRevisionSuggestionItem"
-      );
-
       const { id } = req.query;
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
+
+      if (!user.isAdmin) {
+        const returnedCITLRevision =
+          await prisma.returnedCITLRevision.findFirst({
+            where: {
+              ReturnedCITLRevisionSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        if (returnedCITLRevision?.iDDCoordinatorId !== iDDCoordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update this returned CITL revision suggestion item",
+            },
+          });
+        }
+
+        const submittedReturnedCITLRevision =
+          await prisma.submittedReturnedCITLRevision.findFirst({
+            where: {
+              ReturnedCITLRevision: {
+                ReturnedCITLRevisionSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        if (submittedReturnedCITLRevision) {
+          return res.status(400).json({
+            error: {
+              message: "Error: Peer suggestion is already submitted",
+            },
+          });
+        }
+      }
 
       const submittedReturnedCITLRevision =
         await prisma.submittedReturnedCITLRevision.findFirst({
@@ -147,9 +249,9 @@ export default async function handler(
       if (submittedReturnedCITLRevision) {
         return res.status(400).json({
           error: {
-            message: "Error: Peer suggestion is already submitted"
-          }
-        })
+            message: "Error: Peer suggestion is already submitted",
+          },
+        });
       }
 
       const returnedCITLRevisionSuggestionItem =

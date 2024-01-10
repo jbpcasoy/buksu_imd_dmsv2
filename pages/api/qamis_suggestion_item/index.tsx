@@ -60,7 +60,7 @@ export default async function handler(
       if (submittedQAMISSuggestion) {
         return res.status(400).json({
           error: {
-            message: "Error: QAMIS Suggestion is already submitted",
+            message: "Error: QAMIS suggestion is already submitted",
           },
         });
       }
