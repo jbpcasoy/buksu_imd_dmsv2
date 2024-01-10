@@ -71,7 +71,7 @@ export default function ReturnedIMERCCITLRevisionsPage() {
                   </td>
                   <td>
                     <Link
-                      href={`/crud/cITL_revision/${returnedIMERCCITLRevision.iMERCCITLRevisionId}`}
+                      href={`/crud/citl_revision/${returnedIMERCCITLRevision.iMERCCITLRevisionId}`}
                       className='underline'
                     >
                       {returnedIMERCCITLRevision.iMERCCITLRevisionId}

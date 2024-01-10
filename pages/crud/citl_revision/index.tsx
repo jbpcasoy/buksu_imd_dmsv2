@@ -1,12 +1,11 @@
 import CrudLayout from "@/components/CrudLayout";
-import useReturnedCITLRevisions from "@/hooks/useReturnedCITLRevisions";
+import useCITLRevisions from "@/hooks/useCITLRevisions";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function ReturnedCITLRevisionsPage() {
+export default function CITLRevisionsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { returnedCITLRevisions, count } =
-    useReturnedCITLRevisions(state);
+  const { cITLRevisions, count } = useCITLRevisions(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -25,11 +24,8 @@ export default function ReturnedCITLRevisionsPage() {
   return (
     <CrudLayout>
       <div className='flex justify-between'>
-        <h2>ReturnedCITLRevision</h2>
-        <Link
-          className='border rounded'
-          href={`/crud/returned_citl_revision/add`}
-        >
+        <h2>CITLRevision</h2>
+        <Link className='border rounded' href={`/crud/citl_revision/add`}>
           Add
         </Link>
       </div>
@@ -41,45 +37,41 @@ export default function ReturnedCITLRevisionsPage() {
               <th>id</th>
               <th>createdAt</th>
               <th>updatedAt</th>
-              <th>iDDCoordinatorId</th>
-              <th>cITLRevisionId</th>
+              <th>iMFileId</th>
+              <th>submittedIDDCoordinatorSuggestionId</th>
               <th>action</th>
             </tr>
           </thead>
           <tbody>
-            {returnedCITLRevisions.map((returnedCITLRevision) => {
+            {cITLRevisions.map((cITLRevision) => {
               return (
-                <tr key={returnedCITLRevision.id}>
-                  <td>{returnedCITLRevision.id}</td>
+                <tr key={cITLRevision.id}>
+                  <td>{cITLRevision.id}</td>
                   <td>
-                    {new Date(
-                      returnedCITLRevision.createdAt
-                    ).toLocaleString()}
+                    {new Date(cITLRevision.createdAt).toLocaleString()}
                   </td>
                   <td>
-                    {new Date(
-                      returnedCITLRevision.updatedAt
-                    ).toLocaleString()}
+                    {new Date(cITLRevision.updatedAt).toLocaleString()}
                   </td>
                   <td>
                     <Link
-                      href={`/crud/coordinator/${returnedCITLRevision.iDDCoordinatorId}`}
+                      href={`/crud/im_file/${cITLRevision.iMFileId}`}
                       className='underline'
                     >
-                      {returnedCITLRevision.iDDCoordinatorId}
+                      {cITLRevision.iMFileId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/citl_revision/${returnedCITLRevision.cITLRevisionId}`}
+                      href={`/crud/submitted_idd_coordinator_suggestion/${cITLRevision.submittedIDDCoordinatorSuggestionId}`}
                       className='underline'
                     >
-                      {returnedCITLRevision.cITLRevisionId}
+                      {cITLRevision.submittedIDDCoordinatorSuggestionId}
                     </Link>
                   </td>
                   <td>
                     <Link
-                      href={`/crud/returned_citl_revision/${returnedCITLRevision.id}`}
+                      href={`/crud/citl_revision/${cITLRevision.id}`}
                       className='border rounded'
                     >
                       view
