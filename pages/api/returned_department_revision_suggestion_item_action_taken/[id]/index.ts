@@ -125,43 +125,43 @@ export default async function handler(
             },
           });
         }
-      }
 
-      const departmentRevision = await prisma.departmentRevision.findFirst({
-        where: {
-          IMFile: {
-            DepartmentRevision: {
-              ReturnedDepartmentRevision: {
-                ReturnedDepartmentRevisionSuggestionItem: {
-                  some: {
-                    ReturnedDepartmentRevisionSuggestionItemActionTaken: {
-                      id: {
-                        equals: id,
+        const departmentRevision = await prisma.departmentRevision.findFirst({
+          where: {
+            IMFile: {
+              DepartmentRevision: {
+                ReturnedDepartmentRevision: {
+                  ReturnedDepartmentRevisionSuggestionItem: {
+                    some: {
+                      ReturnedDepartmentRevisionSuggestionItemActionTaken: {
+                        id: {
+                          equals: id,
+                        },
                       },
                     },
                   },
                 },
               },
             },
-          },
-          OR: [
-            {
-              ReturnedDepartmentRevision: {
-                is: null,
-              },
-            },
-            {
-              ReturnedDepartmentRevision: {
-                SubmittedReturnedDepartmentRevision: {
+            OR: [
+              {
+                ReturnedDepartmentRevision: {
                   is: null,
                 },
               },
-            },
-          ],
-        },
-      });
-      if (departmentRevision) {
-        throw new Error("IM already revised.");
+              {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+              },
+            ],
+          },
+        });
+        if (departmentRevision) {
+          throw new Error("IM already revised");
+        }
       }
 
       const returnedDepartmentRevisionSuggestionItemActionTaken =
@@ -256,6 +256,43 @@ export default async function handler(
               message: "You are not allowed to update this action taken",
             },
           });
+        }
+
+        const departmentRevision = await prisma.departmentRevision.findFirst({
+          where: {
+            IMFile: {
+              DepartmentRevision: {
+                ReturnedDepartmentRevision: {
+                  ReturnedDepartmentRevisionSuggestionItem: {
+                    some: {
+                      ReturnedDepartmentRevisionSuggestionItemActionTaken: {
+                        id: {
+                          equals: id as string,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            OR: [
+              {
+                ReturnedDepartmentRevision: {
+                  is: null,
+                },
+              },
+              {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+              },
+            ],
+          },
+        });
+        if (departmentRevision) {
+          throw new Error("IM already revised.");
         }
       }
 

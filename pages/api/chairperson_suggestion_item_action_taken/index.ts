@@ -79,21 +79,21 @@ export default async function handler(
             },
           });
         }
-      }
 
-      const departmentRevision = await prisma.departmentRevision.findFirst({
-        where: {
-          IMFile: {
-            IM: {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        ChairpersonSuggestionItem: {
-                          some: {
-                            id: {
-                              equals: chairpersonSuggestionItemId,
+        const departmentRevision = await prisma.departmentRevision.findFirst({
+          where: {
+            IMFile: {
+              IM: {
+                IMFile: {
+                  some: {
+                    DepartmentReview: {
+                      ChairpersonReview: {
+                        ChairpersonSuggestion: {
+                          ChairpersonSuggestionItem: {
+                            some: {
+                              id: {
+                                equals: chairpersonSuggestionItemId,
+                              },
                             },
                           },
                         },
@@ -103,25 +103,25 @@ export default async function handler(
                 },
               },
             },
-          },
-          OR: [
-            {
-              ReturnedDepartmentRevision: {
-                is: null,
-              },
-            },
-            {
-              ReturnedDepartmentRevision: {
-                SubmittedReturnedDepartmentRevision: {
+            OR: [
+              {
+                ReturnedDepartmentRevision: {
                   is: null,
                 },
               },
-            },
-          ],
-        },
-      });
-      if (departmentRevision) {
-        throw new Error("IM already revised.");
+              {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+              },
+            ],
+          },
+        });
+        if (departmentRevision) {
+          throw new Error("IM already revised.");
+        }
       }
 
       const chairpersonSuggestionItemActionTaken =

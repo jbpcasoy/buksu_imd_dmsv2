@@ -79,21 +79,21 @@ export default async function handler(
             },
           });
         }
-      }
 
-      const departmentRevision = await prisma.departmentRevision.findFirst({
-        where: {
-          IMFile: {
-            IM: {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        PeerSuggestionItem: {
-                          some: {
-                            id: {
-                              equals: peerSuggestionItemId,
+        const departmentRevision = await prisma.departmentRevision.findFirst({
+          where: {
+            IMFile: {
+              IM: {
+                IMFile: {
+                  some: {
+                    DepartmentReview: {
+                      PeerReview: {
+                        PeerSuggestion: {
+                          PeerSuggestionItem: {
+                            some: {
+                              id: {
+                                equals: peerSuggestionItemId,
+                              },
                             },
                           },
                         },
@@ -103,25 +103,25 @@ export default async function handler(
                 },
               },
             },
-          },
-          OR: [
-            {
-              ReturnedDepartmentRevision: {
-                is: null,
-              },
-            },
-            {
-              ReturnedDepartmentRevision: {
-                SubmittedReturnedDepartmentRevision: {
+            OR: [
+              {
+                ReturnedDepartmentRevision: {
                   is: null,
                 },
               },
-            },
-          ],
-        },
-      });
-      if (departmentRevision) {
-        throw new Error("IM already revised.");
+              {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+              },
+            ],
+          },
+        });
+        if (departmentRevision) {
+          throw new Error("IM already revised.");
+        }
       }
 
       const peerSuggestionItemActionTaken =

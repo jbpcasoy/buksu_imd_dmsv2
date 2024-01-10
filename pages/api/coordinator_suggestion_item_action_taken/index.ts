@@ -79,21 +79,21 @@ export default async function handler(
             },
           });
         }
-      }
 
-      const departmentRevision = await prisma.departmentRevision.findFirst({
-        where: {
-          IMFile: {
-            IM: {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        CoordinatorSuggestionItem: {
-                          some: {
-                            id: {
-                              equals: coordinatorSuggestionItemId,
+        const departmentRevision = await prisma.departmentRevision.findFirst({
+          where: {
+            IMFile: {
+              IM: {
+                IMFile: {
+                  some: {
+                    DepartmentReview: {
+                      CoordinatorReview: {
+                        CoordinatorSuggestion: {
+                          CoordinatorSuggestionItem: {
+                            some: {
+                              id: {
+                                equals: coordinatorSuggestionItemId,
+                              },
                             },
                           },
                         },
@@ -103,25 +103,25 @@ export default async function handler(
                 },
               },
             },
-          },
-          OR: [
-            {
-              ReturnedDepartmentRevision: {
-                is: null,
-              },
-            },
-            {
-              ReturnedDepartmentRevision: {
-                SubmittedReturnedDepartmentRevision: {
+            OR: [
+              {
+                ReturnedDepartmentRevision: {
                   is: null,
                 },
               },
-            },
-          ],
-        },
-      });
-      if (departmentRevision) {
-        throw new Error("IM already revised.");
+              {
+                ReturnedDepartmentRevision: {
+                  SubmittedReturnedDepartmentRevision: {
+                    is: null,
+                  },
+                },
+              },
+            ],
+          },
+        });
+        if (departmentRevision) {
+          throw new Error("IM already revised.");
+        }
       }
 
       const coordinatorSuggestionItemActionTaken =
