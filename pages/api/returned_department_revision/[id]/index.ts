@@ -165,7 +165,7 @@ export default async function handler(
         if (coordinatorEndorsement) {
           return res.status(400).json({
             error: {
-              message: "IM is already endorsed by the Coordinator",
+              message: "IM is already endorsed by the coordinator",
             },
           });
         }

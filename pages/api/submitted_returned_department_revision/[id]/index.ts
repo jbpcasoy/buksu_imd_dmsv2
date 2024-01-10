@@ -112,7 +112,7 @@ export default async function handler(
         });
 
       if (coordinatorEndorsement) {
-        throw new Error("IM already endorsed by IDD coordinator");
+        throw new Error("IM is already endorsed by the coordinator");
       }
 
       const submittedReturnedDepartmentRevision =
