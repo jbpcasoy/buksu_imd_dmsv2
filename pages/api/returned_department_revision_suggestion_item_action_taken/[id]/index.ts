@@ -95,14 +95,18 @@ export default async function handler(
                           DepartmentRevision: {
                             some: {
                               ReturnedDepartmentRevision: {
-                                ReturnedDepartmentRevisionSuggestionItem: {
-                                  some: {
-                                    ReturnedDepartmentRevisionSuggestionItemActionTaken:
-                                      {
-                                        id: {
-                                          equals: id,
-                                        },
+                                SubmittedReturnedDepartmentRevision: {
+                                  ReturnedDepartmentRevision: {
+                                    ReturnedDepartmentRevisionSuggestionItem: {
+                                      some: {
+                                        ReturnedDepartmentRevisionSuggestionItemActionTaken:
+                                          {
+                                            id: {
+                                              equals: id,
+                                            },
+                                          },
                                       },
+                                    },
                                   },
                                 },
                               },
@@ -131,11 +135,15 @@ export default async function handler(
             IMFile: {
               DepartmentRevision: {
                 ReturnedDepartmentRevision: {
-                  ReturnedDepartmentRevisionSuggestionItem: {
-                    some: {
-                      ReturnedDepartmentRevisionSuggestionItemActionTaken: {
-                        id: {
-                          equals: id,
+                  SubmittedReturnedDepartmentRevision: {
+                    ReturnedDepartmentRevision: {
+                      ReturnedDepartmentRevisionSuggestionItem: {
+                        some: {
+                          ReturnedDepartmentRevisionSuggestionItemActionTaken: {
+                            id: {
+                              equals: id,
+                            },
+                          },
                         },
                       },
                     },

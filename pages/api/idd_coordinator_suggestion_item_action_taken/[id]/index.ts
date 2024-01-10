@@ -140,11 +140,15 @@ export default async function handler(
                 CoordinatorEndorsement: {
                   DeanEndorsement: {
                     IDDCoordinatorSuggestion: {
-                      IDDCoordinatorSuggestionItem: {
-                        some: {
-                          IDDCoordinatorSuggestionItemActionTaken: {
-                            id: {
-                              equals: id as string,
+                      SubmittedIDDCoordinatorSuggestion: {
+                        IDDCoordinatorSuggestion: {
+                          IDDCoordinatorSuggestionItem: {
+                            some: {
+                              IDDCoordinatorSuggestionItemActionTaken: {
+                                id: {
+                                  equals: id as string,
+                                },
+                              },
                             },
                           },
                         },
@@ -283,11 +287,15 @@ export default async function handler(
                 CoordinatorEndorsement: {
                   DeanEndorsement: {
                     IDDCoordinatorSuggestion: {
-                      IDDCoordinatorSuggestionItem: {
-                        some: {
-                          IDDCoordinatorSuggestionItemActionTaken: {
-                            id: {
-                              equals: id as string,
+                      SubmittedIDDCoordinatorSuggestion: {
+                        IDDCoordinatorSuggestion: {
+                          IDDCoordinatorSuggestionItem: {
+                            some: {
+                              IDDCoordinatorSuggestionItemActionTaken: {
+                                id: {
+                                  equals: id as string,
+                                },
+                              },
                             },
                           },
                         },

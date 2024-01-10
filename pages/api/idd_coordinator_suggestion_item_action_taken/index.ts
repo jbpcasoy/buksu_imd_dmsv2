@@ -113,8 +113,16 @@ export default async function handler(
                       CoordinatorEndorsement: {
                         DeanEndorsement: {
                           IDDCoordinatorSuggestion: {
-                            id: {
-                              equals: iDDCoordinatorSuggestionItemId,
+                            SubmittedIDDCoordinatorSuggestion: {
+                              IDDCoordinatorSuggestion: {
+                                IDDCoordinatorSuggestionItem: {
+                                  some: {
+                                    id: {
+                                      equals: iDDCoordinatorSuggestionItemId,
+                                    },
+                                  },
+                                },
+                              },
                             },
                           },
                         },

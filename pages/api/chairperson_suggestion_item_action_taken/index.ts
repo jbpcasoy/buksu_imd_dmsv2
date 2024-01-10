@@ -35,10 +35,14 @@ export default async function handler(
                 DepartmentReview: {
                   ChairpersonReview: {
                     ChairpersonSuggestion: {
-                      ChairpersonSuggestionItem: {
-                        some: {
-                          id: {
-                            equals: chairpersonSuggestionItemId,
+                      SubmittedChairpersonSuggestion: {
+                        ChairpersonSuggestion: {
+                          ChairpersonSuggestionItem: {
+                            some: {
+                              id: {
+                                equals: chairpersonSuggestionItemId,
+                              },
+                            },
                           },
                         },
                       },

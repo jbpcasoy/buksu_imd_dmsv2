@@ -67,11 +67,15 @@ export default async function handler(
                 DepartmentReview: {
                   PeerReview: {
                     PeerSuggestion: {
-                      PeerSuggestionItem: {
-                        some: {
-                          PeerSuggestionItemActionTaken: {
-                            id: {
-                              equals: id as string,
+                      SubmittedPeerSuggestion: {
+                        PeerSuggestion: {
+                          PeerSuggestionItem: {
+                            some: {
+                              PeerSuggestionItemActionTaken: {
+                                id: {
+                                  equals: id as string,
+                                },
+                              },
                             },
                           },
                         },
@@ -176,11 +180,15 @@ export default async function handler(
                 DepartmentReview: {
                   PeerReview: {
                     PeerSuggestion: {
-                      PeerSuggestionItem: {
-                        some: {
-                          PeerSuggestionItemActionTaken: {
-                            id: {
-                              equals: id as string,
+                      SubmittedPeerSuggestion: {
+                        PeerSuggestion: {
+                          PeerSuggestionItem: {
+                            some: {
+                              PeerSuggestionItemActionTaken: {
+                                id: {
+                                  equals: id as string,
+                                },
+                              },
                             },
                           },
                         },

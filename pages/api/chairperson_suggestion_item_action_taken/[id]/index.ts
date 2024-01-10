@@ -28,45 +28,6 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const departmentRevision = await prisma.departmentRevision.findFirst({
-        where: {
-          IMFile: {
-            DepartmentReview: {
-              ChairpersonReview: {
-                ChairpersonSuggestion: {
-                  ChairpersonSuggestionItem: {
-                    some: {
-                      ChairpersonSuggestionItemActionTaken: {
-                        id: {
-                          equals: id,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          OR: [
-            {
-              ReturnedDepartmentRevision: {
-                is: null,
-              },
-            },
-            {
-              ReturnedDepartmentRevision: {
-                SubmittedReturnedDepartmentRevision: {
-                  is: null,
-                },
-              },
-            },
-          ],
-        },
-      });
-      if (departmentRevision) {
-        throw new Error("IM already revised.");
-      }
-
       const chairpersonSuggestionItemActionTaken =
         await prisma.chairpersonSuggestionItemActionTaken.findFirstOrThrow({
           where: {
@@ -107,11 +68,15 @@ export default async function handler(
                 DepartmentReview: {
                   ChairpersonReview: {
                     ChairpersonSuggestion: {
-                      ChairpersonSuggestionItem: {
-                        some: {
-                          ChairpersonSuggestionItemActionTaken: {
-                            id: {
-                              equals: id,
+                      SubmittedChairpersonSuggestion: {
+                        ChairpersonSuggestion: {
+                          ChairpersonSuggestionItem: {
+                            some: {
+                              ChairpersonSuggestionItemActionTaken: {
+                                id: {
+                                  equals: id,
+                                },
+                              },
                             },
                           },
                         },
@@ -217,11 +182,15 @@ export default async function handler(
                 DepartmentReview: {
                   ChairpersonReview: {
                     ChairpersonSuggestion: {
-                      ChairpersonSuggestionItem: {
-                        some: {
-                          ChairpersonSuggestionItemActionTaken: {
-                            id: {
-                              equals: id as string,
+                      SubmittedChairpersonSuggestion: {
+                        ChairpersonSuggestion: {
+                          ChairpersonSuggestionItem: {
+                            some: {
+                              ChairpersonSuggestionItemActionTaken: {
+                                id: {
+                                  equals: id as string,
+                                },
+                              },
                             },
                           },
                         },

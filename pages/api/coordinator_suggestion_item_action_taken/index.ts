@@ -35,10 +35,14 @@ export default async function handler(
                 DepartmentReview: {
                   CoordinatorReview: {
                     CoordinatorSuggestion: {
-                      CoordinatorSuggestionItem: {
-                        some: {
-                          id: {
-                            equals: coordinatorSuggestionItemId,
+                      SubmittedCoordinatorSuggestion: {
+                        CoordinatorSuggestion: {
+                          CoordinatorSuggestionItem: {
+                            some: {
+                              id: {
+                                equals: coordinatorSuggestionItemId,
+                              },
+                            },
                           },
                         },
                       },
@@ -89,10 +93,14 @@ export default async function handler(
                     DepartmentReview: {
                       CoordinatorReview: {
                         CoordinatorSuggestion: {
-                          CoordinatorSuggestionItem: {
-                            some: {
-                              id: {
-                                equals: coordinatorSuggestionItemId,
+                          SubmittedCoordinatorSuggestion: {
+                            CoordinatorSuggestion: {
+                              CoordinatorSuggestionItem: {
+                                some: {
+                                  id: {
+                                    equals: coordinatorSuggestionItemId,
+                                  },
+                                },
                               },
                             },
                           },

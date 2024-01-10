@@ -63,11 +63,15 @@ export default async function handler(
                           DepartmentRevision: {
                             some: {
                               ReturnedDepartmentRevision: {
-                                ReturnedDepartmentRevisionSuggestionItem: {
-                                  some: {
-                                    id: {
-                                      equals:
-                                        returnedDepartmentRevisionSuggestionItemId,
+                                SubmittedReturnedDepartmentRevision: {
+                                  ReturnedDepartmentRevision: {
+                                    ReturnedDepartmentRevisionSuggestionItem: {
+                                      some: {
+                                        id: {
+                                          equals:
+                                            returnedDepartmentRevisionSuggestionItemId,
+                                        },
+                                      },
                                     },
                                   },
                                 },
@@ -101,11 +105,15 @@ export default async function handler(
                   some: {
                     DepartmentRevision: {
                       ReturnedDepartmentRevision: {
-                        ReturnedDepartmentRevisionSuggestionItem: {
-                          some: {
-                            id: {
-                              equals:
-                                returnedDepartmentRevisionSuggestionItemId,
+                        SubmittedReturnedDepartmentRevision: {
+                          ReturnedDepartmentRevision: {
+                            ReturnedDepartmentRevisionSuggestionItem: {
+                              some: {
+                                id: {
+                                  equals:
+                                    returnedDepartmentRevisionSuggestionItemId,
+                                },
+                              },
                             },
                           },
                         },

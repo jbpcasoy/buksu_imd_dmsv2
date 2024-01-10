@@ -28,45 +28,6 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const departmentRevision = await prisma.departmentRevision.findFirst({
-        where: {
-          IMFile: {
-            DepartmentReview: {
-              CoordinatorReview: {
-                CoordinatorSuggestion: {
-                  CoordinatorSuggestionItem: {
-                    some: {
-                      CoordinatorSuggestionItemActionTaken: {
-                        id: {
-                          equals: id,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          OR: [
-            {
-              ReturnedDepartmentRevision: {
-                is: null,
-              },
-            },
-            {
-              ReturnedDepartmentRevision: {
-                SubmittedReturnedDepartmentRevision: {
-                  is: null,
-                },
-              },
-            },
-          ],
-        },
-      });
-      if (departmentRevision) {
-        throw new Error("IM already revised.");
-      }
-
       const coordinatorSuggestionItemActionTaken =
         await prisma.coordinatorSuggestionItemActionTaken.findFirstOrThrow({
           where: {
@@ -107,11 +68,15 @@ export default async function handler(
                 DepartmentReview: {
                   CoordinatorReview: {
                     CoordinatorSuggestion: {
-                      CoordinatorSuggestionItem: {
-                        some: {
-                          CoordinatorSuggestionItemActionTaken: {
-                            id: {
-                              equals: id,
+                      SubmittedCoordinatorSuggestion: {
+                        CoordinatorSuggestion: {
+                          CoordinatorSuggestionItem: {
+                            some: {
+                              CoordinatorSuggestionItemActionTaken: {
+                                id: {
+                                  equals: id,
+                                },
+                              },
                             },
                           },
                         },
@@ -216,11 +181,15 @@ export default async function handler(
                 DepartmentReview: {
                   CoordinatorReview: {
                     CoordinatorSuggestion: {
-                      CoordinatorSuggestionItem: {
-                        some: {
-                          CoordinatorSuggestionItemActionTaken: {
-                            id: {
-                              equals: id as string,
+                      SubmittedCoordinatorSuggestion: {
+                        CoordinatorSuggestion: {
+                          CoordinatorSuggestionItem: {
+                            some: {
+                              CoordinatorSuggestionItemActionTaken: {
+                                id: {
+                                  equals: id as string,
+                                },
+                              },
                             },
                           },
                         },
