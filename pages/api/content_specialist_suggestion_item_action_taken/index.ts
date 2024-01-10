@@ -75,7 +75,7 @@ export default async function handler(
         },
       });
       if (iMERCCITLRevision) {
-        throw new Error("IM already revised.");
+        throw new Error("Error: IM is already revised");
       }
 
       const contentSpecialistSuggestionItemActionTaken =

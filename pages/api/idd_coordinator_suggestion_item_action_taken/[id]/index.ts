@@ -136,17 +136,23 @@ export default async function handler(
         const cITLRevision = await prisma.cITLRevision.findFirst({
           where: {
             IMFile: {
-              DepartmentRevision: {
-                CoordinatorEndorsement: {
-                  DeanEndorsement: {
-                    IDDCoordinatorSuggestion: {
-                      SubmittedIDDCoordinatorSuggestion: {
-                        IDDCoordinatorSuggestion: {
-                          IDDCoordinatorSuggestionItem: {
-                            some: {
-                              IDDCoordinatorSuggestionItemActionTaken: {
-                                id: {
-                                  equals: id as string,
+              IM: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      CoordinatorEndorsement: {
+                        DeanEndorsement: {
+                          IDDCoordinatorSuggestion: {
+                            SubmittedIDDCoordinatorSuggestion: {
+                              IDDCoordinatorSuggestion: {
+                                IDDCoordinatorSuggestionItem: {
+                                  some: {
+                                    IDDCoordinatorSuggestionItemActionTaken: {
+                                      id: {
+                                        equals: id as string,
+                                      },
+                                    },
+                                  },
                                 },
                               },
                             },
@@ -175,7 +181,7 @@ export default async function handler(
           },
         });
         if (cITLRevision) {
-          throw new Error("IM already revised.");
+          throw new Error("Error: IM is already revised");
         }
       }
 
@@ -283,17 +289,23 @@ export default async function handler(
         const cITLRevision = await prisma.cITLRevision.findFirst({
           where: {
             IMFile: {
-              DepartmentRevision: {
-                CoordinatorEndorsement: {
-                  DeanEndorsement: {
-                    IDDCoordinatorSuggestion: {
-                      SubmittedIDDCoordinatorSuggestion: {
-                        IDDCoordinatorSuggestion: {
-                          IDDCoordinatorSuggestionItem: {
-                            some: {
-                              IDDCoordinatorSuggestionItemActionTaken: {
-                                id: {
-                                  equals: id as string,
+              IM: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      CoordinatorEndorsement: {
+                        DeanEndorsement: {
+                          IDDCoordinatorSuggestion: {
+                            SubmittedIDDCoordinatorSuggestion: {
+                              IDDCoordinatorSuggestion: {
+                                IDDCoordinatorSuggestionItem: {
+                                  some: {
+                                    IDDCoordinatorSuggestionItemActionTaken: {
+                                      id: {
+                                        equals: id as string,
+                                      },
+                                    },
+                                  },
                                 },
                               },
                             },
@@ -322,7 +334,7 @@ export default async function handler(
           },
         });
         if (cITLRevision) {
-          throw new Error("IM already revised.");
+          throw new Error("Error: IM is already revised");
         }
       }
 

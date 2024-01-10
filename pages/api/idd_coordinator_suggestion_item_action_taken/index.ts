@@ -149,7 +149,7 @@ export default async function handler(
           },
         });
         if (cITLRevision) {
-          throw new Error("IM already revised.");
+          throw new Error("Error: IM is already revised");
         }
       }
 
