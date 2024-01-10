@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedIDDCoordinatorSuggestionAbility from "@/services/ability/submittedIDDCoordinatorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -16,12 +14,10 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
-    
   } catch (error) {
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedIDDCoordinatorSuggestionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -36,7 +32,6 @@ export default async function handler(
         await prisma.submittedIDDCoordinatorSuggestion.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).SubmittedIDDCoordinatorSuggestion,
               {
                 id: {
                   equals: id,
@@ -63,12 +58,16 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "SubmittedIDDCoordinatorSuggestion"
-      );
-
       const { id } = validator.cast(req.query);
+
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to perform this action",
+          },
+        });
+      }
+
       const submittedIDDCoordinatorSuggestion =
         await prisma.submittedIDDCoordinatorSuggestion.delete({
           where: {
