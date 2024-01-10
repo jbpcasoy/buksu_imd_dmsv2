@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedReturnedCITLRevisionAbility from "@/services/ability/submittedReturnedCITLRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import mailTransporter from "@/services/mailTransporter";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedReturnedCITLRevisionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,12 +26,48 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "SubmittedReturnedCITLRevision"
-      );
-
       const { returnedCITLRevisionId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active IDD coordinator can perform this action",
+            },
+          });
+        }
+
+        const returnedCITLRevision =
+          await prisma.returnedCITLRevision.findFirstOrThrow({
+            where: {
+              id: {
+                equals: returnedCITLRevisionId,
+              },
+            },
+          });
+        if (iDDCoordinator.id !== returnedCITLRevision.iDDCoordinatorId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to submit this returned CITL revision",
+            },
+          });
+        }
+      }
       const returnedCITLRevisionSuggestionItemCount =
         await prisma.returnedCITLRevisionSuggestionItem.count({
           where: {
@@ -187,17 +219,13 @@ export default async function handler(
         await prisma.submittedReturnedCITLRevision.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).SubmittedReturnedCITLRevision],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.submittedReturnedCITLRevision.count({
-        where: {
-          AND: [accessibleBy(ability).SubmittedReturnedCITLRevision],
-        },
+        where: {},
       });
 
       return res.json({ submittedReturnedCITLRevisions, count });
