@@ -84,13 +84,19 @@ export default async function handler(
       const departmentRevision = await prisma.departmentRevision.findFirst({
         where: {
           IMFile: {
-            DepartmentReview: {
-              CoordinatorReview: {
-                CoordinatorSuggestion: {
-                  CoordinatorSuggestionItem: {
-                    some: {
-                      id: {
-                        equals: coordinatorSuggestionItemId,
+            IM: {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    CoordinatorReview: {
+                      CoordinatorSuggestion: {
+                        CoordinatorSuggestionItem: {
+                          some: {
+                            id: {
+                              equals: coordinatorSuggestionItemId,
+                            },
+                          },
+                        },
                       },
                     },
                   },

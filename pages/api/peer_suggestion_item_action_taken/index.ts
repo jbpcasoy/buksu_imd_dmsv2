@@ -26,11 +26,6 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      // ForbiddenError.from(ability).throwUnlessCan(
-      //   "create",
-      //   "PeerSuggestionItemActionTaken"
-      // );
-
       const { value, peerSuggestionItemId } = validator.cast(req.body);
 
       if (!user.isAdmin) {
@@ -89,13 +84,19 @@ export default async function handler(
       const departmentRevision = await prisma.departmentRevision.findFirst({
         where: {
           IMFile: {
-            DepartmentReview: {
-              PeerReview: {
-                PeerSuggestion: {
-                  PeerSuggestionItem: {
-                    some: {
-                      id: {
-                        equals: peerSuggestionItemId,
+            IM: {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    PeerReview: {
+                      PeerSuggestion: {
+                        PeerSuggestionItem: {
+                          some: {
+                            id: {
+                              equals: peerSuggestionItemId,
+                            },
+                          },
+                        },
                       },
                     },
                   },
