@@ -34,12 +34,8 @@ export default async function handler(
         const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
           where: {
             ActiveIDDCoordinator: {
-              IDDCoordinator: {
-                User: {
-                  id: {
-                    equals: user.id,
-                  },
-                },
+              id: {
+                equals: activeIDDCoordinatorId,
               },
             },
           },
@@ -50,6 +46,15 @@ export default async function handler(
             error: {
               message:
                 "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        if (iDDCoordinator.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create an IDD coordinator endorsement for this user",
             },
           });
         }
