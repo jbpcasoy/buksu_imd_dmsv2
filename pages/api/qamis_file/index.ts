@@ -1,8 +1,6 @@
 import prisma from "@/prisma/client";
-import qAMISFileAbility from "@/services/ability/qAMISFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
@@ -172,22 +170,16 @@ export default async function handler(
       await validator.validate(req.query);
       const { skip, take } = validator.cast(req.query);
 
-      const ability = qAMISFileAbility({ user });
-
       const qAMISFiles = await prisma.qAMISFile.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).QAMISFile],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.qAMISFile.count({
-        where: {
-          AND: [accessibleBy(ability).QAMISFile],
-        },
+        where: {},
       });
 
       return res.json({ qAMISFiles, count });
