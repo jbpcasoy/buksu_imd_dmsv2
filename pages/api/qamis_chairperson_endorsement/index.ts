@@ -113,7 +113,27 @@ export default async function handler(
         if (iMDepartment.id !== chairpersonDepartment.id) {
           return res.status(403).json({
             error: {
-              message: "You are not allowed to endorse an IM from another department",
+              message:
+                "You are not allowed to endorse an IM from another department",
+            },
+          });
+        }
+
+        const faculty = await prisma.faculty.findFirstOrThrow({
+          where: {
+            Chairperson: {
+              ActiveChairperson: {
+                id: {
+                  equals: activeChairpersonId,
+                },
+              },
+            },
+          },
+        });
+        if (faculty.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to endorse an IM for this user",
             },
           });
         }

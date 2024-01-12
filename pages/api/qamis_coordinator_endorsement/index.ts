@@ -119,6 +119,25 @@ export default async function handler(
             },
           });
         }
+
+        const faculty = await prisma.faculty.findFirstOrThrow({
+          where: {
+            Coordinator: {
+              ActiveCoordinator: {
+                id: {
+                  equals: activeCoordinatorId,
+                },
+              },
+            },
+          },
+        });
+        if (faculty.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to endorse an IM for this user",
+            },
+          });
+        }
       }
 
       const coordinator = await prisma.coordinator.findFirstOrThrow({
