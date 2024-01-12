@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedContentSpecialistSuggestionAbility from "@/services/ability/submittedContentSpecialistSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import mailTransporter from "@/services/mailTransporter";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedContentSpecialistSuggestionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,18 +26,64 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "SubmittedContentSpecialistSuggestion"
-      );
       const { contentSpecialistSuggestionId } = validator.cast(req.body);
-      const contentSpecialistSuggestionItemCount = await prisma.contentSpecialistSuggestionItem.count({
-        where: {
-          contentSpecialistSuggestionId: {
-            equals: contentSpecialistSuggestionId,
+
+      if (!user.isAdmin) {
+        const contentSpecialistReview =
+          await prisma.contentSpecialistReview.findFirstOrThrow({
+            where: {
+              ContentSpecialistSuggestion: {
+                id: {
+                  equals: contentSpecialistSuggestionId,
+                },
+              },
+            },
+          });
+
+        const contentSpecialist = await prisma.contentSpecialist.findFirst({
+          where: {
+            ActiveContentSpecialist: {
+              ContentSpecialist: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
           },
-        },
-      });
+        });
+        if (!contentSpecialist) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active content specialist can perform this action",
+            },
+          });
+        }
+
+        if (
+          contentSpecialistReview.contentSpecialistId !== contentSpecialist.id
+        ) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to submit this content specialist suggestion",
+            },
+          });
+        }
+      }
+
+      const contentSpecialistSuggestionItemCount =
+        await prisma.contentSpecialistSuggestionItem.count({
+          where: {
+            contentSpecialistSuggestionId: {
+              equals: contentSpecialistSuggestionId,
+            },
+          },
+        });
       if (contentSpecialistSuggestionItemCount < 1) {
         throw new Error("Suggestions are required upon submitting");
       }
@@ -225,17 +267,13 @@ export default async function handler(
         await prisma.submittedContentSpecialistSuggestion.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).SubmittedContentSpecialistSuggestion],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.submittedContentSpecialistSuggestion.count({
-        where: {
-          AND: [accessibleBy(ability).SubmittedContentSpecialistSuggestion],
-        },
+        where: {},
       });
 
       return res.json({ submittedContentSpecialistSuggestions, count });
