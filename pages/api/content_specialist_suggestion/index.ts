@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import contentSpecialistSuggestionAbility from "@/services/ability/contentSpecialistSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = contentSpecialistSuggestionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -29,19 +25,62 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "ContentSpecialistSuggestion");
-
       const { contentSpecialistReviewId } = validator.cast(req.body);
 
-      const contentSpecialistSuggestion = await prisma.contentSpecialistSuggestion.create({
-        data: {
-          ContentSpecialistReview: {
-            connect: {
-              id: contentSpecialistReviewId,
+      if (!user.isAdmin) {
+        const contentSpecialistReview =
+          await prisma.contentSpecialistReview.findFirstOrThrow({
+            where: {
+              id: {
+                equals: contentSpecialistReviewId,
+              },
+            },
+          });
+        const contentSpecialist = await prisma.contentSpecialist.findFirst({
+          where: {
+            ActiveContentSpecialist: {
+              ContentSpecialist: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
             },
           },
-        },
-      });
+        });
+        if (!contentSpecialist) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active content specialist review can perform this action",
+            },
+          });
+        }
+
+        if (
+          contentSpecialist.id !== contentSpecialistReview.contentSpecialistId
+        ) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to perform this action",
+            },
+          });
+        }
+      }
+
+      const contentSpecialistSuggestion =
+        await prisma.contentSpecialistSuggestion.create({
+          data: {
+            ContentSpecialistReview: {
+              connect: {
+                id: contentSpecialistReviewId,
+              },
+            },
+          },
+        });
 
       return res.json(contentSpecialistSuggestion);
     } catch (error: any) {
@@ -67,22 +106,18 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      
 
-      const contentSpecialistSuggestions = await prisma.contentSpecialistSuggestion.findMany({
-        skip,
-        take,
-        where: {
-          AND: [accessibleBy(ability).ContentSpecialistSuggestion],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+      const contentSpecialistSuggestions =
+        await prisma.contentSpecialistSuggestion.findMany({
+          skip,
+          take,
+          where: {},
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
       const count = await prisma.contentSpecialistSuggestion.count({
-        where: {
-          AND: [accessibleBy(ability).ContentSpecialistSuggestion],
-        },
+        where: {},
       });
 
       return res.json({ contentSpecialistSuggestions, count });
