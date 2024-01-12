@@ -98,58 +98,58 @@ export default async function handler(
         activeCoordinatorId,
       } = validator.cast(req.body);
 
-      if (!user.isAdmin) {
-        const faculty = await prisma.faculty.findFirst({
-          where: {
-            ActiveFaculty: {
-              Faculty: {
-                Coordinator: {
-                  ActiveCoordinator: {
+      const faculty = await prisma.faculty.findFirst({
+        where: {
+          ActiveFaculty: {
+            Faculty: {
+              Coordinator: {
+                ActiveCoordinator: {
+                  id: {
+                    equals: activeCoordinatorId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!faculty) {
+        return res.status(403).json({
+          error: {
+            message:
+              "Only an active coordinator is allowed to perform this action",
+          },
+        });
+      }
+
+      const iMOwner = await prisma.faculty.findFirstOrThrow({
+        where: {
+          IM: {
+            some: {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
                     id: {
-                      equals: activeCoordinatorId,
+                      equals: departmentReviewId,
                     },
                   },
                 },
               },
             },
           },
-        });
-        if (!faculty) {
-          return res.status(403).json({
-            error: {
-              message:
-                "Only an active coordinator is allowed to perform this action",
-            },
-          });
-        }
+        },
+      });
 
-        const iMOwner = await prisma.faculty.findFirstOrThrow({
-          where: {
-            IM: {
-              some: {
-                IMFile: {
-                  some: {
-                    DepartmentReview: {
-                      id: {
-                        equals: departmentReviewId,
-                      },
-                    },
-                  },
-                },
-              },
-            },
+      if (faculty.departmentId !== iMOwner.departmentId) {
+        return res.status(400).json({
+          error: {
+            message:
+              "coordinators are not allowed to review an IM from another department",
           },
         });
+      }
 
-        if (faculty.departmentId !== iMOwner.departmentId) {
-          return res.status(400).json({
-            error: {
-              message:
-                "You are not allowed to create a coordinator review for IMs outside your department",
-            },
-          });
-        }
-
+      if (!user.isAdmin) {
         // Might not be thrown unless multiple coordinators on each departments became allowed
         if (faculty.userId !== user.id) {
           return res.status(400).json({

@@ -108,58 +108,59 @@ export default async function handler(
         },
       });
 
-      if (!user.isAdmin) {
-        const faculty = await prisma.faculty.findFirst({
-          where: {
-            ActiveFaculty: {
-              Faculty: {
-                Chairperson: {
-                  ActiveChairperson: {
+      const faculty = await prisma.faculty.findFirst({
+        where: {
+          ActiveFaculty: {
+            Faculty: {
+              Chairperson: {
+                ActiveChairperson: {
+                  id: {
+                    equals: activeChairpersonId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!faculty) {
+        return res.status(403).json({
+          error: {
+            message:
+              "Only an active chairperson is allowed to perform this action",
+          },
+        });
+      }
+
+      const iMOwner = await prisma.faculty.findFirstOrThrow({
+        where: {
+          IM: {
+            some: {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
                     id: {
-                      equals: activeChairpersonId,
+                      equals: departmentReviewId,
                     },
                   },
                 },
               },
             },
           },
-        });
-        if (!faculty) {
-          return res.status(403).json({
-            error: {
-              message:
-                "Only an active chairperson is allowed to perform this action",
-            },
-          });
-        }
+        },
+      });
 
-        const iMOwner = await prisma.faculty.findFirstOrThrow({
-          where: {
-            IM: {
-              some: {
-                IMFile: {
-                  some: {
-                    DepartmentReview: {
-                      id: {
-                        equals: departmentReviewId,
-                      },
-                    },
-                  },
-                },
-              },
-            },
+      if (faculty.departmentId !== iMOwner.departmentId) {
+        return res.status(400).json({
+          error: {
+            message:
+              "chairpersons are not allowed to review an IM from another department",
           },
         });
+      }
 
-        if (faculty.departmentId !== iMOwner.departmentId) {
-          return res.status(400).json({
-            error: {
-              message:
-                "You are not allowed to create a chairperson review for IMs outside your department",
-            },
-          });
-        }
-
+      if (!user.isAdmin) {
         // Might not be thrown unless multiple chairpersons on each departments became allowed
         if (faculty.userId !== user.id) {
           return res.status(400).json({
