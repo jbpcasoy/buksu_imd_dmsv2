@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import contentSpecialistReviewAbility from "@/services/ability/contentSpecialistReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = contentSpecialistReviewAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -50,32 +46,27 @@ export default async function handler(
         q7_4: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q7_5: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q8_1: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_2: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_3: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         qAMISDepartmentEndorsementId: Yup.string().required(),
         activeContentSpecialistId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ContentSpecialistReview"
-      );
 
       const {
         q1_1,
@@ -108,6 +99,124 @@ export default async function handler(
         qAMISDepartmentEndorsementId,
         activeContentSpecialistId,
       } = validator.cast(req.body);
+
+      const iMDepartment = await prisma.department.findFirstOrThrow({
+        where: {
+          Faculty: {
+            some: {
+              IM: {
+                some: {
+                  IMFile: {
+                    some: {
+                      DepartmentReview: {
+                        CoordinatorReview: {
+                          CoordinatorSuggestion: {
+                            SubmittedCoordinatorSuggestion: {
+                              DepartmentReviewed: {
+                                DepartmentRevision: {
+                                  some: {
+                                    CoordinatorEndorsement: {
+                                      DeanEndorsement: {
+                                        IDDCoordinatorSuggestion: {
+                                          SubmittedIDDCoordinatorSuggestion: {
+                                            CITLRevision: {
+                                              some: {
+                                                IDDCoordinatorEndorsement: {
+                                                  CITLDirectorEndorsement: {
+                                                    QAMISSuggestion: {
+                                                      SubmittedQAMISSuggestion:
+                                                        {
+                                                          QAMISRevision: {
+                                                            QAMISDeanEndorsement:
+                                                              {
+                                                                QAMISDepartmentEndorsement:
+                                                                  {
+                                                                    id: {
+                                                                      equals:
+                                                                        qAMISDepartmentEndorsementId,
+                                                                    },
+                                                                  },
+                                                              },
+                                                          },
+                                                        },
+                                                    },
+                                                  },
+                                                },
+                                              },
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const contentSpecialistDepartment = await prisma.department.findFirst({
+        where: {
+          Faculty: {
+            some: {
+              ContentSpecialist: {
+                ActiveContentSpecialist: {
+                  id: {
+                    equals: activeContentSpecialistId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!contentSpecialistDepartment) {
+        return res.status(403).json({
+          error: {
+            message:
+              "Only an active content specialist can perform this action",
+          },
+        });
+      }
+
+      if (iMDepartment.id !== contentSpecialistDepartment.id) {
+        return res.status(403).json({
+          error: {
+            message:
+              "Content specialists are not allowed to review an IM from another department",
+          },
+        });
+      }
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirstOrThrow({
+          where: {
+            ContentSpecialist: {
+              ActiveContentSpecialist: {
+                id: {
+                  equals: activeContentSpecialistId,
+                },
+              },
+            },
+          },
+        });
+        if (faculty.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to create a review for this user",
+            },
+          });
+        }
+      }
 
       const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow(
         {
@@ -192,17 +301,13 @@ export default async function handler(
         await prisma.contentSpecialistReview.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).ContentSpecialistReview],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.contentSpecialistReview.count({
-        where: {
-          AND: [accessibleBy(ability).ContentSpecialistReview],
-        },
+        where: {},
       });
 
       return res.json({ contentSpecialistReviews, count });
