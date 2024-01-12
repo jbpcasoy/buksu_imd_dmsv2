@@ -113,7 +113,7 @@ export default async function handler(
         if (iMDepartment.id !== chairpersonDepartment.id) {
           return res.status(403).json({
             error: {
-              message: "You cant endorse IMs from another department",
+              message: "You are not allowed to endorse an IM from another department",
             },
           });
         }
