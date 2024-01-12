@@ -103,6 +103,27 @@ export default async function handler(
             },
           });
         }
+
+        const submittedContentSpecialistSuggestion =
+          await prisma.submittedContentSpecialistSuggestion.findFirst({
+            where: {
+              ContentSpecialistSuggestion: {
+                ContentSpecialistReview: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedContentSpecialistSuggestion) {
+          return res.status(400).json({
+            error: {
+              message:
+                "Error: Content specialist suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const contentSpecialistReview =
@@ -242,6 +263,27 @@ export default async function handler(
             error: {
               message:
                 "You are not allowed to update this content specialist review",
+            },
+          });
+        }
+
+        const submittedContentSpecialistSuggestion =
+          await prisma.submittedContentSpecialistSuggestion.findFirst({
+            where: {
+              ContentSpecialistSuggestion: {
+                ContentSpecialistReview: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedContentSpecialistSuggestion) {
+          return res.status(400).json({
+            error: {
+              message:
+                "Error: Content specialist suggestion is already submitted",
             },
           });
         }

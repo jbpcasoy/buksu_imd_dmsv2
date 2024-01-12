@@ -119,7 +119,7 @@ export default async function handler(
           return res.status(400).json({
             error: {
               message:
-                "You are not allowed to delete a submitted content specialist",
+                "Error: Content specialist suggestion is already submitted",
             },
           });
         }
