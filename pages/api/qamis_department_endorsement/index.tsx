@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import qAMISDepartmentEndorsementAbility from "@/services/ability/qAMISDepartmentEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = qAMISDepartmentEndorsementAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -34,20 +29,17 @@ export default async function handler(
 
       const { skip, take } = validator.cast(req.query);
 
-      const qAMISDepartmentEndorsements = await prisma.qAMISDepartmentEndorsement.findMany({
-        skip,
-        take,
-        where: {
-          AND: [accessibleBy(ability).QAMISDepartmentEndorsement],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+      const qAMISDepartmentEndorsements =
+        await prisma.qAMISDepartmentEndorsement.findMany({
+          skip,
+          take,
+          where: {},
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
       const count = await prisma.qAMISDepartmentEndorsement.count({
-        where: {
-          AND: [accessibleBy(ability).QAMISDepartmentEndorsement],
-        },
+        where: {},
       });
 
       return res.json({ qAMISDepartmentEndorsements, count });
