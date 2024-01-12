@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import iDDSpecialistSuggestionItemAbility from "@/services/ability/iDDSpecialistSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iDDSpecialistSuggestionItemAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -36,7 +32,6 @@ export default async function handler(
         await prisma.iDDSpecialistSuggestionItem.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).IDDSpecialistSuggestionItem,
               {
                 id: {
                   equals: id,
@@ -63,12 +58,73 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "IDDSpecialistSuggestionItem"
-      );
-
       const { id } = validator.cast(req.query);
+      if (!user.isAdmin) {
+        const iDDSpecialistReview =
+          await prisma.iDDSpecialistReview.findFirstOrThrow({
+            where: {
+              IDDSpecialistSuggestion: {
+                IDDSpecialistSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active IDD Coordinator can perform this action",
+            },
+          });
+        }
+
+        if (iDDCoordinator.id !== iDDSpecialistReview.iDDCoordinatorId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this IDD specialist suggestion item",
+            },
+          });
+        }
+
+        const submittedIDDSpecialistSuggestion =
+          await prisma.submittedIDDSpecialistSuggestion.findFirst({
+            where: {
+              IDDSpecialistSuggestion: {
+                IDDSpecialistSuggestionItem: {
+                  some: {
+                    id: id,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedIDDSpecialistSuggestion) {
+          return res.status(403).json({
+            error: {
+              message: "Error: IDD specialist suggestion is already submitted",
+            },
+          });
+        }
+      }
 
       const submittedIDDSpecialistSuggestion =
         await prisma.submittedIDDSpecialistSuggestion.findFirst({
@@ -119,14 +175,76 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "IDDSpecialistSuggestionItem"
-      );
       const { id } = req.query;
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
+      if (!user.isAdmin) {
+        const iDDSpecialistReview =
+          await prisma.iDDSpecialistReview.findFirstOrThrow({
+            where: {
+              IDDSpecialistSuggestion: {
+                IDDSpecialistSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active IDD Coordinator can perform this action",
+            },
+          });
+        }
+
+        if (iDDCoordinator.id !== iDDSpecialistReview.iDDCoordinatorId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update this IDD specialist suggestion item",
+            },
+          });
+        }
+
+        const submittedIDDSpecialistSuggestion =
+          await prisma.submittedIDDSpecialistSuggestion.findFirst({
+            where: {
+              IDDSpecialistSuggestion: {
+                IDDSpecialistSuggestionItem: {
+                  some: {
+                    id: id as string,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedIDDSpecialistSuggestion) {
+          return res.status(403).json({
+            error: {
+              message: "Error: IDD specialist suggestion is already submitted",
+            },
+          });
+        }
+      }
 
       const submittedIDDSpecialistSuggestion =
         await prisma.submittedIDDSpecialistSuggestion.findFirst({
@@ -146,9 +264,9 @@ export default async function handler(
       if (submittedIDDSpecialistSuggestion) {
         return res.status(400).json({
           error: {
-            message: "Error: IDD specialist suggestion is already submitted"
-          }
-        })
+            message: "Error: IDD specialist suggestion is already submitted",
+          },
+        });
       }
 
       const iDDSpecialistSuggestionItem =
