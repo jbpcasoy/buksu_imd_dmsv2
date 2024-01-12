@@ -56,6 +56,7 @@ export default async function handler(
       });
 
       await validator.validate(req.query);
+      const { id } = validator.cast(req.query);
 
       if (!user.isAdmin) {
         const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
@@ -88,9 +89,27 @@ export default async function handler(
             },
           });
         }
-      }
 
-      const { id } = validator.cast(req.query);
+        const submittedIDDSpecialistSuggestion =
+          await prisma.submittedIDDSpecialistSuggestion.findFirst({
+            where: {
+              IDDSpecialistSuggestion: {
+                IDDSpecialistReview: {
+                  id: {
+                    equals: id,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedIDDSpecialistSuggestion) {
+          return res.status(403).json({
+            error: {
+              message: "Error: IDD specialist suggestion is already submitted",
+            },
+          });
+        }
+      }
 
       const iDDSpecialistReview = await prisma.iDDSpecialistReview.delete({
         where: {
@@ -187,7 +206,6 @@ export default async function handler(
         q8_3,
       } = validator.cast(req.body);
 
-
       if (!user.isAdmin) {
         const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
           where: {
@@ -216,6 +234,26 @@ export default async function handler(
             error: {
               message:
                 "You are not allowed to update an IDD specialist review for this user",
+            },
+          });
+        }
+
+        const submittedIDDSpecialistSuggestion =
+          await prisma.submittedIDDSpecialistSuggestion.findFirst({
+            where: {
+              IDDSpecialistSuggestion: {
+                IDDSpecialistReview: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedIDDSpecialistSuggestion) {
+          return res.status(403).json({
+            error: {
+              message: "Error: IDD specialist suggestion is already submitted",
             },
           });
         }
