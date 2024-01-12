@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import iDDSpecialistReviewAbility from "@/services/ability/iDDSpecialistReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iDDSpecialistReviewAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
         await prisma.iDDSpecialistReview.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).IDDSpecialistReview,
               {
                 id: {
                   equals: id,
@@ -62,19 +57,46 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "IDDSpecialistReview"
-      );
+      if (!user.isAdmin) {
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        if (iDDCoordinator.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this IDD specialist review",
+            },
+          });
+        }
+      }
 
       const { id } = validator.cast(req.query);
 
-      const iDDSpecialistReview =
-        await prisma.iDDSpecialistReview.delete({
-          where: {
-            id,
-          },
-        });
+      const iDDSpecialistReview = await prisma.iDDSpecialistReview.delete({
+        where: {
+          id,
+        },
+      });
 
       return res.json(iDDSpecialistReview);
     } catch (error: any) {
@@ -113,31 +135,26 @@ export default async function handler(
         q7_4: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q7_5: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q8_1: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_2: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_3: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
       });
 
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "IDDSpecialistReview"
-      );
 
       const { id } = req.query;
       const {
@@ -170,41 +187,74 @@ export default async function handler(
         q8_3,
       } = validator.cast(req.body);
 
-      const iDDSpecialistReview =
-        await prisma.iDDSpecialistReview.update({
+
+      if (!user.isAdmin) {
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
           where: {
-            id: id as string,
-          },
-          data: {
-            q1_1,
-            q1_2,
-            q2_1,
-            q2_2,
-            q2_3,
-            q2_4,
-            q3_1,
-            q4_1,
-            q4_2,
-            q4_3,
-            q5_1,
-            q5_2,
-            q5_3,
-            q5_4,
-            q6_1,
-            q6_2,
-            q6_3,
-            q6_4,
-            q6_5,
-            q7_1,
-            q7_2,
-            q7_3,
-            q7_4,
-            q7_5,
-            q8_1,
-            q8_2,
-            q8_3,
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
           },
         });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        if (iDDCoordinator.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update an IDD specialist review for this user",
+            },
+          });
+        }
+      }
+
+      const iDDSpecialistReview = await prisma.iDDSpecialistReview.update({
+        where: {
+          id: id as string,
+        },
+        data: {
+          q1_1,
+          q1_2,
+          q2_1,
+          q2_2,
+          q2_3,
+          q2_4,
+          q3_1,
+          q4_1,
+          q4_2,
+          q4_3,
+          q5_1,
+          q5_2,
+          q5_3,
+          q5_4,
+          q6_1,
+          q6_2,
+          q6_3,
+          q6_4,
+          q6_5,
+          q7_1,
+          q7_2,
+          q7_3,
+          q7_4,
+          q7_5,
+          q8_1,
+          q8_2,
+          q8_3,
+        },
+      });
 
       return res.json(iDDSpecialistReview);
     } catch (error: any) {
