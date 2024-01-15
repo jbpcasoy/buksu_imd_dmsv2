@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import contentEditorSuggestionAbility from "@/services/ability/contentEditorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = contentEditorSuggestionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -30,18 +26,18 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const contentEditorSuggestion = await prisma.contentEditorSuggestion.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).ContentEditorSuggestion,
-            {
-              id: {
-                equals: id,
+      const contentEditorSuggestion =
+        await prisma.contentEditorSuggestion.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                id: {
+                  equals: id,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
       return res.json(contentEditorSuggestion);
     } catch (error: any) {
@@ -60,15 +56,75 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "ContentEditorSuggestion");
-
       const { id } = validator.cast(req.query);
 
-      const contentEditorSuggestion = await prisma.contentEditorSuggestion.delete({
-        where: {
-          id,
-        },
-      });
+      if (!user.isAdmin) {
+        const contentEditorReview =
+          await prisma.contentEditorReview.findFirstOrThrow({
+            where: {
+              ContentEditorSuggestion: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          });
+
+        const cITLDirector = await prisma.cITLDirector.findFirst({
+          where: {
+            ActiveCITLDirector: {
+              CITLDirector: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!cITLDirector) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active CITL director can perform this action",
+            },
+          });
+        }
+
+        if (contentEditorReview.cITLDirectorId !== cITLDirector.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this content editor suggestion",
+            },
+          });
+        }
+
+        const submittedContentEditorSuggestion =
+          await prisma.submittedContentEditorSuggestion.findFirst({
+            where: {
+              ContentEditorSuggestion: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          });
+        if (submittedContentEditorSuggestion) {
+          return res.status(403).json({
+            error: {
+              message: "Error: Content editor suggestion is already submitted",
+            },
+          });
+        }
+      }
+
+      const contentEditorSuggestion =
+        await prisma.contentEditorSuggestion.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(contentEditorSuggestion);
     } catch (error: any) {
