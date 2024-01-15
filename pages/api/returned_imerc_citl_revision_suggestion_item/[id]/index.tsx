@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import returnedIMERCCITLRevisionSuggestionItemAbility from "@/services/ability/returnedIMERCCITLRevisionSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedIMERCCITLRevisionSuggestionItemAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
         await prisma.returnedIMERCCITLRevisionSuggestionItem.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ReturnedIMERCCITLRevisionSuggestionItem,
               {
                 id: {
                   equals: id,
@@ -62,34 +57,74 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ReturnedIMERCCITLRevisionSuggestionItem"
-      );
-
       const { id } = validator.cast(req.query);
 
-      const submittedReturnedIMERCCITLRevision =
-        await prisma.submittedReturnedIMERCCITLRevision.findFirst({
-          where: {
-            ReturnedIMERCCITLRevision: {
+      if (!user.isAdmin) {
+        const returnedIMERCCITLRevision =
+          await prisma.returnedIMERCCITLRevision.findFirstOrThrow({
+            where: {
               ReturnedIMERCCITLRevisionSuggestionItem: {
                 some: {
                   id: {
-                    equals: id as string,
+                    equals: id,
+                  },
+                },
+              },
+            },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
                   },
                 },
               },
             },
           },
         });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active IDD coordinator can perform this action",
+            },
+          });
+        }
 
-      if (submittedReturnedIMERCCITLRevision) {
-        return res.status(400).json({
-          error: {
-            message: "Error: Peer suggestion is already submitted",
-          },
-        });
+        if (returnedIMERCCITLRevision.iDDCoordinatorId !== iDDCoordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this returned IMERC CITL suggestion item",
+            },
+          });
+        }
+
+        const submittedReturnedIMERCCITLRevision =
+          await prisma.submittedReturnedIMERCCITLRevision.findFirst({
+            where: {
+              ReturnedIMERCCITLRevision: {
+                ReturnedIMERCCITLRevisionSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        if (submittedReturnedIMERCCITLRevision) {
+          return res.status(400).json({
+            error: {
+              message: "Error: Peer suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const returnedIMERCCITLRevisionSuggestionItem =
@@ -119,20 +154,15 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "ReturnedIMERCCITLRevisionSuggestionItem"
-      );
-
       const { id } = req.query;
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
 
-      const submittedReturnedIMERCCITLRevision =
-        await prisma.submittedReturnedIMERCCITLRevision.findFirst({
-          where: {
-            ReturnedIMERCCITLRevision: {
+      if (!user.isAdmin) {
+        const returnedIMERCCITLRevision =
+          await prisma.returnedIMERCCITLRevision.findFirstOrThrow({
+            where: {
               ReturnedIMERCCITLRevisionSuggestionItem: {
                 some: {
                   id: {
@@ -141,15 +171,60 @@ export default async function handler(
                 },
               },
             },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
           },
         });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active IDD coordinator can perform this action",
+            },
+          });
+        }
 
-      if (submittedReturnedIMERCCITLRevision) {
-        return res.status(400).json({
-          error: {
-            message: "Error: Peer suggestion is already submitted"
-          }
-        })
+        if (returnedIMERCCITLRevision.iDDCoordinatorId !== iDDCoordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this returned IMERC CITL suggestion item",
+            },
+          });
+        }
+
+        const submittedReturnedIMERCCITLRevision =
+          await prisma.submittedReturnedIMERCCITLRevision.findFirst({
+            where: {
+              ReturnedIMERCCITLRevision: {
+                ReturnedIMERCCITLRevisionSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        if (submittedReturnedIMERCCITLRevision) {
+          return res.status(400).json({
+            error: {
+              message: "Error: Peer suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const returnedIMERCCITLRevisionSuggestionItem =
