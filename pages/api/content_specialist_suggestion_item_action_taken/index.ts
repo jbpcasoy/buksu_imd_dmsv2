@@ -118,7 +118,7 @@ export default async function handler(
         if (!faculty) {
           return res.status(403).json({
             error: {
-              message: "Only an active CITL director can perform this action",
+              message: "Only an active faculty can perform this action",
             },
           });
         }

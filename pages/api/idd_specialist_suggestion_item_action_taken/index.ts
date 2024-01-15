@@ -115,7 +115,7 @@ export default async function handler(
         if (!faculty) {
           return res.status(403).json({
             error: {
-              message: "Only an active CITL director can perform this action",
+              message: "Only an active faculty can perform this action",
             },
           });
         }
@@ -128,22 +128,22 @@ export default async function handler(
             },
           });
         }
-      }
 
-      const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirst({
-        where: {
-          IMFile: {
-            IM: {
-              IMFile: {
-                some: {
-                  IMERCCITLRevision: {
-                    IMERCCITLReviewed: {
-                      SubmittedIDDSpecialistSuggestion: {
-                        IDDSpecialistSuggestion: {
-                          IDDSpecialistSuggestionItem: {
-                            some: {
-                              id: {
-                                equals: iDDSpecialistSuggestionItemId,
+        const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirst({
+          where: {
+            IMFile: {
+              IM: {
+                IMFile: {
+                  some: {
+                    IMERCCITLRevision: {
+                      IMERCCITLReviewed: {
+                        SubmittedIDDSpecialistSuggestion: {
+                          IDDSpecialistSuggestion: {
+                            IDDSpecialistSuggestionItem: {
+                              some: {
+                                id: {
+                                  equals: iDDSpecialistSuggestionItemId,
+                                },
                               },
                             },
                           },
@@ -154,25 +154,25 @@ export default async function handler(
                 },
               },
             },
-          },
-          OR: [
-            {
-              ReturnedIMERCCITLRevision: {
-                is: null,
-              },
-            },
-            {
-              ReturnedIMERCCITLRevision: {
-                SubmittedReturnedIMERCCITLRevision: {
+            OR: [
+              {
+                ReturnedIMERCCITLRevision: {
                   is: null,
                 },
               },
-            },
-          ],
-        },
-      });
-      if (iMERCCITLRevision) {
-        throw new Error("Error: IM is already revised");
+              {
+                ReturnedIMERCCITLRevision: {
+                  SubmittedReturnedIMERCCITLRevision: {
+                    is: null,
+                  },
+                },
+              },
+            ],
+          },
+        });
+        if (iMERCCITLRevision) {
+          throw new Error("Error: IM is already revised");
+        }
       }
 
       const iDDSpecialistSuggestionItemActionTaken =
