@@ -2,24 +2,16 @@ import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
-import { Fields, Formidable } from "formidable";
 import fs from "fs";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
-import * as Yup from "yup";
-
-//set bodyParser
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   let user: User;
+
   try {
     user = await getServerUser(req, res);
   } catch (error) {
@@ -27,29 +19,46 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const postHandler = async () => {
+  const getHandler = async () => {
     try {
-      // Read body using formidable
-      const data: any = await new Promise((resolve, reject) => {
-        const form = new Formidable();
-        form.parse(req, (err, fields, files) => {
-          if (err) {
-            reject({ err });
-          }
-          resolve({ err, fields, files });
+      const { id } = req.query;
+      const plagiarismFile = await prisma.plagiarismFile.findFirstOrThrow({
+        where: {
+          AND: [
+            {
+              id: {
+                equals: id as string,
+              },
+            },
+          ],
+        },
+      });
+
+      return res.json(plagiarismFile);
+    } catch (error: any) {
+      logger.error(error);
+      return res
+        .status(400)
+        .json({ error: { message: error?.message ?? "Server Error" } });
+    }
+  };
+
+  const deleteHandler = async () => {
+    try {
+      const { id } = req.query;
+
+      const plagiarismFileToDelete =
+        await prisma.plagiarismFile.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                id: {
+                  equals: id as string,
+                },
+              },
+            ],
+          },
         });
-      });
-      // Parse request body
-      const fields: Fields = data.fields;
-      const body = {
-        iMERCCITLReviewedId: fields?.iMERCCITLReviewedId?.at(0),
-      };
-      // Validate request body
-      const validator = Yup.object({
-        iMERCCITLReviewedId: Yup.string().required(),
-      });
-      await validator.validate(body);
-      const { iMERCCITLReviewedId } = validator.cast(body);
 
       if (!user.isAdmin) {
         const iM = await prisma.iM.findFirstOrThrow({
@@ -86,10 +95,13 @@ export default async function handler(
                                                                       {
                                                                         IMERCCITLReviewed:
                                                                           {
-                                                                            id: {
-                                                                              equals:
-                                                                                iMERCCITLReviewedId,
-                                                                            },
+                                                                            PlagiarismFile:
+                                                                              {
+                                                                                id: {
+                                                                                  equals:
+                                                                                    id as string,
+                                                                                },
+                                                                              },
                                                                           },
                                                                       },
                                                                   },
@@ -140,72 +152,49 @@ export default async function handler(
             },
           });
         }
+
         if (iM.facultyId !== faculty.id) {
           return res.status(403).json({
             error: {
-              message: "You are not allowed to create this plagiarism file",
+              message: "You are not allowed to delete this plagiarism file",
+            },
+          });
+        }
+
+        const iMERCCITLRevision = await prisma.iMERCCITLRevision.findFirst({
+          where: {
+            IMFile: {
+              id: {
+                equals: id as string,
+              },
+            },
+          },
+        });
+        if (iMERCCITLRevision) {
+          return res.status(403).json({
+            error: {
+              message: "Error: IMERC suggestions has already been revised",
             },
           });
         }
       }
 
-      // Save file to server
-      const file = data.files.file[0];
-      const filename = `${file.newFilename}.pdf`;
-      const filePath = file.filepath;
-      const destination = path.join(
+      const filePath = path.join(
         process.cwd(),
-        `/files/plagiarism/${filename}`
+        `/files/plagiarism/${plagiarismFileToDelete.filename}`
       );
-      fs.copyFile(filePath, destination, (err) => {
-        if (err) throw err;
+      fs.rm(filePath, (error) => {
+        logger.error({ error });
+        throw error;
       });
 
-      // create object to server
-      const plagiarismFile = await prisma.plagiarismFile.create({
-        data: {
-          IMERCCITLReviewed: {
-            connect: {
-              id: iMERCCITLReviewedId,
-            },
-          },
-          filename,
-          mimetype: file.mimetype,
-          size: file.size,
-          originalFilename: file.originalFilename,
+      const plagiarismFile = await prisma.plagiarismFile.delete({
+        where: {
+          id: id as string,
         },
       });
-      res.status(200).json(plagiarismFile);
-    } catch (error: any) {
-      logger.error(error);
-      return res
-        .status(400)
-        .json({ error: { message: error?.message ?? "Server Error" } });
-    }
-  };
 
-  const getHandler = async () => {
-    try {
-      const validator = Yup.object({
-        take: Yup.number().required(),
-        skip: Yup.number().required(),
-      });
-      await validator.validate(req.query);
-      const { skip, take } = validator.cast(req.query);
-
-      const plagiarismFiles = await prisma.plagiarismFile.findMany({
-        skip,
-        take,
-        where: {},
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
-      const count = await prisma.plagiarismFile.count({
-        where: {},
-      });
-
-      return res.json({ plagiarismFiles, count });
+      return res.json(plagiarismFile);
     } catch (error: any) {
       logger.error(error);
       return res
@@ -215,8 +204,8 @@ export default async function handler(
   };
 
   switch (req.method) {
-    case "POST":
-      return await postHandler();
+    case "DELETE":
+      return await deleteHandler();
     case "GET":
       return await getHandler();
     default:

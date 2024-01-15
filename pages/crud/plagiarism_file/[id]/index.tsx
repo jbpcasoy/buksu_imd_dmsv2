@@ -42,9 +42,9 @@ export default function PlagiarismFilePage() {
       <p>createdAt: {new Date(plagiarismFile.createdAt).toLocaleString()}</p>
       <p>updatedAt: {new Date(plagiarismFile.updatedAt).toLocaleString()}</p>
       <p>
-        iMId:{" "}
-        <Link href={`/crud/im/${plagiarismFile.iMId}`} className='underline'>
-          {plagiarismFile.iMId}
+        iMERCCITLReviewedId:{" "}
+        <Link href={`/crud/im/${plagiarismFile.iMERCCITLReviewedId}`} className='underline'>
+          {plagiarismFile.iMERCCITLReviewedId}
         </Link>
       </p>
       <p>filename: {plagiarismFile.filename}</p>

@@ -121,13 +121,12 @@ model IM {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty        Faculty          @relation(fields: [facultyId], references: [id])
-    facultyId      String
-    title          String
-    type           IMType
-    IMFile         IMFile[]
-    Event          Event[]
-    PlagiarismFile PlagiarismFile[]
+    Faculty   Faculty  @relation(fields: [facultyId], references: [id])
+    facultyId String
+    title     String
+    type      IMType
+    IMFile    IMFile[]
+    Event     Event[]
 }
 
 model IMFile {
@@ -1017,6 +1016,7 @@ model IMERCCITLReviewed {
     IMERCCITLRevision                      IMERCCITLRevision[]
     Event                                  Event[]
     IMFile                                 IMFile?
+    PlagiarismFile                         PlagiarismFile?
 }
 
 model IMERCCITLRevision {
@@ -1209,13 +1209,13 @@ model PlagiarismFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM                IM                  @relation(fields: [iMId], references: [id], onDelete: Cascade)
-    iMId              String
-    filename          String
-    size              Int
-    mimetype          String
-    originalFilename  String
-    IMERCCITLRevision IMERCCITLRevision[]
+    filename            String
+    size                Int
+    mimetype            String
+    originalFilename    String
+    IMERCCITLRevision   IMERCCITLRevision[]
+    IMERCCITLReviewed   IMERCCITLReviewed   @relation(fields: [iMERCCITLReviewedId], references: [id])
+    iMERCCITLReviewedId String              @unique
 }
 
 model Announcement {
