@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedContentEditorSuggestionAbility from "@/services/ability/submittedContentEditorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import mailTransporter from "@/services/mailTransporter";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedContentEditorSuggestionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,18 +26,57 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "SubmittedContentEditorSuggestion"
-      );
       const { contentEditorSuggestionId } = validator.cast(req.body);
-      const contentEditorSuggestionItemCount = await prisma.contentEditorSuggestionItem.count({
-        where: {
-          contentEditorSuggestionId: {
-            equals: contentEditorSuggestionId,
+
+      if (!user.isAdmin) {
+        const contentEditorReview =
+          await prisma.contentEditorReview.findFirstOrThrow({
+            where: {
+              ContentEditorSuggestion: {
+                id: {
+                  equals: contentEditorSuggestionId,
+                },
+              },
+            },
+          });
+
+        const cITLDirector = await prisma.cITLDirector.findFirst({
+          where: {
+            ActiveCITLDirector: {
+              CITLDirector: {
+                User: {
+                  id: user.id,
+                },
+              },
+            },
           },
-        },
-      });
+        });
+        if (!cITLDirector) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active CITL director can perform this action",
+            },
+          });
+        }
+
+        if (cITLDirector.id !== contentEditorReview.cITLDirectorId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to submit this content editor suggestion",
+            },
+          });
+        }
+      }
+
+      const contentEditorSuggestionItemCount =
+        await prisma.contentEditorSuggestionItem.count({
+          where: {
+            contentEditorSuggestionId: {
+              equals: contentEditorSuggestionId,
+            },
+          },
+        });
       if (contentEditorSuggestionItemCount < 1) {
         throw new Error("Suggestions are required upon submitting");
       }
@@ -224,17 +259,13 @@ export default async function handler(
         await prisma.submittedContentEditorSuggestion.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).SubmittedContentEditorSuggestion],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.submittedContentEditorSuggestion.count({
-        where: {
-          AND: [accessibleBy(ability).SubmittedContentEditorSuggestion],
-        },
+        where: {},
       });
 
       return res.json({ submittedContentEditorSuggestions, count });
