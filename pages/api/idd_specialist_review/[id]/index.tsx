@@ -229,15 +229,6 @@ export default async function handler(
           });
         }
 
-        if (iDDCoordinator.userId !== user.id) {
-          return res.status(403).json({
-            error: {
-              message:
-                "You are not allowed to update an IDD specialist review for this user",
-            },
-          });
-        }
-
         const submittedIDDSpecialistSuggestion =
           await prisma.submittedIDDSpecialistSuggestion.findFirst({
             where: {
