@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import contentEditorSuggestionItemAbility from "@/services/ability/contentEditorSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = contentEditorSuggestionItemAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -36,7 +32,6 @@ export default async function handler(
         await prisma.contentEditorSuggestionItem.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ContentEditorSuggestionItem,
               {
                 id: {
                   equals: id,
@@ -63,34 +58,76 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ContentEditorSuggestionItem"
-      );
-
       const { id } = validator.cast(req.query);
 
-      const submittedContentEditorSuggestion =
-        await prisma.submittedContentEditorSuggestion.findFirst({
+      if (!user.isAdmin) {
+        const contentEditorReview =
+          await prisma.contentEditorReview.findFirstOrThrow({
+            where: {
+              ContentEditorSuggestion: {
+                ContentEditorSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        const cITLDirector = await prisma.cITLDirector.findFirst({
           where: {
-            ContentEditorSuggestion: {
-              ContentEditorSuggestionItem: {
-                some: {
+            ActiveCITLDirector: {
+              CITLDirector: {
+                User: {
                   id: {
-                    equals: id as string,
+                    equals: user.id,
                   },
                 },
               },
             },
           },
         });
+        if (!cITLDirector) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active allowed to perform this action",
+            },
+          });
+        }
 
-      if (submittedContentEditorSuggestion) {
-        return res.status(400).json({
-          error: {
-            message: "Error: Content editor suggestion is already submitted",
-          },
-        });
+        if (cITLDirector.id !== contentEditorReview.cITLDirectorId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this content editor suggestion item",
+            },
+          });
+        }
+
+        const submittedContentEditorSuggestion =
+          await prisma.submittedContentEditorSuggestion.findFirst({
+            where: {
+              ContentEditorSuggestion: {
+                ContentEditorSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        if (submittedContentEditorSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "Error: content editor suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const contentEditorSuggestionItem =
@@ -120,36 +157,79 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "ContentEditorSuggestionItem"
-      );
       const { id } = req.query;
       const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
 
-      const submittedContentEditorSuggestion =
-        await prisma.submittedContentEditorSuggestion.findFirst({
+      if (!user.isAdmin) {
+        const contentEditorReview =
+          await prisma.contentEditorReview.findFirstOrThrow({
+            where: {
+              ContentEditorSuggestion: {
+                ContentEditorSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        const cITLDirector = await prisma.cITLDirector.findFirst({
           where: {
-            ContentEditorSuggestion: {
-              ContentEditorSuggestionItem: {
-                some: {
+            ActiveCITLDirector: {
+              CITLDirector: {
+                User: {
                   id: {
-                    equals: id as string,
+                    equals: user.id,
                   },
                 },
               },
             },
           },
         });
+        if (!cITLDirector) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active allowed to perform this action",
+            },
+          });
+        }
 
-      if (submittedContentEditorSuggestion) {
-        return res.status(400).json({
-          error: {
-            message: "Error: Content editor suggestion is already submitted",
-          },
-        });
+        if (cITLDirector.id !== contentEditorReview.cITLDirectorId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update this content editor suggestion item",
+            },
+          });
+        }
+
+        const submittedContentEditorSuggestion =
+          await prisma.submittedContentEditorSuggestion.findFirst({
+            where: {
+              ContentEditorSuggestion: {
+                ContentEditorSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        if (submittedContentEditorSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "Error: content editor suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const contentEditorSuggestionItem =
