@@ -35,12 +35,6 @@ export default function IMERCCITLRevisionPage() {
       <div className='flex'>
         <h2 className='flex-1'>IMERCCITLRevision</h2>
         <div className='space-x-1'>
-          <Link
-            href={`/crud/imerc_citl_revision/${iMERCCITLRevision.id}/edit`}
-            className='rounded border'
-          >
-            edit
-          </Link>
           <button className='border rounded' onClick={deleteHandler}>
             delete
           </button>
@@ -61,10 +55,19 @@ export default function IMERCCITLRevisionPage() {
       <p>
         iMERCCITLReviewedId:{" "}
         <Link
-          href={`/crud/imerc_citl_revieweded/${iMERCCITLRevision.iMERCCITLReviewedId}`}
+          href={`/crud/imerc_citl_reviewed/${iMERCCITLRevision.iMERCCITLReviewedId}`}
           className='underline'
         >
           {iMERCCITLRevision.iMERCCITLReviewedId}
+        </Link>
+      </p>
+      <p>
+        plagiarismFileId:{" "}
+        <Link
+          href={`/crud/plagiarism_file/${iMERCCITLRevision.plagiarismFileId}`}
+          className='underline'
+        >
+          {iMERCCITLRevision.plagiarismFileId}
         </Link>
       </p>
     </CrudLayout>

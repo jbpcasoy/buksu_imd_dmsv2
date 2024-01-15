@@ -92,7 +92,7 @@ export default async function handler(
 
       if (existingDepartmentReview) {
         return res.status(400).json({
-          error: { message: "IM has already been submitted for review" },
+          error: { message: "Error: IM has already been submitted for review" },
         });
       }
 

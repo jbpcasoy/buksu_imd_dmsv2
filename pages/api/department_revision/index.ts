@@ -290,7 +290,7 @@ export default async function handler(
 
       if (existingDepartmentRevision) {
         return res.status(400).json({
-          error: { message: "IM has already been submitted for endorsement" },
+          error: { message: "Error: IM has already been submitted for endorsement" },
         });
       }
 

@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import iMERCCITLRevisionAbility from "@/services/ability/iMERCCITLRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iMERCCITLRevisionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,12 +26,80 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "IMERCCITLRevision"
-      );
-
       const { iMFileId, plagiarismFileId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                IMFile: {
+                  some: {
+                    id: {
+                      equals: iMFileId,
+                    },
+                  },
+                },
+              },
+              {
+                IMFile: {
+                  some: {
+                    QAMISRevision: {
+                      QAMISDeanEndorsement: {
+                        QAMISDepartmentEndorsement: {
+                          ContentEditorReview: {
+                            ContentEditorSuggestion: {
+                              SubmittedContentEditorSuggestion: {
+                                IMERCCITLReviewed: {
+                                  PlagiarismFile: {
+                                    id: {
+                                      equals: plagiarismFileId,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active faculty is allowed to perform this action",
+            },
+          });
+        }
+
+        if (faculty.id !== iM.facultyId) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to perform this action",
+            },
+          });
+        }
+      }
 
       const iMFile = await prisma.iMFile.findFirstOrThrow({
         where: {
@@ -261,7 +325,7 @@ export default async function handler(
 
       if (existingIMERCCITLRevision) {
         return res.status(400).json({
-          error: { message: "IM has already been submitted for endorsement" },
+          error: { message: "Error: IM has already been submitted for endorsement" },
         });
       }
 
@@ -323,17 +387,13 @@ export default async function handler(
       const iMERCCITLRevisions = await prisma.iMERCCITLRevision.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).IMERCCITLRevision],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.iMERCCITLRevision.count({
-        where: {
-          AND: [accessibleBy(ability).IMERCCITLRevision],
-        },
+        where: {},
       });
 
       return res.json({ iMERCCITLRevisions, count });

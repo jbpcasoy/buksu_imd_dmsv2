@@ -7,9 +7,11 @@ export default function AddIMERCCITLRevisionPage() {
   const formik = useFormik({
     initialValues: {
       iMFileId: "",
+      plagiarismFileId: ""
     },
     validationSchema: Yup.object({
       iMFileId: Yup.string().required(),
+      plagiarismFileId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -31,6 +33,11 @@ export default function AddIMERCCITLRevisionPage() {
           type='text'
           placeholder='iMFileId'
           {...formik.getFieldProps("iMFileId")}
+        />
+        <input
+          type='text'
+          placeholder='plagiarismFileId'
+          {...formik.getFieldProps("plagiarismFileId")}
         />
         <input type='submit' value='Submit' className='rounded border' />
       </form>
