@@ -141,7 +141,7 @@ export default async function handler(
         if (departmentRevision) {
           return res.status(400).json({
             error: {
-              message: "IM is already revised",
+              message: "Error: IM is already revised",
             },
           });
         }
@@ -255,7 +255,7 @@ export default async function handler(
         if (departmentRevision) {
           return res.status(400).json({
             error: {
-              message: "IM is already revised",
+              message: "Error: IM is already revised",
             },
           });
         }
