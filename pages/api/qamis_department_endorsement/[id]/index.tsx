@@ -50,35 +50,7 @@ export default async function handler(
     }
   };
 
-  // const deleteHandler = async () => {
-  //   try {
-  //     const validator = Yup.object({
-  //       id: Yup.string().required(),
-  //     });
-
-  //     await validator.validate(req.query);
-
-  //     const { id } = validator.cast(req.query);
-
-  //     const qAMISDepartmentEndorsement =
-  //       await prisma.qAMISDepartmentEndorsement.delete({
-  //         where: {
-  //           id,
-  //         },
-  //       });
-
-  //     return res.json(qAMISDepartmentEndorsement);
-  //   } catch (error: any) {
-  //     logger.error(error);
-  //     return res
-  //       .status(400)
-  //       .json({ error: { message: error?.message ?? "Server Error" } });
-  //   }
-  // };
-
   switch (req.method) {
-    // case "DELETE":
-    //   return await deleteHandler();
     case "GET":
       return await getHandler();
     default:

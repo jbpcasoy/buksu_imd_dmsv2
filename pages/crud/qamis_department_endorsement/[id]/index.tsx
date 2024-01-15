@@ -11,34 +11,13 @@ export default function QAMISDepartmentEndorsementPage() {
     id: qAMISDepartmentEndorsementId as string,
   });
 
-  const deleteHandler = () => {
-    const ok = confirm("Are you sure?");
-
-    if (!ok) {
-      return;
-    }
-
-    axios
-      .delete(`/api/qamis_department_endorsement/${qAMISDepartmentEndorsementId}`)
-      .then(() => {
-        alert("QAMISDepartmentEndorsement has been deleted successfully");
-      })
-      .catch((error) => {
-        alert(error.response?.data?.error?.message);
-      });
-  };
-
   if (!qAMISDepartmentEndorsement) return null;
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>QAMISDepartmentEndorsement</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
-            delete
-          </button>
-        </div>
+      <div className="flex">
+        <h2 className="flex-1">QAMISDepartmentEndorsement</h2>
+        <div className="space-x-1"></div>
       </div>
       <p>id: {qAMISDepartmentEndorsement.id}</p>
       <p>
@@ -53,7 +32,7 @@ export default function QAMISDepartmentEndorsementPage() {
         qAMISChairpersonEndorsementId:
         <Link
           href={`/crud/qamis_chairperson_endorsement/${qAMISDepartmentEndorsement.qAMISChairpersonEndorsementId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISDepartmentEndorsement.qAMISChairpersonEndorsementId}
         </Link>
@@ -62,7 +41,7 @@ export default function QAMISDepartmentEndorsementPage() {
         qAMISCoordinatorEndorsementId:
         <Link
           href={`/crud/qamis_coordinator_endorsement/${qAMISDepartmentEndorsement.qAMISCoordinatorEndorsementId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISDepartmentEndorsement.qAMISCoordinatorEndorsementId}
         </Link>
@@ -71,7 +50,7 @@ export default function QAMISDepartmentEndorsementPage() {
         qAMISDeanEndorsementId:
         <Link
           href={`/crud/qamis_dean_endorsement/${qAMISDepartmentEndorsement.qAMISDeanEndorsementId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISDepartmentEndorsement.qAMISDeanEndorsementId}
         </Link>
