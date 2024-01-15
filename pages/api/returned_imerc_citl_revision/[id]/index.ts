@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import returnedIMERCCITLRevisionAbility from "@/services/ability/returnedIMERCCITLRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedIMERCCITLRevisionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
         await prisma.returnedIMERCCITLRevision.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ReturnedIMERCCITLRevision,
               {
                 id: {
                   equals: id,
@@ -62,12 +57,68 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ReturnedIMERCCITLRevision"
-      );
-
       const { id } = validator.cast(req.query);
+
+      if (!user.isAdmin) {
+        const returnedIMERCCITLRevision =
+          await prisma.returnedIMERCCITLRevision.findFirstOrThrow({
+            where: {
+              id: {
+                equals: id,
+              },
+            },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        if (returnedIMERCCITLRevision.iDDCoordinatorId !== iDDCoordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed delete this returned IMERC CITL revision",
+            },
+          });
+        }
+
+        const submittedReturnedIMERCCITLRevision =
+          await prisma.submittedReturnedIMERCCITLRevision.findFirst({
+            where: {
+              ReturnedIMERCCITLRevision: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          });
+        if (submittedReturnedIMERCCITLRevision) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete a submitted returned CITL revision",
+            },
+          });
+        }
+      }
 
       const iMERCIDDCoordinatorEndorsement =
         await prisma.iMERCIDDCoordinatorEndorsement.findFirst({

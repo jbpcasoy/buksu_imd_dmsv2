@@ -1,8 +1,6 @@
 import prisma from "@/prisma/client";
-import returnedIMERCCITLRevisionAbility from "@/services/ability/returnedIMERCCITLRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -20,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedIMERCCITLRevisionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,14 +27,37 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ReturnedIMERCCITLRevision"
-      );
-
       const { activeIDDCoordinatorId, iMERCCITLRevisionId } = validator.cast(
         req.body
       );
+
+      const iDDCoordinator = await prisma.iDDCoordinator.findFirstOrThrow({
+        where: {
+          ActiveIDDCoordinator: {
+            id: {
+              equals: activeIDDCoordinatorId,
+            },
+          },
+        },
+      });
+      if (!iDDCoordinator) {
+        return res.status(403).json({
+          error: {
+            message: "Only an active IDD coordinator can perform this action",
+          },
+        });
+      }
+
+      if (!user.isAdmin) {
+        if (iDDCoordinator.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create an IDD specialist review for this user",
+            },
+          });
+        }
+      }
 
       const iMERCIDDCoordinatorEndorsement =
         await prisma.iMERCIDDCoordinatorEndorsement.findFirst({
@@ -137,17 +157,13 @@ export default async function handler(
         await prisma.returnedIMERCCITLRevision.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).ReturnedIMERCCITLRevision],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.returnedIMERCCITLRevision.count({
-        where: {
-          AND: [accessibleBy(ability).ReturnedIMERCCITLRevision],
-        },
+        where: {},
       });
 
       return res.json({ returnedIMERCCITLRevisions, count });
