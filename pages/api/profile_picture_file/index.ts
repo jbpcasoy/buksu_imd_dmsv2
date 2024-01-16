@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
 import profilePictureFileAbility from "@/services/ability/profilePictureFileAbility";
-import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
 import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
@@ -45,12 +43,6 @@ export default async function handler(
       });
       // Parse request body
       const fields: Fields = data.fields;
-
-      const ability = userAbility({ user });
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToProfilePictureFile",
-        subject("User", user)
-      );
 
       // Save file to server
       const file = data.files.file[0];
