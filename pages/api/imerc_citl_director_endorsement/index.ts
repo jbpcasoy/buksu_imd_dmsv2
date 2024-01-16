@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import iMERCCITLDirectorEndorsementAbility from "@/services/ability/iMERCCITLDirectorEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import mailTransporter from "@/services/mailTransporter";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iMERCCITLDirectorEndorsementAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -31,13 +27,36 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "IMERCCITLDirectorEndorsement"
-      );
-
       const { iMERCIDDCoordinatorEndorsementId, activeCITLDirectorId } =
         validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const cITLDirector = await prisma.cITLDirector.findFirst({
+          where: {
+            ActiveCITLDirector: {
+              id: {
+                equals: activeCITLDirectorId,
+              },
+            },
+          },
+        });
+        if (!cITLDirector) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active CITL director can perform this action",
+            },
+          });
+        }
+
+        if (cITLDirector.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create a CITL director endorsement for this user",
+            },
+          });
+        }
+      }
 
       const cITLDirector = await prisma.cITLDirector.findFirstOrThrow({
         where: {
@@ -144,17 +163,13 @@ export default async function handler(
         await prisma.iMERCCITLDirectorEndorsement.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).IMERCCITLDirectorEndorsement],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.iMERCCITLDirectorEndorsement.count({
-        where: {
-          AND: [accessibleBy(ability).IMERCCITLDirectorEndorsement],
-        },
+        where: {},
       });
 
       return res.json({ iMERCCITLDirectorEndorsements, count });
