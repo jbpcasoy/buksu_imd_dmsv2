@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedReturnedIMERCCITLRevisionAbility from "@/services/ability/submittedReturnedIMERCCITLRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import mailTransporter from "@/services/mailTransporter";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedReturnedIMERCCITLRevisionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,12 +26,49 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "SubmittedReturnedIMERCCITLRevision"
-      );
-
       const { returnedIMERCCITLRevisionId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const returnedIMERCCITLRevision =
+          await prisma.returnedIMERCCITLRevision.findFirstOrThrow({
+            where: {
+              id: {
+                equals: returnedIMERCCITLRevisionId,
+              },
+            },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active IDD coordinator can perform this action",
+            },
+          });
+        }
+
+        if (iDDCoordinator.id !== returnedIMERCCITLRevision.iDDCoordinatorId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to submit this returned IMERC CITL revision",
+            },
+          });
+        }
+      }
+
       const returnedIMERCCITLRevisionSuggestionItemCount =
         await prisma.returnedIMERCCITLRevisionSuggestionItem.count({
           where: {
@@ -188,17 +221,13 @@ export default async function handler(
         await prisma.submittedReturnedIMERCCITLRevision.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).SubmittedReturnedIMERCCITLRevision],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.submittedReturnedIMERCCITLRevision.count({
-        where: {
-          AND: [accessibleBy(ability).SubmittedReturnedIMERCCITLRevision],
-        },
+        where: {},
       });
 
       return res.json({ submittedReturnedIMERCCITLRevisions, count });
