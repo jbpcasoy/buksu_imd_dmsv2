@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import iMERCIDDCoordinatorEndorsementAbility from "@/services/ability/iMERCIDDCoordinatorEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iMERCIDDCoordinatorEndorsementAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,14 +26,56 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "IMERCIDDCoordinatorEndorsement"
-      );
-
       const { iMERCCITLRevisionId, activeIDDCoordinatorId } = validator.cast(
         req.body
       );
+      if (!user.isAdmin) {
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              id: {
+                equals: activeIDDCoordinatorId,
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active IDD coordinator can perform this action",
+            },
+          });
+        }
+
+        if (iDDCoordinator.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create this IMERC IDD coordinator endorsement",
+            },
+          });
+        }
+
+        const submittedReturnedIMERCCITLRevision =
+          await prisma.submittedReturnedIMERCCITLRevision.findFirst({
+            where: {
+              ReturnedIMERCCITLRevision: {
+                IMERCCITLRevision: {
+                  id: {
+                    equals: iMERCCITLRevisionId,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedReturnedIMERCCITLRevision) {
+          return res.status(403).json({
+            error: {
+              message: "Error: IMERC CITL revision is returned",
+            },
+          });
+        }
+      }
 
       const iDDCoordinator = await prisma.iDDCoordinator.findFirstOrThrow({
         where: {
@@ -98,17 +136,13 @@ export default async function handler(
         await prisma.iMERCIDDCoordinatorEndorsement.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).IMERCIDDCoordinatorEndorsement],
+          where: {},
+          orderBy: {
+            updatedAt: "desc",
           },
-        orderBy: {
-          updatedAt: "desc",
-        },
         });
       const count = await prisma.iMERCIDDCoordinatorEndorsement.count({
-        where: {
-          AND: [accessibleBy(ability).IMERCIDDCoordinatorEndorsement],
-        },
+        where: {},
       });
 
       return res.json({ iMERCIDDCoordinatorEndorsements, count });
