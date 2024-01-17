@@ -371,22 +371,26 @@ export default function CrudSidebar() {
       link: "/crud/profile_picture_file",
       label: "Profile Picture File",
     },
+    {
+      link: "/crud/serial_number",
+      label: "Serial Number",
+    },
   ];
 
   return (
-    <div className='h-full overflow-y-auto pb-10'>
+    <div className="h-full overflow-y-auto pb-10">
       <Link
-        href='/crud'
-        className='py-2 sticky top-0 bg-white shadow text-lg block'
+        href="/crud"
+        className="py-2 sticky top-0 bg-white shadow text-lg block"
       >
-        BUKSU IMD DMS <span className='text-sm text-gray-500'>CRUD</span>
+        BUKSU IMD DMS <span className="text-sm text-gray-500">CRUD</span>
       </Link>
 
-      <div className='flex flex-col'>
+      <div className="flex flex-col">
         {items
           .sort((a, b) => a.label.localeCompare(b.label))
           .map((item) => (
-            <Link href={item.link} className='underline' key={item.link}>
+            <Link href={item.link} className="underline" key={item.link}>
               {item.label}
             </Link>
           ))}

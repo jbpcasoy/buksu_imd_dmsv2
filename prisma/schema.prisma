@@ -1051,6 +1051,7 @@ model IMERCCITLDirectorEndorsement {
     IMERCIDDCoordinatorEndorsement   IMERCIDDCoordinatorEndorsement @relation(fields: [iMERCIDDCoordinatorEndorsementId], references: [id], onDelete: Cascade)
     iMERCIDDCoordinatorEndorsementId String                         @unique
     Event                            Event[]
+    SerialNumber                     SerialNumber?
 }
 
 model ContentSpecialist {
@@ -1430,4 +1431,14 @@ model ReturnedIMERCCITLRevisionSuggestionItemActionTaken {
     ReturnedIMERCCITLRevisionSuggestionItem   ReturnedIMERCCITLRevisionSuggestionItem @relation(fields: [returnedIMERCCITLRevisionSuggestionItemId], references: [id], onDelete: Cascade)
     returnedIMERCCITLRevisionSuggestionItemId String                                  @unique
     value                                     String
+}
+
+model SerialNumber {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    value                          String                       @unique
+    IMERCCITLDirectorEndorsement   IMERCCITLDirectorEndorsement @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id])
+    iMERCCITLDirectorEndorsementId String                       @unique
 }
