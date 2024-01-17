@@ -232,6 +232,7 @@ export default function ReturnedDepartmentRevisionPage() {
       addSnackbar("Cannot review IM from other department", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myDepartment, ownerDepartment]);
 
   useEffect(() => {
@@ -243,6 +244,7 @@ export default function ReturnedDepartmentRevisionPage() {
       addSnackbar("Only coordinators are allowed for this action", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCoordinator]);
 
   if (iM === null) {

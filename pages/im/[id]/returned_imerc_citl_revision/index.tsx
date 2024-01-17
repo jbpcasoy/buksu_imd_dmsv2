@@ -227,6 +227,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
       );
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIDDCoordinator]);
 
   if (iM === null) {

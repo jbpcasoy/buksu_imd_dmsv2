@@ -132,6 +132,7 @@ export default function AddPeerReviewPage() {
       addSnackbar("Cannot review IM from other department", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myDepartment, ownerDepartment]);
 
   useEffect(() => {
@@ -143,6 +144,7 @@ export default function AddPeerReviewPage() {
       addSnackbar("Cannot review own IM", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iM, activeFaculty]);
 
   useEffect(() => {

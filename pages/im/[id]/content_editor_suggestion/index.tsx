@@ -213,6 +213,7 @@ export default function ContentEditorSuggestionPage() {
       addSnackbar("Only the CITL director is allowed for this action", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCITLDirector]);
 
   if (iM === null) {

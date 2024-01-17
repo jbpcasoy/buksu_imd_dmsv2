@@ -69,10 +69,10 @@ export default function IMPage() {
 
   return (
     <AdminLayout>
-      <div className='flex h-full'>
-        <div className='flex-1 p-1'>
-          <div className='flex'>
-            <h2 className='flex-1 uppercase'>{iM.title}</h2>
+      <div className="flex h-full">
+        <div className="flex-1 p-1">
+          <div className="flex">
+            <h2 className="flex-1 uppercase">{iM.title}</h2>
             <div>
               {
                 <ActionMenu
@@ -86,40 +86,46 @@ export default function IMPage() {
               }
             </div>
           </div>
-          <div className='flex space-x-10'>
-            <div className='flex space-x-2 mt-2'>
-              <img className='w-10 h-10 rounded-full object-cover' src={user?.image ?? ""} />
-              <div className='text-xs text-palette_grey'>
-                <p className='uppercase font-bold'>{user?.name}</p>
+          <div className="flex space-x-10">
+            <div className="flex space-x-2 mt-2">
+              <img
+                className="w-10 h-10 rounded-full object-cover"
+                src={user?.image ?? ""}
+                alt="User profile picture"
+              />
+              <div className="text-xs text-palette_grey">
+                <p className="uppercase font-bold">{user?.name}</p>
                 {iM?.createdAt && (
                   <p>
-                    {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
+                    {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat(
+                      "D | t"
+                    )}
                   </p>
                 )}
               </div>
             </div>
             <div>
-              <div className='space-x-4'>
-                <span className='text-xs text-palette_grey'>
+              <div className="space-x-4">
+                <span className="text-xs text-palette_grey">
                   Type: {iM.type}
                 </span>
-                <span className='text-xs text-palette_grey'>
+                <span className="text-xs text-palette_grey">
                   Status: {iMStatusNormalizer(iMStatus)}
                 </span>
               </div>
-              <p className='text-xs text-palette_grey'>
+              <p className="text-xs text-palette_grey">
                 Department: {department?.name} | {college?.name}
               </p>
             </div>
           </div>
         </div>
-        <div className='flex flex-1 h-full'>
+        <div className="flex flex-1 h-full">
           {iMFile && (
             <iframe
-              loading='lazy'
+              loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className='w-full h-full rounded'
+              className="w-full h-full rounded"
             />
           )}
         </div>
@@ -177,14 +183,14 @@ function ActionMenu({
   }, []);
 
   return (
-    <div className='relative inline-block text-left' ref={menuRef}>
+    <div className="relative inline-block text-left" ref={menuRef}>
       <div>
         <button
-          type='button'
-          className='inline-flex justify-center items-center space-x-2 w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50'
-          id='options-menu'
-          aria-haspopup='true'
-          aria-expanded='true'
+          type="button"
+          className="inline-flex justify-center items-center space-x-2 w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+          id="options-menu"
+          aria-haspopup="true"
+          aria-expanded="true"
           onClick={() =>
             setState((prev) => ({ ...prev, openMenu: !prev.openMenu }))
           }
@@ -192,62 +198,62 @@ function ActionMenu({
           <span>Actions</span>
           {!state.openMenu && (
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='1em'
-              viewBox='0 0 320 512'
-              className='fill-palette_blue'
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 320 512"
+              className="fill-palette_blue"
             >
-              <path d='M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z' />
+              <path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z" />
             </svg>
           )}
           {state.openMenu && (
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='1em'
-              viewBox='0 0 320 512'
-              className='fill-palette_blue'
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 320 512"
+              className="fill-palette_blue"
             >
-              <path d='M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z' />
+              <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z" />
             </svg>
           )}
         </button>
       </div>
 
       {state.openMenu && (
-        <div className='origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5'>
+        <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div
-            className='py-1'
-            role='menu'
-            aria-orientation='vertical'
-            aria-labelledby='options-menu'
+            className="py-1"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="options-menu"
           >
             <Link
               href={`/admin/im/${iM.id}/all_reviews`}
-              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-              role='menuitem'
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
             >
               All reviews
             </Link>
             <Link
               href={`/admin/im/${iM.id}/all_suggestions`}
-              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-              role='menuitem'
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
             >
               All suggestions
             </Link>
             <Link
               href={`/admin/im/${iM.id}/track`}
-              className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-              role='menuitem'
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
             >
               Track
             </Link>
             {showIMPDF && (
               <Link
                 href={`/api/im_file/im/${iM.id}/pdf`}
-                target='_blank'
-                className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                role='menuitem'
+                target="_blank"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem"
               >
                 View IM PDF
               </Link>
@@ -255,9 +261,9 @@ function ActionMenu({
             {showQAMISPDF && (
               <Link
                 href={`/api/qamis_file/im/${iM.id}/pdf`}
-                target='_blank'
-                className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                role='menuitem'
+                target="_blank"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem"
               >
                 View QAMIS PDF
               </Link>
@@ -265,9 +271,9 @@ function ActionMenu({
             {showPlagiarismPDF && (
               <Link
                 href={`/api/plagiarism_file/im/${iM.id}/pdf`}
-                target='_blank'
-                className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                role='menuitem'
+                target="_blank"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem"
               >
                 View Plagiarism PDF
               </Link>
@@ -278,8 +284,8 @@ function ActionMenu({
                 onClick={() =>
                   setState((prev) => ({ ...prev, openConfirmation: true }))
                 }
-                className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left'
-                role='menuitem'
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                role="menuitem"
               >
                 Delete
               </button>
@@ -360,40 +366,40 @@ function EditIM() {
   return (
     <>
       <button
-        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left'
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
         onClick={() => setOpenEdit(true)}
       >
         Edit
       </button>
       {openEdit && (
-        <Modal title='Edit IM' onClose={() => setOpenEdit(false)}>
+        <Modal title="Edit IM" onClose={() => setOpenEdit(false)}>
           <form onSubmit={formik.handleSubmit} noValidate>
-            <div className='flex flex-col space-y-1'>
+            <div className="flex flex-col space-y-1">
               <input
-                placeholder='Title'
+                placeholder="Title"
                 {...formik.getFieldProps("title")}
-                className='rounded'
+                className="rounded"
               />
-              <select {...formik.getFieldProps("type")} className='rounded'>
-                <option value='MODULE'>Module</option>
-                <option value='COURSE_FILE'>Course File</option>
-                <option value='WORKTEXT'>Worktext</option>
-                <option value='TEXTBOOK'>Textbook</option>
+              <select {...formik.getFieldProps("type")} className="rounded">
+                <option value="MODULE">Module</option>
+                <option value="COURSE_FILE">Course File</option>
+                <option value="WORKTEXT">Worktext</option>
+                <option value="TEXTBOOK">Textbook</option>
               </select>
               <button
-                type='submit'
+                type="submit"
                 disabled={!formik.isValid}
-                className='bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90 disabled:bg-opacity-50'
+                className="bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90 disabled:bg-opacity-50"
               >
                 <span>Submit</span>
                 <span>
                   <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    height='1em'
-                    viewBox='0 0 448 512'
-                    className='fill-palette_white'
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="1em"
+                    viewBox="0 0 448 512"
+                    className="fill-palette_white"
                   >
-                    <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
                   </svg>
                 </span>
               </button>

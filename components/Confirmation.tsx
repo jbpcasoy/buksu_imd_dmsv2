@@ -29,6 +29,7 @@ export default function Confirmation({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const confirmHandler = () => {

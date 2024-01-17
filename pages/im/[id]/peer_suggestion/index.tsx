@@ -208,6 +208,7 @@ export default function PeerSuggestionPage() {
     if (iM.facultyId === activeFaculty.facultyId) {
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iM, activeFaculty]);
 
   if (iM === null) {

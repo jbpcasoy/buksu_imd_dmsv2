@@ -135,6 +135,7 @@ export default function AddChairpersonReviewPage() {
       addSnackbar("Cannot review IM from other department", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myDepartment, ownerDepartment]);
 
   useEffect(() => {
@@ -146,6 +147,7 @@ export default function AddChairpersonReviewPage() {
       addSnackbar("Only chairpersons are allowed for this action", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeChairperson]);
 
   useEffect(() => {

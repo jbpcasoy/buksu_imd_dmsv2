@@ -225,6 +225,7 @@ export default function ContentSpecialistSuggestionPage() {
       addSnackbar("Cannot review IM from other department", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myDepartment, ownerDepartment]);
 
   useEffect(() => {
@@ -239,6 +240,7 @@ export default function ContentSpecialistSuggestionPage() {
       );
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeContentSpecialist]);
 
   if (iM === null) {

@@ -634,6 +634,7 @@ export default function ViewIM() {
                     <img
                       className="w-10 h-10 rounded-full object-cover"
                       src={user?.image ?? ""}
+                      alt="User profile picture"
                     />
                     <div className="text-xs text-palette_grey">
                       <p className="uppercase font-bold">{user?.name}</p>

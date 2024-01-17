@@ -433,6 +433,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
 
   useEffect(() => {
     onFilterChange(selectedField, filterValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedField, filterValue]);
 
   return (
@@ -472,6 +473,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
 
   useEffect(() => {
     onSortChange(selectedField, sortDirection);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedField, sortDirection]);
 
   return (

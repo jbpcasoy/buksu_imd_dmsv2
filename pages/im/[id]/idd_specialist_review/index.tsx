@@ -142,6 +142,7 @@ export default function AddIDDSpecialistReviewPage() {
       );
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIDDCoordinator]);
 
   useEffect(() => {

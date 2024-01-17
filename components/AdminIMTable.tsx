@@ -47,6 +47,7 @@ export default function AdminIMTable({
 
   useEffect(() => {
     onChangeState(state);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   const nextHandler = () => {
@@ -111,14 +112,14 @@ export default function AdminIMTable({
   };
 
   return (
-    <div className='text-sm border border-palette_grey rounded h-full flex flex-col overflow-auto'>
-      <div className='p-1 bg-palette_grey bg-opacity-10'>
-        <div className='flex'>
-          <div className='flex-1 flex items-center space-x-1'>
-            <h2 className='text-base border-b-2 border-palette_orange inline pb-1 px-2'>
+    <div className="text-sm border border-palette_grey rounded h-full flex flex-col overflow-auto">
+      <div className="p-1 bg-palette_grey bg-opacity-10">
+        <div className="flex">
+          <div className="flex-1 flex items-center space-x-1">
+            <h2 className="text-base border-b-2 border-palette_orange inline pb-1 px-2">
               {title}
             </h2>
-            <div className='flex flex-row space-x-1'>
+            <div className="flex flex-row space-x-1">
               <FilterSelector onFilterChange={handleFilterChange} />
 
               <SortSelector onSortChange={handleSortChange} />
@@ -128,21 +129,21 @@ export default function AdminIMTable({
           {enableAdd && <AddIM />}
         </div>
       </div>
-      <div className='flex-1 h-full overflow-auto'>
-        <table className='table-auto w-full overflow-auto '>
-          <thead className='bg-palette_grey bg-opacity-10 p-1'>
+      <div className="flex-1 h-full overflow-auto">
+        <table className="table-auto w-full overflow-auto ">
+          <thead className="bg-palette_grey bg-opacity-10 p-1">
             <tr>
-              <th className='font-normal'>TITLE</th>
-              <th className='font-normal'>TYPE</th>
-              <th className='font-normal'>AUTHOR</th>
-              <th className='font-normal'>DEPARTMENT</th>
-              <th className='font-normal'>COLLEGE</th>
-              <th className='font-normal'>STATUS</th>
-              <th className='font-normal'>DATE CREATED</th>
-              <th className='font-normal'>ACTIONS</th>
+              <th className="font-normal">TITLE</th>
+              <th className="font-normal">TYPE</th>
+              <th className="font-normal">AUTHOR</th>
+              <th className="font-normal">DEPARTMENT</th>
+              <th className="font-normal">COLLEGE</th>
+              <th className="font-normal">STATUS</th>
+              <th className="font-normal">DATE CREATED</th>
+              <th className="font-normal">ACTIONS</th>
             </tr>
           </thead>
-          <tbody className='py-1 h-full overflow-auto'>
+          <tbody className="py-1 h-full overflow-auto">
             {iMs.map((iM) => {
               return <IMItem iM={iM} key={iM.id} />;
             })}
@@ -150,37 +151,37 @@ export default function AdminIMTable({
         </table>
       </div>
 
-      <div className='flex justify-end items-center space-x-1 p-1'>
-        <p className='text-xs'>
+      <div className="flex justify-end items-center space-x-1 p-1">
+        <p className="text-xs">
           {state.skip} - {state.skip + state.take} of {count}
         </p>
         <button
           disabled={state.skip - state.take < 0}
-          className='rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50'
+          className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={previousHandler}
         >
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            height='1em'
-            viewBox='0 0 448 512'
+            xmlns="http://www.w3.org/2000/svg"
+            height="1em"
+            viewBox="0 0 448 512"
           >
-            <path d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z' />
+            <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
           </svg>
           <span>Previous</span>
         </button>
         <button
           disabled={state.skip + state.take >= count}
-          className='rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50'
+          className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={nextHandler}
         >
           <span>Next</span>
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            height='1em'
-            viewBox='0 0 448 512'
-            className='fill-inherit'
+            xmlns="http://www.w3.org/2000/svg"
+            height="1em"
+            viewBox="0 0 448 512"
+            className="fill-inherit"
           >
-            <path d='M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z' />
+            <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
           </svg>
         </button>
       </div>
@@ -196,46 +197,46 @@ function IMItem({ iM }: { iM: IM }) {
   const college = useCollegeIM({ id: iM.id });
 
   return (
-    <tr key={iM.id} className='border-b'>
+    <tr key={iM.id} className="border-b">
       <td>
-        <div className='py-1 px-2 pl-4'>{iM.title}</div>
+        <div className="py-1 px-2 pl-4">{iM.title}</div>
       </td>
       <td>
-        <div className='py-1 px-2'>{iM.type}</div>
+        <div className="py-1 px-2">{iM.type}</div>
       </td>
       <td>
-        <div className='py-1 px-2'>{user?.name}</div>
+        <div className="py-1 px-2">{user?.name}</div>
       </td>
       <td>
-        <div className='py-1 px-2'>{department?.name}</div>
+        <div className="py-1 px-2">{department?.name}</div>
       </td>
       <td>
-        <div className='py-1 px-2'>{college?.name}</div>
+        <div className="py-1 px-2">{college?.name}</div>
       </td>
       <td>
-        <div className='py-1 px-2'>
+        <div className="py-1 px-2">
           <IMStatus iM={iM} />
         </div>
       </td>
       <td>
-        <div className='py-1 px-2 '>
-          {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat( "D | t")}
+        <div className="py-1 px-2 ">
+          {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
         </div>
       </td>
       <td>
-        <div className='py-1 flex justify-center items-center'>
+        <div className="py-1 flex justify-center items-center">
           <Link
             href={`/admin/im/${iM.id}`}
-            className='rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1'
+            className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
           >
             <span>View</span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='1em'
-              viewBox='0 0 576 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 576 512"
+              className="fill-palette_white"
             >
-              <path d='M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z' />
+              <path d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z" />
             </svg>
           </Link>
         </div>
@@ -275,25 +276,26 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
 
   useEffect(() => {
     onFilterChange(selectedField, filterValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedField, filterValue]);
 
   return (
     <div>
       <select
         onChange={handleFieldChange}
-        className='py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+        className="py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey"
       >
-        <option value=''>Select field</option>
-        <option value='title'>Title</option>
-        <option value='userName'>Author</option>
-        <option value='departmentName'>Department</option>
-        <option value='collegeName'>College</option>
+        <option value="">Select field</option>
+        <option value="title">Title</option>
+        <option value="userName">Author</option>
+        <option value="departmentName">Department</option>
+        <option value="collegeName">College</option>
       </select>
       <input
-        type='text'
-        placeholder='Search'
+        type="text"
+        placeholder="Search"
         value={filterValue}
-        className='bg-inherit border-b py-1 rounded-e focus:border-palette_grey focus:ring-palette_grey'
+        className="bg-inherit border-b py-1 rounded-e focus:border-palette_grey focus:ring-palette_grey"
         onChange={handleValueChange}
       />
     </div>
@@ -317,6 +319,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
 
   useEffect(() => {
     onSortChange(selectedField, sortDirection);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedField, sortDirection]);
 
   return (
@@ -324,21 +327,21 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
       <select
         onChange={handleFieldChange}
         value={selectedField}
-        className='py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+        className="py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey"
       >
-        <option value='title'>Title</option>
-        <option value='createdAt'>Date Created</option>
-        <option value='userName'>Author</option>
-        <option value='departmentName'>Department Name</option>
-        <option value='collegeName'>College Name</option>
+        <option value="title">Title</option>
+        <option value="createdAt">Date Created</option>
+        <option value="userName">Author</option>
+        <option value="departmentName">Department Name</option>
+        <option value="collegeName">College Name</option>
       </select>
       <select
         onChange={handleDirectionChange}
         value={sortDirection}
-        className='py-1 rounded-e bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+        className="py-1 rounded-e bg-inherit focus:border-palette_grey focus:ring-palette_grey"
       >
-        <option value='asc'>Ascending</option>
-        <option value='desc'>Descending</option>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
       </select>
     </div>
   );
@@ -382,51 +385,51 @@ function AddIM() {
   return (
     <>
       <button
-        className='rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1'
+        className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
         onClick={() => setState({ addIMOpen: true })}
       >
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          height='1em'
-          viewBox='0 0 448 512'
-          className='fill-palette_white'
+          xmlns="http://www.w3.org/2000/svg"
+          height="1em"
+          viewBox="0 0 448 512"
+          className="fill-palette_white"
         >
-          <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
+          <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
         </svg>
         <span>Add IM</span>
       </button>
       {state.addIMOpen && (
-        <Modal title='ADD IM' onClose={() => setState({ addIMOpen: false })}>
+        <Modal title="ADD IM" onClose={() => setState({ addIMOpen: false })}>
           <form onSubmit={formik.handleSubmit} noValidate>
-            <div className='text-base flex flex-col space-y-1'>
+            <div className="text-base flex flex-col space-y-1">
               <input
-                placeholder='Title'
+                placeholder="Title"
                 {...formik.getFieldProps("title")}
-                className='py-1 rounded'
+                className="py-1 rounded"
               />
               <select
                 {...formik.getFieldProps("type")}
-                className='rounded block py-1'
+                className="rounded block py-1"
               >
-                <option value='MODULE'>Module</option>
-                <option value='COURSE_FILE'>Course File</option>
-                <option value='WORKTEXT'>Worktext</option>
-                <option value='TEXTBOOK'>Textbook</option>
+                <option value="MODULE">Module</option>
+                <option value="COURSE_FILE">Course File</option>
+                <option value="WORKTEXT">Worktext</option>
+                <option value="TEXTBOOK">Textbook</option>
               </select>
 
               <button
-                type='submit'
-                className='bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90'
+                type="submit"
+                className="bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90"
               >
                 <span>Submit</span>
                 <span>
                   <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    height='1em'
-                    viewBox='0 0 448 512'
-                    className='fill-palette_white'
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="1em"
+                    viewBox="0 0 448 512"
+                    className="fill-palette_white"
                   >
-                    <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
                   </svg>
                 </span>
               </button>
@@ -463,9 +466,9 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
   return (
     <select
       onChange={(e) => onStatusChange(e.target.value)}
-      className='py-1 rounded bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+      className="py-1 rounded bg-inherit focus:border-palette_grey focus:ring-palette_grey"
     >
-      <option value=''>Select Status</option>
+      <option value="">Select Status</option>
       {statuses.map((status) => {
         return (
           <option value={status} key={status}>

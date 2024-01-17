@@ -141,6 +141,7 @@ export default function AddContentEditorReviewPage() {
       addSnackbar("Only the CITL director is allowed for this action", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCITLDirector]);
 
   useEffect(() => {

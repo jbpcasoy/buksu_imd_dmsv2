@@ -34,6 +34,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
 
     localStorage.setItem("openSidebar", JSON.stringify(state.openSidebar));
     onToggleSidebar(state.openSidebar);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   useEffect(() => {

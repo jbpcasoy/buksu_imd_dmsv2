@@ -261,6 +261,7 @@ export default function QAMISSuggestionPage() {
       addSnackbar("Can only review own IM", "error");
       router.replace(`/im/${iMId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iM, activeFaculty]);
 
   if (iM === null) {
