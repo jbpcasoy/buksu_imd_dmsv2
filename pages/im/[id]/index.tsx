@@ -359,7 +359,12 @@ export default function ViewIM() {
 
   const submitForIMERCCITLEndorsementHandler = async () => {
     console.log({ state });
-    if (!state?.iMFile || !state?.plagiarismFile || !iMERCCITLReviewed) return;
+    if (
+      !state?.iMFile ||
+      (!state?.plagiarismFile && !plagiarismFile) ||
+      !iMERCCITLReviewed
+    )
+      return;
 
     const iMFormData = new FormData();
     iMFormData.append("file", state.iMFile);
@@ -376,24 +381,39 @@ export default function ViewIM() {
       .post("/api/im_file", iMFormData)
       .then((res) => {
         const iMFile = res.data;
-        if (!state?.plagiarismFile) return;
+        if (!state?.plagiarismFile && !plagiarismFile) return;
 
         const plagiarismFormData = new FormData();
-        plagiarismFormData.append("file", state.plagiarismFile);
-        plagiarismFormData.append("iMId", iMId as string);
-        return axios
-          .post("/api/plagiarism_file", plagiarismFormData)
-          .then((res) => {
-            const plagiarismFile = res.data;
-            return axios
-              .post("/api/imerc_citl_revision", {
-                iMFileId: iMFile.id,
-                plagiarismFileId: plagiarismFile.id,
-              })
-              .then(() => {
-                addSnackbar("IM has been submitted for endorsement");
-              });
-          });
+        plagiarismFormData.append("iMERCCITLReviewedId", iMERCCITLReviewed.id);
+        if (!plagiarismFile) {
+          if (state.plagiarismFile) {
+            plagiarismFormData.append("file", state.plagiarismFile);
+          }
+          console.log("No plagiarism file detected");
+          return axios
+            .post("/api/plagiarism_file", plagiarismFormData)
+            .then((res) => {
+              const plagiarismFile = res.data;
+              return axios
+                .post("/api/imerc_citl_revision", {
+                  iMFileId: iMFile.id,
+                  plagiarismFileId: plagiarismFile.id,
+                })
+                .then(() => {
+                  addSnackbar("IM has been submitted for endorsement");
+                });
+            });
+        } else {
+          console.log("A plagiarism file detected");
+          return axios
+            .post("/api/imerc_citl_revision", {
+              iMFileId: iMFile.id,
+              plagiarismFileId: plagiarismFile.id,
+            })
+            .then(() => {
+              addSnackbar("IM has been submitted for endorsement");
+            });
+        }
       })
       .catch((error) => {
         addSnackbar(
@@ -640,7 +660,9 @@ export default function ViewIM() {
                       <p className="uppercase font-bold">{user?.name}</p>
                       {iM?.createdAt && (
                         <p>
-                          {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
+                          {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat(
+                            "D | t"
+                          )}
                         </p>
                       )}
                     </div>
@@ -1300,21 +1322,23 @@ export default function ViewIM() {
                         />
 
                         <div className="flex flex-col w-full space-y-1">
-                          <FileUpload
-                            label="UPLOAD PLAGIARISM FILE"
-                            onFileChange={(e) => {
-                              setState((prev) => ({
-                                ...prev,
-                                plagiarismFile: e.target.files?.item(0),
-                              }));
-                            }}
-                            onFileReset={() => {
-                              setState((prev) => ({
-                                ...prev,
-                                iMFile: undefined,
-                              }));
-                            }}
-                          />
+                          {!plagiarismFile && (
+                            <FileUpload
+                              label="UPLOAD PLAGIARISM FILE"
+                              onFileChange={(e) => {
+                                setState((prev) => ({
+                                  ...prev,
+                                  plagiarismFile: e.target.files?.item(0),
+                                }));
+                              }}
+                              onFileReset={() => {
+                                setState((prev) => ({
+                                  ...prev,
+                                  iMFile: undefined,
+                                }));
+                              }}
+                            />
+                          )}
                           <FileUpload
                             label="UPLOAD IM FILE"
                             onFileChange={(e) => {
@@ -1470,7 +1494,8 @@ export default function ViewIM() {
 
                 {iMStatus === "IMERC_CITL_DIRECTOR_ENDORSED" && (
                   <div>
-                    <IMERCEndorsementStatus iMId={iMId as string} />
+                    {/* <IMERCEndorsementStatus iMId={iMId as string} /> */}
+                    <h1 className="font-bold text-center my-10 text-palette_grey">ENDORSED TO IPTTU</h1>
                   </div>
                 )}
               </div>

@@ -114,6 +114,7 @@ export default function PeerSuggestionPage() {
             })
             .finally(() => {
               refresh();
+              setOpenAdd(false);
             });
         };
 
