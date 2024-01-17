@@ -169,6 +169,11 @@ export default async function handler(
                                     OR: [
                                       {
                                         ReturnedIMERCCITLRevision: {
+                                          is: null,
+                                        },
+                                      },
+                                      {
+                                        ReturnedIMERCCITLRevision: {
                                           SubmittedReturnedIMERCCITLRevision: {
                                             is: null,
                                           },
@@ -200,6 +205,11 @@ export default async function handler(
                                 IMERCCITLRevision: {
                                   some: {
                                     OR: [
+                                      {
+                                        ReturnedIMERCCITLRevision: {
+                                          is: null,
+                                        },
+                                      },
                                       {
                                         ReturnedIMERCCITLRevision: {
                                           SubmittedReturnedIMERCCITLRevision: {
@@ -236,6 +246,11 @@ export default async function handler(
                                 IMERCCITLRevision: {
                                   some: {
                                     OR: [
+                                      {
+                                        ReturnedIMERCCITLRevision: {
+                                          is: null,
+                                        },
+                                      },
                                       {
                                         ReturnedIMERCCITLRevision: {
                                           SubmittedReturnedIMERCCITLRevision: {
