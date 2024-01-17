@@ -64,7 +64,6 @@ export default function ContentSpecialistSuggestionItemPage() {
       </p>
       <p>suggestion: {contentSpecialistSuggestionItem.suggestion}</p>
       <p>pageNumber: {contentSpecialistSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {contentSpecialistSuggestionItem.actionTaken}</p>
       <p>remarks: {contentSpecialistSuggestionItem.remarks}</p>
     </CrudLayout>
   );

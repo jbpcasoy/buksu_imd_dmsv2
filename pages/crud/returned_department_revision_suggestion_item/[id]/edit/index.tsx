@@ -16,13 +16,11 @@ export default function EditReturnedDepartmentRevisionSuggestionItemPage() {
   const formik = useFormik({
     initialValues: {
       suggestion: "",
-      actionTaken: "",
       remarks: "",
       pageNumber: 0,
     },
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
       pageNumber: Yup.number().min(0).required()
     }),
@@ -48,7 +46,6 @@ export default function EditReturnedDepartmentRevisionSuggestionItemPage() {
     formik.setValues({
       pageNumber: returnedDepartmentRevisionSuggestionItem.pageNumber,
       suggestion: returnedDepartmentRevisionSuggestionItem.suggestion,
-      actionTaken: returnedDepartmentRevisionSuggestionItem?.actionTaken ?? "",
       remarks: returnedDepartmentRevisionSuggestionItem?.remarks ?? "",
     });
 
@@ -73,11 +70,6 @@ export default function EditReturnedDepartmentRevisionSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

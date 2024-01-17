@@ -64,7 +64,6 @@ export default function IDDSpecialistSuggestionItemPage() {
       </p>
       <p>suggestion: {iDDSpecialistSuggestionItem.suggestion}</p>
       <p>pageNumber: {iDDSpecialistSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {iDDSpecialistSuggestionItem.actionTaken}</p>
       <p>remarks: {iDDSpecialistSuggestionItem.remarks}</p>
     </CrudLayout>
   );

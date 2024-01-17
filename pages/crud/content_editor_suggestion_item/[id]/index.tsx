@@ -64,7 +64,6 @@ export default function ContentEditorSuggestionItemPage() {
       </p>
       <p>suggestion: {contentEditorSuggestionItem.suggestion}</p>
       <p>pageNumber: {contentEditorSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {contentEditorSuggestionItem.actionTaken}</p>
       <p>remarks: {contentEditorSuggestionItem.remarks}</p>
     </CrudLayout>
   );

@@ -9,14 +9,12 @@ export default function AddReturnedDepartmentRevisionSuggestionItemPage() {
       pageNumber: 0,
       returnedDepartmentRevisionId: "",
       suggestion: "",
-      actionTaken: "",
       remarks: "",
     },
     validationSchema: Yup.object({
       pageNumber: Yup.number().min(0).required(),
       returnedDepartmentRevisionId: Yup.string().required(),
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
     }),
     onSubmit: (values) => {
@@ -49,11 +47,6 @@ export default function AddReturnedDepartmentRevisionSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

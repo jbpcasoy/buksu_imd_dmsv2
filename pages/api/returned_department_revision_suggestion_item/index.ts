@@ -24,13 +24,11 @@ export default async function handler(
         returnedDepartmentRevisionId: Yup.string().required(),
         pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
       await validator.validate(req.body);
 
       const {
-        actionTaken,
         returnedDepartmentRevisionId,
         remarks,
         suggestion,
@@ -102,7 +100,6 @@ export default async function handler(
       const returnedDepartmentRevisionSuggestionItem =
         await prisma.returnedDepartmentRevisionSuggestionItem.create({
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

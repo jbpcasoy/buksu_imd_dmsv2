@@ -75,7 +75,6 @@ export default function ReturnedIMERCCITLRevisionSuggestionItemPage() {
       </p>
       <p>suggestion: {returnedIMERCCITLRevisionSuggestionItem.suggestion}</p>
       <p>pageNumber: {returnedIMERCCITLRevisionSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {returnedIMERCCITLRevisionSuggestionItem.actionTaken}</p>
       <p>remarks: {returnedIMERCCITLRevisionSuggestionItem.remarks}</p>
     </CrudLayout>
   );

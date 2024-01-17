@@ -143,7 +143,6 @@ export default async function handler(
   const putHandler = async () => {
     try {
       const validator = Yup.object({
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
         suggestion: Yup.string().optional(),
         pageNumber: Yup.number().min(0).optional(),
@@ -152,7 +151,7 @@ export default async function handler(
       await validator.validate(req.body);
 
       const { id } = req.query;
-      const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
+      const { remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
 
@@ -227,7 +226,6 @@ export default async function handler(
           id: id as string,
         },
         data: {
-          actionTaken,
           remarks,
           suggestion,
           pageNumber,

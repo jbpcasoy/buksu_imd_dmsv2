@@ -51,6 +51,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     ) {
       router.replace("/non_active");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFaculty, activeCITLDirector, activeIDDCoordinator]);
 
   useEffect(() => {

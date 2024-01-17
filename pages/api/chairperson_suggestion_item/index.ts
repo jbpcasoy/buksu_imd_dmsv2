@@ -24,13 +24,11 @@ export default async function handler(
         chairpersonSuggestionId: Yup.string().required(),
         pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
       await validator.validate(req.body);
 
       const {
-        actionTaken,
         chairpersonSuggestionId,
         remarks,
         suggestion,
@@ -102,7 +100,6 @@ export default async function handler(
       const chairpersonSuggestionItem =
         await prisma.chairpersonSuggestionItem.create({
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

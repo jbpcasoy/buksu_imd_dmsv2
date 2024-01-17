@@ -24,18 +24,12 @@ export default async function handler(
         returnedIMERCCITLRevisionId: Yup.string().required(),
         pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
       await validator.validate(req.body);
 
-      const {
-        actionTaken,
-        returnedIMERCCITLRevisionId,
-        remarks,
-        suggestion,
-        pageNumber,
-      } = validator.cast(req.body);
+      const { returnedIMERCCITLRevisionId, remarks, suggestion, pageNumber } =
+        validator.cast(req.body);
 
       if (!user.isAdmin) {
         const returnedIMERCCITLRevision =
@@ -100,7 +94,6 @@ export default async function handler(
       const returnedIMERCCITLRevisionSuggestionItem =
         await prisma.returnedIMERCCITLRevisionSuggestionItem.create({
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

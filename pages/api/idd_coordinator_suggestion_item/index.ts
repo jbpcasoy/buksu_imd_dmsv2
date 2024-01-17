@@ -26,13 +26,11 @@ export default async function handler(
         iDDCoordinatorSuggestionId: Yup.string().required(),
         pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
       await validator.validate(req.body);
 
       const {
-        actionTaken,
         iDDCoordinatorSuggestionId,
         remarks,
         suggestion,
@@ -102,7 +100,6 @@ export default async function handler(
       const iDDCoordinatorSuggestionItem =
         await prisma.iDDCoordinatorSuggestionItem.create({
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

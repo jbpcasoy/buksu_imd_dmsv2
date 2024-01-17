@@ -75,7 +75,6 @@ export default function ReturnedDepartmentRevisionSuggestionItemPage() {
       </p>
       <p>suggestion: {returnedDepartmentRevisionSuggestionItem.suggestion}</p>
       <p>pageNumber: {returnedDepartmentRevisionSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {returnedDepartmentRevisionSuggestionItem.actionTaken}</p>
       <p>remarks: {returnedDepartmentRevisionSuggestionItem.remarks}</p>
     </CrudLayout>
   );

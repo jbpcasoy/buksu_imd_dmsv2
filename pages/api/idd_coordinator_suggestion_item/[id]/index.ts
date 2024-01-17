@@ -148,16 +148,13 @@ export default async function handler(
       const validator = Yup.object({
         pageNumber: Yup.number().min(0).optional(),
         suggestion: Yup.string().optional(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
 
       await validator.validate(req.body);
 
       const { id } = req.query;
-      const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
-        req.body
-      );
+      const { remarks, suggestion, pageNumber } = validator.cast(req.body);
 
       if (!user.isAdmin) {
         const iDDCoordinatorSuggestion =
@@ -256,7 +253,6 @@ export default async function handler(
             id: id as string,
           },
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

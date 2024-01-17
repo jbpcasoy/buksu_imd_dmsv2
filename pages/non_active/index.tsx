@@ -21,6 +21,7 @@ export default function NonActive() {
     if (activeFaculty || activeCITLDirector || activeIDDCoordinator) {
       router.replace("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFaculty, activeCITLDirector, activeIDDCoordinator]);
 
   return (

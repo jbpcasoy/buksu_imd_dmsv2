@@ -16,13 +16,11 @@ export default function EditIDDSpecialistSuggestionItemPage() {
   const formik = useFormik({
     initialValues: {
       suggestion: "",
-      actionTaken: "",
       remarks: "",
       pageNumber: 0,
     },
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
       pageNumber: Yup.number().min(0).required()
     }),
@@ -48,7 +46,6 @@ export default function EditIDDSpecialistSuggestionItemPage() {
     formik.setValues({
       pageNumber: iDDSpecialistSuggestionItem.pageNumber,
       suggestion: iDDSpecialistSuggestionItem.suggestion,
-      actionTaken: iDDSpecialistSuggestionItem?.actionTaken ?? "",
       remarks: iDDSpecialistSuggestionItem?.remarks ?? "",
     });
 
@@ -73,11 +70,6 @@ export default function EditIDDSpecialistSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

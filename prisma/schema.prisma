@@ -305,7 +305,6 @@ model PeerSuggestionItem {
     updatedAt DateTime @updatedAt
 
     suggestion                    String
-    actionTaken                   String?
     remarks                       String?
     PeerSuggestion                PeerSuggestion                 @relation(fields: [peerSuggestionId], references: [id], onDelete: Cascade)
     peerSuggestionId              String
@@ -379,7 +378,6 @@ model ChairpersonSuggestionItem {
     updatedAt DateTime @updatedAt
 
     suggestion                           String
-    actionTaken                          String?
     remarks                              String?
     ChairpersonSuggestion                ChairpersonSuggestion                 @relation(fields: [chairpersonSuggestionId], references: [id], onDelete: Cascade)
     chairpersonSuggestionId              String
@@ -453,7 +451,6 @@ model CoordinatorSuggestionItem {
     updatedAt DateTime @updatedAt
 
     suggestion                           String
-    actionTaken                          String?
     remarks                              String?
     CoordinatorSuggestion                CoordinatorSuggestion                 @relation(fields: [coordinatorSuggestionId], references: [id], onDelete: Cascade)
     coordinatorSuggestionId              String
@@ -596,7 +593,6 @@ model IDDCoordinatorSuggestionItem {
     IDDCoordinatorSuggestion                IDDCoordinatorSuggestion                 @relation(fields: [iDDCoordinatorSuggestionId], references: [id], onDelete: Cascade)
     iDDCoordinatorSuggestionId              String
     suggestion                              String
-    actionTaken                             String?
     remarks                                 String?
     pageNumber                              Int
     IDDCoordinatorSuggestionItemActionTaken IDDCoordinatorSuggestionItemActionTaken?
@@ -835,7 +831,6 @@ model ContentSpecialistSuggestionItem {
     ContentSpecialistSuggestion                ContentSpecialistSuggestion                 @relation(fields: [contentSpecialistSuggestionId], references: [id], onDelete: Cascade)
     contentSpecialistSuggestionId              String
     suggestion                                 String
-    actionTaken                                String?
     remarks                                    String?
     pageNumber                                 Int
     ContentSpecialistSuggestionItemActionTaken ContentSpecialistSuggestionItemActionTaken?
@@ -910,7 +905,6 @@ model ContentEditorSuggestionItem {
     ContentEditorSuggestion                ContentEditorSuggestion                 @relation(fields: [contentEditorSuggestionId], references: [id], onDelete: Cascade)
     contentEditorSuggestionId              String
     suggestion                             String
-    actionTaken                            String?
     remarks                                String?
     pageNumber                             Int
     ContentEditorSuggestionItemActionTaken ContentEditorSuggestionItemActionTaken?
@@ -985,7 +979,6 @@ model IDDSpecialistSuggestionItem {
     IDDSpecialistSuggestion                IDDSpecialistSuggestion                 @relation(fields: [iDDSpecialistSuggestionId], references: [id], onDelete: Cascade)
     iDDSpecialistSuggestionId              String
     suggestion                             String
-    actionTaken                            String?
     remarks                                String?
     pageNumber                             Int
     IDDSpecialistSuggestionItemActionTaken IDDSpecialistSuggestionItemActionTaken?
@@ -1249,7 +1242,6 @@ model ReturnedDepartmentRevisionSuggestionItem {
     ReturnedDepartmentRevision                          ReturnedDepartmentRevision                           @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     returnedDepartmentRevisionId                        String
     suggestion                                          String
-    actionTaken                                         String?
     remarks                                             String?
     pageNumber                                          Int
     ReturnedDepartmentRevisionSuggestionItemActionTaken ReturnedDepartmentRevisionSuggestionItemActionTaken?
@@ -1287,8 +1279,6 @@ model ReturnedCITLRevisionSuggestionItem {
     ReturnedCITLRevision                          ReturnedCITLRevision                           @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
     returnedCITLRevisionId                        String
     suggestion                                    String
-    // TODO remove actionTaken
-    actionTaken                                   String?
     remarks                                       String?
     pageNumber                                    Int
     ReturnedCITLRevisionSuggestionItemActionTaken ReturnedCITLRevisionSuggestionItemActionTaken?
@@ -1326,7 +1316,6 @@ model ReturnedIMERCCITLRevisionSuggestionItem {
     ReturnedIMERCCITLRevision                          ReturnedIMERCCITLRevision                           @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
     returnedIMERCCITLRevisionId                        String
     suggestion                                         String
-    actionTaken                                        String?
     remarks                                            String?
     pageNumber                                         Int
     ReturnedIMERCCITLRevisionSuggestionItemActionTaken ReturnedIMERCCITLRevisionSuggestionItemActionTaken?

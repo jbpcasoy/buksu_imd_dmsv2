@@ -24,13 +24,11 @@ export default async function handler(
         returnedCITLRevisionId: Yup.string().required(),
         pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
       await validator.validate(req.body);
 
       const {
-        actionTaken,
         returnedCITLRevisionId,
         remarks,
         suggestion,
@@ -101,7 +99,6 @@ export default async function handler(
       const returnedCITLRevisionSuggestionItem =
         await prisma.returnedCITLRevisionSuggestionItem.create({
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

@@ -75,7 +75,6 @@ export default function ReturnedCITLRevisionSuggestionItemPage() {
       </p>
       <p>suggestion: {returnedCITLRevisionSuggestionItem.suggestion}</p>
       <p>pageNumber: {returnedCITLRevisionSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {returnedCITLRevisionSuggestionItem.actionTaken}</p>
       <p>remarks: {returnedCITLRevisionSuggestionItem.remarks}</p>
     </CrudLayout>
   );

@@ -24,12 +24,11 @@ export default async function handler(
         peerSuggestionId: Yup.string().required(),
         pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
       await validator.validate(req.body);
 
-      const { actionTaken, peerSuggestionId, remarks, suggestion, pageNumber } =
+      const { peerSuggestionId, remarks, suggestion, pageNumber } =
         validator.cast(req.body);
 
       if (!user.isAdmin) {
@@ -91,7 +90,6 @@ export default async function handler(
 
       const peerSuggestionItem = await prisma.peerSuggestionItem.create({
         data: {
-          actionTaken,
           remarks,
           suggestion,
           pageNumber,

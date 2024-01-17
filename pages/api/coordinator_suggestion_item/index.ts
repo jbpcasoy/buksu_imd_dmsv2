@@ -25,18 +25,12 @@ export default async function handler(
         coordinatorSuggestionId: Yup.string().required(),
         pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
       await validator.validate(req.body);
 
-      const {
-        actionTaken,
-        coordinatorSuggestionId,
-        remarks,
-        suggestion,
-        pageNumber,
-      } = validator.cast(req.body);
+      const { coordinatorSuggestionId, remarks, suggestion, pageNumber } =
+        validator.cast(req.body);
 
       if (!user.isAdmin) {
         const coordinator = await prisma.coordinator.findFirst({
@@ -100,11 +94,9 @@ export default async function handler(
         }
       }
 
-
       const coordinatorSuggestionItem =
         await prisma.coordinatorSuggestionItem.create({
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

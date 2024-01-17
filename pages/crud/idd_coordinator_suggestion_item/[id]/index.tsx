@@ -64,7 +64,6 @@ export default function IDDCoordinatorSuggestionItemPage() {
       </p>
       <p>suggestion: {iDDCoordinatorSuggestionItem.suggestion}</p>
       <p>pageNumber: {iDDCoordinatorSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {iDDCoordinatorSuggestionItem.actionTaken}</p>
       <p>remarks: {iDDCoordinatorSuggestionItem.remarks}</p>
     </CrudLayout>
   );
