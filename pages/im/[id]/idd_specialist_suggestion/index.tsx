@@ -43,7 +43,7 @@ export default function IDDSpecialistSuggestionPage() {
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [state, setState] = useState<useIDDSpecialistSuggestionItemsOwnParams>({
     skip: 0,
-    take: 999,
+    take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
   });
   const iDDSpecialistSuggestionItems =
     useIDDSpecialistSuggestionItemsOwn(state, refreshFlag);

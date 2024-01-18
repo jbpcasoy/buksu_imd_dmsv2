@@ -42,7 +42,7 @@ export default function QAMISSuggestionPage() {
   const {refresh, refreshFlag} = useRefresh();
   const [state, setState] = useState<useQAMISSuggestionItemsOwnParams>({
     skip: 0,
-    take: 999,
+    take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
   });
   const qAMISSuggestion = useQAMISSuggestionMe({
     id: iMId as string,

@@ -31,7 +31,7 @@ export default function PeerSuggestionPage() {
   const peerReview = usePeerReviewMe({ id: iMId as string });
   const [state, setState] = useState<usePeerSuggestionItemsOwnParams>({
     skip: 0,
-    take: 999,
+    take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
   });
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const departmentRevision = useDepartmentRevisionIM({ id: iMId as string });

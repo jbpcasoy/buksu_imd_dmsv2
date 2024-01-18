@@ -46,7 +46,7 @@ export default function IDDCoordinatorSuggestionPage() {
   const [state, setState] = useState<useIDDCoordinatorSuggestionItemsOwnParams>(
     {
       skip: 0,
-      take: 999,
+      take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
     }
   );
   const iDDCoordinatorSuggestionItems = useIDDCoordinatorSuggestionItemsOwn(

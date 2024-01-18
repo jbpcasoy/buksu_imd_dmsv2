@@ -40,7 +40,7 @@ export default function CoordinatorSuggestionPage() {
   const coordinatorReview = useCoordinatorReviewMe({ id: iMId as string });
   const [state, setState] = useState<useCoordinatorSuggestionItemsOwnParams>({
     skip: 0,
-    take: 999,
+    take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
   });
   const departmentRevision = useDepartmentRevisionIM({ id: iMId as string });
   const submittedCoordinatorSuggestion = useSubmittedCoordinatorSuggestionIM({

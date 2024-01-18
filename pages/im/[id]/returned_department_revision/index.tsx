@@ -41,7 +41,7 @@ export default function ReturnedDepartmentRevisionPage() {
   const [state, setState] =
     useState<useReturnedDepartmentRevisionSuggestionItemsIMParams>({
       skip: 0,
-      take: 999,
+      take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
     });
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const departmentRevision = useDepartmentRevisionIM({ id: iMId as string });

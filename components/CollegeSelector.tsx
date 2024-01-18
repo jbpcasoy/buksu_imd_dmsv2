@@ -17,7 +17,7 @@ export default function CollegeSelector({
   });
   const { colleges, count } = useColleges({
     skip: 0,
-    take: 999,
+    take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
     filter: state,
   });
 

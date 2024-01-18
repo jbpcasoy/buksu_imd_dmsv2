@@ -42,7 +42,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
   const [state, setState] =
     useState<useReturnedIMERCCITLRevisionSuggestionItemsIMParams>({
       skip: 0,
-      take: 999,
+      take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
     });
   const iMERCCITLRevision = useIMERCCITLRevisionIM({ id: iMId as string });
   const submittedReturnedIMERCCITLRevision =

@@ -19,7 +19,7 @@ export default function DepartmentSelector({
 
   const { departments, count } = useDepartments({
     skip: 0,
-    take: 999,
+    take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
     filter: state,
   });
 

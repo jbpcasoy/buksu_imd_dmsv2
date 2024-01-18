@@ -44,7 +44,7 @@ export default function ContentSpecialistSuggestionPage() {
   const [state, setState] =
     useState<useContentSpecialistSuggestionItemsOwnParams>({
       skip: 0,
-      take: 999,
+      take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
     });
   const submittedContentSpecialistSuggestion =
     useSubmittedContentSpecialistSuggestionIM({ id: iMId as string });

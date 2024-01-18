@@ -1679,6 +1679,13 @@ function ActionMenu({
                 View Plagiarism PDF
               </Link>
             )}
+            <Link
+              href={`/im/${iM.id}/versions`}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Versions
+            </Link>
             {iM.facultyId === activeFaculty?.facultyId &&
               iMStatus === "IMPLEMENTATION_DRAFT" && (
                 <EditIM onUpdate={refresh} />

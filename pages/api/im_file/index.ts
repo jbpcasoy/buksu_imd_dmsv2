@@ -427,14 +427,30 @@ export default async function handler(
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
+        "filter[iMId]": Yup.string().optional(),
       });
       await validator.validate(req.query);
-      const { skip, take } = validator.cast(req.query);
+      const {
+        skip,
+        take,
+        "filter[iMId]": filterIMId,
+      } = validator.cast(req.query);
 
       const iMFiles = await prisma.iMFile.findMany({
         skip,
         take,
-        where: {},
+        where: {
+          AND: [
+            {
+              IM: {
+                id: {
+                  contains: filterIMId ?? "",
+                  mode: "insensitive",
+                },
+              },
+            },
+          ],
+        },
         orderBy: {
           updatedAt: "desc",
         },
