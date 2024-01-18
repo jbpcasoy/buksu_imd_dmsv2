@@ -14,6 +14,8 @@ import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
 import iMStatusNormalizer from "@/services/iMStatusNormalizer";
+import useSerialNumber from "@/hooks/useSerialNumber";
+import useSerialNumberIM from "@/hooks/useSerialNumberIM";
 
 export interface AdminIMTableProps {
   count: number;
@@ -134,6 +136,7 @@ export default function AdminIMTable({
           <thead className="bg-palette_grey bg-opacity-10 p-1">
             <tr>
               <th className="font-normal">TITLE</th>
+              <th className="font-normal">SERIAL No.</th>
               <th className="font-normal">TYPE</th>
               <th className="font-normal">AUTHOR</th>
               <th className="font-normal">DEPARTMENT</th>
@@ -195,11 +198,17 @@ function IMItem({ iM }: { iM: IM }) {
   });
   const department = useDepartmentIM({ id: iM.id });
   const college = useCollegeIM({ id: iM.id });
+  const serialNumber = useSerialNumberIM({
+    id: iM.id,
+  });
 
   return (
     <tr key={iM.id} className="border-b">
       <td>
         <div className="py-1 px-2 pl-4">{iM.title}</div>
+      </td>
+      <td>
+        <div className="py-1 px-2 pl-4">{serialNumber?.value}</div>
       </td>
       <td>
         <div className="py-1 px-2">{iM.type}</div>

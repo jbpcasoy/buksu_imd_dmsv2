@@ -7,13 +7,15 @@ import useCollege from "@/hooks/useCollege";
 import useDepartment from "@/hooks/useDepartment";
 import useFaculty from "@/hooks/useFaculty";
 import useIM from "@/hooks/useIM";
+import useIMERCCITLDirectorEndorsementIM from "@/hooks/useIMERCCITLDirectorEndorsementIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import useIMLatestPlagiarismFile from "@/hooks/useIMLatestPlagiarismFile";
 import useIMLatestQAMISFile from "@/hooks/useIMLatestQAMISFile";
 import useIMStatus from "@/hooks/useIMStatus";
+import useSerialNumberIM from "@/hooks/useSerialNumberIM";
 import useUser from "@/hooks/useUser";
 import iMStatusNormalizer from "@/services/iMStatusNormalizer";
-import { ActiveFaculty, IM } from "@prisma/client";
+import { IM, IMERCCITLDirectorEndorsement, SerialNumber } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
@@ -42,13 +44,18 @@ export default function IMPage() {
   const iMStatus = useIMStatus({
     id: iM?.id,
   });
+  const iMERCCITLDirectorEndorsement = useIMERCCITLDirectorEndorsementIM({
+    id: iM?.id,
+  });
+  const serialNumber = useSerialNumberIM({
+    id: iM?.id,
+  });
 
   const qAMISFile = useIMLatestQAMISFile({ id: iM?.id });
   const plagiarismFile = useIMLatestPlagiarismFile({ id: iM?.id });
   const iMFile = useIMLatestIMFile({
     id: iM?.id,
   });
-  const activeFaculty = useActiveFacultyMe();
 
   const deleteHandler = () => {
     axios
@@ -72,7 +79,14 @@ export default function IMPage() {
       <div className="flex h-full">
         <div className="flex-1 p-1">
           <div className="flex">
-            <h2 className="flex-1 uppercase">{iM.title}</h2>
+            <h2 className="flex-1 uppercase">
+              {iM.title}{" "}
+              {serialNumber && (
+                <span className="normal-case italic text-xs text-palette_grey">
+                  {serialNumber?.value}
+                </span>
+              )}
+            </h2>
             <div>
               {
                 <ActionMenu
@@ -82,6 +96,8 @@ export default function IMPage() {
                   showIMPDF={Boolean(iMFile)}
                   showQAMISPDF={Boolean(qAMISFile)}
                   showPlagiarismPDF={Boolean(plagiarismFile)}
+                  iMERCCITLDirectorEndorsement={iMERCCITLDirectorEndorsement}
+                  serialNumber={serialNumber}
                 />
               }
             </div>
@@ -141,6 +157,8 @@ interface ActionMenuProps {
   showIMPDF: boolean;
   showQAMISPDF: boolean;
   showPlagiarismPDF: boolean;
+  iMERCCITLDirectorEndorsement?: IMERCCITLDirectorEndorsement | null;
+  serialNumber?: SerialNumber | null;
 }
 function ActionMenu({
   iM,
@@ -149,6 +167,8 @@ function ActionMenu({
   showIMPDF,
   showPlagiarismPDF,
   showQAMISPDF,
+  iMERCCITLDirectorEndorsement,
+  serialNumber,
 }: ActionMenuProps) {
   const [state, setState] = useState({
     openMenu: false,
@@ -278,6 +298,12 @@ function ActionMenu({
                 View Plagiarism PDF
               </Link>
             )}
+            {iMERCCITLDirectorEndorsement && (
+              <EditSerialNumber
+                iMERCCITLDirectorEndorsement={iMERCCITLDirectorEndorsement}
+                serialNumber={serialNumber}
+              />
+            )}
             <EditIM />
             <>
               <button
@@ -311,6 +337,117 @@ function ActionMenu({
     </div>
   );
 }
+
+interface EditSerialNumberProps {
+  iMERCCITLDirectorEndorsement: IMERCCITLDirectorEndorsement;
+  serialNumber?: SerialNumber | null;
+}
+function EditSerialNumber({
+  iMERCCITLDirectorEndorsement,
+  serialNumber,
+}: EditSerialNumberProps) {
+  const router = useRouter();
+  const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
+  const [openEdit, setOpenEdit] = useState(false);
+  const { addSnackbar } = useContext(SnackbarContext);
+
+  const formik = useFormik({
+    initialValues: {
+      value: "",
+    },
+    validationSchema: Yup.object({
+      value: Yup.string(),
+    }),
+
+    onSubmit: (values) => {
+      if (!serialNumber) {
+        axios
+          .post("/api/serial_number", {
+            ...values,
+            iMERCCITLDirectorEndorsementId: iMERCCITLDirectorEndorsement.id,
+          })
+          .then(() => {
+            addSnackbar("Serial number Updated successfully");
+          })
+          .catch((error) => {
+            addSnackbar(
+              error.response.data?.error?.message ??
+                "Failed to update serial number",
+              "error"
+            );
+          })
+          .finally(() => {
+            router.reload();
+          });
+      } else {
+        axios
+          .put(`/api/serial_number/${serialNumber.id}`, values)
+          .then(() => {
+            addSnackbar("Serial number updated successfully");
+          })
+          .catch((error) => {
+            addSnackbar(
+              error.response.data?.error?.message ??
+                "Failed to update serial number",
+              "error"
+            );
+          })
+          .finally(() => {
+            router.reload();
+          });
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (serialNumber) {
+      formik.setFieldValue("value", serialNumber.value);
+    }
+  }, [serialNumber]);
+
+  return (
+    <>
+      <button
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+        onClick={() => setOpenEdit(true)}
+      >
+        Serial Number
+      </button>
+      {openEdit && (
+        <Modal title="Edit IM" onClose={() => setOpenEdit(false)}>
+          <form onSubmit={formik.handleSubmit} noValidate>
+            <div className="flex flex-col space-y-1">
+              <input
+                placeholder="Serial Number"
+                {...formik.getFieldProps("value")}
+                className="rounded"
+              />
+              <button
+                type="submit"
+                disabled={!formik.isValid}
+                className="bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90 disabled:bg-opacity-50"
+              >
+                <span>Submit</span>
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="1em"
+                    viewBox="0 0 448 512"
+                    className="fill-palette_white"
+                  >
+                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
+    </>
+  );
+}
+
 function EditIM() {
   const router = useRouter();
   const iMId = router.query.id;

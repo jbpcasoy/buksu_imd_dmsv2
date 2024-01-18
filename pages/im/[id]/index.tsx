@@ -50,6 +50,7 @@ import useQAMISCoordinatorEndorsementIM from "@/hooks/useQAMISCoordinatorEndorse
 import useQAMISDeanEndorsementIM from "@/hooks/useQAMISDeanEndorsementIM";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
 import useRefresh from "@/hooks/useRefresh";
+import useSerialNumberIM from "@/hooks/useSerialNumberIM";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
 import useSubmittedContentSpecialistSuggestionIM from "@/hooks/useSubmittedContentSpecialistSuggestionIM";
@@ -161,6 +162,9 @@ export default function ViewIM() {
     useSubmittedContentEditorSuggestionIM({
       id: iMId as string,
     });
+  const serialNumber = useSerialNumberIM({
+    id: iM?.id,
+  });
 
   const { addSnackbar } = useContext(SnackbarContext);
 
@@ -633,7 +637,14 @@ export default function ViewIM() {
             <div className="flex mb-2">
               <div className="flex-1">
                 <div className="flex">
-                  <h2 className="flex-1 uppercase">{iM.title}</h2>
+                  <h2 className="flex-1 uppercase">
+                    {iM.title}{" "}
+                    {serialNumber && (
+                      <span className="normal-case italic text-xs text-palette_grey">
+                        {serialNumber?.value}
+                      </span>
+                    )}
+                  </h2>
                   <div>
                     {
                       <ActionMenu
@@ -1495,7 +1506,9 @@ export default function ViewIM() {
                 {iMStatus === "IMERC_CITL_DIRECTOR_ENDORSED" && (
                   <div>
                     {/* <IMERCEndorsementStatus iMId={iMId as string} /> */}
-                    <h1 className="font-bold text-center my-10 text-palette_grey">ENDORSED TO IPTTU</h1>
+                    <h1 className="font-bold text-center my-10 text-palette_grey">
+                      ENDORSED TO IPTTU
+                    </h1>
                   </div>
                 )}
               </div>
