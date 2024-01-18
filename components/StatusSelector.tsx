@@ -41,7 +41,7 @@ export default function StatusSelector(props?: FieldInputProps<any>) {
         className='rounded-s p-1'
       /> */}
       <select {...props} className='rounded py-1'>
-        <option value=''>Select</option>
+        <option value=''>Select Status</option>
         {state?.map((status) => (
           <option key={status} value={status}>{iMStatusNormalizer(status)}</option>
         ))}

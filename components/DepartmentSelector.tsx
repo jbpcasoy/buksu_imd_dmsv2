@@ -47,7 +47,7 @@ export default function DepartmentSelector({
         className='rounded-t p-1'
       /> */}
       <select {...props} disabled={disabled} className='rounded py-1'>
-        <option value=''>Select</option>
+        <option value=''>Select Department</option>
         {departments.map((department) => {
           return (
             <option key={department.id} value={department.id}>

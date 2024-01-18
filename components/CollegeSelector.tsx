@@ -38,7 +38,7 @@ export default function CollegeSelector({
         className='rounded-t p-1'
       /> */}
       <select {...props} disabled={disabled} className='rounded py-1'>
-        <option value=''>Select</option>
+        <option value=''>Select College</option>
         {colleges.map((college) => {
           return (
             <option key={college.id} value={college.id}>
