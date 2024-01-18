@@ -298,6 +298,13 @@ function ActionMenu({
                 View Plagiarism PDF
               </Link>
             )}
+            <Link
+              href={`/admin/im/${iM.id}/versions`}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Versions
+            </Link>
             {iMERCCITLDirectorEndorsement && (
               <EditSerialNumber
                 iMERCCITLDirectorEndorsement={iMERCCITLDirectorEndorsement}
