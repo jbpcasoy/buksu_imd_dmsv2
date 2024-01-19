@@ -34,12 +34,6 @@ export default function StatusSelector(props?: FieldInputProps<any>) {
 
   return (
     <div className='flex'>
-      {/* <input
-        type='text'
-        placeholder='Search Status'
-        onChange={handleSearch}
-        className='rounded-s p-1'
-      /> */}
       <select {...props} className='rounded py-1'>
         <option value=''>Select Status</option>
         {state?.map((status) => (

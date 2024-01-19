@@ -59,48 +59,11 @@ export default async function handler(
 
       // ForbiddenError.from(ability).throwUnlessCan("delete", "DepartmentReview");
       if (!user.isAdmin) {
-        const iM = await prisma.iM.findFirstOrThrow({
-          where: {
-            IMFile: {
-              some: {
-                DepartmentReview: {
-                  id: {
-                    equals: id as string,
-                  },
-                },
-              },
-            },
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to perform this action",
           },
         });
-
-        const faculty = await prisma.faculty.findFirst({
-          where: {
-            ActiveFaculty: {
-              Faculty: {
-                User: {
-                  id: {
-                    equals: user.id,
-                  },
-                },
-              },
-            },
-          },
-        });
-
-        if(!faculty) {
-          return res.status(403).json({
-            error: {
-              message: "Only an active faculty is allowed to perform this action"
-            }
-          })
-        }
-        if(iM.facultyId !== faculty.id) {
-          return res.status(403).json({
-            error: {
-              message: "You are not allowed to delete this department revision"
-            }
-          })
-        }
       }
 
       const departmentReview = await prisma.departmentReview.delete({
