@@ -1,7 +1,7 @@
 import FileMetadata from "@/constants/FileMetadata";
+import prisma from "@/prisma/client";
 import fs from "fs";
 import path from "path";
-
 
 export default async function getFilesWithMetadata(
   folderPath: string,
@@ -14,7 +14,7 @@ export default async function getFilesWithMetadata(
     const filenames = await fs.promises.readdir(fullPath);
 
     // Apply pagination
-    const paginatedFilenames = filenames.slice(skip, skip + take);
+    let paginatedFilenames = filenames.slice(skip, skip + take);
 
     // Get metadata for each file
     const filesWithMetadata = await Promise.all(

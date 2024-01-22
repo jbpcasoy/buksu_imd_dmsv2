@@ -1,7 +1,9 @@
+import prisma from "@/prisma/client";
+import getFilenames from "@/services/getFilenames";
 import getFilesWithMetadata from "@/services/getFilesWithMetadata";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -38,9 +40,13 @@ export default async function handler(
 
       const folderPath = "files/im";
       const fileMetadatas = await getFilesWithMetadata(folderPath, take, skip);
+
+      const filenames = getFilenames(folderPath);
+      let count = filenames.length;
+
       return res.status(200).json({
         fileMetadatas,
-        count: fileMetadatas.length,
+        count: count,
       });
     } catch (error: any) {
       logger.error(error);
