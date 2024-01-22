@@ -288,6 +288,12 @@ export default async function handler(
         }
       }
 
+      const iMFile = await prisma.iMFile.delete({
+        where: {
+          id: id as string,
+        },
+      });
+      
       const filePath = path.join(
         process.cwd(),
         `/files/im/${iMFileToDelete.filename}`
@@ -295,12 +301,6 @@ export default async function handler(
       fs.rm(filePath, (error) => {
         logger.error({ error });
         throw error;
-      });
-
-      const iMFile = await prisma.iMFile.delete({
-        where: {
-          id: id as string,
-        },
       });
 
       return res.json(iMFile);
