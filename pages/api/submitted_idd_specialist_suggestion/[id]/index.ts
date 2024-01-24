@@ -67,6 +67,23 @@ export default async function handler(
           },
         });
       }
+      
+      // const iMERCCITLReviewed = await prisma.iMERCCITLReviewed.findFirst({
+      //   where: {
+      //     SubmittedIDDSpecialistSuggestion: {
+      //       id: {
+      //         equals: id, 
+      //       },
+      //     },
+      //   },
+      // });
+      // if (iMERCCITLReviewed) {
+      //   await prisma.iMERCCITLReviewed.delete({
+      //     where: {
+      //       id: iMERCCITLReviewed.id,
+      //     },
+      //   });
+      // }
 
       const submittedIDDSpecialistSuggestion =
         await prisma.submittedIDDSpecialistSuggestion.delete({

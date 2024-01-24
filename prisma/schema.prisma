@@ -145,19 +145,19 @@ model IMFile {
     CITLRevision                          CITLRevision?
     QAMISRevision                         QAMISRevision?
     IMERCCITLRevision                     IMERCCITLRevision?
-    DepartmentReviewed                    DepartmentReviewed?                  @relation(fields: [departmentReviewedId], references: [id])
+    DepartmentReviewed                    DepartmentReviewed?                  @relation(fields: [departmentReviewedId], references: [id], onDelete: Cascade)
     departmentReviewedId                  String?                              @unique
-    SubmittedReturnedDepartmentRevision   SubmittedReturnedDepartmentRevision? @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id])
+    SubmittedReturnedDepartmentRevision   SubmittedReturnedDepartmentRevision? @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     submittedReturnedDepartmentRevisionId String?                              @unique
-    SubmittedIDDCoordinatorSuggestion     SubmittedIDDCoordinatorSuggestion?   @relation(fields: [submittedIDDCoordinatorSuggestionId], references: [id])
+    SubmittedIDDCoordinatorSuggestion     SubmittedIDDCoordinatorSuggestion?   @relation(fields: [submittedIDDCoordinatorSuggestionId], references: [id], onDelete: Cascade)
     submittedIDDCoordinatorSuggestionId   String?                              @unique
-    SubmittedReturnedCITLRevision         SubmittedReturnedCITLRevision?       @relation(fields: [submittedReturnedCITLRevisionId], references: [id])
+    SubmittedReturnedCITLRevision         SubmittedReturnedCITLRevision?       @relation(fields: [submittedReturnedCITLRevisionId], references: [id], onDelete: Cascade)
     submittedReturnedCITLRevisionId       String?                              @unique
-    SubmittedQAMISSuggestion              SubmittedQAMISSuggestion?            @relation(fields: [submittedQAMISSuggestionId], references: [id])
+    SubmittedQAMISSuggestion              SubmittedQAMISSuggestion?            @relation(fields: [submittedQAMISSuggestionId], references: [id], onDelete: Cascade)
     submittedQAMISSuggestionId            String?                              @unique
-    IMERCCITLReviewed                     IMERCCITLReviewed?                   @relation(fields: [iMERCCITLReviewedId], references: [id])
+    IMERCCITLReviewed                     IMERCCITLReviewed?                   @relation(fields: [iMERCCITLReviewedId], references: [id], onDelete: Cascade)
     iMERCCITLReviewedId                   String?                              @unique
-    SubmittedReturnedIMERCCITLRevision    SubmittedReturnedIMERCCITLRevision?  @relation(fields: [submittedReturnedIMERCCITLRevisionId], references: [id])
+    SubmittedReturnedIMERCCITLRevision    SubmittedReturnedIMERCCITLRevision?  @relation(fields: [submittedReturnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
     submittedReturnedIMERCCITLRevisionId  String?                              @unique
 }
 
@@ -1208,7 +1208,7 @@ model PlagiarismFile {
     mimetype            String
     originalFilename    String
     IMERCCITLRevision   IMERCCITLRevision[]
-    IMERCCITLReviewed   IMERCCITLReviewed   @relation(fields: [iMERCCITLReviewedId], references: [id])
+    IMERCCITLReviewed   IMERCCITLReviewed   @relation(fields: [iMERCCITLReviewedId], references: [id], onDelete: Cascade)
     iMERCCITLReviewedId String              @unique
 }
 

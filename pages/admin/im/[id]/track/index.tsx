@@ -32,7 +32,7 @@ import ReactFlow, {
   Node,
   PanOnScrollMode,
 } from "reactflow";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Modal, { ModalProps } from "@/components/Modal";
 import { DateTime } from "luxon";
 import {
@@ -82,6 +82,9 @@ import useIDDSpecialistSuggestion from "@/hooks/useIDDSpecialistSuggestion";
 import useIDDSpecialistReview from "@/hooks/useIDDSpecialistReview";
 import useContentEditorSuggestion from "@/hooks/useContentEditorSuggestion";
 import useContentEditorReview from "@/hooks/useContentEditorReview";
+import axios from "axios";
+import { SnackbarContext } from "@/components/SnackbarProvider";
+import Confirmation from "@/components/Confirmation";
 
 export default function IMTrackingPage() {
   const [state, setState] = useState({
@@ -473,7 +476,7 @@ export default function IMTrackingPage() {
   if (iM === null) {
     return (
       <AdminLayout>
-        <Error statusCode={404} title='IM Not Found' />
+        <Error statusCode={404} title="IM Not Found" />
       </AdminLayout>
     );
   }
@@ -487,7 +490,7 @@ export default function IMTrackingPage() {
 
   return (
     <AdminLayout>
-      <div className='h-full w-full mr-50'>
+      <div className="h-full w-full mr-50">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -662,15 +665,62 @@ interface DepartmentReviewModalProps {
 function DepartmentReviewModal({
   departmentReview,
 }: DepartmentReviewModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
+
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/im_file/${departmentReview.iMFileId}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "Submitted chairperson suggestion has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete submitted chairperson suggestion",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <p className='text-sm'>
-      Submitted for review{" "}
-      <span className='text-palette_light_blue'>
-        {DateTime.fromJSDate(
-          new Date(departmentReview?.updatedAt ?? "")
-        ).toFormat( "D | t")}
-      </span>
-    </p>
+    <div>
+      <p className="text-sm">
+        Submitted for review{" "}
+        <span className="text-palette_light_blue">
+          {DateTime.fromJSDate(
+            new Date(departmentReview?.updatedAt ?? "")
+          ).toFormat("D | t")}
+        </span>
+      </p>
+        <button
+          className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+          onClick={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+          }
+        >
+          Delete
+        </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
+    </div>
   );
 }
 
@@ -683,6 +733,12 @@ function PeerReviewModal({
   submittedPeerSuggestion,
   iMId,
 }: PeerReviewModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const peerSuggestion = usePeerSuggestion({
     id: submittedPeerSuggestion.peerSuggestionId,
   });
@@ -696,63 +752,97 @@ function PeerReviewModal({
     id: faculty?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(`/api/submitted_peer_suggestion/${submittedPeerSuggestion.id}`)
+      .then((res) => {
+        addSnackbar("Submitted peer suggestion has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete submitted peer suggestion",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm flex flex-col space-y-4'>
+    <div className="text-sm flex flex-col space-y-4">
       {user && (
         <p>
           Reviewed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(submittedPeerSuggestion?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
-      <div className='flex justify-start space-x-2'>
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <div className="flex justify-start space-x-2">
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white w-3 h-3'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white w-3 h-3"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Evaluation</span>
         </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white w-3 h-3'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white w-3 h-3"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Suggestion</span>
         </Link>
+        <button
+          className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+          onClick={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+          }
+        >
+          Delete
+        </button>
       </div>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -766,6 +856,12 @@ function ChairpersonReviewModal({
   submittedChairpersonSuggestion,
   iMId,
 }: ChairpersonReviewModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const chairpersonSuggestion = useChairpersonSuggestion({
     id: submittedChairpersonSuggestion.chairpersonSuggestionId,
   });
@@ -781,63 +877,102 @@ function ChairpersonReviewModal({
   const user = useUser({
     id: faculty?.userId,
   });
+
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/submitted_chairperson_suggestion/${submittedChairpersonSuggestion.id}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "Submitted chairperson suggestion has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete submitted chairperson suggestion",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm flex flex-col space-y-4'>
+    <div className="text-sm flex flex-col space-y-4">
       {user && (
         <p>
           Reviewed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(submittedChairpersonSuggestion?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
-      <div className='flex justify-start space-x-2'>
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <div className="flex justify-start space-x-2">
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Evaluation</span>
         </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Suggestion</span>
         </Link>
+        <button
+          className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+          onClick={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+          }
+        >
+          Delete
+        </button>
       </div>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -851,6 +986,12 @@ function CoordinatorReviewModal({
   submittedCoordinatorSuggestion,
   iMId,
 }: CoordinatorReviewModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const coordinatorSuggestion = useCoordinatorSuggestion({
     id: submittedCoordinatorSuggestion.coordinatorSuggestionId,
   });
@@ -867,63 +1008,101 @@ function CoordinatorReviewModal({
     id: faculty?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/submitted_coordinator_suggestion/${submittedCoordinatorSuggestion.id}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "Submitted coordinator suggestion has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete submitted coordinator suggestion",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm flex flex-col space-y-4'>
+    <div className="text-sm flex flex-col space-y-4">
       {user && (
         <p>
           Reviewed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(submittedCoordinatorSuggestion?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
-      <div className='flex justify-start space-x-2'>
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <div className="flex justify-start space-x-2">
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Evaluation</span>
         </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Suggestion</span>
         </Link>
+        <button
+          className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+          onClick={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+          }
+        >
+          Delete
+        </button>
       </div>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -937,6 +1116,12 @@ function DepartmentRevisionModal({
   departmentRevision,
   iMId,
 }: DepartmentRevisionModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const iM = useIM({
     id: iMId,
   });
@@ -945,26 +1130,60 @@ function DepartmentRevisionModal({
     id: faculty?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(`/api/im_file/${departmentRevision.iMFileId}`)
+      .then((res) => {
+        addSnackbar("Department revision has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete department revision",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Revised by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(departmentRevision?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -976,6 +1195,12 @@ interface CoordinatorEndorsementModalProps {
 function CoordinatorEndorsementModal({
   coordinatorEndorsement,
 }: CoordinatorEndorsementModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const coordinator = useCoordinator({
     id: coordinatorEndorsement.coordinatorId,
   });
@@ -984,26 +1209,60 @@ function CoordinatorEndorsementModal({
     id: faculty?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(`/api/coordinator_endorsement/${coordinatorEndorsement.id}`)
+      .then((res) => {
+        addSnackbar("Coordinator endorsement has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete coordinator endorsement",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Endorsed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(coordinatorEndorsement?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1013,30 +1272,70 @@ interface DeanEndorsementModalProps {
 }
 
 function DeanEndorsementModal({ deanEndorsement }: DeanEndorsementModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const dean = useDean({ id: deanEndorsement.deanId });
   const faculty = useFaculty({ id: dean?.facultyId });
   const user = useUser({ id: faculty?.userId });
 
+  async function deleteHandler() {
+    return axios
+      .delete(`/api/dean_endorsement/${deanEndorsement.id}`)
+      .then((res) => {
+        addSnackbar("Dean endorsement has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete dean endorsement",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Endorsed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(deanEndorsement?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1049,6 +1348,12 @@ function IDDCoordinatorReviewModal({
   iMId,
   submittedIDDCoordinatorSuggestion,
 }: IDDCoordinatorReviewModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const iDDCoordinatorSuggestion = useIDDCoordinatorSuggestion({
     id: submittedIDDCoordinatorSuggestion.iDDCoordinatorSuggestionId,
   });
@@ -1059,45 +1364,83 @@ function IDDCoordinatorReviewModal({
     id: iDDCoordinator?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/submitted_idd_coordinator_suggestion/${submittedIDDCoordinatorSuggestion.id}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "Submitted IDD coordinator suggestion has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete submitted IDD coordinator suggestion",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm space-y-4'>
+    <div className="text-sm space-y-4">
       {user && (
         <p>
           Reviewed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(submittedIDDCoordinatorSuggestion?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
-      <div className='flex justify-start space-x-2'>
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <div className="flex justify-start space-x-2">
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white w-3 h-3'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white w-3 h-3"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Suggestion</span>
         </Link>
+        <button
+          className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+          onClick={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+          }
+        >
+          Delete
+        </button>
       </div>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1107,6 +1450,12 @@ interface CITLRevisionModalProps {
   iMId: string;
 }
 function CITLRevisionModal({ cITLRevision, iMId }: CITLRevisionModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const iM = useIM({ id: iMId });
   const faculty = useFaculty({
     id: iM?.facultyId,
@@ -1115,27 +1464,61 @@ function CITLRevisionModal({ cITLRevision, iMId }: CITLRevisionModalProps) {
     id: faculty?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(`/api/im_file/${cITLRevision.iMFileId}`)
+      .then((res) => {
+        addSnackbar("CITL revision has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete CITL revision",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Revised by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(cITLRevision?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1147,30 +1530,75 @@ interface IDDCoordinatorEndorsementModalProps {
 function IDDCoordinatorEndorsementModal({
   iDDCoordinatorEndorsement,
 }: IDDCoordinatorEndorsementModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const iDDCoordinator = useIDDCoordinator({
     id: iDDCoordinatorEndorsement.iDDCoordinatorId,
   });
   const user = useUser({ id: iDDCoordinator?.userId });
+
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/idd_coordinator_endorsement/${iDDCoordinatorEndorsement.id}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "IDD coordinator endorsement has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete IDD coordinator endorsement",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Endorsed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(iDDCoordinatorEndorsement?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1182,6 +1610,12 @@ interface CITLDirectorEndorsementModalProps {
 function CITLDirectorEndorsementModal({
   cITLDirectorEndorsement,
 }: CITLDirectorEndorsementModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const cITLDirector = useCITLDirector({
     id: cITLDirectorEndorsement.cITLDirectorId,
   });
@@ -1189,26 +1623,60 @@ function CITLDirectorEndorsementModal({
     id: cITLDirector?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(`/api/citl_director_endorsement/${cITLDirectorEndorsement.id}`)
+      .then((res) => {
+        addSnackbar("CITL director endorsement has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete CITL director endorsement",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Endorsed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(cITLDirectorEndorsement?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1218,10 +1686,10 @@ interface TryOutModalProps {
 }
 function TryOutModal({ cITLDirectorEndorsement }: TryOutModalProps) {
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       <p>
         On try-out until{" "}
-        <span className='text-palette_light_blue'>
+        <span className="text-palette_light_blue">
           {DateTime.fromJSDate(
             new Date(cITLDirectorEndorsement?.updatedAt ?? "")
           )
@@ -1240,32 +1708,73 @@ interface QAMISRevisionModalProps {
   iMId: string;
 }
 function QAMISRevisionModal({ qAMISRevision, iMId }: QAMISRevisionModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const iM = useIM({ id: iMId });
   const faculty = useFaculty({
     id: iM?.facultyId,
   });
   const user = useUser({ id: faculty?.userId });
+
+  async function deleteHandler() {
+    return axios
+      .delete(`/api/im_file/${qAMISRevision.iMFileId}`)
+      .then((res) => {
+        addSnackbar("QAMIS revision has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete QAMIS revision",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Revised by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(qAMISRevision?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1276,33 +1785,77 @@ interface QAMISChairpersonEndorsementModalProps {
 function QAMISChairpersonEndorsementModal({
   qAMISChairpersonEndorsement,
 }: QAMISChairpersonEndorsementModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const chairperson = useChairperson({
     id: qAMISChairpersonEndorsement.chairpersonId,
   });
   const faculty = useFaculty({ id: chairperson?.facultyId });
   const user = useUser({ id: faculty?.userId });
 
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/qamis_chairperson_endorsement/${qAMISChairpersonEndorsement.id}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "QAMIS chairperson endorsement has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete QAMIS chairperson endorsement",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Revised by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(qAMISChairpersonEndorsement?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1313,32 +1866,77 @@ interface QAMISCoordinatorEndorsementModalProps {
 function QAMISCoordinatorEndorsementModal({
   qAMISCoordinatorEndorsement,
 }: QAMISCoordinatorEndorsementModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const coordinator = useCoordinator({
     id: qAMISCoordinatorEndorsement.coordinatorId,
   });
   const faculty = useFaculty({ id: coordinator?.facultyId });
   const user = useUser({ id: faculty?.userId });
+
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/qamis_coordinator_endorsement/${qAMISCoordinatorEndorsement.id}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "QAMIS coordinator endorsement has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete QAMIS coordinator endorsement",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Revised by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(qAMISCoordinatorEndorsement?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1349,32 +1947,73 @@ interface QAMISDeanEndorsementModalProps {
 function QAMISDeanEndorsementModal({
   qAMISDeanEndorsement,
 }: QAMISDeanEndorsementModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const dean = useDean({
     id: qAMISDeanEndorsement.deanId,
   });
   const faculty = useFaculty({ id: dean?.facultyId });
   const user = useUser({ id: faculty?.userId });
+
+  async function deleteHandler() {
+    return axios
+      .delete(`/api/qamis_dean_endorsement/${qAMISDeanEndorsement.id}`)
+      .then((res) => {
+        addSnackbar("QAMIS dean endorsement has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete QAMIS dean endorsement",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Revised by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(qAMISDeanEndorsement?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1386,13 +2025,13 @@ function QAMISDepartmentEndorsementModal({
   qAMISDepartmentEndorsement,
 }: QAMISDepartmentEndorsementModalProps) {
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       <p>
         Endorsed{" "}
-        <span className='text-palette_light_blue'>
+        <span className="text-palette_light_blue">
           {DateTime.fromJSDate(
             new Date(qAMISDepartmentEndorsement?.updatedAt ?? "")
-          ).toFormat( "D | t")}
+          ).toFormat("D | t")}
         </span>
       </p>
     </div>
@@ -1407,6 +2046,12 @@ function ContentSpecialistReviewModal({
   iMId,
   submittedContentSpecialistSuggestion,
 }: ContentSpecialistReviewModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const contentSpecialistSuggestion = useContentSpecialistSuggestion({
     id: submittedContentSpecialistSuggestion.contentSpecialistSuggestionId,
   });
@@ -1423,63 +2068,101 @@ function ContentSpecialistReviewModal({
     id: faculty?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/submitted_content_specialist_suggestion/${submittedContentSpecialistSuggestion.id}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "submitted content specialist has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete submitted content specialist",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm flex flex-col space-y-4'>
+    <div className="text-sm flex flex-col space-y-4">
       {user && (
         <p>
           Reviewed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(submittedContentSpecialistSuggestion?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
-      <div className='flex justify-start space-x-2'>
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <div className="flex justify-start space-x-2">
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Evaluation</span>
         </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Suggestion</span>
         </Link>
+        <button
+          className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+          onClick={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+          }
+        >
+          Delete
+        </button>
       </div>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1492,6 +2175,12 @@ function IDDSpecialistReviewModal({
   iMId,
   submittedIDDSpecialistSuggestion,
 }: IDDSpecialistReviewModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const iDDSpecialistSuggestion = useIDDSpecialistSuggestion({
     id: submittedIDDSpecialistSuggestion.iDDSpecialistSuggestionId,
   });
@@ -1505,63 +2194,99 @@ function IDDSpecialistReviewModal({
     id: iDDCoordinator?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/submitted_idd_specialist_suggestion/${submittedIDDSpecialistSuggestion.id}`
+      )
+      .then((res) => {
+        addSnackbar("submitted content editor has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete submitted content editor",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm flex flex-col space-y-4'>
+    <div className="text-sm flex flex-col space-y-4">
       {user && (
         <p>
           Reviewed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(submittedIDDSpecialistSuggestion?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
-      <div className='flex justify-start space-x-2'>
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <div className="flex justify-start space-x-2">
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Evaluation</span>
         </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Suggestion</span>
         </Link>
+        <button
+          className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+          onClick={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+          }
+        >
+          Delete
+        </button>
       </div>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1574,6 +2299,12 @@ function ContentEditorReviewModal({
   iMId,
   submittedContentEditorSuggestion,
 }: ContentEditorReviewModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const contentEditorSuggestion = useContentEditorSuggestion({
     id: submittedContentEditorSuggestion.contentEditorSuggestionId,
   });
@@ -1586,63 +2317,100 @@ function ContentEditorReviewModal({
   const user = useUser({
     id: cITLDirector?.userId,
   });
+
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/submitted_content_editor_suggestion/${submittedContentEditorSuggestion.id}`
+      )
+      .then((res) => {
+        addSnackbar("submitted content editor has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete submitted content editor",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm flex flex-col space-y-4'>
+    <div className="text-sm flex flex-col space-y-4">
       {user && (
         <p>
           Reviewed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(submittedContentEditorSuggestion?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
           .
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
-      <div className='flex justify-start space-x-2'>
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <div className="flex justify-start space-x-2">
         <Link
           href={`/admin/im/${iMId}/all_reviews`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Evaluation</span>
         </Link>
         <Link
           href={`/admin/im/${iMId}/all_suggestions`}
-          className='hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center'
+          className="hover:bg-opacity-90 rounded px-2 py-1 text-palette_white bg-palette_blue flex space-x-1 items-center"
         >
           <span>
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='16'
-              viewBox='0 0 512 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="16"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
             >
-              <path d='M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z' />
+              <path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" />
             </svg>
           </span>
           <span>Suggestion</span>
         </Link>
+        <button
+          className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+          onClick={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+          }
+        >
+          Delete
+        </button>
       </div>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1655,6 +2423,12 @@ function IMERCCITLRevisionModal({
   iMERCCITLRevision,
   iMId,
 }: IMERCCITLRevisionModal) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const iM = useIM({ id: iMId });
   const faculty = useFaculty({
     id: iM?.facultyId,
@@ -1663,26 +2437,60 @@ function IMERCCITLRevisionModal({
     id: faculty?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(`/api/im_file/${iMERCCITLRevision.iMFileId}`)
+      .then((res) => {
+        addSnackbar("IMERC CITL revision has been deleted successfully");
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete IMERC CITL revision",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Revised by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(iMERCCITLRevision?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1693,6 +2501,12 @@ interface IMERCIDDCoordinatorEndorsementModalProps {
 function IMERCIDDCoordinatorEndorsementModal({
   iMERCIDDCoordinatorEndorsement,
 }: IMERCIDDCoordinatorEndorsementModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+
   const iDDCoordinator = useIDDCoordinator({
     id: iMERCIDDCoordinatorEndorsement.iDDCoordinatorId,
   });
@@ -1700,26 +2514,64 @@ function IMERCIDDCoordinatorEndorsementModal({
     id: iDDCoordinator?.userId,
   });
 
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/imerc_idd_coordinator_endorsement/${iMERCIDDCoordinatorEndorsement.id}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "IMERC IDD coordinator endorsement has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete IMERC IDD coordinator",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Endorsed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(iMERCIDDCoordinatorEndorsement?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
@@ -1730,6 +2582,11 @@ interface IMERCCITLDirectorEndorsementModalProps {
 function IMERCCITLDirectorEndorsementModal({
   iMERCCITLDirectorEndorsement,
 }: IMERCCITLDirectorEndorsementModalProps) {
+  const [state, setState] = useState({
+    openDeleteConfirmation: false,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
 
   const cITLDirector = useCITLDirector({
     id: iMERCCITLDirectorEndorsement.cITLDirectorId,
@@ -1737,26 +2594,65 @@ function IMERCCITLDirectorEndorsementModal({
   const user = useUser({
     id: cITLDirector?.userId,
   });
+
+  async function deleteHandler() {
+    return axios
+      .delete(
+        `/api/imerc_citl_director_endorsement/${iMERCCITLDirectorEndorsement.id}`
+      )
+      .then((res) => {
+        addSnackbar(
+          "IMERC CITL director endorsement has been deleted successfully"
+        );
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ??
+            "Failed to delete IMERC CITL Endorsement",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  }
+
   return (
-    <div className='text-sm'>
+    <div className="text-sm">
       {user && (
         <p>
           Endorsed by{" "}
           <Link
             href={`/admin/user/${user.id}`}
-            className='text-palette_light_blue hover:underline'
+            className="text-palette_light_blue hover:underline"
           >
             {user.name}
           </Link>{" "}
           |{" "}
-          <span className='text-palette_light_blue'>
+          <span className="text-palette_light_blue">
             {DateTime.fromJSDate(
               new Date(iMERCCITLDirectorEndorsement?.updatedAt ?? "")
-            ).toFormat( "D | t")}
+            ).toFormat("D | t")}
           </span>
         </p>
       )}
-      {!user && <p className='animate-pulse'>Loading...</p>}
+      {!user && <p className="animate-pulse">Loading...</p>}
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
+      {state.openDeleteConfirmation && (
+        <Confirmation
+          onClose={() =>
+            setState((prev) => ({ ...prev, openDeleteConfirmation: false }))
+          }
+          onConfirm={deleteHandler}
+        />
+      )}
     </div>
   );
 }
