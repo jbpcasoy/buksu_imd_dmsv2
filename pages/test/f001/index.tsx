@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function F001Page() {
   return (
-    <div className="flex items-center justify-center font-serif">
+    <div className="flex items-center justify-center">
       <F001
         title="Process of Teaching Physical Education and Health"
         authors="John Bryan Pit M. Acaso"

@@ -14,7 +14,7 @@ export default function F001({ title, authors, courseCode, semester, syStart, sy
   return (
     <div
       style={{ width: "8.27in", height: "11.69in", padding: "0.5in" }}
-      className="shadow-lg flex flex-col"
+      className="shadow-lg flex flex-col font-serif"
     >
       <header className="flex justify-between">
         <div className="flex items-center">
