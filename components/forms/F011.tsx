@@ -309,7 +309,7 @@ export default function F011({
       <footer>
         <div className="text-xs flex justify-between">
           <p>Document Code: CITL-F-011</p>
-          <p>Revision No. 0</p>
+          <p>Revision No.: 0</p>
           <p>Issue No.: 1</p>
           <p>Issue Date: July 28, 2020</p>
           <p>Page 1 of 1</p>
