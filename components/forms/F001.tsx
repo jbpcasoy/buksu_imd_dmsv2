@@ -10,7 +10,14 @@ interface F001Props {
   syEnd: number;
 }
 
-export default function F001({ title, authors, courseCode, semester, syStart, syEnd }: F001Props) {
+export default function F001({
+  title,
+  authors,
+  courseCode,
+  semester,
+  syStart,
+  syEnd,
+}: F001Props) {
   return (
     <div
       style={{ width: "8.27in", height: "11.69in", padding: "0.5in" }}
@@ -30,17 +37,21 @@ export default function F001({ title, authors, courseCode, semester, syStart, sy
         <div className="text-center text-sm">
           <p className="font-bold">BUKIDNON STATE UNIVERSITY</p>
           <p>Malaybalay City, Bukidnon 8700</p>
-          <p>Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717,</p>
-          <Link
-            href="https://www.buksu.edu.ph"
-            className="underline text-palette_light_blue"
-          >
-            www.buksu.edu.ph
-          </Link>
+          <p>
+            Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717,{" "}
+            <Link
+              href="https://www.buksu.edu.ph"
+              className="underline text-palette_light_blue"
+            >
+              www.buksu.edu.ph
+            </Link>
+          </p>
           <p className="font-bold">
             OFFICE OF THE VICE PRESIDENT FOR ACADEMIC AFFAIRS
           </p>
-          <p>Center for Innovative Teaching and Learning</p>
+          <p className="text-palette_orange">
+            Center for Innovative Teaching and Learning
+          </p>
         </div>
         <div className="flex items-center justify-center text-center text-xs text-palette_orange">
           <div className="border border-black rounded-lg py-2 px-6 italic">
@@ -73,7 +84,7 @@ export default function F001({ title, authors, courseCode, semester, syStart, sy
               {"\t\t"}
               Sem./SY:{"\t"}
               <span className="font-bold underline">
-                {numberToOrdinal(semester)} Sem / S.Y. 2023-2024
+                {numberToOrdinal(semester)} Sem / S.Y. {syStart}-{syEnd}
               </span>
             </p>
             <p>
