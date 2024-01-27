@@ -10,6 +10,12 @@ export default function F001Page() {
         semester={1}
         syStart={2023}
         syEnd={2024}
+        iMType="Module"
+        college="College of Education"
+        coordinatorName="Glenmark T. Artiaga"
+        department="Physical Education Department"
+        endorseFor="Printing & e-Distribution"
+        iDDCoordinatorName="Keano Lyrhens Jimeno"
       />
     </div>
   );

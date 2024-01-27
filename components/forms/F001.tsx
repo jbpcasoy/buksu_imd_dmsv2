@@ -2,12 +2,18 @@ import numberToOrdinal from "@/services/numberToOrinal";
 import Link from "next/link";
 
 interface F001Props {
-  title: string;
-  authors: string;
-  courseCode: string;
-  semester: 1 | 2;
-  syStart: number;
-  syEnd: number;
+  title?: string;
+  authors?: string;
+  courseCode?: string;
+  semester?: 1 | 2;
+  syStart?: number;
+  syEnd?: number;
+  iMType?: string;
+  department?: string;
+  college?: string;
+  endorseFor?: "Printing" | "e-Distribution" | "Printing & e-Distribution";
+  coordinatorName?: string;
+  iDDCoordinatorName?: string;
 }
 
 export default function F001({
@@ -17,6 +23,12 @@ export default function F001({
   semester,
   syStart,
   syEnd,
+  college,
+  coordinatorName,
+  department,
+  endorseFor,
+  iDDCoordinatorName,
+  iMType,
 }: F001Props) {
   return (
     <div
@@ -72,33 +84,54 @@ export default function F001({
           <div className="whitespace-pre">
             <p>
               Title:{"\t\t\t\t"}
-              <span className="font-bold underline">{title}</span>
+              {!title && (
+                <span className="">
+                  _________________________________________________________
+                </span>
+              )}
+              {title && <span className="underline">{title}</span>}
             </p>
             <p>
               Author/s:{"\t\t\t"}
-              <span className="font-bold underline">{authors}</span>
+              {!authors && (
+                <span className="">
+                  _________________________________________________________
+                </span>
+              )}
+              {authors && <span className="underline">{authors}</span>}
             </p>
             <p>
               Course Code:{"\t"}
-              <span className="font-bold underline">{courseCode}</span>
+              {!courseCode && <span className="">___________________</span>}
+              {courseCode && <span className="underline">{courseCode}</span>}
               {"\t\t"}
               Sem./SY:{"\t"}
-              <span className="font-bold underline">
-                {numberToOrdinal(semester)} Sem / S.Y. {syStart}-{syEnd}
-              </span>
+              {(!semester || !syStart || !syEnd) && (
+                <span className="">___________________________</span>
+              )}
+              {semester && syStart && syEnd && (
+                <span className="underline">
+                  {numberToOrdinal(semester)} Sem / S.Y. {syStart}-{syEnd}
+                </span>
+              )}
             </p>
             <p>
               IM Type:{"\t\t\t"}
-              <span className="font-bold underline">Module</span>
+              {!iMType && (
+                <span className="">
+                  _________________________________________________________
+                </span>
+              )}
+              {iMType && <span className="underline">{iMType}</span>}
             </p>
             <p>
               Program/Department:{"\t"}
-              <span className="font-bold underline">
-                Physical Education Department
-              </span>
+              {!department && <span className="">___________________</span>}
+              {department && <span className="underline">{department}</span>}
               {"\t\t"}
               College:{"\t"}
-              <span className="font-bold underline">College of Education</span>
+              {!college && <span>_____________________</span>}
+              {college && <span className="underline">{college}</span>}
             </p>
             <br />
             <br />
@@ -113,6 +146,7 @@ export default function F001({
               <div className="flex space-x-1 items-center">
                 <input
                   disabled={true}
+                  checked={endorseFor === "Printing"}
                   type="checkbox"
                   className="w-10 h-8 rounded border-green-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-offset-0 focus:ring-green-200 focus:ring-opacity-50"
                 />{" "}
@@ -121,6 +155,7 @@ export default function F001({
               <div className="flex space-x-1 items-center">
                 <input
                   disabled={true}
+                  checked={endorseFor === "e-Distribution"}
                   type="checkbox"
                   className="w-10 h-8 rounded border-green-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-offset-0 focus:ring-green-200 focus:ring-opacity-50"
                 />{" "}
@@ -130,7 +165,7 @@ export default function F001({
                 <input
                   type="checkbox"
                   disabled={true}
-                  checked={true}
+                  checked={endorseFor === "Printing & e-Distribution"}
                   className="w-10 h-8 rounded border-green-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-offset-0 focus:ring-green-200 focus:ring-opacity-50"
                 />{" "}
                 <p>Printing & e-Distribution</p>
@@ -141,13 +176,15 @@ export default function F001({
           <br />
           <br />
           <div className="text-center">
-            <p className="underline uppercase">LOWENA D. BASTIDA</p>
+            {!coordinatorName && <p className="">____________________________</p>}
+            {coordinatorName && <p className="underline">{coordinatorName}</p>}
             <p>IMD Coordinator</p>
           </div>
           <br />
           <br />
           <div className="text-center">
-            <p className="underline uppercase">CECILLE MARIE T. IMPROGO</p>
+            {!iDDCoordinatorName && <p className="">____________________________</p>}
+            {iDDCoordinatorName && <p className="underline">{iDDCoordinatorName}</p>}
             <p>IDD Coordinator</p>
           </div>
         </div>
