@@ -1686,6 +1686,13 @@ function ActionMenu({
             >
               Versions
             </Link>
+            <Link
+              href={`/forms`}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Forms
+            </Link>
             {iM.facultyId === activeFaculty?.facultyId &&
               iMStatus === "IMPLEMENTATION_DRAFT" && (
                 <EditIM onUpdate={refresh} />

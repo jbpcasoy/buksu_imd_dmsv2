@@ -305,6 +305,13 @@ function ActionMenu({
             >
               Versions
             </Link>
+            <Link
+              href={`/admin/forms`}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Forms
+            </Link>
             {iMERCCITLDirectorEndorsement && (
               <EditSerialNumber
                 iMERCCITLDirectorEndorsement={iMERCCITLDirectorEndorsement}
