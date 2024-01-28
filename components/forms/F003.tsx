@@ -71,34 +71,34 @@ export default function F003({
             {!programReviews && (
               <>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
               </>
             )}
@@ -150,34 +150,34 @@ export default function F003({
             {!cITLReviews && (
               <>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
                 <tr>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
-                  <td className="border border-black p-3"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
+                  <td className="border border-black p-4"></td>
                 </tr>
               </>
             )}
