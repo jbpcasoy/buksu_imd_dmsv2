@@ -13,7 +13,7 @@ export default function F011Page() {
         usage="1st sem only"
         haveStudentEvaluation={false}
         coordinatorName="Glenmark T. Artiaga"
-        chairpersonName="Keano Lyrence Jimeno"
+        chairpersonName="Keano Lehryns Hynson Jimeno"
         deanName="Airys Prill C. Gorra"
         receiveDate={new Date("January 25, 2024")}
         hasHardCopy={true}

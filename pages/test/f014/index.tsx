@@ -152,7 +152,7 @@ export default function F013Page() {
         }}
         contentEditorName="Glenmark T. Artiaga"
         contentSpecialistName="Airys Prill C. Gorra"
-        iDDSpecialistName="Keano Lyrens Jimeno"
+        iDDSpecialistName="Keano Lehryns Hynson Jimeno"
       />
     </div>
   );

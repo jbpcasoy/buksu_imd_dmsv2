@@ -1,5 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import Confirmation from "@/components/Confirmation";
+import Loading from "@/components/Loading";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
@@ -7,6 +8,7 @@ import useCollege from "@/hooks/useCollege";
 import useDepartment from "@/hooks/useDepartment";
 import useFaculty from "@/hooks/useFaculty";
 import useIM from "@/hooks/useIM";
+import useIMAll from "@/hooks/useIMAll";
 import useIMERCCITLDirectorEndorsementIM from "@/hooks/useIMERCCITLDirectorEndorsementIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import useIMLatestPlagiarismFile from "@/hooks/useIMLatestPlagiarismFile";
@@ -19,10 +21,12 @@ import { IM, IMERCCITLDirectorEndorsement, SerialNumber } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
+const DynamicReactJson = dynamic(import("react-json-view"), { ssr: false });
 
 export default function IMPage() {
   const router = useRouter();
@@ -318,6 +322,12 @@ function ActionMenu({
                 serialNumber={serialNumber}
               />
             )}
+            <Link
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              href={`/admin/im/${iM.id}/info`}
+            >
+              More Info
+            </Link>
             <EditIM />
             <>
               <button
@@ -350,6 +360,20 @@ function ActionMenu({
       )}
     </div>
   );
+}
+
+interface IMInfoProps {
+  iM: IM;
+}
+
+function IMInfo({ iM }: IMInfoProps) {
+  const iMInfo = useIMAll({ id: iM.id });
+
+  if (!iMInfo) {
+    return <Loading />;
+  }
+
+  return <DynamicReactJson src={iMInfo} collapsed={2} />;
 }
 
 interface EditSerialNumberProps {

@@ -15,7 +15,7 @@ export default function F001Page() {
         coordinatorName="Glenmark T. Artiaga"
         department="Physical Education Department"
         endorseFor="Printing & e-Distribution"
-        iDDCoordinatorName="Keano Lyrhens Jimeno"
+        iDDCoordinatorName="Keano Lehryns Hynson Jimeno"
       />
     </div>
   );

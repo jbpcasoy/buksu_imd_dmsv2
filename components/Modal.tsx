@@ -33,7 +33,7 @@ export default function Modal({
       onClick={onClose}
     >
       <div
-        className="border w-full max-w-sm bg-palette_white rounded"
+        className="border w-full max-w-sm bg-palette_white rounded max-h-96 overflow-auto flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between px-5 py-2">
@@ -61,7 +61,7 @@ export default function Modal({
           <hr />
         </div>
 
-        <div className="px-5 py-2">{children}</div>
+        <div className="px-5 py-2 overflow-auto flex-1">{children}</div>
       </div>
     </div>
   );

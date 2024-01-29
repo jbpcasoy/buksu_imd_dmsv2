@@ -21,7 +21,7 @@ export default function F012Page() {
         requestDate={new Date("January 25, 2024")}
         coordinatorName="Glenmark T. Artiaga"
         coordinatorDate={new Date("January 26, 2024")}
-        chairpersonName="Keano Lyrens Jimeno"
+        chairpersonName="Keano Lehryns Hynson Jimeno"
         chairpersonDate={new Date("January 26, 2024")}
         deanName="Airys Prill C. Gorra"
         deanDate={new Date("January 27, 2024")}

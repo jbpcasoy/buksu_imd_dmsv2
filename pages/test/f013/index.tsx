@@ -37,7 +37,7 @@ export default function F013Page() {
         }}
         chairpersonName="Glenmark T. Artiaga"
         coordinatorName="Airys Prill C. Gorra"
-        peerName="Keano Lyrens Jimeno"
+        peerName="Keano Lehryns Hynson Jimeno"
       />
     </div>
   );
