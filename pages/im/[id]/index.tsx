@@ -2184,13 +2184,14 @@ function CoAuthors({ iMId }: CoAuthorsProps) {
   const { refreshFlag, refresh } = useRefresh();
   const { activeFaculties, count } = useActiveFaculties(state, refreshFlag);
   const { addSnackbar } = useContext(SnackbarContext);
-  const { coAuthors } = useCoAuthors(
-    {
-      skip: 0,
-      take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
+  const [coAuthorsQuery, setCoAuthorsQuery] = useState({
+    skip: 0,
+    take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
+    filter: {
+      iMId: iMId,
     },
-    refreshFlag
-  );
+  });
+  const { coAuthors } = useCoAuthors(coAuthorsQuery, refreshFlag);
 
   const addCoAuthor = async (activeFaculty: ActiveFaculty) => {
     console.log("Adding co-author");
