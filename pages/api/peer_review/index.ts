@@ -174,6 +174,35 @@ export default async function handler(
             },
           });
         }
+
+        const coAuthor = await prisma.coAuthor.findFirst({
+          where: {
+            AND: [
+              {
+
+                IM: {
+                  id: {
+                    equals: iM.id
+                  }
+                }
+              },
+              {
+                Faculty: {
+                  id: {
+                    equals: faculty.id
+                  }
+                }
+              }
+            ]
+          }
+        });
+        if(coAuthor) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to create a peer review for a co-authored IM"
+            }
+          })
+        }
       }
 
       const peerReview = await prisma.peerReview.create({

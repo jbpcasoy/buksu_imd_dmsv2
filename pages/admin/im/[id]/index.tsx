@@ -3,9 +3,12 @@ import Confirmation from "@/components/Confirmation";
 import Loading from "@/components/Loading";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
+import useActiveFaculties from "@/hooks/useActiveFaculties";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
+import useCoAuthors from "@/hooks/useCoAuthors";
 import useCollege from "@/hooks/useCollege";
 import useDepartment from "@/hooks/useDepartment";
+import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
 import useFaculty from "@/hooks/useFaculty";
 import useIM from "@/hooks/useIM";
 import useIMAll from "@/hooks/useIMAll";
@@ -14,10 +17,18 @@ import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import useIMLatestPlagiarismFile from "@/hooks/useIMLatestPlagiarismFile";
 import useIMLatestQAMISFile from "@/hooks/useIMLatestQAMISFile";
 import useIMStatus from "@/hooks/useIMStatus";
+import useRefresh from "@/hooks/useRefresh";
 import useSerialNumberIM from "@/hooks/useSerialNumberIM";
 import useUser from "@/hooks/useUser";
+import useUserFaculty from "@/hooks/useUserFaculty";
 import iMStatusNormalizer from "@/services/iMStatusNormalizer";
-import { IM, IMERCCITLDirectorEndorsement, SerialNumber } from "@prisma/client";
+import {
+  ActiveFaculty,
+  CoAuthor,
+  IM,
+  IMERCCITLDirectorEndorsement,
+  SerialNumber,
+} from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
@@ -138,7 +149,9 @@ export default function IMPage() {
               </p>
             </div>
           </div>
+          <CoAuthors iMId={iMId as string} />
         </div>
+
         <div className="flex flex-1 h-full">
           {iMFile && (
             <iframe
@@ -583,5 +596,200 @@ function EditIM() {
         </Modal>
       )}
     </>
+  );
+}
+
+interface CoAuthorsProps {
+  iMId: string;
+}
+
+function CoAuthors({ iMId }: CoAuthorsProps) {
+  const departmentReview = useDepartmentReviewIM({
+    id: iMId,
+  });
+  const iM = useIM({
+    id: iMId,
+  });
+  const [openOptions, setOpenOptions] = useState(false);
+  const [state, setState] = useState<{
+    skip: number;
+    take: number;
+    filter?: {
+      name?: string;
+      notCoAuthorOfIM?: string;
+    };
+    sort?: {
+      field?: string;
+      direction?: string;
+    };
+  }>({
+    skip: 0,
+    take: 10,
+    filter: {
+      name: undefined,
+      notCoAuthorOfIM: iMId,
+    },
+    sort: {
+      field: "name",
+      direction: "asc",
+    },
+  });
+  const { refreshFlag, refresh } = useRefresh();
+  const { activeFaculties, count } = useActiveFaculties(state, refreshFlag);
+  const { addSnackbar } = useContext(SnackbarContext);
+  const { coAuthors } = useCoAuthors(
+    {
+      skip: 0,
+      take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
+    },
+    refreshFlag
+  );
+
+  const addCoAuthor = async (activeFaculty: ActiveFaculty) => {
+    console.log("Adding co-author");
+    return axios
+      .post(`/api/co_author/`, {
+        iMId,
+        activeFacultyId: activeFaculty.id,
+      })
+      .then(() => {
+        addSnackbar("Co-author added successfully");
+        refresh();
+      })
+      .catch((err: any) => {
+        addSnackbar(
+          err?.response?.data?.error?.message ?? "Unknown Error",
+          "error"
+        );
+      });
+  };
+
+  return (
+    <div className="mb-2">
+      <p className="text-sm">Co-authors:</p>
+      <div className="flex flex-wrap items-center gap-1">
+        {coAuthors.map((coAuthor) => {
+          return <CoAuthorChip coAuthor={coAuthor} onDelete={refresh} />;
+        })}
+      </div>
+      <div>
+        <input
+          type="text"
+          placeholder="Name"
+          className="w-72 my-1 rounded border-transparent focus:rounded-b-none focus:border-gray-500 focus:bg-white focus:ring-0 p-0"
+          onChange={(e) => {
+            setState((prev) => ({
+              ...prev,
+              filter: {
+                ...prev.filter,
+                name: e.target.value === "" ? undefined : e.target.value,
+              },
+            }));
+          }}
+          onFocus={() => {
+            setOpenOptions(true);
+          }}
+          onBlur={(e) => {
+            setTimeout(() => {
+              if (!e.relatedTarget || !e.relatedTarget.closest(".options")) {
+                setOpenOptions(false);
+              }
+            }, 0);
+          }}
+        />
+        {count > 0 && openOptions && (
+          <div className="rounded-b shadow-lg w-72 absolute bg-white">
+            {activeFaculties.map((activeFaculty) => (
+              <FacultyOption
+                activeFaculty={activeFaculty}
+                key={activeFaculty.id}
+                onSelectFaculty={() => addCoAuthor(activeFaculty)}
+              />
+            ))}
+          </div>
+        )}
+        {count < 1 && openOptions && (
+          <div className="rounded-b shadow-lg w-72 absolute bg-white">
+            <p className="text-palette_grey p-2 text-center">None found</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface CoAuthorChipProps {
+  coAuthor: CoAuthor;
+  onDelete: () => any;
+}
+
+function CoAuthorChip({ coAuthor, onDelete }: CoAuthorChipProps) {
+  const user = useUserFaculty({
+    id: coAuthor.facultyId,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const handleDelete = async () => {
+    return axios
+      .delete(`/api/co_author/${coAuthor.id}`)
+      .then(() => {
+        onDelete();
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ?? "Unknown Error",
+          "error"
+        );
+      });
+  };
+
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <div className="inline bg-palette_orange rounded-full px-1 text-xs flex items-center space-x-1">
+      <p>{user.name}</p>
+      <button
+        className="bg-palette_blue rounded-full h-3 w-3 hover:bg-opacity-90 active:bg-opacity-100 flex items-center justify-center"
+        onClick={handleDelete}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+          className="h-2 w-2 fill-palette_white"
+        >
+          <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+interface FacultyOptionProps {
+  activeFaculty: ActiveFaculty;
+  onSelectFaculty: () => any;
+}
+function FacultyOption({ activeFaculty, onSelectFaculty }: FacultyOptionProps) {
+  const faculty = useFaculty({
+    id: activeFaculty.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <div className="hover:bg-palette_grey hover:bg-opacity-10 active:bg-opacity-30 w-72 p-1 text-palette_blue cursor-pointer select-none">
+      <p
+        onMouseDown={() => {
+          onSelectFaculty();
+        }}
+      >
+        {user?.name}
+      </p>
+    </div>
   );
 }

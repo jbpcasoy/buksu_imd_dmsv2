@@ -5,21 +5,25 @@ import { useEffect, useState } from "react";
 export interface useCoAuthorsParams {
   skip: number;
   take: number;
-  filter?: object;
+  filter?: any;
   sort?: object;
 }
-export default function useCoAuthors({
-  skip,
-  take,
-  filter,
-  sort,
-}: useCoAuthorsParams, refreshFlag?: number) {
+export default function useCoAuthors(
+  { skip, take, filter, sort }: useCoAuthorsParams,
+  refreshFlag?: number,
+  strict = false
+) {
   const [state, setState] = useState<{ coAuthors: CoAuthor[]; count: number }>({
     count: 0,
     coAuthors: [],
   });
 
   useEffect(() => {
+    if(strict) {
+      if(!filter?.iMId || !filter?.facultyId) {
+        return;
+      }
+    }
     axios
       .get("/api/co_author", {
         params: {

@@ -148,17 +148,61 @@ export default async function handler(
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
+        "filter[iMId]": Yup.string().optional(),
+        "filter[facultyId]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
 
-      const { skip, take } = validator.cast(req.query);
+      const {
+        skip,
+        take,
+        "filter[facultyId]": filterFacultyId,
+        "filter[iMId]": filterIMId,
+      } = validator.cast(req.query);
 
       const coAuthors = await prisma.coAuthor.findMany({
         skip,
         take,
+        where: {
+          AND: [
+            {
+              Faculty: {
+                id: {
+                  contains: filterFacultyId ?? "",
+                },
+              },
+            },
+            {
+              IM: {
+                id: {
+                  contains: filterIMId ?? "",
+                },
+              },
+            },
+          ],
+        },
       });
-      const count = await prisma.coAuthor.count();
+      const count = await prisma.coAuthor.count({
+        where: {
+          AND: [
+            {
+              Faculty: {
+                id: {
+                  contains: filterFacultyId ?? "",
+                },
+              },
+            },
+            {
+              IM: {
+                id: {
+                  contains: filterIMId ?? "",
+                },
+              },
+            },
+          ],
+        },
+      });
 
       return res.json({ coAuthors, count });
     } catch (error: any) {
