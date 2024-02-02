@@ -85,6 +85,13 @@ export default function Sidebar() {
                   link='/department/my_ims'
                 />
               )}
+              {activeFaculty && (
+                <MenuItem
+                  count={myIMsCount}
+                  label="Co-authored IM's"
+                  link='/department/co_authored'
+                />
+              )}
 
               {(activeCoordinator || activeChairperson) && (
                 <MenuItem
