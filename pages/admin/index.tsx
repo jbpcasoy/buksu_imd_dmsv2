@@ -43,10 +43,10 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col w-full h-full">
         <h2>Dashboard</h2>
 
-        <div className="flex-1 flex flex-col h-full">
+        <div className="flex-1 flex flex-col w-full h-full">
           <form noValidate onSubmit={formik.handleSubmit}>
             <div className="flex flex-col space-y-1">
               <div className="space-x-1 flex flex">
@@ -103,24 +103,25 @@ export default function AdminDashboard() {
           </form>
 
           <div className="flex-1 flex w-full h-full">
-            <div className="flex flex-col justify-center items-center space-y-2  h-full">
-              <div className="h-1/2 relative">
+            <div className="flex flex-col justify-center items-center space-y-2 h-full">
+              <div className="h-2/5 relative">
                 <IMStatusPieChart filter={state} />
               </div>
-              <div className="h-1/2 relative">
+              <div className="h-2/5 relative">
                 <IMDepartmentPieChart filter={state} />
               </div>
             </div>
-            <div className="flex-1 relative h-full">
-              <IMStatusDepartmentLineChart filter={state} />
+            <div className="flex-1">
+              <div className="relative h-full w-full">
+                <IMStatusDepartmentLineChart filter={state} />
+              </div>
             </div>
           </div>
-          <div>
+          {/* <div>
             <div className="flex-1 relative h-full">
               <IMDateDepartmentLineChart filter={state} />
             </div>
-
-          </div>
+          </div> */}
         </div>
       </div>
     </AdminLayout>

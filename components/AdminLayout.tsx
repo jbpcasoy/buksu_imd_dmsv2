@@ -22,8 +22,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }, [session]);
 
   return (
-    <div className='flex flex-col h-screen'>
-      <div className='flex flex-col h-full overflow-auto'>
+    <div className='flex flex-col h-screen w-screen'>
+      <div className='flex flex-col w-full h-full overflow-auto'>
         <AdminHeader onToggleSidebar={setOpenSidebar} />
 
         <div className='flex-1 flex h-full overflow-y-clip overflow-x-auto'>
