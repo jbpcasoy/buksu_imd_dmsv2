@@ -10,8 +10,8 @@ export default function iMStatusNormalizer(
       return "Department Reviewed";
     case "IMPLEMENTATION_DEPARTMENT_REVISED":
       return "Department Revised";
-    case "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION_NOT_SUBMITTED":
-      return "Department Revised";
+    case "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION":
+      return "Returned Department Revision";
     case "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED":
       return "Coordinator Endorsed";
     case "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED":
@@ -20,8 +20,8 @@ export default function iMStatusNormalizer(
       return "CITL Reviewed";
     case "IMPLEMENTATION_CITL_REVISED":
       return "CITL Revised";
-    case "IMPLEMENTATION_CITL_RETURNED_REVISION_NOT_SUBMITTED":
-      return "CITL Revised";
+    case "IMPLEMENTATION_CITL_RETURNED_REVISION":
+      return "Returned CITL Revision";
     case "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED":
       return "IDD Coordinator Endorsed";
     case "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED":
@@ -34,8 +34,8 @@ export default function iMStatusNormalizer(
       return "IMERC Reviewed";
     case "IMERC_CITL_REVISED":
       return "IMERC Revised";
-    case "IMERC_CITL_RETURNED_REVISION_NOT_SUBMITTED":
-      return "IMERC Revised";
+    case "IMERC_CITL_RETURNED_REVISION":
+      return "Returned IMERC Revision";
     case "IMERC_CITL_IDD_COORDINATOR_ENDORSED":
       return "IMDB Approved";
     case "IMERC_CITL_DIRECTOR_ENDORSED":

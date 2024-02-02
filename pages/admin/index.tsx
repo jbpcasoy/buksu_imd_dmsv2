@@ -2,6 +2,7 @@ import AdminLayout from "@/components/AdminLayout";
 import CollegeSelector from "@/components/CollegeSelector";
 import DepartmentSelector from "@/components/DepartmentSelector";
 import StatusSelector from "@/components/StatusSelector";
+import { IMDateDepartmentLineChart } from "@/components/dashboard/IMDateDepartmentLineChart";
 import { IMDepartmentPieChart } from "@/components/dashboard/IMDepartmentPieChart";
 import { IMStatusDepartmentLineChart } from "@/components/dashboard/IMStatusDepartmentLineChart";
 import { IMStatusPieChart } from "@/components/dashboard/IMStatusPieChart";
@@ -102,9 +103,6 @@ export default function AdminDashboard() {
           </form>
 
           <div className="flex-1 flex w-full h-full">
-            <div className="flex-1 relative h-full">
-              <IMStatusDepartmentLineChart filter={state} />
-            </div>
             <div className="flex flex-col justify-center items-center space-y-2  h-full">
               <div className="h-1/2 relative">
                 <IMStatusPieChart filter={state} />
@@ -113,6 +111,15 @@ export default function AdminDashboard() {
                 <IMDepartmentPieChart filter={state} />
               </div>
             </div>
+            <div className="flex-1 relative h-full">
+              <IMStatusDepartmentLineChart filter={state} />
+            </div>
+          </div>
+          <div>
+            <div className="flex-1 relative h-full">
+              <IMDateDepartmentLineChart filter={state} />
+            </div>
+
           </div>
         </div>
       </div>

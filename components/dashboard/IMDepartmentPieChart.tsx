@@ -69,7 +69,7 @@ export function IMDepartmentPieChart({
     labels: departments?.map((department) => department.name),
     datasets: [
       {
-        label: `# of ${
+        label: `${
           filter?.status ? iMStatusNormalizer(filter.status) : ""
         } IM's`,
         data: departments.map((department) => {
