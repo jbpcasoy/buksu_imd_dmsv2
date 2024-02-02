@@ -50,8 +50,12 @@ export default async function handler(
           Dean: {
             Faculty: {
               ActiveFaculty: {
-                id: {
-                  equals: userActiveFaculty.id,
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
                 },
               },
             },

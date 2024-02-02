@@ -35,17 +35,6 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      let userActiveFaculty: ActiveFaculty;
-      userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          Faculty: {
-            userId: {
-              equals: user.id,
-            },
-          },
-        },
-      });
-
       const {
         skip,
         take,

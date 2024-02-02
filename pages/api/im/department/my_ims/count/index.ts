@@ -39,24 +39,15 @@ export default async function handler(
 }
 
 export async function myIMsCount(user: User) {
-  let userActiveFaculty: ActiveFaculty;
-  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-    where: {
-      Faculty: {
-        userId: {
-          equals: user.id,
-        },
-      },
-    },
-  });
-
   const count = await prisma.iM.count({
     where: {
       AND: [
         {
           Faculty: {
-            id: {
-              equals: userActiveFaculty.facultyId,
+            User: {
+              id: {
+                equals: user.id,
+              },
             },
           },
         },

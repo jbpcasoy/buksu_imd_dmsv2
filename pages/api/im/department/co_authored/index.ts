@@ -108,8 +108,10 @@ export default async function handler(
               CoAuthor: {
                 some: {
                   Faculty: {
-                    id: {
-                      equals: userActiveFaculty.facultyId,
+                    User: {
+                      id: {
+                        equals: user.id,
+                      },
                     },
                   },
                 },
@@ -163,8 +165,10 @@ export default async function handler(
             statusQuery,
             {
               Faculty: {
-                id: {
-                  equals: userActiveFaculty.facultyId,
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
                 },
               },
             },

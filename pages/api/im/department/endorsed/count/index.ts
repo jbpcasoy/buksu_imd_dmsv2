@@ -39,26 +39,6 @@ export default async function handler(
 }
 
 export async function coordinatorEndorsedCount(user: User) {
-  let userActiveFaculty: ActiveFaculty;
-  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-    where: {
-      Faculty: {
-        userId: {
-          equals: user.id,
-        },
-      },
-    },
-  });
-  const department = await prisma.department.findFirstOrThrow({
-    where: {
-      Faculty: {
-        some: {
-          id: userActiveFaculty.facultyId,
-        },
-      },
-    },
-  });
-
   const count = await prisma.iM.count({
     where: {
       AND: [

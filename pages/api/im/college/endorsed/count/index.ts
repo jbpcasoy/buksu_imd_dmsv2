@@ -54,8 +54,12 @@ export async function deanEndorsedCount(user: User) {
       Dean: {
         Faculty: {
           ActiveFaculty: {
-            id: {
-              equals: userActiveFaculty.id,
+            Faculty: {
+              User: {
+                id: {
+                  equals: user.id,
+                },
+              },
             },
           },
         },
