@@ -1,0 +1,12 @@
+-- CreateTable
+CREATE TABLE "CoAuthor" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "iMId" TEXT NOT NULL,
+
+    CONSTRAINT "CoAuthor_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "CoAuthor" ADD CONSTRAINT "CoAuthor_iMId_fkey" FOREIGN KEY ("iMId") REFERENCES "IM"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

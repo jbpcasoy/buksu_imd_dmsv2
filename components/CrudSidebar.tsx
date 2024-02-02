@@ -375,6 +375,10 @@ export default function CrudSidebar() {
       link: "/crud/serial_number",
       label: "Serial Number",
     },
+    {
+      link: "/crud/co_author",
+      label: "Co-author",
+    },
   ];
 
   return (

@@ -7,7 +7,7 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useActiveFaculties({ skip, take, filter }: useFacultiesParams) {
+export default function useActiveFaculties({ skip, take, filter }: useFacultiesParams, refreshFlag?: number) {
   const [state, setState] = useState<{activeFaculties: ActiveFaculty[], count: number}>({
     count: 0,
     activeFaculties: []
@@ -28,7 +28,7 @@ export default function useActiveFaculties({ skip, take, filter }: useFacultiesP
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, refreshFlag]);
 
   return state;
 }

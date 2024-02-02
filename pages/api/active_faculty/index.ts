@@ -86,6 +86,7 @@ export default async function handler(
         take: Yup.number().required(),
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
+        "filter[notCoAuthorOfIM]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -94,6 +95,7 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
+        "filter[notCoAuthorOfIM]": notCoAuthorOfIM,
       } = validator.cast(req.query);
 
       const activeFaculties = await prisma.activeFaculty.findMany({
@@ -111,6 +113,51 @@ export default async function handler(
                 },
               },
             },
+            notCoAuthorOfIM
+              ? {
+                  AND: [
+                    {
+                      Faculty: {
+                        Department: {
+                          Faculty: {
+                            some: {
+                              IM: {
+                                some: {
+                                  id: {
+                                    equals: notCoAuthorOfIM,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    {
+                      Faculty: {
+                        User: {
+                          id: {
+                            not: user.id,
+                          },
+                        },
+                      },
+                    },
+                    {
+                      Faculty: {
+                        CoAuthor: {
+                          none: {
+                            IM: {
+                              id: {
+                                equals: notCoAuthorOfIM,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  ],
+                }
+              : {},
           ],
         },
         orderBy: {
@@ -118,6 +165,7 @@ export default async function handler(
         },
       });
       const count = await prisma.activeFaculty.count({
+        
         where: {
           AND: [
             {
@@ -130,6 +178,51 @@ export default async function handler(
                 },
               },
             },
+            notCoAuthorOfIM
+              ? {
+                  AND: [
+                    {
+                      Faculty: {
+                        Department: {
+                          Faculty: {
+                            some: {
+                              IM: {
+                                some: {
+                                  id: {
+                                    equals: notCoAuthorOfIM,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    {
+                      Faculty: {
+                        User: {
+                          id: {
+                            not: user.id,
+                          },
+                        },
+                      },
+                    },
+                    {
+                      Faculty: {
+                        CoAuthor: {
+                          none: {
+                            IM: {
+                              id: {
+                                equals: notCoAuthorOfIM,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  ],
+                }
+              : {},
           ],
         },
       });

@@ -96,6 +96,7 @@ model Faculty {
     Dean              Dean?
     PeerReview        PeerReview[]
     ContentSpecialist ContentSpecialist?
+    CoAuthor          CoAuthor[]
 
     @@unique([departmentId, userId])
 }
@@ -121,12 +122,13 @@ model IM {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty   Faculty  @relation(fields: [facultyId], references: [id])
+    Faculty   Faculty    @relation(fields: [facultyId], references: [id])
     facultyId String
     title     String
     type      IMType
     IMFile    IMFile[]
     Event     Event[]
+    CoAuthor  CoAuthor[]
 }
 
 model IMFile {
@@ -1441,4 +1443,17 @@ model SerialNumber {
     value                          String                       @unique
     IMERCCITLDirectorEndorsement   IMERCCITLDirectorEndorsement @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id])
     iMERCCITLDirectorEndorsementId String                       @unique
+}
+
+model CoAuthor {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IM        IM      @relation(fields: [iMId], references: [id])
+    iMId      String
+    Faculty   Faculty @relation(fields: [facultyId], references: [id])
+    facultyId String
+
+    @@unique([facultyId, iMId])
 }
