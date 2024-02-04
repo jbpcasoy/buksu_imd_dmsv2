@@ -1441,7 +1441,7 @@ model SerialNumber {
     updatedAt DateTime @updatedAt
 
     value                          String                       @unique
-    IMERCCITLDirectorEndorsement   IMERCCITLDirectorEndorsement @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id])
+    IMERCCITLDirectorEndorsement   IMERCCITLDirectorEndorsement @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id], onDelete: Cascade)
     iMERCCITLDirectorEndorsementId String                       @unique
 }
 
@@ -1450,7 +1450,7 @@ model CoAuthor {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM        IM      @relation(fields: [iMId], references: [id])
+    IM        IM      @relation(fields: [iMId], references: [id], onDelete: Cascade)
     iMId      String
     Faculty   Faculty @relation(fields: [facultyId], references: [id])
     facultyId String

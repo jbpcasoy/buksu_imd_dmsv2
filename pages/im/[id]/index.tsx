@@ -867,7 +867,9 @@ export default function ViewIM() {
                   </div>
                 )}
 
-                {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" && (
+                {(iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" ||
+                  iMStatus ===
+                    "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION") && (
                   <div className="flex flex-col space-y-1">
                     <div>
                       <DepartmentReviewStatus iMId={iMId as string} />
@@ -1047,7 +1049,7 @@ export default function ViewIM() {
                   </div>
                 )}
 
-                {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" && (
+                {(iMStatus === "IMPLEMENTATION_CITL_REVIEWED" || iMStatus === "IMPLEMENTATION_CITL_RETURNED_REVISION") && (
                   <div className="flex flex-col space-y-1">
                     <div>
                       <CITLReviewStatus iMId={iMId as string} />
@@ -1373,7 +1375,7 @@ export default function ViewIM() {
                   </div>
                 )}
 
-                {iMStatus === "IMERC_CITL_REVIEWED" && (
+                {(iMStatus === "IMERC_CITL_REVIEWED" || iMStatus === "IMERC_CITL_RETURNED_REVISION") && (
                   <div className="flex flex-col space-y-1">
                     <div>
                       <IMERCReviewStatus iMId={iMId as string} />

@@ -49,7 +49,6 @@ export default async function handler(
       });
       // Parse request body
       const fields: Fields = data.fields;
-      console.log(JSON.stringify(fields, null, 4));
       const body = {
         iMId: fields?.iMId?.at(0),
         departmentReviewedId: fields?.departmentReviewedId?.at(0),
@@ -134,7 +133,6 @@ export default async function handler(
         !iMERCCITLReviewedId &&
         !submittedReturnedIMERCCITLRevisionId
       ) {
-        console.log("Testing im file existence");
         const existingIMFile = await prisma.iMFile.findFirst({
           where: {
             AND: [
@@ -147,7 +145,6 @@ export default async function handler(
           },
         });
 
-        console.log(existingIMFile);
         if (existingIMFile) {
           return res
             .status(400)
@@ -172,8 +169,6 @@ export default async function handler(
             ],
           },
         });
-
-        console.log({ existingIMFile });
 
         if (existingIMFile) {
           return res.status(400).json({
@@ -415,7 +410,6 @@ export default async function handler(
       res.status(200).json(iMFile);
     } catch (error: any) {
       logger.error(error);
-      console.log(error);
       return res
         .status(400)
         .json({ error: { message: error?.message ?? "Server Error" } });

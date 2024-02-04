@@ -73,26 +73,6 @@ export default async function handler(
       ];
       let data: { [department: string]: number } = {};
 
-      let statusCounts: { [status: string]: number } = {};
-      const allIMs = await prisma.iM.findMany({
-        where: {},
-      });
-      for (let iM of allIMs) {
-        const status = await iMStatus(iM.id);
-        // console.log({ status, iM });
-        if (statusCounts[status]) {
-          statusCounts[status] += 1;
-        } else {
-          statusCounts[status] = 1;
-        }
-        if (status === "IMPLEMENTATION_DEPARTMENT_REVISED")
-          console.log({
-            iM,
-            status,
-          });
-      }
-      console.log({ statusCounts });
-
       for (let department of departments) {
         data = {
           ...data,

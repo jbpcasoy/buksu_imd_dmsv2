@@ -56,17 +56,26 @@ export default async function iMStatus(id: string) {
   const submittedReturnedDepartmentRevision =
     await prisma.submittedReturnedDepartmentRevision.findFirst({
       where: {
-        ReturnedDepartmentRevision: {
-          DepartmentRevision: {
-            IMFile: {
-              IM: {
-                id: {
-                  equals: id,
+        AND: [
+          {
+            ReturnedDepartmentRevision: {
+              DepartmentRevision: {
+                IMFile: {
+                  IM: {
+                    id: {
+                      equals: id,
+                    },
+                  },
                 },
               },
             },
           },
-        },
+          {
+            IMFile: {
+              is: null,
+            },
+          },
+        ],
       },
     });
 
@@ -140,17 +149,26 @@ export default async function iMStatus(id: string) {
   const submittedReturnedCITLRevision =
     await prisma.submittedReturnedCITLRevision.findFirst({
       where: {
-        ReturnedCITLRevision: {
-          CITLRevision: {
-            IMFile: {
-              IM: {
-                id: {
-                  equals: id,
+        AND: [
+          {
+            ReturnedCITLRevision: {
+              CITLRevision: {
+                IMFile: {
+                  IM: {
+                    id: {
+                      equals: id,
+                    },
+                  },
                 },
               },
             },
           },
-        },
+          {
+            IMFile: {
+              is: null,
+            },
+          },
+        ],
       },
     });
 
@@ -270,17 +288,26 @@ export default async function iMStatus(id: string) {
   const submittedReturnedIMERCCITLRevision =
     await prisma.submittedReturnedIMERCCITLRevision.findFirst({
       where: {
-        ReturnedIMERCCITLRevision: {
-          IMERCCITLRevision: {
-            IMFile: {
-              IM: {
-                id: {
-                  equals: id,
+        AND: [
+          {
+            ReturnedIMERCCITLRevision: {
+              IMERCCITLRevision: {
+                IMFile: {
+                  IM: {
+                    id: {
+                      equals: id,
+                    },
+                  },
                 },
               },
             },
           },
-        },
+          {
+            IMFile: {
+              is: null,
+            },
+          },
+        ],
       },
     });
 
