@@ -6,11 +6,20 @@ export interface useCITLDirectorsParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useCITLDirectors({ skip, take, filter }: useCITLDirectorsParams) {
-  const [state, setState] = useState<{cITLDirectors: CITLDirector[], count: number}>({
+export default function useCITLDirectors({
+  skip,
+  take,
+  filter,
+  sort,
+}: useCITLDirectorsParams) {
+  const [state, setState] = useState<{
+    cITLDirectors: CITLDirector[];
+    count: number;
+  }>({
     count: 0,
-    cITLDirectors: []
+    cITLDirectors: [],
   });
 
   useEffect(() => {
@@ -19,7 +28,8 @@ export default function useCITLDirectors({ skip, take, filter }: useCITLDirector
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +38,7 @@ export default function useCITLDirectors({ skip, take, filter }: useCITLDirector
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

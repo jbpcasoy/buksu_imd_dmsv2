@@ -91,7 +91,7 @@ export default function EditIDDSpecialistReviewPage() {
       axios
         .put(`/api/idd_specialist_review/${iDDSpecialistReviewId}`, values)
         .then(() => {
-          alert("IDDSpecialistReview Updated Successfully");
+          alert("IDDSpecialistReview has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

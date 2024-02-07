@@ -1,5 +1,4 @@
 import prisma from "@/prisma/client";
-import contentSpecialistSuggestionItemActionTakenAbility from "@/services/ability/contentSpecialistSuggestionItemActionTakenAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
@@ -19,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = contentSpecialistSuggestionItemActionTakenAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -34,7 +32,6 @@ export default async function handler(
         await prisma.contentSpecialistSuggestionItemActionTaken.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ContentSpecialistSuggestionItemActionTaken,
               {
                 ContentSpecialistSuggestionItem: {
                   id: {

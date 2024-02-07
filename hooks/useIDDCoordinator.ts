@@ -3,7 +3,7 @@ import { IDDCoordinator, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useIDDCoordinatorParams {
-  id: string;
+  id?: string;
 }
 export default function useIDDCoordinator({ id }: useIDDCoordinatorParams) {
   const [state, setState] = useState<IDDCoordinator | null>();

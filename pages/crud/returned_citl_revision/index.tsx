@@ -71,7 +71,7 @@ export default function ReturnedCITLRevisionsPage() {
                   </td>
                   <td>
                     <Link
-                      href={`/crud/cITL_revision/${returnedCITLRevision.cITLRevisionId}`}
+                      href={`/crud/citl_revision/${returnedCITLRevision.cITLRevisionId}`}
                       className='underline'
                     >
                       {returnedCITLRevision.cITLRevisionId}

@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useContentSpecialistSuggestionMeParams {
   id: string;
 }
-export default function useContentSpecialistSuggestionMe({ id }: useContentSpecialistSuggestionMeParams) {
+export default function useContentSpecialistSuggestionMe({ id }: useContentSpecialistSuggestionMeParams, refreshFlag?: number) {
   const [state, setState] = useState<ContentSpecialistSuggestion | null>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function useContentSpecialistSuggestionMe({ id }: useContentSpeci
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

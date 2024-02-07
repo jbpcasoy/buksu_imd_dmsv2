@@ -6,8 +6,8 @@
 /* Set the width and color of the scrollbar */
 ::-webkit-scrollbar {
     width: 5px;
-    height: 5px;
-    background-color: #888;
+    height: 3px;
+    border-radius: 5px;
     /* Change this to gray */
 }
 
@@ -20,7 +20,9 @@
 
 /* Style the scrollbar track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #f1f1f100;
+    border-radius: 5px;
+    width:0;
     /* You can keep the track light gray */
 }
 

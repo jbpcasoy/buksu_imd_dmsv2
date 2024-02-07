@@ -17,7 +17,7 @@ export default function AddReturnedDepartmentRevisionSuggestionItemActionTakenPa
       axios
         .post("/api/returned_department_revision_suggestion_item_action_taken", values)
         .then(() => {
-          alert("ReturnedDepartmentRevisionSuggestionItemActionTaken Added Successfully");
+          alert("ReturnedDepartmentRevisionSuggestionItemActionTaken has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

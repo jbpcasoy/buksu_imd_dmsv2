@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import profilePictureFileAbility from "@/services/ability/profilePictureFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -21,23 +18,22 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = profilePictureFileAbility({ user });
 
   const getHandler = async () => {
     try {
       const { id } = req.query;
-      const profilePictureFile = await prisma.profilePictureFile.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).ProfilePictureFile,
-            {
-              id: {
-                equals: id as string,
+      const profilePictureFile =
+        await prisma.profilePictureFile.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                id: {
+                  equals: id as string,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
       return res.json(profilePictureFile);
     } catch (error: any) {
@@ -53,24 +49,27 @@ export default async function handler(
       const { id } = req.query;
 
       let profilePictureFileToDelete;
-      profilePictureFileToDelete = await prisma.profilePictureFile.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).ProfilePictureFile,
-            {
-              id: {
-                equals: id as string,
+      profilePictureFileToDelete =
+        await prisma.profilePictureFile.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                id: {
+                  equals: id as string,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        subject("ProfilePictureFile", profilePictureFileToDelete)
-      );
-
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to perform this action",
+          },
+        });
+      }
+      
       const filePath = path.join(
         process.cwd(),
         `/files/profile_picture/${profilePictureFileToDelete.filename}`

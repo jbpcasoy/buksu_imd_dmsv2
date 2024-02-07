@@ -24,7 +24,7 @@ export default function ContentEditorReviewPage() {
     axios
       .delete(`/api/content_editor_review/${contentEditorReviewId}`)
       .then(() => {
-        alert("ContentEditorReview deleted successfully.");
+        alert("ContentEditorReview has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

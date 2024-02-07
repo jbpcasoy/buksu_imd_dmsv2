@@ -37,6 +37,7 @@ import { iMERCCITLDirectorEndorsedCount } from "../../imerc/citl/citl_director_e
 import { iMERCCITLEndorsedCount } from "../../imerc/citl/endorsed/count";
 import { coordinatorEndorsedCount } from "../../department/endorsed/count";
 import { collegeIMsCount } from "../../college/all_ims/count";
+import { coAuthoredIMsCount } from "../../department/co_authored/count";
 
 export default async function handler(
   req: NextApiRequest,
@@ -55,6 +56,7 @@ export default async function handler(
     try {
       const counts = {
         myIMsCount: 0,
+        coAuthoredIMsCount: 0,
         departmentIMsCount: 0,
         coordinatorToEndorseCount: 0,
         deanToEndorseCount: 0,
@@ -93,6 +95,12 @@ export default async function handler(
       } catch (error) {
         logger.error({ error });
         counts.myIMsCount = 0;
+      }
+      try {
+        counts.coAuthoredIMsCount = await coAuthoredIMsCount(user);
+      } catch (error) {
+        logger.error({ error });
+        counts.coAuthoredIMsCount = 0;
       }
       try {
         counts.departmentIMsCount = await departmentIMsCount(user);
@@ -175,13 +183,17 @@ export default async function handler(
         counts.cITLIMsCount = 0;
       }
       try {
-        counts.cITLDirectorToEndorseCount = await cITLDirectorToEndorseCount(user);
+        counts.cITLDirectorToEndorseCount = await cITLDirectorToEndorseCount(
+          user
+        );
       } catch (error) {
         logger.error({ error });
         counts.cITLDirectorToEndorseCount = 0;
       }
       try {
-        counts.cITLDirectorEndorsedCount = await cITLDirectorEndorsedCount(user);
+        counts.cITLDirectorEndorsedCount = await cITLDirectorEndorsedCount(
+          user
+        );
       } catch (error) {
         logger.error({ error });
         counts.cITLDirectorEndorsedCount = 0;
@@ -217,13 +229,17 @@ export default async function handler(
         counts.iMERCEndorsedCount = 0;
       }
       try {
-        counts.iMERCCollegeToEndorseCount = await iMERCCollegeToEndorseCount(user);
+        counts.iMERCCollegeToEndorseCount = await iMERCCollegeToEndorseCount(
+          user
+        );
       } catch (error) {
         logger.error({ error });
         counts.iMERCCollegeToEndorseCount = 0;
       }
       try {
-        counts.iMERCCollegeEndorsedCount = await iMERCCollegeEndorsedCount(user);
+        counts.iMERCCollegeEndorsedCount = await iMERCCollegeEndorsedCount(
+          user
+        );
       } catch (error) {
         logger.error({ error });
         counts.iMERCCollegeEndorsedCount = 0;
@@ -253,13 +269,15 @@ export default async function handler(
         counts.iMERCCITLToEndorseCount = 0;
       }
       try {
-        counts.iMERCCITLDirectorToEndorseCount = await iMERCCITLDirectorToEndorseCount(user);
+        counts.iMERCCITLDirectorToEndorseCount =
+          await iMERCCITLDirectorToEndorseCount(user);
       } catch (error) {
         logger.error({ error });
         counts.iMERCCITLDirectorToEndorseCount = 0;
       }
       try {
-        counts.iMERCCITLDirectorEndorsedCount = await iMERCCITLDirectorEndorsedCount(user);
+        counts.iMERCCITLDirectorEndorsedCount =
+          await iMERCCITLDirectorEndorsedCount(user);
       } catch (error) {
         logger.error({ error });
         counts.iMERCCITLDirectorEndorsedCount = 0;

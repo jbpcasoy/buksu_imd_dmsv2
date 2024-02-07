@@ -17,7 +17,7 @@ export default function AddPeerSuggestionItemActionTakenPage() {
       axios
         .post("/api/peer_suggestion_item_action_taken", values)
         .then(() => {
-          alert("PeerSuggestionItemActionTaken Added Successfully");
+          alert("PeerSuggestionItemActionTaken has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

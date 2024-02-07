@@ -1,4 +1,5 @@
 import useDepartments from "@/hooks/useDepartments";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 import axios from "axios";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import autocolors from "chartjs-plugin-autocolors";
@@ -68,7 +69,9 @@ export function IMDepartmentPieChart({
     labels: departments?.map((department) => department.name),
     datasets: [
       {
-        label: `# of ${filter?.status ?? ""} IM's`,
+        label: `${
+          filter?.status ? iMStatusNormalizer(filter.status) : ""
+        } IM's`,
         data: departments.map((department) => {
           return state?.[department.name];
         }),
@@ -82,6 +85,10 @@ export function IMDepartmentPieChart({
       options={{
         responsive: true,
         plugins: {
+          title: {
+            display: true,
+            text: "By Department",
+          },
           legend: {
             display: false,
           },

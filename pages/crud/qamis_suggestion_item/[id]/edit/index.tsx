@@ -33,7 +33,7 @@ export default function EditQAMISSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("QAMISSuggestionItem Updated Successfully");
+          alert("QAMISSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

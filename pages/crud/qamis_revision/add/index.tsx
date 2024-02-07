@@ -16,7 +16,7 @@ export default function AddQAMISRevisionPage() {
       axios
         .post("/api/qamis_revision", values)
         .then(() => {
-          alert("QAMISRevision Added Successfully");
+          alert("QAMISRevision has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

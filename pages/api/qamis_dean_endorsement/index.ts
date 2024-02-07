@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import qAMISDeanEndorsementAbility from "@/services/ability/qAMISDeanEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = qAMISDeanEndorsementAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,12 +26,122 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "QAMISDeanEndorsement"
-      );
-
       const { qAMISRevisionId, activeDeanId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const iMDepartment = await prisma.department.findFirstOrThrow({
+          where: {
+            Faculty: {
+              some: {
+                IM: {
+                  some: {
+                    IMFile: {
+                      some: {
+                        DepartmentReview: {
+                          CoordinatorReview: {
+                            CoordinatorSuggestion: {
+                              SubmittedCoordinatorSuggestion: {
+                                DepartmentReviewed: {
+                                  DepartmentRevision: {
+                                    some: {
+                                      CoordinatorEndorsement: {
+                                        DeanEndorsement: {
+                                          IDDCoordinatorSuggestion: {
+                                            SubmittedIDDCoordinatorSuggestion: {
+                                              CITLRevision: {
+                                                some: {
+                                                  IDDCoordinatorEndorsement: {
+                                                    CITLDirectorEndorsement: {
+                                                      QAMISSuggestion: {
+                                                        SubmittedQAMISSuggestion:
+                                                          {
+                                                            QAMISRevision: {
+                                                              id: {
+                                                                equals:
+                                                                  qAMISRevisionId,
+                                                              },
+                                                            },
+                                                          },
+                                                      },
+                                                    },
+                                                  },
+                                                },
+                                              },
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const deanCollege = await prisma.college.findFirst({
+          where: {
+            Department: {
+              some: {
+                Faculty: {
+                  some: {
+                    Dean: {
+                      ActiveDean: {
+                        id: {
+                          equals: activeDeanId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!deanCollege) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active dean can perform this action",
+            },
+          });
+        }
+
+        if (deanCollege.id !== iMDepartment.collegeId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to endorse an IM from another college",
+            },
+          });
+        }
+
+        const faculty = await prisma.faculty.findFirstOrThrow({
+          where: {
+            Dean: {
+              ActiveDean: {
+                id: {
+                  equals: activeDeanId,
+                },
+              },
+            },
+          },
+        });
+        if (faculty.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to endorse an IM for this user",
+            },
+          });
+        }
+      }
 
       const dean = await prisma.dean.findFirstOrThrow({
         where: {
@@ -127,7 +233,7 @@ export default async function handler(
                     id: user.id,
                   },
                 },
-                type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED"
+                type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED",
               },
             },
           },
@@ -156,17 +262,13 @@ export default async function handler(
       const qAMISDeanEndorsements = await prisma.qAMISDeanEndorsement.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).QAMISDeanEndorsement],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.qAMISDeanEndorsement.count({
-        where: {
-          AND: [accessibleBy(ability).QAMISDeanEndorsement],
-        },
+        where: {},
       });
 
       return res.json({ qAMISDeanEndorsements, count });

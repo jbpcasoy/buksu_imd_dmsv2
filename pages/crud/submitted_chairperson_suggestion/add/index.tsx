@@ -15,7 +15,7 @@ export default function AddSubmittedChairpersonSuggestionPage() {
       axios
         .post("/api/submitted_chairperson_suggestion", values)
         .then(() => {
-          alert("SubmittedChairpersonSuggestion Added Successfully");
+          alert("SubmittedChairpersonSuggestion has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

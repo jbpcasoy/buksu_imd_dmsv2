@@ -19,7 +19,7 @@ export default function DeanEndorsementPage() {
     axios
       .delete(`/api/dean_endorsement/${deanEndorsementId}`)
       .then(() => {
-        alert("DeanEndorsement deleted successfully.");
+        alert("DeanEndorsement has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

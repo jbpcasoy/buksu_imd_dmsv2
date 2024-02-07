@@ -1,11 +1,7 @@
 import prisma from "@/prisma/client";
-import collegeAbility from "@/services/ability/collegeAbility";
-import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -21,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = collegeAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,9 +25,28 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "College");
+      if (!user.isAdmin) {
+        return res
+          .status(403)
+          .json({
+            error: { message: "You are not allowed to create a college" },
+          });
+      }
 
       const { name } = validator.cast(req.body);
+
+      const existingCollege = await prisma.college.findFirst({
+        where: {
+          name: {
+            equals: name,
+          },
+        },
+      });
+      if (existingCollege) {
+        return res
+          .status(409)
+          .json({ error: { message: "College name is already used" } });
+      }
 
       const college = await prisma.college.create({
         data: {
@@ -55,6 +69,8 @@ export default async function handler(
         take: Yup.number().required(),
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -63,14 +79,15 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
-      
+
       const colleges = await prisma.college.findMany({
         skip,
         take,
         where: {
           AND: [
-            accessibleBy(ability).College,
             {
               name: {
                 contains: filterName,
@@ -80,13 +97,12 @@ export default async function handler(
           ],
         },
         orderBy: {
-          updatedAt: "desc",
+          [sortField || "name"]: sortDirection || "asc",
         },
       });
       const count = await prisma.college.count({
         where: {
           AND: [
-            accessibleBy(ability).College,
             {
               name: {
                 contains: filterName,

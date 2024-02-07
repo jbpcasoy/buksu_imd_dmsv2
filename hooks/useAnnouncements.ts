@@ -5,12 +5,21 @@ import { useEffect, useState } from "react";
 export interface useAnnouncementsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
+  sort?: object;
 }
-export default function useAnnouncements({ skip, take, filter }: useAnnouncementsParams) {
-  const [state, setState] = useState<{announcements: Announcement[], count: number}>({
+export default function useAnnouncements({
+  skip,
+  take,
+  filter,
+  sort,
+}: useAnnouncementsParams) {
+  const [state, setState] = useState<{
+    announcements: Announcement[];
+    count: number;
+  }>({
     count: 0,
-    announcements: []
+    announcements: [],
   });
 
   useEffect(() => {
@@ -19,7 +28,8 @@ export default function useAnnouncements({ skip, take, filter }: useAnnouncement
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +38,7 @@ export default function useAnnouncements({ skip, take, filter }: useAnnouncement
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

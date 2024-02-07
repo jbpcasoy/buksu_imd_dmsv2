@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItemParams {
   id: string;
 }
-export default function useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem({ id }: useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItemParams) {
+export default function useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItem({ id }: useReturnedDepartmentRevisionSuggestionItemActionTakenReturnedDepartmentRevisionSuggestionItemParams, refreshFlag?: number) {
   const [state, setState] = useState<ReturnedDepartmentRevisionSuggestionItemActionTaken | null>();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function useReturnedDepartmentRevisionSuggestionItemActionTakenRe
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

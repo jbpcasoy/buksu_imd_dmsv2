@@ -5,7 +5,7 @@ import axios from "axios";
 export interface usePeerSuggestionItemActionTakenPeerSuggestionItemParams {
   id: string;
 }
-export default function usePeerSuggestionItemActionTakenPeerSuggestionItem({ id }: usePeerSuggestionItemActionTakenPeerSuggestionItemParams) {
+export default function usePeerSuggestionItemActionTakenPeerSuggestionItem({ id }: usePeerSuggestionItemActionTakenPeerSuggestionItemParams, refreshFlag?: number) {
   const [state, setState] = useState<PeerSuggestionItemActionTaken | null>();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function usePeerSuggestionItemActionTakenPeerSuggestionItem({ id 
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

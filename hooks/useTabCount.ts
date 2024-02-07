@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 export default function useTabCount() {
   const [state, setState] = useState<{
     myIMsCount: number;
+    coAuthoredIMsCount: number;
     departmentIMsCount: number;
     coordinatorToEndorseCount: number;
     deanToEndorseCount: number;
@@ -37,6 +38,7 @@ export default function useTabCount() {
     collegeIMsCount: number;
   }>({
     myIMsCount: 0,
+    coAuthoredIMsCount: 0,
     departmentIMsCount: 0,
     coordinatorToEndorseCount: 0,
     deanToEndorseCount: 0,

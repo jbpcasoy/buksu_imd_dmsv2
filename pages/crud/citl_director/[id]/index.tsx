@@ -17,9 +17,9 @@ export default function CITLDirectorPage() {
     }
 
     axios
-      .delete(`/api/cITLDirector/${cITLDirectorId}`)
+      .delete(`/api/citl_director/${cITLDirectorId}`)
       .then(() => {
-        alert("CITLDirector deleted successfully.");
+        alert("CITLDirector has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

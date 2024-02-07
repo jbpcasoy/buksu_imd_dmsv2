@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import departmentAbility from "@/services/ability/departmentAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = departmentAbility({ user });
-
   const postHandler = async () => {
     try {
       const validator = Yup.object({
@@ -31,9 +26,28 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "Department");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to create a department" },
+        });
+      }
 
       const { name, collegeId } = validator.cast(req.body);
+
+      const existingDepartment = await prisma.department.findFirst({
+        where: {
+          name: {
+            equals: name,
+          },
+        },
+      });
+      if (existingDepartment) {
+        return res.status(409).json({
+          error: {
+            message: "Department name is already used",
+          },
+        });
+      }
 
       const college = await prisma.college.findFirstOrThrow({
         where: {
@@ -69,6 +83,9 @@ export default async function handler(
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
         "filter[collegeId]": Yup.string().optional(),
+        "filter[collegeName]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -77,7 +94,10 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
-        "filter[collegeId]": filterCollege,
+        "filter[collegeId]": filterCollegeId,
+        "filter[collegeName]": filterCollegeName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
 
       const departments = await prisma.department.findMany({
@@ -85,7 +105,6 @@ export default async function handler(
         take,
         where: {
           AND: [
-            accessibleBy(ability).Department,
             {
               name: {
                 contains: filterName,
@@ -95,24 +114,57 @@ export default async function handler(
             {
               College: {
                 id: {
-                  contains: filterCollege,
+                  contains: filterCollegeId,
+                },
+              },
+            },
+            {
+              College: {
+                name: {
+                  contains: filterCollegeName,
+                  mode: "insensitive",
                 },
               },
             },
           ],
         },
-        orderBy: {
-          updatedAt: "desc",
-        },
+        orderBy:
+          sortField === "name"
+            ? ({
+                name: sortDirection ?? "asc",
+              } as Prisma.DepartmentOrderByWithRelationInput)
+            : sortField === "collegeName"
+            ? ({
+                College: {
+                  name: sortDirection ?? "asc",
+                },
+              } as Prisma.DepartmentOrderByWithRelationInput)
+            : ({
+                name: sortDirection ?? "asc",
+              } as Prisma.DepartmentOrderByWithRelationInput),
       });
       const count = await prisma.department.count({
         where: {
           AND: [
-            accessibleBy(ability).Department,
             {
               name: {
                 contains: filterName,
                 mode: "insensitive",
+              },
+            },
+            {
+              College: {
+                id: {
+                  contains: filterCollegeId,
+                },
+              },
+            },
+            {
+              College: {
+                name: {
+                  contains: filterCollegeName,
+                  mode: "insensitive",
+                },
               },
             },
           ],

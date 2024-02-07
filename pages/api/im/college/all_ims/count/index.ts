@@ -1,13 +1,9 @@
 import prisma from "@/prisma/client";
-import { ActiveFaculty, Faculty, User } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
+import { AppAbility } from "@/services/ability/abilityBuilder";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import iMAbility from "@/services/ability/iMAbility";
-import { accessibleBy } from "@casl/prisma";
-import { AppAbility } from "@/services/ability/abilityBuilder";
-import useActiveDean from "@/hooks/useActiveDean";
+import { ActiveFaculty, User } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -83,12 +79,10 @@ export async function collegeIMsCount(user: User) {
       },
     },
   });
-  ability = iMAbility({ user });
 
   const count = await prisma.iM.count({
     where: {
       AND: [
-        accessibleBy(ability).IM,
         {
           Faculty: {
             Department: {

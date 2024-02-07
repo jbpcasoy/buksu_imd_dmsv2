@@ -9,21 +9,19 @@ export default function AddIDDSpecialistSuggestionItemPage() {
       pageNumber: 0,
       iDDSpecialistSuggestionId: "",
       suggestion: "",
-      actionTaken: "",
       remarks: "",
     },
     validationSchema: Yup.object({
       pageNumber: Yup.number().min(0).required(),
       iDDSpecialistSuggestionId: Yup.string().required(),
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
     }),
     onSubmit: (values) => {
       axios
         .post("/api/idd_specialist_suggestion_item", values)
         .then(() => {
-          alert("IDDSpecialistSuggestionItem Added Successfully");
+          alert("IDDSpecialistSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -49,11 +47,6 @@ export default function AddIDDSpecialistSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

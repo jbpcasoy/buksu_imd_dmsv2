@@ -1,8 +1,6 @@
 import prisma from "@/prisma/client";
-import departmentAbility from "@/services/ability/departmentAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -19,14 +17,11 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = departmentAbility({ user });
-
   const getHandler = async () => {
     try {
       const department = await prisma.department.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).Department,
             {
               Faculty: {
                 some: {

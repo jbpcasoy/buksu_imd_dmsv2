@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import returnedDepartmentRevisionAbility from "@/services/ability/returnedDepartmentRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedDepartmentRevisionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
         await prisma.returnedDepartmentRevision.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ReturnedDepartmentRevision,
               {
                 id: {
                   equals: id,
@@ -62,57 +57,68 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ReturnedDepartmentRevision"
-      );
-
       const { id } = validator.cast(req.query);
 
-      const coordinatorEndorsement =
-        await prisma.coordinatorEndorsement.findFirst({
+      if (!user.isAdmin) {
+        const coordinator = await prisma.coordinator.findFirst({
           where: {
-            DepartmentRevision: {
-              AND: [
-                {
-                  IMFile: {
-                    IM: {
-                      IMFile: {
-                        some: {
-                          DepartmentRevision: {
-                            CoordinatorEndorsement: {
-                              isNot: null,
-                            },
-                          },
-                        },
-                      },
+            ActiveCoordinator: {
+              Coordinator: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
                     },
                   },
                 },
-                {
-                  IMFile: {
-                    IM: {
-                      IMFile: {
-                        some: {
-                          DepartmentRevision: {
-                            ReturnedDepartmentRevision: {
-                              id: {
-                                equals: id,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
+              },
             },
           },
         });
+        if (!coordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active coordinator is allowed to perform this action",
+            },
+          });
+        }
 
-      if (coordinatorEndorsement) {
-        throw new Error("IM already endorsed by IDD Coordinator");
+        const returnedDepartmentRevision =
+          await prisma.returnedDepartmentRevision.findFirstOrThrow({
+            where: {
+              id: {
+                equals: id,
+              },
+            },
+          });
+        if (returnedDepartmentRevision.coordinatorId !== coordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this returned department revision",
+            },
+          });
+        }
+
+        const submittedReturnedDepartmentRevision =
+          await prisma.submittedReturnedDepartmentRevision.findFirst({
+            where: {
+              ReturnedDepartmentRevision: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          });
+        if (submittedReturnedDepartmentRevision) {
+          return res.status(400).json({
+            error: {
+              message:
+                "You are not allowed to delete a submitted returned department revision",
+            },
+          });
+        }
       }
 
       const returnedDepartmentRevision =

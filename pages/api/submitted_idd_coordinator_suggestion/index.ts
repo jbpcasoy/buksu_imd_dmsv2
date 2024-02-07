@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
-import submittedIDDCoordinatorSuggestionAbility from "@/services/ability/submittedIDDCoordinatorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
+import mailTransporter from "@/services/mailTransporter";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedIDDCoordinatorSuggestionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -29,12 +26,58 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "SubmittedIDDCoordinatorSuggestion"
-      );
-
       const { iDDCoordinatorSuggestionId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const iDDCoordinatorSuggestion =
+          await prisma.iDDCoordinatorSuggestion.findFirstOrThrow({
+            where: {
+              id: {
+                equals: iDDCoordinatorSuggestionId,
+              },
+            },
+          });
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active IDD coordinator can perform this action",
+            },
+          });
+        }
+
+        if (iDDCoordinator.id !== iDDCoordinatorSuggestion.iDDCoordinatorId) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to submit this IDD suggestion",
+            },
+          });
+        }
+      }
+
+      const iDDCoordinatorSuggestionItemCount =
+        await prisma.iDDCoordinatorSuggestionItem.count({
+          where: {
+            iDDCoordinatorSuggestionId: {
+              equals: iDDCoordinatorSuggestionId,
+            },
+          },
+        });
+      if (iDDCoordinatorSuggestionItemCount < 1) {
+        throw new Error("Suggestions are required upon submitting");
+      }
 
       const submittedIDDCoordinatorSuggestion =
         await prisma.submittedIDDCoordinatorSuggestion.create({
@@ -56,6 +99,66 @@ export default async function handler(
             },
           },
         });
+
+      const iM = await prisma.iM.findFirst({
+        where: {
+          IMFile: {
+            some: {
+              DepartmentReview: {
+                CoordinatorReview: {
+                  CoordinatorSuggestion: {
+                    SubmittedCoordinatorSuggestion: {
+                      DepartmentReviewed: {
+                        DepartmentRevision: {
+                          some: {
+                            CoordinatorEndorsement: {
+                              DeanEndorsement: {
+                                IDDCoordinatorSuggestion: {
+                                  id: {
+                                    equals: iDDCoordinatorSuggestionId,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      const iMOwner = await prisma.user.findFirst({
+        where: {
+          Faculty: {
+            some: {
+              IM: {
+                some: {
+                  id: {
+                    equals: iM?.id,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (iMOwner?.email) {
+        mailTransporter.sendMail(
+          {
+            subject: "IM CITL Review",
+            text: `We are pleased to inform you that the CITL review process for your IM titled "${iM?.title}" has been successfully completed and is now ready for your revision.`,
+            to: iMOwner.email,
+          },
+          (err) => {
+            logger.error(err);
+          }
+        );
+      }
 
       return res.json(submittedIDDCoordinatorSuggestion);
     } catch (error: any) {
@@ -85,17 +188,13 @@ export default async function handler(
         await prisma.submittedIDDCoordinatorSuggestion.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).SubmittedIDDCoordinatorSuggestion],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.submittedIDDCoordinatorSuggestion.count({
-        where: {
-          AND: [accessibleBy(ability).SubmittedIDDCoordinatorSuggestion],
-        },
+        where: {},
       });
 
       return res.json({ submittedIDDCoordinatorSuggestions, count });

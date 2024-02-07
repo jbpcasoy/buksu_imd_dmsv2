@@ -1,9 +1,8 @@
 import prisma from "@/prisma/client";
+import { countIMs } from "@/services/im_count";
 import logger from "@/services/logger";
-import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
-import { countIMs } from "..";
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,7 +30,11 @@ export default async function handler(
           "IMPLEMENTATION_DEPARTMENT_REVIEWED",
           "IMPLEMENTATION_DEPARTMENT_REVIEW",
           "IMPLEMENTATION_DRAFT",
-        ]),
+        ])
+        .optional()
+        .transform((originalValue) => {
+          return originalValue === "" ? undefined : originalValue;
+        }),
         "filter[start]": Yup.date().optional(),
         "filter[end]": Yup.date().optional(),
       });

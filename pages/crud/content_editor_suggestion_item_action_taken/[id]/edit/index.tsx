@@ -29,7 +29,7 @@ export default function EditContentEditorSuggestionItemActionTakenPage() {
           values
         )
         .then(() => {
-          alert("ContentEditorSuggestionItemActionTaken updated successfully");
+          alert("ContentEditorSuggestionItemActionTaken has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

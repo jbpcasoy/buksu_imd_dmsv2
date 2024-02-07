@@ -9,21 +9,19 @@ export default function AddContentSpecialistSuggestionItemPage() {
       pageNumber: 0,
       contentSpecialistSuggestionId: "",
       suggestion: "",
-      actionTaken: "",
       remarks: "",
     },
     validationSchema: Yup.object({
       pageNumber: Yup.number().min(0).required(),
       contentSpecialistSuggestionId: Yup.string().required(),
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
     }),
     onSubmit: (values) => {
       axios
         .post("/api/content_specialist_suggestion_item", values)
         .then(() => {
-          alert("ContentSpecialistSuggestionItem Added Successfully");
+          alert("ContentSpecialistSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -49,11 +47,6 @@ export default function AddContentSpecialistSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

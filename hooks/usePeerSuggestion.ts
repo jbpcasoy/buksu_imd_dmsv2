@@ -3,7 +3,7 @@ import { PeerSuggestion, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface usePeerSuggestionParams {
-  id: string;
+  id?: string;
 }
 export default function usePeerSuggestion({ id }: usePeerSuggestionParams) {
   const [state, setState] = useState<PeerSuggestion | null | undefined>(undefined);

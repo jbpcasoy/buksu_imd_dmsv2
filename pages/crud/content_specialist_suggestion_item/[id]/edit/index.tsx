@@ -16,13 +16,11 @@ export default function EditContentSpecialistSuggestionItemPage() {
   const formik = useFormik({
     initialValues: {
       suggestion: "",
-      actionTaken: "",
       remarks: "",
       pageNumber: 0,
     },
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
       pageNumber: Yup.number().min(0).required()
     }),
@@ -33,7 +31,7 @@ export default function EditContentSpecialistSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ContentSpecialistSuggestionItem Updated Successfully");
+          alert("ContentSpecialistSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -48,7 +46,6 @@ export default function EditContentSpecialistSuggestionItemPage() {
     formik.setValues({
       pageNumber: contentSpecialistSuggestionItem.pageNumber,
       suggestion: contentSpecialistSuggestionItem.suggestion,
-      actionTaken: contentSpecialistSuggestionItem?.actionTaken ?? "",
       remarks: contentSpecialistSuggestionItem?.remarks ?? "",
     });
 
@@ -73,11 +70,6 @@ export default function EditContentSpecialistSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

@@ -6,8 +6,9 @@ export interface useIMERCEndorsedParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useIMERCEndorsed({ skip, take, filter }: useIMERCEndorsedParams) {
+export default function useIMERCEndorsed({ skip, take, filter, sort }: useIMERCEndorsedParams) {
   const [state, setState] = useState<{iMs: IM[], count: number}>({
     count: 0,
     iMs: []
@@ -19,7 +20,8 @@ export default function useIMERCEndorsed({ skip, take, filter }: useIMERCEndorse
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +30,7 @@ export default function useIMERCEndorsed({ skip, take, filter }: useIMERCEndorse
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+    }, [skip, take, filter, sort]);
 
   return state;
 }

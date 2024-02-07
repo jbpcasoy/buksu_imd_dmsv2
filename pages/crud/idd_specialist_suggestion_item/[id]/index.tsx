@@ -21,7 +21,7 @@ export default function IDDSpecialistSuggestionItemPage() {
     axios
       .delete(`/api/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItemId}`)
       .then(() => {
-        alert("IDDSpecialistSuggestionItem deleted successfully.");
+        alert("IDDSpecialistSuggestionItem has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -64,7 +64,6 @@ export default function IDDSpecialistSuggestionItemPage() {
       </p>
       <p>suggestion: {iDDSpecialistSuggestionItem.suggestion}</p>
       <p>pageNumber: {iDDSpecialistSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {iDDSpecialistSuggestionItem.actionTaken}</p>
       <p>remarks: {iDDSpecialistSuggestionItem.remarks}</p>
     </CrudLayout>
   );

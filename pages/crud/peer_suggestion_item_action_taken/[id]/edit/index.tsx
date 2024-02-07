@@ -27,7 +27,7 @@ export default function EditPeerSuggestionItemActionTakenPage() {
           values
         )
         .then(() => {
-          alert("PeerSuggestionItemActionTaken updated successfully");
+          alert("PeerSuggestionItemActionTaken has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

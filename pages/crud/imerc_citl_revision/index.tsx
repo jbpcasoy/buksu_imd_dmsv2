@@ -39,6 +39,7 @@ export default function IMERCCITLRevisionsPage() {
               <th>updatedAt</th>
               <th>iMFileId</th>
               <th>iMERCCITLReviewedId</th>
+              <th>plagiarismFileId</th>
               <th>action</th>
             </tr>
           </thead>
@@ -67,6 +68,14 @@ export default function IMERCCITLRevisionsPage() {
                       className='underline'
                     >
                       {iMERCCITLRevision.iMERCCITLReviewedId}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/crud/plagiarism_file/${iMERCCITLRevision.plagiarismFileId}`}
+                      className='underline'
+                    >
+                      {iMERCCITLRevision.plagiarismFileId}
                     </Link>
                   </td>
                   <td>

@@ -89,7 +89,7 @@ export default function EditPeerReviewPage() {
       axios
         .put(`/api/peer_review/${peerReviewId}`, values)
         .then(() => {
-          alert("PeerReview Updated Successfully");
+          alert("PeerReview has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

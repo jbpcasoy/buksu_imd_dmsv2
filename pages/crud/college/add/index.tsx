@@ -15,7 +15,7 @@ export default function AddCollegePage() {
       axios
         .post("/api/college", values)
         .then(() => {
-          alert("College Added Successfully");
+          alert("College has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -29,7 +29,7 @@ export default function AddCollegePage() {
       <form onSubmit={formik.handleSubmit}>
         <input
           type='text'
-          placeholder='name'
+          placeholder='Name'
           {...formik.getFieldProps("name")}
         />
         <input type='submit' value='Submit' className='rounded border' />

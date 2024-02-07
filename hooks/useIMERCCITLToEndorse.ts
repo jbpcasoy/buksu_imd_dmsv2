@@ -6,11 +6,13 @@ export interface useIMERCCITLToEndorseParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
 export default function useIMERCCITLToEndorse({
   skip,
   take,
   filter,
+  sort,
 }: useIMERCCITLToEndorseParams) {
   const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
@@ -24,6 +26,7 @@ export default function useIMERCCITLToEndorse({
           skip,
           take,
           filter,
+          sort,
         },
       })
       .then((res) => {
@@ -32,7 +35,7 @@ export default function useIMERCCITLToEndorse({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

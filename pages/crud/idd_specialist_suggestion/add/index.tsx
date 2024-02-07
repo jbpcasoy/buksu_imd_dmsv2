@@ -15,7 +15,7 @@ export default function AddIDDSpecialistSuggestionPage() {
       axios
         .post("/api/idd_specialist_suggestion", values)
         .then(() => {
-          alert("IDDSpecialistSuggestion Added Successfully");
+          alert("IDDSpecialistSuggestion has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

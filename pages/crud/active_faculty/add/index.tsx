@@ -15,7 +15,7 @@ export default function AddActiveFacultyPage() {
       axios
         .post("/api/active_faculty", values)
         .then(() => {
-          alert("ActiveFaculty Added Successfully");
+          alert("ActiveFaculty has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

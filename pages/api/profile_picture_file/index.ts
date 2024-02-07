@@ -1,10 +1,6 @@
 import prisma from "@/prisma/client";
-import profilePictureFileAbility from "@/services/ability/profilePictureFileAbility";
-import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
@@ -45,12 +41,6 @@ export default async function handler(
       });
       // Parse request body
       const fields: Fields = data.fields;
-
-      const ability = userAbility({ user });
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToProfilePictureFile",
-        subject("User", user)
-      );
 
       // Save file to server
       const file = data.files.file[0];
@@ -97,22 +87,16 @@ export default async function handler(
       await validator.validate(req.query);
       const { skip, take } = validator.cast(req.query);
 
-      const ability = profilePictureFileAbility({ user });
-
       const profilePictureFiles = await prisma.profilePictureFile.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).ProfilePictureFile],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.profilePictureFile.count({
-        where: {
-          AND: [accessibleBy(ability).ProfilePictureFile],
-        },
+        where: {},
       });
 
       return res.json({ profilePictureFiles, count });

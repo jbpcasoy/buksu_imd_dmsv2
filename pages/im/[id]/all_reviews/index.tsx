@@ -1,9 +1,13 @@
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
+import ReviewItem from "@/components/ReviewItem";
+import ReviewSection from "@/components/ReviewSection";
 import useChairpersonReviewIM from "@/hooks/useChairpersonReviewIM";
 import useContentEditorReviewIM from "@/hooks/useContentEditorReviewIM";
 import useContentSpecialistReviewIM from "@/hooks/useContentSpecialistReviewIM";
 import useCoordinatorReviewIM from "@/hooks/useCoordinatorReviewIM";
 import useIDDSpecialistReviewIM from "@/hooks/useIDDSpecialistReviewIM";
+import useIM from "@/hooks/useIM";
 import usePeerReviewIM from "@/hooks/usePeerReviewIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
@@ -15,7 +19,7 @@ import {
   IDDSpecialistReview,
   PeerReview,
 } from "@prisma/client";
-import Link from "next/link";
+import Error from "next/error";
 import { useRouter } from "next/router";
 
 export default function AllReviewsPage() {
@@ -27,27 +31,45 @@ export default function AllReviewsPage() {
   const contentSpecialistReview = useContentSpecialistReviewIM({ id: iMId });
   const contentEditorReview = useContentEditorReviewIM({ id: iMId });
   const iDDSpecialistReview = useIDDSpecialistReviewIM({ id: iMId });
+  const iM = useIM({ id: iMId as string });
+
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
-      <h2>All Reviews</h2>
+      <h2 className='font-bold border-b-2 border-palette_orange pb-1 inline'>
+        All Reviews
+      </h2>
       {peerReview && <PeerReview peerReview={peerReview} />}
-      {coordinatorReview && (
-        <CoordinatorReview coordinatorReview={coordinatorReview} />
-      )}
       {chairpersonReview && (
         <ChairpersonReview chairpersonReview={chairpersonReview} />
+      )}
+      {coordinatorReview && (
+        <CoordinatorReview coordinatorReview={coordinatorReview} />
       )}
       {contentSpecialistReview && (
         <ContentSpecialistReview
           contentSpecialistReview={contentSpecialistReview}
         />
       )}
-      {contentEditorReview && (
-        <ContentEditorReview contentEditorReview={contentEditorReview} />
-      )}
       {iDDSpecialistReview && (
         <IDDSpecialistReview iDDSpecialistReview={iDDSpecialistReview} />
+      )}
+      {contentEditorReview && (
+        <ContentEditorReview contentEditorReview={contentEditorReview} />
       )}
     </MainLayout>
   );
@@ -56,141 +78,169 @@ export default function AllReviewsPage() {
 function PeerReview({ peerReview }: { peerReview: PeerReview }) {
   return (
     <div>
-      <div className='flex'>
-        <h3 className='flex-1 text-center font-bold'>PeerReview</h3>
+      <div>
+        <h2 className='inline text-lg font-bold'>
+          Instructional Material Review{" "}
+          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+            Peer
+          </span>
+        </h2>
+        <p className='text-sm'>Implementation Phase</p>
       </div>
-      <p>id: {peerReview.id}</p>
-      <p>createdAt: {new Date(peerReview.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(peerReview.updatedAt).toLocaleString()}</p>
-      <p>
-        departmentReviewId:{" "}
-        <Link
-          href={`/crud/department_review/${peerReview.departmentReviewId}`}
-          className='underline'
-        >
-          {peerReview.departmentReviewId}
-        </Link>
-      </p>
 
-      <p className='font-bold'>{ReviewSections.s1}</p>
-      <p>
-        <span className='font-bold'>{peerReview.q1_1}</span> -{" "}
-        {ReviewQuestions.q1_1}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q1_2}</span> -{" "}
-        {ReviewQuestions.q1_2}
-      </p>
+      <div className='flex flex-col space-y-2 p-1'>
+        <ReviewSection title={ReviewSections.s1}>
+          <ReviewItem
+            question={ReviewQuestions.q1_1}
+            disabled={true}
+            checkedValue={peerReview?.q1_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q1_2}
+            disabled={true}
+            checkedValue={peerReview?.q1_2 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s2}</p>
-      <p>
-        <span className='font-bold'>{peerReview.q2_1}</span> -{" "}
-        {ReviewQuestions.q2_1}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q2_2}</span> -{" "}
-        {ReviewQuestions.q2_2}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q2_3}</span> -{" "}
-        {ReviewQuestions.q2_3}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q2_4}</span> -{" "}
-        {ReviewQuestions.q2_4}
-      </p>
+        <ReviewSection title={ReviewSections.s2}>
+          <ReviewItem
+            question={ReviewQuestions.q2_1}
+            disabled={true}
+            checkedValue={peerReview?.q2_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_2}
+            disabled={true}
+            checkedValue={peerReview?.q2_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_3}
+            disabled={true}
+            checkedValue={peerReview?.q2_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_4}
+            disabled={true}
+            checkedValue={peerReview?.q2_4 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s3}</p>
-      <p>
-        <span className='font-bold'>{peerReview.q3_1}</span> -{" "}
-        {ReviewQuestions.q3_1}
-      </p>
+        <ReviewSection title={ReviewSections.s3}>
+          <ReviewItem
+            question={ReviewQuestions.q3_1}
+            disabled={true}
+            checkedValue={peerReview?.q3_1 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s4}</p>
-      <p>
-        <span className='font-bold'>{peerReview.q4_1}</span> -{" "}
-        {ReviewQuestions.q4_1}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q4_2}</span> -{" "}
-        {ReviewQuestions.q4_2}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q4_3}</span> -{" "}
-        {ReviewQuestions.q4_3}
-      </p>
+        <ReviewSection title={ReviewSections.s4}>
+          <ReviewItem
+            question={ReviewQuestions.q4_1}
+            disabled={true}
+            checkedValue={peerReview?.q4_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_2}
+            disabled={true}
+            checkedValue={peerReview?.q4_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_3}
+            disabled={true}
+            checkedValue={peerReview?.q4_3 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s5}</p>
-      <p>
-        <span className='font-bold'>{peerReview.q5_1}</span> -{" "}
-        {ReviewQuestions.q5_1}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q5_2}</span> -{" "}
-        {ReviewQuestions.q5_2}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q5_3}</span> -{" "}
-        {ReviewQuestions.q5_3}
-      </p>
+        <ReviewSection title={ReviewSections.s5}>
+          <ReviewItem
+            question={ReviewQuestions.q5_1}
+            disabled={true}
+            checkedValue={peerReview?.q5_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_2}
+            disabled={true}
+            checkedValue={peerReview?.q5_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_3}
+            disabled={true}
+            checkedValue={peerReview?.q5_3 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s6}</p>
-      <p>
-        <span className='font-bold'>{peerReview.q6_1}</span> -{" "}
-        {ReviewQuestions.q6_1}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q6_2}</span> -{" "}
-        {ReviewQuestions.q6_2}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q6_3}</span> -{" "}
-        {ReviewQuestions.q6_3}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q6_4}</span> -{" "}
-        {ReviewQuestions.q6_4}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q6_5}</span> -{" "}
-        {ReviewQuestions.q6_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s7}</p>
-      <p>
-        <span className='font-bold'>{peerReview.q7_1}</span> -{" "}
-        {ReviewQuestions.q7_1}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q7_2}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q7_3}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q7_4}</span> -{" "}
-        {ReviewQuestions.q7_4}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q7_5}</span> -{" "}
-        {ReviewQuestions.q7_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s8}</p>
-      <p>
-        <span className='font-bold'>{peerReview.q8_1}</span> -{" "}
-        {ReviewQuestions.q8_1}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q8_2}</span> -{" "}
-        {ReviewQuestions.q8_2}
-      </p>
-      <p>
-        <span className='font-bold'>{peerReview.q8_3}</span> -{" "}
-        {ReviewQuestions.q8_3}
-      </p>
+        <ReviewSection title={ReviewSections.s6}>
+          <ReviewItem
+            question={ReviewQuestions.q6_1}
+            disabled={true}
+            checkedValue={peerReview?.q6_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_2}
+            disabled={true}
+            checkedValue={peerReview?.q6_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_3}
+            disabled={true}
+            checkedValue={peerReview?.q6_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_4}
+            disabled={true}
+            checkedValue={peerReview?.q6_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_5}
+            disabled={true}
+            checkedValue={peerReview?.q6_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s7}>
+          <ReviewItem
+            question={ReviewQuestions.q7_1}
+            disabled={true}
+            checkedValue={peerReview?.q7_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_2}
+            disabled={true}
+            checkedValue={peerReview?.q7_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_3}
+            disabled={true}
+            checkedValue={peerReview?.q7_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_4}
+            disabled={true}
+            checkedValue={peerReview?.q7_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_5}
+            disabled={true}
+            checkedValue={peerReview?.q7_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s8}>
+          <ReviewItem
+            question={ReviewQuestions.q8_1}
+            disabled={true}
+            checkedValue={peerReview?.q8_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_2}
+            disabled={true}
+            checkedValue={peerReview?.q8_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_3}
+            disabled={true}
+            checkedValue={peerReview?.q8_3 ?? ""}
+          />
+        </ReviewSection>
+      </div>
     </div>
   );
 }
@@ -202,141 +252,169 @@ function CoordinatorReview({
 }) {
   return (
     <div>
-      <div className='flex'>
-        <h3 className='flex-1 text-center font-bold'>CoordinatorReview</h3>
+      <div>
+        <h2 className='inline text-lg font-bold'>
+          Instructional Material Review{" "}
+          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+            Coordinator
+          </span>
+        </h2>
+        <p className='text-sm'>Implementation Phase</p>
       </div>
-      <p>id: {coordinatorReview.id}</p>
-      <p>createdAt: {new Date(coordinatorReview.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(coordinatorReview.updatedAt).toLocaleString()}</p>
-      <p>
-        departmentReviewId:{" "}
-        <Link
-          href={`/crud/department_review/${coordinatorReview.departmentReviewId}`}
-          className='underline'
-        >
-          {coordinatorReview.departmentReviewId}
-        </Link>
-      </p>
 
-      <p className='font-bold'>{ReviewSections.s1}</p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q1_1}</span> -{" "}
-        {ReviewQuestions.q1_1}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q1_2}</span> -{" "}
-        {ReviewQuestions.q1_2}
-      </p>
+      <div className='flex flex-col space-y-2 p-1'>
+        <ReviewSection title={ReviewSections.s1}>
+          <ReviewItem
+            question={ReviewQuestions.q1_1}
+            disabled={true}
+            checkedValue={coordinatorReview?.q1_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q1_2}
+            disabled={true}
+            checkedValue={coordinatorReview?.q1_2 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s2}</p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q2_1}</span> -{" "}
-        {ReviewQuestions.q2_1}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q2_2}</span> -{" "}
-        {ReviewQuestions.q2_2}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q2_3}</span> -{" "}
-        {ReviewQuestions.q2_3}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q2_4}</span> -{" "}
-        {ReviewQuestions.q2_4}
-      </p>
+        <ReviewSection title={ReviewSections.s2}>
+          <ReviewItem
+            question={ReviewQuestions.q2_1}
+            disabled={true}
+            checkedValue={coordinatorReview?.q2_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_2}
+            disabled={true}
+            checkedValue={coordinatorReview?.q2_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_3}
+            disabled={true}
+            checkedValue={coordinatorReview?.q2_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_4}
+            disabled={true}
+            checkedValue={coordinatorReview?.q2_4 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s3}</p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q3_1}</span> -{" "}
-        {ReviewQuestions.q3_1}
-      </p>
+        <ReviewSection title={ReviewSections.s3}>
+          <ReviewItem
+            question={ReviewQuestions.q3_1}
+            disabled={true}
+            checkedValue={coordinatorReview?.q3_1 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s4}</p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q4_1}</span> -{" "}
-        {ReviewQuestions.q4_1}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q4_2}</span> -{" "}
-        {ReviewQuestions.q4_2}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q4_3}</span> -{" "}
-        {ReviewQuestions.q4_3}
-      </p>
+        <ReviewSection title={ReviewSections.s4}>
+          <ReviewItem
+            question={ReviewQuestions.q4_1}
+            disabled={true}
+            checkedValue={coordinatorReview?.q4_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_2}
+            disabled={true}
+            checkedValue={coordinatorReview?.q4_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_3}
+            disabled={true}
+            checkedValue={coordinatorReview?.q4_3 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s5}</p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q5_1}</span> -{" "}
-        {ReviewQuestions.q5_1}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q5_2}</span> -{" "}
-        {ReviewQuestions.q5_2}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q5_3}</span> -{" "}
-        {ReviewQuestions.q5_3}
-      </p>
+        <ReviewSection title={ReviewSections.s5}>
+          <ReviewItem
+            question={ReviewQuestions.q5_1}
+            disabled={true}
+            checkedValue={coordinatorReview?.q5_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_2}
+            disabled={true}
+            checkedValue={coordinatorReview?.q5_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_3}
+            disabled={true}
+            checkedValue={coordinatorReview?.q5_3 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s6}</p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q6_1}</span> -{" "}
-        {ReviewQuestions.q6_1}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q6_2}</span> -{" "}
-        {ReviewQuestions.q6_2}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q6_3}</span> -{" "}
-        {ReviewQuestions.q6_3}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q6_4}</span> -{" "}
-        {ReviewQuestions.q6_4}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q6_5}</span> -{" "}
-        {ReviewQuestions.q6_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s7}</p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q7_1}</span> -{" "}
-        {ReviewQuestions.q7_1}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q7_2}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q7_3}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q7_4}</span> -{" "}
-        {ReviewQuestions.q7_4}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q7_5}</span> -{" "}
-        {ReviewQuestions.q7_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s8}</p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q8_1}</span> -{" "}
-        {ReviewQuestions.q8_1}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q8_2}</span> -{" "}
-        {ReviewQuestions.q8_2}
-      </p>
-      <p>
-        <span className='font-bold'>{coordinatorReview.q8_3}</span> -{" "}
-        {ReviewQuestions.q8_3}
-      </p>
+        <ReviewSection title={ReviewSections.s6}>
+          <ReviewItem
+            question={ReviewQuestions.q6_1}
+            disabled={true}
+            checkedValue={coordinatorReview?.q6_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_2}
+            disabled={true}
+            checkedValue={coordinatorReview?.q6_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_3}
+            disabled={true}
+            checkedValue={coordinatorReview?.q6_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_4}
+            disabled={true}
+            checkedValue={coordinatorReview?.q6_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_5}
+            disabled={true}
+            checkedValue={coordinatorReview?.q6_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s7}>
+          <ReviewItem
+            question={ReviewQuestions.q7_1}
+            disabled={true}
+            checkedValue={coordinatorReview?.q7_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_2}
+            disabled={true}
+            checkedValue={coordinatorReview?.q7_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_3}
+            disabled={true}
+            checkedValue={coordinatorReview?.q7_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_4}
+            disabled={true}
+            checkedValue={coordinatorReview?.q7_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_5}
+            disabled={true}
+            checkedValue={coordinatorReview?.q7_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s8}>
+          <ReviewItem
+            question={ReviewQuestions.q8_1}
+            disabled={true}
+            checkedValue={coordinatorReview?.q8_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_2}
+            disabled={true}
+            checkedValue={coordinatorReview?.q8_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_3}
+            disabled={true}
+            checkedValue={coordinatorReview?.q8_3 ?? ""}
+          />
+        </ReviewSection>
+      </div>
     </div>
   );
 }
@@ -348,141 +426,169 @@ function ChairpersonReview({
 }) {
   return (
     <div>
-      <div className='flex'>
-        <h3 className='flex-1 text-center font-bold'>ChairpersonReview</h3>
+      <div>
+        <h2 className='inline text-lg font-bold'>
+          Instructional Material Review{" "}
+          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+            Chairperson
+          </span>
+        </h2>
+        <p className='text-sm'>Implementation Phase</p>
       </div>
-      <p>id: {chairpersonReview.id}</p>
-      <p>createdAt: {new Date(chairpersonReview.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(chairpersonReview.updatedAt).toLocaleString()}</p>
-      <p>
-        departmentReviewId:{" "}
-        <Link
-          href={`/crud/department_review/${chairpersonReview.departmentReviewId}`}
-          className='underline'
-        >
-          {chairpersonReview.departmentReviewId}
-        </Link>
-      </p>
 
-      <p className='font-bold'>{ReviewSections.s1}</p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q1_1}</span> -{" "}
-        {ReviewQuestions.q1_1}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q1_2}</span> -{" "}
-        {ReviewQuestions.q1_2}
-      </p>
+      <div className='flex flex-col space-y-2 p-1'>
+        <ReviewSection title={ReviewSections.s1}>
+          <ReviewItem
+            question={ReviewQuestions.q1_1}
+            disabled={true}
+            checkedValue={chairpersonReview?.q1_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q1_2}
+            disabled={true}
+            checkedValue={chairpersonReview?.q1_2 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s2}</p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q2_1}</span> -{" "}
-        {ReviewQuestions.q2_1}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q2_2}</span> -{" "}
-        {ReviewQuestions.q2_2}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q2_3}</span> -{" "}
-        {ReviewQuestions.q2_3}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q2_4}</span> -{" "}
-        {ReviewQuestions.q2_4}
-      </p>
+        <ReviewSection title={ReviewSections.s2}>
+          <ReviewItem
+            question={ReviewQuestions.q2_1}
+            disabled={true}
+            checkedValue={chairpersonReview?.q2_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_2}
+            disabled={true}
+            checkedValue={chairpersonReview?.q2_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_3}
+            disabled={true}
+            checkedValue={chairpersonReview?.q2_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_4}
+            disabled={true}
+            checkedValue={chairpersonReview?.q2_4 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s3}</p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q3_1}</span> -{" "}
-        {ReviewQuestions.q3_1}
-      </p>
+        <ReviewSection title={ReviewSections.s3}>
+          <ReviewItem
+            question={ReviewQuestions.q3_1}
+            disabled={true}
+            checkedValue={chairpersonReview?.q3_1 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s4}</p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q4_1}</span> -{" "}
-        {ReviewQuestions.q4_1}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q4_2}</span> -{" "}
-        {ReviewQuestions.q4_2}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q4_3}</span> -{" "}
-        {ReviewQuestions.q4_3}
-      </p>
+        <ReviewSection title={ReviewSections.s4}>
+          <ReviewItem
+            question={ReviewQuestions.q4_1}
+            disabled={true}
+            checkedValue={chairpersonReview?.q4_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_2}
+            disabled={true}
+            checkedValue={chairpersonReview?.q4_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_3}
+            disabled={true}
+            checkedValue={chairpersonReview?.q4_3 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s5}</p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q5_1}</span> -{" "}
-        {ReviewQuestions.q5_1}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q5_2}</span> -{" "}
-        {ReviewQuestions.q5_2}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q5_3}</span> -{" "}
-        {ReviewQuestions.q5_3}
-      </p>
+        <ReviewSection title={ReviewSections.s5}>
+          <ReviewItem
+            question={ReviewQuestions.q5_1}
+            disabled={true}
+            checkedValue={chairpersonReview?.q5_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_2}
+            disabled={true}
+            checkedValue={chairpersonReview?.q5_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_3}
+            disabled={true}
+            checkedValue={chairpersonReview?.q5_3 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s6}</p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q6_1}</span> -{" "}
-        {ReviewQuestions.q6_1}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q6_2}</span> -{" "}
-        {ReviewQuestions.q6_2}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q6_3}</span> -{" "}
-        {ReviewQuestions.q6_3}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q6_4}</span> -{" "}
-        {ReviewQuestions.q6_4}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q6_5}</span> -{" "}
-        {ReviewQuestions.q6_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s7}</p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q7_1}</span> -{" "}
-        {ReviewQuestions.q7_1}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q7_2}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q7_3}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q7_4}</span> -{" "}
-        {ReviewQuestions.q7_4}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q7_5}</span> -{" "}
-        {ReviewQuestions.q7_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s8}</p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q8_1}</span> -{" "}
-        {ReviewQuestions.q8_1}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q8_2}</span> -{" "}
-        {ReviewQuestions.q8_2}
-      </p>
-      <p>
-        <span className='font-bold'>{chairpersonReview.q8_3}</span> -{" "}
-        {ReviewQuestions.q8_3}
-      </p>
+        <ReviewSection title={ReviewSections.s6}>
+          <ReviewItem
+            question={ReviewQuestions.q6_1}
+            disabled={true}
+            checkedValue={chairpersonReview?.q6_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_2}
+            disabled={true}
+            checkedValue={chairpersonReview?.q6_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_3}
+            disabled={true}
+            checkedValue={chairpersonReview?.q6_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_4}
+            disabled={true}
+            checkedValue={chairpersonReview?.q6_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_5}
+            disabled={true}
+            checkedValue={chairpersonReview?.q6_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s7}>
+          <ReviewItem
+            question={ReviewQuestions.q7_1}
+            disabled={true}
+            checkedValue={chairpersonReview?.q7_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_2}
+            disabled={true}
+            checkedValue={chairpersonReview?.q7_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_3}
+            disabled={true}
+            checkedValue={chairpersonReview?.q7_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_4}
+            disabled={true}
+            checkedValue={chairpersonReview?.q7_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_5}
+            disabled={true}
+            checkedValue={chairpersonReview?.q7_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s8}>
+          <ReviewItem
+            question={ReviewQuestions.q8_1}
+            disabled={true}
+            checkedValue={chairpersonReview?.q8_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_2}
+            disabled={true}
+            checkedValue={chairpersonReview?.q8_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_3}
+            disabled={true}
+            checkedValue={chairpersonReview?.q8_3 ?? ""}
+          />
+        </ReviewSection>
+      </div>
     </div>
   );
 }
@@ -494,153 +600,174 @@ function ContentSpecialistReview({
 }) {
   return (
     <div>
-      <div className='flex'>
-        <h3 className='flex-1 text-center font-bold'>
-          ContentSpecialistReview
-        </h3>
+      <div>
+        <h2 className='inline text-lg font-bold'>
+          Instructional Material Review{" "}
+          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+            Content Specialist
+          </span>
+        </h2>
+        <p className='text-sm'>IMERC Phase</p>
       </div>
-      <p>id: {contentSpecialistReview.id}</p>
-      <p>
-        createdAt:{" "}
-        {new Date(contentSpecialistReview.createdAt).toLocaleString()}
-      </p>
-      <p>
-        updatedAt:{" "}
-        {new Date(contentSpecialistReview.updatedAt).toLocaleString()}
-      </p>
-      <p>
-        departmentReviewId:{" "}
-        <Link
-          href={`/crud/qamis_department_endorsement/${contentSpecialistReview.qAMISDepartmentEndorsementId}`}
-          className='underline'
-        >
-          {contentSpecialistReview.qAMISDepartmentEndorsementId}
-        </Link>
-      </p>
 
-      <p className='font-bold'>{ReviewSections.s1}</p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q1_1}</span> -{" "}
-        {ReviewQuestions.q1_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q1_2}</span> -{" "}
-        {ReviewQuestions.q1_2}
-      </p>
+      <div className='flex flex-col space-y-2 p-1'>
+        <ReviewSection title={ReviewSections.s1}>
+          <ReviewItem
+            question={ReviewQuestions.q1_1}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q1_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q1_2}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q1_2 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s2}</p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q2_1}</span> -{" "}
-        {ReviewQuestions.q2_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q2_2}</span> -{" "}
-        {ReviewQuestions.q2_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q2_3}</span> -{" "}
-        {ReviewQuestions.q2_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q2_4}</span> -{" "}
-        {ReviewQuestions.q2_4}
-      </p>
+        <ReviewSection title={ReviewSections.s2}>
+          <ReviewItem
+            question={ReviewQuestions.q2_1}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q2_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_2}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q2_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_3}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q2_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_4}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q2_4 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s3}</p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q3_1}</span> -{" "}
-        {ReviewQuestions.q3_1}
-      </p>
+        <ReviewSection title={ReviewSections.s3}>
+          <ReviewItem
+            question={ReviewQuestions.q3_1}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q3_1 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s4}</p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q4_1}</span> -{" "}
-        {ReviewQuestions.q4_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q4_2}</span> -{" "}
-        {ReviewQuestions.q4_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q4_3}</span> -{" "}
-        {ReviewQuestions.q4_3}
-      </p>
+        <ReviewSection title={ReviewSections.s4}>
+          <ReviewItem
+            question={ReviewQuestions.q4_1}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q4_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_2}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q4_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_3}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q4_3 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s5}</p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q5_1}</span> -{" "}
-        {ReviewQuestions.q5_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q5_2}</span> -{" "}
-        {ReviewQuestions.q5_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q5_3}</span> -{" "}
-        {ReviewQuestions.q5_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q5_4}</span> -{" "}
-        {ReviewQuestions.q5_4}
-      </p>
+        <ReviewSection title={ReviewSections.s5}>
+          <ReviewItem
+            question={ReviewQuestions.q5_1}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q5_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_2}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q5_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_3}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q5_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_4}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q5_4 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s6}</p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q6_1}</span> -{" "}
-        {ReviewQuestions.q6_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q6_2}</span> -{" "}
-        {ReviewQuestions.q6_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q6_3}</span> -{" "}
-        {ReviewQuestions.q6_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q6_4}</span> -{" "}
-        {ReviewQuestions.q6_4}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q6_5}</span> -{" "}
-        {ReviewQuestions.q6_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s7}</p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q7_1}</span> -{" "}
-        {ReviewQuestions.q7_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q7_2}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q7_3}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q7_4}</span> -{" "}
-        {ReviewQuestions.q7_4}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q7_5}</span> -{" "}
-        {ReviewQuestions.q7_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s8}</p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q8_1}</span> -{" "}
-        {ReviewQuestions.q8_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q8_2}</span> -{" "}
-        {ReviewQuestions.q8_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentSpecialistReview.q8_3}</span> -{" "}
-        {ReviewQuestions.q8_3}
-      </p>
+        <ReviewSection title={ReviewSections.s6}>
+          <ReviewItem
+            question={ReviewQuestions.q6_1}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q6_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_2}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q6_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_3}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q6_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_4}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q6_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_5}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q6_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s7}>
+          <ReviewItem
+            question={ReviewQuestions.q7_1}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q7_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_2}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q7_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_3}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q7_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_4}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q7_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_5}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q7_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s8}>
+          <ReviewItem
+            question={ReviewQuestions.q8_1}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q8_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_2}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q8_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_3}
+            disabled={true}
+            checkedValue={contentSpecialistReview?.q8_3 ?? ""}
+          />
+        </ReviewSection>
+      </div>
     </div>
   );
 }
@@ -652,149 +779,173 @@ function ContentEditorReview({
 }) {
   return (
     <div>
-      <div className='flex'>
-        <h3 className='flex-1 text-center font-bold'>ContentEditorReview</h3>
+      <div>
+        <h2 className='inline text-lg font-bold'>
+          Instructional Material Review{" "}
+          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+            Content Editor
+          </span>
+        </h2>
+        <p className='text-sm'>IMERC Phase</p>
       </div>
-      <p>id: {contentEditorReview.id}</p>
-      <p>
-        createdAt: {new Date(contentEditorReview.createdAt).toLocaleString()}
-      </p>
-      <p>
-        updatedAt: {new Date(contentEditorReview.updatedAt).toLocaleString()}
-      </p>
-      <p>
-        departmentReviewId:{" "}
-        <Link
-          href={`/crud/qamis_department_endorsement/${contentEditorReview.qAMISDepartmentEndorsementId}`}
-          className='underline'
-        >
-          {contentEditorReview.qAMISDepartmentEndorsementId}
-        </Link>
-      </p>
+      <div className='flex flex-col space-y-2 p-1'>
+        <ReviewSection title={ReviewSections.s1}>
+          <ReviewItem
+            question={ReviewQuestions.q1_1}
+            disabled={true}
+            checkedValue={contentEditorReview?.q1_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q1_2}
+            disabled={true}
+            checkedValue={contentEditorReview?.q1_2 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s1}</p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q1_1}</span> -{" "}
-        {ReviewQuestions.q1_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q1_2}</span> -{" "}
-        {ReviewQuestions.q1_2}
-      </p>
+        <ReviewSection title={ReviewSections.s2}>
+          <ReviewItem
+            question={ReviewQuestions.q2_1}
+            disabled={true}
+            checkedValue={contentEditorReview?.q2_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_2}
+            disabled={true}
+            checkedValue={contentEditorReview?.q2_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_3}
+            disabled={true}
+            checkedValue={contentEditorReview?.q2_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_4}
+            disabled={true}
+            checkedValue={contentEditorReview?.q2_4 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s2}</p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q2_1}</span> -{" "}
-        {ReviewQuestions.q2_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q2_2}</span> -{" "}
-        {ReviewQuestions.q2_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q2_3}</span> -{" "}
-        {ReviewQuestions.q2_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q2_4}</span> -{" "}
-        {ReviewQuestions.q2_4}
-      </p>
+        <ReviewSection title={ReviewSections.s3}>
+          <ReviewItem
+            question={ReviewQuestions.q3_1}
+            disabled={true}
+            checkedValue={contentEditorReview?.q3_1 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s3}</p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q3_1}</span> -{" "}
-        {ReviewQuestions.q3_1}
-      </p>
+        <ReviewSection title={ReviewSections.s4}>
+          <ReviewItem
+            question={ReviewQuestions.q4_1}
+            disabled={true}
+            checkedValue={contentEditorReview?.q4_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_2}
+            disabled={true}
+            checkedValue={contentEditorReview?.q4_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_3}
+            disabled={true}
+            checkedValue={contentEditorReview?.q4_3 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s4}</p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q4_1}</span> -{" "}
-        {ReviewQuestions.q4_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q4_2}</span> -{" "}
-        {ReviewQuestions.q4_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q4_3}</span> -{" "}
-        {ReviewQuestions.q4_3}
-      </p>
+        <ReviewSection title={ReviewSections.s5}>
+          <ReviewItem
+            question={ReviewQuestions.q5_1}
+            disabled={true}
+            checkedValue={contentEditorReview?.q5_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_2}
+            disabled={true}
+            checkedValue={contentEditorReview?.q5_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_3}
+            disabled={true}
+            checkedValue={contentEditorReview?.q5_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_4}
+            disabled={true}
+            checkedValue={contentEditorReview?.q5_4 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s5}</p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q5_1}</span> -{" "}
-        {ReviewQuestions.q5_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q5_2}</span> -{" "}
-        {ReviewQuestions.q5_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q5_3}</span> -{" "}
-        {ReviewQuestions.q5_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q5_4}</span> -{" "}
-        {ReviewQuestions.q5_4}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s6}</p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q6_1}</span> -{" "}
-        {ReviewQuestions.q6_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q6_2}</span> -{" "}
-        {ReviewQuestions.q6_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q6_3}</span> -{" "}
-        {ReviewQuestions.q6_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q6_4}</span> -{" "}
-        {ReviewQuestions.q6_4}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q6_5}</span> -{" "}
-        {ReviewQuestions.q6_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s7}</p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q7_1}</span> -{" "}
-        {ReviewQuestions.q7_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q7_2}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q7_3}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q7_4}</span> -{" "}
-        {ReviewQuestions.q7_4}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q7_5}</span> -{" "}
-        {ReviewQuestions.q7_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s8}</p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q8_1}</span> -{" "}
-        {ReviewQuestions.q8_1}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q8_2}</span> -{" "}
-        {ReviewQuestions.q8_2}
-      </p>
-      <p>
-        <span className='font-bold'>{contentEditorReview.q8_3}</span> -{" "}
-        {ReviewQuestions.q8_3}
-      </p>
+        <ReviewSection title={ReviewSections.s6}>
+          <ReviewItem
+            question={ReviewQuestions.q6_1}
+            disabled={true}
+            checkedValue={contentEditorReview?.q6_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_2}
+            disabled={true}
+            checkedValue={contentEditorReview?.q6_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_3}
+            disabled={true}
+            checkedValue={contentEditorReview?.q6_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_4}
+            disabled={true}
+            checkedValue={contentEditorReview?.q6_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_5}
+            disabled={true}
+            checkedValue={contentEditorReview?.q6_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s7}>
+          <ReviewItem
+            question={ReviewQuestions.q7_1}
+            disabled={true}
+            checkedValue={contentEditorReview?.q7_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_2}
+            disabled={true}
+            checkedValue={contentEditorReview?.q7_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_3}
+            disabled={true}
+            checkedValue={contentEditorReview?.q7_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_4}
+            disabled={true}
+            checkedValue={contentEditorReview?.q7_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_5}
+            disabled={true}
+            checkedValue={contentEditorReview?.q7_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s8}>
+          <ReviewItem
+            question={ReviewQuestions.q8_1}
+            disabled={true}
+            checkedValue={contentEditorReview?.q8_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_2}
+            disabled={true}
+            checkedValue={contentEditorReview?.q8_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_3}
+            disabled={true}
+            checkedValue={contentEditorReview?.q8_3 ?? ""}
+          />
+        </ReviewSection>
+      </div>
     </div>
   );
 }
@@ -806,149 +957,173 @@ function IDDSpecialistReview({
 }) {
   return (
     <div>
-      <div className='flex'>
-        <h3 className='flex-1 text-center font-bold'>IDDSpecialistReview</h3>
+      <div>
+        <h2 className='inline text-lg font-bold'>
+          Instructional Material Review{" "}
+          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+            IDD Specialist
+          </span>
+        </h2>
+        <p className='text-sm'>IMERC Phase</p>
       </div>
-      <p>id: {iDDSpecialistReview.id}</p>
-      <p>
-        createdAt: {new Date(iDDSpecialistReview.createdAt).toLocaleString()}
-      </p>
-      <p>
-        updatedAt: {new Date(iDDSpecialistReview.updatedAt).toLocaleString()}
-      </p>
-      <p>
-        departmentReviewId:{" "}
-        <Link
-          href={`/crud/qamis_department_endorsement/${iDDSpecialistReview.qAMISDepartmentEndorsementId}`}
-          className='underline'
-        >
-          {iDDSpecialistReview.qAMISDepartmentEndorsementId}
-        </Link>
-      </p>
+      <div className='flex flex-col space-y-2 p-1'>
+        <ReviewSection title={ReviewSections.s1}>
+          <ReviewItem
+            question={ReviewQuestions.q1_1}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q1_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q1_2}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q1_2 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s1}</p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q1_1}</span> -{" "}
-        {ReviewQuestions.q1_1}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q1_2}</span> -{" "}
-        {ReviewQuestions.q1_2}
-      </p>
+        <ReviewSection title={ReviewSections.s2}>
+          <ReviewItem
+            question={ReviewQuestions.q2_1}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q2_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_2}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q2_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_3}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q2_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q2_4}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q2_4 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s2}</p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q2_1}</span> -{" "}
-        {ReviewQuestions.q2_1}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q2_2}</span> -{" "}
-        {ReviewQuestions.q2_2}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q2_3}</span> -{" "}
-        {ReviewQuestions.q2_3}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q2_4}</span> -{" "}
-        {ReviewQuestions.q2_4}
-      </p>
+        <ReviewSection title={ReviewSections.s3}>
+          <ReviewItem
+            question={ReviewQuestions.q3_1}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q3_1 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s3}</p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q3_1}</span> -{" "}
-        {ReviewQuestions.q3_1}
-      </p>
+        <ReviewSection title={ReviewSections.s4}>
+          <ReviewItem
+            question={ReviewQuestions.q4_1}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q4_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_2}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q4_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q4_3}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q4_3 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s4}</p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q4_1}</span> -{" "}
-        {ReviewQuestions.q4_1}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q4_2}</span> -{" "}
-        {ReviewQuestions.q4_2}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q4_3}</span> -{" "}
-        {ReviewQuestions.q4_3}
-      </p>
+        <ReviewSection title={ReviewSections.s5}>
+          <ReviewItem
+            question={ReviewQuestions.q5_1}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q5_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_2}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q5_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_3}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q5_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q5_4}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q5_4 ?? ""}
+          />
+        </ReviewSection>
 
-      <p className='font-bold'>{ReviewSections.s5}</p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q5_1}</span> -{" "}
-        {ReviewQuestions.q5_1}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q5_2}</span> -{" "}
-        {ReviewQuestions.q5_2}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q5_3}</span> -{" "}
-        {ReviewQuestions.q5_3}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q5_4}</span> -{" "}
-        {ReviewQuestions.q5_4}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s6}</p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q6_1}</span> -{" "}
-        {ReviewQuestions.q6_1}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q6_2}</span> -{" "}
-        {ReviewQuestions.q6_2}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q6_3}</span> -{" "}
-        {ReviewQuestions.q6_3}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q6_4}</span> -{" "}
-        {ReviewQuestions.q6_4}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q6_5}</span> -{" "}
-        {ReviewQuestions.q6_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s7}</p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q7_1}</span> -{" "}
-        {ReviewQuestions.q7_1}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q7_2}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q7_3}</span> -{" "}
-        {ReviewQuestions.q7_3}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q7_4}</span> -{" "}
-        {ReviewQuestions.q7_4}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q7_5}</span> -{" "}
-        {ReviewQuestions.q7_5}
-      </p>
-
-      <p className='font-bold'>{ReviewSections.s8}</p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q8_1}</span> -{" "}
-        {ReviewQuestions.q8_1}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q8_2}</span> -{" "}
-        {ReviewQuestions.q8_2}
-      </p>
-      <p>
-        <span className='font-bold'>{iDDSpecialistReview.q8_3}</span> -{" "}
-        {ReviewQuestions.q8_3}
-      </p>
+        <ReviewSection title={ReviewSections.s6}>
+          <ReviewItem
+            question={ReviewQuestions.q6_1}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q6_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_2}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q6_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_3}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q6_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_4}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q6_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q6_5}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q6_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s7}>
+          <ReviewItem
+            question={ReviewQuestions.q7_1}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q7_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_2}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q7_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_3}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q7_3 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_4}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q7_4 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q7_5}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q7_5 ?? ""}
+          />
+        </ReviewSection>
+        <ReviewSection title={ReviewSections.s8}>
+          <ReviewItem
+            question={ReviewQuestions.q8_1}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q8_1 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_2}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q8_2 ?? ""}
+          />
+          <ReviewItem
+            question={ReviewQuestions.q8_3}
+            disabled={true}
+            checkedValue={iDDSpecialistReview?.q8_3 ?? ""}
+          />
+        </ReviewSection>
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useIMStatusParams {
-  id: string;
+  id?: string;
 }
 export default function useIMStatus({ id }: useIMStatusParams) {
   const [state, setState] = useState<string | null>();

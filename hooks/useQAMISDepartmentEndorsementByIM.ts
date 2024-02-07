@@ -3,7 +3,7 @@ import { QAMISDepartmentEndorsement, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useQAMISDepartmentEndorsementByIMParams {
-  id: string;
+  id?: string;
 }
 export default function useQAMISDepartmentEndorsementByIM({ id }: useQAMISDepartmentEndorsementByIMParams) {
   const [state, setState] = useState<QAMISDepartmentEndorsement | null>();

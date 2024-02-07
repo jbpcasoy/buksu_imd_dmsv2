@@ -11,34 +11,13 @@ export default function IMERCCITLReviewedPage() {
     id: iMERCCITLReviewedId as string,
   });
 
-  const deleteHandler = () => {
-    const ok = confirm("Are you sure?");
-
-    if (!ok) {
-      return;
-    }
-
-    axios
-      .delete(`/api/imerc_citl_reviewed/${iMERCCITLReviewedId}`)
-      .then(() => {
-        alert("IMERCCITLReviewed deleted successfully.");
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-  };
-
   if (!iMERCCITLReviewed) return null;
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IMERCCITLReviewed</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
-            delete
-          </button>
-        </div>
+      <div className="flex">
+        <h2 className="flex-1">IMERCCITLReviewed</h2>
+        <div className="space-x-1"></div>
       </div>
       <p>id: {iMERCCITLReviewed.id}</p>
       <p>createdAt: {new Date(iMERCCITLReviewed.createdAt).toLocaleString()}</p>
@@ -47,7 +26,7 @@ export default function IMERCCITLReviewedPage() {
         submittedContentEditorSuggestionId:
         <Link
           href={`/crud/submitted_content_editor_suggestion/${iMERCCITLReviewed.submittedContentEditorSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {iMERCCITLReviewed.submittedContentEditorSuggestionId}
         </Link>
@@ -56,7 +35,7 @@ export default function IMERCCITLReviewedPage() {
         submittedContentSpecialistSuggestionId:
         <Link
           href={`/crud/submitted_content_specialist_suggestion/${iMERCCITLReviewed.submittedContentSpecialistSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {iMERCCITLReviewed.submittedContentSpecialistSuggestionId}
         </Link>
@@ -65,7 +44,7 @@ export default function IMERCCITLReviewedPage() {
         submittedIDDSpecialistSuggestionId:
         <Link
           href={`/crud/submitted_idd_specialist_suggestion/${iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}
         </Link>

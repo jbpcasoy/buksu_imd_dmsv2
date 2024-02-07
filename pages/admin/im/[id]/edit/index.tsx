@@ -25,7 +25,7 @@ export default function EditIMPage() {
       axios
         .put(`/api/im/${iMId}`, values)
         .then(() => {
-          alert("IM Added Successfully");
+          alert("IM has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

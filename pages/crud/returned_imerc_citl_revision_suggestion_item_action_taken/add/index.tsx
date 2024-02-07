@@ -17,7 +17,7 @@ export default function AddReturnedIMERCCITLRevisionSuggestionItemActionTakenPag
       axios
         .post("/api/returned_imerc_citl_revision_suggestion_item_action_taken", values)
         .then(() => {
-          alert("ReturnedIMERCCITLRevisionSuggestionItemActionTaken Added Successfully");
+          alert("ReturnedIMERCCITLRevisionSuggestionItemActionTaken has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

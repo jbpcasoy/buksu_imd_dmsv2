@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import departmentReviewAbility from "@/services/ability/departmentReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = departmentReviewAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -28,17 +24,59 @@ export default async function handler(
         iMFileId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan("create", "DepartmentReview");
-
       const { iMFileId } = validator.cast(req.body);
+
       const iMFile = await prisma.iMFile.findFirstOrThrow({
         where: {
-          id: {
-            equals: iMFileId,
-          },
+          AND: [
+            {
+              id: {
+                equals: iMFileId as string,
+              },
+            },
+          ],
         },
       });
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            id: {
+              equals: iMFile.iMId
+            },
+          },
+        });
+
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create a department review for this IM file",
+            },
+          });
+        }
+      }
 
       const existingDepartmentReview = await prisma.departmentReview.findFirst({
         where: {
@@ -54,7 +92,7 @@ export default async function handler(
 
       if (existingDepartmentReview) {
         return res.status(400).json({
-          error: { message: "IM has already been submitted for review" },
+          error: { message: "Error: IM has already been submitted for review" },
         });
       }
 
@@ -105,17 +143,13 @@ export default async function handler(
       const departmentReviews = await prisma.departmentReview.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).DepartmentReview],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.departmentReview.count({
-        where: {
-          AND: [accessibleBy(ability).DepartmentReview],
-        },
+        where: {},
       });
 
       return res.json({ departmentReviews, count });

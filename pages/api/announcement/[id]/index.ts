@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import announcementAbility from "@/services/ability/announcementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = announcementAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -34,7 +30,6 @@ export default async function handler(
       const announcement = await prisma.announcement.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).Announcement,
             {
               id: {
                 equals: id,
@@ -61,7 +56,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "Announcement");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to delete this announcement",
+          },
+        });
+      }
 
       const { id } = validator.cast(req.query);
 
@@ -90,7 +91,13 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("update", "Announcement");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to update this announcement",
+          },
+        });
+      }
 
       const { id } = req.query;
       const { title, description, url } = validator.cast(req.body);

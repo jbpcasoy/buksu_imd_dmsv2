@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useReturnedCITLRevisionMeParams {
   id: string;
 }
-export default function useReturnedCITLRevisionMe({ id }: useReturnedCITLRevisionMeParams) {
+export default function useReturnedCITLRevisionMe({ id }: useReturnedCITLRevisionMeParams, refreshFlag?: number) {
   const [state, setState] = useState<ReturnedCITLRevision | null>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function useReturnedCITLRevisionMe({ id }: useReturnedCITLRevisio
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

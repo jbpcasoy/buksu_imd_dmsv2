@@ -3,7 +3,7 @@ import { ContentSpecialist, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useContentSpecialistParams {
-  id: string;
+  id?: string;
 }
 export default function useContentSpecialist({ id }: useContentSpecialistParams) {
   const [state, setState] = useState<ContentSpecialist | null>();

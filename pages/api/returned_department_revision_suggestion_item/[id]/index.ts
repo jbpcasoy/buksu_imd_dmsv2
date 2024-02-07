@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import returnedDepartmentRevisionSuggestionItemAbility from "@/services/ability/returnedDepartmentRevisionSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedDepartmentRevisionSuggestionItemAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -32,30 +28,10 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const submittedReturnedDepartmentRevision =
-        await prisma.submittedReturnedDepartmentRevision.findFirst({
-          where: {
-            ReturnedDepartmentRevision: {
-              ReturnedDepartmentRevisionSuggestionItem: {
-                some: {
-                  id: {
-                    equals: id as string,
-                  },
-                },
-              },
-            },
-          },
-        });
-
-      if (submittedReturnedDepartmentRevision) {
-        throw new Error("Peer Suggestion is already submitted");
-      }
-
       const returnedDepartmentRevisionSuggestionItem =
         await prisma.returnedDepartmentRevisionSuggestionItem.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ReturnedDepartmentRevisionSuggestionItem,
               {
                 id: {
                   equals: id,
@@ -82,30 +58,75 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ReturnedDepartmentRevisionSuggestionItem"
-      );
-
       const { id } = validator.cast(req.query);
 
-      const submittedReturnedDepartmentRevision =
-        await prisma.submittedReturnedDepartmentRevision.findFirst({
+      if (!user.isAdmin) {
+        const coordinator = await prisma.coordinator.findFirst({
           where: {
-            ReturnedDepartmentRevision: {
-              ReturnedDepartmentRevisionSuggestionItem: {
-                some: {
-                  id: {
-                    equals: id as string,
+            ActiveCoordinator: {
+              Coordinator: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
                   },
                 },
               },
             },
           },
         });
+        if (!coordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active coordinator can perform this action",
+            },
+          });
+        }
 
-      if (submittedReturnedDepartmentRevision) {
-        throw new Error("Peer Suggestion is already submitted");
+        const returnedDepartmentRevision =
+          await prisma.returnedDepartmentRevision.findFirstOrThrow({
+            where: {
+              ReturnedDepartmentRevisionSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id,
+                  },
+                },
+              },
+            },
+          });
+        if (returnedDepartmentRevision.coordinatorId !== coordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this returned department revision suggestion item",
+            },
+          });
+        }
+
+        const submittedReturnedDepartmentRevision =
+          await prisma.submittedReturnedDepartmentRevision.findFirst({
+            where: {
+              ReturnedDepartmentRevision: {
+                ReturnedDepartmentRevisionSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        if (submittedReturnedDepartmentRevision) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Error: Returned department revision is already submitted",
+            },
+          });
+        }
       }
 
       const returnedDepartmentRevisionSuggestionItem =
@@ -127,7 +148,6 @@ export default async function handler(
   const putHandler = async () => {
     try {
       const validator = Yup.object({
-        actionTaken: Yup.string().optional(),
         pageNumber: Yup.number().min(0).optional(),
         remarks: Yup.string().optional(),
         suggestion: Yup.string().optional(),
@@ -135,15 +155,77 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "ReturnedDepartmentRevisionSuggestionItem"
-      );
-
       const { id } = req.query;
-      const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
-        req.body
-      );
+      const { remarks, suggestion, pageNumber } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const coordinator = await prisma.coordinator.findFirst({
+          where: {
+            ActiveCoordinator: {
+              Coordinator: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!coordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active coordinator can perform this action",
+            },
+          });
+        }
+
+        const returnedDepartmentRevision =
+          await prisma.returnedDepartmentRevision.findFirstOrThrow({
+            where: {
+              ReturnedDepartmentRevisionSuggestionItem: {
+                some: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          });
+        if (returnedDepartmentRevision.coordinatorId !== coordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update this returned department revision suggestion item",
+            },
+          });
+        }
+
+        const submittedReturnedDepartmentRevision =
+          await prisma.submittedReturnedDepartmentRevision.findFirst({
+            where: {
+              ReturnedDepartmentRevision: {
+                ReturnedDepartmentRevisionSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        if (submittedReturnedDepartmentRevision) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Error: Returned department revision is already submitted",
+            },
+          });
+        }
+      }
 
       const returnedDepartmentRevisionSuggestionItem =
         await prisma.returnedDepartmentRevisionSuggestionItem.update({
@@ -151,7 +233,6 @@ export default async function handler(
             id: id as string,
           },
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

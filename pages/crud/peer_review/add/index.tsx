@@ -87,7 +87,7 @@ export default function AddPeerReviewPage() {
       axios
         .post("/api/peer_review", values)
         .then(() => {
-          alert("PeerReview Added Successfully");
+          alert("PeerReview has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

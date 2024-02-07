@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useCoordinatorSuggestionMeParams {
   id: string;
 }
-export default function useCoordinatorSuggestionMe({ id }: useCoordinatorSuggestionMeParams) {
+export default function useCoordinatorSuggestionMe({ id }: useCoordinatorSuggestionMeParams, refreshFlag?: number) {
   const [state, setState] = useState<CoordinatorSuggestion | null>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function useCoordinatorSuggestionMe({ id }: useCoordinatorSuggest
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

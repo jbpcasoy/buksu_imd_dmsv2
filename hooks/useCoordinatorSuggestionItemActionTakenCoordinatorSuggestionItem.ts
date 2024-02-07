@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItemParams {
   id: string;
 }
-export default function useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem({ id }: useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItemParams) {
+export default function useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItem({ id }: useCoordinatorSuggestionItemActionTakenCoordinatorSuggestionItemParams, refreshFlag?: number) {
   const [state, setState] = useState<CoordinatorSuggestionItemActionTaken | null>();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function useCoordinatorSuggestionItemActionTakenCoordinatorSugges
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

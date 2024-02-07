@@ -1,8 +1,6 @@
 import prisma from "@/prisma/client";
-import submittedReturnedCITLRevisionAbility from "@/services/ability/submittedReturnedCITLRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -14,12 +12,10 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
-    981;
   } catch (error) {
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = submittedReturnedCITLRevisionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -28,7 +24,6 @@ export default async function handler(
         await prisma.submittedReturnedCITLRevision.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).SubmittedReturnedCITLRevision,
               {
                 ReturnedCITLRevision: {
                   id: id as string,

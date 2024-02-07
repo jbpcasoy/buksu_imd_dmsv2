@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import returnedDepartmentRevisionAbility from "@/services/ability/returnedDepartmentRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedDepartmentRevisionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,14 +26,71 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ReturnedDepartmentRevision"
-      );
-
       const { activeCoordinatorId, departmentRevisionId } = validator.cast(
         req.body
       );
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                Coordinator: {
+                  ActiveCoordinator: {
+                    id: {
+                      equals: activeCoordinatorId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const iMOwner = await prisma.faculty.findFirstOrThrow({
+          where: {
+            IM: {
+              some: {
+                IMFile: {
+                  some: {
+                    DepartmentRevision: {
+                      id: {
+                        equals: departmentRevisionId,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (faculty && faculty.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to return an IM for this user",
+            },
+          });
+        }
+
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active coordinator can perform this action.",
+            },
+          });
+        }
+
+        if (iMOwner.userId !== faculty.userId)
+          if (iMOwner.departmentId !== faculty.departmentId) {
+            return res.status(403).json({
+              error: {
+                message:
+                  "You are not allowed to return IMs outside your department",
+              },
+            });
+          }
+      }
 
       const coordinatorEndorsement =
         await prisma.coordinatorEndorsement.findFirst({
@@ -80,7 +133,7 @@ export default async function handler(
         });
 
       if (coordinatorEndorsement) {
-        throw new Error("IM already endorsed by IDD Coordinator");
+        throw new Error("IM is already endorsed by the coordinator");
       }
 
       const activeCoordinator = await prisma.activeCoordinator.findFirstOrThrow(
@@ -138,17 +191,13 @@ export default async function handler(
         await prisma.returnedDepartmentRevision.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).ReturnedDepartmentRevision],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.returnedDepartmentRevision.count({
-        where: {
-          AND: [accessibleBy(ability).ReturnedDepartmentRevision],
-        },
+        where: {},
       });
 
       return res.json({ returnedDepartmentRevisions, count });

@@ -20,7 +20,7 @@ export default function ContentSpecialistPage() {
     axios
       .delete(`/api/content_specialist/${contentSpecialistId}`)
       .then(() => {
-        alert("ContentSpecialist deleted successfully.");
+        alert("ContentSpecialist has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

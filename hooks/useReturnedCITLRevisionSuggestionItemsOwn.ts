@@ -7,7 +7,7 @@ export interface useReturnedCITLRevisionSuggestionItemsOwnParams {
   take: number;
   id?: string
 }
-export default function useReturnedCITLRevisionSuggestionItemsOwn({ skip, take, id }: useReturnedCITLRevisionSuggestionItemsOwnParams) {
+export default function useReturnedCITLRevisionSuggestionItemsOwn({ skip, take, id }: useReturnedCITLRevisionSuggestionItemsOwnParams, refreshFlag?: number) {
   const [state, setState] = useState<{returnedCITLRevisionSuggestionItems: ReturnedCITLRevisionSuggestionItem[], count: number}>({
     count: 0,
     returnedCITLRevisionSuggestionItems: []
@@ -33,7 +33,7 @@ export default function useReturnedCITLRevisionSuggestionItemsOwn({ skip, take, 
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

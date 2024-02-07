@@ -87,7 +87,7 @@ export default function AddChairpersonReviewPage() {
       axios
         .post("/api/chairperson_review", values)
         .then(() => {
-          alert("ChairpersonReview Added Successfully");
+          alert("ChairpersonReview has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

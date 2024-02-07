@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import contentSpecialistReviewAbility from "@/services/ability/contentSpecialistReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = contentSpecialistReviewAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
         await prisma.contentSpecialistReview.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ContentSpecialistReview,
               {
                 id: {
                   equals: id,
@@ -62,12 +57,74 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ContentSpecialistReview"
-      );
-
       const { id } = validator.cast(req.query);
+
+      if (!user.isAdmin) {
+        const contentSpecialistReview =
+          await prisma.contentSpecialistReview.findFirstOrThrow({
+            where: {
+              id: {
+                equals: id,
+              },
+            },
+          });
+
+        const contentSpecialist = await prisma.contentSpecialist.findFirst({
+          where: {
+            ActiveContentSpecialist: {
+              ContentSpecialist: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!contentSpecialist) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active content specialist can perform this action",
+            },
+          });
+        }
+
+        if (
+          contentSpecialist.id !== contentSpecialistReview.contentSpecialistId
+        ) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this content specialist review",
+            },
+          });
+        }
+
+        const submittedContentSpecialistSuggestion =
+          await prisma.submittedContentSpecialistSuggestion.findFirst({
+            where: {
+              ContentSpecialistSuggestion: {
+                ContentSpecialistReview: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedContentSpecialistSuggestion) {
+          return res.status(400).json({
+            error: {
+              message:
+                "Error: Content specialist suggestion is already submitted",
+            },
+          });
+        }
+      }
 
       const contentSpecialistReview =
         await prisma.contentSpecialistReview.delete({
@@ -113,31 +170,26 @@ export default async function handler(
         q7_4: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q7_5: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q8_1: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_2: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_3: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
       });
 
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "ContentSpecialistReview"
-      );
 
       const { id } = req.query;
       const {
@@ -169,6 +221,73 @@ export default async function handler(
         q8_2,
         q8_3,
       } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const contentSpecialistReview =
+          await prisma.contentSpecialistReview.findFirstOrThrow({
+            where: {
+              id: {
+                equals: id as string,
+              },
+            },
+          });
+
+        const contentSpecialist = await prisma.contentSpecialist.findFirst({
+          where: {
+            ActiveContentSpecialist: {
+              ContentSpecialist: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!contentSpecialist) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active content specialist can perform this action",
+            },
+          });
+        }
+
+        if (
+          contentSpecialist.id !== contentSpecialistReview.contentSpecialistId
+        ) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update this content specialist review",
+            },
+          });
+        }
+
+        const submittedContentSpecialistSuggestion =
+          await prisma.submittedContentSpecialistSuggestion.findFirst({
+            where: {
+              ContentSpecialistSuggestion: {
+                ContentSpecialistReview: {
+                  id: {
+                    equals: id as string,
+                  },
+                },
+              },
+            },
+          });
+        if (submittedContentSpecialistSuggestion) {
+          return res.status(400).json({
+            error: {
+              message:
+                "Error: Content specialist suggestion is already submitted",
+            },
+          });
+        }
+      }
 
       const contentSpecialistReview =
         await prisma.contentSpecialistReview.update({

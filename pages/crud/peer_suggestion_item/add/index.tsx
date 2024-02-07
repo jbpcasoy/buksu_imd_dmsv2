@@ -9,21 +9,19 @@ export default function AddPeerSuggestionItemPage() {
       pageNumber: 0,
       peerSuggestionId: "",
       suggestion: "",
-      actionTaken: "",
       remarks: "",
     },
     validationSchema: Yup.object({
       pageNumber: Yup.number().min(0).required(),
       peerSuggestionId: Yup.string().required(),
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
     }),
     onSubmit: (values) => {
       axios
         .post("/api/peer_suggestion_item", values)
         .then(() => {
-          alert("PeerSuggestionItem Added Successfully");
+          alert("PeerSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -49,11 +47,6 @@ export default function AddPeerSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

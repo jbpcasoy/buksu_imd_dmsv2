@@ -6,8 +6,14 @@ export interface useToReviewParams {
   skip: number;
   take: number;
   filter: object;
+  sort?: object;
 }
-export default function useToReview({ skip, take, filter }: useToReviewParams) {
+export default function useToReview({
+  skip,
+  take,
+  filter,
+  sort,
+}: useToReviewParams) {
   const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
     iMs: [],
@@ -20,6 +26,7 @@ export default function useToReview({ skip, take, filter }: useToReviewParams) {
           skip,
           take,
           filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +35,7 @@ export default function useToReview({ skip, take, filter }: useToReviewParams) {
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

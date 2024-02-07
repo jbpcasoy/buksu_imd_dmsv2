@@ -21,7 +21,7 @@ export default function ChairpersonSuggestionItemPage() {
     axios
       .delete(`/api/chairperson_suggestion_item/${chairpersonSuggestionItemId}`)
       .then(() => {
-        alert("ChairpersonSuggestionItem deleted successfully.");
+        alert("ChairpersonSuggestionItem has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -64,7 +64,6 @@ export default function ChairpersonSuggestionItemPage() {
       </p>
       <p>suggestion: {chairpersonSuggestionItem.suggestion}</p>
       <p>pageNumber: {chairpersonSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {chairpersonSuggestionItem.actionTaken}</p>
       <p>remarks: {chairpersonSuggestionItem.remarks}</p>
     </CrudLayout>
   );

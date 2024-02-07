@@ -6,8 +6,9 @@ export interface useContentSpecialistsParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useContentSpecialists({ skip, take, filter }: useContentSpecialistsParams) {
+export default function useContentSpecialists({ skip, take, filter, sort }: useContentSpecialistsParams) {
   const [state, setState] = useState<{contentSpecialists: ContentSpecialist[], count: number}>({
     count: 0,
     contentSpecialists: []
@@ -19,7 +20,8 @@ export default function useContentSpecialists({ skip, take, filter }: useContent
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort
         },
       })
       .then((res) => {
@@ -28,7 +30,7 @@ export default function useContentSpecialists({ skip, take, filter }: useContent
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

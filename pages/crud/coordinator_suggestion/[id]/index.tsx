@@ -19,7 +19,7 @@ export default function CoordinatorSuggestionPage() {
     axios
       .delete(`/api/coordinator_suggestion/${coordinatorSuggestionId}`)
       .then(() => {
-        alert("CoordinatorSuggestion deleted successfully.");
+        alert("CoordinatorSuggestion has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

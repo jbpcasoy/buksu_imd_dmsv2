@@ -89,7 +89,7 @@ export default function AddContentSpecialistReviewPage() {
       axios
         .post("/api/content_specialist_review", values)
         .then(() => {
-          alert("ContentSpecialistReview Added Successfully");
+          alert("ContentSpecialistReview has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

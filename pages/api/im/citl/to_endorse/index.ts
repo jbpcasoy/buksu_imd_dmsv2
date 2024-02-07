@@ -1,12 +1,11 @@
 import prisma from "@/prisma/client";
-import { ActiveFaculty, Faculty, User } from "@prisma/client";
+import { AppAbility } from "@/services/ability/abilityBuilder";
+import getServerUser from "@/services/getServerUser";
+import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
+import logger from "@/services/logger";
+import { Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
-import getServerUser from "@/services/getServerUser";
-import logger from "@/services/logger";
-import iMAbility from "@/services/ability/iMAbility";
-import { accessibleBy } from "@casl/prisma";
-import { AppAbility } from "@/services/ability/abilityBuilder";
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,12 +29,14 @@ export default async function handler(
         "filter[userName]": Yup.string().optional(),
         "filter[collegeName]": Yup.string().optional(),
         "filter[departmentName]": Yup.string().optional(),
+        "filter[status]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().oneOf(["asc", "desc"]).optional(),
       });
 
       await validator.validate(req.query);
 
       let ability: AppAbility;
-      ability = iMAbility({ user });
 
       const {
         skip,
@@ -44,13 +45,57 @@ export default async function handler(
         "filter[departmentName]": filterDepartmentName,
         "filter[title]": filterTitle,
         "filter[userName]": filterUserName,
+        "filter[status]": filterStatus,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
+      let statusQuery = iMStatusQueryBuilder(filterStatus);
+
+      const orderBy: Prisma.IMOrderByWithRelationInput =
+        sortField === "title"
+          ? {
+              title: sortDirection,
+            }
+          : sortField === "createdAt"
+          ? {
+              createdAt: sortDirection,
+            }
+          : sortField === "userName"
+          ? {
+              Faculty: {
+                User: {
+                  name: sortDirection,
+                },
+              },
+            }
+          : sortField === "departmentName"
+          ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+          : sortField === "collegeName"
+          ? {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: sortDirection,
+                  },
+                },
+              },
+            }
+          : {
+              createdAt: "desc",
+            };
+
       const iMs = await prisma.iM.findMany({
         skip,
         take,
         where: {
           AND: [
-            accessibleBy(ability).IM,
+            statusQuery,
             {
               IMFile: {
                 some: {
@@ -151,14 +196,12 @@ export default async function handler(
             },
           ],
         },
-        orderBy: {
-          updatedAt: "desc",
-        },
+        orderBy,
       });
       const count = await prisma.iM.count({
         where: {
           AND: [
-            accessibleBy(ability).IM,
+            statusQuery,
             {
               IMFile: {
                 some: {

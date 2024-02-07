@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import departmentReviewedAbility from "@/services/ability/departmentReviewedAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = departmentReviewedAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -37,17 +32,13 @@ export default async function handler(
       const departmentRevieweds = await prisma.departmentReviewed.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).DepartmentReviewed],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.departmentReviewed.count({
-        where: {
-          AND: [accessibleBy(ability).DepartmentReviewed],
-        },
+        where: {},
       });
 
       return res.json({ departmentRevieweds, count });

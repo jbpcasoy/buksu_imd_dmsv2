@@ -1,3 +1,5 @@
+import Confirmation from "@/components/Confirmation";
+import FileUpload from "@/components/FileUpload";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
 import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
@@ -5,43 +7,121 @@ import IMCoordinatorSuggestionItems from "@/components/IMCoordinatorSuggestionIt
 import IMIDDCoordinatorSuggestionItems from "@/components/IMIDDCoordinatorSuggestionItems";
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
+import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
 import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
 import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
+import Modal from "@/components/Modal";
+import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
 import useActiveContentSpecialistMe from "@/hooks/useActiveContentSpecialistMe";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
+import useActiveFaculties from "@/hooks/useActiveFaculties";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import useCITLDirectorEndorsementIM from "@/hooks/useCITLDirectorEndorsementIM";
+import useChairpersonReviewIM from "@/hooks/useChairpersonReviewIM";
+import useCoAuthors from "@/hooks/useCoAuthors";
+import useCollege from "@/hooks/useCollege";
+import useCollegeIM from "@/hooks/useCollegeIM";
+import useContentEditorReviewIM from "@/hooks/useContentEditorReviewIM";
+import useContentSpecialistReviewIM from "@/hooks/useContentSpecialistReviewIM";
+import useCoordinatorEndorsementIM from "@/hooks/useCoordinatorEndorsementIM";
+import useCoordinatorReviewIM from "@/hooks/useCoordinatorReviewIM";
+import useDeanEndorsementIM from "@/hooks/useDeanEndorsementIM";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
+import useDepartmentReview from "@/hooks/useDepartmentReview";
+import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
+import useDepartmentReviewedIM from "@/hooks/useDepartmentReviewedIM";
+import useFaculties from "@/hooks/useFaculties";
+import useFaculty from "@/hooks/useFaculty";
+import useIDDCoordinatorEndorsementIM from "@/hooks/useIDDCoordinatorEndorsementIM";
+import useIDDSpecialistReviewIM from "@/hooks/useIDDSpecialistReviewIM";
 import useIM from "@/hooks/useIM";
+import useIMERCCITLDirectorEndorsementIM from "@/hooks/useIMERCCITLDirectorEndorsementIM";
+import useIMERCCITLReviewedIM from "@/hooks/useIMERCCITLReviewedIM";
+import useIMERCIDDCoordinatorEndorsementIM from "@/hooks/useIMERCIDDCoordinatorEndorsementIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import useIMLatestPlagiarismFile from "@/hooks/useIMLatestPlagiarismFile";
 import useIMLatestQAMISFile from "@/hooks/useIMLatestQAMISFile";
 import useIMStatus from "@/hooks/useIMStatus";
+import usePeerReviewIM from "@/hooks/usePeerReviewIM";
+import useQAMISChairpersonEndorsementIM from "@/hooks/useQAMISChairpersonEndorsementIM";
+import useQAMISCoordinatorEndorsementIM from "@/hooks/useQAMISCoordinatorEndorsementIM";
+import useQAMISDeanEndorsementIM from "@/hooks/useQAMISDeanEndorsementIM";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
+import useRefresh from "@/hooks/useRefresh";
+import useSerialNumberIM from "@/hooks/useSerialNumberIM";
+import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
+import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
+import useSubmittedContentSpecialistSuggestionIM from "@/hooks/useSubmittedContentSpecialistSuggestionIM";
+import useSubmittedCoordinatorSuggestionIM from "@/hooks/useSubmittedCoordinatorSuggestionIM";
+import useSubmittedIDDCoordinatorSuggestionIM from "@/hooks/useSubmittedIDDCoordinatorSuggestionIM";
+import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
+import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
+import useSubmittedReturnedCITLRevisionIM from "@/hooks/useSubmittedReturnedCITLRevisionIM";
+import useSubmittedReturnedDepartmentRevisionIM from "@/hooks/useSubmittedReturnedDepartmentRevisionIM";
+import useSubmittedReturnedIMERCCITLRevisionIM from "@/hooks/useSubmittedReturnedIMERCCITLRevisionIM";
+import useUser from "@/hooks/useUser";
+import useUserFaculty from "@/hooks/useUserFaculty";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 import {
+  ActiveFaculty,
+  CoAuthor,
   CoordinatorEndorsement,
   DepartmentReview,
   DepartmentRevision,
+  IM,
   IMFile,
 } from "@prisma/client";
 import axios from "axios";
+import { useFormik } from "formik";
+import { DateTime } from "luxon";
+import Error from "next/error";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEventHandler, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import * as Yup from "yup";
 
 export default function ViewIM() {
+  const { refresh, refreshFlag } = useRefresh();
   const router = useRouter();
   const iMId = router.query.id;
-  const iM = useIM({ id: iMId as string });
+  const iM = useIM({ id: iMId as string, refreshFlag });
   const [state, setState] = useState<{
     iMFile?: File | null;
     plagiarismFile?: File | null;
-  }>();
+    openConfirmation: boolean;
+  }>({
+    openConfirmation: false,
+  });
   const iMStatus = useIMStatus({ id: iMId as string });
+  const departmentReviewed = useDepartmentReviewedIM({
+    id: iMId as string,
+  });
+  const submittedReturnedDepartmentRevision =
+    useSubmittedReturnedDepartmentRevisionIM({
+      id: iMId as string,
+    });
+  const submittedIDDCoordinatorSuggestion =
+    useSubmittedIDDCoordinatorSuggestionIM({
+      id: iMId as string,
+    });
+  const submittedReturnedCITLRevision = useSubmittedReturnedCITLRevisionIM({
+    id: iMId as string,
+  });
+  const iMERCCITLReviewed = useIMERCCITLReviewedIM({
+    id: iMId as string,
+  });
+  const submittedReturnedIMERCCITLRevision =
+    useSubmittedReturnedIMERCCITLRevisionIM({
+      id: iMId as string,
+    });
   const activeFaculty = useActiveFacultyMe();
   const activeCoordinator = useActiveCoordinatorMe();
   const activeChairperson = useActiveChairpersonMe();
@@ -53,6 +133,88 @@ export default function ViewIM() {
   const iMFile = useIMLatestIMFile({ id: iMId as string });
   const qAMISFile = useIMLatestQAMISFile({ id: iMId as string });
   const plagiarismFile = useIMLatestPlagiarismFile({ id: iMId as string });
+  const department = useDepartmentIM({ id: iMId as string });
+  const college = useCollegeIM({ id: iMId as string });
+  const myDepartment = useDepartmentMe();
+  const myCollege = useCollege({ id: myDepartment?.collegeId });
+  const user = useUserFaculty({
+    id: iM?.facultyId,
+  });
+  const submittedPeerSuggestion = useSubmittedPeerSuggestionIM({
+    id: iMId as string,
+  });
+  const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
+    id: iMId as string,
+  });
+  const submittedCoordinatorSuggestion = useSubmittedCoordinatorSuggestionIM({
+    id: iMId as string,
+  });
+  const chairpersonEndorsement = useQAMISChairpersonEndorsementIM({
+    id: iMId as string,
+  });
+  const coordinatorEndorsement = useQAMISCoordinatorEndorsementIM({
+    id: iMId as string,
+  });
+  const deanEndorsement = useQAMISDeanEndorsementIM({
+    id: iMId as string,
+  });
+  const submittedContentSpecialistSuggestion =
+    useSubmittedContentSpecialistSuggestionIM({
+      id: iMId as string,
+    });
+  const submittedIDDSpecialistSuggestion =
+    useSubmittedIDDSpecialistSuggestionIM({
+      id: iMId as string,
+    });
+  const submittedContentEditorSuggestion =
+    useSubmittedContentEditorSuggestionIM({
+      id: iMId as string,
+    });
+  const serialNumber = useSerialNumberIM({
+    id: iM?.id,
+  });
+  const [coAuthorQuery, setCoAuthorQuery] = useState({
+    skip: 0,
+    take: 1,
+    filter: {
+      facultyId: activeFaculty?.facultyId,
+      iMId: iMId as string,
+    },
+  });
+  const { coAuthors, count: coAuthorsCount } = useCoAuthors(
+    coAuthorQuery,
+    undefined,
+    true
+  );
+
+  useEffect(() => {
+    if (!activeFaculty) {
+      return;
+    }
+    setCoAuthorQuery((prev) => ({
+      ...prev,
+      filter: {
+        iMId: iMId as string,
+        facultyId: activeFaculty?.facultyId,
+      },
+    }));
+  }, [activeFaculty]);
+
+  const { addSnackbar } = useContext(SnackbarContext);
+
+  const closeConfirmation = () => {
+    setState((prev) => ({
+      ...prev,
+      openConfirmation: false,
+    }));
+  };
+
+  const openConfirmation = () => {
+    setState((prev) => ({
+      ...prev,
+      openConfirmation: true,
+    }));
+  };
 
   const onQAMISChairpersonEndorsement = () => {
     axios
@@ -60,9 +222,12 @@ export default function ViewIM() {
         qAMISRevisionId: qAMISRevision?.id,
         activeChairpersonId: activeChairperson?.id,
       })
-      .then(() => alert("Successfully endorsed IM"))
+      .then(() => addSnackbar("Successfully endorsed IM"))
       .catch((error) => {
-        alert(error?.response?.data?.error?.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -75,9 +240,12 @@ export default function ViewIM() {
         qAMISRevisionId: qAMISRevision?.id,
         activeCoordinatorId: activeCoordinator?.id,
       })
-      .then(() => alert("Successfully endorsed IM"))
+      .then(() => addSnackbar("Successfully endorsed IM"))
       .catch((error) => {
-        alert(error?.response?.data?.error?.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -90,9 +258,12 @@ export default function ViewIM() {
         qAMISRevisionId: qAMISRevision?.id,
         activeDeanId: activeDean?.id,
       })
-      .then(() => alert("Successfully endorsed IM"))
+      .then(() => addSnackbar("Successfully endorsed IM"))
       .catch((error) => {
-        alert(error?.response?.data?.error?.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -103,19 +274,15 @@ export default function ViewIM() {
     axios
       .delete(`/api/im/${id}`)
       .then(() => {
-        alert("IM deleted successfully");
-        router.push("/my_ims");
+        addSnackbar("IM has been deleted successfully");
+        router.push("/department/my_ims");
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to delete IM",
+          "error"
+        );
       });
-  };
-
-  const onFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setState((prev) => ({ ...prev, iMFile: e.target.files?.item(0) }));
-  };
-  const onPlagiarismFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setState((prev) => ({ ...prev, plagiarismFile: e.target.files?.item(0) }));
   };
 
   const submitForReviewHandler = async () => {
@@ -132,11 +299,14 @@ export default function ViewIM() {
             iMFileId: res.data.id,
           })
           .then(() => {
-            alert("IM has been submitted for review");
+            addSnackbar("IM has been submitted for review");
           });
       })
-      .catch((err) => {
-        alert(err?.response?.data?.error?.message ?? err.message);
+      .catch((error) => {
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to submit for review",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -144,11 +314,20 @@ export default function ViewIM() {
   };
 
   const submitForEndorsementHandler = async () => {
-    if (!state?.iMFile || !iMId) return;
+    if (!state?.iMFile || !iMId || !departmentReviewed) return;
 
     const formData = new FormData();
     formData.append("file", state.iMFile);
     formData.append("iMId", iMId as string);
+    if (submittedReturnedDepartmentRevision) {
+      formData.append(
+        "submittedReturnedDepartmentRevisionId",
+        submittedReturnedDepartmentRevision.id
+      );
+    } else {
+      formData.append("departmentReviewedId", departmentReviewed.id);
+    }
+
     return axios
       .post<IMFile>("/api/im_file", formData)
       .then(async (res) => {
@@ -157,11 +336,15 @@ export default function ViewIM() {
             iMFileId: res.data.id,
           })
           .then(() => {
-            alert("IM has been submitted for endorsement");
+            addSnackbar("IM has been submitted for endorsement");
           });
       })
-      .catch((err) => {
-        alert(err?.response?.data?.error?.message ?? err.message);
+      .catch((error) => {
+        addSnackbar(
+          error.response.data?.error?.message ??
+            "Failed to submit IM for endorsement",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -169,11 +352,22 @@ export default function ViewIM() {
   };
 
   const submitForCITLEndorsementHandler = async () => {
-    if (!state?.iMFile || !iMId) return;
+    if (!state?.iMFile || !iMId || !submittedIDDCoordinatorSuggestion) return;
 
     const formData = new FormData();
     formData.append("file", state.iMFile);
     formData.append("iMId", iMId as string);
+    if (submittedReturnedCITLRevision) {
+      formData.append(
+        "submittedReturnedCITLRevisionId",
+        submittedReturnedCITLRevision.id
+      );
+    } else {
+      formData.append(
+        "submittedIDDCoordinatorSuggestionId",
+        submittedIDDCoordinatorSuggestion.id
+      );
+    }
     return axios
       .post<IMFile>("/api/im_file", formData)
       .then(async (res) => {
@@ -182,45 +376,89 @@ export default function ViewIM() {
             iMFileId: res.data.id,
           })
           .then(() => {
-            alert("IM has been submitted for endorsement");
+            addSnackbar("IM has been submitted for endorsement");
           });
       })
-      .catch((err) => {
-        alert(err?.response?.data?.error?.message ?? err.message);
+      .catch((error) => {
+        addSnackbar(
+          error.response.data?.error?.message ??
+            "Failed to submit IM for endorsement",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
       });
   };
 
+  useEffect(() => {
+    console.log({ submittedReturnedIMERCCITLRevision });
+  }, [submittedReturnedIMERCCITLRevision]);
+
   const submitForIMERCCITLEndorsementHandler = async () => {
     console.log({ state });
-    if (!state?.iMFile || !state?.plagiarismFile) return;
+    if (
+      !state?.iMFile ||
+      (!state?.plagiarismFile && !plagiarismFile) ||
+      !iMERCCITLReviewed
+    )
+      return;
 
     const iMFormData = new FormData();
     iMFormData.append("file", state.iMFile);
     iMFormData.append("iMId", iMId as string);
+    if (submittedReturnedIMERCCITLRevision) {
+      iMFormData.append(
+        "submittedReturnedIMERCCITLRevisionId",
+        submittedReturnedIMERCCITLRevision.id
+      );
+    } else {
+      iMFormData.append("iMERCCITLReviewedId", iMERCCITLReviewed.id);
+    }
     return axios
       .post("/api/im_file", iMFormData)
       .then((res) => {
         const iMFile = res.data;
-        if (!state?.plagiarismFile) return;
+        if (!state?.plagiarismFile && !plagiarismFile) return;
 
         const plagiarismFormData = new FormData();
-        plagiarismFormData.append("file", state.plagiarismFile);
-        plagiarismFormData.append("iMId", iMId as string);
-        return axios
-          .post("/api/plagiarism_file", plagiarismFormData)
-          .then((res) => {
-            const plagiarismFile = res.data;
-            return axios.post("/api/imerc_citl_revision", {
+        plagiarismFormData.append("iMERCCITLReviewedId", iMERCCITLReviewed.id);
+        if (!plagiarismFile) {
+          if (state.plagiarismFile) {
+            plagiarismFormData.append("file", state.plagiarismFile);
+          }
+          console.log("No plagiarism file detected");
+          return axios
+            .post("/api/plagiarism_file", plagiarismFormData)
+            .then((res) => {
+              const plagiarismFile = res.data;
+              return axios
+                .post("/api/imerc_citl_revision", {
+                  iMFileId: iMFile.id,
+                  plagiarismFileId: plagiarismFile.id,
+                })
+                .then(() => {
+                  addSnackbar("IM has been submitted for endorsement");
+                });
+            });
+        } else {
+          console.log("A plagiarism file detected");
+          return axios
+            .post("/api/imerc_citl_revision", {
               iMFileId: iMFile.id,
               plagiarismFileId: plagiarismFile.id,
+            })
+            .then(() => {
+              addSnackbar("IM has been submitted for endorsement");
             });
-          });
+        }
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ??
+            "Failed to submit IM for endorsement",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -241,12 +479,13 @@ export default function ViewIM() {
             departmentRevisionId: departmentRevision.id,
             activeCoordinatorId: activeCoordinator.id,
           })
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -271,12 +510,13 @@ export default function ViewIM() {
             coordinatorEndorsementId: coordinatorEndorsement.id,
             activeDeanId: activeDean.id,
           })
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -297,12 +537,13 @@ export default function ViewIM() {
             cITLRevisionId: cITLRevision.id,
             activeIDDCoordinatorId: activeIDDCoordinator.id,
           })
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -327,12 +568,13 @@ export default function ViewIM() {
             iDDCoordinatorEndorsementId: iDDCoordinatorEndorsement.id,
             activeCITLDirectorId: activeCITLDirector.id,
           })
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -356,12 +598,13 @@ export default function ViewIM() {
               activeIDDCoordinatorId: activeIDDCoordinator.id,
             }
           )
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
@@ -392,399 +635,1720 @@ export default function ViewIM() {
               activeCITLDirectorId: activeCITLDirector.id,
             }
           )
-          .then(() => {
-            alert("IM endorsed successfully");
-          });
+          .then(() => addSnackbar("Successfully endorsed IM"));
       })
       .catch((error) => {
-        alert(error.response.data.error.message);
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
       })
       .finally(() => {
         router.reload();
       });
   };
 
-  if (!iM) return null;
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title="IM Not Found" />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>View IM</h2>
+      <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 h-full border rounded p-1 overflow-auto space-x-1">
+        <div className="sm:flex-1 px-1 sm:h-full sm:overflow-auto">
+          <div className="flex flex-col h-full sm:overflow-auto">
+            <div className="flex mb-2">
+              <div className="flex-1">
+                <div className="flex">
+                  <h2 className="flex-1 uppercase">
+                    {iM.title}{" "}
+                    {serialNumber && (
+                      <span className="normal-case italic text-xs text-palette_grey">
+                        {serialNumber?.value}
+                      </span>
+                    )}
+                  </h2>
+                  <div>
+                    {
+                      <ActionMenu
+                        activeFaculty={activeFaculty}
+                        iM={iM}
+                        iMStatus={iMStatus}
+                        deleteHandler={deleteHandler}
+                        showIMPDF={Boolean(iMFile)}
+                        showQAMISPDF={Boolean(qAMISFile)}
+                        showPlagiarismPDF={Boolean(plagiarismFile)}
+                        refresh={refresh}
+                      />
+                    }
+                  </div>
+                </div>
+                <div className="flex space-x-10">
+                  <div className="flex space-x-2 mt-2">
+                    <img
+                      className="w-10 h-10 rounded-full object-cover"
+                      src={user?.image ?? ""}
+                      alt="User profile picture"
+                    />
+                    <div className="text-xs text-palette_grey">
+                      <p className="uppercase font-bold">{user?.name}</p>
+                      {iM?.createdAt && (
+                        <p>
+                          {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat(
+                            "D | t"
+                          )}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="space-x-4">
+                      <span className="text-xs text-palette_grey">
+                        Type: {iM.type}
+                      </span>
+                      <span className="text-xs text-palette_grey">
+                        Status: {iMStatusNormalizer(iMStatus)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-palette_grey">
+                      Department: {department?.name} | {college?.name}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        <div className='space-x-1'>
-          <Link href={`/im/${iM.id}/all_reviews`} className='border rounded'>
-            all reviews
-          </Link>
-          <Link
-            href={`/im/${iM.id}/all_suggestions`}
-            className='border rounded'
-          >
-            all suggestions
-          </Link>
-          <Link href={`/im/${iM.id}/track`} className='border rounded'>
-            track
-          </Link>
-          {iM.facultyId === activeFaculty?.facultyId &&
-            iMStatus === "IMPLEMENTATION_DRAFT" && (
-              <Link href={`/im/${iM.id}/edit`} className='border rounded'>
-                edit
-              </Link>
+            <CoAuthors iMId={iMId as string} />
+
+            {((activeDean && college?.id === myCollege?.id) ||
+              (activeFaculty && department?.id === myDepartment?.id) ||
+              activeIDDCoordinator ||
+              activeCITLDirector) && (
+              <div className="flex-1 h-full overflow-auto">
+                {iMStatus === "IMPLEMENTATION_DRAFT" &&
+                  iM.facultyId === activeFaculty?.facultyId && (
+                    <div>
+                      <FileUpload
+                        onFileChange={(e) => {
+                          setState((prev) => ({
+                            ...prev,
+                            iMFile: e.target.files?.item(0),
+                          }));
+                        }}
+                        onFileReset={() => {
+                          setState((prev) => ({
+                            ...prev,
+                            iMFile: undefined,
+                          }));
+                        }}
+                      />
+                      <button
+                        className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2"
+                        disabled={Boolean(!state?.iMFile)}
+                        onClick={openConfirmation}
+                      >
+                        <span>Submit for Review</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="1em"
+                          viewBox="0 0 384 512"
+                          className="fill-palette_white"
+                        >
+                          <path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM216 408c0 13.3-10.7 24-24 24s-24-10.7-24-24V305.9l-31 31c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l72-72c9.4-9.4 24.6-9.4 33.9 0l72 72c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-31-31V408z" />
+                        </svg>
+                      </button>
+                      {state.openConfirmation && (
+                        <Confirmation
+                          onClose={closeConfirmation}
+                          onConfirm={submitForReviewHandler}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
+                  <div className="flex flex-col">
+                    <div>
+                      <DepartmentReviewStatus iMId={iMId as string} />
+                    </div>
+                    <div className="space-x-2 my-1">
+                      {iM.facultyId !== activeFaculty?.facultyId &&
+                        !submittedPeerSuggestion && (
+                          <>
+                            {coAuthorsCount < 1 && (
+                              <Link
+                                href={`/im/${iM.id}/peer_review`}
+                                className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                              >
+                                <span>Peer Review</span>
+                                <span>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="1em"
+                                    viewBox="0 0 576 512"
+                                    className="fill-palette_white"
+                                  >
+                                    <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                                  </svg>
+                                </span>
+                              </Link>
+                            )}
+                            {coAuthorsCount > 0 && (
+                              <button
+                                disabled={true}
+                                title="Cannot review co-authored IM"
+                                className="bg-palette_grey text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2"
+                              >
+                                <span>Peer Review</span>
+                                <span>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="1em"
+                                    viewBox="0 0 576 512"
+                                    className="fill-palette_white"
+                                  >
+                                    <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                                  </svg>
+                                </span>
+                              </button>
+                            )}
+                          </>
+                        )}
+
+                      {activeCoordinator && !submittedCoordinatorSuggestion && (
+                        <Link
+                          href={`/im/${iM.id}/coordinator_review`}
+                          className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                        >
+                          <span>Coordinator Review</span>
+                          <span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 576 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                            </svg>
+                          </span>
+                        </Link>
+                      )}
+
+                      {activeChairperson && !submittedChairpersonSuggestion && (
+                        <Link
+                          href={`/im/${iM.id}/chairperson_review`}
+                          className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                        >
+                          <span>Chairperson Review</span>
+                          <span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 576 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                            </svg>
+                          </span>
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {(iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" ||
+                  iMStatus ===
+                    "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION") && (
+                  <div className="flex flex-col space-y-1">
+                    <div>
+                      <DepartmentReviewStatus iMId={iMId as string} />
+                    </div>
+                    {iM.facultyId === activeFaculty?.facultyId && (
+                      <div className="space-y-1 px-1">
+                        <IMPeerSuggestionItems id={iM.id} />
+                        <IMChairpersonSuggestionItems id={iM.id} />
+                        <IMCoordinatorSuggestionItems id={iM.id} />
+                        <IMReturnedDepartmentRevisionSuggestionItems
+                          id={iM.id}
+                        />
+                        <FileUpload
+                          onFileChange={(e) => {
+                            setState((prev) => ({
+                              ...prev,
+                              iMFile: e.target.files?.item(0),
+                            }));
+                          }}
+                          onFileReset={() => {
+                            setState((prev) => ({
+                              ...prev,
+                              iMFile: undefined,
+                            }));
+                          }}
+                        />
+
+                        <button
+                          className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
+                          disabled={Boolean(!state?.iMFile)}
+                          onClick={openConfirmation}
+                        >
+                          <span>Submit for endorsement</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="1em"
+                            viewBox="0 0 384 512"
+                            className="fill-palette_white"
+                          >
+                            <path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM216 408c0 13.3-10.7 24-24 24s-24-10.7-24-24V305.9l-31 31c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l72-72c9.4-9.4 24.6-9.4 33.9 0l72 72c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-31-31V408z" />
+                          </svg>
+                        </button>
+                        {state.openConfirmation && (
+                          <Confirmation
+                            onClose={closeConfirmation}
+                            onConfirm={submitForEndorsementHandler}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" && (
+                  <div className="flex flex-col">
+                    <div>
+                      <DepartmentEndorsementStatus iMId={iMId as string} />
+                    </div>
+                    {activeCoordinator && (
+                      <div className="space-y-1 p-1">
+                        <IMChairpersonSuggestionItems
+                          id={iM.id}
+                          editable={false}
+                        />
+                        <IMCoordinatorSuggestionItems
+                          id={iM.id}
+                          editable={false}
+                        />
+                        <IMPeerSuggestionItems id={iM.id} editable={false} />
+                        <IMReturnedDepartmentRevisionSuggestionItems
+                          id={iM.id}
+                          editable={false}
+                        />
+                        <div className="space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row">
+                          <>
+                            <button
+                              className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                              onClick={openConfirmation}
+                            >
+                              <span>Endorse IM</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 448 512"
+                                className="fill-palette_white"
+                              >
+                                <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                              </svg>
+                            </button>
+                            {state.openConfirmation && (
+                              <Confirmation
+                                onClose={closeConfirmation}
+                                onConfirm={coordinatorEndorsementHandler}
+                              />
+                            )}
+                          </>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                            onClick={returnCoordinatorEndorsementHandler}
+                          >
+                            <span>Return Revision</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 512 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M48.5 224H40c-13.3 0-24-10.7-24-24V72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8H48.5z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus ===
+                  "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED" && (
+                  <div className="flex flex-col space-y-1 p-1">
+                    <div>
+                      <DepartmentEndorsementStatus iMId={iMId as string} />
+                    </div>
+                    {activeDean && (
+                      <div className="flex flex-col sm:flex-row">
+                        <>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                            onClick={openConfirmation}
+                          >
+                            <span>Endorse IM</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 448 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                            </svg>
+                          </button>
+                          {state.openConfirmation && (
+                            <Confirmation
+                              onClose={closeConfirmation}
+                              onConfirm={deanEndorsementHandler}
+                            />
+                          )}
+                        </>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus === "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED" && (
+                  <div className="flex flex-col space-y-1 px-1">
+                    <div>
+                      <CITLReviewStatus iMId={iMId as string} />
+                    </div>
+                    {activeIDDCoordinator && (
+                      <div>
+                        <Link
+                          href={`/im/${iM.id}/idd_coordinator_suggestion`}
+                          className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                        >
+                          <span>IDD Coordinator Suggestion</span>
+                          <span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 576 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                            </svg>
+                          </span>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {(iMStatus === "IMPLEMENTATION_CITL_REVIEWED" || iMStatus === "IMPLEMENTATION_CITL_RETURNED_REVISION") && (
+                  <div className="flex flex-col space-y-1">
+                    <div>
+                      <CITLReviewStatus iMId={iMId as string} />
+                    </div>
+                    {iM.facultyId === activeFaculty?.facultyId && (
+                      <div className="space-y-1">
+                        <IMIDDCoordinatorSuggestionItems id={iM.id} />
+                        <IMReturnedCITLRevisionSuggestionItems id={iM.id} />
+                        <FileUpload
+                          onFileChange={(e) => {
+                            setState((prev) => ({
+                              ...prev,
+                              iMFile: e.target.files?.item(0),
+                            }));
+                          }}
+                          onFileReset={() => {
+                            setState((prev) => ({
+                              ...prev,
+                              iMFile: undefined,
+                            }));
+                          }}
+                        />
+
+                        <>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
+                            onClick={openConfirmation}
+                            disabled={!Boolean(state.iMFile)}
+                          >
+                            <span>Submit for endorsement</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 448 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                            </svg>
+                          </button>
+                          {state.openConfirmation && (
+                            <Confirmation
+                              onClose={closeConfirmation}
+                              onConfirm={submitForCITLEndorsementHandler}
+                            />
+                          )}
+                        </>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus === "IMPLEMENTATION_CITL_REVISED" && (
+                  <div className="flex flex-col space-y-1">
+                    <div>
+                      <CITLReviewStatus iMId={iMId as string} />
+                    </div>
+                    {activeIDDCoordinator && (
+                      <div className="space-y-1">
+                        <IMIDDCoordinatorSuggestionItems
+                          id={iM.id}
+                          editable={false}
+                        />
+                        <IMReturnedCITLRevisionSuggestionItems
+                          id={iM.id}
+                          editable={false}
+                        />
+
+                        <div className="space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row">
+                          <>
+                            <button
+                              className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                              onClick={openConfirmation}
+                            >
+                              <span>Endorse IM</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 448 512"
+                                className="fill-palette_white"
+                              >
+                                <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                              </svg>
+                            </button>
+                            {state.openConfirmation && (
+                              <Confirmation
+                                onClose={closeConfirmation}
+                                onConfirm={iDDCoordinatorEndorsementHandler}
+                              />
+                            )}
+                          </>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                            onClick={returnIDDCoordinatorEndorsementHandler}
+                          >
+                            <span>Return Revision</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 512 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M48.5 224H40c-13.3 0-24-10.7-24-24V72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8H48.5z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus ===
+                  "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" && (
+                  <div className="flex flex-col space-y-1">
+                    <div>
+                      <CITLReviewStatus iMId={iMId as string} />
+                    </div>
+                    {activeCITLDirector && (
+                      <div>
+                        <>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
+                            onClick={openConfirmation}
+                          >
+                            <span>Endorse IM</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 448 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                            </svg>
+                          </button>
+                          {state.openConfirmation && (
+                            <Confirmation
+                              onClose={closeConfirmation}
+                              onConfirm={cITLDirectorEndorsementHandler}
+                            />
+                          )}
+                        </>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus === "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED" && (
+                  <div className="flex flex-col space-y-1">
+                    <div>
+                      <CITLReviewStatus iMId={iMId as string} />
+                    </div>
+                    {iM.facultyId === activeFaculty?.facultyId && (
+                      <div>
+                        <Link
+                          href={`/im/${iM.id}/qamis_suggestion`}
+                          className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                        >
+                          <span>Input QAMIS suggestions</span>
+                          <span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 576 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                            </svg>
+                          </span>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus === "IMERC_QAMIS_REVISED" && (
+                  <div className="flex flex-col space-y-1">
+                    <div>
+                      <QAMISCollegeEndorsementStatus iMId={iMId as string} />
+                    </div>
+                    <div className="space-y-1">
+                      <IMQAMISSuggestionItems id={iM.id} editable={false} />
+                      {activeCoordinator && !coordinatorEndorsement && (
+                        <>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
+                            onClick={openConfirmation}
+                          >
+                            <span>Coordinator Endorsement</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 448 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                            </svg>
+                          </button>
+                          {state.openConfirmation && (
+                            <Confirmation
+                              onClose={closeConfirmation}
+                              onConfirm={onQAMISCoordinatorEndorsement}
+                            />
+                          )}
+                        </>
+                      )}
+                      {activeChairperson && !chairpersonEndorsement && (
+                        <>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
+                            onClick={openConfirmation}
+                          >
+                            <span>Chairperson Endorsement</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 448 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                            </svg>
+                          </button>
+                          {state.openConfirmation && (
+                            <Confirmation
+                              onClose={closeConfirmation}
+                              onConfirm={onQAMISChairpersonEndorsement}
+                            />
+                          )}
+                        </>
+                      )}
+                      {activeDean && !deanEndorsement && (
+                        <>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
+                            onClick={openConfirmation}
+                          >
+                            <span>Dean Endorsement</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 448 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                            </svg>
+                          </button>
+                          {state.openConfirmation && (
+                            <Confirmation
+                              onClose={closeConfirmation}
+                              onConfirm={onQAMISDeanEndorsement}
+                            />
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {iMStatus === "IMERC_QAMIS_DEPARTMENT_ENDORSED" && (
+                  <div className="flex flex-col space-y-1">
+                    <div>
+                      <IMERCReviewStatus iMId={iMId as string} />
+                    </div>
+                    <div className="space-x-2">
+                      {activeContentSpecialist &&
+                        !submittedContentSpecialistSuggestion && (
+                          <Link
+                            href={`/im/${iM.id}/content_specialist_review`}
+                            className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                          >
+                            <span>Content Specialist Review</span>
+                            <span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 576 512"
+                                className="fill-palette_white"
+                              >
+                                <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                              </svg>
+                            </span>
+                          </Link>
+                        )}
+
+                      {activeCITLDirector &&
+                        !submittedContentEditorSuggestion && (
+                          <Link
+                            href={`/im/${iM.id}/content_editor_review`}
+                            className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                          >
+                            <span>Content Editor Review</span>
+                            <span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 576 512"
+                                className="fill-palette_white"
+                              >
+                                <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                              </svg>
+                            </span>
+                          </Link>
+                        )}
+
+                      {activeIDDCoordinator &&
+                        !submittedIDDSpecialistSuggestion && (
+                          <Link
+                            href={`/im/${iM.id}/idd_specialist_review`}
+                            className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                          >
+                            <span>IDD Specialist Review</span>
+                            <span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 576 512"
+                                className="fill-palette_white"
+                              >
+                                <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                              </svg>
+                            </span>
+                          </Link>
+                        )}
+                    </div>
+                  </div>
+                )}
+
+                {(iMStatus === "IMERC_CITL_REVIEWED" || iMStatus === "IMERC_CITL_RETURNED_REVISION") && (
+                  <div className="flex flex-col space-y-1">
+                    <div>
+                      <IMERCReviewStatus iMId={iMId as string} />
+                    </div>
+                    {iM.facultyId === activeFaculty?.facultyId && (
+                      <div className="space-y-1">
+                        <IMContentSpecialistSuggestionItems id={iM.id} />
+                        <IMIDDSpecialistSuggestionItems id={iM.id} />
+                        <IMContentEditorSuggestionItems id={iM.id} />
+                        <IMReturnedIMERCCITLRevisionSuggestionItems
+                          id={iM.id}
+                        />
+
+                        <div className="flex flex-col w-full space-y-1">
+                          {!plagiarismFile && (
+                            <FileUpload
+                              label="UPLOAD PLAGIARISM FILE"
+                              onFileChange={(e) => {
+                                setState((prev) => ({
+                                  ...prev,
+                                  plagiarismFile: e.target.files?.item(0),
+                                }));
+                              }}
+                              onFileReset={() => {
+                                setState((prev) => ({
+                                  ...prev,
+                                  iMFile: undefined,
+                                }));
+                              }}
+                            />
+                          )}
+                          <FileUpload
+                            label="UPLOAD IM FILE"
+                            onFileChange={(e) => {
+                              setState((prev) => ({
+                                ...prev,
+                                iMFile: e.target.files?.item(0),
+                              }));
+                            }}
+                            onFileReset={() => {
+                              setState((prev) => ({
+                                ...prev,
+                                qAMISFile: undefined,
+                              }));
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row">
+                          <>
+                            <button
+                              className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                              onClick={openConfirmation}
+                              disabled={!Boolean(state.iMFile)}
+                            >
+                              <span>Submit for endorsement</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 448 512"
+                                className="fill-palette_white"
+                              >
+                                <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                              </svg>
+                            </button>
+                            {state.openConfirmation && (
+                              <Confirmation
+                                onClose={closeConfirmation}
+                                onConfirm={submitForIMERCCITLEndorsementHandler}
+                              />
+                            )}
+                          </>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus === "IMERC_CITL_REVISED" && (
+                  <div className="flex flex-col space-y-1">
+                    <div>
+                      <IMERCEndorsementStatus iMId={iMId as string} />
+                    </div>
+                    {activeIDDCoordinator && (
+                      <div className="space-y-1">
+                        <IMContentSpecialistSuggestionItems
+                          id={iM.id}
+                          editable={false}
+                        />
+                        <IMIDDSpecialistSuggestionItems
+                          id={iM.id}
+                          editable={false}
+                        />
+                        <IMContentEditorSuggestionItems
+                          id={iM.id}
+                          editable={false}
+                        />
+                        <IMReturnedIMERCCITLRevisionSuggestionItems
+                          id={iM.id}
+                          editable={false}
+                        />
+                        <div className="space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row">
+                          <>
+                            <button
+                              className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                              onClick={openConfirmation}
+                            >
+                              <span>Endorse IM</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 448 512"
+                                className="fill-palette_white"
+                              >
+                                <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                              </svg>
+                            </button>
+                            {state.openConfirmation && (
+                              <Confirmation
+                                onClose={closeConfirmation}
+                                onConfirm={
+                                  iMERCIDDCoordinatorEndorsementHandler
+                                }
+                              />
+                            )}
+                          </>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                            onClick={
+                              returnIMERCIDDCoordinatorEndorsementHandler
+                            }
+                          >
+                            <span>Return Revision</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 512 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M48.5 224H40c-13.3 0-24-10.7-24-24V72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8H48.5z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" && (
+                  <div className="flex flex-col">
+                    <div>
+                      <IMERCEndorsementStatus iMId={iMId as string} />
+                    </div>
+                    {activeCITLDirector && (
+                      <div>
+                        <>
+                          <button
+                            className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
+                            onClick={openConfirmation}
+                          >
+                            <span>Endorse IM</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="1em"
+                              viewBox="0 0 448 512"
+                              className="fill-palette_white"
+                            >
+                              <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                            </svg>
+                          </button>
+                          {state.openConfirmation && (
+                            <Confirmation
+                              onClose={closeConfirmation}
+                              onConfirm={iMERCCITLDirectorEndorsementHandler}
+                            />
+                          )}
+                        </>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {iMStatus === "IMERC_CITL_DIRECTOR_ENDORSED" && (
+                  <div>
+                    {/* <IMERCEndorsementStatus iMId={iMId as string} /> */}
+                    <h1 className="font-bold text-center my-10 text-palette_grey">
+                      ENDORSED TO IPTTU
+                    </h1>
+                  </div>
+                )}
+              </div>
             )}
-          {iM.facultyId === activeFaculty?.facultyId &&
-            iMStatus === "IMPLEMENTATION_DRAFT" && (
-              <button
-                onClick={() => deleteHandler(iM.id)}
-                className='border rounded'
-              >
-                delete
-              </button>
-            )}
+          </div>
         </div>
-      </div>
-      <div>
-        <p>id: {iM.id}</p>
-        <p>createdAt: {new Date(iM.createdAt).toLocaleString()}</p>
-        <p>updatedAt: {new Date(iM.updatedAt).toLocaleString()}</p>
-        <p>facultyId: {iM.facultyId}</p>
-        <p>title: {iM.title}</p>
-        <p>type: {iM.type}</p>
-      </div>
 
-      {iMStatus === "IMPLEMENTATION_DRAFT" &&
-        iM.facultyId === activeFaculty?.facultyId && (
-          <div>
-            <input type='file' onChange={onFileChange} accept='.pdf' />
-            <button className='border rounded' onClick={submitForReviewHandler}>
-              Submit for review
-            </button>
-          </div>
-        )}
-
-      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" && (
-        <div className='space-x-2'>
-          {iM.facultyId !== activeFaculty?.facultyId && (
-            <Link href={`/im/${iM.id}/peer_review`} className='border rounded'>
-              Peer Review
-            </Link>
-          )}
-
-          {activeCoordinator && (
-            <Link
-              href={`/im/${iM.id}/coordinator_review`}
-              className='border rounded'
-            >
-              Coordinator Review
-            </Link>
-          )}
-
-          {activeChairperson && (
-            <Link
-              href={`/im/${iM.id}/chairperson_review`}
-              className='border rounded'
-            >
-              Chairperson Review
-            </Link>
-          )}
-        </div>
-      )}
-
-      {iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED" &&
-        iM.facultyId === activeFaculty?.facultyId && (
-          <div>
-            <IMChairpersonSuggestionItems id={iM.id} />
-            <IMCoordinatorSuggestionItems id={iM.id} />
-            <IMPeerSuggestionItems id={iM.id} />
-            <IMReturnedDepartmentRevisionSuggestionItems id={iM.id} />
-            <input type='file' onChange={onFileChange} accept='.pdf' />
-            <button
-              className='border rounded'
-              onClick={submitForEndorsementHandler}
-            >
-              Submit for endorsement
-            </button>
-          </div>
-        )}
-
-      {(iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" ||
-        iMStatus ===
-          "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION_NOT_SUBMITTED") &&
-        activeCoordinator && (
-          <div className='space-x-1'>
-            <IMChairpersonSuggestionItems id={iM.id} editable={false} />
-            <IMCoordinatorSuggestionItems id={iM.id} editable={false} />
-            <IMPeerSuggestionItems id={iM.id} editable={false} />
-            <IMReturnedDepartmentRevisionSuggestionItems
-              id={iM.id}
-              editable={false}
-            />
-            <button
-              className='border rounded'
-              onClick={coordinatorEndorsementHandler}
-            >
-              Endorse IM
-            </button>
-            <button
-              className='border rounded'
-              onClick={returnCoordinatorEndorsementHandler}
-            >
-              Return revision
-            </button>
-          </div>
-        )}
-
-      {iMStatus === "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED" &&
-        activeDean && (
-          <div>
-            <button className='border rounded' onClick={deanEndorsementHandler}>
-              Endorse IM
-            </button>
-          </div>
-        )}
-
-      {iMStatus === "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED" &&
-        activeIDDCoordinator && (
-          <div>
-            <Link
-              href={`/im/${iM.id}/idd_coordinator_suggestion`}
-              className='border rounded'
-            >
-              IDD Coordinator Suggestion
-            </Link>
-          </div>
-        )}
-
-      {iMStatus === "IMPLEMENTATION_CITL_REVIEWED" &&
-        iM.facultyId === activeFaculty?.facultyId && (
-          <div>
-            <IMIDDCoordinatorSuggestionItems id={iM.id} />
-            <IMReturnedCITLRevisionSuggestionItems id={iM.id} />
-
-            <input type='file' onChange={onFileChange} accept='.pdf' />
-            <button
-              className='border rounded'
-              onClick={submitForCITLEndorsementHandler}
-            >
-              Submit for endorsement
-            </button>
-          </div>
-        )}
-
-      {(iMStatus === "IMPLEMENTATION_CITL_REVISED" ||
-        iMStatus === "IMPLEMENTATION_CITL_RETURNED_REVISION_NOT_SUBMITTED") &&
-        activeIDDCoordinator && (
-          <div className='space-x-1'>
-            <IMIDDCoordinatorSuggestionItems id={iM.id} editable={false} />
-            <IMReturnedCITLRevisionSuggestionItems
-              id={iM.id}
-              editable={false}
-            />
-            <button
-              className='border rounded'
-              onClick={iDDCoordinatorEndorsementHandler}
-            >
-              Endorse IM
-            </button>
-            <button
-              className='border rounded'
-              onClick={returnIDDCoordinatorEndorsementHandler}
-            >
-              Return revision
-            </button>
-          </div>
-        )}
-
-      {iMStatus === "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" &&
-        activeCITLDirector && (
-          <div>
-            <button
-              className='border rounded'
-              onClick={cITLDirectorEndorsementHandler}
-            >
-              Endorse IM
-            </button>
-          </div>
-        )}
-
-      {iMStatus === "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED" &&
-        iM.facultyId === activeFaculty?.facultyId && (
-          <div>
-            <Link
-              href={`/im/${iM.id}/qamis_suggestion`}
-              className='border rounded'
-            >
-              Input QAMIS suggestions
-            </Link>
-          </div>
-        )}
-
-      {iMStatus === "IMERC_QAMIS_REVISED" && (
-        <div className='space-x-2'>
-          {activeCoordinator && (
-            <button
-              className='border rounded'
-              onClick={onQAMISCoordinatorEndorsement}
-            >
-              Coordinator Endorsement
-            </button>
-          )}
-          {activeChairperson && (
-            <button
-              className='border rounded'
-              onClick={onQAMISChairpersonEndorsement}
-            >
-              Chairperson Endorsement
-            </button>
-          )}
-          {activeDean && (
-            <button className='border rounded' onClick={onQAMISDeanEndorsement}>
-              Dean Endorsement
-            </button>
-          )}
-        </div>
-      )}
-
-      {iMStatus === "IMERC_QAMIS_DEPARTMENT_ENDORSED" && (
-        <div className='space-x-2'>
-          {activeContentSpecialist && (
-            <Link
-              href={`/im/${iM.id}/content_specialist_review`}
-              className='border rounded'
-            >
-              Content Specialist Review
-            </Link>
-          )}
-
-          {activeCITLDirector && (
-            <Link
-              href={`/im/${iM.id}/content_editor_review`}
-              className='border rounded'
-            >
-              Content Editor Review
-            </Link>
-          )}
-
-          {activeIDDCoordinator && (
-            <Link
-              href={`/im/${iM.id}/idd_specialist_review`}
-              className='border rounded'
-            >
-              IDD Specialist Review
-            </Link>
-          )}
-        </div>
-      )}
-
-      {iMStatus === "IMERC_CITL_REVIEWED" &&
-        iM.facultyId === activeFaculty?.facultyId && (
-          <div>
-            <IMContentSpecialistSuggestionItems id={iM.id} />
-            <IMIDDSpecialistSuggestionItems id={iM.id} />
-            <IMContentEditorSuggestionItems id={iM.id} />
-            <IMReturnedIMERCCITLRevisionSuggestionItems id={iM.id} />
-
-            <p>Plagiarism File:</p>
-            <input
-              type='file'
-              onChange={onPlagiarismFileChange}
-              accept='.pdf'
-            />
-            <br />
-            <p>IM File:</p>
-            <input
-              type='file'
-              id='im_file'
-              onChange={onFileChange}
-              accept='.pdf'
-            />
-            <br />
-            <button
-              className='border rounded'
-              onClick={submitForIMERCCITLEndorsementHandler}
-            >
-              Submit for endorsement
-            </button>
-          </div>
-        )}
-
-      {(iMStatus === "IMERC_CITL_REVISED" ||
-        iMStatus ===
-          "IMPLEMENTATION_IMERC_CITL_RETURNED_REVISION_NOT_SUBMITTED") &&
-        activeIDDCoordinator && (
-          <div className='space-x-1'>
-            <IMContentSpecialistSuggestionItems id={iM.id} editable={false} />
-            <IMIDDSpecialistSuggestionItems id={iM.id} editable={false} />
-            <IMContentEditorSuggestionItems id={iM.id} editable={false} />
-            <IMReturnedIMERCCITLRevisionSuggestionItems
-              id={iM.id}
-              editable={false}
-            />
-            <button
-              className='border rounded'
-              onClick={iMERCIDDCoordinatorEndorsementHandler}
-            >
-              Endorse IM
-            </button>
-            <button
-              className='border rounded'
-              onClick={returnIMERCIDDCoordinatorEndorsementHandler}
-            >
-              Return revision
-            </button>
-          </div>
-        )}
-
-      {iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" &&
-        activeCITLDirector && (
-          <div>
-            <button
-              className='border rounded'
-              onClick={iMERCCITLDirectorEndorsementHandler}
-            >
-              Endorse IM
-            </button>
-          </div>
-        )}
-
-      {iMStatus === "IMERC_CITL_DIRECTOR_ENDORSED" && (
-        <div>
-          <p className='text-lg font-bold'>
-            IM is endorsed to IPTTU for copyright application process.
-          </p>
-        </div>
-      )}
-
-      <div className='flex'>
-        {qAMISFile && iMStatus === "IMERC_QAMIS_REVISED" && (
-          <div className='flex flex-col w-full'>
-            <p className='text-sm font-bold text-center'>QAMIS FILE</p>
-            <iframe
-              src={`/api/qamis_file/${qAMISFile.id}/pdf`}
-              title='QAMIS File'
-              className='w-full h-screen'
-            />
-          </div>
-        )}
-        {plagiarismFile && iMStatus === "IMERC_CITL_REVISED" && (
-          <div className='flex flex-col w-full'>
-            <p className='text-sm font-bold text-center'>PLAGIARISM FILE</p>
-            <iframe
-              src={`/api/plagiarism_file/${plagiarismFile.id}/pdf`}
-              title='Plagiarism File'
-              className='w-full h-screen'
-            />
-          </div>
-        )}
         {iMFile && (
-          <div className='flex flex-col w-full'>
-            <p className='text-sm font-bold text-center'>IM FILE</p>
+          <div className="sm:flex-1 h-screen-3/4 sm:h-full">
             <iframe
+              loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className='w-full h-screen'
+              className="w-full h-full rounded"
             />
           </div>
         )}
       </div>
     </MainLayout>
+  );
+}
+
+interface ActionMenuProps {
+  iM: IM;
+  activeFaculty?: ActiveFaculty | null;
+  iMStatus?: string | null;
+  deleteHandler: (id: string) => void;
+  showIMPDF: boolean;
+  showQAMISPDF: boolean;
+  showPlagiarismPDF: boolean;
+  refresh?: () => any;
+}
+function ActionMenu({
+  iM,
+  activeFaculty,
+  iMStatus,
+  deleteHandler,
+  showIMPDF,
+  showPlagiarismPDF,
+  showQAMISPDF,
+  refresh = () => {},
+}: ActionMenuProps) {
+  const [state, setState] = useState({
+    openMenu: false,
+    openConfirmation: false,
+  });
+  const menuRef: any = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setState((prev) => ({ ...prev, openMenu: false }));
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setState((prev) => ({ ...prev, openMenu: false }));
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  return (
+    <div className="relative inline-block text-left" ref={menuRef}>
+      <div>
+        <button
+          type="button"
+          className="inline-flex justify-center items-center space-x-2 w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+          id="options-menu"
+          aria-haspopup="true"
+          aria-expanded="true"
+          onClick={() =>
+            setState((prev) => ({ ...prev, openMenu: !prev.openMenu }))
+          }
+        >
+          <span>Actions</span>
+          {!state.openMenu && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 320 512"
+              className="fill-palette_blue"
+            >
+              <path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z" />
+            </svg>
+          )}
+          {state.openMenu && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 320 512"
+              className="fill-palette_blue"
+            >
+              <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z" />
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {state.openMenu && (
+        <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+          <div
+            className="py-1"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="options-menu"
+          >
+            <Link
+              href={`/im/${iM.id}/all_reviews`}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              All reviews
+            </Link>
+            <Link
+              href={`/im/${iM.id}/all_suggestions`}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              All suggestions
+            </Link>
+            <Link
+              href={`/im/${iM.id}/track`}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Track
+            </Link>
+            {showIMPDF && (
+              <Link
+                href={`/api/im_file/im/${iM.id}/pdf`}
+                target="_blank"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem"
+              >
+                View IM PDF
+              </Link>
+            )}
+            {showQAMISPDF && (
+              <Link
+                href={`/api/qamis_file/im/${iM.id}/pdf`}
+                target="_blank"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem"
+              >
+                View QAMIS PDF
+              </Link>
+            )}
+            {showPlagiarismPDF && (
+              <Link
+                href={`/api/plagiarism_file/im/${iM.id}/pdf`}
+                target="_blank"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem"
+              >
+                View Plagiarism PDF
+              </Link>
+            )}
+            <Link
+              href={`/im/${iM.id}/versions`}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Versions
+            </Link>
+            <Link
+              href={`/forms`}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Forms
+            </Link>
+            {iM.facultyId === activeFaculty?.facultyId &&
+              iMStatus === "IMPLEMENTATION_DRAFT" && (
+                <EditIM onUpdate={refresh} />
+              )}
+            {iM.facultyId === activeFaculty?.facultyId &&
+              iMStatus === "IMPLEMENTATION_DRAFT" && (
+                <>
+                  <button
+                    onClick={() =>
+                      setState((prev) => ({ ...prev, openConfirmation: true }))
+                    }
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    role="menuitem"
+                  >
+                    Delete
+                  </button>
+
+                  {state.openConfirmation && (
+                    <Confirmation
+                      onClose={() =>
+                        setState((prev) => ({
+                          ...prev,
+                          openConfirmation: false,
+                        }))
+                      }
+                      onConfirm={() => {
+                        deleteHandler(iM.id);
+                      }}
+                    />
+                  )}
+                </>
+              )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface EditIMProps {
+  onUpdate?: () => any;
+}
+function EditIM({ onUpdate = () => {} }: EditIMProps) {
+  const router = useRouter();
+  const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
+  const [openEdit, setOpenEdit] = useState(false);
+  const { addSnackbar } = useContext(SnackbarContext);
+
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      type: "MODULE",
+    },
+    validationSchema: Yup.object({
+      title: Yup.string().required(),
+      type: Yup.string()
+        .oneOf(["MODULE", "COURSE_FILE", "WORKTEXT", "TEXTBOOK"])
+        .required(),
+    }),
+
+    onSubmit: (values) => {
+      axios
+        .put(`/api/im/${iMId}`, values)
+        .then(() => {
+          addSnackbar("IM Updated successfully");
+        })
+        .catch((error) => {
+          addSnackbar(
+            error.response.data?.error?.message ?? "Failed to update IM",
+            "error"
+          );
+        })
+        .finally(() => {
+          setOpenEdit(false);
+          onUpdate();
+        });
+    },
+  });
+
+  useEffect(() => {
+    if (!iM) return;
+
+    formik.setValues({
+      title: iM.title,
+      type: iM.type,
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [iM]);
+
+  useEffect(() => {
+    console.log({ iM });
+  }, [iM]);
+
+  return (
+    <>
+      <button
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+        onClick={() => setOpenEdit(true)}
+      >
+        Edit
+      </button>
+      {openEdit && (
+        <Modal title="Edit IM" onClose={() => setOpenEdit(false)}>
+          <form onSubmit={formik.handleSubmit} noValidate>
+            <div className="flex flex-col space-y-1">
+              <input
+                placeholder="Title"
+                {...formik.getFieldProps("title")}
+                className="rounded"
+              />
+              <select {...formik.getFieldProps("type")} className="rounded">
+                <option value="MODULE">Module</option>
+                <option value="COURSE_FILE">Course File</option>
+                <option value="WORKTEXT">Worktext</option>
+                <option value="TEXTBOOK">Textbook</option>
+              </select>
+              <button
+                type="submit"
+                disabled={!formik.isValid}
+                className="bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90 disabled:bg-opacity-50"
+              >
+                <span>Submit</span>
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="1em"
+                    viewBox="0 0 448 512"
+                    className="fill-palette_white"
+                  >
+                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
+    </>
+  );
+}
+
+interface DepartmentReviewStatusProps {
+  iMId: string;
+}
+function DepartmentReviewStatus({ iMId }: DepartmentReviewStatusProps) {
+  const peerReview = usePeerReviewIM({ id: iMId });
+  const submittedPeerSuggestion = useSubmittedPeerSuggestionIM({ id: iMId });
+  const chairpersonReview = useChairpersonReviewIM({ id: iMId });
+  const submittedChairpersonSuggestion = useSubmittedChairpersonSuggestionIM({
+    id: iMId,
+  });
+  const coordinatorReview = useCoordinatorReviewIM({ id: iMId });
+  const submittedCoordinatorSuggestion = useSubmittedCoordinatorSuggestionIM({
+    id: iMId,
+  });
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2">
+      <StatusItem label="Peer Review" success={Boolean(peerReview)} />
+      <StatusItem
+        label="Peer Suggestion"
+        success={Boolean(submittedPeerSuggestion)}
+      />
+      <StatusItem
+        label="Chairperson Review"
+        success={Boolean(chairpersonReview)}
+      />
+      <StatusItem
+        label="Chairperson Suggestion"
+        success={Boolean(submittedChairpersonSuggestion)}
+      />
+      <StatusItem
+        label="Coordinator Review"
+        success={Boolean(coordinatorReview)}
+      />
+      <StatusItem
+        label="Coordinator Suggestion"
+        success={Boolean(submittedCoordinatorSuggestion)}
+      />
+    </div>
+  );
+}
+
+interface StatusItemProps {
+  success: boolean;
+  label: string;
+}
+function StatusItem({ label, success }: StatusItemProps) {
+  return (
+    <div>
+      <span
+        className={`rounded-full text-palette_white px-1 inline-flex justify-center items-center px-2 text-sm space-x-1 ${
+          success ? "bg-palette_success" : "bg-palette_grey"
+        }`}
+      >
+        <span>{label}</span>
+        <span>
+          {!success && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="14"
+              width="14"
+              viewBox="0 0 512 512"
+              className="fill-palette_white"
+            >
+              <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+            </svg>
+          )}
+          {success && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="14"
+              width="10"
+              viewBox="0 0 448 512"
+              className="fill-palette_white"
+            >
+              <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+            </svg>
+          )}
+        </span>
+      </span>
+    </div>
+  );
+}
+
+interface DepartmentEndorsementStatusProps {
+  iMId: string;
+}
+function DepartmentEndorsementStatus({
+  iMId,
+}: DepartmentEndorsementStatusProps) {
+  const coordinatorEndorsement = useCoordinatorEndorsementIM({
+    id: iMId,
+  });
+  const deanEndorsement = useDeanEndorsementIM({
+    id: iMId,
+  });
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2">
+      <StatusItem
+        label="Coordinator Endorsement"
+        success={Boolean(coordinatorEndorsement)}
+      />
+      <StatusItem label="Dean Endorsement" success={Boolean(deanEndorsement)} />
+    </div>
+  );
+}
+
+interface CITLReviewStatusProps {
+  iMId: string;
+}
+function CITLReviewStatus({ iMId }: CITLReviewStatusProps) {
+  const submittedIDDCoordinatorSuggestion =
+    useSubmittedIDDCoordinatorSuggestionIM({
+      id: iMId,
+    });
+  const iDDCoordinatorEndorsement = useIDDCoordinatorEndorsementIM({
+    id: iMId,
+  });
+  const cITLDirectorEndorsement = useCITLDirectorEndorsementIM({
+    id: iMId,
+  });
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2">
+      <div className="col-span-1 sm:col-span-2">
+        <StatusItem
+          label="IDD Coordinator Review"
+          success={Boolean(submittedIDDCoordinatorSuggestion)}
+        />
+      </div>
+      <StatusItem
+        label="IDD Coordinator Endorsement"
+        success={Boolean(iDDCoordinatorEndorsement)}
+      />
+      <StatusItem
+        label="CITL Director Endorsement"
+        success={Boolean(cITLDirectorEndorsement)}
+      />
+    </div>
+  );
+}
+
+interface QAMISCollegeEndorsementStatusProps {
+  iMId: string;
+}
+function QAMISCollegeEndorsementStatus({
+  iMId,
+}: QAMISCollegeEndorsementStatusProps) {
+  const chairpersonEndorsement = useQAMISChairpersonEndorsementIM({
+    id: iMId,
+  });
+  const coordinatorEndorsement = useQAMISCoordinatorEndorsementIM({
+    id: iMId,
+  });
+  const deanEndorsement = useQAMISDeanEndorsementIM({
+    id: iMId,
+  });
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2">
+      <StatusItem
+        label="Chairperson Endorsement"
+        success={Boolean(chairpersonEndorsement)}
+      />
+      <StatusItem
+        label="Coordinator Endorsement"
+        success={Boolean(coordinatorEndorsement)}
+      />
+      <StatusItem label="Dean Endorsement" success={Boolean(deanEndorsement)} />
+    </div>
+  );
+}
+
+interface IMERCReviewStatusProps {
+  iMId: string;
+}
+function IMERCReviewStatus({ iMId }: IMERCReviewStatusProps) {
+  const contentSpecialistReview = useContentSpecialistReviewIM({
+    id: iMId,
+  });
+  const iDDSpecialistReview = useIDDSpecialistReviewIM({
+    id: iMId,
+  });
+  const contentEditorReview = useContentEditorReviewIM({
+    id: iMId,
+  });
+  const submittedContentSpecialistSuggestion =
+    useSubmittedContentSpecialistSuggestionIM({
+      id: iMId,
+    });
+  const submittedIDDSpecialistSuggestion =
+    useSubmittedIDDSpecialistSuggestionIM({
+      id: iMId,
+    });
+  const submittedContentEditor = useSubmittedContentEditorSuggestionIM({
+    id: iMId,
+  });
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2">
+      <StatusItem
+        label="Content Specialist Review"
+        success={Boolean(contentSpecialistReview)}
+      />
+      <StatusItem
+        label="Content Specialist Suggestion"
+        success={Boolean(submittedContentSpecialistSuggestion)}
+      />
+      <StatusItem
+        label="IDD Specialist Review"
+        success={Boolean(iDDSpecialistReview)}
+      />
+      <StatusItem
+        label="IDD Specialist Suggestion"
+        success={Boolean(submittedIDDSpecialistSuggestion)}
+      />
+      <StatusItem
+        label="Content Editor Review"
+        success={Boolean(contentEditorReview)}
+      />
+      <StatusItem
+        label="Content Editor Suggestion"
+        success={Boolean(submittedContentEditor)}
+      />
+    </div>
+  );
+}
+
+interface IMERCEndorsementStatusProps {
+  iMId: string;
+}
+function IMERCEndorsementStatus({ iMId }: IMERCEndorsementStatusProps) {
+  const iMERCIDDCoordinatorEndorsement = useIMERCIDDCoordinatorEndorsementIM({
+    id: iMId,
+  });
+  const iMERCCITLDirectorEndorsement = useIMERCCITLDirectorEndorsementIM({
+    id: iMId,
+  });
+  return (
+    <div className="grid grid-cols-1 my-1">
+      <StatusItem
+        label="IDD Coordinator Endorsement"
+        success={Boolean(iMERCIDDCoordinatorEndorsement)}
+      />
+      <StatusItem
+        label="CITL Director Endorsement"
+        success={Boolean(iMERCCITLDirectorEndorsement)}
+      />
+    </div>
+  );
+}
+
+interface CoAuthorsProps {
+  iMId: string;
+}
+
+function CoAuthors({ iMId }: CoAuthorsProps) {
+  const departmentReview = useDepartmentReviewIM({
+    id: iMId,
+  });
+  const iM = useIM({
+    id: iMId,
+  });
+  const [openOptions, setOpenOptions] = useState(false);
+  const [state, setState] = useState<{
+    skip: number;
+    take: number;
+    filter?: {
+      name?: string;
+      notCoAuthorOfIM?: string;
+    };
+    sort?: {
+      field?: string;
+      direction?: string;
+    };
+  }>({
+    skip: 0,
+    take: 10,
+    filter: {
+      name: undefined,
+      notCoAuthorOfIM: iMId,
+    },
+    sort: {
+      field: "name",
+      direction: "asc",
+    },
+  });
+  const { refreshFlag, refresh } = useRefresh();
+  const { activeFaculties, count } = useActiveFaculties(state, refreshFlag);
+  const { addSnackbar } = useContext(SnackbarContext);
+  const [coAuthorsQuery, setCoAuthorsQuery] = useState({
+    skip: 0,
+    take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
+    filter: {
+      iMId: iMId,
+    },
+  });
+  const { coAuthors } = useCoAuthors(coAuthorsQuery, refreshFlag);
+
+  const addCoAuthor = async (activeFaculty: ActiveFaculty) => {
+    console.log("Adding co-author");
+    return axios
+      .post(`/api/co_author/`, {
+        iMId,
+        activeFacultyId: activeFaculty.id,
+      })
+      .then(() => {
+        addSnackbar("Co-author added successfully");
+        refresh();
+      })
+      .catch((err: any) => {
+        addSnackbar(
+          err?.response?.data?.error?.message ?? "Unknown Error",
+          "error"
+        );
+      });
+  };
+
+  return (
+    <div className="mb-2">
+      <p className="text-sm">Co-authors:</p>
+      <div className="flex flex-wrap items-center gap-1">
+        {coAuthors.map((coAuthor) => {
+          return (
+            <CoAuthorChip
+              coAuthor={coAuthor}
+              onDelete={refresh}
+              allowDelete={!departmentReview}
+            />
+          );
+        })}
+      </div>
+      {!departmentReview && (
+        <div>
+          <input
+            type="text"
+            placeholder="Name"
+            className="w-72 my-1 rounded border-transparent focus:rounded-b-none focus:border-gray-500 focus:bg-white focus:ring-0"
+            onChange={(e) => {
+              setState((prev) => ({
+                ...prev,
+                filter: {
+                  ...prev.filter,
+                  name: e.target.value === "" ? undefined : e.target.value,
+                },
+              }));
+            }}
+            onFocus={() => {
+              setOpenOptions(true);
+            }}
+            onBlur={(e) => {
+              setTimeout(() => {
+                if (!e.relatedTarget || !e.relatedTarget.closest(".options")) {
+                  setOpenOptions(false);
+                }
+              }, 0);
+            }}
+          />
+          {count > 0 && openOptions && (
+            <div className="rounded-b shadow-lg w-72 absolute bg-white">
+              {activeFaculties.map((activeFaculty) => (
+                <FacultyOption
+                  activeFaculty={activeFaculty}
+                  key={activeFaculty.id}
+                  onSelectFaculty={() => addCoAuthor(activeFaculty)}
+                />
+              ))}
+            </div>
+          )}
+          {count < 1 && openOptions && (
+            <div className="rounded-b shadow-lg w-72 absolute bg-white">
+              <p className="text-palette_grey p-2 text-center">None found</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface CoAuthorChipProps {
+  coAuthor: CoAuthor;
+  onDelete: () => any;
+  allowDelete?: boolean;
+}
+
+function CoAuthorChip({
+  coAuthor,
+  onDelete,
+  allowDelete = true,
+}: CoAuthorChipProps) {
+  const user = useUserFaculty({
+    id: coAuthor.facultyId,
+  });
+  const { addSnackbar } = useContext(SnackbarContext);
+  const handleDelete = async () => {
+    return axios
+      .delete(`/api/co_author/${coAuthor.id}`)
+      .then(() => {
+        onDelete();
+      })
+      .catch((error: any) => {
+        addSnackbar(
+          error?.response?.data?.error?.message ?? "Unknown Error",
+          "error"
+        );
+      });
+  };
+
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <div className="inline bg-palette_orange rounded-full px-1 text-xs flex items-center space-x-1">
+      <p>{user.name}</p>
+      {allowDelete && (
+        <button
+          className="bg-palette_blue rounded-full h-3 w-3 hover:bg-opacity-90 active:bg-opacity-100 flex items-center justify-center"
+          onClick={handleDelete}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 384 512"
+            className="h-2 w-2 fill-palette_white"
+          >
+            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+}
+
+interface FacultyOptionProps {
+  activeFaculty: ActiveFaculty;
+  onSelectFaculty: () => any;
+}
+function FacultyOption({ activeFaculty, onSelectFaculty }: FacultyOptionProps) {
+  const faculty = useFaculty({
+    id: activeFaculty.facultyId,
+  });
+  const user = useUser({
+    id: faculty?.userId,
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <div className="hover:bg-palette_grey hover:bg-opacity-10 active:bg-opacity-30 w-72 p-1 text-palette_blue cursor-pointer select-none">
+      <p
+        onMouseDown={() => {
+          onSelectFaculty();
+        }}
+      >
+        {user?.name}
+      </p>
+    </div>
   );
 }

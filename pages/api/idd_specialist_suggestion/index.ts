@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
-import iDDSpecialistSuggestionAbility from "@/services/ability/iDDSpecialistSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iDDSpecialistSuggestionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -29,19 +26,58 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "IDDSpecialistSuggestion");
-
       const { iDDSpecialistReviewId } = validator.cast(req.body);
 
-      const iDDSpecialistSuggestion = await prisma.iDDSpecialistSuggestion.create({
-        data: {
-          IDDSpecialistReview: {
-            connect: {
-              id: iDDSpecialistReviewId,
+      if (!user.isAdmin) {
+        const iDDSpecialistReview =
+          await prisma.iDDSpecialistReview.findFirstOrThrow({
+            where: {
+              id: {
+                equals: iDDSpecialistReviewId,
+              },
+            },
+          });
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
             },
           },
-        },
-      });
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active idd coordinator can perform this action",
+            },
+          });
+        }
+
+        if (iDDSpecialistReview.iDDCoordinatorId !== iDDCoordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create this IDD specialist suggestion",
+            },
+          });
+        }
+      }
+
+      const iDDSpecialistSuggestion =
+        await prisma.iDDSpecialistSuggestion.create({
+          data: {
+            IDDSpecialistReview: {
+              connect: {
+                id: iDDSpecialistReviewId,
+              },
+            },
+          },
+        });
 
       return res.json(iDDSpecialistSuggestion);
     } catch (error: any) {
@@ -67,22 +103,18 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      
 
-      const iDDSpecialistSuggestions = await prisma.iDDSpecialistSuggestion.findMany({
-        skip,
-        take,
-        where: {
-          AND: [accessibleBy(ability).IDDSpecialistSuggestion],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+      const iDDSpecialistSuggestions =
+        await prisma.iDDSpecialistSuggestion.findMany({
+          skip,
+          take,
+          where: {},
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
       const count = await prisma.iDDSpecialistSuggestion.count({
-        where: {
-          AND: [accessibleBy(ability).IDDSpecialistSuggestion],
-        },
+        where: {},
       });
 
       return res.json({ iDDSpecialistSuggestions, count });

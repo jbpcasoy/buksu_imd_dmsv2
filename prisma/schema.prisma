@@ -96,6 +96,7 @@ model Faculty {
     Dean              Dean?
     PeerReview        PeerReview[]
     ContentSpecialist ContentSpecialist?
+    CoAuthor          CoAuthor[]
 
     @@unique([departmentId, userId])
 }
@@ -121,13 +122,13 @@ model IM {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty        Faculty          @relation(fields: [facultyId], references: [id])
-    facultyId      String
-    title          String
-    type           IMType
-    IMFile         IMFile[]
-    Event          Event[]
-    PlagiarismFile PlagiarismFile[]
+    Faculty   Faculty    @relation(fields: [facultyId], references: [id])
+    facultyId String
+    title     String
+    type      IMType
+    IMFile    IMFile[]
+    Event     Event[]
+    CoAuthor  CoAuthor[]
 }
 
 model IMFile {
@@ -135,17 +136,31 @@ model IMFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM                 IM                  @relation(fields: [iMId], references: [id], onDelete: Cascade)
-    iMId               String
-    filename           String
-    size               Int
-    mimetype           String
-    originalFilename   String
-    DepartmentReview   DepartmentReview?
-    DepartmentRevision DepartmentRevision?
-    CITLRevision       CITLRevision?
-    QAMISRevision      QAMISRevision?
-    IMERCCITLRevision  IMERCCITLRevision?
+    IM                                    IM                                   @relation(fields: [iMId], references: [id], onDelete: Cascade)
+    iMId                                  String
+    filename                              String
+    size                                  Int
+    mimetype                              String
+    originalFilename                      String
+    DepartmentReview                      DepartmentReview?
+    DepartmentRevision                    DepartmentRevision?
+    CITLRevision                          CITLRevision?
+    QAMISRevision                         QAMISRevision?
+    IMERCCITLRevision                     IMERCCITLRevision?
+    DepartmentReviewed                    DepartmentReviewed?                  @relation(fields: [departmentReviewedId], references: [id], onDelete: Cascade)
+    departmentReviewedId                  String?                              @unique
+    SubmittedReturnedDepartmentRevision   SubmittedReturnedDepartmentRevision? @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id], onDelete: Cascade)
+    submittedReturnedDepartmentRevisionId String?                              @unique
+    SubmittedIDDCoordinatorSuggestion     SubmittedIDDCoordinatorSuggestion?   @relation(fields: [submittedIDDCoordinatorSuggestionId], references: [id], onDelete: Cascade)
+    submittedIDDCoordinatorSuggestionId   String?                              @unique
+    SubmittedReturnedCITLRevision         SubmittedReturnedCITLRevision?       @relation(fields: [submittedReturnedCITLRevisionId], references: [id], onDelete: Cascade)
+    submittedReturnedCITLRevisionId       String?                              @unique
+    SubmittedQAMISSuggestion              SubmittedQAMISSuggestion?            @relation(fields: [submittedQAMISSuggestionId], references: [id], onDelete: Cascade)
+    submittedQAMISSuggestionId            String?                              @unique
+    IMERCCITLReviewed                     IMERCCITLReviewed?                   @relation(fields: [iMERCCITLReviewedId], references: [id], onDelete: Cascade)
+    iMERCCITLReviewedId                   String?                              @unique
+    SubmittedReturnedIMERCCITLRevision    SubmittedReturnedIMERCCITLRevision?  @relation(fields: [submittedReturnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
+    submittedReturnedIMERCCITLRevisionId  String?                              @unique
 }
 
 model Chairperson {
@@ -292,7 +307,6 @@ model PeerSuggestionItem {
     updatedAt DateTime @updatedAt
 
     suggestion                    String
-    actionTaken                   String?
     remarks                       String?
     PeerSuggestion                PeerSuggestion                 @relation(fields: [peerSuggestionId], references: [id], onDelete: Cascade)
     peerSuggestionId              String
@@ -366,7 +380,6 @@ model ChairpersonSuggestionItem {
     updatedAt DateTime @updatedAt
 
     suggestion                           String
-    actionTaken                          String?
     remarks                              String?
     ChairpersonSuggestion                ChairpersonSuggestion                 @relation(fields: [chairpersonSuggestionId], references: [id], onDelete: Cascade)
     chairpersonSuggestionId              String
@@ -440,7 +453,6 @@ model CoordinatorSuggestionItem {
     updatedAt DateTime @updatedAt
 
     suggestion                           String
-    actionTaken                          String?
     remarks                              String?
     CoordinatorSuggestion                CoordinatorSuggestion                 @relation(fields: [coordinatorSuggestionId], references: [id], onDelete: Cascade)
     coordinatorSuggestionId              String
@@ -472,6 +484,7 @@ model DepartmentReviewed {
     submittedPeerSuggestionId        String                         @unique
     DepartmentRevision               DepartmentRevision[]
     Event                            Event[]
+    IMFile                           IMFile?
 }
 
 model DepartmentRevision {
@@ -582,7 +595,6 @@ model IDDCoordinatorSuggestionItem {
     IDDCoordinatorSuggestion                IDDCoordinatorSuggestion                 @relation(fields: [iDDCoordinatorSuggestionId], references: [id], onDelete: Cascade)
     iDDCoordinatorSuggestionId              String
     suggestion                              String
-    actionTaken                             String?
     remarks                                 String?
     pageNumber                              Int
     IDDCoordinatorSuggestionItemActionTaken IDDCoordinatorSuggestionItemActionTaken?
@@ -597,6 +609,7 @@ model SubmittedIDDCoordinatorSuggestion {
     iDDCoordinatorSuggestionId String                   @unique
     CITLRevision               CITLRevision[]
     Event                      Event[]
+    IMFile                     IMFile?
 }
 
 model CITLRevision {
@@ -671,7 +684,8 @@ model SubmittedQAMISSuggestion {
     QAMISSuggestion   QAMISSuggestion @relation(fields: [qAMISSuggestionId], references: [id], onDelete: Cascade)
     qAMISSuggestionId String          @unique
     QAMISRevision     QAMISRevision?
-    QAMISFile         QAMISFile[]
+    QAMISFile         QAMISFile?
+    IMFile            IMFile?
 }
 
 model QAMISFile {
@@ -684,7 +698,7 @@ model QAMISFile {
     mimetype                   String
     originalFilename           String
     SubmittedQAMISSuggestion   SubmittedQAMISSuggestion @relation(fields: [submittedQAMISSuggestionId], references: [id], onDelete: Cascade)
-    submittedQAMISSuggestionId String
+    submittedQAMISSuggestionId String                   @unique
     QAMISRevision              QAMISRevision?
 }
 
@@ -819,7 +833,6 @@ model ContentSpecialistSuggestionItem {
     ContentSpecialistSuggestion                ContentSpecialistSuggestion                 @relation(fields: [contentSpecialistSuggestionId], references: [id], onDelete: Cascade)
     contentSpecialistSuggestionId              String
     suggestion                                 String
-    actionTaken                                String?
     remarks                                    String?
     pageNumber                                 Int
     ContentSpecialistSuggestionItemActionTaken ContentSpecialistSuggestionItemActionTaken?
@@ -894,7 +907,6 @@ model ContentEditorSuggestionItem {
     ContentEditorSuggestion                ContentEditorSuggestion                 @relation(fields: [contentEditorSuggestionId], references: [id], onDelete: Cascade)
     contentEditorSuggestionId              String
     suggestion                             String
-    actionTaken                            String?
     remarks                                String?
     pageNumber                             Int
     ContentEditorSuggestionItemActionTaken ContentEditorSuggestionItemActionTaken?
@@ -969,7 +981,6 @@ model IDDSpecialistSuggestionItem {
     IDDSpecialistSuggestion                IDDSpecialistSuggestion                 @relation(fields: [iDDSpecialistSuggestionId], references: [id], onDelete: Cascade)
     iDDSpecialistSuggestionId              String
     suggestion                             String
-    actionTaken                            String?
     remarks                                String?
     pageNumber                             Int
     IDDSpecialistSuggestionItemActionTaken IDDSpecialistSuggestionItemActionTaken?
@@ -999,6 +1010,8 @@ model IMERCCITLReviewed {
     submittedContentSpecialistSuggestionId String                               @unique
     IMERCCITLRevision                      IMERCCITLRevision[]
     Event                                  Event[]
+    IMFile                                 IMFile?
+    PlagiarismFile                         PlagiarismFile?
 }
 
 model IMERCCITLRevision {
@@ -1040,6 +1053,7 @@ model IMERCCITLDirectorEndorsement {
     IMERCIDDCoordinatorEndorsement   IMERCIDDCoordinatorEndorsement @relation(fields: [iMERCIDDCoordinatorEndorsementId], references: [id], onDelete: Cascade)
     iMERCIDDCoordinatorEndorsementId String                         @unique
     Event                            Event[]
+    SerialNumber                     SerialNumber?
 }
 
 model ContentSpecialist {
@@ -1191,13 +1205,13 @@ model PlagiarismFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM                IM                  @relation(fields: [iMId], references: [id], onDelete: Cascade)
-    iMId              String
-    filename          String
-    size              Int
-    mimetype          String
-    originalFilename  String
-    IMERCCITLRevision IMERCCITLRevision[]
+    filename            String
+    size                Int
+    mimetype            String
+    originalFilename    String
+    IMERCCITLRevision   IMERCCITLRevision[]
+    IMERCCITLReviewed   IMERCCITLReviewed   @relation(fields: [iMERCCITLReviewedId], references: [id], onDelete: Cascade)
+    iMERCCITLReviewedId String              @unique
 }
 
 model Announcement {
@@ -1231,7 +1245,6 @@ model ReturnedDepartmentRevisionSuggestionItem {
     ReturnedDepartmentRevision                          ReturnedDepartmentRevision                           @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     returnedDepartmentRevisionId                        String
     suggestion                                          String
-    actionTaken                                         String?
     remarks                                             String?
     pageNumber                                          Int
     ReturnedDepartmentRevisionSuggestionItemActionTaken ReturnedDepartmentRevisionSuggestionItemActionTaken?
@@ -1245,6 +1258,7 @@ model SubmittedReturnedDepartmentRevision {
     ReturnedDepartmentRevision   ReturnedDepartmentRevision @relation(fields: [returnedDepartmentRevisionId], references: [id], onDelete: Cascade)
     returnedDepartmentRevisionId String                     @unique
     Event                        Event[]
+    IMFile                       IMFile?
 }
 
 model ReturnedCITLRevision {
@@ -1268,7 +1282,6 @@ model ReturnedCITLRevisionSuggestionItem {
     ReturnedCITLRevision                          ReturnedCITLRevision                           @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
     returnedCITLRevisionId                        String
     suggestion                                    String
-    actionTaken                                   String?
     remarks                                       String?
     pageNumber                                    Int
     ReturnedCITLRevisionSuggestionItemActionTaken ReturnedCITLRevisionSuggestionItemActionTaken?
@@ -1282,6 +1295,7 @@ model SubmittedReturnedCITLRevision {
     ReturnedCITLRevision   ReturnedCITLRevision @relation(fields: [returnedCITLRevisionId], references: [id], onDelete: Cascade)
     returnedCITLRevisionId String               @unique
     Event                  Event[]
+    IMFile                 IMFile?
 }
 
 model ReturnedIMERCCITLRevision {
@@ -1302,10 +1316,9 @@ model ReturnedIMERCCITLRevisionSuggestionItem {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    ReturnedIMERCCITLRevision                          ReturnedIMERCCITLRevision                            @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
+    ReturnedIMERCCITLRevision                          ReturnedIMERCCITLRevision                           @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
     returnedIMERCCITLRevisionId                        String
     suggestion                                         String
-    actionTaken                                        String?
     remarks                                            String?
     pageNumber                                         Int
     ReturnedIMERCCITLRevisionSuggestionItemActionTaken ReturnedIMERCCITLRevisionSuggestionItemActionTaken?
@@ -1319,6 +1332,7 @@ model SubmittedReturnedIMERCCITLRevision {
     ReturnedIMERCCITLRevision   ReturnedIMERCCITLRevision @relation(fields: [returnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
     returnedIMERCCITLRevisionId String                    @unique
     Event                       Event[]
+    IMFile                      IMFile?
 }
 
 model PeerSuggestionItemActionTaken {
@@ -1419,4 +1433,27 @@ model ReturnedIMERCCITLRevisionSuggestionItemActionTaken {
     ReturnedIMERCCITLRevisionSuggestionItem   ReturnedIMERCCITLRevisionSuggestionItem @relation(fields: [returnedIMERCCITLRevisionSuggestionItemId], references: [id], onDelete: Cascade)
     returnedIMERCCITLRevisionSuggestionItemId String                                  @unique
     value                                     String
+}
+
+model SerialNumber {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    value                          String                       @unique
+    IMERCCITLDirectorEndorsement   IMERCCITLDirectorEndorsement @relation(fields: [iMERCCITLDirectorEndorsementId], references: [id], onDelete: Cascade)
+    iMERCCITLDirectorEndorsementId String                       @unique
+}
+
+model CoAuthor {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    IM        IM      @relation(fields: [iMId], references: [id], onDelete: Cascade)
+    iMId      String
+    Faculty   Faculty @relation(fields: [facultyId], references: [id])
+    facultyId String
+
+    @@unique([facultyId, iMId])
 }

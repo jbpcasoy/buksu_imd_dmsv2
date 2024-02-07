@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import contentSpecialistAbility from "@/services/ability/contentSpecialistAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = contentSpecialistAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -33,18 +28,19 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).ContentSpecialist,
-            {
-              id: {
-                equals: id,
+      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow(
+        {
+          where: {
+            AND: [
+              {
+                id: {
+                  equals: id,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        }
+      );
 
       return res.json(contentSpecialist);
     } catch (error: any) {
@@ -63,7 +59,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "ContentSpecialist");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to delete this content specialist",
+          },
+        });
+      }
 
       const { id } = validator.cast(req.query);
 

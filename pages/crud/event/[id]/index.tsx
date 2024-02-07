@@ -18,10 +18,10 @@ export default function EventPage() {
     axios
       .delete(`/api/event/${eventId}`)
       .then(() => {
-        alert("Event deleted successfully.");
+        alert("Event has been deleted successfully");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error.response?.data?.error?.message);
       });
   };
 

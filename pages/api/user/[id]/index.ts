@@ -1,11 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import prisma from "@/prisma/client";
-import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
-import { ForbiddenError, subject } from "@casl/ability";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -21,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = userAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
       const user = await prisma.user.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).User,
             {
               id: {
                 equals: id,
@@ -65,8 +60,7 @@ export default async function handler(
       const { id } = req.query;
       const { name, image } = validator.cast(req.body);
 
-      let userToUpdate;
-      userToUpdate = await prisma.user.findFirstOrThrow({
+      const userToUpdate = await prisma.user.findFirstOrThrow({
         where: {
           id: {
             equals: id as string,
@@ -74,12 +68,15 @@ export default async function handler(
         },
       });
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        subject("User", userToUpdate)
-      );
+      if (!user.isAdmin) {
+        if (id !== user.id) {
+          return res.status(403).json({
+            error: { message: "You are not allowed to update that user" },
+          });
+        }
+      }
 
-      const user = await prisma.user.update({
+      const updatedUser = await prisma.user.update({
         where: {
           id: id as string,
         },
@@ -89,7 +86,7 @@ export default async function handler(
         },
       });
 
-      return res.json(user);
+      return res.json(updatedUser);
     } catch (error: any) {
       logger.error(error);
       return res

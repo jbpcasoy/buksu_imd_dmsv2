@@ -91,7 +91,7 @@ export default function EditContentSpecialistReviewPage() {
       axios
         .put(`/api/content_specialist_review/${contentSpecialistReviewId}`, values)
         .then(() => {
-          alert("ContentSpecialistReview Updated Successfully");
+          alert("ContentSpecialistReview has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

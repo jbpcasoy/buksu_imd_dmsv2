@@ -91,7 +91,7 @@ export default function EditContentEditorReviewPage() {
       axios
         .put(`/api/content_editor_review/${contentEditorReviewId}`, values)
         .then(() => {
-          alert("ContentEditorReview Updated Successfully");
+          alert("ContentEditorReview has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

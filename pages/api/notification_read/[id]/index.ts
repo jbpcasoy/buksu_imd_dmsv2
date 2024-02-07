@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import notificationReadAbility from "@/services/ability/notificationReadAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = notificationReadAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -34,7 +30,6 @@ export default async function handler(
       const notificationRead = await prisma.notificationRead.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).NotificationRead,
             {
               id: {
                 equals: id,
@@ -61,7 +56,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "NotificationRead");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to perform this action",
+          },
+        });
+      }
 
       const { id } = validator.cast(req.query);
 
@@ -79,7 +80,6 @@ export default async function handler(
         .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
-
 
   switch (req.method) {
     case "DELETE":

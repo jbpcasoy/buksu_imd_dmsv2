@@ -5,7 +5,7 @@ import axios from "axios";
 export interface useChairpersonSuggestionItemActionTakenChairpersonSuggestionItemParams {
   id: string;
 }
-export default function useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem({ id }: useChairpersonSuggestionItemActionTakenChairpersonSuggestionItemParams) {
+export default function useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem({ id }: useChairpersonSuggestionItemActionTakenChairpersonSuggestionItemParams, refreshFlag?: number) {
   const [state, setState] = useState<ChairpersonSuggestionItemActionTaken | null>();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function useChairpersonSuggestionItemActionTakenChairpersonSugges
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

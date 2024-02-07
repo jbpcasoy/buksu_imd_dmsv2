@@ -1,12 +1,8 @@
 import prisma from "@/prisma/client";
-import { ActiveFaculty, Faculty, User } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import iMAbility from "@/services/ability/iMAbility";
-import { accessibleBy } from "@casl/prisma";
-import { AppAbility } from "@/services/ability/abilityBuilder";
+import { ActiveFaculty, User } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,7 +39,6 @@ export default async function handler(
 }
 
 export async function toReviewCount(user: User) {
-  let ability: AppAbility;
   let userActiveFaculty: ActiveFaculty;
   userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
     where: {
@@ -63,12 +58,10 @@ export async function toReviewCount(user: User) {
       },
     },
   });
-  ability = iMAbility({ user });
 
   const count = await prisma.iM.count({
     where: {
       AND: [
-        accessibleBy(ability).IM,
         {
           Faculty: {
             Department: {
@@ -126,6 +119,85 @@ export async function toReviewCount(user: User) {
                 },
               },
             ],
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              DepartmentReview: {
+                ChairpersonReview: {
+                  ChairpersonSuggestion: {
+                    SubmittedChairpersonSuggestion: {
+                      ChairpersonSuggestion: {
+                        ChairpersonReview: {
+                          Chairperson: {
+                            Faculty: {
+                              User: {
+                                id: {
+                                  equals: user.id,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              DepartmentReview: {
+                CoordinatorReview: {
+                  CoordinatorSuggestion: {
+                    SubmittedCoordinatorSuggestion: {
+                      CoordinatorSuggestion: {
+                        CoordinatorReview: {
+                          Coordinator: {
+                            Faculty: {
+                              User: {
+                                id: {
+                                  equals: user.id,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              DepartmentReview: {
+                PeerReview: {
+                  PeerSuggestion: {
+                    SubmittedPeerSuggestion: {
+                      PeerSuggestion: {
+                        PeerReview: {
+                          Faculty: {
+                            User: {
+                              id: {
+                                equals: user.id,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
         {

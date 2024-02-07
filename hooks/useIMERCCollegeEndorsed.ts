@@ -6,11 +6,13 @@ export interface useIMERCCollegeEndorsedParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
 export default function useIMERCCollegeEndorsed({
   skip,
   take,
   filter,
+  sort,
 }: useIMERCCollegeEndorsedParams) {
   const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
@@ -24,6 +26,7 @@ export default function useIMERCCollegeEndorsed({
           skip,
           take,
           filter,
+          sort,
         },
       })
       .then((res) => {
@@ -32,7 +35,7 @@ export default function useIMERCCollegeEndorsed({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

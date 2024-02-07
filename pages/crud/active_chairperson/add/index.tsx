@@ -15,7 +15,7 @@ export default function AddActiveChairpersonPage() {
       axios
         .post("/api/active_chairperson", values)
         .then(() => {
-          alert("ActiveChairperson Added Successfully");
+          alert("ActiveChairperson has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

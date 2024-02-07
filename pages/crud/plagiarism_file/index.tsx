@@ -41,7 +41,7 @@ export default function PlagiarismFilesPage() {
               <th>mimetype</th>
               <th>size</th>
               <th>originalFilename</th>
-              <th>iMId</th>
+              <th>iMERCCITLReviewedId</th>
               <th>action</th>
             </tr>
           </thead>
@@ -58,10 +58,10 @@ export default function PlagiarismFilesPage() {
                   <td>{plagiarismFile.originalFilename}</td>
                   <td>
                     <Link
-                      href={`/crud/im/${plagiarismFile.iMId}`}
+                      href={`/crud/im/${plagiarismFile.iMERCCITLReviewedId}`}
                       className='underline'
                     >
-                      {plagiarismFile.iMId}
+                      {plagiarismFile.iMERCCITLReviewedId}
                     </Link>
                   </td>
                   <td>

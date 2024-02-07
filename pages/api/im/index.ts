@@ -1,11 +1,8 @@
 import prisma from "@/prisma/client";
-import facultyAbility from "@/services/ability/facultyAbility";
-import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
+import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { ActiveFaculty, Faculty, User } from "@prisma/client";
+import { Faculty, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -45,12 +42,15 @@ export default async function handler(
         },
       });
 
-      const ability = facultyAbility({ user });
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToIM",
-        subject("Faculty", faculty)
-      );
+      if (!user.isAdmin) {
+        if (faculty.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to create an IM for this user",
+            },
+          });
+        }
+      }
 
       const iM = await prisma.iM.create({
         data: {
@@ -92,6 +92,9 @@ export default async function handler(
         "filter[userName]": Yup.string().optional(),
         "filter[collegeName]": Yup.string().optional(),
         "filter[departmentName]": Yup.string().optional(),
+        "filter[status]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().oneOf(["asc", "desc"]).optional(),
       });
       await validator.validate(req.query);
 
@@ -102,16 +105,18 @@ export default async function handler(
         "filter[departmentName]": filterDepartmentName,
         "filter[title]": filterTitle,
         "filter[userName]": filterUserName,
+        "filter[status]": filterStatus,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
-
-      const ability = iMAbility({ user });
+      let statusQuery = iMStatusQueryBuilder(filterStatus);
 
       const iMs = await prisma.iM.findMany({
         skip,
         take,
         where: {
           AND: [
-            accessibleBy(ability).IM,
+            statusQuery,
             {
               Faculty: {
                 User: {
@@ -153,14 +158,13 @@ export default async function handler(
           ],
         },
         orderBy: {
-          updatedAt: "desc",
+          [sortField || "updatedAt"]: sortDirection || "desc",
         },
       });
       const count = await prisma.iM.count({
         where: {
           AND: [
-            accessibleBy(ability).IM,
-
+            statusQuery,
             {
               Faculty: {
                 User: {

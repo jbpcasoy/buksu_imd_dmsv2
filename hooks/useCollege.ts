@@ -3,7 +3,7 @@ import { College, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useCollegeParams {
-  id: string;
+  id?: string;
 }
 export default function useCollege({ id }: useCollegeParams) {
   const [state, setState] = useState<College | null>();

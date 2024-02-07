@@ -19,7 +19,7 @@ export default function ActiveDeanPage() {
     axios
       .delete(`/api/active_dean/${activeDeanId}`)
       .then(() => {
-        alert("ActiveDean deleted successfully.");
+        alert("ActiveDean has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

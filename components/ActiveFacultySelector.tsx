@@ -41,9 +41,14 @@ export default function ActiveFacultySelector(props: FieldInputProps<any>) {
   };
 
   return (
-    <div>
-      <input type='text' onChange={onSearch} placeholder='Search faculty' />
-      <select {...props}>
+    <div className="flex flex-col">
+      <input
+        type='text'
+        onChange={onSearch}
+        placeholder='Search Faculty'
+        className='rounded-t py-1'
+      />
+      <select {...props} className='rounded-b py-1'>
         <option value=''>Select</option>
         {activeFaculties.map((faculty) => {
           return <FacultySelectorItem key={faculty.id} id={faculty.id} />;

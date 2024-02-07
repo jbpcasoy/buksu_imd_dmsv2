@@ -21,7 +21,7 @@ export default function PeerSuggestionItemPage() {
     axios
       .delete(`/api/peer_suggestion_item/${peerSuggestionItemId}`)
       .then(() => {
-        alert("PeerSuggestionItem deleted successfully.");
+        alert("PeerSuggestionItem has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -64,7 +64,6 @@ export default function PeerSuggestionItemPage() {
       </p>
       <p>suggestion: {peerSuggestionItem.suggestion}</p>
       <p>pageNumber: {peerSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {peerSuggestionItem.actionTaken}</p>
       <p>remarks: {peerSuggestionItem.remarks}</p>
     </CrudLayout>
   );

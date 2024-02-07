@@ -9,21 +9,19 @@ export default function AddIDDCoordinatorSuggestionItemPage() {
       pageNumber: 0,
       iDDCoordinatorSuggestionId: "",
       suggestion: "",
-      actionTaken: "",
       remarks: "",
     },
     validationSchema: Yup.object({
       pageNumber: Yup.number().min(0).required(),
       iDDCoordinatorSuggestionId: Yup.string().required(),
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
     }),
     onSubmit: (values) => {
       axios
         .post("/api/idd_coordinator_suggestion_item", values)
         .then(() => {
-          alert("IDDCoordinatorSuggestionItem Added Successfully");
+          alert("IDDCoordinatorSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -49,11 +47,6 @@ export default function AddIDDCoordinatorSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

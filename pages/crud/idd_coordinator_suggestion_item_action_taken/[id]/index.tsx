@@ -24,10 +24,10 @@ export default function IDDCoordinatorSuggestionItemActionTakenPage() {
         `/api/idd_coordinator_suggestion_item_action_taken/${iDDCoordinatorSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("IDDCoordinatorSuggestionItemActionTaken deleted successfully.");
+        alert("IDDCoordinatorSuggestionItemActionTaken has been deleted successfully");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error.response?.data?.error?.message);
       });
   };
 

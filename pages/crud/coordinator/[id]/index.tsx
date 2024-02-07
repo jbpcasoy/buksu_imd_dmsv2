@@ -20,7 +20,7 @@ export default function CoordinatorPage() {
     axios
       .delete(`/api/coordinator/${coordinatorId}`)
       .then(() => {
-        alert("Coordinator deleted successfully.");
+        alert("Coordinator has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

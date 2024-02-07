@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import deanEndorsementAbility from "@/services/ability/deanEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = deanEndorsementAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,11 +26,103 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "DeanEndorsement");
-
       const { coordinatorEndorsementId, activeDeanId } = validator.cast(
         req.body
       );
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                Dean: {
+                  ActiveDean: {
+                    id: {
+                      equals: activeDeanId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active dean can perform this action",
+            },
+          });
+        }
+
+        if (faculty.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create a dean endorsement for this user",
+            },
+          });
+        }
+
+        const facultyCollege = await prisma.college.findFirstOrThrow({
+          where: {
+            Department: {
+              some: {
+                id: {
+                  equals: faculty.departmentId,
+                },
+              },
+            },
+          },
+        });
+        const iMCollege = await prisma.college.findFirstOrThrow({
+          where: {
+            Department: {
+              some: {
+                Faculty: {
+                  some: {
+                    IM: {
+                      some: {
+                        IMFile: {
+                          some: {
+                            DepartmentReview: {
+                              CoordinatorReview: {
+                                CoordinatorSuggestion: {
+                                  SubmittedCoordinatorSuggestion: {
+                                    DepartmentReviewed: {
+                                      DepartmentRevision: {
+                                        some: {
+                                          CoordinatorEndorsement: {
+                                            id: {
+                                              equals: coordinatorEndorsementId,
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (facultyCollege.id !== iMCollege.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to endorse IM's from another college",
+            },
+          });
+        }
+      }
 
       const dean = await prisma.dean.findFirstOrThrow({
         where: {
@@ -93,17 +181,13 @@ export default async function handler(
       const deanEndorsements = await prisma.deanEndorsement.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).DeanEndorsement],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.deanEndorsement.count({
-        where: {
-          AND: [accessibleBy(ability).DeanEndorsement],
-        },
+        where: {},
       });
 
       return res.json({ deanEndorsements, count });

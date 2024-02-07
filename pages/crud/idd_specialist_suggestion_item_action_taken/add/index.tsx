@@ -17,7 +17,7 @@ export default function AddIDDSpecialistSuggestionItemActionTakenPage() {
       axios
         .post("/api/idd_specialist_suggestion_item_action_taken", values)
         .then(() => {
-          alert("IDDSpecialistSuggestionItemActionTaken Added Successfully");
+          alert("IDDSpecialistSuggestionItemActionTaken has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

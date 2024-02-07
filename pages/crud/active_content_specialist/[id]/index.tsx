@@ -21,7 +21,7 @@ export default function ActiveContentSpecialistPage() {
     axios
       .delete(`/api/active_content_specialist/${activeContentSpecialistId}`)
       .then(() => {
-        alert("ActiveContentSpecialist deleted successfully.");
+        alert("ActiveContentSpecialist has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

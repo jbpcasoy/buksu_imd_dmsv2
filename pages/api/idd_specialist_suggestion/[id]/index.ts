@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
-import iDDSpecialistSuggestionAbility from "@/services/ability/iDDSpecialistSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iDDSpecialistSuggestionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -30,18 +27,18 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const iDDSpecialistSuggestion = await prisma.iDDSpecialistSuggestion.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).IDDSpecialistSuggestion,
-            {
-              id: {
-                equals: id,
+      const iDDSpecialistSuggestion =
+        await prisma.iDDSpecialistSuggestion.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                id: {
+                  equals: id,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
       return res.json(iDDSpecialistSuggestion);
     } catch (error: any) {
@@ -60,15 +57,74 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "IDDSpecialistSuggestion");
-
       const { id } = validator.cast(req.query);
 
-      const iDDSpecialistSuggestion = await prisma.iDDSpecialistSuggestion.delete({
-        where: {
-          id,
-        },
-      });
+      if (!user.isAdmin) {
+        const iDDSpecialistReview =
+          await prisma.iDDSpecialistReview.findFirstOrThrow({
+            where: {
+              IDDSpecialistSuggestion: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active IDD coordinator can perform this action",
+            },
+          });
+        }
+
+        if (iDDCoordinator.id !== iDDSpecialistReview.iDDCoordinatorId) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to delete this IDD Coordinator",
+            },
+          });
+        }
+
+        const submittedIDDSpecialistSuggestion =
+          await prisma.submittedIDDSpecialistSuggestion.findFirst({
+            where: {
+              IDDSpecialistSuggestion: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          });
+          if(submittedIDDSpecialistSuggestion) {
+            return res.status(403).json({
+              error: {
+                message: "Error: IDD Specialist is already submitted"
+              }
+            })
+          }
+      }
+
+      const iDDSpecialistSuggestion =
+        await prisma.iDDSpecialistSuggestion.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(iDDSpecialistSuggestion);
     } catch (error: any) {

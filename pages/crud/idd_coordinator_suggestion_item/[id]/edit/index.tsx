@@ -16,13 +16,11 @@ export default function EditIDDCoordinatorSuggestionItemPage() {
   const formik = useFormik({
     initialValues: {
       suggestion: "",
-      actionTaken: "",
       remarks: "",
       pageNumber: 0,
     },
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
       pageNumber: Yup.number().min(0).required()
     }),
@@ -33,7 +31,7 @@ export default function EditIDDCoordinatorSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("IDDCoordinatorSuggestionItem Updated Successfully");
+          alert("IDDCoordinatorSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -48,7 +46,6 @@ export default function EditIDDCoordinatorSuggestionItemPage() {
     formik.setValues({
       pageNumber: iDDCoordinatorSuggestionItem.pageNumber,
       suggestion: iDDCoordinatorSuggestionItem.suggestion,
-      actionTaken: iDDCoordinatorSuggestionItem?.actionTaken ?? "",
       remarks: iDDCoordinatorSuggestionItem?.remarks ?? "",
     });
 
@@ -73,11 +70,6 @@ export default function EditIDDCoordinatorSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

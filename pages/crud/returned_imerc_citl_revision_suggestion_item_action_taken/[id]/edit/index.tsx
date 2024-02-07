@@ -29,7 +29,7 @@ export default function EditReturnedIMERCCITLRevisionSuggestionItemActionTakenPa
         )
         .then(() => {
           alert(
-            "ReturnedIMERCCITLRevisionSuggestionItemActionTaken updated successfully"
+            "ReturnedIMERCCITLRevisionSuggestionItemActionTaken has been updated successfully"
           );
         })
         .catch((error) => {

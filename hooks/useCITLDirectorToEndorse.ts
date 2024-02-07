@@ -6,11 +6,13 @@ export interface useCITLDirectorToEndorseParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
 export default function useCITLDirectorToEndorse({
   skip,
   take,
   filter,
+  sort,
 }: useCITLDirectorToEndorseParams) {
   const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
@@ -23,7 +25,8 @@ export default function useCITLDirectorToEndorse({
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -32,7 +35,7 @@ export default function useCITLDirectorToEndorse({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
-
+    }, [skip, take, filter, sort]);
+  
   return state;
 }

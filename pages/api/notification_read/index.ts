@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import notificationReadAbility from "@/services/ability/notificationReadAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = notificationReadAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -28,8 +24,6 @@ export default async function handler(
         eventId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan("create", "NotificationRead");
 
       const { eventId } = validator.cast(req.body);
 
@@ -71,17 +65,13 @@ export default async function handler(
       const notificationReads = await prisma.notificationRead.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).NotificationRead],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.notificationRead.count({
-        where: {
-          AND: [accessibleBy(ability).NotificationRead],
-        },
+        where: {},
       });
 
       return res.json({ notificationReads, count });

@@ -3,7 +3,7 @@ import { CITLDirector, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useCITLDirectorParams {
-  id: string;
+  id?: string;
 }
 export default function useCITLDirector({ id }: useCITLDirectorParams) {
   const [state, setState] = useState<CITLDirector | null>();

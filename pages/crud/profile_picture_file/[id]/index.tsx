@@ -19,7 +19,7 @@ export default function ProfilePictureFilePage() {
     axios
       .delete(`/api/profile_picture_file/${profilePictureFileId}`)
       .then(() => {
-        alert("ProfilePictureFile deleted successfully.");
+        alert("ProfilePictureFile has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

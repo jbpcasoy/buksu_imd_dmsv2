@@ -9,21 +9,19 @@ export default function AddReturnedCITLRevisionSuggestionItemPage() {
       pageNumber: 0,
       returnedCITLRevisionId: "",
       suggestion: "",
-      actionTaken: "",
       remarks: "",
     },
     validationSchema: Yup.object({
       pageNumber: Yup.number().min(0).required(),
       returnedCITLRevisionId: Yup.string().required(),
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
     }),
     onSubmit: (values) => {
       axios
         .post("/api/returned_citl_revision_suggestion_item", values)
         .then(() => {
-          alert("ReturnedCITLRevisionSuggestionItem Added Successfully");
+          alert("ReturnedCITLRevisionSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -49,11 +47,6 @@ export default function AddReturnedCITLRevisionSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

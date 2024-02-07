@@ -1,16 +1,12 @@
 import prisma from "@/prisma/client";
-import iMFileAbility from "@/services/ability/iMFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
-import { ActiveFaculty, IM, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import * as Yup from "yup";
-import { ForbiddenError, subject } from "@casl/ability";
-import iMAbility from "@/services/ability/iMAbility";
 
 //set bodyParser
 export const config = {
@@ -31,6 +27,14 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
+  /** TODO add post blockers only allow im file upload when:
+   * IM is in status of:
+   * IMPLEMENTATION_DRAFT
+   * IMPLEMENTATION_DEPARTMENT_REVIEWED
+   * IMPLEMENTATION_CITL_REVIEWED
+   * IMPLEMENTATION_CITL_DIRECTOR_ENDORSED
+   * IMERC_CITL_REVIEWED
+   */
   const postHandler = async () => {
     try {
       // Read body using formidable
@@ -47,44 +51,287 @@ export default async function handler(
       const fields: Fields = data.fields;
       const body = {
         iMId: fields?.iMId?.at(0),
+        departmentReviewedId: fields?.departmentReviewedId?.at(0),
+        submittedReturnedDepartmentRevisionId:
+          fields?.submittedReturnedDepartmentRevisionId?.at(0),
+        submittedIDDCoordinatorSuggestionId:
+          fields?.submittedIDDCoordinatorSuggestionId?.at(0),
+        submittedReturnedCITLRevisionId:
+          fields?.submittedReturnedCITLRevisionId?.at(0),
+        submittedQAMISSuggestionId: fields?.submittedQAMISSuggestionId?.at(0),
+        iMERCCITLReviewedId: fields?.iMERCCITLReviewedId?.at(0),
+        submittedReturnedIMERCCITLRevisionId:
+          fields?.submittedReturnedIMERCCITLRevisionId?.at(0),
       };
       // Validate request body
       const validator = Yup.object({
         iMId: Yup.string().required(),
+        departmentReviewedId: Yup.string(),
+        submittedReturnedDepartmentRevisionId: Yup.string(),
+        submittedIDDCoordinatorSuggestionId: Yup.string(),
+        submittedReturnedCITLRevisionId: Yup.string(),
+        submittedQAMISSuggestionId: Yup.string(),
+        iMERCCITLReviewedId: Yup.string(),
+        submittedReturnedIMERCCITLRevisionId: Yup.string(),
       });
       await validator.validate(body);
-      const { iMId } = validator.cast(body);
+      const {
+        iMId,
+        departmentReviewedId,
+        submittedReturnedDepartmentRevisionId,
+        submittedIDDCoordinatorSuggestionId,
+        submittedReturnedCITLRevisionId,
+        submittedQAMISSuggestionId,
+        iMERCCITLReviewedId,
+        submittedReturnedIMERCCITLRevisionId,
+      } = validator.cast(body);
 
-      // Find IM
-      let iM: IM;
-      iM = await prisma.iM.findFirstOrThrow({
+      const iM = await prisma.iM.findFirstOrThrow({
         where: {
           id: {
-            equals: iMId,
+            equals: iMId as string,
           },
         },
-        include: {
-          Faculty: {
-            include: {
-              ActiveFaculty: {
-                include: {
-                  Faculty: {
-                    include: {
-                      User: true,
-                    },
+      });
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
                   },
                 },
               },
             },
           },
-        },
-      });
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to submit a file for this IM",
+            },
+          });
+        }
+      }
 
-      const ability = iMAbility({ user });
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToIMFile",
-        subject("IM", iM)
-      );
+      if (
+        !departmentReviewedId &&
+        !submittedReturnedDepartmentRevisionId &&
+        !submittedIDDCoordinatorSuggestionId &&
+        !submittedReturnedCITLRevisionId &&
+        !submittedQAMISSuggestionId &&
+        !iMERCCITLReviewedId &&
+        !submittedReturnedIMERCCITLRevisionId
+      ) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res
+            .status(400)
+            .json({ error: { message: "IM already had a file" } });
+        }
+      } else if (departmentReviewedId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                DepartmentReviewed: {
+                  id: {
+                    equals: departmentReviewedId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: { message: "IM already had a department revision file" },
+          });
+        }
+      } else if (submittedReturnedDepartmentRevisionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedReturnedDepartmentRevision: {
+                  id: {
+                    equals: submittedReturnedDepartmentRevisionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: {
+              message: "IM already had a returned department revision file",
+            },
+          });
+        }
+      } else if (submittedIDDCoordinatorSuggestionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedIDDCoordinatorSuggestion: {
+                  id: {
+                    equals: submittedIDDCoordinatorSuggestionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: { message: "IM already had a CITL revision file" },
+          });
+        }
+      } else if (submittedReturnedCITLRevisionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedReturnedCITLRevision: {
+                  id: {
+                    equals: submittedReturnedCITLRevisionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: {
+              message: "IM already had a returned citl revision file",
+            },
+          });
+        }
+      } else if (submittedQAMISSuggestionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedQAMISSuggestion: {
+                  id: {
+                    equals: submittedQAMISSuggestionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: { message: "IM already had a QAMIS revision file" },
+          });
+        }
+      } else if (iMERCCITLReviewedId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                IMERCCITLReviewed: {
+                  id: {
+                    equals: iMERCCITLReviewedId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: { message: "IM already had an IMERC CITL revision file" },
+          });
+        }
+      } else if (submittedReturnedIMERCCITLRevisionId) {
+        const existingIMFile = await prisma.iMFile.findFirst({
+          where: {
+            AND: [
+              {
+                iMId: {
+                  equals: iMId,
+                },
+              },
+              {
+                SubmittedReturnedIMERCCITLRevision: {
+                  id: {
+                    equals: submittedReturnedIMERCCITLRevisionId,
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        if (existingIMFile) {
+          return res.status(400).json({
+            error: {
+              message: "IM already had a returned IMERC CITL revision file",
+            },
+          });
+        }
+      }
 
       // Save file to server
       const file = data.files.file[0];
@@ -103,6 +350,57 @@ export default async function handler(
               id: iM.id,
             },
           },
+          DepartmentReviewed: departmentReviewedId
+            ? {
+                connect: {
+                  id: departmentReviewedId,
+                },
+              }
+            : undefined,
+          SubmittedReturnedDepartmentRevision:
+            submittedReturnedDepartmentRevisionId
+              ? {
+                  connect: {
+                    id: submittedReturnedDepartmentRevisionId,
+                  },
+                }
+              : undefined,
+          SubmittedIDDCoordinatorSuggestion: submittedIDDCoordinatorSuggestionId
+            ? {
+                connect: {
+                  id: submittedIDDCoordinatorSuggestionId,
+                },
+              }
+            : undefined,
+          SubmittedReturnedCITLRevision: submittedReturnedCITLRevisionId
+            ? {
+                connect: {
+                  id: submittedReturnedCITLRevisionId,
+                },
+              }
+            : undefined,
+          SubmittedQAMISSuggestion: submittedQAMISSuggestionId
+            ? {
+                connect: {
+                  id: submittedQAMISSuggestionId,
+                },
+              }
+            : undefined,
+          IMERCCITLReviewed: iMERCCITLReviewedId
+            ? {
+                connect: {
+                  id: iMERCCITLReviewedId,
+                },
+              }
+            : undefined,
+          SubmittedReturnedIMERCCITLRevision:
+            submittedReturnedIMERCCITLRevisionId
+              ? {
+                  connect: {
+                    id: submittedReturnedIMERCCITLRevisionId,
+                  },
+                }
+              : undefined,
           filename,
           mimetype: file.mimetype,
           size: file.size,
@@ -123,26 +421,36 @@ export default async function handler(
       const validator = Yup.object({
         take: Yup.number().required(),
         skip: Yup.number().required(),
+        "filter[iMId]": Yup.string().optional(),
       });
       await validator.validate(req.query);
-      const { skip, take } = validator.cast(req.query);
-
-      const ability = iMFileAbility({ user });
+      const {
+        skip,
+        take,
+        "filter[iMId]": filterIMId,
+      } = validator.cast(req.query);
 
       const iMFiles = await prisma.iMFile.findMany({
         skip,
         take,
         where: {
-          AND: [accessibleBy(ability).IMFile],
+          AND: [
+            {
+              IM: {
+                id: {
+                  contains: filterIMId ?? "",
+                  mode: "insensitive",
+                },
+              },
+            },
+          ],
         },
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.iMFile.count({
-        where: {
-          AND: [accessibleBy(ability).IMFile],
-        },
+        where: {},
       });
 
       return res.json({ iMFiles, count });

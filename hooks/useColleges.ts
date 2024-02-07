@@ -5,12 +5,18 @@ import { useEffect, useState } from "react";
 export interface useCollegesParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
+  sort?: object;
 }
-export default function useColleges({ skip, take, filter }: useCollegesParams) {
-  const [state, setState] = useState<{colleges: College[], count: number}>({
+export default function useColleges({
+  skip,
+  take,
+  filter,
+  sort,
+}: useCollegesParams) {
+  const [state, setState] = useState<{ colleges: College[]; count: number }>({
     count: 0,
-    colleges: []
+    colleges: [],
   });
 
   useEffect(() => {
@@ -19,7 +25,8 @@ export default function useColleges({ skip, take, filter }: useCollegesParams) {
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +35,7 @@ export default function useColleges({ skip, take, filter }: useCollegesParams) {
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

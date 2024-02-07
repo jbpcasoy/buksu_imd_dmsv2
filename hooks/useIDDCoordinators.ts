@@ -6,11 +6,20 @@ export interface useIDDCoordinatorsParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useIDDCoordinators({ skip, take, filter }: useIDDCoordinatorsParams) {
-  const [state, setState] = useState<{iDDCoordinators: IDDCoordinator[], count: number}>({
+export default function useIDDCoordinators({
+  skip,
+  take,
+  filter,
+  sort,
+}: useIDDCoordinatorsParams) {
+  const [state, setState] = useState<{
+    iDDCoordinators: IDDCoordinator[];
+    count: number;
+  }>({
     count: 0,
-    iDDCoordinators: []
+    iDDCoordinators: [],
   });
 
   useEffect(() => {
@@ -19,7 +28,8 @@ export default function useIDDCoordinators({ skip, take, filter }: useIDDCoordin
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +38,7 @@ export default function useIDDCoordinators({ skip, take, filter }: useIDDCoordin
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

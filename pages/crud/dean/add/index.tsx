@@ -15,7 +15,7 @@ export default function AddDeanPage() {
       axios
         .post("/api/dean", values)
         .then(() => {
-          alert("Dean Added Successfully");
+          alert("Dean has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

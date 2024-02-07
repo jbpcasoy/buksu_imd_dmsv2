@@ -11,7 +11,7 @@ export default function useContentEditorSuggestionItemsOwn({
   skip,
   take,
   id,
-}: useContentEditorSuggestionItemsOwnParams) {
+}: useContentEditorSuggestionItemsOwnParams, refreshFlag?: number) {
   const [state, setState] = useState<{
     contentEditorSuggestionItems: ContentEditorSuggestionItem[];
     count: number;
@@ -40,7 +40,7 @@ export default function useContentEditorSuggestionItemsOwn({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

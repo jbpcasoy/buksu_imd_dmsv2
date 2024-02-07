@@ -1,13 +1,8 @@
 import prisma from "@/prisma/client";
-import { ActiveFaculty, Faculty, User } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import iMAbility from "@/services/ability/iMAbility";
-import { accessibleBy } from "@casl/prisma";
-import { AppAbility } from "@/services/ability/abilityBuilder";
-import useActiveDean from "@/hooks/useActiveDean";
+import { ActiveFaculty, User } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,7 +39,6 @@ export default async function handler(
 }
 
 export async function deanEndorsedCount(user: User) {
-  let ability: AppAbility;
   let userActiveFaculty: ActiveFaculty;
   userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
     where: {
@@ -60,8 +54,12 @@ export async function deanEndorsedCount(user: User) {
       Dean: {
         Faculty: {
           ActiveFaculty: {
-            id: {
-              equals: userActiveFaculty.id,
+            Faculty: {
+              User: {
+                id: {
+                  equals: user.id,
+                },
+              },
             },
           },
         },
@@ -83,12 +81,10 @@ export async function deanEndorsedCount(user: User) {
       },
     },
   });
-  ability = iMAbility({ user });
 
   const count = await prisma.iM.count({
     where: {
       AND: [
-        accessibleBy(ability).IM,
         {
           Faculty: {
             Department: {

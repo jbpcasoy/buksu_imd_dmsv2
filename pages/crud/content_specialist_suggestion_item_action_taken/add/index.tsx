@@ -17,7 +17,7 @@ export default function AddContentSpecialistSuggestionItemActionTakenPage() {
       axios
         .post("/api/content_specialist_suggestion_item_action_taken", values)
         .then(() => {
-          alert("ContentSpecialistSuggestionItemActionTaken Added Successfully");
+          alert("ContentSpecialistSuggestionItemActionTaken has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

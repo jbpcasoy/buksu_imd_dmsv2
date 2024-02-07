@@ -7,6 +7,7 @@ const logger = pino(
   pretty({
     singleLine: true,
     errorLikeObjectKeys: ["err", "error"],
+    messageKey: "message",
   })
 );
 

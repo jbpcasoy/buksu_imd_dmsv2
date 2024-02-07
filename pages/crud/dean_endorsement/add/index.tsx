@@ -17,7 +17,7 @@ export default function AddDeanEndorsementPage() {
       axios
         .post("/api/dean_endorsement", values)
         .then(() => {
-          alert("DeanEndorsement Added Successfully");
+          alert("DeanEndorsement has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

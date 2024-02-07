@@ -1,20 +1,33 @@
+import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
+import ReviewItem from "@/components/ReviewItem";
+import ReviewSection from "@/components/ReviewSection";
+import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveContentSpecialistMe from "@/hooks/useActiveContentSpecialistMe";
 import useContentSpecialistReviewIM from "@/hooks/useContentSpecialistReviewIM";
-import useContentSpecialistReviewMe from "@/hooks/useContentSpecialistReviewMe";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useDepartmentMe from "@/hooks/useDepartmentMe";
+import useIM from "@/hooks/useIM";
 import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import ReviewQuestions from "@/services/ReviewQuestions";
 import ReviewSections from "@/services/ReviewSections";
 import axios from "axios";
 import { useFormik } from "formik";
-import Link from "next/link";
+import Error from "next/error";
 import { useRouter } from "next/router";
-import { DetailedHTMLProps, SelectHTMLAttributes, useEffect } from "react";
+import {
+  DetailedHTMLProps,
+  SelectHTMLAttributes,
+  useContext,
+  useEffect,
+} from "react";
 import * as Yup from "yup";
 
 export default function AddContentSpecialistReviewPage() {
   const router = useRouter();
+  const { addSnackbar } = useContext(SnackbarContext);
   const iMId = router.query.id;
+  const iM = useIM({ id: iMId as string });
   const qAMISDepartmentEndorsement = useQAMISDepartmentEndorsementByIM({
     id: iMId as string,
   });
@@ -22,6 +35,8 @@ export default function AddContentSpecialistReviewPage() {
     id: iMId as string,
   });
   const activeContentSpecialist = useActiveContentSpecialistMe();
+  const myDepartment = useDepartmentMe();
+  const ownerDepartment = useDepartmentIM({ id: iMId as string });
   const formik = useFormik({
     initialValues: {
       q1_1: "",
@@ -108,14 +123,43 @@ export default function AddContentSpecialistReviewPage() {
           activeContentSpecialistId: activeContentSpecialist.id,
         })
         .then(() => {
-          alert("ContentSpecialistReview Added Successfully");
           router.push(`/im/${iMId}/content_specialist_suggestion`);
         })
         .catch((error) => {
-          alert(error?.response?.data?.error?.message);
+          addSnackbar(
+            error?.response?.data?.error?.message ?? "Failed to submit review",
+            "error"
+          );
         });
     },
   });
+
+  useEffect(() => {
+    if (!myDepartment || !ownerDepartment) {
+      return;
+    }
+
+    if (myDepartment.id !== ownerDepartment.id) {
+      addSnackbar("Cannot review IM from other department", "error");
+      router.replace(`/im/${iMId}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [myDepartment, ownerDepartment]);
+
+  useEffect(() => {
+    if (activeContentSpecialist === undefined) {
+      return;
+    }
+
+    if (activeContentSpecialist === null) {
+      addSnackbar(
+        "Only content specialists are allowed for this action",
+        "error"
+      );
+      router.replace(`/im/${iMId}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeContentSpecialist]);
 
   useEffect(() => {
     if (!contentSpecialistReview) {
@@ -126,97 +170,200 @@ export default function AddContentSpecialistReviewPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentSpecialistReview, iMId]);
 
-  if (!qAMISDepartmentEndorsement || !activeContentSpecialist) {
-    return null;
+  if (iM === null) {
+    return (
+      <MainLayout>
+        <Error statusCode={404} title='IM Not Found' />
+      </MainLayout>
+    );
+  }
+  if (iM === undefined) {
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
   }
 
   return (
     <MainLayout>
-      <div className='flex justify-between'>
-        <h2 className='inline'>Content Specialist Review</h2>
-        <Link
-          href={`/api/im_file/im/${iMId}/pdf`}
-          className='underline'
-          target='_blank'
-        >
-          View PDF
-        </Link>
-      </div>
+      <div className='flex flex-col sm:flex-row h-full overflow-auto'>
+        <div className='flex flex-col sm:flex-1'>
+          <div className='flex justify-between pb-2'>
+            <div>
+              <h2 className='inline text-lg font-bold'>
+                Instructional Material Review{" "}
+                <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                  Content Specialist
+                </span>
+              </h2>
+              <p className='text-sm'>IMERC Phase</p>
+            </div>
+          </div>
+          <div className='flex-1 overflow-auto'>
+            <form onSubmit={formik.handleSubmit} className=''>
+              <div className='space-y-2 mx-1'>
+                <ReviewSection title={ReviewSections.s1}>
+                  <ReviewItem
+                    question={ReviewQuestions.q1_1}
+                    {...formik.getFieldProps("q1_1")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q1_2}
+                    {...formik.getFieldProps("q1_2")}
+                  />
+                </ReviewSection>
 
-      <form onSubmit={formik.handleSubmit}>
-        <div>
-          <p className='font-bold'>{ReviewSections.s1}</p>
-          <p>{ReviewQuestions.q1_1}</p>
-          <RateSelector {...formik.getFieldProps("q1_1")} />
-          <p>{ReviewQuestions.q1_2}</p>
-          <RateSelector {...formik.getFieldProps("q1_2")} />
+                <ReviewSection title={ReviewSections.s2}>
+                  <ReviewItem
+                    question={ReviewQuestions.q2_1}
+                    {...formik.getFieldProps("q2_1")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q2_2}
+                    {...formik.getFieldProps("q2_2")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q2_3}
+                    {...formik.getFieldProps("q2_3")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q2_4}
+                    {...formik.getFieldProps("q2_4")}
+                  />
+                </ReviewSection>
 
-          <p className='font-bold'>{ReviewSections.s2}</p>
-          <p>{ReviewQuestions.q2_1}</p>
-          <RateSelector {...formik.getFieldProps("q2_1")} />
-          <p>{ReviewQuestions.q2_2}</p>
-          <RateSelector {...formik.getFieldProps("q2_2")} />
-          <p>{ReviewQuestions.q2_3}</p>
-          <RateSelector {...formik.getFieldProps("q2_3")} />
-          <p>{ReviewQuestions.q2_4}</p>
-          <RateSelector {...formik.getFieldProps("q2_4")} />
+                <ReviewSection title={ReviewSections.s3}>
+                  <ReviewItem
+                    question={ReviewQuestions.q3_1}
+                    {...formik.getFieldProps("q3_1")}
+                  />
+                </ReviewSection>
 
-          <p className='font-bold'>{ReviewSections.s3}</p>
-          <p>{ReviewQuestions.q3_1}</p>
-          <RateSelector {...formik.getFieldProps("q3_1")} />
+                <ReviewSection title={ReviewSections.s4}>
+                  <ReviewItem
+                    question={ReviewQuestions.q4_1}
+                    {...formik.getFieldProps("q4_1")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q4_2}
+                    {...formik.getFieldProps("q4_2")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q4_3}
+                    {...formik.getFieldProps("q4_3")}
+                  />
+                </ReviewSection>
 
-          <p className='font-bold'>{ReviewSections.s4}</p>
-          <p>{ReviewQuestions.q4_1}</p>
-          <RateSelector {...formik.getFieldProps("q4_1")} />
-          <p>{ReviewQuestions.q4_2}</p>
-          <RateSelector {...formik.getFieldProps("q4_2")} />
-          <p>{ReviewQuestions.q4_3}</p>
-          <RateSelector {...formik.getFieldProps("q4_3")} />
+                <ReviewSection title={ReviewSections.s5}>
+                  <ReviewItem
+                    question={ReviewQuestions.q5_1}
+                    {...formik.getFieldProps("q5_1")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q5_2}
+                    {...formik.getFieldProps("q5_2")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q5_3}
+                    {...formik.getFieldProps("q5_3")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q5_4}
+                    {...formik.getFieldProps("q5_4")}
+                  />
+                </ReviewSection>
 
-          <p className='font-bold'>{ReviewSections.s5}</p>
-          <p>{ReviewQuestions.q5_1}</p>
-          <RateSelector {...formik.getFieldProps("q5_1")} />
-          <p>{ReviewQuestions.q5_2}</p>
-          <RateSelector {...formik.getFieldProps("q5_2")} />
-          <p>{ReviewQuestions.q5_3}</p>
-          <RateSelector {...formik.getFieldProps("q5_3")} />
-          <p>{ReviewQuestions.q5_4}</p>
-          <RateSelector {...formik.getFieldProps("q5_4")} />
+                <ReviewSection title={ReviewSections.s6}>
+                  <ReviewItem
+                    question={ReviewQuestions.q6_1}
+                    {...formik.getFieldProps("q6_1")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q6_2}
+                    {...formik.getFieldProps("q6_2")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q6_3}
+                    {...formik.getFieldProps("q6_3")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q6_4}
+                    {...formik.getFieldProps("q6_4")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q6_5}
+                    {...formik.getFieldProps("q6_5")}
+                  />
+                </ReviewSection>
 
-          <p className='font-bold'>{ReviewSections.s6}</p>
-          <p>{ReviewQuestions.q6_1}</p>
-          <RateSelector {...formik.getFieldProps("q6_1")} />
-          <p>{ReviewQuestions.q6_2}</p>
-          <RateSelector {...formik.getFieldProps("q6_2")} />
-          <p>{ReviewQuestions.q6_3}</p>
-          <RateSelector {...formik.getFieldProps("q6_3")} />
-          <p>{ReviewQuestions.q6_4}</p>
-          <RateSelector {...formik.getFieldProps("q6_4")} />
-          <p>{ReviewQuestions.q6_5}</p>
-          <RateSelector {...formik.getFieldProps("q6_5")} />
+                <ReviewSection title={ReviewSections.s7}>
+                  <ReviewItem
+                    question={ReviewQuestions.q7_1}
+                    {...formik.getFieldProps("q7_1")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q7_2}
+                    {...formik.getFieldProps("q7_2")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q7_3}
+                    {...formik.getFieldProps("q7_3")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q7_4}
+                    {...formik.getFieldProps("q7_4")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q7_5}
+                    {...formik.getFieldProps("q7_5")}
+                  />
+                </ReviewSection>
 
-          <p className='font-bold'>{ReviewSections.s7}</p>
-          <p>{ReviewQuestions.q7_1}</p>
-          <RateSelector {...formik.getFieldProps("q7_1")} />
-          <p>{ReviewQuestions.q7_2}</p>
-          <RateSelector {...formik.getFieldProps("q7_2")} />
-          <p>{ReviewQuestions.q7_3}</p>
-          <RateSelector {...formik.getFieldProps("q7_3")} />
-          <p>{ReviewQuestions.q7_4}</p>
-          <RateSelector {...formik.getFieldProps("q7_4")} />
-          <p>{ReviewQuestions.q7_5}</p>
-          <RateSelector {...formik.getFieldProps("q7_5")} />
-
-          <p className='font-bold'>{ReviewSections.s8}</p>
-          <p>{ReviewQuestions.q8_1}</p>
-          <RateSelector {...formik.getFieldProps("q8_1")} />
-          <p>{ReviewQuestions.q8_2}</p>
-          <RateSelector {...formik.getFieldProps("q8_2")} />
-          <p>{ReviewQuestions.q8_3}</p>
-          <RateSelector {...formik.getFieldProps("q8_3")} />
+                <ReviewSection title={ReviewSections.s8}>
+                  <ReviewItem
+                    question={ReviewQuestions.q8_1}
+                    {...formik.getFieldProps("q8_1")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q8_2}
+                    {...formik.getFieldProps("q8_2")}
+                  />
+                  <ReviewItem
+                    question={ReviewQuestions.q8_3}
+                    {...formik.getFieldProps("q8_3")}
+                  />
+                </ReviewSection>
+              </div>
+              <div className='flex justify-end p-1'>
+                <button
+                  disabled={formik.isSubmitting || !formik.isValid}
+                  className='bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded cursor-pointer inline-flex space-x-2 items-center hover:bg-opacity-90'
+                >
+                  <span>Next</span>
+                  <span>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      height='1em'
+                      viewBox='0 0 448 512'
+                      className='fill-palette_white'
+                    >
+                      <path d='M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z' />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <input type='submit' value='Next' className='rounded border' />
-      </form>
+        <div className='sm:flex-1 h-screen-3/4 sm:h-auto'>
+          <iframe
+            loading='lazy'
+            src={`/api/im_file/im/${iMId}/pdf`}
+            className='w-full h-full rounded'
+          />
+        </div>
+      </div>
     </MainLayout>
   );
 }

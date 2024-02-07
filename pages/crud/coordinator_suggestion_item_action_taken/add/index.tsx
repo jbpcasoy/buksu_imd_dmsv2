@@ -17,7 +17,7 @@ export default function AddCoordinatorSuggestionItemActionTakenPage() {
       axios
         .post("/api/coordinator_suggestion_item_action_taken", values)
         .then(() => {
-          alert("CoordinatorSuggestionItemActionTaken Added Successfully");
+          alert("CoordinatorSuggestionItemActionTaken has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

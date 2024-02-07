@@ -5,17 +5,23 @@ import { useEffect, useState } from "react";
 export interface useIDDCoordinatorSuggestionItemsOwnParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useIDDCoordinatorSuggestionItemsOwn({ skip, take, id }: useIDDCoordinatorSuggestionItemsOwnParams) {
-  const [state, setState] = useState<{iDDCoordinatorSuggestionItems: IDDCoordinatorSuggestionItem[], count: number}>({
+export default function useIDDCoordinatorSuggestionItemsOwn(
+  { skip, take, id }: useIDDCoordinatorSuggestionItemsOwnParams,
+  refreshFlag?: number
+) {
+  const [state, setState] = useState<{
+    iDDCoordinatorSuggestionItems: IDDCoordinatorSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    iDDCoordinatorSuggestionItems: []
+    iDDCoordinatorSuggestionItems: [],
   });
 
   useEffect(() => {
-    if(!id) {
-        return;
+    if (!id) {
+      return;
     }
     axios
       .get("/api/idd_coordinator_suggestion_item", {
@@ -23,8 +29,8 @@ export default function useIDDCoordinatorSuggestionItemsOwn({ skip, take, id }: 
           skip,
           take,
           filter: {
-            iDDCoordinatorSuggestionId: id
-          }
+            iDDCoordinatorSuggestionId: id,
+          },
         },
       })
       .then((res) => {
@@ -33,7 +39,7 @@ export default function useIDDCoordinatorSuggestionItemsOwn({ skip, take, id }: 
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

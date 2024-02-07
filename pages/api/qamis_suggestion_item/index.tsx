@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import qAMISSuggestionItemAbility from "@/services/ability/qAMISSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = qAMISSuggestionItemAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -33,11 +29,6 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "QAMISSuggestionItem"
-      );
-
       const {
         actionTaken,
         qAMISSuggestionId,
@@ -45,36 +36,115 @@ export default async function handler(
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
-      
-      const submittedQAMISSuggestion =
-      await prisma.submittedQAMISSuggestion.findFirst({
-        where: {
-          QAMISSuggestion: {
-            id: {
-              equals: qAMISSuggestionId,
-            },
-          },
-        },
-      });
 
-    if (submittedQAMISSuggestion) {
-      throw new Error("QAMIS Suggestion is already submitted");
-    }
-    
-      const qAMISSuggestionItem =
-        await prisma.qAMISSuggestionItem.create({
-          data: {
-            actionTaken,
-            remarks,
-            suggestion,
-            pageNumber,
-            QAMISSuggestion: {
-              connect: {
-                id: qAMISSuggestionId,
+      if (!user.isAdmin) {
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  CoordinatorReview: {
+                    CoordinatorSuggestion: {
+                      SubmittedCoordinatorSuggestion: {
+                        DepartmentReviewed: {
+                          DepartmentRevision: {
+                            some: {
+                              CoordinatorEndorsement: {
+                                DeanEndorsement: {
+                                  IDDCoordinatorSuggestion: {
+                                    SubmittedIDDCoordinatorSuggestion: {
+                                      CITLRevision: {
+                                        some: {
+                                          IDDCoordinatorEndorsement: {
+                                            CITLDirectorEndorsement: {
+                                              QAMISSuggestion: {
+                                                id: {
+                                                  equals: qAMISSuggestionId,
+                                                },
+                                              },
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
               },
             },
           },
         });
+
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+
+        if (faculty.id !== iM.facultyId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create this QAMIS suggestion item",
+            },
+          });
+        }
+
+        const submittedQAMISSuggestion =
+          await prisma.submittedQAMISSuggestion.findFirst({
+            where: {
+              QAMISSuggestion: {
+                id: {
+                  equals: qAMISSuggestionId,
+                },
+              },
+            },
+          });
+
+        if (submittedQAMISSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "Error: QAMIS suggestion is already submitted",
+            },
+          });
+        }
+      }
+
+      const qAMISSuggestionItem = await prisma.qAMISSuggestionItem.create({
+        data: {
+          actionTaken,
+          remarks,
+          suggestion,
+          pageNumber,
+          QAMISSuggestion: {
+            connect: {
+              id: qAMISSuggestionId,
+            },
+          },
+        },
+      });
 
       return res.json(qAMISSuggestionItem);
     } catch (error: any) {
@@ -85,7 +155,6 @@ export default async function handler(
     }
   };
 
- 
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -106,7 +175,6 @@ export default async function handler(
         take,
         where: {
           AND: [
-            accessibleBy(ability).QAMISSuggestionItem,
             {
               QAMISSuggestion: {
                 id: {
@@ -123,7 +191,6 @@ export default async function handler(
       const count = await prisma.qAMISSuggestionItem.count({
         where: {
           AND: [
-            accessibleBy(ability).QAMISSuggestionItem,
             {
               QAMISSuggestion: {
                 id: {

@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import coordinatorReviewAbility from "@/services/ability/coordinatorReviewAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = coordinatorReviewAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -49,32 +45,27 @@ export default async function handler(
         q7_4: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q7_5: Yup.string().oneOf(["VM", "M", "JE", "NM", "NAA"]).required(),
         q8_1: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_2: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         q8_3: Yup.string()
-        .oneOf(["VM", "M", "JE", "NM", "NAA"])
-        .optional()
-        .transform((originalValue, originalObject) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+          .oneOf(["VM", "M", "JE", "NM", "NAA"])
+          .optional()
+          .transform((originalValue, originalObject) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         departmentReviewId: Yup.string().required(),
         activeCoordinatorId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "CoordinatorReview"
-      );
 
       const {
         q1_1,
@@ -106,6 +97,69 @@ export default async function handler(
         departmentReviewId,
         activeCoordinatorId,
       } = validator.cast(req.body);
+
+      const faculty = await prisma.faculty.findFirst({
+        where: {
+          ActiveFaculty: {
+            Faculty: {
+              Coordinator: {
+                ActiveCoordinator: {
+                  id: {
+                    equals: activeCoordinatorId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!faculty) {
+        return res.status(403).json({
+          error: {
+            message:
+              "Only an active coordinator is allowed to perform this action",
+          },
+        });
+      }
+
+      const iMOwner = await prisma.faculty.findFirstOrThrow({
+        where: {
+          IM: {
+            some: {
+              IMFile: {
+                some: {
+                  DepartmentReview: {
+                    id: {
+                      equals: departmentReviewId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (faculty.departmentId !== iMOwner.departmentId) {
+        return res.status(400).json({
+          error: {
+            message:
+              "coordinators are not allowed to review an IM from another department",
+          },
+        });
+      }
+
+      if (!user.isAdmin) {
+        // Might not be thrown unless multiple coordinators on each departments became allowed
+        if (faculty.userId !== user.id) {
+          return res.status(400).json({
+            error: {
+              message:
+                "You are not allowed to create a coordinator review for this user",
+            },
+          });
+        }
+      }
 
       const coordinator = await prisma.coordinator.findFirstOrThrow({
         where: {
@@ -186,17 +240,13 @@ export default async function handler(
       const coordinatorReviews = await prisma.coordinatorReview.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).CoordinatorReview],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.coordinatorReview.count({
-        where: {
-          AND: [accessibleBy(ability).CoordinatorReview],
-        },
+        where: {},
       });
 
       return res.json({ coordinatorReviews, count });

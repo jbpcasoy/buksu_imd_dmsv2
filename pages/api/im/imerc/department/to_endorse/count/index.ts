@@ -1,12 +1,9 @@
 import prisma from "@/prisma/client";
-import { ActiveFaculty, Faculty, User } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
+import { AppAbility } from "@/services/ability/abilityBuilder";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import iMAbility from "@/services/ability/iMAbility";
-import { accessibleBy } from "@casl/prisma";
-import { AppAbility } from "@/services/ability/abilityBuilder";
+import { ActiveFaculty, User } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -54,49 +51,20 @@ export async function iMERCToEndorseCount(user: User) {
       },
     },
   });
-  ability = iMAbility({ user });
 
   const count = await prisma.iM.count({
     where: {
       AND: [
-        accessibleBy(ability).IM,
         {
           Faculty: {
             Department: {
               Faculty: {
                 some: {
-                  OR: [
-                    {
-                      Chairperson: {
-                        ActiveChairperson: {
-                          Chairperson: {
-                            Faculty: {
-                              User: {
-                                id: {
-                                  equals: user.id,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
+                  User: {
+                    id: {
+                      equals: user.id,
                     },
-                    {
-                      Coordinator: {
-                        ActiveCoordinator: {
-                          Coordinator: {
-                            Faculty: {
-                              User: {
-                                id: {
-                                  equals: user.id,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  ],
+                  },
                 },
               },
             },
@@ -127,29 +95,78 @@ export async function iMERCToEndorseCount(user: User) {
             IMFile: {
               some: {
                 QAMISRevision: {
-                  AND: [
-                    {
-                      QAMISChairpersonEndorsement: {
-                        QAMISDepartmentEndorsement: {
-                          isNot: null,
+                  QAMISChairpersonEndorsement: {
+                    QAMISDepartmentEndorsement: {
+                      isNot: null,
+                    },
+                  },
+                  QAMISCoordinatorEndorsement: {
+                    QAMISDepartmentEndorsement: {
+                      isNot: null,
+                    },
+                  },
+                  QAMISDeanEndorsement: {
+                    QAMISDepartmentEndorsement: {
+                      isNot: null,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              QAMISRevision: {
+                QAMISChairpersonEndorsement: {
+                  Chairperson: {
+                    Faculty: {
+                      User: {
+                        id: {
+                          equals: user.id,
                         },
                       },
                     },
-                    {
-                      QAMISCoordinatorEndorsement: {
-                        QAMISDepartmentEndorsement: {
-                          isNot: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              QAMISRevision: {
+                QAMISCoordinatorEndorsement: {
+                  Coordinator: {
+                    Faculty: {
+                      User: {
+                        id: {
+                          equals: user.id,
                         },
                       },
                     },
-                    {
-                      QAMISDeanEndorsement: {
-                        QAMISDepartmentEndorsement: {
-                          isNot: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              QAMISRevision: {
+                QAMISDeanEndorsement: {
+                  Dean: {
+                    Faculty: {
+                      User: {
+                        id: {
+                          equals: user.id,
                         },
                       },
                     },
-                  ],
+                  },
                 },
               },
             },

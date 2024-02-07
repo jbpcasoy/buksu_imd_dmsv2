@@ -29,7 +29,7 @@ export default function EditContentSpecialistSuggestionItemActionTakenPage() {
         )
         .then(() => {
           alert(
-            "ContentSpecialistSuggestionItemActionTaken updated successfully"
+            "ContentSpecialistSuggestionItemActionTaken has been updated successfully"
           );
         })
         .catch((error) => {

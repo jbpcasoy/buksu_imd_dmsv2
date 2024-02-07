@@ -1,14 +1,10 @@
 import prisma from "@/prisma/client";
-import plagiarismFileAbility from "@/services/ability/plagiarismFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
+import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
-import { promisify } from "util";
-
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,7 +18,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = plagiarismFileAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -30,7 +25,6 @@ export default async function handler(
       const plagiarismFile = await prisma.plagiarismFile.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).PlagiarismFile,
             {
               id: {
                 equals: id as string,
@@ -40,14 +34,14 @@ export default async function handler(
         },
       });
 
-      res.setHeader("Content-Disposition", `inline`);
       res.setHeader("Content-Type", `application/pdf`);
 
-      const destination = path.join(process.cwd(), `/files/plagiarism/${plagiarismFile.filename}`);
-      const readFile = promisify(fs.readFile);
-      const file = await readFile(destination);
-
-      return res.send(file);
+      const destination = path.join(
+        process.cwd(),
+        `/files/plagiarism/${plagiarismFile.filename}`
+      );
+      const file = fs.createReadStream(destination);
+      file.pipe(res);
     } catch (error: any) {
       logger.error(error);
       return res

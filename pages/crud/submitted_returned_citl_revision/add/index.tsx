@@ -15,7 +15,7 @@ export default function AddSubmittedReturnedCITLRevisionPage() {
       axios
         .post("/api/submitted_returned_citl_revision", values)
         .then(() => {
-          alert("SubmittedReturnedCITLRevision Added Successfully");
+          alert("SubmittedReturnedCITLRevision has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

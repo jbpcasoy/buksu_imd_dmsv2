@@ -1,11 +1,8 @@
 import prisma from "@/prisma/client";
-import chairpersonAbility from "@/services/ability/chairpersonAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = chairpersonAbility({ user });
-
   const postHandler = async () => {
     try {
       const validator = Yup.object({
@@ -30,10 +25,30 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "Chairperson");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: { message: "You are not allowed to create a chairperson" },
+        });
+      }
 
       const { activeFacultyId } = validator.cast(req.body);
 
+      const existingChairperson = await prisma.chairperson.findFirst({
+        where: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: activeFacultyId,
+              },
+            },
+          },
+        },
+      });
+      if (existingChairperson) {
+        return res
+          .status(409)
+          .json({ error: { message: "Chairperson already exists" } });
+      }
       const faculty = await prisma.faculty.findFirstOrThrow({
         where: {
           ActiveFaculty: {
@@ -69,6 +84,10 @@ export default async function handler(
         take: Yup.number().required(),
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
+        "filter[departmentName]": Yup.string().optional(),
+        "filter[collegeName]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().optional(),
       });
 
       await validator.validate(req.query);
@@ -77,13 +96,16 @@ export default async function handler(
         skip,
         take,
         "filter[name]": filterName,
+        "filter[departmentName]": filterDepartmentName,
+        "filter[collegeName]": filterCollegeName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
       const chairpersons = await prisma.chairperson.findMany({
         skip,
         take,
         where: {
           AND: [
-            accessibleBy(ability).Chairperson,
             {
               Faculty: {
                 User: {
@@ -94,15 +116,97 @@ export default async function handler(
                 },
               },
             },
+            {
+              Faculty: {
+                Department: {
+                  name: {
+                    contains: filterDepartmentName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
           ],
         },
-        orderBy: {
-          updatedAt: "desc",
-        },
+        orderBy:
+          sortField === "name"
+            ? ({
+                Faculty: {
+                  User: {
+                    name: sortDirection ?? "asc",
+                  },
+                },
+              } as Prisma.FacultyOrderByWithRelationInput)
+            : sortField === "departmentName"
+            ? ({
+                Faculty: {
+                  Department: {
+                    name: sortDirection ?? "asc",
+                  },
+                },
+              } as Prisma.FacultyOrderByWithRelationInput)
+            : sortField === "collegeName"
+            ? ({
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection ?? "asc",
+                    },
+                  },
+                },
+              } as Prisma.FacultyOrderByWithRelationInput)
+            : ({
+                updatedAt: "desc",
+              } as Prisma.FacultyOrderByWithRelationInput),
       });
       const count = await prisma.chairperson.count({
         where: {
-          AND: [accessibleBy(ability).Chairperson],
+          AND: [
+            {
+              Faculty: {
+                User: {
+                  name: {
+                    contains: filterName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  name: {
+                    contains: filterDepartmentName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              Faculty: {
+                Department: {
+                  College: {
+                    name: {
+                      contains: filterCollegeName,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
       });
 

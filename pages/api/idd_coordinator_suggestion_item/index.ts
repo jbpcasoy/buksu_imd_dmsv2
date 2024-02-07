@@ -1,5 +1,4 @@
 import prisma from "@/prisma/client";
-import iDDCoordinatorSuggestionItemAbility from "@/services/ability/iDDCoordinatorSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { ForbiddenError } from "@casl/ability";
@@ -20,7 +19,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iDDCoordinatorSuggestionItemAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -28,23 +26,57 @@ export default async function handler(
         iDDCoordinatorSuggestionId: Yup.string().required(),
         pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "IDDCoordinatorSuggestionItem"
-      );
-
       const {
-        actionTaken,
         iDDCoordinatorSuggestionId,
         remarks,
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        const iDDCoordinatorSuggestion =
+          await prisma.iDDCoordinatorSuggestion.findFirstOrThrow({
+            where: {
+              id: {
+                equals: iDDCoordinatorSuggestionId,
+              },
+            },
+          });
+        if (iDDCoordinatorSuggestion.iDDCoordinatorId !== iDDCoordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create this IDD coordinator suggestion item",
+            },
+          });
+        }
+      }
 
       const submittedIDDCoordinatorSuggestion =
         await prisma.submittedIDDCoordinatorSuggestion.findFirst({
@@ -58,14 +90,16 @@ export default async function handler(
         });
 
       if (submittedIDDCoordinatorSuggestion) {
-        throw new Error("IDDCoordinator Suggestion is already submitted");
+        return res.status(400).json({
+          error: {
+            message: "Error: IDD coordinator suggestion is already submitted",
+          },
+        });
       }
 
-      
       const iDDCoordinatorSuggestionItem =
         await prisma.iDDCoordinatorSuggestionItem.create({
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,
@@ -86,7 +120,6 @@ export default async function handler(
     }
   };
 
- 
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -102,29 +135,28 @@ export default async function handler(
         take,
         "filter[iDDCoordinatorSuggestionId]": filterIDDCoordinatorSuggestionId,
       } = validator.cast(req.query);
-      const iDDCoordinatorSuggestionItems = await prisma.iDDCoordinatorSuggestionItem.findMany({
-        skip,
-        take,
-        where: {
-          AND: [
-            accessibleBy(ability).IDDCoordinatorSuggestionItem,
-            {
-              IDDCoordinatorSuggestion: {
-                id: {
-                  equals: filterIDDCoordinatorSuggestionId,
+      const iDDCoordinatorSuggestionItems =
+        await prisma.iDDCoordinatorSuggestionItem.findMany({
+          skip,
+          take,
+          where: {
+            AND: [
+              {
+                IDDCoordinatorSuggestion: {
+                  id: {
+                    equals: filterIDDCoordinatorSuggestionId,
+                  },
                 },
               },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
+            ],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
       const count = await prisma.iDDCoordinatorSuggestionItem.count({
         where: {
           AND: [
-            accessibleBy(ability).IDDCoordinatorSuggestionItem,
             {
               IDDCoordinatorSuggestion: {
                 id: {

@@ -3,7 +3,7 @@ import { Faculty, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useFacultyParams {
-  id: string;
+  id?: string;
 }
 export default function useFaculty({ id }: useFacultyParams) {
   const [state, setState] = useState<Faculty | null>();

@@ -22,7 +22,7 @@ export default function EditUserPage() {
       axios
         .put(`/api/user/${userId}`, values)
         .then(() => {
-          alert("User updated successfully");
+          alert("User has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -54,7 +54,7 @@ export default function EditUserPage() {
       <form onSubmit={formik.handleSubmit}>
         <input
           type='text'
-          placeholder='name'
+          placeholder='Name'
           {...formik.getFieldProps("name")}
         />
         <input type='submit' value='Submit' className='rounded border' />

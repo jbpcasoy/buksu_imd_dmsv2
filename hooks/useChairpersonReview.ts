@@ -3,7 +3,7 @@ import { ChairpersonReview, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useChairpersonReviewParams {
-  id: string;
+  id?: string;
 }
 export default function useChairpersonReview({ id }: useChairpersonReviewParams) {
   const [state, setState] = useState<ChairpersonReview | null>();

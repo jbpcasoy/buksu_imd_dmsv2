@@ -1,16 +1,12 @@
 import prisma from "@/prisma/client";
-import plagiarismFileAbility from "@/services/ability/plagiarismFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
-import { ActiveFaculty, IM, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import * as Yup from "yup";
-import { ForbiddenError, subject } from "@casl/ability";
-import iMAbility from "@/services/ability/iMAbility";
 
 //set bodyParser
 export const config = {
@@ -46,51 +42,121 @@ export default async function handler(
       // Parse request body
       const fields: Fields = data.fields;
       const body = {
-        iMId: fields?.iMId?.at(0),
+        iMERCCITLReviewedId: fields?.iMERCCITLReviewedId?.at(0),
       };
       // Validate request body
       const validator = Yup.object({
-        iMId: Yup.string().required(),
+        iMERCCITLReviewedId: Yup.string().required(),
       });
       await validator.validate(body);
-      const { iMId } = validator.cast(body);
+      const { iMERCCITLReviewedId } = validator.cast(body);
 
-      // Find IM
-      let iM: IM;
-      iM = await prisma.iM.findFirstOrThrow({
-        where: {
-          id: {
-            equals: iMId,
-          },
-        },
-        include: {
-          Faculty: {
-            include: {
-              ActiveFaculty: {
-                include: {
-                  Faculty: {
-                    include: {
-                      User: true,
+      if (!user.isAdmin) {
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  CoordinatorReview: {
+                    CoordinatorSuggestion: {
+                      SubmittedCoordinatorSuggestion: {
+                        DepartmentReviewed: {
+                          DepartmentRevision: {
+                            some: {
+                              CoordinatorEndorsement: {
+                                DeanEndorsement: {
+                                  IDDCoordinatorSuggestion: {
+                                    SubmittedIDDCoordinatorSuggestion: {
+                                      CITLRevision: {
+                                        some: {
+                                          IDDCoordinatorEndorsement: {
+                                            CITLDirectorEndorsement: {
+                                              QAMISSuggestion: {
+                                                SubmittedQAMISSuggestion: {
+                                                  IMFile: {
+                                                    QAMISRevision: {
+                                                      QAMISDeanEndorsement: {
+                                                        QAMISDepartmentEndorsement:
+                                                          {
+                                                            ContentEditorReview:
+                                                              {
+                                                                ContentEditorSuggestion:
+                                                                  {
+                                                                    SubmittedContentEditorSuggestion:
+                                                                      {
+                                                                        IMERCCITLReviewed:
+                                                                          {
+                                                                            id: {
+                                                                              equals:
+                                                                                iMERCCITLReviewedId,
+                                                                            },
+                                                                          },
+                                                                      },
+                                                                  },
+                                                              },
+                                                          },
+                                                      },
+                                                    },
+                                                  },
+                                                },
+                                              },
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-      });
+        });
 
-      const ability = iMAbility({ user });
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToPlagiarismFile",
-        subject("IM", iM)
-      );
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to create this plagiarism file",
+            },
+          });
+        }
+      }
 
       // Save file to server
       const file = data.files.file[0];
       const filename = `${file.newFilename}.pdf`;
       const filePath = file.filepath;
-      const destination = path.join(process.cwd(), `/files/plagiarism/${filename}`);
+      const destination = path.join(
+        process.cwd(),
+        `/files/plagiarism/${filename}`
+      );
       fs.copyFile(filePath, destination, (err) => {
         if (err) throw err;
       });
@@ -98,9 +164,9 @@ export default async function handler(
       // create object to server
       const plagiarismFile = await prisma.plagiarismFile.create({
         data: {
-          IM: {
+          IMERCCITLReviewed: {
             connect: {
-              id: iM.id,
+              id: iMERCCITLReviewedId,
             },
           },
           filename,
@@ -127,22 +193,16 @@ export default async function handler(
       await validator.validate(req.query);
       const { skip, take } = validator.cast(req.query);
 
-      const ability = plagiarismFileAbility({ user });
-
       const plagiarismFiles = await prisma.plagiarismFile.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).PlagiarismFile],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.plagiarismFile.count({
-        where: {
-          AND: [accessibleBy(ability).PlagiarismFile],
-        },
+        where: {},
       });
 
       return res.json({ plagiarismFiles, count });

@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import returnedCITLRevisionAbility from "@/services/ability/returnedCITLRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedCITLRevisionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
         await prisma.returnedCITLRevision.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ReturnedCITLRevision,
               {
                 id: {
                   equals: id,
@@ -62,57 +57,67 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ReturnedCITLRevision"
-      );
-
       const { id } = validator.cast(req.query);
 
-      const iDDCoordinatorEndorsement =
-        await prisma.iDDCoordinatorEndorsement.findFirst({
+      if (!user.isAdmin) {
+        const returnedCITLRevision =
+          await prisma.returnedCITLRevision.findFirstOrThrow({
+            where: {
+              id: {
+                equals: id,
+              },
+            },
+          });
+
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
           where: {
-            CITLRevision: {
-              AND: [
-                {
-                  IMFile: {
-                    IM: {
-                      IMFile: {
-                        some: {
-                          CITLRevision: {
-                            IDDCoordinatorEndorsement: {
-                              isNot: null,
-                            },
-                          },
-                        },
-                      },
-                    },
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
                   },
                 },
-                {
-                  IMFile: {
-                    IM: {
-                      IMFile: {
-                        some: {
-                          CITLRevision: {
-                            ReturnedCITLRevision: {
-                              id: {
-                                equals: id,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
+              },
             },
           },
         });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
 
-      if (iDDCoordinatorEndorsement) {
-        throw new Error("IM already endorsed by IDD Coordinator");
+        if (iDDCoordinator.id !== returnedCITLRevision.iDDCoordinatorId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this returned CITL revision",
+            },
+          });
+        }
+
+        const submittedReturnedCITLRevision =
+          await prisma.submittedReturnedCITLRevision.findFirst({
+            where: {
+              ReturnedCITLRevision: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          });
+        if (submittedReturnedCITLRevision) {
+          return res.status(400).json({
+            error: {
+              message:
+                "You are not allowed to delete a submitted returned CITL revision",
+            },
+          });
+        }
       }
 
       const returnedCITLRevision = await prisma.returnedCITLRevision.delete({

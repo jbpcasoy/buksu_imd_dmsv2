@@ -19,7 +19,7 @@ export default function CITLDirectorEndorsementPage() {
     axios
       .delete(`/api/citl_director_endorsement/${cITLDirectorEndorsementId}`)
       .then(() => {
-        alert("CITLDirectorEndorsement deleted successfully.");
+        alert("CITLDirectorEndorsement has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

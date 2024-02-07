@@ -3,7 +3,7 @@ import { ContentEditorSuggestion, IM } from "@prisma/client";
 import axios from "axios";
 
 export interface useContentEditorSuggestionParams {
-  id: string;
+  id?: string;
 }
 export default function useContentEditorSuggestion({ id }: useContentEditorSuggestionParams) {
   const [state, setState] = useState<ContentEditorSuggestion | null | undefined>(undefined);

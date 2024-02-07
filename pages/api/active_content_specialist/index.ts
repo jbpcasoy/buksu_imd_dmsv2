@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import activeContentSpecialistAbility from "@/services/ability/activeContentSpecialistAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeContentSpecialistAbility({ user });
-
   const postHandler = async () => {
     try {
       const validator = Yup.object({
@@ -30,39 +25,48 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ActiveContentSpecialist"
-      );
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to set an active content specialist",
+          },
+        });
+      }
 
       const { activeFacultyId } = validator.cast(req.body);
-      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow({
-        where: {
-          Faculty: {
-            ActiveFaculty: {
-              id: {
-                equals: activeFacultyId,
-              },
-            },
-          },
-        },
-      });
-
-      const userActiveContentSpecialistCount = await prisma.activeContentSpecialist.count({
-        where: {
-          ContentSpecialist: {
+      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow(
+        {
+          where: {
             Faculty: {
-              id: {
-                equals: contentSpecialist.facultyId,
+              ActiveFaculty: {
+                id: {
+                  equals: activeFacultyId,
+                },
               },
             },
           },
-        },
-      });
+        }
+      );
+
+      const userActiveContentSpecialistCount =
+        await prisma.activeContentSpecialist.count({
+          where: {
+            ContentSpecialist: {
+              Faculty: {
+                id: {
+                  equals: contentSpecialist.facultyId,
+                },
+              },
+            },
+          },
+        });
 
       if (userActiveContentSpecialistCount > 0) {
         return res.status(409).json({
-          error: { message: "User can only have one active contentSpecialist" },
+          error: {
+            message:
+              "Faculty can only be an active content specialist on one department",
+          },
         });
       }
 
@@ -97,19 +101,22 @@ export default async function handler(
 
       if (departmentActiveContentSpecialistCount > 0) {
         return res.status(409).json({
-          error: { message: "Department can only have one active contentSpecialist" },
+          error: {
+            message: "Department can only have one active content specialist",
+          },
         });
       }
 
-      const activeContentSpecialist = await prisma.activeContentSpecialist.create({
-        data: {
-          ContentSpecialist: {
-            connect: {
-              id: contentSpecialist.id,
+      const activeContentSpecialist =
+        await prisma.activeContentSpecialist.create({
+          data: {
+            ContentSpecialist: {
+              connect: {
+                id: contentSpecialist.id,
+              },
             },
           },
-        },
-      });
+        });
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {
@@ -135,12 +142,33 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      const activeContentSpecialists = await prisma.activeContentSpecialist.findMany({
-        skip,
-        take,
+      const activeContentSpecialists =
+        await prisma.activeContentSpecialist.findMany({
+          skip,
+          take,
+          where: {
+            AND: [
+              {
+                ContentSpecialist: {
+                  Faculty: {
+                    User: {
+                      name: {
+                        contains: filterName,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        });
+      const count = await prisma.activeContentSpecialist.count({
         where: {
           AND: [
-            accessibleBy(ability).ActiveContentSpecialist,
             {
               ContentSpecialist: {
                 Faculty: {
@@ -154,14 +182,6 @@ export default async function handler(
               },
             },
           ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
-      const count = await prisma.activeContentSpecialist.count({
-        where: {
-          AND: [accessibleBy(ability).ActiveContentSpecialist],
         },
       });
 

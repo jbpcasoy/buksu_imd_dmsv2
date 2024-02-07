@@ -21,7 +21,7 @@ export default function ContentEditorSuggestionItemPage() {
     axios
       .delete(`/api/content_editor_suggestion_item/${contentEditorSuggestionItemId}`)
       .then(() => {
-        alert("ContentEditorSuggestionItem deleted successfully.");
+        alert("ContentEditorSuggestionItem has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -64,7 +64,6 @@ export default function ContentEditorSuggestionItemPage() {
       </p>
       <p>suggestion: {contentEditorSuggestionItem.suggestion}</p>
       <p>pageNumber: {contentEditorSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {contentEditorSuggestionItem.actionTaken}</p>
       <p>remarks: {contentEditorSuggestionItem.remarks}</p>
     </CrudLayout>
   );

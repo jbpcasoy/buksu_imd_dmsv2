@@ -1,9 +1,11 @@
 import prisma from "@/prisma/client";
+import iMStatus from "@/services/iMStatus";
+import { countIMs } from "@/services/im_count";
 import logger from "@/services/logger";
 import { Prisma } from "@prisma/client";
+import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
-import { countIMs } from "..";
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,24 +16,29 @@ export default async function handler(
       const validator = Yup.object({
         "filter[departmentId]": Yup.string().optional(),
         "filter[collegeId]": Yup.string().optional(),
-        "filter[status]": Yup.string().oneOf([
-          "IMERC_CITL_DIRECTOR_ENDORSED",
-          "IMERC_CITL_IDD_COORDINATOR_ENDORSED",
-          "IMERC_CITL_REVISED",
-          "IMERC_CITL_REVIEWED",
-          "IMERC_QAMIS_DEPARTMENT_ENDORSED",
-          "IMERC_QAMIS_REVISED",
-          "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED",
-          "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED",
-          "IMPLEMENTATION_CITL_REVISED",
-          "IMPLEMENTATION_CITL_REVIEWED",
-          "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED",
-          "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED",
-          "IMPLEMENTATION_DEPARTMENT_REVISED",
-          "IMPLEMENTATION_DEPARTMENT_REVIEWED",
-          "IMPLEMENTATION_DEPARTMENT_REVIEW",
-          "IMPLEMENTATION_DRAFT",
-        ]),
+        "filter[status]": Yup.string()
+          .oneOf([
+            "IMERC_CITL_DIRECTOR_ENDORSED",
+            "IMERC_CITL_IDD_COORDINATOR_ENDORSED",
+            "IMERC_CITL_REVISED",
+            "IMERC_CITL_REVIEWED",
+            "IMERC_QAMIS_DEPARTMENT_ENDORSED",
+            "IMERC_QAMIS_REVISED",
+            "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED",
+            "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED",
+            "IMPLEMENTATION_CITL_REVISED",
+            "IMPLEMENTATION_CITL_REVIEWED",
+            "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED",
+            "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED",
+            "IMPLEMENTATION_DEPARTMENT_REVISED",
+            "IMPLEMENTATION_DEPARTMENT_REVIEWED",
+            "IMPLEMENTATION_DEPARTMENT_REVIEW",
+            "IMPLEMENTATION_DRAFT",
+          ])
+          .optional()
+          .transform((originalValue) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         "filter[start]": Yup.date().optional(),
         "filter[end]": Yup.date().optional(),
       });

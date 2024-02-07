@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import contentEditorSuggestionItemAbility from "@/services/ability/contentEditorSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = contentEditorSuggestionItemAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -28,43 +24,82 @@ export default async function handler(
         contentEditorSuggestionId: Yup.string().required(),
         pageNumber: Yup.number().min(0).required(),
         suggestion: Yup.string().required(),
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ContentEditorSuggestionItem"
-      );
-
       const {
-        actionTaken,
         contentEditorSuggestionId,
         remarks,
         suggestion,
         pageNumber,
       } = validator.cast(req.body);
 
-      const submittedContentEditorSuggestion =
-        await prisma.submittedContentEditorSuggestion.findFirst({
+      if (!user.isAdmin) {
+        const contentEditorReview =
+          await prisma.contentEditorReview.findFirstOrThrow({
+            where: {
+              ContentEditorSuggestion: {
+                id: {
+                  equals: contentEditorSuggestionId,
+                },
+              },
+            },
+          });
+
+        const cITLDirector = await prisma.cITLDirector.findFirst({
           where: {
-            ContentEditorSuggestion: {
-              id: {
-                equals: contentEditorSuggestionId,
+            ActiveCITLDirector: {
+              CITLDirector: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
               },
             },
           },
         });
+        if (!cITLDirector) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active CITl director can perform this action",
+            },
+          });
+        }
 
-      if (submittedContentEditorSuggestion) {
-        throw new Error("ContentEditor Suggestion is already submitted");
+        if (contentEditorReview.cITLDirectorId !== cITLDirector.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create this content editor suggestion item",
+            },
+          });
+        }
+
+        const submittedContentEditorSuggestion =
+          await prisma.submittedContentEditorSuggestion.findFirst({
+            where: {
+              ContentEditorSuggestion: {
+                id: {
+                  equals: contentEditorSuggestionId,
+                },
+              },
+            },
+          });
+
+        if (submittedContentEditorSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "Error: Content editor suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const contentEditorSuggestionItem =
         await prisma.contentEditorSuggestionItem.create({
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,
@@ -106,7 +141,6 @@ export default async function handler(
           take,
           where: {
             AND: [
-              accessibleBy(ability).ContentEditorSuggestionItem,
               {
                 ContentEditorSuggestion: {
                   id: {
@@ -123,7 +157,6 @@ export default async function handler(
       const count = await prisma.contentEditorSuggestionItem.count({
         where: {
           AND: [
-            accessibleBy(ability).ContentEditorSuggestionItem,
             {
               ContentEditorSuggestion: {
                 id: {

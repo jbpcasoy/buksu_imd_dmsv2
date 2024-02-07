@@ -17,7 +17,7 @@ export default function AddIMERCCITLDirectorEndorsementPage() {
       axios
         .post("/api/imerc_citl_director_endorsement", values)
         .then(() => {
-          alert("IMERCCITLDirectorEndorsement Added Successfully");
+          alert("IMERCCITLDirectorEndorsement has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

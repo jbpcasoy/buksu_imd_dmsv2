@@ -6,11 +6,13 @@ export interface useIMERCToEndorseParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
 export default function useIMERCToEndorse({
   skip,
   take,
   filter,
+  sort,
 }: useIMERCToEndorseParams) {
   const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
@@ -24,6 +26,7 @@ export default function useIMERCToEndorse({
           skip,
           take,
           filter,
+          sort,
         },
       })
       .then((res) => {
@@ -32,7 +35,7 @@ export default function useIMERCToEndorse({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

@@ -7,7 +7,7 @@ export interface useQAMISSuggestionItemsOwnParams {
   take: number;
   id?: string
 }
-export default function useQAMISSuggestionItemsOwn({ skip, take, id }: useQAMISSuggestionItemsOwnParams) {
+export default function useQAMISSuggestionItemsOwn({ skip, take, id }: useQAMISSuggestionItemsOwnParams, refreshFlag?: number) {
   const [state, setState] = useState<{qAMISSuggestionItems: QAMISSuggestionItem[], count: number}>({
     count: 0,
     qAMISSuggestionItems: []
@@ -33,7 +33,7 @@ export default function useQAMISSuggestionItemsOwn({ skip, take, id }: useQAMISS
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

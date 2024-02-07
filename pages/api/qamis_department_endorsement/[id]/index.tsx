@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import qAMISDepartmentEndorsementAbility from "@/services/ability/qAMISDepartmentEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = qAMISDepartmentEndorsementAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -33,18 +28,18 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      const qAMISDepartmentEndorsement = await prisma.qAMISDepartmentEndorsement.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).QAMISDepartmentEndorsement,
-            {
-              id: {
-                equals: id,
+      const qAMISDepartmentEndorsement =
+        await prisma.qAMISDepartmentEndorsement.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                id: {
+                  equals: id,
+                },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
       return res.json(qAMISDepartmentEndorsement);
     } catch (error: any) {
@@ -54,38 +49,8 @@ export default async function handler(
         .json({ error: { message: error?.message ?? "Server Error" } });
     }
   };
-
-  const deleteHandler = async () => {
-    try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
-
-      await validator.validate(req.query);
-
-      ForbiddenError.from(ability).throwUnlessCan("delete", "QAMISDepartmentEndorsement");
-
-      const { id } = validator.cast(req.query);
-
-      const qAMISDepartmentEndorsement = await prisma.qAMISDepartmentEndorsement.delete({
-        where: {
-          id,
-        },
-      });
-
-      return res.json(qAMISDepartmentEndorsement);
-    } catch (error: any) {
-      logger.error(error);
-      return res
-        .status(400)
-        .json({ error: { message: error?.message ?? "Server Error" } });
-    }
-  };
-
 
   switch (req.method) {
-    case "DELETE":
-      return await deleteHandler();
     case "GET":
       return await getHandler();
     default:

@@ -16,13 +16,11 @@ export default function EditReturnedIMERCCITLRevisionSuggestionItemPage() {
   const formik = useFormik({
     initialValues: {
       suggestion: "",
-      actionTaken: "",
       remarks: "",
       pageNumber: 0,
     },
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
       pageNumber: Yup.number().min(0).required()
     }),
@@ -33,7 +31,7 @@ export default function EditReturnedIMERCCITLRevisionSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ReturnedIMERCCITLRevisionSuggestionItem Updated Successfully");
+          alert("ReturnedIMERCCITLRevisionSuggestionItem has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -48,7 +46,6 @@ export default function EditReturnedIMERCCITLRevisionSuggestionItemPage() {
     formik.setValues({
       pageNumber: returnedIMERCCITLRevisionSuggestionItem.pageNumber,
       suggestion: returnedIMERCCITLRevisionSuggestionItem.suggestion,
-      actionTaken: returnedIMERCCITLRevisionSuggestionItem?.actionTaken ?? "",
       remarks: returnedIMERCCITLRevisionSuggestionItem?.remarks ?? "",
     });
 
@@ -73,11 +70,6 @@ export default function EditReturnedIMERCCITLRevisionSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

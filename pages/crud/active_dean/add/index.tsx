@@ -15,7 +15,7 @@ export default function AddActiveDeanPage() {
       axios
         .post("/api/active_dean", values)
         .then(() => {
-          alert("ActiveDean Added Successfully");
+          alert("ActiveDean has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

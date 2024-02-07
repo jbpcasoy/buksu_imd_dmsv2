@@ -1,3 +1,4 @@
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 import { FieldInputProps } from "formik";
 import { ChangeEventHandler, useState } from "react";
 
@@ -32,12 +33,11 @@ export default function StatusSelector(props?: FieldInputProps<any>) {
   };
 
   return (
-    <div>
-      <input type='text' placeholder='Search status' onChange={handleSearch} />
-      <select {...props}>
-        <option value=''>Select</option>
+    <div className='flex'>
+      <select {...props} className='rounded py-1'>
+        <option value=''>Select Status</option>
         {state?.map((status) => (
-          <option key={status}>{status}</option>
+          <option key={status} value={status}>{iMStatusNormalizer(status)}</option>
         ))}
       </select>
     </div>

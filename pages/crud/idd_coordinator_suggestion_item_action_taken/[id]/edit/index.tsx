@@ -27,7 +27,7 @@ export default function EditIDDCoordinatorSuggestionItemActionTakenPage() {
           values
         )
         .then(() => {
-          alert("IDDCoordinatorSuggestionItemActionTaken updated successfully");
+          alert("IDDCoordinatorSuggestionItemActionTaken has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

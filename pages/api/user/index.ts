@@ -1,10 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import prisma from "@/prisma/client";
-import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -20,7 +19,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = userAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -29,6 +27,8 @@ export default async function handler(
         take: Yup.number().required(),
         "filter[email]": Yup.string().optional(),
         "filter[name]": Yup.string().optional(),
+        "sort[field]": Yup.string().optional(),
+        "sort[direction]": Yup.string().oneOf(["asc", "desc"]).optional(),
       });
 
       await validator.validate(req.query);
@@ -38,6 +38,8 @@ export default async function handler(
         take,
         "filter[email]": filterEmail,
         "filter[name]": filterName,
+        "sort[field]": sortField,
+        "sort[direction]": sortDirection,
       } = validator.cast(req.query);
 
       const users = await prisma.user.findMany({
@@ -45,17 +47,18 @@ export default async function handler(
         take,
         where: {
           AND: [
-            accessibleBy(ability).User,
             {
-              OR: [
+              AND: [
                 {
                   email: {
                     contains: filterEmail,
+                    mode: "insensitive",
                   },
                 },
                 {
                   name: {
                     contains: filterName,
+                    mode: "insensitive",
                   },
                 },
               ],
@@ -63,23 +66,24 @@ export default async function handler(
           ],
         },
         orderBy: {
-          name: "desc"
+          [sortField || "name"]: sortDirection || "asc",
         },
       });
       const count = await prisma.user.count({
         where: {
           AND: [
-            accessibleBy(ability).User,
             {
-              OR: [
+              AND: [
                 {
                   email: {
                     contains: filterEmail,
+                    mode: "insensitive",
                   },
                 },
                 {
                   name: {
                     contains: filterName,
+                    mode: "insensitive",
                   },
                 },
               ],

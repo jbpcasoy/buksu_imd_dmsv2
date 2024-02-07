@@ -1,10 +1,7 @@
 import prisma from "@/prisma/client";
-import activeFacultyAbility from "@/services/ability/activeFacultyAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,7 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeFacultyAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
       const activeFaculty = await prisma.activeFaculty.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).ActiveFaculty,
             {
               id: {
                 equals: id,
@@ -62,7 +57,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "ActiveFaculty");
+      if(!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to remove this active faculty"
+          }
+        })
+      }
 
       const { id } = validator.cast(req.query);
 
@@ -80,9 +81,11 @@ export default async function handler(
         },
       });
       if (activeCoordinator) {
-        return res
-          .status(400)
-          .json({ error: { message: "Faculty is an Active Coordinator" } });
+        return res.status(400).json({
+          error: {
+            message: "Cannot deactivate, please remove coordinator role first",
+          },
+        });
       }
 
       const activeChairperson = await prisma.activeChairperson.findFirst({
@@ -99,9 +102,11 @@ export default async function handler(
         },
       });
       if (activeChairperson) {
-        return res
-          .status(400)
-          .json({ error: { message: "Faculty is an Active Chairperson" } });
+        return res.status(400).json({
+          error: {
+            message: "Cannot deactivate, please remove chairperson role first",
+          },
+        });
       }
 
       const activeDean = await prisma.activeDean.findFirst({
@@ -118,28 +123,34 @@ export default async function handler(
         },
       });
       if (activeDean) {
-        return res
-          .status(400)
-          .json({ error: { message: "Faculty is an Active Dean" } });
+        return res.status(400).json({
+          error: {
+            message: "Cannot deactivate, please remove dean role first",
+          },
+        });
       }
 
-      const activeContentSpecialist = await prisma.activeContentSpecialist.findFirst({
-        where: {
-          ContentSpecialist: {
-            Faculty: {
-              ActiveFaculty: {
-                id: {
-                  equals: id,
+      const activeContentSpecialist =
+        await prisma.activeContentSpecialist.findFirst({
+          where: {
+            ContentSpecialist: {
+              Faculty: {
+                ActiveFaculty: {
+                  id: {
+                    equals: id,
+                  },
                 },
               },
             },
           },
-        },
-      });
+        });
       if (activeContentSpecialist) {
-        return res
-          .status(400)
-          .json({ error: { message: "Faculty is an Active Content Specialist" } });
+        return res.status(400).json({
+          error: {
+            message:
+              "Cannot deactivate, please remove content specialist role first",
+          },
+        });
       }
 
       const activeFaculty = await prisma.activeFaculty.delete({

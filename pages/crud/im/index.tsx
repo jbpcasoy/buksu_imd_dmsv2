@@ -48,7 +48,9 @@ export default function IMsPage() {
       },
     }));
   };
-  const handleDepartmentNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleDepartmentNameChange: ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
     setState((prev) => ({
       ...prev,
       filter: {
@@ -66,6 +68,15 @@ export default function IMsPage() {
       },
     }));
   };
+  const handleStatusChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setState((prev) => ({
+      ...prev,
+      filter: {
+        ...prev.filter,
+        status: e.target.value ?? "",
+      },
+    }));
+  };
 
   return (
     <CrudLayout>
@@ -78,9 +89,40 @@ export default function IMsPage() {
 
       <div>
         <input type='text' placeholder='title' onChange={handleTitleChange} />
-        <input type='text' placeholder='userName' onChange={handleUserNameChange} />
-        <input type='text' placeholder='departmentName' onChange={handleDepartmentNameChange} />
-        <input type='text' placeholder='collegeName' onChange={handleCollegeNameChange} />
+        <input
+          type='text'
+          placeholder='userName'
+          onChange={handleUserNameChange}
+        />
+        <input
+          type='text'
+          placeholder='departmentName'
+          onChange={handleDepartmentNameChange}
+        />
+        <input
+          type='text'
+          placeholder='collegeName'
+          onChange={handleCollegeNameChange}
+        />
+        <select onChange={handleStatusChange}>
+        <option value="">Select Status</option>
+          <option>IMPLEMENTATION_DRAFT</option>
+          <option>IMPLEMENTATION_DEPARTMENT_REVIEW</option>
+          <option>IMPLEMENTATION_DEPARTMENT_REVIEWED</option>
+          <option>IMPLEMENTATION_DEPARTMENT_REVISED</option>
+          <option>IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED</option>
+          <option>IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED</option>
+          <option>IMPLEMENTATION_CITL_REVIEWED</option>
+          <option>IMPLEMENTATION_CITL_REVISED</option>
+          <option>IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED</option>
+          <option>IMPLEMENTATION_CITL_DIRECTOR_ENDORSED</option>
+          <option>IMERC_QAMIS_REVISED</option>
+          <option>IMERC_QAMIS_DEPARTMENT_ENDORSED</option>
+          <option>IMERC_CITL_REVIEWED</option>
+          <option>IMERC_CITL_REVISED</option>
+          <option>IMERC_CITL_IDD_COORDINATOR_ENDORSED</option>
+          <option>IMERC_CITL_DIRECTOR_ENDORSED</option>
+        </select>
       </div>
 
       <div>

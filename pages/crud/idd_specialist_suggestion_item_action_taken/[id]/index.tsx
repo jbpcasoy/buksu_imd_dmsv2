@@ -24,10 +24,10 @@ export default function IDDSpecialistSuggestionItemActionTakenPage() {
         `/api/idd_specialist_suggestion_item_action_taken/${iDDSpecialistSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("IDDSpecialistSuggestionItemActionTaken deleted successfully.");
+        alert("IDDSpecialistSuggestionItemActionTaken has been deleted successfully");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error.response?.data?.error?.message);
       });
   };
 

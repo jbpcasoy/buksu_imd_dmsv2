@@ -5,7 +5,7 @@ import axios from "axios";
 export interface usePeerSuggestionMeParams {
   id: string;
 }
-export default function usePeerSuggestionMe({ id }: usePeerSuggestionMeParams) {
+export default function usePeerSuggestionMe({ id }: usePeerSuggestionMeParams, refreshFlag?: number) {
   const [state, setState] = useState<PeerSuggestion | null>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function usePeerSuggestionMe({ id }: usePeerSuggestionMeParams) {
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

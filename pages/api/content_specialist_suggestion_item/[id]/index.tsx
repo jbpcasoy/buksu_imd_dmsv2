@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import contentSpecialistSuggestionItemAbility from "@/services/ability/contentSpecialistSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = contentSpecialistSuggestionItemAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -36,7 +32,6 @@ export default async function handler(
         await prisma.contentSpecialistSuggestionItem.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).ContentSpecialistSuggestionItem,
               {
                 id: {
                   equals: id,
@@ -63,12 +58,81 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "ContentSpecialistSuggestionItem"
-      );
-
       const { id } = validator.cast(req.query);
+
+      if (!user.isAdmin) {
+        const contentSpecialistReview =
+          await prisma.contentSpecialistReview.findFirstOrThrow({
+            where: {
+              ContentSpecialistSuggestion: {
+                ContentSpecialistSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        const contentSpecialist = await prisma.contentSpecialist.findFirst({
+          where: {
+            ActiveContentSpecialist: {
+              ContentSpecialist: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!contentSpecialist) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active content specialist is not allowed to delete a content specialist suggestion item",
+            },
+          });
+        }
+
+        if (
+          contentSpecialistReview.contentSpecialistId !== contentSpecialist.id
+        ) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this content specialist suggestion item",
+            },
+          });
+        }
+
+        const submittedContentSpecialistSuggestion =
+          await prisma.submittedContentSpecialistSuggestion.findFirst({
+            where: {
+              ContentSpecialistSuggestion: {
+                ContentSpecialistSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        if (submittedContentSpecialistSuggestion) {
+          return res.status(400).json({
+            error: {
+              message:
+                "Error: Content specialist suggestion is already submitted",
+            },
+          });
+        }
+      }
 
       const submittedContentSpecialistSuggestion =
         await prisma.submittedContentSpecialistSuggestion.findFirst({
@@ -104,7 +168,6 @@ export default async function handler(
   const putHandler = async () => {
     try {
       const validator = Yup.object({
-        actionTaken: Yup.string().optional(),
         remarks: Yup.string().optional(),
         suggestion: Yup.string().optional(),
         pageNumber: Yup.number().min(0).optional(),
@@ -112,14 +175,84 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "ContentSpecialistSuggestionItem"
-      );
       const { id } = req.query;
-      const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
+      const { remarks, suggestion, pageNumber } = validator.cast(
         req.body
       );
+
+      if (!user.isAdmin) {
+        const contentSpecialistReview =
+          await prisma.contentSpecialistReview.findFirstOrThrow({
+            where: {
+              ContentSpecialistSuggestion: {
+                ContentSpecialistSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        const contentSpecialist = await prisma.contentSpecialist.findFirst({
+          where: {
+            ActiveContentSpecialist: {
+              ContentSpecialist: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!contentSpecialist) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active content specialist is allowed to perform this action",
+            },
+          });
+        }
+
+        if (
+          contentSpecialistReview.contentSpecialistId !== contentSpecialist.id
+        ) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update this content specialist suggestion item",
+            },
+          });
+        }
+
+        const submittedContentSpecialistSuggestion =
+          await prisma.submittedContentSpecialistSuggestion.findFirst({
+            where: {
+              ContentSpecialistSuggestion: {
+                ContentSpecialistSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        if (submittedContentSpecialistSuggestion) {
+          return res.status(400).json({
+            error: {
+              message:
+                "Error: Content specialist suggestion is already submitted",
+            },
+          });
+        }
+      }
 
       const contentSpecialistSuggestionItem =
         await prisma.contentSpecialistSuggestionItem.update({
@@ -127,7 +260,6 @@ export default async function handler(
             id: id as string,
           },
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

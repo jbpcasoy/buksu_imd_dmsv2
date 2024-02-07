@@ -1,9 +1,7 @@
 import prisma from "@/prisma/client";
-import activeCITLDirectorAbility from "@/services/ability/activeCITLDirectorAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -19,24 +17,22 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeCITLDirectorAbility({user});
-
   const getHandler = async () => {
     try {
-      const activeCITLDirector = await prisma.activeCITLDirector.findFirstOrThrow({
-        where: {
-          AND: [
-            accessibleBy(ability).ActiveCITLDirector,
-            {
-              CITLDirector: {
-                userId: {
-                  equals: user.id,
+      const activeCITLDirector =
+        await prisma.activeCITLDirector.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                CITLDirector: {
+                  userId: {
+                    equals: user.id,
+                  },
                 },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
 
       return res.json(activeCITLDirector);
     } catch (error: any) {

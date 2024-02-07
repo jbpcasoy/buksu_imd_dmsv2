@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import coordinatorSuggestionItemAbility from "@/services/ability/coordinatorSuggestionItemAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = coordinatorSuggestionItemAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -35,7 +31,6 @@ export default async function handler(
         await prisma.coordinatorSuggestionItem.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).CoordinatorSuggestionItem,
               {
                 id: {
                   equals: id,
@@ -62,30 +57,76 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "CoordinatorSuggestionItem"
-      );
-
       const { id } = validator.cast(req.query);
 
-      const submittedCoordinatorSuggestion =
-        await prisma.submittedCoordinatorSuggestion.findFirst({
+      if (!user.isAdmin) {
+        const coordinator = await prisma.coordinator.findFirst({
           where: {
-            CoordinatorSuggestion: {
-              CoordinatorSuggestionItem: {
-                some: {
-                  id: {
-                    equals: id as string,
+            ActiveCoordinator: {
+              Coordinator: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
                   },
                 },
               },
             },
           },
         });
+        if (!coordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active coordinator can perform this action",
+            },
+          });
+        }
 
-      if (submittedCoordinatorSuggestion) {
-        throw new Error("Coordinator Suggestion is already submitted");
+        const coordinatorReview =
+          await prisma.coordinatorReview.findFirstOrThrow({
+            where: {
+              CoordinatorSuggestion: {
+                CoordinatorSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        if (coordinatorReview.coordinatorId !== coordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to delete this coordinator suggestion item",
+            },
+          });
+        }
+
+        const submittedCoordinatorSuggestion =
+          await prisma.submittedCoordinatorSuggestion.findFirst({
+            where: {
+              CoordinatorSuggestion: {
+                CoordinatorSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        if (submittedCoordinatorSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "Error: Coordinator suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const coordinatorSuggestionItem =
@@ -107,7 +148,6 @@ export default async function handler(
   const putHandler = async () => {
     try {
       const validator = Yup.object({
-        actionTaken: Yup.string().optional(),
         pageNumber: Yup.number().min(0).optional(),
         remarks: Yup.string().optional(),
         suggestion: Yup.string().optional(),
@@ -115,33 +155,77 @@ export default async function handler(
 
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "update",
-        "CoordinatorSuggestionItem"
-      );
-
       const { id } = req.query;
-      const { actionTaken, remarks, suggestion, pageNumber } = validator.cast(
-        req.body
-      );
+      const { remarks, suggestion, pageNumber } = validator.cast(req.body);
 
-      const submittedCoordinatorSuggestion =
-        await prisma.submittedCoordinatorSuggestion.findFirst({
+      if (!user.isAdmin) {
+        const coordinator = await prisma.coordinator.findFirst({
           where: {
-            CoordinatorSuggestion: {
-              CoordinatorSuggestionItem: {
-                some: {
-                  id: {
-                    equals: id as string,
+            ActiveCoordinator: {
+              Coordinator: {
+                Faculty: {
+                  User: {
+                    id: {
+                      equals: user.id,
+                    },
                   },
                 },
               },
             },
           },
         });
+        if (!coordinator) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active coordinator can perform this action",
+            },
+          });
+        }
 
-      if (submittedCoordinatorSuggestion) {
-        throw new Error("Coordinator Suggestion is already submitted");
+        const coordinatorReview =
+          await prisma.coordinatorReview.findFirstOrThrow({
+            where: {
+              CoordinatorSuggestion: {
+                CoordinatorSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        if (coordinatorReview.coordinatorId !== coordinator.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to update this coordinator suggestion item",
+            },
+          });
+        }
+
+        const submittedCoordinatorSuggestion =
+          await prisma.submittedCoordinatorSuggestion.findFirst({
+            where: {
+              CoordinatorSuggestion: {
+                CoordinatorSuggestionItem: {
+                  some: {
+                    id: {
+                      equals: id as string,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        if (submittedCoordinatorSuggestion) {
+          return res.status(400).json({
+            error: {
+              message: "Error: Coordinator suggestion is already submitted",
+            },
+          });
+        }
       }
 
       const coordinatorSuggestionItem =
@@ -150,7 +234,6 @@ export default async function handler(
             id: id as string,
           },
           data: {
-            actionTaken,
             remarks,
             suggestion,
             pageNumber,

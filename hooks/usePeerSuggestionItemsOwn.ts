@@ -5,17 +5,23 @@ import { useEffect, useState } from "react";
 export interface usePeerSuggestionItemsOwnParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function usePeerSuggestionItemsOwn({ skip, take, id }: usePeerSuggestionItemsOwnParams) {
-  const [state, setState] = useState<{peerSuggestionItems: PeerSuggestionItem[], count: number}>({
+export default function usePeerSuggestionItemsOwn(
+  { skip, take, id }: usePeerSuggestionItemsOwnParams,
+  refreshFlag?: number
+) {
+  const [state, setState] = useState<{
+    peerSuggestionItems: PeerSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    peerSuggestionItems: []
+    peerSuggestionItems: [],
   });
 
   useEffect(() => {
-    if(!id) {
-        return;
+    if (!id) {
+      return;
     }
     axios
       .get("/api/peer_suggestion_item", {
@@ -23,8 +29,8 @@ export default function usePeerSuggestionItemsOwn({ skip, take, id }: usePeerSug
           skip,
           take,
           filter: {
-            peerSuggestionId: id
-          }
+            peerSuggestionId: id,
+          },
         },
       })
       .then((res) => {
@@ -33,7 +39,7 @@ export default function usePeerSuggestionItemsOwn({ skip, take, id }: usePeerSug
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

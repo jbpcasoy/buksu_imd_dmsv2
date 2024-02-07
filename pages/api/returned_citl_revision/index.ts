@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import returnedCITLRevisionAbility from "@/services/ability/returnedCITLRevisionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = returnedCITLRevisionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,14 +26,32 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "ReturnedCITLRevision"
-      );
-
       const { activeIDDCoordinatorId, cITLRevisionId } = validator.cast(
         req.body
       );
+
+      if (!user.isAdmin) {
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: user.id,
+                },
+              },
+            },
+          },
+        });
+
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+      }
 
       const iDDCoordinatorEndorsement =
         await prisma.iDDCoordinatorEndorsement.findFirst({
@@ -80,7 +94,7 @@ export default async function handler(
         });
 
       if (iDDCoordinatorEndorsement) {
-        throw new Error("IM already endorsed by IDD Coordinator");
+        throw new Error("IM is already endorsed by the IDD coordinator");
       }
 
       const activeIDDCoordinator =
@@ -135,17 +149,13 @@ export default async function handler(
       const returnedCITLRevisions = await prisma.returnedCITLRevision.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).ReturnedCITLRevision],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.returnedCITLRevision.count({
-        where: {
-          AND: [accessibleBy(ability).ReturnedCITLRevision],
-        },
+        where: {},
       });
 
       return res.json({ returnedCITLRevisions, count });

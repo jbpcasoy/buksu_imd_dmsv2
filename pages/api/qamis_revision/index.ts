@@ -1,11 +1,7 @@
 import prisma from "@/prisma/client";
-import qAMISRevisionAbility from "@/services/ability/qAMISRevisionAbility";
-import userAbility from "@/services/ability/userAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -21,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = qAMISRevisionAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -31,9 +26,99 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan("create", "QAMISRevision");
-
       const { qAMISFileId, iMFileId } = validator.cast(req.body);
+
+      if (!user.isAdmin) {
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            AND: [
+              {
+                IMFile: {
+                  some: {
+                    DepartmentReview: {
+                      CoordinatorReview: {
+                        CoordinatorSuggestion: {
+                          SubmittedCoordinatorSuggestion: {
+                            DepartmentReviewed: {
+                              DepartmentRevision: {
+                                some: {
+                                  CoordinatorEndorsement: {
+                                    DeanEndorsement: {
+                                      IDDCoordinatorSuggestion: {
+                                        SubmittedIDDCoordinatorSuggestion: {
+                                          CITLRevision: {
+                                            some: {
+                                              IDDCoordinatorEndorsement: {
+                                                CITLDirectorEndorsement: {
+                                                  QAMISSuggestion: {
+                                                    SubmittedQAMISSuggestion: {
+                                                      QAMISFile: {
+                                                        id: {
+                                                          equals: qAMISFileId,
+                                                        },
+                                                      },
+                                                    },
+                                                  },
+                                                },
+                                              },
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                IMFile: {
+                  some: {
+                    id: {
+                      equals: iMFileId,
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+
+        if (faculty.id !== iM.facultyId) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to create this QAMIS revision",
+            },
+          });
+        }
+      }
 
       const qAMISFile = await prisma.qAMISFile.findFirstOrThrow({
         where: {
@@ -47,10 +132,8 @@ export default async function handler(
         await prisma.submittedQAMISSuggestion.findFirstOrThrow({
           where: {
             QAMISFile: {
-              some: {
-                id: {
-                  equals: qAMISFile.id,
-                },
+              id: {
+                equals: qAMISFile.id,
               },
             },
           },
@@ -97,7 +180,9 @@ export default async function handler(
 
       if (existingQAMISRevision) {
         return res.status(400).json({
-          error: { message: "IM has already been submitted for endorsement" },
+          error: {
+            message: "Error: IM has already been submitted for endorsement",
+          },
         });
       }
 
@@ -153,17 +238,13 @@ export default async function handler(
       const qAMISRevisions = await prisma.qAMISRevision.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).QAMISRevision],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.qAMISRevision.count({
-        where: {
-          AND: [accessibleBy(ability).QAMISRevision],
-        },
+        where: {},
       });
 
       return res.json({ qAMISRevisions, count });

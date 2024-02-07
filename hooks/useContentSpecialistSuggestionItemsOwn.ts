@@ -11,7 +11,7 @@ export default function useContentSpecialistSuggestionItemsOwn({
   skip,
   take,
   id,
-}: useContentSpecialistSuggestionItemsOwnParams) {
+}: useContentSpecialistSuggestionItemsOwnParams, refreshFlag?: number) {
   const [state, setState] = useState<{
     contentSpecialistSuggestionItems: ContentSpecialistSuggestionItem[];
     count: number;
@@ -40,7 +40,7 @@ export default function useContentSpecialistSuggestionItemsOwn({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

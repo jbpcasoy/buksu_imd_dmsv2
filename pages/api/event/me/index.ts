@@ -1,11 +1,7 @@
 import prisma from "@/prisma/client";
-import eventAbility from "@/services/ability/eventAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { Prisma, User } from "@prisma/client";
-import { equal } from "assert";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -21,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = eventAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -1216,195 +1211,6 @@ export default async function handler(
           {
             type: "IMERC_CITL_REVISION_CREATED",
             OR: [
-              {
-                IMERCCITLRevision: {
-                  IMERCCITLReviewed: {
-                    SubmittedContentEditorSuggestion: {
-                      ContentEditorSuggestion: {
-                        ContentEditorReview: {
-                          QAMISDepartmentEndorsement: {
-                            AND: [
-                              {
-                                QAMISCoordinatorEndorsement: {
-                                  QAMISRevision: {
-                                    IMFile: {
-                                      IM: {
-                                        Faculty: {
-                                          User: {
-                                            id: {
-                                              equals: user.id,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                              {
-                                QAMISChairpersonEndorsement: {
-                                  QAMISRevision: {
-                                    IMFile: {
-                                      IM: {
-                                        Faculty: {
-                                          User: {
-                                            id: {
-                                              equals: user.id,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                              {
-                                QAMISDeanEndorsement: {
-                                  QAMISRevision: {
-                                    IMFile: {
-                                      IM: {
-                                        Faculty: {
-                                          User: {
-                                            id: {
-                                              equals: user.id,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      },
-                    },
-                    SubmittedContentSpecialistSuggestion: {
-                      ContentSpecialistSuggestion: {
-                        ContentSpecialistReview: {
-                          QAMISDepartmentEndorsement: {
-                            AND: [
-                              {
-                                QAMISCoordinatorEndorsement: {
-                                  QAMISRevision: {
-                                    IMFile: {
-                                      IM: {
-                                        Faculty: {
-                                          User: {
-                                            id: {
-                                              equals: user.id,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                              {
-                                QAMISChairpersonEndorsement: {
-                                  QAMISRevision: {
-                                    IMFile: {
-                                      IM: {
-                                        Faculty: {
-                                          User: {
-                                            id: {
-                                              equals: user.id,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                              {
-                                QAMISDeanEndorsement: {
-                                  QAMISRevision: {
-                                    IMFile: {
-                                      IM: {
-                                        Faculty: {
-                                          User: {
-                                            id: {
-                                              equals: user.id,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      },
-                    },
-                    SubmittedIDDSpecialistSuggestion: {
-                      IDDSpecialistSuggestion: {
-                        IDDSpecialistReview: {
-                          QAMISDepartmentEndorsement: {
-                            AND: [
-                              {
-                                QAMISCoordinatorEndorsement: {
-                                  QAMISRevision: {
-                                    IMFile: {
-                                      IM: {
-                                        Faculty: {
-                                          User: {
-                                            id: {
-                                              equals: user.id,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                              {
-                                QAMISChairpersonEndorsement: {
-                                  QAMISRevision: {
-                                    IMFile: {
-                                      IM: {
-                                        Faculty: {
-                                          User: {
-                                            id: {
-                                              equals: user.id,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                              {
-                                QAMISDeanEndorsement: {
-                                  QAMISRevision: {
-                                    IMFile: {
-                                      IM: {
-                                        Faculty: {
-                                          User: {
-                                            id: {
-                                              equals: user.id,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
               activeIDDCoordinator
                 ? {
                     type: "IMERC_CITL_REVISION_CREATED",
@@ -1494,7 +1300,6 @@ export default async function handler(
           take,
           where: {
             AND: [
-              accessibleBy(ability).Event,
               whereQuery,
               {
                 NotificationRead: {
@@ -1516,7 +1321,6 @@ export default async function handler(
         count = await prisma.event.count({
           where: {
             AND: [
-              accessibleBy(ability).Event,
               whereQuery,
               {
                 NotificationRead: {
@@ -1538,7 +1342,6 @@ export default async function handler(
           take,
           where: {
             AND: [
-              accessibleBy(ability).Event,
               whereQuery,
               {
                 NotificationRead: {
@@ -1560,7 +1363,6 @@ export default async function handler(
         count = await prisma.event.count({
           where: {
             AND: [
-              accessibleBy(ability).Event,
               whereQuery,
               {
                 NotificationRead: {
@@ -1580,17 +1382,13 @@ export default async function handler(
         events = await prisma.event.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).Event, whereQuery],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
         count = await prisma.event.count({
-          where: {
-            AND: [accessibleBy(ability).Event, whereQuery],
-          },
+          where: {},
         });
       }
 
@@ -1657,7 +1455,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedCoordinatorSuggestion.CoordinatorSuggestion.CoordinatorReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the Coordinator.";
+            event.message = "An IM has been reviewed by the coordinator.";
             break;
           case "SUBMITTED_CHAIRPERSON_SUGGESTION_CREATED":
             const submittedChairpersonSuggestion =
@@ -1682,7 +1480,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedChairpersonSuggestion.ChairpersonSuggestion.ChairpersonReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the Chairperson.";
+            event.message = "An IM has been reviewed by the chairperson.";
             break;
           case "DEPARTMENT_REVIEWED_CREATED":
             const departmentReviewed =
@@ -1764,7 +1562,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${coordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been endorsed by the Coordinator.";
+            event.message = "An IM has been endorsed by the coordinator.";
             break;
           case "DEAN_ENDORSEMENT_CREATED":
             const deanEndorsement =
@@ -1785,7 +1583,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${deanEndorsement.CoordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been endorsed by the Dean.";
+            event.message = "An IM has been endorsed by the dean.";
             break;
           case "SUBMITTED_IDD_COORDINATOR_SUGGESTION_CREATED":
             const submittedIDDCoordinatorSuggestion =
@@ -1814,7 +1612,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedIDDCoordinatorSuggestion.IDDCoordinatorSuggestion.DeanEndorsement.CoordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the IDD Coordinator.";
+            event.message = "An IM has been reviewed by the IDD coordinator.";
             break;
           case "CITL_REVISION_CREATED":
             const cITLRevision = await prisma.cITLRevision.findUniqueOrThrow({
@@ -1830,24 +1628,22 @@ export default async function handler(
             break;
           case "SUBMITTED_RETURNED_CITL_REVISION_CREATED":
             const submittedReturnedCITLRevision =
-              await prisma.submittedReturnedCITLRevision.findUniqueOrThrow(
-                {
-                  where: {
-                    id: event.submittedReturnedCITLRevisionId as string,
-                  },
-                  include: {
-                    ReturnedCITLRevision: {
-                      include: {
-                        CITLRevision: {
-                          include: {
-                            IMFile: true,
-                          },
+              await prisma.submittedReturnedCITLRevision.findUniqueOrThrow({
+                where: {
+                  id: event.submittedReturnedCITLRevisionId as string,
+                },
+                include: {
+                  ReturnedCITLRevision: {
+                    include: {
+                      CITLRevision: {
+                        include: {
+                          IMFile: true,
                         },
                       },
                     },
                   },
-                }
-              );
+                },
+              });
             event.url = `/im/${submittedReturnedCITLRevision.ReturnedCITLRevision.CITLRevision.IMFile.iMId}`;
             event.message = "An IM has been returned from CITL review.";
             break;
@@ -1866,7 +1662,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${iDDCoordinatorEndorsement.CITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the IDD Coordinator.";
+            event.message = "An IM has been reviewed by the IDD coordinator.";
             break;
           case "CITL_DIRECTOR_ENDORSEMENT_CREATED":
             const cITLDirectorEndorsement =
@@ -1887,7 +1683,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${cITLDirectorEndorsement.IDDCoordinatorEndorsement.CITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been endorsed by the CITL Director.";
+            event.message = "An IM has been endorsed by the CITL director.";
             break;
           case "QAMIS_REVISION_CREATED":
             const qAMISRevision = await prisma.qAMISRevision.findUniqueOrThrow({
@@ -1917,7 +1713,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISCoordinatorEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the Coordinator for IMERC review.";
+              "An IM has been endorsed by the coordinator for IMERC review.";
             break;
           case "QAMIS_CHAIRPERSON_ENDORSEMENT_CREATED":
             const qAMISChairpersonEndorsement =
@@ -1935,7 +1731,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISChairpersonEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the Chairperson for IMERC review.";
+              "An IM has been endorsed by the chairperson for IMERC review.";
             break;
           case "QAMIS_DEAN_ENDORSEMENT_CREATED":
             const qAMISDeanEndorsement =
@@ -1953,7 +1749,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the Dean for IMERC review.";
+              "An IM has been endorsed by the dean for IMERC review.";
             break;
           case "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED":
             const qAMISDepartmentEndorsement =
@@ -2010,7 +1806,7 @@ export default async function handler(
                 }
               );
             event.url = `/im/${submittedContentSpecialist.ContentSpecialistSuggestion.ContentSpecialistReview.QAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
-            event.message = "Yor IM has been reviewed by a Content Specialist.";
+            event.message = "Yor IM has been reviewed by a Content specialist.";
             break;
           case "SUBMITTED_IDD_SPECIALIST_SUGGESTION_CREATED":
             const submittedIDDSpecialistSuggestion =
@@ -2128,7 +1924,7 @@ export default async function handler(
             event.url = `/im/${iMERCCITLRevision.IMFile.iMId}`;
             event.message = "An IM has been revised.";
             break;
-            
+
           case "SUBMITTED_RETURNED_IMERC_CITL_REVISION_CREATED":
             const submittedReturnedIMERCCITLRevision =
               await prisma.submittedReturnedIMERCCITLRevision.findUniqueOrThrow(
@@ -2168,7 +1964,7 @@ export default async function handler(
               });
             event.url = `/im/${iMERCIDDCoordinatorEndorsement.IMERCCITLRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the IDD Coordinator. (IMERC review)";
+              "An IM has been endorsed by the IDD coordinator. (IMERC review)";
             break;
           case "IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED":
             const iMERCCITLDirectorEndorsement =
@@ -2190,7 +1986,7 @@ export default async function handler(
               });
             event.url = `/im/${iMERCCITLDirectorEndorsement.IMERCIDDCoordinatorEndorsement.IMERCCITLRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the CITL Director. (IMERC review)";
+              "An IM has been endorsed by the CITL director. (IMERC review)";
             break;
         }
       }

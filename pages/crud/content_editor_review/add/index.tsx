@@ -89,7 +89,7 @@ export default function AddContentEditorReviewPage() {
       axios
         .post("/api/content_editor_review", values)
         .then(() => {
-          alert("ContentEditorReview Added Successfully");
+          alert("ContentEditorReview has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

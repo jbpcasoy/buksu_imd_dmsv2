@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import coordinatorEndorsementAbility from "@/services/ability/coordinatorEndorsementAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = coordinatorEndorsementAbility({ user });
 
   const postHandler = async () => {
     try {
@@ -30,14 +26,101 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "create",
-        "CoordinatorEndorsement"
-      );
-
       const { departmentRevisionId, activeCoordinatorId } = validator.cast(
         req.body
       );
+
+      if (!user.isAdmin) {
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                Coordinator: {
+                  ActiveCoordinator: {
+                    id: {
+                      equals: activeCoordinatorId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        if (faculty.userId !== user.id) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to create a coordinator endorsement for this user",
+            },
+          });
+        }
+
+        const iMOwner = await prisma.faculty.findFirstOrThrow({
+          where: {
+            IM: {
+              some: {
+                IMFile: {
+                  some: {
+                    DepartmentReview: {
+                      CoordinatorReview: {
+                        CoordinatorSuggestion: {
+                          SubmittedCoordinatorSuggestion: {
+                            DepartmentReviewed: {
+                              DepartmentRevision: {
+                                some: {
+                                  id: {
+                                    equals: departmentRevisionId,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (faculty.departmentId !== iMOwner.departmentId) {
+          return res.status(403).json({
+            error: {
+              message:
+                "You are not allowed to endorse IMs from another department",
+            },
+          });
+        }
+
+        const submittedReturnedDepartmentRevision =
+          await prisma.submittedReturnedDepartmentRevision.findFirst({
+            where: {
+              ReturnedDepartmentRevision: {
+                DepartmentRevision: {
+                  id: departmentRevisionId,
+                },
+              },
+            },
+          });
+        if (submittedReturnedDepartmentRevision) {
+          return res.status(400).json({
+            error: {
+              message: "Error: This department revision is returned",
+            },
+          });
+        }
+      }
 
       const coordinator = await prisma.coordinator.findFirstOrThrow({
         where: {
@@ -99,17 +182,13 @@ export default async function handler(
         await prisma.coordinatorEndorsement.findMany({
           skip,
           take,
-          where: {
-            AND: [accessibleBy(ability).CoordinatorEndorsement],
-          },
+          where: {},
           orderBy: {
             updatedAt: "desc",
           },
         });
       const count = await prisma.coordinatorEndorsement.count({
-        where: {
-          AND: [accessibleBy(ability).CoordinatorEndorsement],
-        },
+        where: {},
       });
 
       return res.json({ coordinatorEndorsements, count });

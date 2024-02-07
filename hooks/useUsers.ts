@@ -6,12 +6,9 @@ export interface useUsersParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useUsers({
-  skip,
-  take,
-  filter,
-}: useUsersParams) {
+export default function useUsers({ skip, take, filter, sort }: useUsersParams) {
   const [state, setState] = useState<{
     users: User[];
     count: number;
@@ -26,7 +23,8 @@ export default function useUsers({
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -35,7 +33,7 @@ export default function useUsers({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

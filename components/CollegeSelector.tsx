@@ -17,7 +17,7 @@ export default function CollegeSelector({
   });
   const { colleges, count } = useColleges({
     skip: 0,
-    take: 10,
+    take: Number(process.env.NEXT_PUBLIC_MAX_QUERY_TAKE),
     filter: state,
   });
 
@@ -29,15 +29,16 @@ export default function CollegeSelector({
   };
 
   return (
-    <div>
-      <input
+    <div className="flex flex-col w-full">
+      {/* <input
         type='text'
         onChange={onSearch}
-        placeholder='Search college'
+        placeholder='Search College'
         disabled={disabled}
-      />
-      <select {...props} disabled={disabled}>
-        <option value=''>Select</option>
+        className='rounded-t p-1'
+      /> */}
+      <select {...props} disabled={disabled} className='rounded py-1'>
+        <option value=''>Select College</option>
         {colleges.map((college) => {
           return (
             <option key={college.id} value={college.id}>

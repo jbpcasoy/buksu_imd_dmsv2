@@ -15,7 +15,7 @@ export default function AddNotificationReadPage() {
       axios
         .post("/api/notification_read", values)
         .then(() => {
-          alert("NotificationRead Added Successfully");
+          alert("NotificationRead has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

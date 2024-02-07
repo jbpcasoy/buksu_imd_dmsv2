@@ -29,7 +29,7 @@ export default function EditReturnedDepartmentRevisionSuggestionItemActionTakenP
         )
         .then(() => {
           alert(
-            "ReturnedDepartmentRevisionSuggestionItemActionTaken updated successfully"
+            "ReturnedDepartmentRevisionSuggestionItemActionTaken has been updated successfully"
           );
         })
         .catch((error) => {

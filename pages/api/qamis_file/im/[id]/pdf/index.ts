@@ -1,5 +1,4 @@
 import prisma from "@/prisma/client";
-import qAMISFileAbility from "@/services/ability/qAMISFileAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { accessibleBy } from "@casl/prisma";
@@ -7,7 +6,6 @@ import { User } from "@prisma/client";
 import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
-import { promisify } from "util";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,7 +19,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = qAMISFileAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -29,7 +26,6 @@ export default async function handler(
       const qAMISFile = await prisma.qAMISFile.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).QAMISFile,
             {
               QAMISRevision: {
                 IMFile: {
@@ -45,17 +41,14 @@ export default async function handler(
         },
       });
 
-      res.setHeader("Content-Disposition", `inline`);
       res.setHeader("Content-Type", `application/pdf`);
 
       const destination = path.join(
         process.cwd(),
         `/files/qamis/${qAMISFile.filename}`
       );
-      const readFile = promisify(fs.readFile);
-      const file = await readFile(destination);
-
-      return res.send(file);
+      const file = fs.createReadStream(destination);
+      file.pipe(res);
     } catch (error: any) {
       logger.error(error);
       return res

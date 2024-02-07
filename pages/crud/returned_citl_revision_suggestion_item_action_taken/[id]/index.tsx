@@ -23,10 +23,10 @@ export default function ReturnedCITLRevisionSuggestionItemActionTakenPage() {
         `/api/returned_citl_revision_suggestion_item_action_taken/${returnedCITLRevisionSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ReturnedCITLRevisionSuggestionItemActionTaken deleted successfully.");
+        alert("ReturnedCITLRevisionSuggestionItemActionTaken has been deleted successfully");
       })
       .catch((error) => {
-        alert(error.message);
+        alert(error.response?.data?.error?.message);
       });
   };
 

@@ -3,7 +3,7 @@ import { IMFile } from "@prisma/client";
 import axios from "axios";
 
 export interface useIMFileParams {
-  id: string;
+  id?: string;
 }
 export default function useIMFile({ id }: useIMFileParams) {
   const [state, setState] = useState<IMFile | null>();

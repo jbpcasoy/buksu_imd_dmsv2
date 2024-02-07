@@ -15,7 +15,7 @@ export default function AddCoordinatorPage() {
       axios
         .post("/api/coordinator", values)
         .then(() => {
-          alert("Coordinator Added Successfully");
+          alert("Coordinator has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -21,7 +21,7 @@ export default function IDDCoordinatorSuggestionItemPage() {
     axios
       .delete(`/api/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItemId}`)
       .then(() => {
-        alert("IDDCoordinatorSuggestionItem deleted successfully.");
+        alert("IDDCoordinatorSuggestionItem has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -64,7 +64,6 @@ export default function IDDCoordinatorSuggestionItemPage() {
       </p>
       <p>suggestion: {iDDCoordinatorSuggestionItem.suggestion}</p>
       <p>pageNumber: {iDDCoordinatorSuggestionItem.pageNumber}</p>
-      <p>actionTaken: {iDDCoordinatorSuggestionItem.actionTaken}</p>
       <p>remarks: {iDDCoordinatorSuggestionItem.remarks}</p>
     </CrudLayout>
   );

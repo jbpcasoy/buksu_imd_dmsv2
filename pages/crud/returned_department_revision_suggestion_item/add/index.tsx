@@ -9,21 +9,19 @@ export default function AddReturnedDepartmentRevisionSuggestionItemPage() {
       pageNumber: 0,
       returnedDepartmentRevisionId: "",
       suggestion: "",
-      actionTaken: "",
       remarks: "",
     },
     validationSchema: Yup.object({
       pageNumber: Yup.number().min(0).required(),
       returnedDepartmentRevisionId: Yup.string().required(),
       suggestion: Yup.string().required(),
-      actionTaken: Yup.string(),
       remarks: Yup.string(),
     }),
     onSubmit: (values) => {
       axios
         .post("/api/returned_department_revision_suggestion_item", values)
         .then(() => {
-          alert("ReturnedDepartmentRevisionSuggestionItem Added Successfully");
+          alert("ReturnedDepartmentRevisionSuggestionItem has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -49,11 +47,6 @@ export default function AddReturnedDepartmentRevisionSuggestionItemPage() {
           type='text'
           placeholder='pageNumber'
           {...formik.getFieldProps("pageNumber")}
-        />
-        <input
-          type='text'
-          placeholder='actionTaken'
-          {...formik.getFieldProps("actionTaken")}
         />
         <input
           type='text'

@@ -5,17 +5,23 @@ import { useEffect, useState } from "react";
 export interface useReturnedDepartmentRevisionSuggestionItemsOwnParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useReturnedDepartmentRevisionSuggestionItemsOwn({ skip, take, id }: useReturnedDepartmentRevisionSuggestionItemsOwnParams) {
-  const [state, setState] = useState<{returnedDepartmentRevisionSuggestionItems: ReturnedDepartmentRevisionSuggestionItem[], count: number}>({
+export default function useReturnedDepartmentRevisionSuggestionItemsOwn(
+  { skip, take, id }: useReturnedDepartmentRevisionSuggestionItemsOwnParams,
+  refreshFlag?: number
+) {
+  const [state, setState] = useState<{
+    returnedDepartmentRevisionSuggestionItems: ReturnedDepartmentRevisionSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    returnedDepartmentRevisionSuggestionItems: []
+    returnedDepartmentRevisionSuggestionItems: [],
   });
 
   useEffect(() => {
-    if(!id) {
-        return;
+    if (!id) {
+      return;
     }
     axios
       .get("/api/returned_department_revision_suggestion_item", {
@@ -23,8 +29,8 @@ export default function useReturnedDepartmentRevisionSuggestionItemsOwn({ skip, 
           skip,
           take,
           filter: {
-            returnedDepartmentRevisionId: id
-          }
+            returnedDepartmentRevisionId: id,
+          },
         },
       })
       .then((res) => {
@@ -33,7 +39,7 @@ export default function useReturnedDepartmentRevisionSuggestionItemsOwn({ skip, 
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, id]);
+  }, [skip, take, id, refreshFlag]);
 
   return state;
 }

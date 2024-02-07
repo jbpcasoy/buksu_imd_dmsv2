@@ -1,12 +1,9 @@
 import prisma from "@/prisma/client";
-import activeCoordinatorAbility from "@/services/ability/activeCoordinatorAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,7 +17,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  let ability = activeCoordinatorAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -28,7 +24,6 @@ export default async function handler(
         {
           where: {
             AND: [
-              accessibleBy(ability).ActiveCoordinator,
               {
                 Coordinator: {
                   Faculty: {

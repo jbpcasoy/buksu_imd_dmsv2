@@ -6,11 +6,18 @@ export interface useIMERCReviewedParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
-export default function useIMERCReviewed({ skip, take, filter }: useIMERCReviewedParams) {
-  const [state, setState] = useState<{iMs: IM[], count: number}>({
+
+export default function useIMERCReviewed({
+  skip,
+  take,
+  filter,
+  sort,
+}: useIMERCReviewedParams) {
+  const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
-    iMs: []
+    iMs: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,8 @@ export default function useIMERCReviewed({ skip, take, filter }: useIMERCReviewe
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -28,7 +36,7 @@ export default function useIMERCReviewed({ skip, take, filter }: useIMERCReviewe
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

@@ -1,12 +1,8 @@
 import prisma from "@/prisma/client";
-import { ActiveFaculty, Faculty, User } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import iMAbility from "@/services/ability/iMAbility";
-import { accessibleBy } from "@casl/prisma";
-import { AppAbility } from "@/services/ability/abilityBuilder";
+import { ActiveFaculty, User } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,27 +39,15 @@ export default async function handler(
 }
 
 export async function myIMsCount(user: User) {
-  let ability: AppAbility;
-  let userActiveFaculty: ActiveFaculty;
-  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-    where: {
-      Faculty: {
-        userId: {
-          equals: user.id,
-        },
-      },
-    },
-  });
-  ability = iMAbility({ user });
-
   const count = await prisma.iM.count({
     where: {
       AND: [
-        accessibleBy(ability).IM,
         {
           Faculty: {
-            id: {
-              equals: userActiveFaculty.facultyId,
+            User: {
+              id: {
+                equals: user.id,
+              },
             },
           },
         },

@@ -15,7 +15,7 @@ export default function AddContentEditorSuggestionPage() {
       axios
         .post("/api/content_editor_suggestion", values)
         .then(() => {
-          alert("ContentEditorSuggestion Added Successfully");
+          alert("ContentEditorSuggestion has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

@@ -17,7 +17,7 @@ export default function AddContentEditorSuggestionItemActionTakenPage() {
       axios
         .post("/api/content_editor_suggestion_item_action_taken", values)
         .then(() => {
-          alert("ContentEditorSuggestionItemActionTaken Added Successfully");
+          alert("ContentEditorSuggestionItemActionTaken has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

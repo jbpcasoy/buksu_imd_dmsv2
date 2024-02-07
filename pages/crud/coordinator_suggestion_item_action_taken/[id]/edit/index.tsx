@@ -28,7 +28,7 @@ export default function EditCoordinatorSuggestionItemActionTakenPage() {
           values
         )
         .then(() => {
-          alert("CoordinatorSuggestionItemActionTaken updated successfully");
+          alert("CoordinatorSuggestionItemActionTaken has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);

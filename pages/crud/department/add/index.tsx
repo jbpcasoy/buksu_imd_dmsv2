@@ -18,7 +18,7 @@ export default function AddDepartmentPage() {
       axios
         .post("/api/department", values)
         .then(() => {
-          alert("Department Added Successfully");
+          alert("Department has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -40,7 +40,7 @@ export default function AddDepartmentPage() {
         />
         <input
           type='text'
-          placeholder='name'
+          placeholder='Name'
           {...formik.getFieldProps("name")}
         />
         <input type='submit' value='Submit' className='rounded border' />

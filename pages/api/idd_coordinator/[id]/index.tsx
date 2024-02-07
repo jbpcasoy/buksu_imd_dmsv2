@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import iDDCoordinatorAbility from "@/services/ability/iDDCoordinatorAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -21,8 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const ability = iDDCoordinatorAbility({ user });
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -36,7 +31,6 @@ export default async function handler(
       const iDDCoordinator = await prisma.iDDCoordinator.findFirstOrThrow({
         where: {
           AND: [
-            accessibleBy(ability).IDDCoordinator,
             {
               id: {
                 equals: id,
@@ -63,7 +57,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan("delete", "IDDCoordinator");
+      if (!user.isAdmin) {
+        return res.status(403).json({
+          error: {
+            message: "You are not allowed to delete this IDD coordinator",
+          },
+        });
+      }
 
       const { id } = validator.cast(req.query);
 

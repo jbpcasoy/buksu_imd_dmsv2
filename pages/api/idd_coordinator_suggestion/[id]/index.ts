@@ -1,9 +1,6 @@
 import prisma from "@/prisma/client";
-import iDDCoordinatorSuggestionAbility from "@/services/ability/iDDCoordinatorSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -20,7 +17,6 @@ export default async function handler(
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
-  const ability = iDDCoordinatorSuggestionAbility({ user });
 
   const getHandler = async () => {
     try {
@@ -36,7 +32,6 @@ export default async function handler(
         await prisma.iDDCoordinatorSuggestion.findFirstOrThrow({
           where: {
             AND: [
-              accessibleBy(ability).IDDCoordinatorSuggestion,
               {
                 id: {
                   equals: id,
@@ -63,18 +58,74 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      ForbiddenError.from(ability).throwUnlessCan(
-        "delete",
-        "IDDCoordinatorSuggestion"
-      );
-
       const { id } = validator.cast(req.query);
 
-      const iDDCoordinatorSuggestion = await prisma.iDDCoordinatorSuggestion.delete({
-        where: {
-          id,
-        },
-      });
+      if (!user.isAdmin) {
+        const iDDCoordinator = await prisma.iDDCoordinator.findFirst({
+          where: {
+            ActiveIDDCoordinator: {
+              IDDCoordinator: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!iDDCoordinator) {
+          return res.status(403).json({
+            error: {
+              message:
+                "Only an active IDD coordinator is allowed to perform this action",
+            },
+          });
+        }
+
+        const iDDCoordinatorSuggestion =
+          await prisma.iDDCoordinatorSuggestion.findFirstOrThrow({
+            where: {
+              id: {
+                equals: id,
+              },
+            },
+          });
+        if (iDDCoordinator.id !== iDDCoordinatorSuggestion.iDDCoordinatorId) {
+          return res.status(400).json({
+            error: {
+              message:
+                "You are not allowed to delete this IDD coordinator suggestion",
+            },
+          });
+        }
+
+        const submittedIDDCoordinatorSuggestion =
+          await prisma.submittedIDDCoordinatorSuggestion.findFirst({
+            where: {
+              IDDCoordinatorSuggestion: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          });
+        if (submittedIDDCoordinatorSuggestion) {
+          return res.status(400).json({
+            error: {
+              message:
+                "You are not allowed to delete a submitted idd coordinator suggestion",
+            },
+          });
+        }
+      }
+
+      const iDDCoordinatorSuggestion =
+        await prisma.iDDCoordinatorSuggestion.delete({
+          where: {
+            id,
+          },
+        });
 
       return res.json(iDDCoordinatorSuggestion);
     } catch (error: any) {

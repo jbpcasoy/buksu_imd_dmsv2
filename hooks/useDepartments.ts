@@ -6,11 +6,13 @@ export interface useDepartmentsParams {
   skip: number;
   take: number;
   filter?: object;
+  sort?: object;
 }
 export default function useDepartments({
   skip,
   take,
   filter,
+  sort,
 }: useDepartmentsParams) {
   const [state, setState] = useState<{
     departments: Department[];
@@ -26,7 +28,8 @@ export default function useDepartments({
         params: {
           skip,
           take,
-          filter
+          filter,
+          sort,
         },
       })
       .then((res) => {
@@ -35,7 +38,7 @@ export default function useDepartments({
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

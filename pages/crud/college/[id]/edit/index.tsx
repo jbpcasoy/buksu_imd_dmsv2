@@ -22,7 +22,7 @@ export default function EditCollegePage() {
       axios
         .put(`/api/college/${collegeId}`, values)
         .then(() => {
-          alert("College updated successfully");
+          alert("College has been updated successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -54,7 +54,7 @@ export default function EditCollegePage() {
       <form onSubmit={formik.handleSubmit}>
         <input
           type='text'
-          placeholder='name'
+          placeholder='Name'
           {...formik.getFieldProps("name")}
         />
         <input type='submit' value='Submit' className='rounded border' />

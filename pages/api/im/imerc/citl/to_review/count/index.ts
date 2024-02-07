@@ -1,12 +1,8 @@
 import prisma from "@/prisma/client";
-import { ActiveFaculty, Faculty, User } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import iMAbility from "@/services/ability/iMAbility";
-import { accessibleBy } from "@casl/prisma";
-import { AppAbility } from "@/services/ability/abilityBuilder";
+import { User } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,13 +39,9 @@ export default async function handler(
 }
 
 export async function iMERCCITLToReviewCount(user: User) {
-  let ability: AppAbility;
-  ability = iMAbility({ user });
-
   const count = await prisma.iM.count({
     where: {
       AND: [
-        accessibleBy(ability).IM,
         {
           IMFile: {
             some: {
@@ -118,6 +110,95 @@ export async function iMERCCITLToReviewCount(user: User) {
               },
             },
           ],
+        },
+        {
+          IMFile: {
+            none: {
+              QAMISRevision: {
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    ContentSpecialistReview: {
+                      ContentSpecialistSuggestion: {
+                        SubmittedContentSpecialistSuggestion: {
+                          ContentSpecialistSuggestion: {
+                            ContentSpecialistReview: {
+                              ContentSpecialist: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              QAMISRevision: {
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    IDDSpecialistReview: {
+                      IDDSpecialistSuggestion: {
+                        SubmittedIDDSpecialistSuggestion: {
+                          IDDSpecialistSuggestion: {
+                            IDDSpecialistReview: {
+                              IDDCoordinator: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          IMFile: {
+            none: {
+              QAMISRevision: {
+                QAMISDeanEndorsement: {
+                  QAMISDepartmentEndorsement: {
+                    ContentEditorReview: {
+                      ContentEditorSuggestion: {
+                        SubmittedContentEditorSuggestion: {
+                          ContentEditorSuggestion: {
+                            ContentEditorReview: {
+                              CITLDirector: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       ],
     },

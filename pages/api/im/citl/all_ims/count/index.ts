@@ -1,12 +1,9 @@
 import prisma from "@/prisma/client";
 import { AppAbility } from "@/services/ability/abilityBuilder";
-import iMAbility from "@/services/ability/iMAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,12 +41,9 @@ export default async function handler(
 
 export async function cITLIMsCount(user: User) {
   let ability: AppAbility;
-  ability = iMAbility({ user });
 
   const count = await prisma.iM.count({
-    where: {
-      AND: [accessibleBy(ability).IM],
-    },
+    where: {},
   });
   return count;
 }

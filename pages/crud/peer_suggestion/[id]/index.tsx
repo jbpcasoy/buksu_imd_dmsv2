@@ -19,7 +19,7 @@ export default function PeerSuggestionPage() {
     axios
       .delete(`/api/peer_suggestion/${peerSuggestionId}`)
       .then(() => {
-        alert("PeerSuggestion deleted successfully.");
+        alert("PeerSuggestion has been deleted successfully");
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);

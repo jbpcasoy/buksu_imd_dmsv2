@@ -1,10 +1,6 @@
 import prisma from "@/prisma/client";
-import qAMISFileAbility from "@/services/ability/qAMISFileAbility";
-import submittedQAMISSuggestionAbility from "@/services/ability/submittedQAMISSuggestionAbility";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError, subject } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
@@ -55,19 +51,83 @@ export default async function handler(
       await validator.validate(body);
       const { submittedQAMISSuggestionId } = validator.cast(body);
 
-      const submittedQAMISSuggestion = await prisma.submittedQAMISSuggestion.findFirstOrThrow({
-        where: {
-          id: {
-            equals: submittedQAMISSuggestionId,
+      if (!user.isAdmin) {
+        const iM = await prisma.iM.findFirstOrThrow({
+          where: {
+            IMFile: {
+              some: {
+                DepartmentReview: {
+                  CoordinatorReview: {
+                    CoordinatorSuggestion: {
+                      SubmittedCoordinatorSuggestion: {
+                        DepartmentReviewed: {
+                          DepartmentRevision: {
+                            some: {
+                              CoordinatorEndorsement: {
+                                DeanEndorsement: {
+                                  IDDCoordinatorSuggestion: {
+                                    SubmittedIDDCoordinatorSuggestion: {
+                                      CITLRevision: {
+                                        some: {
+                                          IDDCoordinatorEndorsement: {
+                                            CITLDirectorEndorsement: {
+                                              QAMISSuggestion: {
+                                                SubmittedQAMISSuggestion: {
+                                                  id: {
+                                                    equals:
+                                                      submittedQAMISSuggestionId,
+                                                  },
+                                                },
+                                              },
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
-        },
-      });
+        });
 
-      const ability = submittedQAMISSuggestionAbility({ user });
-      ForbiddenError.from(ability).throwUnlessCan(
-        "connectToQAMISFile",
-        subject("SubmittedQAMISSuggestion", submittedQAMISSuggestion)
-      );
+        const faculty = await prisma.faculty.findFirst({
+          where: {
+            ActiveFaculty: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!faculty) {
+          return res.status(403).json({
+            error: {
+              message: "Only an active faculty can perform this action",
+            },
+          });
+        }
+
+        if (iM.facultyId !== faculty.id) {
+          return res.status(403).json({
+            error: {
+              message: "You are not allowed to create this QAMIS file",
+            },
+          });
+        }
+      }
 
       // Save file to server
       const file = data.files.file[0];
@@ -110,22 +170,16 @@ export default async function handler(
       await validator.validate(req.query);
       const { skip, take } = validator.cast(req.query);
 
-      const ability = qAMISFileAbility({ user });
-
       const qAMISFiles = await prisma.qAMISFile.findMany({
         skip,
         take,
-        where: {
-          AND: [accessibleBy(ability).QAMISFile],
-        },
+        where: {},
         orderBy: {
           updatedAt: "desc",
         },
       });
       const count = await prisma.qAMISFile.count({
-        where: {
-          AND: [accessibleBy(ability).QAMISFile],
-        },
+        where: {},
       });
 
       return res.json({ qAMISFiles, count });
