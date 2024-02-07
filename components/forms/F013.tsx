@@ -55,10 +55,12 @@ export default function F013({
         <header className="flex justify-between">
           <div className="flex items-center">
             <img
+              alt="buksu logo"
               src="/images/buksu-logo-min-512x512.png"
               style={{ width: "0.6in", height: "0.6in" }}
             />
             <img
+              alt="citl logo"
               src="/images/citl-logo.png"
               style={{
                 width: "0.8in",
@@ -657,10 +659,12 @@ export default function F013({
         <header className="flex justify-between">
           <div className="flex items-center">
             <img
+              alt="buksu logo"
               src="/images/buksu-logo-min-512x512.png"
               style={{ width: "0.6in", height: "0.6in" }}
             />
             <img
+              alt="citl logo"
               src="/images/citl-logo.png"
               style={{
                 width: "0.8in",
@@ -934,12 +938,22 @@ export default function F013({
           <br />
           <div className="flex justify-evenly">
             <div>
-              {!coordinatorName && <p className="text-center">___________________________________</p>}
-              {coordinatorName && <p className="text-center underline">{coordinatorName}</p>}
+              {!coordinatorName && (
+                <p className="text-center">
+                  ___________________________________
+                </p>
+              )}
+              {coordinatorName && (
+                <p className="text-center underline">{coordinatorName}</p>
+              )}
               <p className="text-center">IMD Program Coordinator</p>
             </div>
             <div>
-              {!peerName && <p className="text-center">___________________________________</p>}
+              {!peerName && (
+                <p className="text-center">
+                  ___________________________________
+                </p>
+              )}
               {peerName && <p className="text-center underline">{peerName}</p>}
               <p className="text-center">Senior Faculty</p>
             </div>
@@ -947,8 +961,12 @@ export default function F013({
           <br />
           <br />
           <div>
-              {!chairpersonName && <p className="text-center">___________________________________</p>}
-              {chairpersonName && <p className="text-center underline">{chairpersonName}</p>}
+            {!chairpersonName && (
+              <p className="text-center">___________________________________</p>
+            )}
+            {chairpersonName && (
+              <p className="text-center underline">{chairpersonName}</p>
+            )}
             <p className="text-center">Program Chair</p>
           </div>
         </div>

@@ -7,7 +7,7 @@ export interface useSubmittedIDDCoordinatorSuggestionIMParams {
 }
 export default function useSubmittedIDDCoordinatorSuggestionIM({
   id,
-}: useSubmittedIDDCoordinatorSuggestionIMParamsz) {
+}: useSubmittedIDDCoordinatorSuggestionIMParams) {
   const [state, setState] =
     useState<SubmittedIDDCoordinatorSuggestion | null>();
 

@@ -38,12 +38,18 @@ export default function F001({
       <header className="flex justify-between">
         <div className="flex items-center">
           <img
+            alt="buksu logo"
             src="/images/buksu-logo-min-512x512.png"
             style={{ width: "0.6in", height: "0.6in" }}
           />
           <img
+            alt="citl logo"
             src="/images/citl-logo.png"
-            style={{ width: "0.8in", height: "0.8in", marginLeft: "-0.15in" }}
+            style={{
+              width: "0.8in",
+              height: "0.8in",
+              marginLeft: "-0.15in",
+            }}
           />
         </div>
         <div className="text-center text-sm">
@@ -176,15 +182,21 @@ export default function F001({
           <br />
           <br />
           <div className="text-center">
-            {!coordinatorName && <p className="">____________________________</p>}
+            {!coordinatorName && (
+              <p className="">____________________________</p>
+            )}
             {coordinatorName && <p className="underline">{coordinatorName}</p>}
             <p>IMD Coordinator</p>
           </div>
           <br />
           <br />
           <div className="text-center">
-            {!iDDCoordinatorName && <p className="">____________________________</p>}
-            {iDDCoordinatorName && <p className="underline">{iDDCoordinatorName}</p>}
+            {!iDDCoordinatorName && (
+              <p className="">____________________________</p>
+            )}
+            {iDDCoordinatorName && (
+              <p className="underline">{iDDCoordinatorName}</p>
+            )}
             <p>IDD Coordinator</p>
           </div>
         </div>

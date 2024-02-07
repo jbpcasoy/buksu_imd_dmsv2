@@ -198,6 +198,7 @@ export default function ViewIM() {
         facultyId: activeFaculty?.facultyId,
       },
     }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFaculty]);
 
   const { addSnackbar } = useContext(SnackbarContext);
@@ -1049,7 +1050,8 @@ export default function ViewIM() {
                   </div>
                 )}
 
-                {(iMStatus === "IMPLEMENTATION_CITL_REVIEWED" || iMStatus === "IMPLEMENTATION_CITL_RETURNED_REVISION") && (
+                {(iMStatus === "IMPLEMENTATION_CITL_REVIEWED" ||
+                  iMStatus === "IMPLEMENTATION_CITL_RETURNED_REVISION") && (
                   <div className="flex flex-col space-y-1">
                     <div>
                       <CITLReviewStatus iMId={iMId as string} />
@@ -1375,7 +1377,8 @@ export default function ViewIM() {
                   </div>
                 )}
 
-                {(iMStatus === "IMERC_CITL_REVIEWED" || iMStatus === "IMERC_CITL_RETURNED_REVISION") && (
+                {(iMStatus === "IMERC_CITL_REVIEWED" ||
+                  iMStatus === "IMERC_CITL_RETURNED_REVISION") && (
                   <div className="flex flex-col space-y-1">
                     <div>
                       <IMERCReviewStatus iMId={iMId as string} />
@@ -2215,6 +2218,7 @@ function CoAuthors({ iMId }: CoAuthorsProps) {
         {coAuthors.map((coAuthor) => {
           return (
             <CoAuthorChip
+              key={coAuthor.id}
               coAuthor={coAuthor}
               onDelete={refresh}
               allowDelete={!departmentReview}

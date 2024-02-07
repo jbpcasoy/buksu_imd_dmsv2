@@ -48,6 +48,7 @@ export default function F005({
       <header className="flex justify-between">
         <div className="absolute items-center">
           <img
+            alt="buksu logo"
             src="/images/buksu-logo-min-512x512.png"
             style={{ width: "0.8in", height: "0.8in" }}
           />

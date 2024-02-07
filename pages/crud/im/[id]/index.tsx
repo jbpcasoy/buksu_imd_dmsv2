@@ -1,10 +1,8 @@
 import CrudLayout from "@/components/CrudLayout";
 import useIMAll from "@/hooks/useIMAll";
 import axios from "axios";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-const DynamicReactJson = dynamic(import("react-json-view"), { ssr: false });
 
 export default function IMPage() {
   const router = useRouter();
@@ -44,7 +42,8 @@ export default function IMPage() {
         </div>
       </div>
 
-      <DynamicReactJson src={iM} collapsed={2}/>
+      {/* <DynamicReactJson src={iM} collapsed={2}/> */}
+      <pre>{JSON.stringify(iM, undefined, 4)}</pre>;
     </CrudLayout>
   );
 }

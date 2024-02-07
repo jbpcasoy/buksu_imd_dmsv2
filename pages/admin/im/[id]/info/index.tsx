@@ -1,9 +1,7 @@
 import AdminLayout from "@/components/AdminLayout";
 import Loading from "@/components/Loading";
 import useIMAll from "@/hooks/useIMAll";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-const DynamicReactJson = dynamic(import("react-json-view"), { ssr: false });
 
 export default function IMInfo() {
   const router = useRouter();
@@ -21,7 +19,8 @@ export default function IMInfo() {
 
   return (
     <AdminLayout>
-      <DynamicReactJson src={iMInfo} collapsed={2} />;
+      {/* <DynamicReactJson src={iMInfo} collapsed={2} />; */}
+      <pre>{JSON.stringify(iMInfo, undefined, 4)}</pre>;
     </AdminLayout>
   );
 }

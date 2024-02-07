@@ -45,6 +45,7 @@ export default function F004({
       <header className="flex justify-between">
         <div className="absolute items-center">
           <img
+            alt="buksu logo"
             src="/images/buksu-logo-min-512x512.png"
             style={{ width: "0.8in", height: "0.8in" }}
           />
@@ -111,7 +112,7 @@ export default function F004({
                   {questions?.q1 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q1  === 2 && "✓"}
+                  {questions?.q1 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q1 === 1 && "✓"}
@@ -131,7 +132,7 @@ export default function F004({
                   {questions?.q2 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q2  === 2 && "✓"}
+                  {questions?.q2 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q2 === 1 && "✓"}
@@ -151,7 +152,7 @@ export default function F004({
                   {questions?.q3 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q3  === 2 && "✓"}
+                  {questions?.q3 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q3 === 1 && "✓"}
@@ -174,7 +175,7 @@ export default function F004({
                   {questions?.q4 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q4  === 2 && "✓"}
+                  {questions?.q4 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q4 === 1 && "✓"}
@@ -197,7 +198,7 @@ export default function F004({
                   {questions?.q5 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q5  === 2 && "✓"}
+                  {questions?.q5 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q5 === 1 && "✓"}
@@ -220,7 +221,7 @@ export default function F004({
                   {questions?.q6 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q6  === 2 && "✓"}
+                  {questions?.q6 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q6 === 1 && "✓"}
@@ -243,7 +244,7 @@ export default function F004({
                   {questions?.q7 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q7  === 2 && "✓"}
+                  {questions?.q7 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q7 === 1 && "✓"}
@@ -266,7 +267,7 @@ export default function F004({
                   {questions?.q8 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q8  === 2 && "✓"}
+                  {questions?.q8 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q8 === 1 && "✓"}
@@ -286,7 +287,7 @@ export default function F004({
                   {questions?.q9 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q9  === 2 && "✓"}
+                  {questions?.q9 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q9 === 1 && "✓"}
@@ -308,7 +309,7 @@ export default function F004({
                   {questions?.q10 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q10  === 2 && "✓"}
+                  {questions?.q10 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q10 === 1 && "✓"}
@@ -330,7 +331,7 @@ export default function F004({
                   {questions?.q11 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q11  === 2 && "✓"}
+                  {questions?.q11 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q11 === 1 && "✓"}
@@ -350,7 +351,7 @@ export default function F004({
                   {questions?.q12 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q12  === 2 && "✓"}
+                  {questions?.q12 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q12 === 1 && "✓"}
@@ -373,7 +374,7 @@ export default function F004({
                   {questions?.q13 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q13  === 2 && "✓"}
+                  {questions?.q13 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q13 === 1 && "✓"}
@@ -397,7 +398,7 @@ export default function F004({
                   {questions?.q14 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q14  === 2 && "✓"}
+                  {questions?.q14 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q14 === 1 && "✓"}
@@ -417,7 +418,7 @@ export default function F004({
                   {questions?.q15 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q15  === 2 && "✓"}
+                  {questions?.q15 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q15 === 1 && "✓"}
@@ -437,7 +438,7 @@ export default function F004({
                   {questions?.q16 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q16  === 2 && "✓"}
+                  {questions?.q16 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q16 === 1 && "✓"}
@@ -460,7 +461,7 @@ export default function F004({
                   {questions?.q17 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q17  === 2 && "✓"}
+                  {questions?.q17 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q17 === 1 && "✓"}
@@ -480,7 +481,7 @@ export default function F004({
                   {questions?.q18 === 3 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
-                  {questions?.q18  === 2 && "✓"}
+                  {questions?.q18 === 2 && "✓"}
                 </td>
                 <td className="border border-black px-1 text-center">
                   {questions?.q18 === 1 && "✓"}

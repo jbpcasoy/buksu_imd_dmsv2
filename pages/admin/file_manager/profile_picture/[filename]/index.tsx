@@ -7,11 +7,9 @@ import useProfilePictureFileByFilename from "@/hooks/useProfilePictureFileByFile
 import formatBytes from "@/services/formatBytes";
 import axios from "axios";
 import { DateTime } from "luxon";
-import dynamic from "next/dynamic";
 import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-const DynamicReactJson = dynamic(import("react-json-view"), { ssr: false });
 
 export default function FileManagerProfilePicturePage() {
   const router = useRouter();
@@ -81,7 +79,8 @@ export default function FileManagerProfilePicturePage() {
             </div>
 
             {profilePictureFile && (
-              <DynamicReactJson src={profilePictureFile} collapsed={2} />
+              // <DynamicReactJson src={profilePictureFile} collapsed={2} />
+              <pre>{JSON.stringify(profilePictureFile, undefined, 4)}</pre>
             )}
             <button
               onClick={() =>
@@ -95,6 +94,7 @@ export default function FileManagerProfilePicturePage() {
 
           <div className="flex-1 h-full">
             <img
+              alt="user profile"
               loading="lazy"
               src={`/api/file_manager/profile_picture/${fileManagerProfilePictureFile.filename}/image`}
               title={fileManagerProfilePictureFile.filename}

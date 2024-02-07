@@ -4,7 +4,6 @@ import Loading from "@/components/Loading";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useActiveFaculties from "@/hooks/useActiveFaculties";
-import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useCoAuthors from "@/hooks/useCoAuthors";
 import useCollege from "@/hooks/useCollege";
 import useDepartment from "@/hooks/useDepartment";
@@ -32,12 +31,10 @@ import {
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
-const DynamicReactJson = dynamic(import("react-json-view"), { ssr: false });
 
 export default function IMPage() {
   const router = useRouter();
@@ -386,7 +383,8 @@ function IMInfo({ iM }: IMInfoProps) {
     return <Loading />;
   }
 
-  return <DynamicReactJson src={iMInfo} collapsed={2} />;
+  // return <DynamicReactJson src={iMInfo} collapsed={2} />;
+  return <pre>{JSON.stringify(iMInfo, undefined, 4)}</pre>;
 }
 
 interface EditSerialNumberProps {
@@ -455,6 +453,7 @@ function EditSerialNumber({
     if (serialNumber) {
       formik.setFieldValue("value", serialNumber.value);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serialNumber]);
 
   return (
@@ -670,7 +669,13 @@ function CoAuthors({ iMId }: CoAuthorsProps) {
       <p className="text-sm">Co-authors:</p>
       <div className="flex flex-wrap items-center gap-1">
         {coAuthors.map((coAuthor) => {
-          return <CoAuthorChip coAuthor={coAuthor} onDelete={refresh} />;
+          return (
+            <CoAuthorChip
+              key={coAuthor.id}
+              coAuthor={coAuthor}
+              onDelete={refresh}
+            />
+          );
         })}
       </div>
       <div>
