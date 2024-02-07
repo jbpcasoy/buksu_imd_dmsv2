@@ -7,11 +7,9 @@ import usePlagiarismFileByFilename from "@/hooks/usePlagiarismFileByFilename";
 import formatBytes from "@/services/formatBytes";
 import axios from "axios";
 import { DateTime } from "luxon";
-import dynamic from "next/dynamic";
 import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-const DynamicReactJson = dynamic(import("react-json-view"), { ssr: false });
 
 export default function FileManagerPlagiarismPage() {
   const router = useRouter();
@@ -76,7 +74,10 @@ export default function FileManagerPlagiarismPage() {
               </div>
             </div>
 
-            {plagiarismFile && <DynamicReactJson src={plagiarismFile} collapsed={2} />}
+            {plagiarismFile && (
+              // <DynamicReactJson src={plagiarismFile} collapsed={2} />
+              <pre>{JSON.stringify(plagiarismFile, undefined, 4)}</pre>
+            )}
             <button
               onClick={() =>
                 setState((prev) => ({ ...prev, openDelete: true }))

@@ -7,11 +7,9 @@ import useIMFileByFilename from "@/hooks/useIMFileByFilename";
 import formatBytes from "@/services/formatBytes";
 import axios from "axios";
 import { DateTime } from "luxon";
-import dynamic from "next/dynamic";
 import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-const DynamicReactJson = dynamic(import("react-json-view"), { ssr: false });
 
 export default function FileManagerIMPage() {
   const router = useRouter();
@@ -74,7 +72,10 @@ export default function FileManagerIMPage() {
               </div>
             </div>
 
-            {iMFile && <DynamicReactJson src={iMFile} collapsed={2} />}
+            {iMFile && (
+              // <DynamicReactJson src={iMFile} collapsed={2} />
+              <pre>{JSON.stringify(iMFile, undefined, 4)}</pre>
+            )}
             <button
               onClick={() =>
                 setState((prev) => ({ ...prev, openDelete: true }))
