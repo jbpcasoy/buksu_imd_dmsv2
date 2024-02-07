@@ -455,6 +455,7 @@ function EditSerialNumber({
     if (serialNumber) {
       formik.setFieldValue("value", serialNumber.value);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serialNumber]);
 
   return (
@@ -670,7 +671,13 @@ function CoAuthors({ iMId }: CoAuthorsProps) {
       <p className="text-sm">Co-authors:</p>
       <div className="flex flex-wrap items-center gap-1">
         {coAuthors.map((coAuthor) => {
-          return <CoAuthorChip coAuthor={coAuthor} onDelete={refresh} />;
+          return (
+            <CoAuthorChip
+              key={coAuthor.id}
+              coAuthor={coAuthor}
+              onDelete={refresh}
+            />
+          );
         })}
       </div>
       <div>

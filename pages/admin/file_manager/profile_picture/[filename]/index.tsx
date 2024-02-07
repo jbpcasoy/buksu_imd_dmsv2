@@ -95,6 +95,7 @@ export default function FileManagerProfilePicturePage() {
 
           <div className="flex-1 h-full">
             <img
+              alt="user profile"
               loading="lazy"
               src={`/api/file_manager/profile_picture/${fileManagerProfilePictureFile.filename}/image`}
               title={fileManagerProfilePictureFile.filename}

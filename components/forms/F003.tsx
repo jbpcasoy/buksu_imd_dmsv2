@@ -32,6 +32,7 @@ export default function F003({
       <header className="flex justify-between">
         <div className="absolute items-center">
           <img
+            alt="buksu logo"
             src="/images/buksu-logo-min-512x512.png"
             style={{ width: "0.8in", height: "0.8in" }}
           />
@@ -102,9 +103,9 @@ export default function F003({
                 </tr>
               </>
             )}
-            {programReviews?.map((programReview) => {
+            {programReviews?.map((programReview, index) => {
               return (
-                <tr>
+                <tr key={index}>
                   <td className="border border-black px-1">
                     {programReview.suggestion}
                   </td>
@@ -181,9 +182,9 @@ export default function F003({
                 </tr>
               </>
             )}
-            {cITLReviews?.map((cITLReview) => {
+            {cITLReviews?.map((cITLReview, index) => {
               return (
-                <tr>
+                <tr key={index}>
                   <td className="border border-black px-1">
                     {cITLReview.suggestion}
                   </td>
@@ -199,7 +200,6 @@ export default function F003({
                 </tr>
               );
             })}
-
           </tbody>
         </table>
         <p className="italic ml-20">Add Rows as necessary.</p>
@@ -210,12 +210,16 @@ export default function F003({
           <div className="flex flex-col space-y-10">
             <div>
               {!iDDCoordinatorName && <p>_____________________________</p>}
-              {iDDCoordinatorName && <p className="underline">{iDDCoordinatorName}</p>}
+              {iDDCoordinatorName && (
+                <p className="underline">{iDDCoordinatorName}</p>
+              )}
               <p>IDD Coordinator</p>
             </div>
             <div>
               {!cITLDirectorName && <p>_____________________________</p>}
-              {cITLDirectorName && <p className="underline">{cITLDirectorName}</p>}
+              {cITLDirectorName && (
+                <p className="underline">{cITLDirectorName}</p>
+              )}
               <p>CITL Director</p>
             </div>
             <div>

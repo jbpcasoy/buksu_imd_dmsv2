@@ -197,10 +197,12 @@ export default function F014({
         <header className="flex justify-between">
           <div className="flex items-center">
             <img
+              alt="buksu logo"
               src="/images/buksu-logo-min-512x512.png"
               style={{ width: "0.6in", height: "0.6in" }}
             />
             <img
+              alt="citl logo"
               src="/images/citl-logo.png"
               style={{
                 width: "0.8in",
@@ -648,10 +650,12 @@ export default function F014({
         <header className="flex justify-between">
           <div className="flex items-center">
             <img
+              alt="buksu logo"
               src="/images/buksu-logo-min-512x512.png"
               style={{ width: "0.6in", height: "0.6in" }}
             />
             <img
+              alt="citl logo"
               src="/images/citl-logo.png"
               style={{
                 width: "0.8in",
