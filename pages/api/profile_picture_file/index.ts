@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
+import uploadToVercelBlob from "@/services/uploadToVercelBlob";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
@@ -46,14 +47,17 @@ export default async function handler(
       const file = data.files.file[0];
       const extension = file.originalFilename.split(".").at(-1);
       const filename = `${file.newFilename}.${extension}`;
-      const filePath = file.filepath;
-      const destination = path.join(
-        process.cwd(),
-        `/files/profile_picture/${filename}`
-      );
-      fs.copyFile(filePath, destination, (err) => {
-        if (err) throw err;
-      });
+      // const filePath = file.filepath;
+      // const destination = path.join(
+      //   process.cwd(),
+      //   `/files/profile_picture/${filename}`
+      // );
+      // fs.copyFile(filePath, destination, (err) => {
+      //   if (err) throw err;
+      // });
+      const blob = await uploadToVercelBlob(file, `files/profile_picture/${filename}`);
+      const blobFilename = blob.url.split("/").at(-1);
+      console.log({ blob });
 
       // create object to server
       const profilePictureFile = await prisma.profilePictureFile.create({
@@ -63,7 +67,7 @@ export default async function handler(
               id: user.id,
             },
           },
-          filename,
+          filename: blobFilename as string,
           mimetype: file.mimetype,
           size: file.size,
           originalFilename: file.originalFilename,

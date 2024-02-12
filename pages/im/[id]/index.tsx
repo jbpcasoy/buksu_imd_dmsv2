@@ -198,7 +198,7 @@ export default function ViewIM() {
         facultyId: activeFaculty?.facultyId,
       },
     }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFaculty]);
 
   const { addSnackbar } = useContext(SnackbarContext);
