@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
+import uploadToVercelBlob from "@/services/uploadToVercelBlob";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
@@ -132,11 +133,15 @@ export default async function handler(
       // Save file to server
       const file = data.files.file[0];
       const filename = `${file.newFilename}.pdf`;
-      const filePath = file.filepath;
-      const destination = path.join(process.cwd(), `/files/qamis/${filename}`);
-      fs.copyFile(filePath, destination, (err) => {
-        if (err) throw err;
-      });
+      // const filePath = file.filepath;
+      // const destination = path.join(process.cwd(), `/files/qamis/${filename}`);
+      // fs.copyFile(filePath, destination, (err) => {
+      //   if (err) throw err;
+      // });
+
+      const blob = await uploadToVercelBlob(file, `files/qamis/${filename}`);
+      const blobFilename = blob.url.split("/").at(-1);
+      console.log({ blob });
 
       // create object to server
       const qAMISFile = await prisma.qAMISFile.create({
@@ -146,7 +151,7 @@ export default async function handler(
               id: submittedQAMISSuggestionId,
             },
           },
-          filename,
+          filename: blobFilename as string,
           mimetype: file.mimetype,
           size: file.size,
           originalFilename: file.originalFilename,

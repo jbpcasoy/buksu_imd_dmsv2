@@ -1,21 +1,47 @@
-import MainLayout from "@/components/MainLayout";
-import Error from "next/error";
-import { useState } from "react";
-import ReactFlow, { Controls, Background, Node } from "reactflow";
+import type { PutBlobResult } from "@vercel/blob";
+import { useState, useRef } from "react";
 
-export default function TestPage() {
-  if (process.env.NODE_ENV === "production") {
-    return <Error statusCode={404} />;
-  }
+export default function AvatarUploadPage() {
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [blob, setBlob] = useState<PutBlobResult | null>(null);
   return (
-    <MainLayout>
-      <iframe
-        style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }}
-        width="800"
-        height="450"
-        src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FkputkulJppAhK2iTMbOpHt%2FBukSU-IMD-DMS%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3DaN11OchXmskVQSAw-1"
-        allowFullScreen
-      ></iframe>
-    </MainLayout>
+    <>
+      <h1>Upload Your Avatar</h1>
+
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+
+          if (!inputFileRef.current?.files) {
+            throw new Error("No file selected");
+          }
+
+          const file = inputFileRef.current.files[0];
+
+          const formData = new FormData();
+          formData.append("file", file);
+
+          const response = await fetch(
+            `/api/avatar/upload?filename=${file.name}`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          const newBlob = (await response.json()) as PutBlobResult;
+
+          setBlob(newBlob);
+        }}
+      >
+        <input name="file" ref={inputFileRef} type="file" required />
+        <button type="submit">Upload</button>
+      </form>
+      {blob && (
+        <div>
+          Blob url: <a href={blob.url}>{blob.url}</a>
+        </div>
+      )}
+    </>
   );
 }

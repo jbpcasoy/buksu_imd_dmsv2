@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
+import uploadToVercelBlob from "@/services/uploadToVercelBlob";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import fs from "fs";
@@ -151,6 +152,109 @@ export default async function handler(
             .json({ error: { message: "IM already had a file" } });
         }
       } else if (departmentReviewedId) {
+        const existingIMFileWithEmptyActionTaken =
+          await prisma.iMFile.findFirst({
+            where: {
+              AND: [
+                {
+                  iMId: {
+                    equals: iMId,
+                  },
+                },
+                {
+                  DepartmentReview: {
+                    OR: [
+                      {
+                        ChairpersonReview: {
+                          ChairpersonSuggestion: {
+                            SubmittedChairpersonSuggestion: {
+                              ChairpersonSuggestion: {
+                                AND: [
+                                  {
+                                    ChairpersonSuggestionItem: {
+                                      some: {},
+                                    },
+                                  },
+                                  {
+                                    ChairpersonSuggestionItem: {
+                                      some: {
+                                        ChairpersonSuggestionItemActionTaken: {
+                                          is: null,
+                                        },
+                                      },
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          },
+                        },
+                      },
+                      {
+                        CoordinatorReview: {
+                          CoordinatorSuggestion: {
+                            SubmittedCoordinatorSuggestion: {
+                              CoordinatorSuggestion: {
+                                AND: [
+                                  {
+                                    CoordinatorSuggestionItem: {
+                                      some: {},
+                                    },
+                                  },
+                                  {
+                                    CoordinatorSuggestionItem: {
+                                      some: {
+                                        CoordinatorSuggestionItemActionTaken: {
+                                          is: null,
+                                        },
+                                      },
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          },
+                        },
+                      },
+                      {
+                        PeerReview: {
+                          PeerSuggestion: {
+                            SubmittedPeerSuggestion: {
+                              PeerSuggestion: {
+                                AND: [
+                                  {
+                                    PeerSuggestionItem: {
+                                      some: {},
+                                    },
+                                  },
+                                  {
+                                    PeerSuggestionItem: {
+                                      some: {
+                                        PeerSuggestionItemActionTaken: {
+                                          is: null,
+                                        },
+                                      },
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          });
+
+        if (existingIMFileWithEmptyActionTaken) {
+          return res.status(400).json({
+            error: { message: "IM have empty action taken" },
+          });
+        }
+
         const existingIMFile = await prisma.iMFile.findFirst({
           where: {
             AND: [
@@ -176,6 +280,51 @@ export default async function handler(
           });
         }
       } else if (submittedReturnedDepartmentRevisionId) {
+        const existingIMFileWithEmptyActionTaken =
+          await prisma.iMFile.findFirst({
+            where: {
+              AND: [
+                {
+                  iMId: {
+                    equals: iMId,
+                  },
+                },
+                {
+                  DepartmentRevision: {
+                    ReturnedDepartmentRevision: {
+                      SubmittedReturnedDepartmentRevision: {
+                        ReturnedDepartmentRevision: {
+                          AND: [
+                            {
+                              ReturnedDepartmentRevisionSuggestionItem: {
+                                some: {},
+                              },
+                            },
+                            {
+                              ReturnedDepartmentRevisionSuggestionItem: {
+                                some: {
+                                  ReturnedDepartmentRevisionSuggestionItemActionTaken:
+                                    {
+                                      is: null,
+                                    },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          });
+
+        if (existingIMFileWithEmptyActionTaken) {
+          return res.status(400).json({
+            error: { message: "IM have empty action taken" },
+          });
+        }
         const existingIMFile = await prisma.iMFile.findFirst({
           where: {
             AND: [
@@ -203,6 +352,54 @@ export default async function handler(
           });
         }
       } else if (submittedIDDCoordinatorSuggestionId) {
+        const existingIMFileWithEmptyActionTaken =
+          await prisma.iMFile.findFirst({
+            where: {
+              AND: [
+                {
+                  iMId: {
+                    equals: iMId,
+                  },
+                },
+                {
+                  DepartmentRevision: {
+                    CoordinatorEndorsement: {
+                      DeanEndorsement: {
+                        IDDCoordinatorSuggestion: {
+                          SubmittedIDDCoordinatorSuggestion: {
+                            IDDCoordinatorSuggestion: {
+                              AND: [
+                                {
+                                  IDDCoordinatorSuggestionItem: {
+                                    some: {},
+                                  },
+                                },
+                                {
+                                  IDDCoordinatorSuggestionItem: {
+                                    some: {
+                                      IDDCoordinatorSuggestionItemActionTaken: {
+                                        is: null,
+                                      },
+                                    },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          });
+
+        if (existingIMFileWithEmptyActionTaken) {
+          return res.status(400).json({
+            error: { message: "IM have empty action taken" },
+          });
+        }
         const existingIMFile = await prisma.iMFile.findFirst({
           where: {
             AND: [
@@ -228,6 +425,53 @@ export default async function handler(
           });
         }
       } else if (submittedReturnedCITLRevisionId) {
+        const existingIMFileWithEmptyActionTaken =
+          await prisma.iMFile.findFirst({
+            where: {
+              AND: [
+                {
+                  iMId: {
+                    equals: iMId,
+                  },
+                },
+                {
+                  CITLRevision: {
+                    ReturnedCITLRevision: {
+                      SubmittedReturnedCITLRevision: {
+                        ReturnedCITLRevision: {
+                          AND: [
+                            {
+                              ReturnedCITLRevisionSuggestionItem: {
+                                some: {},
+                              },
+                            },
+                            {
+                              ReturnedCITLRevisionSuggestionItem: {
+                                some: {
+                                  ReturnedCITLRevisionSuggestionItemActionTaken:
+                                    {
+                                      is: null,
+                                    },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          });
+
+        if (existingIMFileWithEmptyActionTaken) {
+          return res.status(400).json({
+            error: {
+              message: "IM have empty action taken",
+            },
+          });
+        }
         const existingIMFile = await prisma.iMFile.findFirst({
           where: {
             AND: [
@@ -280,6 +524,115 @@ export default async function handler(
           });
         }
       } else if (iMERCCITLReviewedId) {
+        const existingIMFileWithEmptyActionTaken =
+          await prisma.iMFile.findFirst({
+            where: {
+              AND: [
+                {
+                  iMId: {
+                    equals: iMId,
+                  },
+                },
+                {
+                  QAMISRevision: {
+                    QAMISDeanEndorsement: {
+                      QAMISDepartmentEndorsement: {
+                        OR: [
+                          {
+                            ContentEditorReview: {
+                              ContentEditorSuggestion: {
+                                SubmittedContentEditorSuggestion: {
+                                  ContentEditorSuggestion: {
+                                    AND: [
+                                      {
+                                        ContentEditorSuggestionItem: {
+                                          some: {},
+                                        },
+                                      },
+                                      {
+                                        ContentEditorSuggestionItem: {
+                                          some: {
+                                            ContentEditorSuggestionItemActionTaken:
+                                              {
+                                                is: null,
+                                              },
+                                          },
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          },
+                          {
+                            ContentSpecialistReview: {
+                              ContentSpecialistSuggestion: {
+                                SubmittedContentSpecialistSuggestion: {
+                                  ContentSpecialistSuggestion: {
+                                    AND: [
+                                      {
+                                        ContentSpecialistSuggestionItem: {
+                                          some: {},
+                                        },
+                                      },
+                                      {
+                                        ContentSpecialistSuggestionItem: {
+                                          some: {
+                                            ContentSpecialistSuggestionItemActionTaken:
+                                              {
+                                                is: null,
+                                              },
+                                          },
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          },
+                          {
+                            IDDSpecialistReview: {
+                              IDDSpecialistSuggestion: {
+                                SubmittedIDDSpecialistSuggestion: {
+                                  IDDSpecialistSuggestion: {
+                                    AND: [
+                                      {
+                                        IDDSpecialistSuggestionItem: {
+                                          some: {},
+                                        },
+                                      },
+                                      {
+                                        IDDSpecialistSuggestionItem: {
+                                          some: {
+                                            IDDSpecialistSuggestionItemActionTaken:
+                                              {
+                                                is: null,
+                                              },
+                                          },
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          });
+
+        if (existingIMFileWithEmptyActionTaken) {
+          return res.status(400).json({
+            error: { message: "IM have empty action taken" },
+          });
+        }
         const existingIMFile = await prisma.iMFile.findFirst({
           where: {
             AND: [
@@ -305,6 +658,53 @@ export default async function handler(
           });
         }
       } else if (submittedReturnedIMERCCITLRevisionId) {
+        const existingIMFileWithEmptyActionTaken =
+          await prisma.iMFile.findFirst({
+            where: {
+              AND: [
+                {
+                  iMId: {
+                    equals: iMId,
+                  },
+                },
+                {
+                  IMERCCITLRevision: {
+                    ReturnedIMERCCITLRevision: {
+                      SubmittedReturnedIMERCCITLRevision: {
+                        ReturnedIMERCCITLRevision: {
+                          AND: [
+                            {
+                              ReturnedIMERCCITLRevisionSuggestionItem: {
+                                some: {},
+                              },
+                            },
+                            {
+                              ReturnedIMERCCITLRevisionSuggestionItem: {
+                                some: {
+                                  ReturnedIMERCCITLRevisionSuggestionItemActionTaken:
+                                    {
+                                      is: null,
+                                    },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          });
+
+        if (existingIMFileWithEmptyActionTaken) {
+          return res.status(400).json({
+            error: {
+              message: "IM have empty action taken",
+            },
+          });
+        }
         const existingIMFile = await prisma.iMFile.findFirst({
           where: {
             AND: [
@@ -336,11 +736,14 @@ export default async function handler(
       // Save file to server
       const file = data.files.file[0];
       const filename = `${file.newFilename}.pdf`;
-      const filePath = file.filepath;
-      const destination = path.join(process.cwd(), `/files/im/${filename}`);
-      fs.copyFile(filePath, destination, (err) => {
-        if (err) throw err;
-      });
+      // const filePath = file.filepath;
+      // const destination = path.join(process.cwd(), `/files/im/${filename}`);
+      // fs.copyFile(filePath, destination, (err) => {
+      //   if (err) throw err;
+      // });
+      const blob = await uploadToVercelBlob(file, `files/im/${filename}`);
+      const blobFilename = blob.url.split("/").at(-1);
+      console.log({ blob });
 
       // create object to server
       const iMFile = await prisma.iMFile.create({
@@ -401,7 +804,7 @@ export default async function handler(
                   },
                 }
               : undefined,
-          filename,
+          filename: blobFilename as string,
           mimetype: file.mimetype,
           size: file.size,
           originalFilename: file.originalFilename,
