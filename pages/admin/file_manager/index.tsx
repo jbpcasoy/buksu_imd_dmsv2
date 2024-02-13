@@ -77,36 +77,79 @@ export default function FileManagerPage() {
   );
 }
 
-function IMFiles({ query }: { query: { take: number; skip: number } }) {
+// TODO remove skip
+function IMFiles({ query }: { query: { take: number } }) {
   const [state, setState] = useState<{
-    skip: number;
     take: number;
+    cursor?: string;
   }>({
-    skip: 0,
     take: 10,
   });
 
+  const [cursorState, setCursorState] = useState<{
+    cursors: string[];
+    currentCursor: number;
+  }>({
+    currentCursor: -1,
+    cursors: [],
+  });
+  useEffect(() => {
+    console.log({ cursors: cursorState });
+  }, [cursorState]);
+  useEffect(() => {
+    if (cursorState.currentCursor > -1) {
+      setState((prev) => ({
+        ...prev,
+        cursor: cursorState.cursors[cursorState.currentCursor],
+      }));
+    } else if (cursorState.currentCursor === -1) {
+      setState((prev) => ({
+        ...prev,
+        cursor: undefined,
+      }));
+    }
+  }, [cursorState]);
+
   const nextHandler = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return { ...prev, skip: nextVal < count ? nextVal : prev.skip };
-    });
+    setCursorState((prev) => ({
+      ...prev,
+      currentCursor: prev.currentCursor + 1,
+    }));
   };
 
   const previousHandler = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      console.log({ prev, nextVal });
-
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
+    setCursorState((prev) => ({
+      ...prev,
+      currentCursor: prev.currentCursor - 1,
+    }));
   };
 
   useEffect(() => {
     setState((prev) => ({ ...prev, ...query }));
   }, [query]);
 
-  const { fileMetadatas: iMFiles, count } = useFileManagerIMFiles(state);
+  useEffect(() => {
+    console.log({ state });
+  }, [state]);
+
+  const {
+    fileMetadatas: iMFiles,
+    cursor,
+    hasMore,
+  } = useFileManagerIMFiles(state);
+
+  useEffect(() => {
+    if (!cursor) {
+      return;
+    }
+    setCursorState((prev) => {
+      if (!prev.cursors.includes(cursor)) {
+        return { ...prev, cursors: [...prev.cursors, cursor] };
+      } else {
+        return prev;
+      }
+    });
+  }, [cursor]);
 
   return (
     <div>
@@ -123,26 +166,30 @@ function IMFiles({ query }: { query: { take: number; skip: number } }) {
         <tbody className="py-1 h-full overflow-auto">
           {iMFiles?.map((iMFile) => {
             return (
-              <tr key={iMFile.filename} className="border-b">
-                <td>
-                  <div className="py-1 px-2 pl-4">{iMFile.filename}</div>
-                </td>
+              <tr key={iMFile.url} className="border-b">
                 <td>
                   <div className="py-1 px-2 pl-4">
-                    {formatBytes(iMFile.metadata.size)}
+                    {iMFile.url.split("/").at(-1)}
                   </div>
                 </td>
                 <td>
                   <div className="py-1 px-2 pl-4">
-                    {DateTime.fromJSDate(
-                      new Date(iMFile.metadata.lastModified)
-                    ).toFormat("D | t")}
+                    {formatBytes(iMFile.size)}
+                  </div>
+                </td>
+                <td>
+                  <div className="py-1 px-2 pl-4">
+                    {DateTime.fromJSDate(new Date(iMFile.uploadedAt)).toFormat(
+                      "D | t"
+                    )}
                   </div>
                 </td>
                 <td>
                   <div className="py-1 flex justify-center items-center">
                     <Link
-                      href={`/admin/file_manager/im/${iMFile.filename}`}
+                      href={`/admin/file_manager/im/${iMFile.url
+                        .split("/")
+                        .at(-1)}`}
                       className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
                     >
                       <span>View</span>
@@ -165,11 +212,8 @@ function IMFiles({ query }: { query: { take: number; skip: number } }) {
       </table>
 
       <div className="flex justify-end items-center space-x-1 p-1">
-        <p className="text-xs">
-          {state.skip} - {state.skip + state.take} of {count}
-        </p>
         <button
-          disabled={state.skip - state.take < 0}
+          disabled={cursorState.currentCursor < 0}
           className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={previousHandler}
         >
@@ -183,7 +227,7 @@ function IMFiles({ query }: { query: { take: number; skip: number } }) {
           <span>Previous</span>
         </button>
         <button
-          disabled={state.skip + state.take >= count}
+          disabled={!hasMore}
           className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={nextHandler}
         >
@@ -202,36 +246,74 @@ function IMFiles({ query }: { query: { take: number; skip: number } }) {
   );
 }
 
-function QAMISFiles({ query }: { query: { take: number; skip: number } }) {
+function QAMISFiles({ query }: { query: { take: number } }) {
   const [state, setState] = useState<{
-    skip: number;
     take: number;
+    cursor?: string;
   }>({
-    skip: 0,
     take: 10,
   });
 
+  const [cursorState, setCursorState] = useState<{
+    cursors: string[];
+    currentCursor: number;
+  }>({
+    currentCursor: -1,
+    cursors: [],
+  });
+  useEffect(() => {
+    console.log({ cursors: cursorState });
+  }, [cursorState]);
+  useEffect(() => {
+    if (cursorState.currentCursor > -1) {
+      setState((prev) => ({
+        ...prev,
+        cursor: cursorState.cursors[cursorState.currentCursor],
+      }));
+    } else if (cursorState.currentCursor === -1) {
+      setState((prev) => ({
+        ...prev,
+        cursor: undefined,
+      }));
+    }
+  }, [cursorState]);
+
   const nextHandler = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return { ...prev, skip: nextVal < count ? nextVal : prev.skip };
-    });
+    setCursorState((prev) => ({
+      ...prev,
+      currentCursor: prev.currentCursor + 1,
+    }));
   };
 
   const previousHandler = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      console.log({ prev, nextVal });
-
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
+    setCursorState((prev) => ({
+      ...prev,
+      currentCursor: prev.currentCursor - 1,
+    }));
   };
 
   useEffect(() => {
     setState((prev) => ({ ...prev, ...query }));
   }, [query]);
 
-  const { fileMetadatas: qAMISFiles, count } = useFileManagerQAMISFiles(state);
+  const {
+    fileMetadatas: qAMISFiles,
+    cursor,
+    hasMore,
+  } = useFileManagerQAMISFiles(state);
+
+  useEffect(() => {
+    if (!cursor) {
+      return;
+    }
+    setCursorState((prev) => {
+      if (!prev.cursors.includes(cursor)) {
+        return { ...prev, cursors: [...prev.cursors, cursor] };
+      } else {
+        return prev;
+      }
+    });
+  }, [cursor]);
 
   return (
     <div>
@@ -248,26 +330,30 @@ function QAMISFiles({ query }: { query: { take: number; skip: number } }) {
         <tbody className="py-1 h-full overflow-auto">
           {qAMISFiles?.map((qAMISFile) => {
             return (
-              <tr key={qAMISFile.filename} className="border-b">
+              <tr key={qAMISFile.url} className="border-b">
                 <td>
-                  <div className="py-1 px-2 pl-4">{qAMISFile.filename}</div>
+                  <div className="py-1 px-2 pl-4">
+                    {qAMISFile.url.split("/").at(-1)}
+                  </div>
                 </td>
                 <td>
                   <div className="py-1 px-2 pl-4">
-                    {formatBytes(qAMISFile.metadata.size)}
+                    {formatBytes(qAMISFile.size)}
                   </div>
                 </td>
                 <td>
                   <div className="py-1 px-2 pl-4">
                     {DateTime.fromJSDate(
-                      new Date(qAMISFile.metadata.lastModified)
+                      new Date(qAMISFile.uploadedAt)
                     ).toFormat("D | t")}
                   </div>
                 </td>
                 <td>
                   <div className="py-1 flex justify-center items-center">
                     <Link
-                      href={`/admin/file_manager/qamis/${qAMISFile.filename}`}
+                      href={`/admin/file_manager/qamis/${qAMISFile.url
+                        .split("/")
+                        .at(-1)}`}
                       className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
                     >
                       <span>View</span>
@@ -290,11 +376,8 @@ function QAMISFiles({ query }: { query: { take: number; skip: number } }) {
       </table>
 
       <div className="flex justify-end items-center space-x-1 p-1">
-        <p className="text-xs">
-          {state.skip} - {state.skip + state.take} of {count}
-        </p>
         <button
-          disabled={state.skip - state.take < 0}
+          disabled={cursorState.currentCursor < 0}
           className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={previousHandler}
         >
@@ -308,7 +391,7 @@ function QAMISFiles({ query }: { query: { take: number; skip: number } }) {
           <span>Previous</span>
         </button>
         <button
-          disabled={state.skip + state.take >= count}
+          disabled={!hasMore}
           className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={nextHandler}
         >
@@ -329,34 +412,72 @@ function QAMISFiles({ query }: { query: { take: number; skip: number } }) {
 
 function PlagiarismFiles({ query }: { query: { take: number; skip: number } }) {
   const [state, setState] = useState<{
-    skip: number;
     take: number;
+    cursor?: string;
   }>({
-    skip: 0,
     take: 10,
   });
 
+  const [cursorState, setCursorState] = useState<{
+    cursors: string[];
+    currentCursor: number;
+  }>({
+    currentCursor: -1,
+    cursors: [],
+  });
+  useEffect(() => {
+    console.log({ cursors: cursorState });
+  }, [cursorState]);
+  useEffect(() => {
+    if (cursorState.currentCursor > -1) {
+      setState((prev) => ({
+        ...prev,
+        cursor: cursorState.cursors[cursorState.currentCursor],
+      }));
+    } else if (cursorState.currentCursor === -1) {
+      setState((prev) => ({
+        ...prev,
+        cursor: undefined,
+      }));
+    }
+  }, [cursorState]);
+
   const nextHandler = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return { ...prev, skip: nextVal < count ? nextVal : prev.skip };
-    });
+    setCursorState((prev) => ({
+      ...prev,
+      currentCursor: prev.currentCursor + 1,
+    }));
   };
 
   const previousHandler = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      console.log({ prev, nextVal });
-
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
+    setCursorState((prev) => ({
+      ...prev,
+      currentCursor: prev.currentCursor - 1,
+    }));
   };
 
   useEffect(() => {
     setState((prev) => ({ ...prev, ...query }));
   }, [query]);
 
-  const { fileMetadatas: plagiarismFiles, count } = useFileManagerPlagiarismFiles(state);
+  const {
+    fileMetadatas: plagiarismFiles,
+    cursor,
+    hasMore,
+  } = useFileManagerPlagiarismFiles(state);
+
+  useEffect(() => {
+    if (!cursor) {
+      return;
+    }
+    setCursorState((prev) => {
+      if (!prev.cursors.includes(cursor)) {
+        return { ...prev, cursors: [...prev.cursors, cursor] };
+      } else {
+        return prev;
+      }
+    });
+  }, [cursor]);
 
   return (
     <div>
@@ -373,26 +494,30 @@ function PlagiarismFiles({ query }: { query: { take: number; skip: number } }) {
         <tbody className="py-1 h-full overflow-auto">
           {plagiarismFiles?.map((plagiarismFile) => {
             return (
-              <tr key={plagiarismFile.filename} className="border-b">
+              <tr key={plagiarismFile.url} className="border-b">
                 <td>
-                  <div className="py-1 px-2 pl-4">{plagiarismFile.filename}</div>
+                  <div className="py-1 px-2 pl-4">
+                    {plagiarismFile.url.split("/").at(-1)}
+                  </div>
                 </td>
                 <td>
                   <div className="py-1 px-2 pl-4">
-                    {formatBytes(plagiarismFile.metadata.size)}
+                    {formatBytes(plagiarismFile.size)}
                   </div>
                 </td>
                 <td>
                   <div className="py-1 px-2 pl-4">
                     {DateTime.fromJSDate(
-                      new Date(plagiarismFile.metadata.lastModified)
+                      new Date(plagiarismFile.uploadedAt)
                     ).toFormat("D | t")}
                   </div>
                 </td>
                 <td>
                   <div className="py-1 flex justify-center items-center">
                     <Link
-                      href={`/admin/file_manager/plagiarism/${plagiarismFile.filename}`}
+                      href={`/admin/file_manager/plagiarism/${plagiarismFile.url
+                        .split("/")
+                        .at(-1)}`}
                       className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
                     >
                       <span>View</span>
@@ -415,11 +540,8 @@ function PlagiarismFiles({ query }: { query: { take: number; skip: number } }) {
       </table>
 
       <div className="flex justify-end items-center space-x-1 p-1">
-        <p className="text-xs">
-          {state.skip} - {state.skip + state.take} of {count}
-        </p>
         <button
-          disabled={state.skip - state.take < 0}
+          disabled={cursorState.currentCursor < 0}
           className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={previousHandler}
         >
@@ -433,7 +555,7 @@ function PlagiarismFiles({ query }: { query: { take: number; skip: number } }) {
           <span>Previous</span>
         </button>
         <button
-          disabled={state.skip + state.take >= count}
+          disabled={!hasMore}
           className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={nextHandler}
         >
@@ -452,36 +574,74 @@ function PlagiarismFiles({ query }: { query: { take: number; skip: number } }) {
   );
 }
 
-function ProfilePictureFiles({ query }: { query: { take: number; skip: number } }) {
+function ProfilePictureFiles({ query }: { query: { take: number } }) {
   const [state, setState] = useState<{
-    skip: number;
     take: number;
+    cursor?: string;
   }>({
-    skip: 0,
     take: 10,
   });
 
+  const [cursorState, setCursorState] = useState<{
+    cursors: string[];
+    currentCursor: number;
+  }>({
+    currentCursor: -1,
+    cursors: [],
+  });
+  useEffect(() => {
+    console.log({ cursors: cursorState });
+  }, [cursorState]);
+  useEffect(() => {
+    if (cursorState.currentCursor > -1) {
+      setState((prev) => ({
+        ...prev,
+        cursor: cursorState.cursors[cursorState.currentCursor],
+      }));
+    } else if (cursorState.currentCursor === -1) {
+      setState((prev) => ({
+        ...prev,
+        cursor: undefined,
+      }));
+    }
+  }, [cursorState]);
+
   const nextHandler = () => {
-    setState((prev) => {
-      const nextVal = prev.skip + prev.take;
-      return { ...prev, skip: nextVal < count ? nextVal : prev.skip };
-    });
+    setCursorState((prev) => ({
+      ...prev,
+      currentCursor: prev.currentCursor + 1,
+    }));
   };
 
   const previousHandler = () => {
-    setState((prev) => {
-      const nextVal = prev.skip - prev.take;
-      console.log({ prev, nextVal });
-
-      return { ...prev, skip: nextVal >= 0 ? nextVal : prev.skip };
-    });
+    setCursorState((prev) => ({
+      ...prev,
+      currentCursor: prev.currentCursor - 1,
+    }));
   };
 
   useEffect(() => {
     setState((prev) => ({ ...prev, ...query }));
   }, [query]);
 
-  const { fileMetadatas: profilePictureFiles, count } = useFileManagerProfilePictureFiles(state);
+  const {
+    fileMetadatas: profilePictureFiles,
+    cursor,
+    hasMore,
+  } = useFileManagerProfilePictureFiles(state);
+
+  useEffect(() => {
+    if (!cursor) {
+      return;
+    }
+    setCursorState((prev) => {
+      if (!prev.cursors.includes(cursor)) {
+        return { ...prev, cursors: [...prev.cursors, cursor] };
+      } else {
+        return prev;
+      }
+    });
+  }, [cursor]);
 
   return (
     <div>
@@ -498,26 +658,30 @@ function ProfilePictureFiles({ query }: { query: { take: number; skip: number } 
         <tbody className="py-1 h-full overflow-auto">
           {profilePictureFiles?.map((profilePictureFile) => {
             return (
-              <tr key={profilePictureFile.filename} className="border-b">
+              <tr key={profilePictureFile.url} className="border-b">
                 <td>
-                  <div className="py-1 px-2 pl-4">{profilePictureFile.filename}</div>
+                  <div className="py-1 px-2 pl-4">
+                    {profilePictureFile.url.split("/").at(-1)}
+                  </div>
                 </td>
                 <td>
                   <div className="py-1 px-2 pl-4">
-                    {formatBytes(profilePictureFile.metadata.size)}
+                    {formatBytes(profilePictureFile.size)}
                   </div>
                 </td>
                 <td>
                   <div className="py-1 px-2 pl-4">
                     {DateTime.fromJSDate(
-                      new Date(profilePictureFile.metadata.lastModified)
+                      new Date(profilePictureFile.uploadedAt)
                     ).toFormat("D | t")}
                   </div>
                 </td>
                 <td>
                   <div className="py-1 flex justify-center items-center">
                     <Link
-                      href={`/admin/file_manager/profile_picture/${profilePictureFile.filename}`}
+                      href={`/admin/file_manager/profile_picture/${profilePictureFile.url
+                        .split("/")
+                        .at(-1)}`}
                       className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
                     >
                       <span>View</span>
@@ -540,11 +704,8 @@ function ProfilePictureFiles({ query }: { query: { take: number; skip: number } 
       </table>
 
       <div className="flex justify-end items-center space-x-1 p-1">
-        <p className="text-xs">
-          {state.skip} - {state.skip + state.take} of {count}
-        </p>
         <button
-          disabled={state.skip - state.take < 0}
+          disabled={cursorState.currentCursor < 0}
           className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={previousHandler}
         >
@@ -558,7 +719,7 @@ function ProfilePictureFiles({ query }: { query: { take: number; skip: number } 
           <span>Previous</span>
         </button>
         <button
-          disabled={state.skip + state.take >= count}
+          disabled={!hasMore}
           className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
           onClick={nextHandler}
         >

@@ -20,7 +20,7 @@ export default function IMInfo() {
   return (
     <AdminLayout>
       {/* <DynamicReactJson src={iMInfo} collapsed={2} />; */}
-      <pre>{JSON.stringify(iMInfo, undefined, 4)}</pre>;
+      <pre className="text-xs">{JSON.stringify(iMInfo, undefined, 4)}</pre>;
     </AdminLayout>
   );
 }

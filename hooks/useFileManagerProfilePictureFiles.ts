@@ -1,15 +1,23 @@
 import FileMetadata from "@/constants/FileMetadata";
+import { ListBlobResultBlob } from "@vercel/blob";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface UseFileManagerProfilePictureFilesProps {
-  skip: number;
   take: number;
   filter?: object;
+  cursor?: string;
 }
 
-export default function useFileManagerProfilePictureFiles({skip, take, filter}: UseFileManagerProfilePictureFilesProps) {
-    const [state, setState] = useState<{fileMetadatas: FileMetadata[], count: number}>({
+export default function useFileManagerProfilePictureFiles({
+  take,
+  filter,
+  cursor,}: UseFileManagerProfilePictureFilesProps) {
+    const [state, setState] = useState<{
+      fileMetadatas: ListBlobResultBlob[];
+      count: number;
+      cursor?: string;
+      hasMore?: boolean;}>({
         count: 0,
         fileMetadatas: []
       });
@@ -18,9 +26,9 @@ export default function useFileManagerProfilePictureFiles({skip, take, filter}: 
         axios
           .get("/api/file_manager/profile_picture", {
             params: {
-              skip,
               take,
-              filter
+              filter,
+              cursor,
             },
           })
           .then((res) => {
@@ -29,7 +37,7 @@ export default function useFileManagerProfilePictureFiles({skip, take, filter}: 
           .catch((error) => {
             console.error(error);
           });
-      }, [skip, take, filter]);
+      }, [take, filter, cursor]);
     
       return state;
 }

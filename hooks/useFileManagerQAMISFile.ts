@@ -1,4 +1,5 @@
 import FileMetadata from "@/constants/FileMetadata";
+import { ListBlobResultBlob } from "@vercel/blob";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -9,7 +10,7 @@ interface UseFileManagerQAMISFileProps {
 export default function useFileManagerQAMISFile({
   filename,
 }: UseFileManagerQAMISFileProps) {
-  const [state, setState] = useState<FileMetadata | null>();
+  const [state, setState] = useState<ListBlobResultBlob | null>();
 
   useEffect(() => {
     if (!filename) {

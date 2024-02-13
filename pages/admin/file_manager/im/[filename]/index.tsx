@@ -61,20 +61,22 @@ export default function FileManagerIMPage() {
         <div className="flex flex-row h-full">
           <div className="flex-1">
             <div>
-              <p className="text-lg font-bold">{fileManagerIMFile.filename}</p>
+              <p className="text-lg font-bold">
+                {fileManagerIMFile.url.split("/").at(-1)}
+              </p>
               <div className="text-xs palette_grey flex space-x-2">
                 <p>
                   {DateTime.fromJSDate(
-                    new Date(fileManagerIMFile.metadata.lastModified)
+                    new Date(fileManagerIMFile.uploadedAt)
                   ).toFormat("D | t")}
                 </p>
-                <p>{formatBytes(fileManagerIMFile.metadata.size)}</p>
+                <p>{formatBytes(fileManagerIMFile.size)}</p>
               </div>
             </div>
 
             {iMFile && (
               // <DynamicReactJson src={iMFile} collapsed={2} />
-              <pre>{JSON.stringify(iMFile, undefined, 4)}</pre>
+              <pre className="text-xs">{JSON.stringify(iMFile, undefined, 4)}</pre>
             )}
             <button
               onClick={() =>
@@ -89,8 +91,8 @@ export default function FileManagerIMPage() {
           <div className="flex-1 h-full">
             <iframe
               loading="lazy"
-              src={`/api/file_manager/im/${fileManagerIMFile.filename}/pdf`}
-              title={fileManagerIMFile.filename}
+              src={`/api/file_manager/im/${fileManagerIMFile.url.split("/").at(-1)}/pdf`}
+              title={fileManagerIMFile.url.split("/").at(-1)}
               className="w-full h-full rounded"
             />
           </div>
