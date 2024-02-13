@@ -3,6 +3,7 @@ import getFilesWithMetadata from "@/services/getFilesWithMetadata";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
+import { list } from "@vercel/blob";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -22,12 +23,12 @@ export default async function handler(
     try {
       const validator = Yup.object({
         take: Yup.number().required(),
-        skip: Yup.number().required(),
+        cursor: Yup.string().optional(),
       });
 
       await validator.validate(req.query);
 
-      const { skip, take } = validator.cast(req.query);
+      const { take, cursor } = validator.cast(req.query);
 
       if (!user.isAdmin) {
         return res.status(403).json({
@@ -37,15 +38,31 @@ export default async function handler(
         });
       }
 
-      const folderPath = "files/profile_picture";
-      const fileMetadatas = await getFilesWithMetadata(folderPath, take, skip);
+      // const folderPath = "files/profile_picture";
+      // const fileMetadatas = await getFilesWithMetadata(folderPath, take, skip);
 
-      const filenames = getFilenames(folderPath);
-      let count = filenames.length;
+      // const filenames = getFilenames(folderPath);
+      // let count = filenames.length;
+
+      // return res.status(200).json({
+      //   fileMetadatas,
+      //   count: count,
+      // });
+
+      const folderPath = `${process.env.NODE_ENV}/files/profile_picture`;
+      const blobResult = await list({
+        limit: take,
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+        prefix: folderPath,
+        cursor: cursor,
+      });
+      const fileMetadatas = blobResult.blobs;
 
       return res.status(200).json({
         fileMetadatas,
-        count: count,
+        count: fileMetadatas.length,
+        hasMore: blobResult.hasMore,
+        cursor: blobResult.cursor,
       });
     } catch (error: any) {
       logger.error(error);

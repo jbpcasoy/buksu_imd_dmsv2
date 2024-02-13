@@ -219,7 +219,7 @@ export default function AdminSidebar() {
           />
           <MenuItem
             label="Export"
-            link="/api/export"
+            link="/admin/export"
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"

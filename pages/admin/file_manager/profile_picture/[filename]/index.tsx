@@ -62,25 +62,25 @@ export default function FileManagerProfilePicturePage() {
           <div className="flex-1">
             <div>
               <p className="text-lg font-bold">
-                {fileManagerProfilePictureFile.filename}
+                {fileManagerProfilePictureFile.url.split("/").at(-1)}
               </p>
               <div className="text-xs palette_grey flex space-x-2">
                 <p>
                   {DateTime.fromJSDate(
                     new Date(
-                      fileManagerProfilePictureFile.metadata.lastModified
+                      fileManagerProfilePictureFile.uploadedAt
                     )
                   ).toFormat("D | t")}
                 </p>
                 <p>
-                  {formatBytes(fileManagerProfilePictureFile.metadata.size)}
+                  {formatBytes(fileManagerProfilePictureFile.size)}
                 </p>
               </div>
             </div>
 
             {profilePictureFile && (
               // <DynamicReactJson src={profilePictureFile} collapsed={2} />
-              <pre>{JSON.stringify(profilePictureFile, undefined, 4)}</pre>
+              <pre className="text-xs">{JSON.stringify(profilePictureFile, undefined, 4)}</pre>
             )}
             <button
               onClick={() =>
@@ -96,8 +96,8 @@ export default function FileManagerProfilePicturePage() {
             <img
               alt="user profile"
               loading="lazy"
-              src={`/api/file_manager/profile_picture/${fileManagerProfilePictureFile.filename}/image`}
-              title={fileManagerProfilePictureFile.filename}
+              src={`/api/file_manager/profile_picture/${fileManagerProfilePictureFile.url.split("/").at(-1)}/image`}
+              title={fileManagerProfilePictureFile.url.split("/").at(-1)}
               className="w-100 h-100 rounded-full"
             />
           </div>

@@ -43,7 +43,7 @@ export default function IMPage() {
       </div>
 
       {/* <DynamicReactJson src={iM} collapsed={2}/> */}
-      <pre>{JSON.stringify(iM, undefined, 4)}</pre>;
+      <pre className="text-xs">{JSON.stringify(iM, undefined, 4)}</pre>;
     </CrudLayout>
   );
 }

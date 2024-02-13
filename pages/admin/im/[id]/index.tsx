@@ -384,7 +384,7 @@ function IMInfo({ iM }: IMInfoProps) {
   }
 
   // return <DynamicReactJson src={iMInfo} collapsed={2} />;
-  return <pre>{JSON.stringify(iMInfo, undefined, 4)}</pre>;
+  return <pre className="text-xs">{JSON.stringify(iMInfo, undefined, 4)}</pre>;
 }
 
 interface EditSerialNumberProps {

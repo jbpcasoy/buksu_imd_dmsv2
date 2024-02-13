@@ -2,6 +2,7 @@ import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
+import { del } from "@vercel/blob";
 import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
@@ -155,20 +156,24 @@ export default async function handler(
         }
       }
 
-      const filePath = path.join(
-        process.cwd(),
-        `/files/qamis/${qAMISFileToDelete.filename}`
-      );
-      fs.rm(filePath, (error) => {
-        logger.error({ error });
-        throw error;
-      });
-
       const qAMISFile = await prisma.qAMISFile.delete({
         where: {
           id: id as string,
         },
       });
+
+      // const filePath = path.join(
+      //   process.cwd(),
+      //   `/files/qamis/${qAMISFileToDelete.filename}`
+      // );
+      // fs.rm(filePath, (error) => {
+      //   logger.error({ error });
+      //   throw error;
+      // });
+
+      await del(
+        `${process.env.BLOB_URL}/${process.env.NODE_ENV}/files/qamis/${qAMISFileToDelete.filename}`
+      );
 
       return res.json(qAMISFile);
     } catch (error: any) {

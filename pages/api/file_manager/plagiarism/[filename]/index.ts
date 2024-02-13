@@ -3,6 +3,7 @@ import getFileWithMetadata from "@/services/getFileWithMetadata";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
+import { del, head } from "@vercel/blob";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
@@ -22,18 +23,25 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const { filename } = req.query;
-      const folderPath = "files/plagiarism";
-      const file = await getFileWithMetadata(folderPath, filename as string);
-      if (!file) {
-        return res.status(404).json({
-          error: {
-            message: "File not found",
-          },
-        });
-      }
+      // const { filename } = req.query;
+      // const folderPath = "files/plagiarism";
+      // const file = await getFileWithMetadata(folderPath, filename as string);
+      // if (!file) {
+      //   return res.status(404).json({
+      //     error: {
+      //       message: "File not found",
+      //     },
+      //   });
+      // }
 
-      return res.status(200).json(file);
+      // return res.status(200).json(file);
+
+      const { filename } = req.query;
+      const metadata = await head(
+        `${process.env.BLOB_URL}/${process.env.NODE_ENV}/files/plagiarism/${filename}`
+      );
+
+      res.json(metadata);
     } catch (error: any) {
       logger.error(error);
       return res
@@ -71,11 +79,13 @@ export default async function handler(
       });
     }
 
-    const filePath = path.join(process.cwd(), `/files/plagiarism/${filename}`);
-    fs.rm(filePath, (error) => {
-      logger.error({ error });
-      throw error;
-    });
+    // const filePath = path.join(process.cwd(), `/files/plagiarism/${filename}`);
+    // fs.rm(filePath, (error) => {
+    //   logger.error({ error });
+    //   throw error;
+    // });
+
+    await del(`${process.env.BLOB_URL}/${process.env.NODE_ENV}/files/plagiarism/${filename}`);
 
     return res.status(200).json(file);
   };

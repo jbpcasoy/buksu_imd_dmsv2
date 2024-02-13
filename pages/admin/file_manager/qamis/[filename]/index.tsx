@@ -62,21 +62,21 @@ export default function FileManagerQAMISPage() {
           <div className="flex-1">
             <div>
               <p className="text-lg font-bold">
-                {fileManagerQAMISFile.filename}
+                {fileManagerQAMISFile.url.split("/").at(-1)}
               </p>
               <div className="text-xs palette_grey flex space-x-2">
                 <p>
                   {DateTime.fromJSDate(
-                    new Date(fileManagerQAMISFile.metadata.lastModified)
+                    new Date(fileManagerQAMISFile.uploadedAt)
                   ).toFormat("D | t")}
                 </p>
-                <p>{formatBytes(fileManagerQAMISFile.metadata.size)}</p>
+                <p>{formatBytes(fileManagerQAMISFile.size)}</p>
               </div>
             </div>
 
             {qAMISFile && (
               // <DynamicReactJson src={qAMISFile} collapsed={2} />
-              <pre>{JSON.stringify(qAMISFile, undefined, 4)}</pre>
+              <pre className="text-xs">{JSON.stringify(qAMISFile, undefined, 4)}</pre>
             )}
             <button
               onClick={() =>
@@ -91,8 +91,8 @@ export default function FileManagerQAMISPage() {
           <div className="flex-1 h-full">
             <iframe
               loading="lazy"
-              src={`/api/file_manager/qamis/${fileManagerQAMISFile.filename}/pdf`}
-              title={fileManagerQAMISFile.filename}
+              src={`/api/file_manager/qamis/${fileManagerQAMISFile.url.split("/").at(-1)}/pdf`}
+              title={fileManagerQAMISFile.url.split("/").at(-1)}
               className="w-full h-full rounded"
             />
           </div>

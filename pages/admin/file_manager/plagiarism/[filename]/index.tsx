@@ -62,21 +62,21 @@ export default function FileManagerPlagiarismPage() {
           <div className="flex-1">
             <div>
               <p className="text-lg font-bold">
-                {fileManagerPlagiarismFile.filename}
+                {fileManagerPlagiarismFile.url.split("/").at(-1)}
               </p>
               <div className="text-xs palette_grey flex space-x-2">
                 <p>
                   {DateTime.fromJSDate(
-                    new Date(fileManagerPlagiarismFile.metadata.lastModified)
+                    new Date(fileManagerPlagiarismFile.uploadedAt)
                   ).toFormat("D | t")}
                 </p>
-                <p>{formatBytes(fileManagerPlagiarismFile.metadata.size)}</p>
+                <p>{formatBytes(fileManagerPlagiarismFile.size)}</p>
               </div>
             </div>
 
             {plagiarismFile && (
               // <DynamicReactJson src={plagiarismFile} collapsed={2} />
-              <pre>{JSON.stringify(plagiarismFile, undefined, 4)}</pre>
+              <pre className="text-xs">{JSON.stringify(plagiarismFile, undefined, 4)}</pre>
             )}
             <button
               onClick={() =>
@@ -91,8 +91,8 @@ export default function FileManagerPlagiarismPage() {
           <div className="flex-1 h-full">
             <iframe
               loading="lazy"
-              src={`/api/file_manager/plagiarism/${fileManagerPlagiarismFile.filename}/pdf`}
-              title={fileManagerPlagiarismFile.filename}
+              src={`/api/file_manager/plagiarism/${fileManagerPlagiarismFile.url.split("/").at(-1)}/pdf`}
+              title={fileManagerPlagiarismFile.url.split("/").at(-1)}
               className="w-full h-full rounded"
             />
           </div>
