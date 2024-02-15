@@ -15,10 +15,34 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Error from "next/error";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function AddCoordinatorReviewPage() {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const router = useRouter();
   const iMId = router.query.id;
   const iM = useIM({ id: iMId as string });
@@ -323,7 +347,7 @@ export default function AddCoordinatorReviewPage() {
                 </div>
                 <div className="flex justify-end p-1">
                   <button
-                    disabled={formik.isSubmitting || !formik.isValid}
+                    disabled={formik.isSubmitting || !formik.isValid || loading}
                     className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded cursor-pointer inline-flex space-x-2 items-center hover:bg-opacity-90"
                   >
                     <span>Next</span>

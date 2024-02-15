@@ -100,6 +100,31 @@ export default function ViewIM() {
   }>({
     openConfirmation: false,
   });
+
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const iMStatus = useIMStatus({ id: iMId as string });
   const departmentReviewed = useDepartmentReviewedIM({
     id: iMId as string,
@@ -756,7 +781,7 @@ export default function ViewIM() {
                       />
                       <button
                         className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2"
-                        disabled={Boolean(!state?.iMFile)}
+                        disabled={Boolean(!state?.iMFile) || loading}
                         onClick={openConfirmation}
                       >
                         <span>Submit for Review</span>
@@ -900,7 +925,7 @@ export default function ViewIM() {
 
                         <button
                           className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
-                          disabled={Boolean(!state?.iMFile)}
+                          disabled={Boolean(!state?.iMFile) || loading}
                           onClick={openConfirmation}
                         >
                           <span>Submit for endorsement</span>
@@ -947,6 +972,7 @@ export default function ViewIM() {
                         <div className="space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row">
                           <>
                             <button
+                              disabled={loading}
                               className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
                               onClick={openConfirmation}
                             >
@@ -968,6 +994,7 @@ export default function ViewIM() {
                             )}
                           </>
                           <button
+                            disabled={loading}
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
                             onClick={returnCoordinatorEndorsementHandler}
                           >
@@ -997,6 +1024,7 @@ export default function ViewIM() {
                       <div className="flex flex-col sm:flex-row">
                         <>
                           <button
+                            disabled={loading}
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
                             onClick={openConfirmation}
                           >
@@ -1079,7 +1107,7 @@ export default function ViewIM() {
                           <button
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
                             onClick={openConfirmation}
-                            disabled={!Boolean(state.iMFile)}
+                            disabled={!Boolean(state.iMFile) || loading}
                           >
                             <span>Submit for endorsement</span>
                             <svg
@@ -1122,6 +1150,7 @@ export default function ViewIM() {
                         <div className="space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row">
                           <>
                             <button
+                              disabled={loading}
                               className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
                               onClick={openConfirmation}
                             >
@@ -1143,6 +1172,7 @@ export default function ViewIM() {
                             )}
                           </>
                           <button
+                            disabled={loading}
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
                             onClick={returnIDDCoordinatorEndorsementHandler}
                           >
@@ -1172,6 +1202,7 @@ export default function ViewIM() {
                       <div>
                         <>
                           <button
+                            disabled={loading}
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
                             onClick={openConfirmation}
                           >
@@ -1235,6 +1266,7 @@ export default function ViewIM() {
                       {activeCoordinator && !coordinatorEndorsement && (
                         <>
                           <button
+                            disabled={loading}
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
                             onClick={openConfirmation}
                           >
@@ -1259,6 +1291,7 @@ export default function ViewIM() {
                       {activeChairperson && !chairpersonEndorsement && (
                         <>
                           <button
+                            disabled={loading}
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
                             onClick={openConfirmation}
                           >
@@ -1283,6 +1316,7 @@ export default function ViewIM() {
                       {activeDean && !deanEndorsement && (
                         <>
                           <button
+                            disabled={loading}
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
                             onClick={openConfirmation}
                           >
@@ -1432,7 +1466,7 @@ export default function ViewIM() {
                             <button
                               className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
                               onClick={openConfirmation}
-                              disabled={!Boolean(state.iMFile)}
+                              disabled={!Boolean(state.iMFile) || loading}
                             >
                               <span>Submit for endorsement</span>
                               <svg
@@ -1483,6 +1517,7 @@ export default function ViewIM() {
                         <div className="space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row">
                           <>
                             <button
+                              disabled={loading}
                               className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
                               onClick={openConfirmation}
                             >
@@ -1506,6 +1541,7 @@ export default function ViewIM() {
                             )}
                           </>
                           <button
+                            disabled={loading}
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
                             onClick={
                               returnIMERCIDDCoordinatorEndorsementHandler
@@ -1536,6 +1572,7 @@ export default function ViewIM() {
                       <div>
                         <>
                           <button
+                            disabled={loading}
                             className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90"
                             onClick={openConfirmation}
                           >
@@ -1614,6 +1651,31 @@ function ActionMenu({
     openConfirmation: false,
   });
   const menuRef: any = useRef(null);
+
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -1759,6 +1821,7 @@ function ActionMenu({
               iMStatus === "IMPLEMENTATION_DRAFT" && (
                 <>
                   <button
+                    disabled={loading}
                     onClick={() =>
                       setState((prev) => ({ ...prev, openConfirmation: true }))
                     }
@@ -1799,6 +1862,30 @@ function EditIM({ onUpdate = () => {} }: EditIMProps) {
   const iM = useIM({ id: iMId as string });
   const [openEdit, setOpenEdit] = useState(false);
   const { addSnackbar } = useContext(SnackbarContext);
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -1849,6 +1936,7 @@ function EditIM({ onUpdate = () => {} }: EditIMProps) {
   return (
     <>
       <button
+        disabled={loading}
         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
         onClick={() => setOpenEdit(true)}
       >
@@ -1871,7 +1959,7 @@ function EditIM({ onUpdate = () => {} }: EditIMProps) {
               </select>
               <button
                 type="submit"
-                disabled={!formik.isValid}
+                disabled={!formik.isValid || loading}
                 className="bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90 disabled:bg-opacity-50"
               >
                 <span>Submit</span>
@@ -2288,6 +2376,30 @@ function CoAuthorChip({
   const user = useUserFaculty({
     id: coAuthor.facultyId,
   });
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const { addSnackbar } = useContext(SnackbarContext);
   const handleDelete = async () => {
     return axios
@@ -2312,6 +2424,7 @@ function CoAuthorChip({
       <p>{user.name}</p>
       {allowDelete && (
         <button
+          disabled={loading}
           className="bg-palette_blue rounded-full h-3 w-3 hover:bg-opacity-90 active:bg-opacity-100 flex items-center justify-center"
           onClick={handleDelete}
         >

@@ -29,6 +29,30 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function ContentSpecialistSuggestionPage() {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const {refresh, refreshFlag} = useRefresh();
   const router = useRouter();
   const iMId = router.query.id;
@@ -157,6 +181,7 @@ export default function ContentSpecialistSuggestionPage() {
     return (
       <div>
         <button
+          disabled={loading}
           onClick={() => setOpenAdd(true)}
           className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90'
         >
@@ -193,6 +218,7 @@ export default function ContentSpecialistSuggestionPage() {
                   className='rounded'
                 />
                 <button
+                  disabled={loading}
                   type='submit'
                   className='bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90'
                 >
@@ -319,7 +345,7 @@ export default function ContentSpecialistSuggestionPage() {
             <>
               <button
                 className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey'
-                disabled={!Boolean(contentSpecialistSuggestion)}
+                disabled={!Boolean(contentSpecialistSuggestion) || loading}
                 onClick={() => setOpenConfirmation(true)}
               >
                 <span>Submit Review</span>
@@ -360,6 +386,30 @@ export interface ItemProps {
   refresh: () => any;
 }
 export function Item({ contentSpecialistSuggestionItem, refresh }: ItemProps) {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const [state, setState] = useState({
     openConfirmation: false,
   });
@@ -393,6 +443,7 @@ export function Item({ contentSpecialistSuggestionItem, refresh }: ItemProps) {
         />
         <>
           <button
+            disabled={loading}
             className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
             onClick={() => setState(prev => ({...prev, openConfirmation: true}))}
           >
@@ -437,6 +488,30 @@ function EditSuggestionItem({
   contentSpecialistSuggestionItem,
   refresh,
 }: EditSuggestionItemProps) {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const { addSnackbar } = useContext(SnackbarContext);
   const [openEdit, setOpenEdit] = useState(false);
   const router = useRouter();
@@ -487,6 +562,7 @@ function EditSuggestionItem({
   return (
     <div>
       <button
+        disabled={loading}
         className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
         onClick={() => setOpenEdit(true)}
       >
@@ -521,6 +597,7 @@ function EditSuggestionItem({
                 className='rounded'
               />
               <button
+                disabled={loading}
                 type='submit'
                 className='bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90'
               >
