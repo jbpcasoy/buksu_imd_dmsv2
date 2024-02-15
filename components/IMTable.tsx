@@ -365,6 +365,30 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
 }
 
 function AddIM() {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const { addSnackbar } = useContext(SnackbarContext);
   const activeFaculty = useContext(ActiveFacultyContext);
   const router = useRouter();
@@ -402,6 +426,7 @@ function AddIM() {
   return (
     <>
       <button
+        disabled={loading}
         className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
         onClick={() => setState({ addIMOpen: true })}
       >
@@ -435,6 +460,7 @@ function AddIM() {
               </select>
 
               <button
+                disabled={loading}
                 type="submit"
                 className="bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90"
               >

@@ -11,6 +11,30 @@ import { ChangeEventHandler, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function ProfilePage() {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const { data: session } = useSession({
     required: true,
   });
@@ -89,56 +113,58 @@ export default function ProfilePage() {
 
   return (
     <MainLayout>
-      <div className='h-full flex flex-col space-y-1'>
-        <div className='flex justify-end'>
+      <div className="h-full flex flex-col space-y-1">
+        <div className="flex justify-end">
           <button
+            disabled={loading}
             onClick={onLogout}
-            className='bg-palette_blue text-white px-2 py-1 rounded'
+            className="bg-palette_blue text-white px-2 py-1 rounded"
           >
             LOGOUT
           </button>
         </div>
 
-        <div className='h-full'>
-          <form noValidate onSubmit={formik.handleSubmit} className='h-full'>
-            <div className='h-full flex justify-center items-center'>
-              <div className='space-x-1 flex flex-col justify-center items-center space-y-1 mx-auto border p-9 rounded-lg shadow'>
+        <div className="h-full">
+          <form noValidate onSubmit={formik.handleSubmit} className="h-full">
+            <div className="h-full flex justify-center items-center">
+              <div className="space-x-1 flex flex-col justify-center items-center space-y-1 mx-auto border p-9 rounded-lg shadow">
                 <input
-                  id='profile-picture'
-                  type='file'
-                  accept='image/*'
+                  id="profile-picture"
+                  type="file"
+                  accept="image/*"
                   hidden={true}
                   onChange={showProfilePreview}
                 />
                 <label
-                  htmlFor='profile-picture'
-                  className='cursor-pointer hover:opacity-95'
+                  htmlFor="profile-picture"
+                  className="cursor-pointer hover:opacity-95"
                 >
                   <picture>
                     <img
                       src={state?.previewUrl ?? session?.user?.image ?? ""}
-                      className='h-32 w-32 rounded-full object-cover'
-                      alt='User avatar'
+                      className="h-32 w-32 rounded-full object-cover"
+                      alt="User avatar"
                     />
                   </picture>
                 </label>
                 {department && college && (
-                  <p className='text-sm'>
+                  <p className="text-sm">
                     {department?.name} | {college?.name}
                   </p>
                 )}
-                <p className='text-sm'>{session?.user?.email}</p>
+                <p className="text-sm">{session?.user?.email}</p>
                 <input
-                  type='text'
+                  type="text"
                   required
-                  placeholder='Name'
+                  placeholder="Name"
                   {...formik.getFieldProps("name")}
-                  className='rounded w-full'
+                  className="rounded w-full"
                 />
                 <input
-                  type='submit'
-                  value='Save'
-                  className='bg-palette_blue text-palette_white w-full py-1 rounded'
+                  type="submit"
+                  value="Save"
+                  disabled={loading}
+                  className="bg-palette_blue text-palette_white w-full py-1 rounded cursor-pointer"
                 />
               </div>
             </div>

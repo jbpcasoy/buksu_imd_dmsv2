@@ -20,10 +20,35 @@ import {
   SelectHTMLAttributes,
   useContext,
   useEffect,
+  useState,
 } from "react";
 import * as Yup from "yup";
 
 export default function AddContentSpecialistReviewPage() {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
   const iMId = router.query.id;
@@ -173,7 +198,7 @@ export default function AddContentSpecialistReviewPage() {
   if (iM === null) {
     return (
       <MainLayout>
-        <Error statusCode={404} title='IM Not Found' />
+        <Error statusCode={404} title="IM Not Found" />
       </MainLayout>
     );
   }
@@ -187,22 +212,22 @@ export default function AddContentSpecialistReviewPage() {
 
   return (
     <MainLayout>
-      <div className='flex flex-col sm:flex-row h-full overflow-auto'>
-        <div className='flex flex-col sm:flex-1'>
-          <div className='flex justify-between pb-2'>
+      <div className="flex flex-col sm:flex-row h-full overflow-auto">
+        <div className="flex flex-col sm:flex-1">
+          <div className="flex justify-between pb-2">
             <div>
-              <h2 className='inline text-lg font-bold'>
+              <h2 className="inline text-lg font-bold">
                 Instructional Material Review{" "}
-                <span className='bg-palette_orange text-palette_white p-1 rounded'>
+                <span className="bg-palette_orange text-palette_white p-1 rounded">
                   Content Specialist
                 </span>
               </h2>
-              <p className='text-sm'>IMERC Phase</p>
+              <p className="text-sm">IMERC Phase</p>
             </div>
           </div>
-          <div className='flex-1 overflow-auto'>
-            <form onSubmit={formik.handleSubmit} className=''>
-              <div className='space-y-2 mx-1'>
+          <div className="flex-1 overflow-auto">
+            <form onSubmit={formik.handleSubmit} className="">
+              <div className="space-y-2 mx-1">
                 <ReviewSection title={ReviewSections.s1}>
                   <ReviewItem
                     question={ReviewQuestions.q1_1}
@@ -335,20 +360,20 @@ export default function AddContentSpecialistReviewPage() {
                   />
                 </ReviewSection>
               </div>
-              <div className='flex justify-end p-1'>
+              <div className="flex justify-end p-1">
                 <button
-                  disabled={formik.isSubmitting || !formik.isValid}
-                  className='bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded cursor-pointer inline-flex space-x-2 items-center hover:bg-opacity-90'
+                  disabled={formik.isSubmitting || !formik.isValid || loading}
+                  className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded cursor-pointer inline-flex space-x-2 items-center hover:bg-opacity-90"
                 >
                   <span>Next</span>
                   <span>
                     <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      height='1em'
-                      viewBox='0 0 448 512'
-                      className='fill-palette_white'
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="1em"
+                      viewBox="0 0 448 512"
+                      className="fill-palette_white"
                     >
-                      <path d='M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z' />
+                      <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
                     </svg>
                   </span>
                 </button>
@@ -356,11 +381,11 @@ export default function AddContentSpecialistReviewPage() {
             </form>
           </div>
         </div>
-        <div className='sm:flex-1 h-screen-3/4 sm:h-auto'>
+        <div className="sm:flex-1 h-screen-3/4 sm:h-auto">
           <iframe
-            loading='lazy'
+            loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className='w-full h-full rounded'
+            className="w-full h-full rounded"
           />
         </div>
       </div>
@@ -376,12 +401,12 @@ function RateSelector(
 ) {
   return (
     <select {...props}>
-      <option value=''>Select</option>
-      <option value='VM'>VM</option>
-      <option value='M'>M</option>
-      <option value='JE'>JE</option>
-      <option value='NM'>NM</option>
-      <option value='NAA'>NAA</option>
+      <option value="">Select</option>
+      <option value="VM">VM</option>
+      <option value="M">M</option>
+      <option value="JE">JE</option>
+      <option value="NM">NM</option>
+      <option value="NAA">NAA</option>
     </select>
   );
 }

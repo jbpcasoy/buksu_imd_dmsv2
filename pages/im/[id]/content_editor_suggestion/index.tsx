@@ -6,7 +6,6 @@ import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
-import useActiveCITLDirector from "@/hooks/useActiveCITLDirector";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useContentEditorReviewMe from "@/hooks/useContentEditorReviewMe";
 import useContentEditorSuggestionItemsOwn, {
@@ -28,6 +27,30 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function ContentEditorSuggestionPage() {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const {refresh, refreshFlag} = useRefresh();
   const router = useRouter();
   const iMId = router.query.id;
@@ -145,6 +168,7 @@ export default function ContentEditorSuggestionPage() {
     return (
       <>
         <button
+          disabled={loading}
           onClick={() => setOpenAdd(true)}
           className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90'
         >
@@ -181,6 +205,7 @@ export default function ContentEditorSuggestionPage() {
                   className='rounded'
                 />
                 <button
+                  disabled={loading}
                   type='submit'
                   className='bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90'
                 >
@@ -293,7 +318,7 @@ export default function ContentEditorSuggestionPage() {
             <>
               <button
                 className='rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey'
-                disabled={!Boolean(contentEditorSuggestion)}
+                disabled={!Boolean(contentEditorSuggestion) || loading}
                 onClick={() => setOpenConfirmation(true)}
               >
                 <span>Submit Review</span>
@@ -337,6 +362,30 @@ export function Item({
   contentEditorSuggestionItem,
   refresh,
 }: ContentEditorSuggestionItemProps) {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const [state, setState] = useState({
     openConfirmation: false,
   });
@@ -368,6 +417,7 @@ export function Item({
         />
         <>
           <button
+            disabled={loading}
             className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
             onClick={() => setState(prev => ({...prev, openConfirmation: true}))}
           >
@@ -412,6 +462,30 @@ function EditSuggestionItem({
   contentEditorSuggestionItem,
   refresh,
 }: EditSuggestionItemProps) {
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
   const [openEdit, setOpenEdit] = useState(false);
   const router = useRouter();
   const { addSnackbar } = useContext(SnackbarContext);
@@ -462,6 +536,7 @@ function EditSuggestionItem({
   return (
     <div>
       <button
+        disabled={loading}
         className='bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90'
         onClick={() => setOpenEdit(true)}
       >
@@ -496,6 +571,7 @@ function EditSuggestionItem({
                 className='rounded'
               />
               <button
+                disabled={loading}
                 type='submit'
                 className='bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90'
               >
