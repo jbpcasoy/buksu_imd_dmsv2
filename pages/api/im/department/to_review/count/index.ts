@@ -63,6 +63,123 @@ export async function toReviewCount(user: User) {
     where: {
       AND: [
         {
+          OR: [
+            {
+              AND: [
+                {
+                  CoAuthor: {
+                    none: {
+                      Faculty: {
+                        User: {
+                          id: {
+                            equals: user.id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  Faculty: {
+                    Department: {
+                      Faculty: {
+                        none: {
+                          Chairperson: {
+                            ActiveChairperson: {
+                              Chairperson: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  Faculty: {
+                    Department: {
+                      Faculty: {
+                        none: {
+                          Coordinator: {
+                            ActiveCoordinator: {
+                              Coordinator: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              OR: [
+                {
+                  Faculty: {
+                    Department: {
+                      Faculty: {
+                        some: {
+                          Chairperson: {
+                            ActiveChairperson: {
+                              Chairperson: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  Faculty: {
+                    Department: {
+                      Faculty: {
+                        some: {
+                          Coordinator: {
+                            ActiveCoordinator: {
+                              Coordinator: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
           Faculty: {
             Department: {
               id: {
