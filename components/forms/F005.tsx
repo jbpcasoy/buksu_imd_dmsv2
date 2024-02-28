@@ -1,751 +1,850 @@
-import { DateTime } from "luxon";
-import Link from "next/link";
+// Simple example to add text to a document
 
-interface F005Props {
-  questions?: {
-    q1_1?: 1 | 2 | 3 | 4 | 5;
-    q1_2?: 1 | 2 | 3 | 4 | 5;
-    q1_3?: 1 | 2 | 3 | 4 | 5;
-    q2_1?: 1 | 2 | 3 | 4 | 5;
-    q2_2?: 1 | 2 | 3 | 4 | 5;
-    q2_3?: 1 | 2 | 3 | 4 | 5;
-    q2_4?: 1 | 2 | 3 | 4 | 5;
-    q2_5?: 1 | 2 | 3 | 4 | 5;
-    q2_6?: 1 | 2 | 3 | 4 | 5;
-    q2_7?: 1 | 2 | 3 | 4 | 5;
-    q3_1?: 1 | 2 | 3 | 4 | 5;
-    q3_2?: 1 | 2 | 3 | 4 | 5;
-    q3_3?: 1 | 2 | 3 | 4 | 5;
-    q3_4?: 1 | 2 | 3 | 4 | 5;
-    q3_5?: 1 | 2 | 3 | 4 | 5;
-    q3_6?: 1 | 2 | 3 | 4 | 5;
-    q3_7?: 1 | 2 | 3 | 4 | 5;
-    q4_1?: 1 | 2 | 3 | 4 | 5;
-    q4_2?: 1 | 2 | 3 | 4 | 5;
-    q4_3?: 1 | 2 | 3 | 4 | 5;
-  };
-  likeA?: string;
-  likeB?: string;
-  improveA?: string;
-  improveB?: string;
-  evaluatorName?: string;
-  date?: Date;
-}
-export default function F005({
-  improveA,
-  improveB,
-  likeA,
-  likeB,
-  evaluatorName,
-  questions,
-  date,
-}: F005Props) {
+import { F005Props } from "@/types/forms";
+import {
+  AlignmentType,
+  BorderStyle,
+  Document,
+  ExternalHyperlink,
+  Footer,
+  Header,
+  HorizontalPositionRelativeFrom,
+  ImageRun,
+  LevelFormat,
+  LineRuleType,
+  Packer,
+  PageNumber,
+  Paragraph,
+  Table,
+  TableCell,
+  TableRow,
+  TextRun,
+  UnderlineType,
+  VerticalAlign,
+  VerticalPositionRelativeFrom,
+  WidthType,
+  convertInchesToTwip,
+} from "docx";
+import saveAs from "file-saver";
+import { useEffect, useState } from "react";
+
+
+export default function F005({ iMTitle }: F005Props) {
+  const [buksuLogo, setBuksuLogo] = useState<ArrayBuffer>();
+
+  useEffect(() => {
+    fetch("/images/buksu-logo-min-512x512.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setBuksuLogo(buffer);
+      });
+  }, []);
+
+  function download() {
+    if (!buksuLogo) {
+      return;
+    }
+
+    const footer = new Footer({
+      children: [
+        new Table({
+          alignment: AlignmentType.CENTER,
+          width: {
+            size: "100%",
+            type: WidthType.PERCENTAGE,
+          },
+          borders: {
+            top: {
+              style: BorderStyle.NIL,
+            },
+            bottom: {
+              style: BorderStyle.NIL,
+            },
+            left: {
+              style: BorderStyle.NIL,
+            },
+            right: {
+              style: BorderStyle.NIL,
+            },
+            insideVertical: {
+              style: BorderStyle.NIL,
+            },
+          },
+          rows: [
+            new TableRow({
+              children: [
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Document Code: CITL-F-005"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Revision No. 00"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Issue no. 1"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Issue Date: July 27, 2020"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: [
+                            "Page ",
+                            PageNumber.CURRENT,
+                            " of ",
+                            PageNumber.TOTAL_PAGES,
+                          ],
+                        }),
+                      ],
+                      style: "footer",
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    });
+
+    const header = new Header({
+      children: [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "BUKIDNON STATE UNIVERSITY",
+              bold: true,
+              size: "12pt",
+            }),
+          ],
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "Malaybalay City, Bukidnon 8700",
+              size: "12pt",
+            }),
+          ],
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717,",
+              size: "12pt",
+            }),
+          ],
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new ExternalHyperlink({
+              children: [
+                new TextRun({
+                  text: "https://www.buksu.edu.ph",
+                  style: "Hyperlink",
+                  size: "12pt",
+                }),
+              ],
+              link: "https://www.buksu.edu.ph",
+            }),
+          ],
+        }),
+        new Paragraph({
+          run: {
+            size: "5pt",
+          },
+          children: [
+            new ImageRun({
+              data: buksuLogo,
+              transformation: {
+                width: 70,
+                height: 70,
+              },
+              floating: {
+                zIndex: 10,
+                horizontalPosition: {
+                  relative: HorizontalPositionRelativeFrom.LEFT_MARGIN,
+                  offset: 500000,
+                },
+                verticalPosition: {
+                  relative: VerticalPositionRelativeFrom.TOP_MARGIN,
+                  offset: 400000,
+                },
+              },
+            }),
+          ],
+        }),
+      ],
+    });
+
+    const questionTitles = [
+      "CONTENT AND CONTENT ACCURACY",
+      "CLARITY",
+      "RELEVANCE",
+      "APPROPRIATENESS",
+    ];
+
+    const questions = [
+      [
+        "begins with the course and specific learning outcomes",
+        "contains topics/concepts that are informative",
+        "comprehensively presents topics/concepts",
+      ],
+      [
+        "contains illustrations that enhance student's understanding of the lesson",
+        "contains images, figures, graphics, audios, or videos that are clear",
+        "gives web links that work",
+        "presents ideas in a well-organized and logical format",
+        "presents ideas in simple, direct language appropriate to the student's level",
+        "contains instructions that are clear and easy to understand",
+        "contains texts suited to the learner's comprehension level",
+      ],
+      [
+        "has contents relevant to the course",
+        "develops the student's critical thinking skills",
+        "reflects real-life experiences.",
+        "contains activities/tasks that are course-appropriate",
+        "has varied activities",
+        "provides opportunities for students using various modalities",
+        "allows students to synthesize or summarize key points or insights after every lesson or unit",
+      ],
+      [
+        "contains materials appropriate to the course",
+        "allows the students to perform tasks independently.",
+        "caters to varied levels of the students' mental ability.",
+      ],
+    ];
+    const questionRows = [];
+    for (let i = 0; i < questionTitles.length; i++) {
+      const questionTitle = questionTitles[i];
+      questionRows.push(
+        new TableRow({
+          children: [
+            new TableCell({
+              children: [
+                new Paragraph({
+                  numbering: {
+                    reference: "table-numerical-bullet-points",
+                    level: 0,
+                  },
+                  children: [
+                    new TextRun({
+                      text: questionTitle,
+                      italics: true,
+                    }),
+                  ],
+                }),
+              ],
+            }),
+            new TableCell({
+              children: [],
+            }),
+            new TableCell({
+              children: [],
+            }),
+            new TableCell({
+              children: [],
+            }),
+            new TableCell({
+              children: [],
+            }),
+            new TableCell({
+              children: [],
+            }),
+          ],
+        })
+      );
+
+      const sectionQuestions = questions[i];
+      for (let j = 0; j < sectionQuestions.length; j++) {
+        const question = sectionQuestions[j];
+        questionRows.push(
+          new TableRow({
+            children: [
+              new TableCell({
+                children: [
+                  new Paragraph({
+                    numbering: {
+                      reference: "table-numerical-bullet-points",
+                      level: 1,
+                    },
+                    children: [
+                      new TextRun({
+                        text: question,
+                      }),
+                    ],
+                  }),
+                ],
+              }),
+              new TableCell({
+                children: [],
+              }),
+              new TableCell({
+                children: [],
+              }),
+              new TableCell({
+                children: [],
+              }),
+              new TableCell({
+                children: [],
+              }),
+              new TableCell({
+                children: [],
+              }),
+            ],
+          })
+        );
+      }
+    }
+
+    const doc = new Document({
+      numbering: {
+        config: [
+          {
+            reference: "alphabetical-bullet-points",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.UPPER_LETTER,
+                alignment: AlignmentType.LEFT,
+                text: "%1. ",
+                style: {
+                  run: {
+                    italics: true,
+                  },
+                  paragraph: {
+                    indent: {
+                      left: "0.50in",
+                      hanging: "0.25in",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            reference: "table-numerical-bullet-points",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.UPPER_LETTER,
+                alignment: AlignmentType.LEFT,
+                text: "%1. ",
+                style: {
+                  run: {
+                    italics: true,
+                  },
+                  paragraph: {
+                    indent: {
+                      left: "0.20in",
+                      hanging: "0.20in",
+                    },
+                  },
+                },
+              },
+              {
+                level: 1,
+                format: LevelFormat.DECIMAL,
+                alignment: AlignmentType.LEFT,
+                text: "%2. ",
+                style: {
+                  paragraph: {
+                    indent: {
+                      left: "0.20in",
+                      hanging: "0.20in",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            reference: "numerical-bullet-points",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.DECIMAL,
+                alignment: AlignmentType.LEFT,
+                text: "%1. ",
+                style: {
+                  paragraph: {
+                    indent: {
+                      left: "0.50in",
+                      hanging: "0.25in",
+                    },
+                  },
+                },
+              },
+              {
+                level: 1,
+                format: LevelFormat.LOWER_LETTER,
+                alignment: AlignmentType.LEFT,
+                text: "%2. ",
+                style: {
+                  paragraph: {
+                    indent: {
+                      left: "0.75in",
+                      hanging: "0.25in",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      styles: {
+        paragraphStyles: [
+          {
+            id: "footer",
+            name: "Footer",
+            basedOn: "Normal",
+            next: "Normal",
+            run: {
+              size: "8pt",
+            },
+          },
+        ],
+      },
+      sections: [
+        {
+          properties: {
+            page: {
+              margin: {
+                bottom: "0.5in",
+                left: "1in",
+                right: "1in",
+                top: "0.5in",
+              },
+            },
+          },
+          headers: {
+            default: header,
+          },
+          footers: {
+            default: footer,
+          },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Teacher-User Evaluation",
+                }),
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: {
+                before: 200,
+                lineRule: LineRuleType.EXACT,
+              },
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Evaluation of a Module",
+                  italics: true,
+                }),
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: {
+                after: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+            }),
+            new Paragraph({
+              numbering: {
+                reference: "alphabetical-bullet-points",
+                level: 0,
+              },
+              children: [
+                new TextRun({
+                  text: `Directions: Please put a check in the space of your choice that corresponds to your rating of a given feature.`,
+                  italics: true,
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                left: "1in",
+              },
+              spacing: {
+                after: 100,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: "Please do not leave any item blank.",
+                  italics: true,
+                }),
+              ],
+            }),
+            new Table({
+              alignment: AlignmentType.CENTER,
+              width: {
+                size: convertInchesToTwip(6.2),
+                type: WidthType.DXA,
+              },
+              columnWidths: [
+                convertInchesToTwip(3.8),
+                convertInchesToTwip(0.5),
+                convertInchesToTwip(0.5),
+                convertInchesToTwip(0.5),
+                convertInchesToTwip(0.5),
+                convertInchesToTwip(0.5),
+              ],
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [
+                        new Paragraph({
+                          text: "Features",
+                          alignment: AlignmentType.CENTER,
+                        }),
+                        new Paragraph({
+                          children: [
+                            new TextRun({
+                              text: "The module…",
+                              bold: true,
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      children: [
+                        new Paragraph({
+                          text: "HA",
+                          alignment: AlignmentType.CENTER,
+                        }),
+                        new Paragraph({
+                          text: "5",
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      children: [
+                        new Paragraph({
+                          text: "VA",
+                          alignment: AlignmentType.CENTER,
+                        }),
+                        new Paragraph({
+                          text: "4",
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      children: [
+                        new Paragraph({
+                          text: "A",
+                          alignment: AlignmentType.CENTER,
+                        }),
+                        new Paragraph({
+                          text: "3",
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({
+                              text: "SA",
+                            }),
+                          ],
+                          alignment: AlignmentType.CENTER,
+                        }),
+                        new Paragraph({
+                          text: "2",
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({
+                              text: "NA",
+                            }),
+                          ],
+                          alignment: AlignmentType.CENTER,
+                        }),
+                        new Paragraph({
+                          text: "1",
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                ...questionRows,
+              ],
+            }),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: "5-Highly Adequate (HA)\t4-Very Adequate (VA)\t3-Adequate (A)\t2-Slightly Adequate (SA)\t1-Not Adequate (NA)",
+                  italics: true,
+                  size: "8pt",
+                }),
+              ],
+            }),
+            new Paragraph({
+              numbering: {
+                reference: "alphabetical-bullet-points",
+                level: 0,
+              },
+              spacing: {
+                after: 100,
+                before: 100,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: `Directions: Please provide any comment or suggestion regarding the module by completing the
+                    statements below:`,
+                  italics: true,
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                after: 100,
+                before: 100,
+                lineRule: LineRuleType.EXACT,
+              },
+              indent: {
+                left: "0.75in",
+              },
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 0,
+              },
+              children: [
+                new TextRun({
+                  text: `Strengths:`,
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                after: 100,
+                before: 100,
+                lineRule: LineRuleType.EXACT,
+              },
+              indent: {
+                left: "1in",
+              },
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 1,
+              },
+              children: [
+                new TextRun({
+                  text: `                                                                                                                                              `,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                after: 100,
+                before: 100,
+                lineRule: LineRuleType.EXACT,
+              },
+              indent: {
+                left: "1in",
+              },
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 1,
+              },
+              children: [
+                new TextRun({
+                  text: `                                                                                                                                              `,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                after: 100,
+                before: 100,
+                lineRule: LineRuleType.EXACT,
+              },
+              indent: {
+                left: "0.75in",
+              },
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 0,
+              },
+              children: [
+                new TextRun({
+                  text: `Weaknesses:`,
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                after: 100,
+                before: 100,
+                lineRule: LineRuleType.EXACT,
+              },
+              indent: {
+                left: "1in",
+              },
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 1,
+              },
+              children: [
+                new TextRun({
+                  text: `                                                                                                                                              `,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                after: 100,
+                before: 100,
+                lineRule: LineRuleType.EXACT,
+              },
+              indent: {
+                left: "1in",
+              },
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 1,
+              },
+              children: [
+                new TextRun({
+                  text: `                                                                                                                                              `,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+
+            new Paragraph({
+              spacing: {
+                after: 100,
+                before: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: "Name of Evaluator: ",
+                }),
+                new TextRun({
+                  text: `                                                                                              `,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+                new TextRun({
+                  text: " Date: ",
+                }),
+                new TextRun({
+                  text: `                                    `,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Signature of Evaluator: ",
+                }),
+                new TextRun({
+                  text: `                                                                                        `,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
+
+    Packer.toBlob(doc).then((blob) => {
+      // saveAs from FileSaver will download the file
+      saveAs(blob, `${iMTitle}_F005.docx`);
+    });
+  }
+
   return (
-    <div
-      style={{ width: "8.27in", height: "11.69in", padding: "0.5in" }}
-      className="shadow-lg flex flex-col font-serif"
-    >
-      <header className="flex justify-between">
-        <div className="absolute items-center">
-          <img
-            alt="buksu logo"
-            src="/images/buksu-logo-min-512x512.png"
-            style={{ width: "0.8in", height: "0.8in" }}
-          />
-        </div>
-        <div className="flex-1">
-          <div className="text-center text-sm">
-            <p className="font-bold">BUKIDNON STATE UNIVERSITY</p>
-            <p>Malaybalay City, Bukidnon 8700</p>
-            <p>Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717,</p>
-            <Link
-              href="https://www.buksu.edu.ph"
-              className="underline text-palette_light_blue"
-            >
-              www.buksu.edu.ph
-            </Link>
-          </div>
-        </div>
-      </header>
-      <div className="flex-1">
-        <br />
-        <div className="text-center text-sm">
-          <p>Teacher-User Evaluation</p>
-          <p className="italic">Evaluation of a Module</p>
-        </div>
-        <div style={{ paddingLeft: "0.5in", paddingRight: "0.5in" }}>
-          <div>
-            <p className="text-xs italic ml-6">
-              A. Directions: Please put a check in the space of your choice that
-              corresponds to your rating of a given feature. Please do not leave
-              any item blank.
-            </p>
-          </div>
-          <table className="text-xs table-auto border-collapse border">
-            <thead>
-              <tr>
-                <th className="font-normal border border-black px-1">
-                  Features
-                  <p className="text-left font-bold italic">The module...</p>
-                </th>
-                <th className="font-normal border border-black px-1">
-                  HA
-                  <p>5</p>
-                </th>
-                <th className="font-normal border border-black px-1">
-                  VA
-                  <p>4</p>
-                </th>
-                <th className="font-normal border border-black px-2">
-                  A<p>3</p>
-                </th>
-                <th className="font-normal border border-black px-1">
-                  SA
-                  <p>2</p>
-                </th>
-                <th className="font-normal border border-black px-1">
-                  NA
-                  <p>1</p>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>A.</p>
-                    <p>CONTENT AND CONTENT ACCURACY</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>1.</p>
-                    <p>begins with the course and specific learning outcomes</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_1 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_1 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_1 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_1 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_1 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>2.</p>
-                    <p>contains topics/concepts that are informative</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_2 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_2 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_2 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_2 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_2 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>3.</p>
-                    <p>comprehensively presents topics/concepts</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_3 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_3 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_3 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_3 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q1_3 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>B.</p>
-                    <p>CLARITY</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>1.</p>
-                    <p>
-                      contains illustrations that enhance student’s
-                      understanding of the lesson
-                    </p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_1 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_1 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_1 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_1 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_1 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>2.</p>
-                    <p>
-                      contains images, figures, graphics, audios, or videos that
-                      are clear
-                    </p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_2 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_2 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_2 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_2 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_2 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>3.</p>
-                    <p>gives web links that work</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_3 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_3 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_3 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_3 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_3 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>4.</p>
-                    <p>presents ideas in a well-organized and logical format</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_4 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_4 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_4 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_4 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_4 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>5.</p>
-                    <p>
-                      presents ideas in simple, direct language appropriate to
-                      the student&apos;s level
-                    </p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_5 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_5 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_5 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_5 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_5 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>6.</p>
-                    <p>
-                      contains instructions that are clear and easy to
-                      understand.
-                    </p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_6 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_6 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_6 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_6 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_6 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>7.</p>
-                    <p>
-                      contains texts suited to the learner&apos;s comprehension
-                      level
-                    </p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_7 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_7 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_7 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_7 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q2_7 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>C.</p>
-                    <p>RELEVANCE</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>1.</p>
-                    <p>has contents relevant to the course</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_1 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_1 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_1 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_1 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_1 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>2.</p>
-                    <p>develops the student&apos;s critical thinking skills</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_2 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_2 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_2 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_2 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_2 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>3.</p>
-                    <p>reflects real-life experiences</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_3 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_3 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_3 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_3 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_3 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>4.</p>
-                    <p>contains activities/tasks that are course-appropriate</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_4 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_4 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_4 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_4 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_4 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>5.</p>
-                    <p>has varied activities</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_5 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_5 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_5 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_5 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_5 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>6.</p>
-                    <p>
-                      provides opportunities for students using various
-                      modalities
-                    </p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_6 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_6 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_6 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_6 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_6 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>7.</p>
-                    <p>
-                      allows students to synthesize or summarize key points or
-                      insights after every lesson or unit
-                    </p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_7 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_7 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_7 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_7 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q3_7 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>D.</p>
-                    <p>APPROPRIATENESS</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-                <td className="border border-black px-1 text-center"></td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>1.</p>
-                    <p>contains materials appropriate to the course</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_1 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_1 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_1 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_1 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_1 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>2.</p>
-                    <p>allows the students to perform tasks independently</p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_2 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_2 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_2 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_2 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_2 === 1 && "✓"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-black px-1">
-                  <div className="flex space-x-1">
-                    <p>3.</p>
-                    <p>
-                      caters to varied levels of the students&apos; mental
-                      ability
-                    </p>
-                  </div>
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_3 === 5 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_3 === 4 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_3 === 3 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_3 === 2 && "✓"}
-                </td>
-                <td className="border border-black px-1 text-center">
-                  {questions?.q4_3 === 1 && "✓"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="flex text-xs justify-between">
-            <p className="italic">5-Highly Adequate (HA)</p>
-            <p className="italic">4-Very Adequate (VA)</p>
-            <p className="italic">3-Adequate (A)</p>
-            <p className="italic">2-Slightly Adequate (SA)</p>
-            <p className="italic">1-Not Adequate (NA)</p>
-          </div>
-          <br />
-          <div>
-            <p className="text-xs italic ml-6">
-              B. Directions: Please provide comments and suggestions for each
-              area below:
-            </p>
-          </div>
-          <div className="text-xs space-y-1 ml-6">
-            <p>1. Strengths:</p>
-            <div className="flex space-x-1">
-              <p className="ml-4">a.</p>
-              {!improveA && (
-                <p>
-                  ______________________________________________________________________________
-                </p>
-              )}
-              {improveA && <p className="underline">{improveA}</p>}
-            </div>
-
-            <div className="flex space-x-1">
-              <p className="ml-4">b.</p>
-              {!improveB && (
-                <p>
-                  ______________________________________________________________________________
-                </p>
-              )}
-              {improveB && <p className="underline">{improveB}</p>}
-            </div>
-
-            <p>2. Weaknesses:</p>
-            <div className="flex space-x-1">
-              <p className="ml-4">a.</p>
-              {!likeA && (
-                <p>
-                  ______________________________________________________________________________
-                </p>
-              )}
-              {likeA && <p className="underline">{likeA}</p>}
-            </div>
-
-            <div className="flex space-x-1">
-              <p className="ml-4">b.</p>
-              {!likeB && (
-                <p>
-                  ______________________________________________________________________________
-                </p>
-              )}
-              {likeB && <p className="underline">{likeB}</p>}
-            </div>
-          </div>
-          <br />
-
-          <div className="text-xs">
-            <div className="flex justify-between">
-              <p>
-                Name of Evaluator:{" "}
-                {evaluatorName && (
-                  <span className="underline">{evaluatorName}</span>
-                )}
-                {!evaluatorName && (
-                  <span>_________________________________</span>
-                )}
-              </p>
-              <p>
-                Date:{" "}
-                {date && (
-                  <span className="underline">
-                    {DateTime.fromJSDate(date).toFormat("LLLL dd, yyyy ")}
-                  </span>
-                )}
-                {!date && <span>______________________________</span>}
-              </p>
-            </div>
-            <br />
-            <div className="flex">
-              <p className="">
-                Signature of Evaluator: ______________________________
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <div className="text-xs flex justify-between">
-          <p>Document Code: CITL-F-005</p>
-          <p>Revision No. 00</p>
-          <p>Issue No.: 1</p>
-          <p>Issue Date: July 27, 2020</p>
-          <p>Page 1 of 1</p>
-        </div>
-      </footer>
+    <div>
+      <button onClick={download} className="underline">F005 - Teacher-User Evaluation</button>
     </div>
   );
 }

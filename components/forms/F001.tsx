@@ -1,215 +1,668 @@
-import numberToOrdinal from "@/services/numberToOrinal";
-import Link from "next/link";
-
-interface F001Props {
-  title?: string;
-  authors?: string;
-  courseCode?: string;
-  semester?: 1 | 2;
-  syStart?: number;
-  syEnd?: number;
-  iMType?: string;
-  department?: string;
-  college?: string;
-  endorseFor?: "Printing" | "e-Distribution" | "Printing & e-Distribution";
-  coordinatorName?: string;
-  iDDCoordinatorName?: string;
-}
+import { F001Props } from "@/types/forms";
+import {
+  AlignmentType,
+  BorderStyle,
+  Document,
+  ExternalHyperlink,
+  Footer,
+  FrameAnchorType,
+  Header,
+  HorizontalPositionRelativeFrom,
+  ImageRun,
+  LineRuleType,
+  Packer,
+  PageBreak,
+  PageNumber,
+  Paragraph,
+  Table,
+  TableCell,
+  TableRow,
+  TextRun,
+  UnderlineType,
+  VerticalAlign,
+  VerticalPositionRelativeFrom,
+  WidthType,
+  CheckBox,
+  Drawing,
+} from "docx";
+import saveAs from "file-saver";
+import { useEffect, useState } from "react";
 
 export default function F001({
-  title,
-  authors,
-  courseCode,
-  semester,
-  syStart,
-  syEnd,
-  college,
   coordinatorName,
-  department,
-  endorseFor,
   iDDCoordinatorName,
+  iMTitle,
+  authorNames,
+  collegeName,
+  departmentName,
   iMType,
 }: F001Props) {
+  const [buksuLogo, setBuksuLogo] = useState<ArrayBuffer>();
+  const [citlLogo, setCitlLogo] = useState<ArrayBuffer>();
+  const [educateInnovateLead, setEducateInnovateLead] = useState<ArrayBuffer>();
+  const [distribution, setDistribution] = useState<ArrayBuffer>();
+
+  useEffect(() => {
+    fetch("/images/buksu-logo-min-512x512.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setBuksuLogo(buffer);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/images/citl-logo.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setCitlLogo(buffer);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/images/educate-innovate-lead.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setEducateInnovateLead(buffer);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/images/distribution-checkbox.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setDistribution(buffer);
+      });
+  }, []);
+
+  function download() {
+    if (!buksuLogo || !citlLogo || !educateInnovateLead || !distribution) {
+      return;
+    }
+
+    const footer = new Footer({
+      children: [
+        new Table({
+          alignment: AlignmentType.CENTER,
+          width: {
+            size: "100%",
+            type: WidthType.PERCENTAGE,
+          },
+          borders: {
+            top: {
+              style: BorderStyle.NIL,
+            },
+            bottom: {
+              style: BorderStyle.NIL,
+            },
+            left: {
+              style: BorderStyle.NIL,
+            },
+            right: {
+              style: BorderStyle.NIL,
+            },
+            insideVertical: {
+              style: BorderStyle.NIL,
+            },
+          },
+          rows: [
+            new TableRow({
+              children: [
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Document Code: CITL-F-001"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Revision No.: 1"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Issue no.: 1"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Issue Date: April 18, 2022"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: [
+                            "Page ",
+                            PageNumber.CURRENT,
+                            " of ",
+                            PageNumber.TOTAL_PAGES,
+                          ],
+                        }),
+                      ],
+                      style: "footer",
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    });
+    const header = new Header({
+      children: [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "BUKIDNON STATE UNIVERSITY",
+              bold: true,
+            }),
+          ],
+        }),
+        new Paragraph({
+          text: "Malaybalay City, Bukidnon 8700",
+          alignment: AlignmentType.CENTER,
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717, ",
+            }),
+            new ExternalHyperlink({
+              children: [
+                new TextRun({
+                  text: "https://www.buksu.edu.ph",
+                  style: "Hyperlink",
+                }),
+              ],
+              link: "https://www.buksu.edu.ph",
+            }),
+          ],
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "OFFICE OF THE VICE PRESIDENT FOR ACADEMIC AFFAIRS",
+              bold: true,
+            }),
+          ],
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "Center for Innovative Teaching and Learning",
+              color: "F2C050",
+            }),
+          ],
+        }),
+        new Paragraph({
+          run: {
+            size: "5pt",
+          },
+          children: [
+            new ImageRun({
+              data: buksuLogo,
+              transformation: {
+                width: 50,
+                height: 50,
+              },
+              floating: {
+                zIndex: 10,
+                horizontalPosition: {
+                  relative: HorizontalPositionRelativeFrom.LEFT_MARGIN,
+                  offset: 500000,
+                },
+                verticalPosition: {
+                  relative: VerticalPositionRelativeFrom.TOP_MARGIN,
+                  offset: 600000,
+                },
+              },
+            }),
+            new ImageRun({
+              data: citlLogo,
+              transformation: {
+                width: 50,
+                height: 50,
+              },
+              floating: {
+                zIndex: 10,
+                horizontalPosition: {
+                  relative: HorizontalPositionRelativeFrom.LEFT_MARGIN,
+                  offset: 1000000,
+                },
+                verticalPosition: {
+                  relative: VerticalPositionRelativeFrom.TOP_MARGIN,
+                  offset: 600000,
+                },
+              },
+            }),
+            new ImageRun({
+              data: educateInnovateLead,
+              transformation: {
+                width: 70.5,
+                height: 51,
+              },
+              floating: {
+                zIndex: 10,
+                horizontalPosition: {
+                  relative: HorizontalPositionRelativeFrom.RIGHT_MARGIN,
+                  offset: -700000,
+                },
+                verticalPosition: {
+                  relative: VerticalPositionRelativeFrom.TOP_MARGIN,
+                  offset: 600000,
+                },
+              },
+            }),
+          ],
+        }),
+      ],
+    });
+
+    const doc = new Document({
+      styles: {
+        paragraphStyles: [
+          {
+            id: "footer",
+            name: "Footer",
+            basedOn: "Normal",
+            next: "Normal",
+            run: {
+              size: "8pt",
+            },
+          },
+        ],
+      },
+      sections: [
+        {
+          properties: {
+            page: {
+              margin: {
+                bottom: "0.5in",
+                left: "0.5in",
+                right: "0.5in",
+                top: "0.5in",
+              },
+            },
+          },
+          headers: {
+            default: header,
+          },
+          footers: {
+            default: footer,
+          },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Endorsement of the Instructional Material",
+                  bold: true,
+                }),
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: {
+                before: 200,
+                lineRule: LineRuleType.EXACT,
+              },
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "(Implementation Phase)",
+                  bold: true,
+                }),
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: {
+                after: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+            }),
+            new Paragraph({
+              indent: {
+                start: "0.5in",
+                end: "0.5in",
+              },
+              children: [
+                new TextRun({
+                  text: `Title: \t\t`,
+                }),
+                new TextRun({
+                  text: `${iMTitle}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                start: "0.5in",
+                end: "0.5in",
+              },
+              children: [
+                new TextRun({
+                  text: "Author/s: \t",
+                }),
+                new TextRun({
+                  text: `${authorNames}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                start: "0.5in",
+                end: "0.5in",
+              },
+              children: [
+                new TextRun({
+                  text: "Course Code: \t",
+                }),
+                new TextRun({
+                  text: `                    `,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+                new TextRun({
+                  text: "\tSem./SY:  ",
+                }),
+                new TextRun({
+                  text: `                                        `,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                start: "0.5in",
+                end: "0.5in",
+              },
+              children: [
+                new TextRun({
+                  text: "IM Type: \t",
+                }),
+                new TextRun({
+                  text: `${iMType}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                start: "0.5in",
+                end: "0.5in",
+              },
+              children: [
+                new TextRun({
+                  text: "Program/Department: ",
+                }),
+                new TextRun({
+                  text: `${departmentName}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+                new TextRun({
+                  text: "\tCollege: ",
+                }),
+                new TextRun({
+                  text: `${collegeName}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                before: 600,
+                after: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              indent: {
+                start: "0.5in",
+                end: "0.5in",
+              },
+              children: [
+                new TextRun({
+                  text: "This instructional material, having undergone review from the Program IM Committee, is endorsed for:",
+                }),
+              ],
+            }),
+            new Table({
+              width: {
+                size: 7600,
+                type: WidthType.DXA,
+              },
+              borders: {
+                bottom: {
+                  style: BorderStyle.NIL,
+                },
+                right: {
+                  style: BorderStyle.NIL,
+                },
+                top: {
+                  style: BorderStyle.NIL,
+                },
+                left: {
+                  style: BorderStyle.NIL,
+                },
+                insideVertical: {
+                  style: BorderStyle.NIL,
+                },
+              },
+              alignment: AlignmentType.CENTER,
+              columnWidths: [700, 1500, 700, 1500, 700, 2500],
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: distribution,
+                              transformation: {
+                                width: 35,
+                                height: 25,
+                              },
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({
+                              text: "Printing",
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: distribution,
+                              transformation: {
+                                width: 35,
+                                height: 25,
+                              },
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          text: "e-Distribution",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: distribution,
+                              transformation: {
+                                width: 35,
+                                height: 25,
+                              },
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          text: "Printing & e-Distribution",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                before: 800,
+                lineRule: LineRuleType.EXACT,
+              },
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: `${coordinatorName}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                after: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: "IMD Program Coordinator",
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                before: 800,
+                lineRule: LineRuleType.EXACT,
+              },
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: `${iDDCoordinatorName}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              spacing: {
+                after: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: "IDD Coordinator",
+                }),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
+
+    Packer.toBlob(doc).then((blob) => {
+      // saveAs from FileSaver will download the file
+      saveAs(blob, `${iMTitle}_F001.docx`);
+    });
+  }
+
   return (
-    <div
-      style={{ width: "8.27in", height: "11.69in", padding: "0.5in" }}
-      className="shadow-lg flex flex-col font-serif"
-    >
-      <header className="flex justify-between">
-        <div className="flex items-center">
-          <img
-            alt="buksu logo"
-            src="/images/buksu-logo-min-512x512.png"
-            style={{ width: "0.6in", height: "0.6in" }}
-          />
-          <img
-            alt="citl logo"
-            src="/images/citl-logo.png"
-            style={{
-              width: "0.8in",
-              height: "0.8in",
-              marginLeft: "-0.15in",
-            }}
-          />
-        </div>
-        <div className="text-center text-sm">
-          <p className="font-bold">BUKIDNON STATE UNIVERSITY</p>
-          <p>Malaybalay City, Bukidnon 8700</p>
-          <p>
-            Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717,{" "}
-            <Link
-              href="https://www.buksu.edu.ph"
-              className="underline text-palette_light_blue"
-            >
-              www.buksu.edu.ph
-            </Link>
-          </p>
-          <p className="font-bold">
-            OFFICE OF THE VICE PRESIDENT FOR ACADEMIC AFFAIRS
-          </p>
-          <p className="text-palette_orange">
-            Center for Innovative Teaching and Learning
-          </p>
-        </div>
-        <div className="flex items-center justify-center text-center text-xs text-palette_orange">
-          <div className="border border-black rounded-lg py-2 px-6 italic">
-            <p>Educate</p>
-            <p>Innovate</p>
-            <p>Lead</p>
-          </div>
-        </div>
-      </header>
-      <div className="flex-1">
-        <br />
-        <div className="text-center text-sm font-bold">
-          <p>Endorsement of the Instructional Material</p>
-          <p>(Implementation Phase)</p>
-        </div>
-        <br />
-        <div style={{ paddingLeft: "0.5in", paddingRight: "0.5in" }}>
-          <div className="whitespace-pre">
-            <p>
-              Title:{"\t\t\t\t"}
-              {!title && (
-                <span className="">
-                  _________________________________________________________
-                </span>
-              )}
-              {title && <span className="underline">{title}</span>}
-            </p>
-            <p>
-              Author/s:{"\t\t\t"}
-              {!authors && (
-                <span className="">
-                  _________________________________________________________
-                </span>
-              )}
-              {authors && <span className="underline">{authors}</span>}
-            </p>
-            <p>
-              Course Code:{"\t"}
-              {!courseCode && <span className="">___________________</span>}
-              {courseCode && <span className="underline">{courseCode}</span>}
-              {"\t\t"}
-              Sem./SY:{"\t"}
-              {(!semester || !syStart || !syEnd) && (
-                <span className="">___________________________</span>
-              )}
-              {semester && syStart && syEnd && (
-                <span className="underline">
-                  {numberToOrdinal(semester)} Sem / S.Y. {syStart}-{syEnd}
-                </span>
-              )}
-            </p>
-            <p>
-              IM Type:{"\t\t\t"}
-              {!iMType && (
-                <span className="">
-                  _________________________________________________________
-                </span>
-              )}
-              {iMType && <span className="underline">{iMType}</span>}
-            </p>
-            <p>
-              Program/Department:{"\t"}
-              {!department && <span className="">___________________</span>}
-              {department && <span className="underline">{department}</span>}
-              {"\t\t"}
-              College:{"\t"}
-              {!college && <span>_____________________</span>}
-              {college && <span className="underline">{college}</span>}
-            </p>
-            <br />
-            <br />
-          </div>
-          <div>
-            <p className="indent-8">
-              This instructional material, having undergone review from the
-              Program IM Committee, is endorsed for:
-            </p>
-            <br />
-            <div className="flex justify-evenly">
-              <div className="flex space-x-1 items-center">
-                <input
-                  disabled={true}
-                  checked={endorseFor === "Printing"}
-                  type="checkbox"
-                  className="w-10 h-8 rounded border-green-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-offset-0 focus:ring-green-200 focus:ring-opacity-50"
-                />{" "}
-                <p>Printing</p>
-              </div>
-              <div className="flex space-x-1 items-center">
-                <input
-                  disabled={true}
-                  checked={endorseFor === "e-Distribution"}
-                  type="checkbox"
-                  className="w-10 h-8 rounded border-green-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-offset-0 focus:ring-green-200 focus:ring-opacity-50"
-                />{" "}
-                <p>e-Distribution</p>
-              </div>
-              <div className="flex space-x-1 items-center">
-                <input
-                  type="checkbox"
-                  disabled={true}
-                  checked={endorseFor === "Printing & e-Distribution"}
-                  className="w-10 h-8 rounded border-green-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-offset-0 focus:ring-green-200 focus:ring-opacity-50"
-                />{" "}
-                <p>Printing & e-Distribution</p>
-              </div>
-            </div>
-          </div>
-          <br />
-          <br />
-          <br />
-          <div className="text-center">
-            {!coordinatorName && (
-              <p className="">____________________________</p>
-            )}
-            {coordinatorName && <p className="underline">{coordinatorName}</p>}
-            <p>IMD Coordinator</p>
-          </div>
-          <br />
-          <br />
-          <div className="text-center">
-            {!iDDCoordinatorName && (
-              <p className="">____________________________</p>
-            )}
-            {iDDCoordinatorName && (
-              <p className="underline">{iDDCoordinatorName}</p>
-            )}
-            <p>IDD Coordinator</p>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <div className="text-xs flex justify-between">
-          <p>Document Code: CITL-F-001</p>
-          <p>Revision No.: 1s</p>
-          <p>Issue No.: 1</p>
-          <p>Issue Date: April 18, 2022</p>
-          <p>Page 1 of 1</p>
-        </div>
-      </footer>
+    <div>
+      <button onClick={download} className="underline">F001 - Endorsement of the Instructional Material (Implementation Phase)</button>
     </div>
   );
 }
