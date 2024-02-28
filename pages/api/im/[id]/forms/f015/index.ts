@@ -119,8 +119,26 @@ export default async function handler(
       const iDDCoordinatorUser = await prisma.user.findFirstOrThrow({
         where: {
           IDDCoordinator: {
-            ActiveIDDCoordinator: {
-              isNot: null,
+            IDDCoordinatorSuggestion: {
+              some: {
+                SubmittedIDDCoordinatorSuggestion: {
+                  IDDCoordinatorSuggestion: {
+                    DeanEndorsement: {
+                      CoordinatorEndorsement: {
+                        DepartmentRevision: {
+                          IMFile: {
+                            IM: {
+                              id: {
+                                equals: id as string,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -188,17 +206,15 @@ export default async function handler(
         });
       for (let contentSpecialistSuggestionItem of contentSpecialistSuggestionItems) {
         const actionTaken =
-          await prisma.contentSpecialistSuggestionItemActionTaken.findFirst(
-            {
-              where: {
-                ContentSpecialistSuggestionItem: {
-                  id: {
-                    equals: contentSpecialistSuggestionItem.id,
-                  },
+          await prisma.contentSpecialistSuggestionItemActionTaken.findFirst({
+            where: {
+              ContentSpecialistSuggestionItem: {
+                id: {
+                  equals: contentSpecialistSuggestionItem.id,
                 },
               },
-            }
-          );
+            },
+          });
         iMERCReview.push({
           actionTaken: actionTaken?.value ?? "",
           pageNumber: contentSpecialistSuggestionItem.pageNumber,
@@ -318,17 +334,15 @@ export default async function handler(
         });
       for (let returnedIMERCCITLRevisionSuggestionItem of returnedIMERCCITLRevisionSuggestionItems) {
         const actionTaken =
-          await prisma.returnedCITLRevisionSuggestionItemActionTaken.findFirst(
-            {
-              where: {
-                ReturnedCITLRevisionSuggestionItem: {
-                  id: {
-                    equals: returnedIMERCCITLRevisionSuggestionItem.id,
-                  },
+          await prisma.returnedCITLRevisionSuggestionItemActionTaken.findFirst({
+            where: {
+              ReturnedCITLRevisionSuggestionItem: {
+                id: {
+                  equals: returnedIMERCCITLRevisionSuggestionItem.id,
                 },
               },
-            }
-          );
+            },
+          });
         iMERCReview.push({
           actionTaken: actionTaken?.value ?? "",
           pageNumber: returnedIMERCCITLRevisionSuggestionItem.pageNumber,

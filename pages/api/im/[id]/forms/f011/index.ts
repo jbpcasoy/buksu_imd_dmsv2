@@ -113,22 +113,19 @@ export default async function handler(
           Faculty: {
             some: {
               Coordinator: {
-                AND: [
-                  {
-                    ActiveCoordinator: {
-                      isNot: null,
-                    },
-                  },
-                  {
-                    Faculty: {
-                      Department: {
-                        id: {
-                          equals: department.id,
+                CoordinatorEndorsement: {
+                  some: {
+                    DepartmentRevision: {
+                      IMFile: {
+                        IM: {
+                          id: {
+                            equals: id as string,
+                          },
                         },
                       },
                     },
                   },
-                ],
+                },
               },
             },
           },
@@ -140,22 +137,27 @@ export default async function handler(
           Faculty: {
             some: {
               Chairperson: {
-                AND: [
-                  {
-                    ActiveChairperson: {
-                      isNot: null,
-                    },
-                  },
-                  {
-                    Faculty: {
-                      Department: {
-                        id: {
-                          equals: department.id,
+                ChairpersonReview: {
+                  some: {
+                    ChairpersonSuggestion: {
+                      SubmittedChairpersonSuggestion: {
+                        ChairpersonSuggestion: {
+                          ChairpersonReview: {
+                            DepartmentReview: {
+                              IMFile: {
+                                IM: {
+                                  id: {
+                                    equals: id as string,
+                                  },
+                                },
+                              },
+                            },
+                          },
                         },
                       },
                     },
                   },
-                ],
+                },
               },
             },
           },
@@ -167,24 +169,21 @@ export default async function handler(
           Faculty: {
             some: {
               Dean: {
-                AND: [
-                  {
-                    ActiveDean: {
-                      isNot: null,
-                    },
-                  },
-                  {
-                    Faculty: {
-                      Department: {
-                        College: {
-                          id: {
-                            equals: college.id,
+                DeanEndorsement: {
+                  some: {
+                    CoordinatorEndorsement: {
+                      DepartmentRevision: {
+                        IMFile: {
+                          IM: {
+                            id: {
+                              equals: id as string,
+                            },
                           },
                         },
                       },
                     },
                   },
-                ],
+                },
               },
             },
           },
@@ -194,8 +193,18 @@ export default async function handler(
       const iDDCoordinatorUser = await prisma.user.findFirstOrThrow({
         where: {
           IDDCoordinator: {
-            ActiveIDDCoordinator: {
-              isNot: null,
+            IDDCoordinatorEndorsement: {
+              some: {
+                CITLRevision: {
+                  IMFile: {
+                    IM: {
+                      id: {
+                        equals: id as string,
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },

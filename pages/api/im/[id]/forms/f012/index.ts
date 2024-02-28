@@ -113,22 +113,19 @@ export default async function handler(
           Faculty: {
             some: {
               Coordinator: {
-                AND: [
-                  {
-                    ActiveCoordinator: {
-                      isNot: null,
-                    },
-                  },
-                  {
-                    Faculty: {
-                      Department: {
-                        id: {
-                          equals: department.id,
+                QAMISCoordinatorEndorsement: {
+                  some: {
+                    QAMISRevision: {
+                      IMFile: {
+                        IM: {
+                          id: {
+                            equals: id as string,
+                          },
                         },
                       },
                     },
                   },
-                ],
+                },
               },
             },
           },
@@ -140,22 +137,19 @@ export default async function handler(
           Faculty: {
             some: {
               Chairperson: {
-                AND: [
-                  {
-                    ActiveChairperson: {
-                      isNot: null,
-                    },
-                  },
-                  {
-                    Faculty: {
-                      Department: {
-                        id: {
-                          equals: department.id,
+                QAMISChairpersonEndorsement: {
+                  some: {
+                    QAMISRevision: {
+                      IMFile: {
+                        IM: {
+                          id: {
+                            equals: id as string,
+                          },
                         },
                       },
                     },
                   },
-                ],
+                },
               },
             },
           },
@@ -167,24 +161,19 @@ export default async function handler(
           Faculty: {
             some: {
               Dean: {
-                AND: [
-                  {
-                    ActiveDean: {
-                      isNot: null,
-                    },
-                  },
-                  {
-                    Faculty: {
-                      Department: {
-                        College: {
+                QAMISDeanEndorsement: {
+                  some: {
+                    QAMISRevision: {
+                      IMFile: {
+                        IM: {
                           id: {
-                            equals: college.id,
+                            equals: id as string,
                           },
                         },
                       },
                     },
                   },
-                ],
+                },
               },
             },
           },

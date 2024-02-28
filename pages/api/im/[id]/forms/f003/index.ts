@@ -94,43 +94,28 @@ export default async function handler(
           Faculty: {
             some: {
               Coordinator: {
-                AND: [
-                  {
-                    ActiveCoordinator: {
-                      isNot: null,
-                    },
-                  },
-                  {
-                    Faculty: {
-                      Department: {
-                        id: {
-                          equals: department.id,
+                CoordinatorReview: {
+                  some: {
+                    CoordinatorSuggestion: {
+                      SubmittedCoordinatorSuggestion: {
+                        CoordinatorSuggestion: {
+                          CoordinatorReview: {
+                            DepartmentReview: {
+                              IMFile: {
+                                IM: {
+                                  id: {
+                                    equals: id as string,
+                                  },
+                                },
+                              },
+                            },
+                          },
                         },
                       },
                     },
                   },
-                ],
+                },
               },
-            },
-          },
-        },
-      });
-
-      const iDDCoordinatorUser = await prisma.user.findFirstOrThrow({
-        where: {
-          IDDCoordinator: {
-            ActiveIDDCoordinator: {
-              isNot: null,
-            },
-          },
-        },
-      });
-
-      const cITLDirectorUser = await prisma.user.findFirstOrThrow({
-        where: {
-          CITLDirector: {
-            ActiveCITLDirector: {
-              isNot: null,
             },
           },
         },
@@ -324,17 +309,15 @@ export default async function handler(
         });
       for (let iDDCoordinatorSuggestionItem of iDDCoordinatorSuggestionItems) {
         const actionTaken =
-          await prisma.iDDCoordinatorSuggestionItemActionTaken.findFirst(
-            {
-              where: {
-                IDDCoordinatorSuggestionItem: {
-                  id: {
-                    equals: iDDCoordinatorSuggestionItem.id,
-                  },
+          await prisma.iDDCoordinatorSuggestionItemActionTaken.findFirst({
+            where: {
+              IDDCoordinatorSuggestionItem: {
+                id: {
+                  equals: iDDCoordinatorSuggestionItem.id,
                 },
               },
-            }
-          );
+            },
+          });
         cITLReview.push({
           actionTaken: actionTaken?.value ?? "",
           pageNumber: iDDCoordinatorSuggestionItem.pageNumber,
@@ -364,17 +347,15 @@ export default async function handler(
         });
       for (let returnedCITLRevisionSuggestionItem of returnedCITLRevisionSuggestionItems) {
         const actionTaken =
-          await prisma.returnedCITLRevisionSuggestionItemActionTaken.findFirst(
-            {
-              where: {
-                ReturnedCITLRevisionSuggestionItem: {
-                  id: {
-                    equals: returnedCITLRevisionSuggestionItem.id,
-                  },
+          await prisma.returnedCITLRevisionSuggestionItemActionTaken.findFirst({
+            where: {
+              ReturnedCITLRevisionSuggestionItem: {
+                id: {
+                  equals: returnedCITLRevisionSuggestionItem.id,
                 },
               },
-            }
-          );
+            },
+          });
         cITLReview.push({
           actionTaken: actionTaken?.value ?? "",
           pageNumber: returnedCITLRevisionSuggestionItem.pageNumber,
@@ -382,6 +363,56 @@ export default async function handler(
           suggestion: returnedCITLRevisionSuggestionItem.suggestion,
         });
       }
+
+      const iDDCoordinatorUser = await prisma.user.findFirstOrThrow({
+        where: {
+          IDDCoordinator: {
+            IDDCoordinatorSuggestion: {
+              some: {
+                SubmittedIDDCoordinatorSuggestion: {
+                  IDDCoordinatorSuggestion: {
+                    DeanEndorsement: {
+                      CoordinatorEndorsement: {
+                        DepartmentRevision: {
+                          IMFile: {
+                            IM: {
+                              id: {
+                                equals: id as string,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const cITLDirectorUser = await prisma.user.findFirstOrThrow({
+        where: {
+          CITLDirector: {
+            CITLDirectorEndorsement: {
+              some: {
+                IDDCoordinatorEndorsement: {
+                  CITLRevision: {
+                    IMFile: {
+                      IM: {
+                        id: {
+                          equals: id as string,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
 
       const response: F003Props = {
         iMTitle: iM.title,
