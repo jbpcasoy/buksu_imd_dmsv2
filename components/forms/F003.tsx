@@ -1,244 +1,599 @@
-import Link from "next/link";
-
-interface Review {
-  suggestion: string;
-  actionTaken: string;
-  pageNumber?: number;
-  remarks?: string;
-}
-
-interface F003Props {
-  programReview?: Review[];
-  coordinatorName?: string;
-  cITLReview?: Review[];
-  iDDCoordinatorName?: string;
-  cITLDirectorName?: string;
-  vPAAName?: string;
-}
+import { F003Props } from "@/types/forms";
+import {
+  AlignmentType,
+  BorderStyle,
+  Document,
+  ExternalHyperlink,
+  Footer,
+  Header,
+  HorizontalPositionRelativeFrom,
+  ImageRun,
+  LineRuleType,
+  Packer,
+  PageNumber,
+  Paragraph,
+  Table,
+  TableCell,
+  TableRow,
+  TextRun,
+  UnderlineType,
+  VerticalAlign,
+  VerticalPositionRelativeFrom,
+  WidthType,
+} from "docx";
+import saveAs from "file-saver";
+import { useEffect, useState } from "react";
 
 export default function F003({
+  iMTitle,
   cITLDirectorName,
-  cITLReview: cITLReviews,
   coordinatorName,
+  cITLReview,
   iDDCoordinatorName,
-  programReview: programReviews,
+  programReview,
   vPAAName,
 }: F003Props) {
+  const [buksuLogo, setBuksuLogo] = useState<ArrayBuffer>();
+
+  useEffect(() => {
+    fetch("/images/buksu-logo-min-512x512.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setBuksuLogo(buffer);
+      });
+  }, []);
+
+  function download() {
+    if (!buksuLogo) {
+      return;
+    }
+
+    const programReviewRows = programReview.map(
+      (review) =>
+        new TableRow({
+          children: [
+            new TableCell({
+              children: [new Paragraph(review.suggestion)],
+            }),
+            new TableCell({
+              children: [new Paragraph(review.actionTaken)],
+            }),
+            new TableCell({
+              children: [new Paragraph(review.pageNumber.toString())],
+            }),
+            new TableCell({
+              children: [new Paragraph(review.remarks)],
+            }),
+          ],
+        })
+    );
+
+    const programReviewTable = new Table({
+      width: {
+        size: "100%",
+        type: WidthType.PERCENTAGE,
+      },
+      rows: [
+        new TableRow({
+          children: [
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: "Section",
+                  alignment: AlignmentType.CENTER,
+                }),
+              ],
+            }),
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: "Action Taken",
+                  alignment: AlignmentType.CENTER,
+                }),
+              ],
+            }),
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: "Page Number",
+                  alignment: AlignmentType.CENTER,
+                }),
+              ],
+            }),
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: "Remarks",
+                  alignment: AlignmentType.CENTER,
+                }),
+              ],
+            }),
+          ],
+        }),
+        ...programReviewRows,
+      ],
+    });
+
+    const cITLReviewRows = cITLReview.map(
+      (review) =>
+        new TableRow({
+          children: [
+            new TableCell({
+              children: [new Paragraph(review.suggestion)],
+            }),
+            new TableCell({
+              children: [new Paragraph(review.actionTaken)],
+            }),
+            new TableCell({
+              children: [new Paragraph(review.pageNumber.toString())],
+            }),
+            new TableCell({
+              children: [new Paragraph(review.remarks)],
+            }),
+          ],
+        })
+    );
+
+    const cITLReviewTable = new Table({
+      alignment: AlignmentType.CENTER,
+      width: {
+        size: "100%",
+        type: WidthType.PERCENTAGE,
+      },
+      rows: [
+        new TableRow({
+          children: [
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: "Section",
+                  alignment: AlignmentType.CENTER,
+                }),
+              ],
+            }),
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: "Action Taken",
+                  alignment: AlignmentType.CENTER,
+                }),
+              ],
+            }),
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: "Page Number",
+                  alignment: AlignmentType.CENTER,
+                }),
+              ],
+            }),
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: "Remarks",
+                  alignment: AlignmentType.CENTER,
+                }),
+              ],
+            }),
+          ],
+        }),
+        ...cITLReviewRows,
+      ],
+    });
+
+    const footer = new Footer({
+      children: [
+        new Table({
+          alignment: AlignmentType.CENTER,
+          width: {
+            size: "100%",
+            type: WidthType.PERCENTAGE,
+          },
+          borders: {
+            top: {
+              style: BorderStyle.NIL,
+            },
+            bottom: {
+              style: BorderStyle.NIL,
+            },
+            left: {
+              style: BorderStyle.NIL,
+            },
+            right: {
+              style: BorderStyle.NIL,
+            },
+            insideVertical: {
+              style: BorderStyle.NIL,
+            },
+          },
+          rows: [
+            new TableRow({
+              children: [
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Document Code: CITL-F-003"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Revision No. 00"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Issue no. 1"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Issue Date: December 7, 2020"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: [
+                            "Page ",
+                            PageNumber.CURRENT,
+                            " of ",
+                            PageNumber.TOTAL_PAGES,
+                          ],
+                        }),
+                      ],
+                      style: "footer",
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    });
+    const header = new Header({
+      children: [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "BUKIDNON STATE UNIVERSITY",
+              bold: true,
+            }),
+          ],
+        }),
+        new Paragraph({
+          text: "Malaybalay City, Bukidnon 8700",
+          alignment: AlignmentType.CENTER,
+        }),
+        new Paragraph({
+          text: "Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717,",
+          alignment: AlignmentType.CENTER,
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new ExternalHyperlink({
+              children: [
+                new TextRun({
+                  text: "https://www.buksu.edu.ph",
+                  style: "Hyperlink",
+                }),
+              ],
+              link: "https://www.buksu.edu.ph",
+            }),
+          ],
+        }),
+        new Paragraph({
+          run: {
+            size: "5pt",
+          },
+          border: {
+            bottom: {
+              style: BorderStyle.SINGLE,
+              size: 1,
+            },
+          },
+          children: [
+            new ImageRun({
+              data: buksuLogo,
+              transformation: {
+                width: 70,
+                height: 70,
+              },
+              floating: {
+                zIndex: 10,
+                horizontalPosition: {
+                  relative: HorizontalPositionRelativeFrom.LEFT_MARGIN,
+                  offset: 500000,
+                },
+                verticalPosition: {
+                  relative: VerticalPositionRelativeFrom.TOP_MARGIN,
+                  offset: 400000,
+                },
+              },
+            }),
+          ],
+        }),
+      ],
+    });
+
+    const doc = new Document({
+      styles: {
+        paragraphStyles: [
+          {
+            id: "footer",
+            name: "Footer",
+            basedOn: "Normal",
+            next: "Normal",
+            run: {
+              size: "8pt",
+            },
+          },
+        ],
+      },
+      sections: [
+        {
+          properties: {
+            page: {
+              margin: {
+                bottom: "0.5in",
+                left: "0.5in",
+                right: "0.5in",
+                top: "0.5in",
+              },
+            },
+          },
+          headers: {
+            default: header,
+          },
+          footers: {
+            default: footer,
+          },
+          children: [
+            new Paragraph({
+              text: "Suggestions and Action Taken",
+              alignment: AlignmentType.CENTER,
+              spacing: {
+                before: 200,
+                after: 200,
+                lineRule: LineRuleType.EXACT,
+              },
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Part A. Program Review",
+                  bold: true,
+                }),
+              ],
+            }),
+            programReviewTable,
+            new Paragraph({
+              indent: {
+                firstLine: "1in",
+              },
+              children: [
+                new TextRun({
+                  text: "Add Rows as necessary.",
+                  italics: true,
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                firstLine: "0.5in",
+              },
+              spacing: {
+                before: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: `Reviewed by: `,
+                }),
+                new TextRun({
+                  text: `${coordinatorName}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                firstLine: "0.5in",
+              },
+              spacing: {
+                after: 200,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: "                       Program IM Coordinator",
+                }),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Part B. CITL Review",
+                  bold: true,
+                }),
+              ],
+            }),
+            cITLReviewTable,
+            new Paragraph({
+              indent: {
+                firstLine: "1in",
+              },
+              children: [
+                new TextRun({
+                  text: "Add Rows as necessary.",
+                  italics: true,
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                firstLine: "0.5in",
+              },
+              spacing: {
+                before: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: `Reviewed by: `,
+                }),
+                new TextRun({
+                  text: `${iDDCoordinatorName}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                firstLine: "0.5in",
+              },
+              spacing: {
+                after: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: "                       IDD Coordinator",
+                }),
+              ],
+            }),
+
+            new Paragraph({
+              indent: {
+                firstLine: "0.5in",
+              },
+              spacing: {
+                before: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: `                       `,
+                }),
+                new TextRun({
+                  text: `${cITLDirectorName}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                firstLine: "0.5in",
+              },
+              spacing: {
+                after: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: "                       CITL Director",
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                firstLine: "0.5in",
+              },
+              spacing: {
+                before: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: `                       `,
+                }),
+                new TextRun({
+                  text: `${vPAAName}`,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              indent: {
+                firstLine: "0.5in",
+              },
+              spacing: {
+                after: 400,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: "                       VPAA",
+                }),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
+
+    Packer.toBlob(doc).then((blob) => {
+      // saveAs from FileSaver will download the file
+      saveAs(blob, `${iMTitle}_F003.docx`);
+    });
+  }
+
   return (
-    <div
-      style={{ width: "8.27in", height: "11.69in", padding: "0.5in" }}
-      className="shadow-lg flex flex-col font-serif"
-    >
-      <header className="flex justify-between">
-        <div className="absolute items-center">
-          <img
-            alt="buksu logo"
-            src="/images/buksu-logo-min-512x512.png"
-            style={{ width: "0.8in", height: "0.8in" }}
-          />
-        </div>
-        <div className="flex-1">
-          <div className="text-center text-sm">
-            <p className="font-bold">BUKIDNON STATE UNIVERSITY</p>
-            <p>Malaybalay City, Bukidnon 8700</p>
-            <p>Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717,</p>
-            <Link
-              href="https://www.buksu.edu.ph"
-              className="underline text-palette_light_blue"
-            >
-              www.buksu.edu.ph
-            </Link>
-          </div>
-        </div>
-      </header>
-      <hr className="border-black" />
-      <div className="flex-1 text-sm">
-        <br />
-        <p className="text-center">Suggestions and Action Taken</p>
-        <br />
-        <div className="text-sm ">
-          <p className="font-bold">Part A. Program Review</p>
-        </div>
-        <table className="table-auto border-collapsed border border-black w-full text-sm">
-          <thead>
-            <tr>
-              <th className="border border-black font-normal">Suggestions</th>
-              <th className="border border-black font-normal">Action Taken</th>
-              <th className="border border-black font-normal">Page Number</th>
-              <th className="border border-black font-normal">Remarks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!programReviews && (
-              <>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-              </>
-            )}
-            {programReviews?.map((programReview, index) => {
-              return (
-                <tr key={index}>
-                  <td className="border border-black px-1">
-                    {programReview.suggestion}
-                  </td>
-                  <td className="border border-black px-1">
-                    {programReview.actionTaken}
-                  </td>
-                  <td className="border border-black px-1">
-                    {programReview.pageNumber}
-                  </td>
-                  <td className="border border-black px-1">
-                    {programReview.remarks}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <p className="italic ml-20">Add Rows as necessary.</p>
-        <br />
-        <br />
-        <div className="flex ml-10 space-x-1">
-          <p>Reviewed by:</p>
-          <div>
-            {!coordinatorName && <p>_____________________________</p>}
-            {coordinatorName && <p className="underline">{coordinatorName}</p>}
-            <p>Program IM Coordinator</p>
-          </div>
-        </div>
-        <br />
-        <div className="text-sm ">
-          <p className="font-bold">Part B. CITL Review</p>
-        </div>
-        <table className="table-auto border-collapsed border border-black w-full text-sm">
-          <thead>
-            <tr>
-              <th className="border border-black font-normal">Suggestions</th>
-              <th className="border border-black font-normal">Action Taken</th>
-              <th className="border border-black font-normal">Page Number</th>
-              <th className="border border-black font-normal">Remarks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!cITLReviews && (
-              <>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-                <tr>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                  <td className="border border-black p-4"></td>
-                </tr>
-              </>
-            )}
-            {cITLReviews?.map((cITLReview, index) => {
-              return (
-                <tr key={index}>
-                  <td className="border border-black px-1">
-                    {cITLReview.suggestion}
-                  </td>
-                  <td className="border border-black px-1">
-                    {cITLReview.actionTaken}
-                  </td>
-                  <td className="border border-black px-1">
-                    {cITLReview.pageNumber}
-                  </td>
-                  <td className="border border-black px-1">
-                    {cITLReview.remarks}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <p className="italic ml-20">Add Rows as necessary.</p>
-        <br />
-        <br />
-        <div className="flex ml-10 space-x-1">
-          <p>Reviewed by:</p>
-          <div className="flex flex-col space-y-10">
-            <div>
-              {!iDDCoordinatorName && <p>_____________________________</p>}
-              {iDDCoordinatorName && (
-                <p className="underline">{iDDCoordinatorName}</p>
-              )}
-              <p>IDD Coordinator</p>
-            </div>
-            <div>
-              {!cITLDirectorName && <p>_____________________________</p>}
-              {cITLDirectorName && (
-                <p className="underline">{cITLDirectorName}</p>
-              )}
-              <p>CITL Director</p>
-            </div>
-            <div>
-              {!vPAAName && <p>_____________________________</p>}
-              {vPAAName && <p className="underline">{vPAAName}</p>}
-              <p>VPAA</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <div className="text-xs flex justify-between">
-          <p>Document Code: CITL-F-003</p>
-          <p>Revision No. 00</p>
-          <p>Issue no. 1</p>
-          <p>Issue Date: December 7, 2020</p>
-          <p>Page 1 of 1</p>
-        </div>
-      </footer>
+    <div>
+      <button onClick={download} className="underline">
+        F003 - Suggestions and Action Taken
+      </button>
     </div>
   );
 }

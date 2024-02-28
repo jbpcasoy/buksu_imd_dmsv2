@@ -1,328 +1,1219 @@
-import { DateTime } from "luxon";
-import Link from "next/link";
+// Simple example to add text to a document
 
-interface F001Props {
-  author?: string;
-  iMTitle?: string;
-  iMType?: "Module" | "Course File" | "Worktext" | "Textbook" | string;
-  courseCode?: string;
-  courseName?: string;
-  usage?: "Summer" | "1st sem only" | "2nd sem only" | "Every sem.";
-  haveStudentEvaluation?: boolean;
-  applicantName?: string;
-  coordinatorName?: string;
-  chairpersonName?: string;
-  deanName?: string;
-  receiveDate?: Date;
-  hasHardCopy?: boolean;
-  hasSoftCopy?: boolean;
-  iDDCoordinatorName?: string;
-}
+import { F011Props } from "@/types/forms";
+import {
+  AlignmentType,
+  BorderStyle,
+  Document,
+  ExternalHyperlink,
+  Footer,
+  Header,
+  HorizontalPositionRelativeFrom,
+  ImageRun,
+  LevelFormat,
+  LineRuleType,
+  Packer,
+  PageNumber,
+  Paragraph,
+  Table,
+  TableCell,
+  TableRow,
+  TextRun,
+  UnderlineType,
+  VerticalAlign,
+  VerticalPositionRelativeFrom,
+  WidthType,
+  convertInchesToTwip,
+} from "docx";
+import saveAs from "file-saver";
+import { useEffect, useState } from "react";
 
 export default function F011({
-  applicantName,
-  author,
+  authorName,
   chairpersonName,
   coordinatorName,
-  courseCode,
-  courseName,
   deanName,
-  hasHardCopy,
-  hasSoftCopy,
-  haveStudentEvaluation,
   iDDCoordinatorName,
   iMTitle,
   iMType,
-  receiveDate,
-  usage,
-}: F001Props) {
-  return (
-    <div
-      style={{ width: "8.27in", height: "11.69in", padding: "0.5in" }}
-      className="shadow-lg flex flex-col font-serif"
-    >
-      <header className="flex justify-between">
-        <div className="flex items-center">
-          <img
-            alt="buksu logo"
-            src="/images/buksu-logo-min-512x512.png"
-            style={{ width: "0.6in", height: "0.6in" }}
-          />
-          <img
-            alt="citl logo"
-            src="/images/citl-logo.png"
-            style={{
-              width: "0.8in",
-              height: "0.8in",
-              marginLeft: "-0.15in",
-            }}
-          />
-        </div>
-        <div className="text-center text-sm">
-          <p className="font-bold">BUKIDNON STATE UNIVERSITY</p>
-          <p>Malaybalay City, Bukidnon 8700</p>
-          <p>
-            Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717,{" "}
-            <Link
-              href="https://www.buksu.edu.ph"
-              className="underline text-palette_light_blue"
-            >
-              www.buksu.edu.ph
-            </Link>
-          </p>
-          <p className="font-bold">
-            OFFICE OF THE VICE PRESIDENT FOR ACADEMIC AFFAIRS
-          </p>
-          <p className="text-palette_orange">
-            Center for Innovative Teaching and Learning
-          </p>
-        </div>
-        <div className="flex items-center justify-center text-center text-xs text-palette_orange">
-          <div className="border border-black rounded-lg py-2 px-6 italic">
-            <p>Educate</p>
-            <p>Innovate</p>
-            <p>Lead</p>
-          </div>
-        </div>
-      </header>
-      <br />
-      <div className="text-center text-sm">
-        <p>Endorsement of the Instructional Material</p>
-        <p>(Implementation Phase)</p>
-      </div>
-      <br />
-      <div className="text-sm flex-1">
-        <p>The Director CITL</p>
-        <p>Bukidnon State University</p>
-        <br />
-        <p>Sir/Madam:</p>
-        <br />
-        <p className="indent-8">
-          I/We would like to request for the review of my/our instructional
-          material herein named, duly reviewed and endorsed by the
-          department/program and college with which the author/s is /are
-          affiliated. The data pertaining to aforementioned work follow:
-        </p>
-        <br />
-        <p>
-          1. Name of Author/Applicant:{" "}
-          {!applicantName && (
-            <span>
-              ____________________________________________________________
-            </span>
-          )}
-          {applicantName && <span className="underline">{applicantName}</span>}
-        </p>
-        <p>
-          2. Title of IM:{" "}
-          {!iMTitle && (
-            <span>
-              ____________________________________________________________
-            </span>
-          )}
-          {iMTitle && <span className="underline">{iMTitle}</span>}
-        </p>
-        <p>
-          3. IM Type: (
-          <span className={`${iMType === "Module" ? "underline" : ""}`}>
-            Module
-          </span>
-          ,{" "}
-          <span className={`${iMType === "Course File" ? "underline" : ""}`}>
-            Course File
-          </span>
-          ,{" "}
-          <span className={`${iMType === "Worktext" ? "underline" : ""}`}>
-            Worktext
-          </span>
-          ,{" "}
-          <span className={`${iMType === "Textbook" ? "underline" : ""}`}>
-            Textbook
-          </span>
-          , etc., please specify):{" "}
-          {iMType !== "Module" &&
-            iMType !== "Course File" &&
-            iMType !== "Worktext" &&
-            iMType !== "Textbook" &&
-            !iMType && <span>______________________________</span>}
-          {iMType !== "Module" &&
-            iMType !== "Course File" &&
-            iMType !== "Worktext" &&
-            iMType !== "Textbook" &&
-            iMType && <span className="underline">{iMType}</span>}
-        </p>
-        <p>
-          4. Course Code and Course Descriptive Title for which this IM will be
-          used:{" "}
-          {(!courseCode || !courseName) && (
-            <span>
-              ___________________________________________________________________________________________
-            </span>
-          )}
+}: F011Props) {
+  const [buksuLogo, setBuksuLogo] = useState<ArrayBuffer>();
+  const [citlLogo, setCitlLogo] = useState<ArrayBuffer>();
+  const [educateInnovateLead, setEducateInnovateLead] = useState<ArrayBuffer>();
+  const [ovalCheckbox, setOvalCheckbox] = useState<ArrayBuffer>();
+
+  useEffect(() => {
+    fetch("/images/buksu-logo-min-512x512.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setBuksuLogo(buffer);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/images/citl-logo-gapless.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setCitlLogo(buffer);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/images/educate-innovate-lead.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setEducateInnovateLead(buffer);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/images/oval-checkbox.png")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        // `buffer` now contains the image data as a buffer
+        console.log("Image converted to buffer:", buffer);
+        setOvalCheckbox(buffer);
+      });
+  }, []);
+
+  function download() {
+    if (!buksuLogo || !citlLogo || !educateInnovateLead || !ovalCheckbox) {
+      return;
+    }
+
+    const footer = new Footer({
+      children: [
+        new Table({
+          alignment: AlignmentType.CENTER,
+          width: {
+            size: "100%",
+            type: WidthType.PERCENTAGE,
+          },
+          borders: {
+            top: {
+              style: BorderStyle.NIL,
+            },
+            bottom: {
+              style: BorderStyle.NIL,
+            },
+            left: {
+              style: BorderStyle.NIL,
+            },
+            right: {
+              style: BorderStyle.NIL,
+            },
+            insideVertical: {
+              style: BorderStyle.NIL,
+            },
+          },
+          rows: [
+            new TableRow({
+              children: [
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Document Code: CITL-F-011"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Revision No.: 0"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Issue no.: 1"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: ["Issue Date: July 28, 2022"],
+                          size: "8pt",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+                new TableCell({
+                  verticalAlign: VerticalAlign.CENTER,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          children: [
+                            "Page ",
+                            PageNumber.CURRENT,
+                            " of ",
+                            PageNumber.TOTAL_PAGES,
+                          ],
+                        }),
+                      ],
+                      style: "footer",
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    });
+
+    const header = new Header({
+      children: [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "BUKIDNON STATE UNIVERSITY",
+              bold: true,
+            }),
+          ],
+          style: "bodyFont",
+        }),
+        new Paragraph({
+          text: "Malaybalay City, Bukidnon 8700",
+          alignment: AlignmentType.CENTER,
+          style: "bodyFont",
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717, ",
+            }),
+          ],
+          style: "bodyFont",
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new ExternalHyperlink({
+              children: [
+                new TextRun({
+                  text: "https://www.buksu.edu.ph",
+                  style: "Hyperlink",
+                }),
+              ],
+              link: "https://www.buksu.edu.ph",
+            }),
+          ],
+          style: "bodyFont",
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "OFFICE OF THE VICE PRESIDENT FOR ACADEMIC AFFAIRS",
+              bold: true,
+              color: "#272f41",
+            }),
+          ],
+          style: "bodyFont",
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: "Center for Innovative Teaching and Learning",
+              color: "F2C050",
+            }),
+          ],
+          style: "bodyFont",
+        }),
+        new Paragraph({
+          run: {
+            size: "5pt",
+          },
+          children: [
+            new ImageRun({
+              data: buksuLogo,
+              transformation: {
+                width: 63,
+                height: 63,
+              },
+              floating: {
+                zIndex: 10,
+                horizontalPosition: {
+                  relative: HorizontalPositionRelativeFrom.LEFT_MARGIN,
+                  offset: 500000,
+                },
+                verticalPosition: {
+                  relative: VerticalPositionRelativeFrom.TOP_MARGIN,
+                  offset: 300000,
+                },
+              },
+            }),
+            new ImageRun({
+              data: citlLogo,
+              transformation: {
+                width: 63,
+                height: 63,
+              },
+              floating: {
+                zIndex: 10,
+                horizontalPosition: {
+                  relative: HorizontalPositionRelativeFrom.LEFT_MARGIN,
+                  offset: 1100000,
+                },
+                verticalPosition: {
+                  relative: VerticalPositionRelativeFrom.TOP_MARGIN,
+                  offset: 300000,
+                },
+              },
+            }),
+            new ImageRun({
+              data: educateInnovateLead,
+              transformation: {
+                width: 95,
+                height: 69,
+              },
+              floating: {
+                zIndex: 10,
+                horizontalPosition: {
+                  relative: HorizontalPositionRelativeFrom.RIGHT_MARGIN,
+                  offset: -900000,
+                },
+                verticalPosition: {
+                  relative: VerticalPositionRelativeFrom.TOP_MARGIN,
+                  // offset: 600000,
+                  offset: 300000,
+                },
+              },
+            }),
+          ],
+        }),
+      ],
+    });
+
+    const doc = new Document({
+      numbering: {
+        config: [
           {
-            <span className="underline">
-              {courseCode} {courseName}
-            </span>
-          }
-        </p>
-        <div>
-          <p>5. Semester this IM will be used:</p>
-          <div className="flex justify-evenly">
-            <div className="flex space-x-1">
-              <input
-                type="checkbox"
-                className="rounded-full text-black"
-                disabled={true}
-                checked={usage === "Summer"}
-              />
-              <p>Summer</p>
-            </div>
-            <div className="flex space-x-1">
-              <input
-                type="checkbox"
-                className="rounded-full text-black"
-                disabled={true}
-                checked={usage === "1st sem only"}
-              />
-              <p>1st sem only</p>
-            </div>
-            <div className="flex space-x-1">
-              <input
-                type="checkbox"
-                className="rounded-full text-black"
-                disabled={true}
-                checked={usage === "2nd sem only"}
-              />
-              <p>2nd sem only</p>
-            </div>
-            <div className="flex space-x-1">
-              <input
-                type="checkbox"
-                className="rounded-full text-black"
-                disabled={true}
-                checked={usage === "Every sem."}
-              />
-              <p>Every sem.</p>
-            </div>
-          </div>
-        </div>
-        <div>
-          <p>
-            6. Do you agree to have a Student Evaluation Form included in the
-            IM?
-          </p>
-          <div className="flex justify-evenly">
-            <div className="flex space-x-1">
-              <input
-                type="checkbox"
-                className="rounded-full text-black"
-                disabled={true}
-                checked={haveStudentEvaluation === true}
-              />
-              <p>YES</p>
-            </div>
-            <div className="flex space-x-1">
-              <input
-                type="checkbox"
-                className="rounded-full text-black"
-                disabled={true}
-                checked={haveStudentEvaluation === false}
-              />
-              <p>NO</p>
-            </div>
-          </div>
-        </div>
-        <p className="ml-4">
-          I agree to accomplish revisions suggested by the panel of reviewers.{" "}
-        </p>
-        <br />
-        <div className="ml-96">
-          <p className="">Very Respectfully,</p>
-          <br />
-          <p className="">
-            {!applicantName && <span>______________________________</span>}
-            {applicantName && (
-              <span className="underline">{applicantName}</span>
-            )}
-          </p>
-          <p className="">(Printed Name & Signature of Applicant)</p>
-        </div>
-        <p>Reviewed and Endorsed:</p>
-        <br />
-        <div className="flex justify-evenly">
-          <div>
-            <p className="text-center">
-              {!coordinatorName && <span>______________________________</span>}{" "}
-              {coordinatorName && (
-                <span className="underline">{coordinatorName}</span>
-              )}
-            </p>
-            <p className="text-center">IMD Program Coordinator</p>
-          </div>
-          <div>
-            <p className="text-center">
-              {!chairpersonName && <span>______________________________</span>}
-              {chairpersonName && (
-                <span className="underline">{chairpersonName}</span>
-              )}
-            </p>
-            <p className="text-center">Program Chair</p>
-          </div>
-        </div>
+            reference: "alphabetical-bullet-points",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.UPPER_LETTER,
+                alignment: AlignmentType.LEFT,
+                text: "%1. ",
+                style: {
+                  run: {
+                    italics: true,
+                  },
+                  paragraph: {
+                    indent: {
+                      left: "0.50in",
+                      hanging: "0.25in",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            reference: "table-numerical-bullet-points",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.UPPER_LETTER,
+                alignment: AlignmentType.LEFT,
+                text: "%1. ",
+                style: {
+                  run: {
+                    italics: true,
+                  },
+                  paragraph: {
+                    indent: {
+                      left: "0.20in",
+                      hanging: "0.20in",
+                    },
+                  },
+                },
+              },
+              {
+                level: 1,
+                format: LevelFormat.DECIMAL,
+                alignment: AlignmentType.LEFT,
+                text: "%2. ",
+                style: {
+                  paragraph: {
+                    indent: {
+                      left: "0.20in",
+                      hanging: "0.20in",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            reference: "numerical-bullet-points",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.DECIMAL,
+                alignment: AlignmentType.LEFT,
+                text: "%1. ",
+                style: {
+                  paragraph: {
+                    indent: {
+                      left: "1in",
+                      hanging: "0.25in",
+                    },
+                  },
+                },
+              },
+              {
+                level: 1,
+                format: LevelFormat.LOWER_LETTER,
+                alignment: AlignmentType.LEFT,
+                text: "%2. ",
+                style: {
+                  paragraph: {
+                    indent: {
+                      left: "0.75in",
+                      hanging: "0.25in",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      styles: {
+        paragraphStyles: [
+          {
+            id: "footer",
+            name: "Footer",
+            basedOn: "Normal",
+            next: "Normal",
+            run: {
+              size: "8pt",
+            },
+          },
+          {
+            id: "body",
+            name: "Body",
+            basedOn: "bodyFont",
+            next: "Normal",
+            paragraph: {
+              indent: {
+                start: "0.5in",
+                end: "0.5in",
+              },
+            },
+          },
+          {
+            id: "bodyFont",
+            name: "BodyFont",
+            basedOn: "Normal",
+            next: "Normal",
+            run: {
+              size: "11pt",
+              font: "Book Antiqua",
+            },
+          },
+        ],
+      },
+      sections: [
+        {
+          properties: {
+            page: {
+              margin: {
+                bottom: "0.5in",
+                left: "0.5in",
+                right: "0.5in",
+                top: "0.5in",
+              },
+            },
+          },
+          headers: {
+            default: header,
+          },
+          footers: {
+            default: footer,
+          },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Request for Instructional Material Review Form",
+                }),
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: {
+                before: 200,
+                lineRule: LineRuleType.EXACT,
+              },
+              style: "body",
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "(Implementation Phase)",
+                }),
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: {
+                after: 100,
+                lineRule: LineRuleType.EXACT,
+              },
+              style: "body",
+            }),
+            new Paragraph({
+              text: "The Director CITL",
+              style: "body",
+            }),
+            new Paragraph({
+              text: "Bukidnon State University",
+              style: "body",
+            }),
+            new Paragraph(""),
+            new Paragraph({
+              text: "Sir/Madam:",
+              style: "body",
+            }),
+            new Paragraph(""),
+            new Paragraph({
+              text: "I/We would like to request for the review of my/our instructional material herein named, duly reviewed and endorsed by the department/program and college with which the author/s is /are affiliated. The data pertaining to aforementioned work follow:",
+              style: "body",
+              indent: {
+                firstLine: "0.5in",
+              },
+            }),
+            new Paragraph(""),
+            new Paragraph({
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 0,
+              },
+              style: "body",
+              children: [
+                new TextRun({
+                  text: `Name of Author/Applicant: `,
+                }),
+                new TextRun({
+                  text: authorName,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 0,
+              },
+              style: "body",
+              children: [
+                new TextRun({
+                  text: `Title of IM: `,
+                }),
+                new TextRun({
+                  text: iMTitle,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 0,
+              },
+              style: "body",
+              children: [
+                new TextRun({
+                  text: `IM Type: (Module, Course File, Worktext, Textbook, etc., please specify: `,
+                }),
+                new TextRun({
+                  text: iMType,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 0,
+              },
+              style: "body",
+              children: [
+                new TextRun({
+                  text: `Course Code and Course Descriptive Title for which this IM will be used: `,
+                }),
+              ],
+            }),
+            new Paragraph({
+              style: "body",
+              indent: {
+                left: "1in",
+              },
+              children: [
+                new TextRun({
+                  text: "                                                                                                                                                      ",
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 0,
+              },
+              style: "body",
+              children: [
+                new TextRun({
+                  text: `Semester this IM will be used:`,
+                }),
+              ],
+            }),
+            new Table({
+              width: {
+                size: convertInchesToTwip(6),
+                type: WidthType.DXA,
+              },
+              indent: {
+                size: convertInchesToTwip(1),
+                type: "dxa",
+              },
+              columnWidths: [
+                convertInchesToTwip(0.4),
+                convertInchesToTwip(1),
+                convertInchesToTwip(0.4),
+                convertInchesToTwip(1.2),
+                convertInchesToTwip(0.4),
+                convertInchesToTwip(1.2),
+                convertInchesToTwip(0.4),
+                convertInchesToTwip(1),
+              ],
+              borders: {
+                bottom: {
+                  style: BorderStyle.NIL,
+                },
+                top: {
+                  style: BorderStyle.NIL,
+                },
+                left: {
+                  style: BorderStyle.NIL,
+                },
+                right: {
+                  style: BorderStyle.NIL,
+                },
+                insideVertical: {
+                  style: BorderStyle.NIL,
+                },
+              },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: ovalCheckbox,
+                              transformation: {
+                                width: 25,
+                                height: 20,
+                              },
+                            }),
+                          ],
+                          alignment: AlignmentType.CENTER,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({
+                              text: "Summer",
+                            }),
+                          ],
+                          alignment: AlignmentType.LEFT,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: ovalCheckbox,
+                              transformation: {
+                                width: 25,
+                                height: 20,
+                              },
+                            }),
+                          ],
+                          alignment: AlignmentType.CENTER,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({
+                              text: "1",
+                            }),
+                            new TextRun({
+                              text: "st",
+                              superScript: true,
+                            }),
+                            new TextRun({
+                              text: " sem only",
+                            }),
+                          ],
+                          alignment: AlignmentType.LEFT,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: ovalCheckbox,
+                              transformation: {
+                                width: 25,
+                                height: 20,
+                              },
+                            }),
+                          ],
+                          alignment: AlignmentType.CENTER,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({
+                              text: "2",
+                            }),
+                            new TextRun({
+                              text: "nd",
+                              superScript: true,
+                            }),
+                            new TextRun({
+                              text: " sem only",
+                            }),
+                          ],
+                          alignment: AlignmentType.LEFT,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: ovalCheckbox,
+                              transformation: {
+                                width: 25,
+                                height: 20,
+                              },
+                            }),
+                          ],
+                          alignment: AlignmentType.CENTER,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          text: "Every sem.",
+                          alignment: AlignmentType.LEFT,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+            new Paragraph({
+              numbering: {
+                reference: "numerical-bullet-points",
+                level: 0,
+              },
+              style: "body",
+              children: [
+                new TextRun({
+                  text: `Do you agree to have a Student Evaluation Form included in the IM?`,
+                }),
+              ],
+            }),
+            new Table({
+              width: {
+                size: convertInchesToTwip(2.8),
+                type: WidthType.DXA,
+              },
+              indent: {
+                size: convertInchesToTwip(1),
+                type: "dxa",
+              },
+              columnWidths: [
+                convertInchesToTwip(0.4),
+                convertInchesToTwip(1),
+                convertInchesToTwip(0.4),
+                convertInchesToTwip(1),
+              ],
+              borders: {
+                bottom: {
+                  style: BorderStyle.NIL,
+                },
+                top: {
+                  style: BorderStyle.NIL,
+                },
+                left: {
+                  style: BorderStyle.NIL,
+                },
+                right: {
+                  style: BorderStyle.NIL,
+                },
+                insideVertical: {
+                  style: BorderStyle.NIL,
+                },
+              },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: ovalCheckbox,
+                              transformation: {
+                                width: 25,
+                                height: 20,
+                              },
+                            }),
+                          ],
+                          alignment: AlignmentType.CENTER,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({
+                              text: "Yes",
+                            }),
+                          ],
+                          alignment: AlignmentType.START,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: ovalCheckbox,
+                              transformation: {
+                                width: 25,
+                                height: 20,
+                              },
+                            }),
+                          ],
+                          alignment: AlignmentType.CENTER,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      verticalAlign: VerticalAlign.CENTER,
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({
+                              text: "No",
+                            }),
+                          ],
+                          alignment: AlignmentType.START,
+                          style: "bodyFont",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+            new Paragraph({
+              style: "body",
+              indent: {
+                start: "1in",
+              },
+              spacing: {
+                after: 200,
+                before: 200,
+                lineRule: LineRuleType.EXACT,
+              },
+              children: [
+                new TextRun({
+                  text: `I agree to accomplish revisions suggested by the panel of reviewers.`,
+                }),
+              ],
+            }),
+            new Table({
+              width: {
+                size: "100%",
+                type: WidthType.PERCENTAGE,
+              },
+              borders: {
+                bottom: {
+                  style: BorderStyle.NONE,
+                },
+                left: {
+                  style: BorderStyle.NONE,
+                },
+                right: {
+                  style: BorderStyle.NONE,
+                },
+                top: {
+                  style: BorderStyle.NONE,
+                },
+                insideHorizontal: {
+                  style: BorderStyle.NONE,
+                },
+                insideVertical: {
+                  style: BorderStyle.NONE,
+                },
+              },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [],
+                    }),
 
-        <br />
-        <div>
-          <p className="text-center">
-            {!deanName && <span>______________________________</span>}
-            {deanName && <span className="underline">{deanName}</span>}
-          </p>
-          <p className="text-center">College Dean</p>
-        </div>
-        <br />
-        <hr className="border border-black" />
-        <br />
-        <p>
-          Application received on{" "}
-          {!receiveDate && <span>____________________________________</span>}{" "}
-          {receiveDate && (
-            <span className="underline">
-              {DateTime.fromJSDate(receiveDate).toFormat("LLLL dd, yyyy ")}
-            </span>
-          )}{" "}
-          with 1 Hard copy {hasHardCopy === undefined && <span>________</span>}
-          {hasHardCopy === true && <span className="underline">✓</span>}
-          {hasHardCopy === false && <span className="underline">✗</span>} & Soft
-          Copy
-          {hasHardCopy === undefined && <span>________</span>}
-          {hasSoftCopy === true && <span className="underline">✓</span>}
-          {hasSoftCopy === false && <span className="underline">✗</span>}
-        </p>
-        <br />
-        <br />
-        <div className="flex justify-end mx-2">
-          <div>
-            <p className="text-center">
-              {!iDDCoordinatorName && (
-                <span>______________________________</span>
-              )}
-              {iDDCoordinatorName && (
-                <span className="underline">{iDDCoordinatorName}</span>
-              )}
-            </p>
-            <p className="text-center">Signature of IDD Coordinator</p>
-          </div>
-        </div>
-      </div>
+                    new TableCell({
+                      children: [
+                        new Paragraph({
+                          style: "bodyFont",
+                          children: [
+                            new TextRun({
+                              text: `Very respectfully,`,
+                            }),
+                          ],
+                        }),
+                        new Paragraph(""),
+                        new Paragraph(""),
+                        new Paragraph({
+                          style: "bodyFont",
+                          children: [
+                            new TextRun({
+                              text: authorName,
+                              underline: {
+                                type: UnderlineType.SINGLE,
+                              },
+                            }),
+                          ],
+                        }),
+                        new Paragraph({
+                          style: "bodyFont",
+                          children: [
+                            new TextRun({
+                              text: `(Printed Name & Signature of Applicant)`,
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
 
-      <footer>
-        <div className="text-xs flex justify-between">
-          <p>Document Code: CITL-F-011</p>
-          <p>Revision No.: 0</p>
-          <p>Issue No.: 1</p>
-          <p>Issue Date: July 28, 2020</p>
-          <p>Page 1 of 1</p>
-        </div>
-      </footer>
+            new Table({
+              width: {
+                size: "100%",
+                type: WidthType.PERCENTAGE,
+              },
+              borders: {
+                bottom: {
+                  style: BorderStyle.NONE,
+                },
+                left: {
+                  style: BorderStyle.NONE,
+                },
+                right: {
+                  style: BorderStyle.NONE,
+                },
+                top: {
+                  style: BorderStyle.NONE,
+                },
+                insideHorizontal: {
+                  style: BorderStyle.NONE,
+                },
+                insideVertical: {
+                  style: BorderStyle.NONE,
+                },
+              },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [
+                        new Paragraph({
+                          style: "body",
+                          children: [
+                            new TextRun({
+                              text: `Reviewed and Endorsed:`,
+                            }),
+                          ],
+                        }),
+                        new Paragraph(""),
+                        new Paragraph(""),
+                        new Paragraph({
+                          indent: {
+                            left: "0.5in",
+                          },
+                          style: "bodyFont",
+                          children: [
+                            new TextRun({
+                              text: coordinatorName,
+                              underline: {
+                                type: UnderlineType.SINGLE,
+                              },
+                            }),
+                          ],
+                        }),
+                        new Paragraph({
+                          indent: {
+                            left: "0.5in",
+                          },
+                          style: "bodyFont",
+                          children: [
+                            new TextRun({
+                              text: `IMD Program Coordinator`,
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      children: [
+                        new Paragraph(""),
+                        new Paragraph(""),
+                        new Paragraph(""),
+                        new Paragraph({
+                          style: "bodyFont",
+                          children: [
+                            new TextRun({
+                              text: chairpersonName,
+                              underline: {
+                                type: UnderlineType.SINGLE,
+                              },
+                            }),
+                          ],
+                        }),
+                        new Paragraph({
+                          style: "bodyFont",
+                          children: [
+                            new TextRun({
+                              text: `Program Chair`,
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+            new Paragraph(""),
+            new Paragraph(""),
+            new Paragraph({
+              style: "body",
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: deanName,
+                  underline: {
+                    type: UnderlineType.SINGLE,
+                  },
+                }),
+              ],
+            }),
+            new Paragraph({
+              style: "body",
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: `College Dean`,
+                }),
+              ],
+            }),
+            new Paragraph({
+              text: "",
+              style: "body",
+              border: {
+                top: {
+                  style: BorderStyle.THICK,
+                },
+              },
+            }),
+            new Paragraph({
+              style: "bodyFont",
+              indent: {
+                left: "0.5in",
+              },
+              children: [
+                new TextRun({
+                  text: `Application received on _________________ with 1 Hard copy ________ & Soft Copy _______`,
+                }),
+              ],
+            }),
+
+            new Table({
+              width: {
+                size: "100%",
+                type: WidthType.PERCENTAGE,
+              },
+              borders: {
+                bottom: {
+                  style: BorderStyle.NONE,
+                },
+                left: {
+                  style: BorderStyle.NONE,
+                },
+                right: {
+                  style: BorderStyle.NONE,
+                },
+                top: {
+                  style: BorderStyle.NONE,
+                },
+                insideHorizontal: {
+                  style: BorderStyle.NONE,
+                },
+                insideVertical: {
+                  style: BorderStyle.NONE,
+                },
+              },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [],
+                    }),
+
+                    new TableCell({
+                      children: [
+                        new Paragraph(""),
+                        new Paragraph(""),
+                        new Paragraph(""),
+                        new Paragraph({
+                          style: "bodyFont",
+                          children: [
+                            new TextRun({
+                              text: iDDCoordinatorName,
+                              underline: {
+                                type: UnderlineType.SINGLE,
+                              },
+                            }),
+                          ],
+                        }),
+                        new Paragraph({
+                          style: "bodyFont",
+                          children: [
+                            new TextRun({
+                              text: `Signature of IDD Coordinator`,
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
+
+    Packer.toBlob(doc).then((blob) => {
+      // saveAs from FileSaver will download the file
+      saveAs(blob, `${iMTitle}_F011.docx`);
+    });
+  }
+
+  return (
+    <div>
+      <button onClick={download} className="underline">F011 - Endorsement of the Instructional Material (Implementation
+          Phase)</button>
     </div>
   );
 }

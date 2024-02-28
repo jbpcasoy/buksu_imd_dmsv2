@@ -29,7 +29,7 @@ const ReviewQuestions = {
   q7_4: "They encourage students to communicate effectively.",
   q7_5: "They are prepared within the capability of the students.",
   q8_1: "The rubrics are appropriate for the assessment.",
-  q8_2: "The rubrics describe the criteria through which the learners’ outputs are rated.",
+  q8_2: "The rubrics describe the criteria through which the learners' outputs are rated.",
   q8_3: "The rubrics show the levels of achievements of quality of the assessment outputs.",
 };
 
