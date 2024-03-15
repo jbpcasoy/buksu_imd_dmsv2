@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { IDDCoordinatorSuggestionItemActionTaken, IM } from "@prisma/client";
+import { IDDCoordinatorSuggestionItemActionTaken } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIDDCoordinatorSuggestionItemActionTakenParams {
   id: string;
 }
-export default function useIDDCoordinatorSuggestionItemActionTaken({ id }: useIDDCoordinatorSuggestionItemActionTakenParams) {
-  const [state, setState] = useState<IDDCoordinatorSuggestionItemActionTaken | null>();
+export default function useIDDCoordinatorSuggestionItemActionTaken({
+  id,
+}: useIDDCoordinatorSuggestionItemActionTakenParams) {
+  const [state, setState] =
+    useState<IDDCoordinatorSuggestionItemActionTaken | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -16,7 +19,7 @@ export default function useIDDCoordinatorSuggestionItemActionTaken({ id }: useID
     axios
       .get(`/api/idd_coordinator_suggestion_item_action_taken/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -7,10 +7,17 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useQAMISChairpersonEndorsements({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{qAMISChairpersonEndorsements: QAMISChairpersonEndorsement[], count: number}>({
+export default function useQAMISChairpersonEndorsements({
+  skip,
+  take,
+  filter,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    qAMISChairpersonEndorsements: QAMISChairpersonEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    qAMISChairpersonEndorsements: []
+    qAMISChairpersonEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useQAMISChairpersonEndorsements({ skip, take, filter }: 
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

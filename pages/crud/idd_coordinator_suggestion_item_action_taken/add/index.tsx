@@ -17,7 +17,9 @@ export default function AddIDDCoordinatorSuggestionItemActionTakenPage() {
       axios
         .post("/api/idd_coordinator_suggestion_item_action_taken", values)
         .then(() => {
-          alert("IDDCoordinatorSuggestionItemActionTaken has been added successfully");
+          alert(
+            "IDDCoordinatorSuggestionItemActionTaken has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -30,16 +32,16 @@ export default function AddIDDCoordinatorSuggestionItemActionTakenPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='iDDCoordinatorSuggestionItemId'
+          type="text"
+          placeholder="iDDCoordinatorSuggestionItemId"
           {...formik.getFieldProps("iDDCoordinatorSuggestionItemId")}
         />
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

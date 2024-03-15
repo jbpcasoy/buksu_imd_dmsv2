@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { DeanEndorsement, IM } from "@prisma/client";
+import { DeanEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useDeanEndorsementIMParams {
   id?: string;

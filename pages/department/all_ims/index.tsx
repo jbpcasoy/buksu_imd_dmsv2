@@ -17,7 +17,7 @@ export default function DepartmentIMsPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useDepartmentIMs(state);
@@ -28,7 +28,7 @@ export default function DepartmentIMsPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.DEPARTMENT_IMS} />}
         count={count}
         iMs={iMs}
-        title='Department IM&apos;s'
+        title="Department IM's"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

@@ -9,7 +9,7 @@ export default function AddChairpersonSuggestionPage() {
       chairpersonReviewId: "",
     },
     validationSchema: Yup.object({
-        chairpersonReviewId: Yup.string().required(),
+      chairpersonReviewId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -28,11 +28,11 @@ export default function AddChairpersonSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='chairpersonReviewId'
+          type="text"
+          placeholder="chairpersonReviewId"
           {...formik.getFieldProps("chairpersonReviewId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

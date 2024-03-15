@@ -67,12 +67,12 @@ export default async function handler(
           },
         });
       }
-      
+
       // const iMERCCITLReviewed = await prisma.iMERCCITLReviewed.findFirst({
       //   where: {
       //     SubmittedIDDSpecialistSuggestion: {
       //       id: {
-      //         equals: id, 
+      //         equals: id,
       //       },
       //     },
       //   },

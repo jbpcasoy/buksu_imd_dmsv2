@@ -17,7 +17,9 @@ export default function AddChairpersonSuggestionItemActionTakenPage() {
       axios
         .post("/api/chairperson_suggestion_item_action_taken", values)
         .then(() => {
-          alert("ChairpersonSuggestionItemActionTaken has been added successfully");
+          alert(
+            "ChairpersonSuggestionItemActionTaken has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -30,16 +32,16 @@ export default function AddChairpersonSuggestionItemActionTakenPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='chairpersonSuggestionItemId'
+          type="text"
+          placeholder="chairpersonSuggestionItemId"
           {...formik.getFieldProps("chairpersonSuggestionItemId")}
         />
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

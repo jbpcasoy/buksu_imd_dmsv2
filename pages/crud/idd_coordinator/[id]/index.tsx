@@ -30,10 +30,10 @@ export default function IDDCoordinatorPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IDDCoordinator</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">IDDCoordinator</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -43,7 +43,10 @@ export default function IDDCoordinatorPage() {
       <p>updatedAt: {new Date(iDDCoordinator.updatedAt).toLocaleString()}</p>
       <p>
         userId:{" "}
-        <Link href={`/crud/user/${iDDCoordinator.userId}`} className='underline'>
+        <Link
+          href={`/crud/user/${iDDCoordinator.userId}`}
+          className="underline"
+        >
           {iDDCoordinator.userId}
         </Link>
       </p>

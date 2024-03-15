@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Chairperson, IM } from "@prisma/client";
+import { Chairperson } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useChairpersonParams {
   id?: string;
@@ -16,7 +16,7 @@ export default function useChairperson({ id }: useChairpersonParams) {
     axios
       .get(`/api/chairperson/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

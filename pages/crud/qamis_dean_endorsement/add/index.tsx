@@ -30,16 +30,16 @@ export default function AddQAMISDeanEndorsementPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='qAMISRevisionId'
+          type="text"
+          placeholder="qAMISRevisionId"
           {...formik.getFieldProps("qAMISRevisionId")}
         />
         <input
-          type='text'
-          placeholder='activeDeanId'
+          type="text"
+          placeholder="activeDeanId"
           {...formik.getFieldProps("activeDeanId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

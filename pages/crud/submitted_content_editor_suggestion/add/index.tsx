@@ -28,11 +28,11 @@ export default function AddSubmittedContentEditorSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='contentEditorSuggestionId'
+          type="text"
+          placeholder="contentEditorSuggestionId"
           {...formik.getFieldProps("contentEditorSuggestionId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

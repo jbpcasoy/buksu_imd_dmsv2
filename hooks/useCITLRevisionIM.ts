@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { CITLRevision, IM } from "@prisma/client";
+import { CITLRevision } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCITLRevisionIMParams {
   id?: string;

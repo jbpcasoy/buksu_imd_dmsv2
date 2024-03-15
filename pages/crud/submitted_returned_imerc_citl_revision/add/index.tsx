@@ -15,7 +15,9 @@ export default function AddSubmittedReturnedIMERCCITLRevisionPage() {
       axios
         .post("/api/submitted_returned_imerc_citl_revision", values)
         .then(() => {
-          alert("SubmittedReturnedIMERCCITLRevision has been added successfully");
+          alert(
+            "SubmittedReturnedIMERCCITLRevision has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -28,11 +30,11 @@ export default function AddSubmittedReturnedIMERCCITLRevisionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='returnedIMERCCITLRevisionId'
+          type="text"
+          placeholder="returnedIMERCCITLRevisionId"
           {...formik.getFieldProps("returnedIMERCCITLRevisionId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

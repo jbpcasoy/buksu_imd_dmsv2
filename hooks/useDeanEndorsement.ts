@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { DeanEndorsement, IM } from "@prisma/client";
+import { DeanEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useDeanEndorsementParams {
   id: string;
@@ -16,7 +16,7 @@ export default function useDeanEndorsement({ id }: useDeanEndorsementParams) {
     axios
       .get(`/api/dean_endorsement/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useContentEditorSuggestionItemsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useContentEditorSuggestionItems({ skip, take, filter }: useContentEditorSuggestionItemsParams) {
-  const [state, setState] = useState<{contentEditorSuggestionItems: ContentEditorSuggestionItem[], count: number}>({
+export default function useContentEditorSuggestionItems({
+  skip,
+  take,
+  filter,
+}: useContentEditorSuggestionItemsParams) {
+  const [state, setState] = useState<{
+    contentEditorSuggestionItems: ContentEditorSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    contentEditorSuggestionItems: []
+    contentEditorSuggestionItems: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useContentEditorSuggestionItems({ skip, take, filter }: 
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

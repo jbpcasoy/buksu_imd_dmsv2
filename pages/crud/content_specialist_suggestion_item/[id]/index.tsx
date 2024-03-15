@@ -19,7 +19,9 @@ export default function ContentSpecialistSuggestionItemPage() {
     }
 
     axios
-      .delete(`/api/content_specialist_suggestion_item/${contentSpecialistSuggestionItemId}`)
+      .delete(
+        `/api/content_specialist_suggestion_item/${contentSpecialistSuggestionItemId}`
+      )
       .then(() => {
         alert("ContentSpecialistSuggestionItem has been deleted successfully");
       })
@@ -32,32 +34,34 @@ export default function ContentSpecialistSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ContentSpecialistSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ContentSpecialistSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/content_specialist_suggestion_item/${contentSpecialistSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {contentSpecialistSuggestionItem.id}</p>
       <p>
-        createdAt: {new Date(contentSpecialistSuggestionItem.createdAt).toLocaleString()}
+        createdAt:{" "}
+        {new Date(contentSpecialistSuggestionItem.createdAt).toLocaleString()}
       </p>
       <p>
-        updatedAt: {new Date(contentSpecialistSuggestionItem.updatedAt).toLocaleString()}
+        updatedAt:{" "}
+        {new Date(contentSpecialistSuggestionItem.updatedAt).toLocaleString()}
       </p>
       <p>
         contentSpecialistSuggestionId:{" "}
         <Link
           href={`/crud/content_specialist_suggestion/${contentSpecialistSuggestionItem.contentSpecialistSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {contentSpecialistSuggestionItem.contentSpecialistSuggestionId}
         </Link>

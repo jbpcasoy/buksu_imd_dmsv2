@@ -10,7 +10,7 @@ export default function AddIMERCCITLDirectorEndorsementPage() {
       activeCITLDirectorId: "",
     },
     validationSchema: Yup.object({
-        iMERCIDDCoordinatorEndorsementId: Yup.string().required(),
+      iMERCIDDCoordinatorEndorsementId: Yup.string().required(),
       activeCITLDirectorId: Yup.string().required(),
     }),
     onSubmit: (values) => {
@@ -30,16 +30,16 @@ export default function AddIMERCCITLDirectorEndorsementPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='iMERCIDDCoordinatorEndorsementId'
+          type="text"
+          placeholder="iMERCIDDCoordinatorEndorsementId"
           {...formik.getFieldProps("iMERCIDDCoordinatorEndorsementId")}
         />
         <input
-          type='text'
-          placeholder='activeCITLDirectorId'
+          type="text"
+          placeholder="activeCITLDirectorId"
           {...formik.getFieldProps("activeCITLDirectorId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

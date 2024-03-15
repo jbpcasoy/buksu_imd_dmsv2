@@ -4,23 +4,22 @@ import useChairpersonSuggestion from "@/hooks/useChairpersonSuggestion";
 import useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem from "@/hooks/useChairpersonSuggestionItemActionTakenChairpersonSuggestionItem";
 import useChairpersonSuggestionItemsIM from "@/hooks/useChairpersonSuggestionItemsIM";
 import useFaculty from "@/hooks/useFaculty";
+import useRefresh from "@/hooks/useRefresh";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import useUser from "@/hooks/useUser";
 import {
   ChairpersonSuggestionItem,
   SubmittedChairpersonSuggestion,
-  User,
 } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
-import useRefresh from "@/hooks/useRefresh";
-import { useSession } from "next-auth/react";
 
 interface IMChairpersonSuggestionItemsProps {
   id: string;

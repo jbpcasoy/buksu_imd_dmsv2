@@ -11,7 +11,6 @@ import useUser from "@/hooks/useUser";
 import { QAMISSuggestionItem, SubmittedQAMISSuggestion } from "@prisma/client";
 import { DateTime } from "luxon";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface IMQAMISSuggestionItemsProps {

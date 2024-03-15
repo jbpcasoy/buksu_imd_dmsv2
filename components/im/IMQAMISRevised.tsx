@@ -1,24 +1,22 @@
 import Loading from "@/components/Loading";
 import IMActionMenu from "@/components/im/IMActionMenu";
-import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
-import useIM from "@/hooks/useIM";
-import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
-import Error from "next/error";
-import Link from "next/link";
-import IMInfo from "./IMInfo";
+import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
 import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
-import useActiveChairpersonMe from "@/hooks/useActiveChairpersonMe";
-import Confirmation from "../Confirmation";
-import IMQAMISSuggestionItems from "../IMQAMISSuggestionItems";
+import useIM from "@/hooks/useIM";
+import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
+import useQAMISChairpersonEndorsementIM from "@/hooks/useQAMISChairpersonEndorsementIM";
 import useQAMISCoordinatorEndorsementIM from "@/hooks/useQAMISCoordinatorEndorsementIM";
 import useQAMISDeanEndorsementIM from "@/hooks/useQAMISDeanEndorsementIM";
-import useQAMISChairpersonEndorsementIM from "@/hooks/useQAMISChairpersonEndorsementIM";
-import { useContext, useState } from "react";
-import axios from "axios";
-import { SnackbarContext } from "../SnackbarProvider";
-import { useRouter } from "next/router";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
+import axios from "axios";
+import Error from "next/error";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import Confirmation from "../Confirmation";
+import IMQAMISSuggestionItems from "../IMQAMISSuggestionItems";
+import { SnackbarContext } from "../SnackbarProvider";
+import IMInfo from "./IMInfo";
 
 interface IMQAMISRevisedProps {
   iMId: string;

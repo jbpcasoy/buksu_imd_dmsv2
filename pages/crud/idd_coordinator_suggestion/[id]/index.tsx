@@ -32,10 +32,10 @@ export default function IDDCoordinatorSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IDDCoordinatorSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">IDDCoordinatorSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -53,7 +53,7 @@ export default function IDDCoordinatorSuggestionPage() {
         deanEndorsementId:{" "}
         <Link
           href={`/crud/dean_endorsement/${iDDCoordinatorSuggestion.deanEndorsementId}`}
-          className='underline'
+          className="underline"
         >
           {iDDCoordinatorSuggestion.deanEndorsementId}{" "}
         </Link>
@@ -62,7 +62,7 @@ export default function IDDCoordinatorSuggestionPage() {
         iDDCoordinatorId:{" "}
         <Link
           href={`/crud/idd_coordinator/${iDDCoordinatorSuggestion.iDDCoordinatorId}`}
-          className='underline'
+          className="underline"
         >
           {iDDCoordinatorSuggestion.iDDCoordinatorId}{" "}
         </Link>

@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useNotificationReadsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useNotificationReads({ skip, take, filter }: useNotificationReadsParams) {
-  const [state, setState] = useState<{notificationReads: NotificationRead[], count: number}>({
+export default function useNotificationReads({
+  skip,
+  take,
+  filter,
+}: useNotificationReadsParams) {
+  const [state, setState] = useState<{
+    notificationReads: NotificationRead[];
+    count: number;
+  }>({
     count: 0,
-    notificationReads: []
+    notificationReads: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useNotificationReads({ skip, take, filter }: useNotifica
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

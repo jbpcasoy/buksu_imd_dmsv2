@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface usePeerReviewsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function usePeerReviews({ skip, take, filter }: usePeerReviewsParams) {
-  const [state, setState] = useState<{peerReviews: PeerReview[], count: number}>({
+export default function usePeerReviews({
+  skip,
+  take,
+  filter,
+}: usePeerReviewsParams) {
+  const [state, setState] = useState<{
+    peerReviews: PeerReview[];
+    count: number;
+  }>({
     count: 0,
-    peerReviews: []
+    peerReviews: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function usePeerReviews({ skip, take, filter }: usePeerReviewsPar
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

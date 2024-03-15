@@ -8,10 +8,15 @@ export interface useIMERCEndorsedParams {
   filter?: object;
   sort?: object;
 }
-export default function useIMERCEndorsed({ skip, take, filter, sort }: useIMERCEndorsedParams) {
-  const [state, setState] = useState<{iMs: IM[], count: number}>({
+export default function useIMERCEndorsed({
+  skip,
+  take,
+  filter,
+  sort,
+}: useIMERCEndorsedParams) {
+  const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
-    iMs: []
+    iMs: [],
   });
 
   useEffect(() => {
@@ -30,7 +35,7 @@ export default function useIMERCEndorsed({ skip, take, filter, sort }: useIMERCE
       .catch((error) => {
         console.error(error);
       });
-    }, [skip, take, filter, sort]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

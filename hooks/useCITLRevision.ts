@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { CITLRevision, IM } from "@prisma/client";
+import { CITLRevision } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCITLRevisionParams {
   id?: string;
@@ -16,7 +16,7 @@ export default function useCITLRevision({ id }: useCITLRevisionParams) {
     axios
       .get(`/api/citl_revision/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -29,11 +29,11 @@ export default function AddActiveChairpersonPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='activeFacultyId'
+          type="text"
+          placeholder="activeFacultyId"
           {...formik.getFieldProps("activeFacultyId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

@@ -23,7 +23,7 @@ export default function AllSuggestionsPage() {
   if (iM === null) {
     return (
       <MainLayout>
-        <Error statusCode={404} title='IM Not Found' />
+        <Error statusCode={404} title="IM Not Found" />
       </MainLayout>
     );
   }
@@ -37,9 +37,9 @@ export default function AllSuggestionsPage() {
 
   return (
     <MainLayout>
-      <div className='space-y-1 px-1'>
-        <p className='text-center font-bold'>IMPLEMENTATION PHASE</p>
-        <p className='text-center font-bold text-sm'>DEPARTMENT REVIEW</p>
+      <div className="space-y-1 px-1">
+        <p className="text-center font-bold">IMPLEMENTATION PHASE</p>
+        <p className="text-center font-bold text-sm">DEPARTMENT REVIEW</p>
         <IMPeerSuggestionItems id={iMId as string} editable={false} />
         <IMChairpersonSuggestionItems id={iMId as string} editable={false} />
         <IMCoordinatorSuggestionItems id={iMId as string} editable={false} />
@@ -47,10 +47,13 @@ export default function AllSuggestionsPage() {
           id={iMId as string}
           editable={false}
         />
-        <p className='text-center font-bold text-sm'>CITL REVIEW</p>
+        <p className="text-center font-bold text-sm">CITL REVIEW</p>
         <IMIDDCoordinatorSuggestionItems id={iMId as string} editable={false} />
-        <IMReturnedCITLRevisionSuggestionItems id={iMId as string} editable={false} />
-        <p className='text-center font-bold'>IMERC</p>
+        <IMReturnedCITLRevisionSuggestionItems
+          id={iMId as string}
+          editable={false}
+        />
+        <p className="text-center font-bold">IMERC</p>
         <IMQAMISSuggestionItems id={iMId as string} editable={false} />
         <IMIDDSpecialistSuggestionItems id={iMId as string} editable={false} />
         <IMContentSpecialistSuggestionItems

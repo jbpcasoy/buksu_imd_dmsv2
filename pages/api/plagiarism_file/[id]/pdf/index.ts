@@ -2,10 +2,8 @@ import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
-import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import fetch from "node-fetch";
-import path from "path";
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,7 +41,7 @@ export default async function handler(
       // );
       // const file = fs.createReadStream(destination);
       // file.pipe(res);
-      
+
       try {
         const response = await fetch(
           `${process.env.BLOB_URL}/${process.env.NODE_ENV}/files/plagiarism/${plagiarismFile.filename}`

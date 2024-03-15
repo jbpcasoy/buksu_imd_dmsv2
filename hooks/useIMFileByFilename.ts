@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
 import { IMFile } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIMFileByFilenameParams {
   filename?: string;
 }
-export default function useIMFileByFilename({ filename }: useIMFileByFilenameParams) {
+export default function useIMFileByFilename({
+  filename,
+}: useIMFileByFilenameParams) {
   const [state, setState] = useState<IMFile | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useIMFileByFilename({ filename }: useIMFileByFilenamePar
     axios
       .get(`/api/im_file/by_filename/${filename}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

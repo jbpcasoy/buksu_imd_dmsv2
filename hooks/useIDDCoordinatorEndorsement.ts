@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { IDDCoordinatorEndorsement, IM } from "@prisma/client";
+import { IDDCoordinatorEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIDDCoordinatorEndorsementParams {
   id?: string;
 }
-export default function useIDDCoordinatorEndorsement({ id }: useIDDCoordinatorEndorsementParams) {
+export default function useIDDCoordinatorEndorsement({
+  id,
+}: useIDDCoordinatorEndorsementParams) {
   const [state, setState] = useState<IDDCoordinatorEndorsement | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useIDDCoordinatorEndorsement({ id }: useIDDCoordinatorEn
     axios
       .get(`/api/idd_coordinator_endorsement/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

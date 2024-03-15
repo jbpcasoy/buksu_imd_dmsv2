@@ -5,17 +5,23 @@ import { useEffect, useState } from "react";
 export interface useCoordinatorSuggestionItemsOwnParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useCoordinatorSuggestionItemsOwn({ skip, take, id }: useCoordinatorSuggestionItemsOwnParams, refreshFlag: number) {
-  const [state, setState] = useState<{coordinatorSuggestionItems: CoordinatorSuggestionItem[], count: number}>({
+export default function useCoordinatorSuggestionItemsOwn(
+  { skip, take, id }: useCoordinatorSuggestionItemsOwnParams,
+  refreshFlag: number
+) {
+  const [state, setState] = useState<{
+    coordinatorSuggestionItems: CoordinatorSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    coordinatorSuggestionItems: []
+    coordinatorSuggestionItems: [],
   });
 
   useEffect(() => {
-    if(!id) {
-        return;
+    if (!id) {
+      return;
     }
     axios
       .get("/api/coordinator_suggestion_item", {
@@ -23,8 +29,8 @@ export default function useCoordinatorSuggestionItemsOwn({ skip, take, id }: use
           skip,
           take,
           filter: {
-            coordinatorSuggestionId: id
-          }
+            coordinatorSuggestionId: id,
+          },
         },
       })
       .then((res) => {

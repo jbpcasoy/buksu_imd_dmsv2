@@ -1,6 +1,5 @@
 import CrudLayout from "@/components/CrudLayout";
 import useQAMISDepartmentEndorsement from "@/hooks/useQAMISDepartmentEndorsement";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 

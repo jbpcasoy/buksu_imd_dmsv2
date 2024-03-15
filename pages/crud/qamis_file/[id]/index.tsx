@@ -30,10 +30,10 @@ export default function QAMISFilePage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>QAMISFile</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">QAMISFile</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -42,8 +42,11 @@ export default function QAMISFilePage() {
       <p>createdAt: {new Date(qAMISFile.createdAt).toLocaleString()}</p>
       <p>updatedAt: {new Date(qAMISFile.updatedAt).toLocaleString()}</p>
       <p>
-      submittedQAMISSuggestionId:{" "}
-        <Link href={`/crud/submitted_qamis_suggestion/${qAMISFile.submittedQAMISSuggestionId}`} className='underline'>
+        submittedQAMISSuggestionId:{" "}
+        <Link
+          href={`/crud/submitted_qamis_suggestion/${qAMISFile.submittedQAMISSuggestionId}`}
+          className="underline"
+        >
           {qAMISFile.submittedQAMISSuggestionId}
         </Link>
       </p>

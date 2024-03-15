@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function IDDSpecialistSuggestionItemsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { iDDSpecialistSuggestionItems, count } = useIDDSpecialistSuggestionItems(state);
+  const { iDDSpecialistSuggestionItems, count } =
+    useIDDSpecialistSuggestionItems(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -23,10 +24,10 @@ export default function IDDSpecialistSuggestionItemsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>IDDSpecialistSuggestionItem</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/idd_specialist_suggestion_item/add`}
         >
           Add
@@ -34,7 +35,7 @@ export default function IDDSpecialistSuggestionItemsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -50,15 +51,19 @@ export default function IDDSpecialistSuggestionItemsPage() {
                 <tr key={iDDSpecialistSuggestionItem.id}>
                   <td>{iDDSpecialistSuggestionItem.id}</td>
                   <td>
-                    {new Date(iDDSpecialistSuggestionItem.createdAt).toLocaleString()}
+                    {new Date(
+                      iDDSpecialistSuggestionItem.createdAt
+                    ).toLocaleString()}
                   </td>
                   <td>
-                    {new Date(iDDSpecialistSuggestionItem.updatedAt).toLocaleString()}
+                    {new Date(
+                      iDDSpecialistSuggestionItem.updatedAt
+                    ).toLocaleString()}
                   </td>
                   <td>
                     <Link
                       href={`/crud/idd_specialist_suggestion/${iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId}
                     </Link>
@@ -66,7 +71,7 @@ export default function IDDSpecialistSuggestionItemsPage() {
                   <td>
                     <Link
                       href={`/crud/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItem.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -76,14 +81,14 @@ export default function IDDSpecialistSuggestionItemsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

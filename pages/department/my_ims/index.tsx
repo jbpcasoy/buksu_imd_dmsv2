@@ -17,7 +17,7 @@ export default function MyIMsPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useMyIMs(state);
@@ -28,7 +28,7 @@ export default function MyIMsPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.DEPARTMENT_IMS} />}
         count={count}
         iMs={iMs}
-        title='My IM&apos;s'
+        title="My IM's"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

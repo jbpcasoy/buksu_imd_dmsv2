@@ -67,7 +67,7 @@ const exportDataToCSV = async ({
     values.push(Object.values(data).join(","));
   });
   const csvContent = `${headers}\n${values.join("\n")}\n`;
-  
+
   return await put(destination, csvContent, {
     access: "public",
     multipart: true,

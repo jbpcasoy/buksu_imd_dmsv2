@@ -35,7 +35,7 @@ export default function useIMERCCITLEndorsed({
       .catch((error) => {
         console.error(error);
       });
-    }, [skip, take, filter, sort]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

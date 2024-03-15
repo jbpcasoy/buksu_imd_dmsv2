@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { IDDSpecialistReview, IM } from "@prisma/client";
+import { IDDSpecialistReview } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIDDSpecialistReviewParams {
   id: string;
 }
-export default function useIDDSpecialistReviewMe({ id }: useIDDSpecialistReviewParams) {
+export default function useIDDSpecialistReviewMe({
+  id,
+}: useIDDSpecialistReviewParams) {
   const [state, setState] = useState<IDDSpecialistReview | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useIDDSpecialistReviewMe({ id }: useIDDSpecialistReviewP
     axios
       .get(`/api/idd_specialist_review/im/${id}/me`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

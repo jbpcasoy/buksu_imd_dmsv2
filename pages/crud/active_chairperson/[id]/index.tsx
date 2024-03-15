@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function ActiveChairpersonPage() {
   const router = useRouter();
   const activeChairpersonId = router.query.id;
-  const activeChairperson = useActiveChairperson({ id: activeChairpersonId as string });
+  const activeChairperson = useActiveChairperson({
+    id: activeChairpersonId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -30,10 +32,10 @@ export default function ActiveChairpersonPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ActiveChairperson</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ActiveChairperson</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -45,7 +47,7 @@ export default function ActiveChairpersonPage() {
         chairpersonId:{" "}
         <Link
           href={`/crud/chairperson/${activeChairperson.chairpersonId}`}
-          className='underline'
+          className="underline"
         >
           {activeChairperson.chairpersonId}
         </Link>

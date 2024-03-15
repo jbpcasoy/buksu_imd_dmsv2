@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function ActiveCoordinatorPage() {
   const router = useRouter();
   const activeCoordinatorId = router.query.id;
-  const activeCoordinator = useActiveCoordinator({ id: activeCoordinatorId as string });
+  const activeCoordinator = useActiveCoordinator({
+    id: activeCoordinatorId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -30,10 +32,10 @@ export default function ActiveCoordinatorPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ActiveCoordinator</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ActiveCoordinator</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -45,7 +47,7 @@ export default function ActiveCoordinatorPage() {
         coordinatorId:{" "}
         <Link
           href={`/crud/coordinator/${activeCoordinator.coordinatorId}`}
-          className='underline'
+          className="underline"
         >
           {activeCoordinator.coordinatorId}
         </Link>

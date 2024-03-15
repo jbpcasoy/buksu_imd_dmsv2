@@ -1,7 +1,6 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { es } from "@faker-js/faker";
 import { User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";

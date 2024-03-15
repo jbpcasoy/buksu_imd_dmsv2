@@ -17,7 +17,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-
   const getHandler = async () => {
     try {
       const activeCoordinator = await prisma.activeCoordinator.findFirstOrThrow(

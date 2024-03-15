@@ -6,13 +6,12 @@ import {
   Document,
   ExternalHyperlink,
   Footer,
-  FrameAnchorType,
   Header,
   HorizontalPositionRelativeFrom,
   ImageRun,
+  LevelFormat,
   LineRuleType,
   Packer,
-  PageBreak,
   PageNumber,
   Paragraph,
   Table,
@@ -23,14 +22,10 @@ import {
   VerticalAlign,
   VerticalPositionRelativeFrom,
   WidthType,
-  CheckBox,
-  Drawing,
-  LevelFormat,
   convertInchesToTwip,
 } from "docx";
 import saveAs from "file-saver";
 import { useEffect, useState } from "react";
-import { tuple } from "yup";
 
 export default function TestPage() {
   return (

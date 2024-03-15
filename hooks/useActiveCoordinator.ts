@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { ActiveCoordinator, IM } from "@prisma/client";
+import { ActiveCoordinator } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useActiveCoordinatorParams {
   id: string;
 }
-export default function useActiveCoordinator({ id }: useActiveCoordinatorParams) {
+export default function useActiveCoordinator({
+  id,
+}: useActiveCoordinatorParams) {
   const [state, setState] = useState<ActiveCoordinator | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useActiveCoordinator({ id }: useActiveCoordinatorParams)
     axios
       .get(`/api/active_coordinator/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

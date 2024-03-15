@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useSubmittedContentEditorSuggestionsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useSubmittedContentEditorSuggestions({ skip, take, filter }: useSubmittedContentEditorSuggestionsParams) {
-  const [state, setState] = useState<{submittedContentEditorSuggestions: SubmittedContentEditorSuggestion[], count: number}>({
+export default function useSubmittedContentEditorSuggestions({
+  skip,
+  take,
+  filter,
+}: useSubmittedContentEditorSuggestionsParams) {
+  const [state, setState] = useState<{
+    submittedContentEditorSuggestions: SubmittedContentEditorSuggestion[];
+    count: number;
+  }>({
     count: 0,
-    submittedContentEditorSuggestions: []
+    submittedContentEditorSuggestions: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useSubmittedContentEditorSuggestions({ skip, take, filte
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

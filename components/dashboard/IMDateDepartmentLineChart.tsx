@@ -1,3 +1,6 @@
+import useCollege from "@/hooks/useCollege";
+import useDepartments from "@/hooks/useDepartments";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 import axios from "axios";
 import {
   CategoryScale,
@@ -10,13 +13,9 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { DateTime } from "luxon";
+import autocolors from "chartjs-plugin-autocolors";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import autocolors from "chartjs-plugin-autocolors";
-import useDepartments from "@/hooks/useDepartments";
-import useCollege from "@/hooks/useCollege";
-import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 
 ChartJS.register(
   CategoryScale,

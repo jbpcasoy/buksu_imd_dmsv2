@@ -3,9 +3,7 @@ import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import { del } from "@vercel/blob";
-import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 
 export default async function handler(
   req: NextApiRequest,
@@ -303,7 +301,9 @@ export default async function handler(
       //   logger.error({ error });
       //   throw error;
       // });
-      await del(`${process.env.BLOB_URL}/${process.env.NODE_ENV}/files/im/${iMFileToDelete.filename}`);
+      await del(
+        `${process.env.BLOB_URL}/${process.env.NODE_ENV}/files/im/${iMFileToDelete.filename}`
+      );
 
       return res.json(iMFile);
     } catch (error: any) {

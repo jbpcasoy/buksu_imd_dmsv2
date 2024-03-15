@@ -9,7 +9,7 @@ import * as Yup from "yup";
 export default function EditCollegePage() {
   const router = useRouter();
   const collegeId = router.query.id;
-  const college = useCollege({id: collegeId as string})
+  const college = useCollege({ id: collegeId as string });
 
   const formik = useFormik({
     initialValues: {
@@ -30,22 +30,20 @@ export default function EditCollegePage() {
     },
   });
 
-  
   useEffect(() => {
-    if(!college) return;
+    if (!college) return;
     let subscribe = true;
-    
+
     formik.setValues({
-      name: college.name
-    })
+      name: college.name,
+    });
 
     return () => {
       subscribe = false;
-    }
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [college])
-
+  }, [college]);
 
   return (
     <CrudLayout>
@@ -53,11 +51,11 @@ export default function EditCollegePage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='Name'
+          type="text"
+          placeholder="Name"
           {...formik.getFieldProps("name")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

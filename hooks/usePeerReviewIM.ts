@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { PeerReview, IM } from "@prisma/client";
+import { PeerReview } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface usePeerReviewIMParams {
   id?: string;

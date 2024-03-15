@@ -32,16 +32,16 @@ export default function QAMISSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>QAMISSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">QAMISSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/qamis_suggestion_item/${qAMISSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -57,7 +57,7 @@ export default function QAMISSuggestionItemPage() {
         qAMISSuggestionId:{" "}
         <Link
           href={`/crud/qamis_suggestion/${qAMISSuggestionItem.qAMISSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISSuggestionItem.qAMISSuggestionId}
         </Link>

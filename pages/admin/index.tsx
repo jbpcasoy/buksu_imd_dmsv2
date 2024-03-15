@@ -2,7 +2,6 @@ import AdminLayout from "@/components/AdminLayout";
 import CollegeSelector from "@/components/CollegeSelector";
 import DepartmentSelector from "@/components/DepartmentSelector";
 import StatusSelector from "@/components/StatusSelector";
-import { IMDateDepartmentLineChart } from "@/components/dashboard/IMDateDepartmentLineChart";
 import { IMDepartmentPieChart } from "@/components/dashboard/IMDepartmentPieChart";
 import { IMStatusDepartmentLineChart } from "@/components/dashboard/IMStatusDepartmentLineChart";
 import { IMStatusPieChart } from "@/components/dashboard/IMStatusPieChart";

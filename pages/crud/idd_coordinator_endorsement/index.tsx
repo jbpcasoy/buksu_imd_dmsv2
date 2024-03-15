@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function IDDCoordinatorEndorsementsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { iDDCoordinatorEndorsements, count } = useIDDCoordinatorEndorsements(state);
+  const { iDDCoordinatorEndorsements, count } =
+    useIDDCoordinatorEndorsements(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -23,10 +24,10 @@ export default function IDDCoordinatorEndorsementsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>IDDCoordinatorEndorsement</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/idd_coordinator_endorsement/add`}
         >
           Add
@@ -34,7 +35,7 @@ export default function IDDCoordinatorEndorsementsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -63,7 +64,7 @@ export default function IDDCoordinatorEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/citl_revision/${iDDCoordinatorEndorsement.cITLRevisionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iDDCoordinatorEndorsement.cITLRevisionId}
                     </Link>
@@ -71,7 +72,7 @@ export default function IDDCoordinatorEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/idd_coordinator/${iDDCoordinatorEndorsement.iDDCoordinatorId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iDDCoordinatorEndorsement.iDDCoordinatorId}
                     </Link>
@@ -79,7 +80,7 @@ export default function IDDCoordinatorEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/idd_coordinator_endorsement/${iDDCoordinatorEndorsement.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -89,14 +90,14 @@ export default function IDDCoordinatorEndorsementsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

@@ -70,12 +70,13 @@ export default async function handler(
             },
           },
         });
-        if(!faculty) {
+        if (!faculty) {
           return res.status(403).json({
             error: {
-              message: "Only an active faculty is allowed to perform this action"
-            }
-          })
+              message:
+                "Only an active faculty is allowed to perform this action",
+            },
+          });
         }
 
         const peerReview = await prisma.peerReview.findFirstOrThrow({
@@ -87,29 +88,31 @@ export default async function handler(
             },
           },
         });
-        if(peerReview.facultyId !== faculty.id) {
+        if (peerReview.facultyId !== faculty.id) {
           return res.status(403).json({
             error: {
-              message: "You are not allowed to delete this peer suggestion"
-            }
-          })
+              message: "You are not allowed to delete this peer suggestion",
+            },
+          });
         }
 
-        const submittedPeerSuggestion = await prisma.submittedPeerSuggestion.findFirst({
-          where: {
-            PeerSuggestion: {
-              id: {
-                equals: id
-              }
-            }
-          }
-        })
-        if(submittedPeerSuggestion) {
+        const submittedPeerSuggestion =
+          await prisma.submittedPeerSuggestion.findFirst({
+            where: {
+              PeerSuggestion: {
+                id: {
+                  equals: id,
+                },
+              },
+            },
+          });
+        if (submittedPeerSuggestion) {
           return res.status(400).json({
             error: {
-              message: "You are not allowed to delete a submitted peer suggestion"
-            }
-          })
+              message:
+                "You are not allowed to delete a submitted peer suggestion",
+            },
+          });
         }
       }
 

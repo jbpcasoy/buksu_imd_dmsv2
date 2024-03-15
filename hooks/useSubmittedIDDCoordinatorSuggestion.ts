@@ -8,7 +8,8 @@ export interface useSubmittedIDDCoordinatorSuggestionParams {
 export default function useSubmittedIDDCoordinatorSuggestion({
   id,
 }: useSubmittedIDDCoordinatorSuggestionParams) {
-  const [state, setState] = useState<SubmittedIDDCoordinatorSuggestion | null>();
+  const [state, setState] =
+    useState<SubmittedIDDCoordinatorSuggestion | null>();
 
   useEffect(() => {
     if (!id) return;

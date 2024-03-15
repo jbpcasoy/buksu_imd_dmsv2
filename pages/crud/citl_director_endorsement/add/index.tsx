@@ -30,16 +30,16 @@ export default function AddCITLDirectorEndorsementPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='iDDCoordinatorEndorsementId'
+          type="text"
+          placeholder="iDDCoordinatorEndorsementId"
           {...formik.getFieldProps("iDDCoordinatorEndorsementId")}
         />
         <input
-          type='text'
-          placeholder='activeCITLDirectorId'
+          type="text"
+          placeholder="activeCITLDirectorId"
           {...formik.getFieldProps("activeCITLDirectorId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

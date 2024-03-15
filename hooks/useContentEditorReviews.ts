@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useContentEditorReviewsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useContentEditorReviews({ skip, take, filter }: useContentEditorReviewsParams) {
-  const [state, setState] = useState<{contentEditorReviews: ContentEditorReview[], count: number}>({
+export default function useContentEditorReviews({
+  skip,
+  take,
+  filter,
+}: useContentEditorReviewsParams) {
+  const [state, setState] = useState<{
+    contentEditorReviews: ContentEditorReview[];
+    count: number;
+  }>({
     count: 0,
-    contentEditorReviews: []
+    contentEditorReviews: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useContentEditorReviews({ skip, take, filter }: useConte
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

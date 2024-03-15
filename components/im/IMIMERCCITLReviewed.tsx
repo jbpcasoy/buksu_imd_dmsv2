@@ -1,5 +1,6 @@
 import Loading from "@/components/Loading";
 import IMActionMenu from "@/components/im/IMActionMenu";
+import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useIM from "@/hooks/useIM";
 import useIMERCCITLReviewedIM from "@/hooks/useIMERCCITLReviewedIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
@@ -15,9 +16,8 @@ import IMContentEditorSuggestionItems from "../IMContentEditorSuggestionItems";
 import IMContentSpecialistSuggestionItems from "../IMContentSpecialistSuggestionItems";
 import IMIDDSpecialistSuggestionItems from "../IMIDDSpecialistSuggestionItems";
 import IMReturnedIMERCCITLRevisionSuggestionItems from "../IMReturnedIMERCCITLRevisionSuggestionItems";
-import IMInfo from "./IMInfo";
 import { SnackbarContext } from "../SnackbarProvider";
-import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
+import IMInfo from "./IMInfo";
 
 interface IMIMERCCITLReviewedProps {
   iMId: string;

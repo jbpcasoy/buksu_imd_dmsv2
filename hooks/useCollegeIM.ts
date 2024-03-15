@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { College, IM } from "@prisma/client";
+import { College } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCollegeIMParams {
   id: string;
@@ -16,7 +16,7 @@ export default function useCollegeIM({ id }: useCollegeIMParams) {
     axios
       .get(`/api/college/im/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

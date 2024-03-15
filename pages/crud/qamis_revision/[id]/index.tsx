@@ -32,10 +32,10 @@ export default function QAMISRevisionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>QAMISRevision</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">QAMISRevision</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -47,7 +47,7 @@ export default function QAMISRevisionPage() {
         qAMISFileId:{" "}
         <Link
           href={`/crud/qamis_file/${qAMISRevision.qAMISFileId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISRevision.qAMISFileId}
         </Link>
@@ -56,7 +56,7 @@ export default function QAMISRevisionPage() {
         iMFileId:{" "}
         <Link
           href={`/crud/qamis_file/${qAMISRevision.iMFileId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISRevision.iMFileId}
         </Link>
@@ -65,7 +65,7 @@ export default function QAMISRevisionPage() {
         submittedQAMISSuggestionId:{" "}
         <Link
           href={`/crud/submitted_qamis_suggestion/${qAMISRevision.submittedQAMISSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISRevision.submittedQAMISSuggestionId}
         </Link>

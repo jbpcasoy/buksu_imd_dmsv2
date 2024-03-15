@@ -17,7 +17,9 @@ export default function AddContentEditorSuggestionItemActionTakenPage() {
       axios
         .post("/api/content_editor_suggestion_item_action_taken", values)
         .then(() => {
-          alert("ContentEditorSuggestionItemActionTaken has been added successfully");
+          alert(
+            "ContentEditorSuggestionItemActionTaken has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -30,16 +32,16 @@ export default function AddContentEditorSuggestionItemActionTakenPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='contentEditorSuggestionItemId'
+          type="text"
+          placeholder="contentEditorSuggestionItemId"
           {...formik.getFieldProps("contentEditorSuggestionItemId")}
         />
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

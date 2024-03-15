@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { ContentSpecialist, IM } from "@prisma/client";
+import { ContentSpecialist } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useContentSpecialistParams {
   id?: string;
 }
-export default function useContentSpecialist({ id }: useContentSpecialistParams) {
+export default function useContentSpecialist({
+  id,
+}: useContentSpecialistParams) {
   const [state, setState] = useState<ContentSpecialist | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useContentSpecialist({ id }: useContentSpecialistParams)
     axios
       .get(`/api/content_specialist/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

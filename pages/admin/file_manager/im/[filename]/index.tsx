@@ -76,7 +76,9 @@ export default function FileManagerIMPage() {
 
             {iMFile && (
               // <DynamicReactJson src={iMFile} collapsed={2} />
-              <pre className="text-xs">{JSON.stringify(iMFile, undefined, 4)}</pre>
+              <pre className="text-xs">
+                {JSON.stringify(iMFile, undefined, 4)}
+              </pre>
             )}
             <button
               onClick={() =>
@@ -91,7 +93,9 @@ export default function FileManagerIMPage() {
           <div className="flex-1 h-full">
             <iframe
               loading="lazy"
-              src={`/api/file_manager/im/${fileManagerIMFile.url.split("/").at(-1)}/pdf`}
+              src={`/api/file_manager/im/${fileManagerIMFile.url
+                .split("/")
+                .at(-1)}/pdf`}
               title={fileManagerIMFile.url.split("/").at(-1)}
               className="w-full h-full rounded"
             />

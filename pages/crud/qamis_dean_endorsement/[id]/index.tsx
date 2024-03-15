@@ -19,9 +19,7 @@ export default function QAMISDeanEndorsementPage() {
     }
 
     axios
-      .delete(
-        `/api/qamis_dean_endorsement/${qAMISDeanEndorsementId}`
-      )
+      .delete(`/api/qamis_dean_endorsement/${qAMISDeanEndorsementId}`)
       .then(() => {
         alert("QAMISDeanEndorsement has been deleted successfully");
       })
@@ -34,37 +32,35 @@ export default function QAMISDeanEndorsementPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>QAMISDeanEndorsement</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">QAMISDeanEndorsement</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {qAMISDeanEndorsement.id}</p>
       <p>
-        createdAt:{" "}
-        {new Date(qAMISDeanEndorsement.createdAt).toLocaleString()}
+        createdAt: {new Date(qAMISDeanEndorsement.createdAt).toLocaleString()}
       </p>
       <p>
-        updatedAt:{" "}
-        {new Date(qAMISDeanEndorsement.updatedAt).toLocaleString()}
+        updatedAt: {new Date(qAMISDeanEndorsement.updatedAt).toLocaleString()}
       </p>
       <p>
         qAMISRevisionId:{" "}
         <Link
           href={`/crud/qamis_revision/${qAMISDeanEndorsement.qAMISRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISDeanEndorsement.qAMISRevisionId}
         </Link>
       </p>
       <p>
-      deanId:{" "}
+        deanId:{" "}
         <Link
           href={`/crud/dean/${qAMISDeanEndorsement.deanId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISDeanEndorsement.deanId}
         </Link>

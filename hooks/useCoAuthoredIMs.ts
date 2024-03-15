@@ -8,7 +8,12 @@ export interface useCoAuthoredIMsParams {
   filter: Object;
   sort: Object;
 }
-export default function useCoAuthoredIMs({ skip, take, filter, sort }: useCoAuthoredIMsParams) {
+export default function useCoAuthoredIMs({
+  skip,
+  take,
+  filter,
+  sort,
+}: useCoAuthoredIMsParams) {
   const [state, setState] = useState<{ iMs: IM[]; count: number }>({
     count: 0,
     iMs: [],

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { IDDSpecialistReview, IM } from "@prisma/client";
+import { IDDSpecialistReview } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIDDSpecialistReviewIMParams {
   id: string;

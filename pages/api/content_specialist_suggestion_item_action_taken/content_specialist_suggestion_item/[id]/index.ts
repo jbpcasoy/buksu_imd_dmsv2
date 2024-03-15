@@ -1,7 +1,6 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -29,19 +28,21 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
       const contentSpecialistSuggestionItemActionTaken =
-        await prisma.contentSpecialistSuggestionItemActionTaken.findFirstOrThrow({
-          where: {
-            AND: [
-              {
-                ContentSpecialistSuggestionItem: {
-                  id: {
-                    equals: id,
+        await prisma.contentSpecialistSuggestionItemActionTaken.findFirstOrThrow(
+          {
+            where: {
+              AND: [
+                {
+                  ContentSpecialistSuggestionItem: {
+                    id: {
+                      equals: id,
+                    },
                   },
                 },
-              },
-            ],
-          },
-        });
+              ],
+            },
+          }
+        );
 
       return res.json(contentSpecialistSuggestionItemActionTaken);
     } catch (error: any) {

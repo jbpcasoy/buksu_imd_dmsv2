@@ -17,7 +17,7 @@ export default function ToRevisePage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useToRevise(state);
@@ -28,7 +28,7 @@ export default function ToRevisePage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVISE} />}
         count={count}
         iMs={iMs}
-        title='To Revise'
+        title="To Revise"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

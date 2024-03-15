@@ -9,9 +9,10 @@ import * as Yup from "yup";
 export default function EditReturnedDepartmentRevisionSuggestionItemPage() {
   const router = useRouter();
   const returnedDepartmentRevisionSuggestionItemId = router.query.id;
-  const returnedDepartmentRevisionSuggestionItem = useReturnedDepartmentRevisionSuggestionItem({
-    id: returnedDepartmentRevisionSuggestionItemId as string,
-  });
+  const returnedDepartmentRevisionSuggestionItem =
+    useReturnedDepartmentRevisionSuggestionItem({
+      id: returnedDepartmentRevisionSuggestionItemId as string,
+    });
 
   const formik = useFormik({
     initialValues: {
@@ -22,7 +23,7 @@ export default function EditReturnedDepartmentRevisionSuggestionItemPage() {
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
       remarks: Yup.string(),
-      pageNumber: Yup.number().min(0).required()
+      pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
       axios
@@ -31,7 +32,9 @@ export default function EditReturnedDepartmentRevisionSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ReturnedDepartmentRevisionSuggestionItem has been updated successfully");
+          alert(
+            "ReturnedDepartmentRevisionSuggestionItem has been updated successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -62,21 +65,21 @@ export default function EditReturnedDepartmentRevisionSuggestionItemPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='suggestion'
+          type="text"
+          placeholder="suggestion"
           {...formik.getFieldProps("suggestion")}
         />
         <input
-          type='text'
-          placeholder='pageNumber'
+          type="text"
+          placeholder="pageNumber"
           {...formik.getFieldProps("pageNumber")}
         />
         <input
-          type='text'
-          placeholder='remarks'
+          type="text"
+          placeholder="remarks"
           {...formik.getFieldProps("remarks")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

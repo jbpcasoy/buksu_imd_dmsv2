@@ -30,10 +30,10 @@ export default function FacultyPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>Faculty</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">Faculty</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -43,7 +43,7 @@ export default function FacultyPage() {
       <p>updatedAt: {new Date(faculty.updatedAt).toLocaleString()}</p>
       <p>
         userId:{" "}
-        <Link href={`/crud/user/${faculty.userId}`} className='underline'>
+        <Link href={`/crud/user/${faculty.userId}`} className="underline">
           {faculty.userId}
         </Link>
       </p>
@@ -51,7 +51,7 @@ export default function FacultyPage() {
         departmentId:{" "}
         <Link
           href={`/crud/department/${faculty.departmentId}`}
-          className='underline'
+          className="underline"
         >
           {faculty.departmentId}
         </Link>

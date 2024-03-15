@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface usePeerSuggestionItemActionTakensParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function usePeerSuggestionItemActionTakens({ skip, take, filter }: usePeerSuggestionItemActionTakensParams) {
-  const [state, setState] = useState<{peerSuggestionItemActionTakens: PeerSuggestionItemActionTaken[], count: number}>({
+export default function usePeerSuggestionItemActionTakens({
+  skip,
+  take,
+  filter,
+}: usePeerSuggestionItemActionTakensParams) {
+  const [state, setState] = useState<{
+    peerSuggestionItemActionTakens: PeerSuggestionItemActionTaken[];
+    count: number;
+  }>({
     count: 0,
-    peerSuggestionItemActionTakens: []
+    peerSuggestionItemActionTakens: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function usePeerSuggestionItemActionTakens({ skip, take, filter }
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

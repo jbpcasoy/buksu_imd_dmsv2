@@ -8,9 +8,12 @@ export interface useDeansParams {
   filter?: object;
 }
 export default function useActiveDeans({ skip, take, filter }: useDeansParams) {
-  const [state, setState] = useState<{activeDeans: ActiveDean[], count: number}>({
+  const [state, setState] = useState<{
+    activeDeans: ActiveDean[];
+    count: number;
+  }>({
     count: 0,
-    activeDeans: []
+    activeDeans: [],
   });
 
   useEffect(() => {
@@ -19,7 +22,7 @@ export default function useActiveDeans({ skip, take, filter }: useDeansParams) {
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

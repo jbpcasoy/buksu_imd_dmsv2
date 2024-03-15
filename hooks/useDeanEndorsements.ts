@@ -7,10 +7,17 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useDeanEndorsements({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{deanEndorsements: DeanEndorsement[], count: number}>({
+export default function useDeanEndorsements({
+  skip,
+  take,
+  filter,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    deanEndorsements: DeanEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    deanEndorsements: []
+    deanEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useDeanEndorsements({ skip, take, filter }: useFaculties
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

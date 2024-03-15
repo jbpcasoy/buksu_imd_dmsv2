@@ -4,9 +4,7 @@ import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import { del, head } from "@vercel/blob";
-import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 
 export default async function handler(
   req: NextApiRequest,

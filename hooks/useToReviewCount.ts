@@ -1,9 +1,8 @@
-import { IM } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function useToReviewCount() {
-  const [state, setState] = useState<{count: number}>({
+  const [state, setState] = useState<{ count: number }>({
     count: 0,
   });
 

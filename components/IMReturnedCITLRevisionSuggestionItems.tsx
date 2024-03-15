@@ -1,5 +1,10 @@
+import useIDDCoordinator from "@/hooks/useIDDCoordinator";
+import useRefresh from "@/hooks/useRefresh";
+import useReturnedCITLRevision from "@/hooks/useReturnedCITLRevision";
 import useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem from "@/hooks/useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem";
 import useReturnedCITLRevisionSuggestionItemsIM from "@/hooks/useReturnedCITLRevisionSuggestionItemsIM";
+import useSubmittedReturnedCITLRevisionIM from "@/hooks/useSubmittedReturnedCITLRevisionIM";
+import useUser from "@/hooks/useUser";
 import {
   ReturnedCITLRevisionSuggestionItem,
   SubmittedReturnedCITLRevision,
@@ -7,19 +12,12 @@ import {
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
-import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
-import useSubmittedReturnedCITLRevision from "@/hooks/useSubmittedReturnedCITLRevision";
-import useReturnedCITLRevision from "@/hooks/useReturnedCITLRevision";
-import useIDDCoordinator from "@/hooks/useIDDCoordinator";
-import useUser from "@/hooks/useUser";
-import useSubmittedReturnedCITLRevisionIM from "@/hooks/useSubmittedReturnedCITLRevisionIM";
-import useRefresh from "@/hooks/useRefresh";
-import { useSession } from "next-auth/react";
 
 interface IMReturnedCITLRevisionSuggestionItemsProps {
   id: string;

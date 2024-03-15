@@ -32,10 +32,10 @@ export default function ReturnedCITLRevisionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ReturnedCITLRevision</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ReturnedCITLRevision</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -51,7 +51,7 @@ export default function ReturnedCITLRevisionPage() {
         iDDCoordinatorId:{" "}
         <Link
           href={`/crud/coordinator/${returnedCITLRevision.iDDCoordinatorId}`}
-          className='underline'
+          className="underline"
         >
           {returnedCITLRevision.iDDCoordinatorId}
         </Link>
@@ -60,7 +60,7 @@ export default function ReturnedCITLRevisionPage() {
         cITLRevisionId:{" "}
         <Link
           href={`/crud/citl_revision/${returnedCITLRevision.cITLRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {returnedCITLRevision.cITLRevisionId}
         </Link>

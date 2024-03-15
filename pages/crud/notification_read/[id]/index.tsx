@@ -32,10 +32,10 @@ export default function NotificationReadPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>NotificationRead</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">NotificationRead</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -47,7 +47,7 @@ export default function NotificationReadPage() {
         eventId:{" "}
         <Link
           href={`/crud/event/${notificationRead.eventId}`}
-          className='underline'
+          className="underline"
         >
           {notificationRead.eventId}{" "}
         </Link>
@@ -56,7 +56,7 @@ export default function NotificationReadPage() {
         userId:{" "}
         <Link
           href={`/crud/user/${notificationRead.userId}`}
-          className='underline'
+          className="underline"
         >
           {notificationRead.userId}{" "}
         </Link>

@@ -24,10 +24,10 @@ export default function SubmittedReturnedIMERCCITLRevisionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>SubmittedReturnedIMERCCITLRevision</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/submitted_returned_imerc_citl_revision/add`}
         >
           Add
@@ -35,7 +35,7 @@ export default function SubmittedReturnedIMERCCITLRevisionsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -46,49 +46,53 @@ export default function SubmittedReturnedIMERCCITLRevisionsPage() {
             </tr>
           </thead>
           <tbody>
-            {submittedReturnedIMERCCITLRevisions.map((submittedReturnedIMERCCITLRevision) => {
-              return (
-                <tr key={submittedReturnedIMERCCITLRevision.id}>
-                  <td>{submittedReturnedIMERCCITLRevision.id}</td>
-                  <td>
-                    {new Date(
-                      submittedReturnedIMERCCITLRevision.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      submittedReturnedIMERCCITLRevision.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/returned_imerc_citl_revision/${submittedReturnedIMERCCITLRevision.returnedIMERCCITLRevisionId}`}
-                      className='underline'
-                    >
-                      {submittedReturnedIMERCCITLRevision.returnedIMERCCITLRevisionId}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/submitted_returned_imerc_citl_revision/${submittedReturnedIMERCCITLRevision.id}`}
-                      className='border rounded'
-                    >
-                      view
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
+            {submittedReturnedIMERCCITLRevisions.map(
+              (submittedReturnedIMERCCITLRevision) => {
+                return (
+                  <tr key={submittedReturnedIMERCCITLRevision.id}>
+                    <td>{submittedReturnedIMERCCITLRevision.id}</td>
+                    <td>
+                      {new Date(
+                        submittedReturnedIMERCCITLRevision.createdAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      {new Date(
+                        submittedReturnedIMERCCITLRevision.updatedAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/returned_imerc_citl_revision/${submittedReturnedIMERCCITLRevision.returnedIMERCCITLRevisionId}`}
+                        className="underline"
+                      >
+                        {
+                          submittedReturnedIMERCCITLRevision.returnedIMERCCITLRevisionId
+                        }
+                      </Link>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/submitted_returned_imerc_citl_revision/${submittedReturnedIMERCCITLRevision.id}`}
+                        className="border rounded"
+                      >
+                        view
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

@@ -7,10 +7,17 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useQAMISDeanEndorsements({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{qAMISDeanEndorsements: QAMISDeanEndorsement[], count: number}>({
+export default function useQAMISDeanEndorsements({
+  skip,
+  take,
+  filter,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    qAMISDeanEndorsements: QAMISDeanEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    qAMISDeanEndorsements: []
+    qAMISDeanEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useQAMISDeanEndorsements({ skip, take, filter }: useFacu
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

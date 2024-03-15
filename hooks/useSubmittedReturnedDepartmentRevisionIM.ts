@@ -8,7 +8,8 @@ export interface useSubmittedReturnedDepartmentRevisionIMParams {
 export default function useSubmittedReturnedDepartmentRevisionIM({
   id,
 }: useSubmittedReturnedDepartmentRevisionIMParams) {
-  const [state, setState] = useState<SubmittedReturnedDepartmentRevision | null>();
+  const [state, setState] =
+    useState<SubmittedReturnedDepartmentRevision | null>();
 
   useEffect(() => {
     if (!id) return;

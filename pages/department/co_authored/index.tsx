@@ -17,7 +17,7 @@ export default function CoAuthoredIMsPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useCoAuthoredIMs(state);
@@ -28,7 +28,7 @@ export default function CoAuthoredIMsPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.CO_AUTHORED} />}
         count={count}
         iMs={iMs}
-        title='Co-authored IM&apos;s'
+        title="Co-authored IM's"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

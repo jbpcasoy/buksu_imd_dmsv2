@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { ContentEditorReview, IM } from "@prisma/client";
+import { ContentEditorReview } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useContentEditorReviewParams {
   id?: string;
 }
-export default function useContentEditorReview({ id }: useContentEditorReviewParams) {
+export default function useContentEditorReview({
+  id,
+}: useContentEditorReviewParams) {
   const [state, setState] = useState<ContentEditorReview | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useContentEditorReview({ id }: useContentEditorReviewPar
     axios
       .get(`/api/content_editor_review/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -4,9 +4,7 @@ import logger from "@/services/logger";
 import uploadToVercelBlob from "@/services/uploadToVercelBlob";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
-import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 import * as Yup from "yup";
 
 //set bodyParser

@@ -174,7 +174,6 @@ export default async function handler(
         }
       }
 
-
       const contentEditorSuggestionItemActionTaken =
         await prisma.contentEditorSuggestionItemActionTaken.create({
           data: {

@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 export interface useChairpersonReviewParams {
   id: string;
 }
-export default function useChairpersonReviewMe({ id }: useChairpersonReviewParams) {
+export default function useChairpersonReviewMe({
+  id,
+}: useChairpersonReviewParams) {
   const [state, setState] = useState<ChairpersonReview | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useChairpersonReviewMe({ id }: useChairpersonReviewParam
     axios
       .get(`/api/chairperson_review/im/${id}/me`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

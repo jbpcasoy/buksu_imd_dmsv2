@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function ContentEditorSuggestionsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { contentEditorSuggestions, count } = useContentEditorSuggestions(state);
+  const { contentEditorSuggestions, count } =
+    useContentEditorSuggestions(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -23,15 +24,18 @@ export default function ContentEditorSuggestionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>ContentEditorSuggestion</h2>
-        <Link className='border rounded' href={`/crud/content_editor_suggestion/add`}>
+        <Link
+          className="border rounded"
+          href={`/crud/content_editor_suggestion/add`}
+        >
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -46,12 +50,20 @@ export default function ContentEditorSuggestionsPage() {
               return (
                 <tr key={contentEditorSuggestion.id}>
                   <td>{contentEditorSuggestion.id}</td>
-                  <td>{new Date(contentEditorSuggestion.createdAt).toLocaleString()}</td>
-                  <td>{new Date(contentEditorSuggestion.updatedAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(
+                      contentEditorSuggestion.createdAt
+                    ).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(
+                      contentEditorSuggestion.updatedAt
+                    ).toLocaleString()}
+                  </td>
                   <td>
                     <Link
                       href={`/crud/content_editor_review/${contentEditorSuggestion.contentEditorReviewId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {contentEditorSuggestion.contentEditorReviewId}
                     </Link>
@@ -59,7 +71,7 @@ export default function ContentEditorSuggestionsPage() {
                   <td>
                     <Link
                       href={`/crud/content_editor_suggestion/${contentEditorSuggestion.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -69,14 +81,14 @@ export default function ContentEditorSuggestionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

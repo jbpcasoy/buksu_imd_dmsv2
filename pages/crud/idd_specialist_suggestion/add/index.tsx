@@ -9,7 +9,7 @@ export default function AddIDDSpecialistSuggestionPage() {
       iDDSpecialistReviewId: "",
     },
     validationSchema: Yup.object({
-        iDDSpecialistReviewId: Yup.string().required(),
+      iDDSpecialistReviewId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -28,11 +28,11 @@ export default function AddIDDSpecialistSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='iDDSpecialistReviewId'
+          type="text"
+          placeholder="iDDSpecialistReviewId"
           {...formik.getFieldProps("iDDSpecialistReviewId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

@@ -5,13 +5,11 @@ import {
   Document,
   ExternalHyperlink,
   Footer,
-  FrameAnchorType,
   Header,
   HorizontalPositionRelativeFrom,
   ImageRun,
   LineRuleType,
   Packer,
-  PageBreak,
   PageNumber,
   Paragraph,
   Table,
@@ -22,8 +20,6 @@ import {
   VerticalAlign,
   VerticalPositionRelativeFrom,
   WidthType,
-  CheckBox,
-  Drawing,
 } from "docx";
 import saveAs from "file-saver";
 import { useEffect, useState } from "react";
@@ -662,7 +658,9 @@ export default function F001({
 
   return (
     <div>
-      <button onClick={download} className="underline">F001 - Endorsement of the Instructional Material (Implementation Phase)</button>
+      <button onClick={download} className="underline">
+        F001 - Endorsement of the Instructional Material (Implementation Phase)
+      </button>
     </div>
   );
 }

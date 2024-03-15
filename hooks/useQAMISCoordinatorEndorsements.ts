@@ -7,10 +7,17 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useQAMISCoordinatorEndorsements({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{qAMISCoordinatorEndorsements: QAMISCoordinatorEndorsement[], count: number}>({
+export default function useQAMISCoordinatorEndorsements({
+  skip,
+  take,
+  filter,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    qAMISCoordinatorEndorsements: QAMISCoordinatorEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    qAMISCoordinatorEndorsements: []
+    qAMISCoordinatorEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useQAMISCoordinatorEndorsements({ skip, take, filter }: 
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

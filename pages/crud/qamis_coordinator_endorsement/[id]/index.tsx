@@ -34,10 +34,10 @@ export default function QAMISCoordinatorEndorsementPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>QAMISCoordinatorEndorsement</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">QAMISCoordinatorEndorsement</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -55,16 +55,16 @@ export default function QAMISCoordinatorEndorsementPage() {
         qAMISRevisionId:{" "}
         <Link
           href={`/crud/qamis_revision/${qAMISCoordinatorEndorsement.qAMISRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISCoordinatorEndorsement.qAMISRevisionId}
         </Link>
       </p>
       <p>
-      coordinatorId:{" "}
+        coordinatorId:{" "}
         <Link
           href={`/crud/coordinator/${qAMISCoordinatorEndorsement.coordinatorId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISCoordinatorEndorsement.coordinatorId}
         </Link>

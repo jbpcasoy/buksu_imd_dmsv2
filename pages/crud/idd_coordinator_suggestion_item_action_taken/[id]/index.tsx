@@ -24,7 +24,9 @@ export default function IDDCoordinatorSuggestionItemActionTakenPage() {
         `/api/idd_coordinator_suggestion_item_action_taken/${iDDCoordinatorSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("IDDCoordinatorSuggestionItemActionTaken has been deleted successfully");
+        alert(
+          "IDDCoordinatorSuggestionItemActionTaken has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error.response?.data?.error?.message);
@@ -35,16 +37,16 @@ export default function IDDCoordinatorSuggestionItemActionTakenPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IDDCoordinatorSuggestionItemActionTaken</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">IDDCoordinatorSuggestionItemActionTaken</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/idd_coordinator_suggestion_item_action_taken/${iDDCoordinatorSuggestionItemActionTakenId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -66,9 +68,11 @@ export default function IDDCoordinatorSuggestionItemActionTakenPage() {
         iDDCoordinatorSuggestionItemId:
         <Link
           href={`/crud/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItemActionTaken.iDDCoordinatorSuggestionItemId}`}
-          className='underline'
+          className="underline"
         >
-          {iDDCoordinatorSuggestionItemActionTaken.iDDCoordinatorSuggestionItemId}
+          {
+            iDDCoordinatorSuggestionItemActionTaken.iDDCoordinatorSuggestionItemId
+          }
         </Link>
       </p>
       <p>value: {iDDCoordinatorSuggestionItemActionTaken.value}</p>

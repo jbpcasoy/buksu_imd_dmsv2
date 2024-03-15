@@ -1,19 +1,43 @@
-import Loading from "@/components/Loading";
 import AdminLayout from "@/components/AdminLayout";
+import Confirmation from "@/components/Confirmation";
+import Loading from "@/components/Loading";
+import Modal from "@/components/Modal";
+import { SnackbarContext } from "@/components/SnackbarProvider";
+import useCITLDirector from "@/hooks/useCITLDirector";
 import useCITLDirectorEndorsementIM from "@/hooks/useCITLDirectorEndorsementIM";
 import useCITLRevisionIM from "@/hooks/useCITLRevisionIM";
+import useChairperson from "@/hooks/useChairperson";
+import useChairpersonReview from "@/hooks/useChairpersonReview";
+import useChairpersonSuggestion from "@/hooks/useChairpersonSuggestion";
+import useContentEditorReview from "@/hooks/useContentEditorReview";
+import useContentEditorSuggestion from "@/hooks/useContentEditorSuggestion";
+import useContentSpecialist from "@/hooks/useContentSpecialist";
+import useContentSpecialistReview from "@/hooks/useContentSpecialistReview";
+import useContentSpecialistSuggestion from "@/hooks/useContentSpecialistSuggestion";
+import useCoordinator from "@/hooks/useCoordinator";
 import useCoordinatorEndorsementIM from "@/hooks/useCoordinatorEndorsementIM";
+import useCoordinatorReview from "@/hooks/useCoordinatorReview";
+import useCoordinatorSuggestion from "@/hooks/useCoordinatorSuggestion";
+import useDean from "@/hooks/useDean";
 import useDeanEndorsementIM from "@/hooks/useDeanEndorsementIM";
 import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
+import useFaculty from "@/hooks/useFaculty";
+import useIDDCoordinator from "@/hooks/useIDDCoordinator";
 import useIDDCoordinatorEndorsementIM from "@/hooks/useIDDCoordinatorEndorsementIM";
+import useIDDCoordinatorSuggestion from "@/hooks/useIDDCoordinatorSuggestion";
+import useIDDSpecialistReview from "@/hooks/useIDDSpecialistReview";
+import useIDDSpecialistSuggestion from "@/hooks/useIDDSpecialistSuggestion";
 import useIM from "@/hooks/useIM";
 import useIMERCCITLDirectorEndorsementIM from "@/hooks/useIMERCCITLDirectorEndorsementIM";
 import useIMERCCITLRevisionIM from "@/hooks/useIMERCCITLRevisionIM";
 import useIMERCIDDCoordinatorEndorsementIM from "@/hooks/useIMERCIDDCoordinatorEndorsementIM";
+import usePeerReview from "@/hooks/usePeerReview";
+import usePeerSuggestion from "@/hooks/usePeerSuggestion";
 import useQAMISChairpersonEndorsementIM from "@/hooks/useQAMISChairpersonEndorsementIM";
 import useQAMISCoordinatorEndorsementIM from "@/hooks/useQAMISCoordinatorEndorsementIM";
 import useQAMISDeanEndorsementIM from "@/hooks/useQAMISDeanEndorsementIM";
+import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
 import useQAMISRevisionIM from "@/hooks/useQAMISRevisionIM";
 import useSubmittedChairpersonSuggestionIM from "@/hooks/useSubmittedChairpersonSuggestionIM";
 import useSubmittedContentEditorSuggestionIM from "@/hooks/useSubmittedContentEditorSuggestionIM";
@@ -22,19 +46,7 @@ import useSubmittedCoordinatorSuggestionIM from "@/hooks/useSubmittedCoordinator
 import useSubmittedIDDCoordinatorSuggestionIM from "@/hooks/useSubmittedIDDCoordinatorSuggestionIM";
 import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
 import useSubmittedPeerSuggestionIM from "@/hooks/useSubmittedPeerSuggestionIM";
-import Error from "next/error";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import ReactFlow, {
-  Background,
-  Controls,
-  Edge,
-  Node,
-  PanOnScrollMode,
-} from "reactflow";
-import { useContext, useState } from "react";
-import Modal, { ModalProps } from "@/components/Modal";
-import { DateTime } from "luxon";
+import useUser from "@/hooks/useUser";
 import {
   CITLDirectorEndorsement,
   CITLRevision,
@@ -59,32 +71,19 @@ import {
   SubmittedIDDSpecialistSuggestion,
   SubmittedPeerSuggestion,
 } from "@prisma/client";
-import useQAMISDepartmentEndorsementByIM from "@/hooks/useQAMISDepartmentEndorsementByIM";
-import usePeerSuggestion from "@/hooks/usePeerSuggestion";
-import usePeerReview from "@/hooks/usePeerReview";
-import useFaculty from "@/hooks/useFaculty";
-import useUser from "@/hooks/useUser";
-import useChairpersonSuggestion from "@/hooks/useChairpersonSuggestion";
-import useChairpersonReview from "@/hooks/useChairpersonReview";
-import useChairperson from "@/hooks/useChairperson";
-import useCoordinatorSuggestion from "@/hooks/useCoordinatorSuggestion";
-import useCoordinatorReview from "@/hooks/useCoordinatorReview";
-import useCoordinator from "@/hooks/useCoordinator";
-import useIMFile from "@/hooks/useIMFile";
-import useDean from "@/hooks/useDean";
-import useIDDCoordinatorSuggestion from "@/hooks/useIDDCoordinatorSuggestion";
-import useIDDCoordinator from "@/hooks/useIDDCoordinator";
-import useCITLDirector from "@/hooks/useCITLDirector";
-import useContentSpecialist from "@/hooks/useContentSpecialist";
-import useContentSpecialistSuggestion from "@/hooks/useContentSpecialistSuggestion";
-import useContentSpecialistReview from "@/hooks/useContentSpecialistReview";
-import useIDDSpecialistSuggestion from "@/hooks/useIDDSpecialistSuggestion";
-import useIDDSpecialistReview from "@/hooks/useIDDSpecialistReview";
-import useContentEditorSuggestion from "@/hooks/useContentEditorSuggestion";
-import useContentEditorReview from "@/hooks/useContentEditorReview";
 import axios from "axios";
-import { SnackbarContext } from "@/components/SnackbarProvider";
-import Confirmation from "@/components/Confirmation";
+import { DateTime } from "luxon";
+import Error from "next/error";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import ReactFlow, {
+  Background,
+  Controls,
+  Edge,
+  Node,
+  PanOnScrollMode,
+} from "reactflow";
 
 export default function IMTrackingPage() {
   const [state, setState] = useState({
@@ -671,12 +670,9 @@ function DepartmentReviewModal({
   const { addSnackbar } = useContext(SnackbarContext);
   const router = useRouter();
 
-
   async function deleteHandler() {
     return axios
-      .delete(
-        `/api/im_file/${departmentReview.iMFileId}`
-      )
+      .delete(`/api/im_file/${departmentReview.iMFileId}`)
       .then((res) => {
         addSnackbar(
           "Submitted chairperson suggestion has been deleted successfully"
@@ -704,14 +700,14 @@ function DepartmentReviewModal({
           ).toFormat("D | t")}
         </span>
       </p>
-        <button
-          className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
-          onClick={() =>
-            setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
-          }
-        >
-          Delete
-        </button>
+      <button
+        className="rounded bg-palette_error text-palette_white px-1 hover:bg-opacity-90"
+        onClick={() =>
+          setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
+        }
+      >
+        Delete
+      </button>
       {state.openDeleteConfirmation && (
         <Confirmation
           onClose={() =>

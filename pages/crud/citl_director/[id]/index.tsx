@@ -30,10 +30,10 @@ export default function CITLDirectorPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>CITLDirector</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">CITLDirector</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -43,7 +43,7 @@ export default function CITLDirectorPage() {
       <p>updatedAt: {new Date(cITLDirector.updatedAt).toLocaleString()}</p>
       <p>
         userId:{" "}
-        <Link href={`/crud/user/${cITLDirector.userId}`} className='underline'>
+        <Link href={`/crud/user/${cITLDirector.userId}`} className="underline">
           {cITLDirector.userId}
         </Link>
       </p>

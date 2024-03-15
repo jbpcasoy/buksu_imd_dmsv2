@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useCoordinatorSuggestionsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useCoordinatorSuggestions({ skip, take, filter }: useCoordinatorSuggestionsParams) {
-  const [state, setState] = useState<{coordinatorSuggestions: CoordinatorSuggestion[], count: number}>({
+export default function useCoordinatorSuggestions({
+  skip,
+  take,
+  filter,
+}: useCoordinatorSuggestionsParams) {
+  const [state, setState] = useState<{
+    coordinatorSuggestions: CoordinatorSuggestion[];
+    count: number;
+  }>({
     count: 0,
-    coordinatorSuggestions: []
+    coordinatorSuggestions: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useCoordinatorSuggestions({ skip, take, filter }: useCoo
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

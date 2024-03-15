@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { CoordinatorReview, IM } from "@prisma/client";
+import { CoordinatorReview } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCoordinatorReviewIMParams {
   id?: string;
 }
-export default function useCoordinatorReviewIM({ id }: useCoordinatorReviewIMParams) {
+export default function useCoordinatorReviewIM({
+  id,
+}: useCoordinatorReviewIMParams) {
   const [state, setState] = useState<CoordinatorReview | null>();
 
   useEffect(() => {

@@ -1,11 +1,13 @@
-import { IDDCoordinatorSuggestionItem, IMFile, PlagiarismFile } from "@prisma/client";
+import { PlagiarismFile } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 export interface useIMLatestPlagiarismFileParams {
   id?: string;
 }
-export default function useIMLatestPlagiarismFile({ id }: useIMLatestPlagiarismFileParams) {
+export default function useIMLatestPlagiarismFile({
+  id,
+}: useIMLatestPlagiarismFileParams) {
   const [state, setState] = useState<PlagiarismFile>();
 
   useEffect(() => {

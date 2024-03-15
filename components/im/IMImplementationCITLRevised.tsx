@@ -2,7 +2,7 @@ import Confirmation from "@/components/Confirmation";
 import Loading from "@/components/Loading";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import IMActionMenu from "@/components/im/IMActionMenu";
-import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useIM from "@/hooks/useIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import { CoordinatorEndorsement, DepartmentRevision } from "@prisma/client";
@@ -11,7 +11,6 @@ import Error from "next/error";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import IMInfo from "./IMInfo";
-import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 
 interface IMImplementationCITLRevisedProps {
   iMId: string;

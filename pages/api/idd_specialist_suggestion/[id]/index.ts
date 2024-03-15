@@ -1,7 +1,6 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -110,13 +109,13 @@ export default async function handler(
               },
             },
           });
-          if(submittedIDDSpecialistSuggestion) {
-            return res.status(403).json({
-              error: {
-                message: "Error: IDD Specialist is already submitted"
-              }
-            })
-          }
+        if (submittedIDDSpecialistSuggestion) {
+          return res.status(403).json({
+            error: {
+              message: "Error: IDD Specialist is already submitted",
+            },
+          });
+        }
       }
 
       const iDDSpecialistSuggestion =

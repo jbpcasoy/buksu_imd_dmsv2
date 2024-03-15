@@ -23,12 +23,12 @@ export default function IMERCCITLReviewedsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>IMERCCITLReviewed Reviewed</h2>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -45,12 +45,16 @@ export default function IMERCCITLReviewedsPage() {
               return (
                 <tr key={iMERCCITLReviewed.id}>
                   <td>{iMERCCITLReviewed.id}</td>
-                  <td>{new Date(iMERCCITLReviewed.createdAt).toLocaleString()}</td>
-                  <td>{new Date(iMERCCITLReviewed.updatedAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(iMERCCITLReviewed.createdAt).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(iMERCCITLReviewed.updatedAt).toLocaleString()}
+                  </td>
                   <td>
                     <Link
                       href={`/crud/submitted_content_editor_suggestion/${iMERCCITLReviewed.submittedContentEditorSuggestionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iMERCCITLReviewed.submittedContentEditorSuggestionId}
                     </Link>
@@ -58,7 +62,7 @@ export default function IMERCCITLReviewedsPage() {
                   <td>
                     <Link
                       href={`/crud/submitted_content_specialist_suggestion/${iMERCCITLReviewed.submittedContentSpecialistSuggestionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iMERCCITLReviewed.submittedContentSpecialistSuggestionId}
                     </Link>
@@ -66,7 +70,7 @@ export default function IMERCCITLReviewedsPage() {
                   <td>
                     <Link
                       href={`/crud/submitted_idd_specialist_suggestion/${iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iMERCCITLReviewed.submittedIDDSpecialistSuggestionId}
                     </Link>
@@ -74,7 +78,7 @@ export default function IMERCCITLReviewedsPage() {
                   <td>
                     <Link
                       href={`/crud/imerc_citl_reviewed/${iMERCCITLReviewed.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -84,14 +88,14 @@ export default function IMERCCITLReviewedsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

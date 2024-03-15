@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useIDDCoordinatorSuggestionItemsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useIDDCoordinatorSuggestionItems({ skip, take, filter }: useIDDCoordinatorSuggestionItemsParams) {
-  const [state, setState] = useState<{iDDCoordinatorSuggestionItems: IDDCoordinatorSuggestionItem[], count: number}>({
+export default function useIDDCoordinatorSuggestionItems({
+  skip,
+  take,
+  filter,
+}: useIDDCoordinatorSuggestionItemsParams) {
+  const [state, setState] = useState<{
+    iDDCoordinatorSuggestionItems: IDDCoordinatorSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    iDDCoordinatorSuggestionItems: []
+    iDDCoordinatorSuggestionItems: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useIDDCoordinatorSuggestionItems({ skip, take, filter }:
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

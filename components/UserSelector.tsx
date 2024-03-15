@@ -28,23 +28,23 @@ export default function UserSelector(props: FieldInputProps<any>) {
   };
 
   return (
-    <div className='flex flex-col w-full'>
-      <div className='flex w-full'>
+    <div className="flex flex-col w-full">
+      <div className="flex w-full">
         <input
-          type='text'
+          type="text"
           onChange={onSearchEmail}
-          placeholder='Search User Email'
-          className='rounded-tl py-1 flex-1 w-1/2'
+          placeholder="Search User Email"
+          className="rounded-tl py-1 flex-1 w-1/2"
         />
         <input
-          type='text'
+          type="text"
           onChange={onSearchName}
-          placeholder='Search User Name'
-          className='rounded-tr py-1 flex-1 w-1/2'
+          placeholder="Search User Name"
+          className="rounded-tr py-1 flex-1 w-1/2"
         />
       </div>
-      <select {...props} className='rounded-b py-1'>
-        <option value=''>Select</option>
+      <select {...props} className="rounded-b py-1">
+        <option value="">Select</option>
         {users.map((user) => {
           return (
             <option key={user.id} value={user.id}>

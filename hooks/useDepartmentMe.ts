@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Department, IM } from "@prisma/client";
+import { Department } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function useDepartmentMe() {
   const [state, setState] = useState<Department | null>();

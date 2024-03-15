@@ -19,7 +19,9 @@ export default function SubmittedCoordinatorSuggestionPage() {
     }
 
     axios
-      .delete(`/api/submitted_coordinator_suggestion/${submittedCoordinatorSuggestionId}`)
+      .delete(
+        `/api/submitted_coordinator_suggestion/${submittedCoordinatorSuggestionId}`
+      )
       .then(() => {
         alert("SubmittedCoordinatorSuggestion has been deleted successfully");
       })
@@ -32,10 +34,10 @@ export default function SubmittedCoordinatorSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>SubmittedCoordinatorSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">SubmittedCoordinatorSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -53,7 +55,7 @@ export default function SubmittedCoordinatorSuggestionPage() {
         coordinatorSuggestionId:{" "}
         <Link
           href={`/crud/coordinator_suggestion/${submittedCoordinatorSuggestion.coordinatorSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {submittedCoordinatorSuggestion.coordinatorSuggestionId}
         </Link>

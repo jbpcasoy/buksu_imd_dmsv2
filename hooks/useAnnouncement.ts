@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Announcement, IM } from "@prisma/client";
+import { Announcement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useAnnouncementParams {
   id: string;
@@ -16,7 +16,7 @@ export default function useAnnouncement({ id }: useAnnouncementParams) {
     axios
       .get(`/api/announcement/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

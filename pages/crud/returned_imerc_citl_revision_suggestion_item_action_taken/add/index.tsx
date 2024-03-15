@@ -15,9 +15,14 @@ export default function AddReturnedIMERCCITLRevisionSuggestionItemActionTakenPag
     }),
     onSubmit: (values) => {
       axios
-        .post("/api/returned_imerc_citl_revision_suggestion_item_action_taken", values)
+        .post(
+          "/api/returned_imerc_citl_revision_suggestion_item_action_taken",
+          values
+        )
         .then(() => {
-          alert("ReturnedIMERCCITLRevisionSuggestionItemActionTaken has been added successfully");
+          alert(
+            "ReturnedIMERCCITLRevisionSuggestionItemActionTaken has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -30,16 +35,16 @@ export default function AddReturnedIMERCCITLRevisionSuggestionItemActionTakenPag
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='returnedIMERCCITLRevisionSuggestionItemId'
+          type="text"
+          placeholder="returnedIMERCCITLRevisionSuggestionItemId"
           {...formik.getFieldProps("returnedIMERCCITLRevisionSuggestionItemId")}
         />
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

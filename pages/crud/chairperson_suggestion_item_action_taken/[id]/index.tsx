@@ -24,7 +24,9 @@ export default function ChairpersonSuggestionItemActionTakenPage() {
         `/api/chairperson_suggestion_item_action_taken/${chairpersonSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ChairpersonSuggestionItemActionTaken has been deleted successfully");
+        alert(
+          "ChairpersonSuggestionItemActionTaken has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error.response?.data?.error?.message);
@@ -35,16 +37,16 @@ export default function ChairpersonSuggestionItemActionTakenPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ChairpersonSuggestionItemActionTaken</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ChairpersonSuggestionItemActionTaken</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/chairperson_suggestion_item_action_taken/${chairpersonSuggestionItemActionTakenId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -66,7 +68,7 @@ export default function ChairpersonSuggestionItemActionTakenPage() {
         chairpersonSuggestionItemId:
         <Link
           href={`/crud/chairperson_suggestion_item/${chairpersonSuggestionItemActionTaken.chairpersonSuggestionItemId}`}
-          className='underline'
+          className="underline"
         >
           {chairpersonSuggestionItemActionTaken.chairpersonSuggestionItemId}
         </Link>

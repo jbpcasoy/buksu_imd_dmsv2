@@ -147,7 +147,11 @@ export default async function handler(
       const response: F001Props = {
         iMTitle: iM?.title,
         authorNames: authorNames.join(", "),
-        iMType: iMTypeMap[iM.type] as "Module" | "Course File" | "Worktext" | "Textbook",
+        iMType: iMTypeMap[iM.type] as
+          | "Module"
+          | "Course File"
+          | "Worktext"
+          | "Textbook",
         departmentName: department.name,
         collegeName: college.name,
         coordinatorName: coordinatorUser.name ?? "",

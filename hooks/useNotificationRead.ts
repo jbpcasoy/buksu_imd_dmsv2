@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { NotificationRead, IM } from "@prisma/client";
+import { NotificationRead } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useNotificationReadParams {
   id: string;

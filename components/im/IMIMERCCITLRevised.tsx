@@ -1,27 +1,23 @@
 import Loading from "@/components/Loading";
 import IMActionMenu from "@/components/im/IMActionMenu";
-import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useIM from "@/hooks/useIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
-import Error from "next/error";
-import Link from "next/link";
-import IMInfo from "./IMInfo";
-import IMContentSpecialistSuggestionItems from "../IMContentSpecialistSuggestionItems";
-import IMIDDSpecialistSuggestionItems from "../IMIDDSpecialistSuggestionItems";
-import IMContentEditorSuggestionItems from "../IMContentEditorSuggestionItems";
-import IMReturnedIMERCCITLRevisionSuggestionItems from "../IMReturnedIMERCCITLRevisionSuggestionItems";
-import Confirmation from "../Confirmation";
-import { useContext, useState } from "react";
-import axios from "axios";
-import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import {
-  CoordinatorEndorsement,
-  DepartmentRevision,
   IMERCCITLRevision,
   IMERCIDDCoordinatorEndorsement,
 } from "@prisma/client";
-import { SnackbarContext } from "../SnackbarProvider";
+import axios from "axios";
+import Error from "next/error";
 import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import Confirmation from "../Confirmation";
+import IMContentEditorSuggestionItems from "../IMContentEditorSuggestionItems";
+import IMContentSpecialistSuggestionItems from "../IMContentSpecialistSuggestionItems";
+import IMIDDSpecialistSuggestionItems from "../IMIDDSpecialistSuggestionItems";
+import IMReturnedIMERCCITLRevisionSuggestionItems from "../IMReturnedIMERCCITLRevisionSuggestionItems";
+import { SnackbarContext } from "../SnackbarProvider";
+import IMInfo from "./IMInfo";
 
 interface IMIMERCCITLRevisedProps {
   iMId: string;

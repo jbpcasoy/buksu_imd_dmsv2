@@ -32,32 +32,34 @@ export default function CoordinatorSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>CoordinatorSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">CoordinatorSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/coordinator_suggestion_item/${coordinatorSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {coordinatorSuggestionItem.id}</p>
       <p>
-        createdAt: {new Date(coordinatorSuggestionItem.createdAt).toLocaleString()}
+        createdAt:{" "}
+        {new Date(coordinatorSuggestionItem.createdAt).toLocaleString()}
       </p>
       <p>
-        updatedAt: {new Date(coordinatorSuggestionItem.updatedAt).toLocaleString()}
+        updatedAt:{" "}
+        {new Date(coordinatorSuggestionItem.updatedAt).toLocaleString()}
       </p>
       <p>
         coordinatorSuggestionId:{" "}
         <Link
           href={`/crud/coordinator_suggestion/${coordinatorSuggestionItem.coordinatorSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {coordinatorSuggestionItem.coordinatorSuggestionId}
         </Link>

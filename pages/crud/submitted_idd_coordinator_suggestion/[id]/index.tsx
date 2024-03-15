@@ -7,9 +7,10 @@ import { useRouter } from "next/router";
 export default function SubmittedIDDCoordinatorSuggestionPage() {
   const router = useRouter();
   const submittedIDDCoordinatorSuggestionId = router.query.id;
-  const submittedIDDCoordinatorSuggestion = useSubmittedIDDCoordinatorSuggestion({
-    id: submittedIDDCoordinatorSuggestionId as string,
-  });
+  const submittedIDDCoordinatorSuggestion =
+    useSubmittedIDDCoordinatorSuggestion({
+      id: submittedIDDCoordinatorSuggestionId as string,
+    });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -23,7 +24,9 @@ export default function SubmittedIDDCoordinatorSuggestionPage() {
         `/api/submitted_idd_coordinator_suggestion/${submittedIDDCoordinatorSuggestionId}`
       )
       .then(() => {
-        alert("SubmittedIDDCoordinatorSuggestion has been deleted successfully");
+        alert(
+          "SubmittedIDDCoordinatorSuggestion has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -34,10 +37,10 @@ export default function SubmittedIDDCoordinatorSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>SubmittedIDDCoordinatorSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">SubmittedIDDCoordinatorSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -55,7 +58,7 @@ export default function SubmittedIDDCoordinatorSuggestionPage() {
         iDDCoordinatorSuggestionId:{" "}
         <Link
           href={`/crud/idd_coordinator_suggestion/${submittedIDDCoordinatorSuggestion.iDDCoordinatorSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {submittedIDDCoordinatorSuggestion.iDDCoordinatorSuggestionId}
         </Link>

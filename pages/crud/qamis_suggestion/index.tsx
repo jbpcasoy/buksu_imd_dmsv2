@@ -5,8 +5,7 @@ import { useState } from "react";
 
 export default function QAMISSuggestionsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { qAMISSuggestions, count } =
-    useQAMISSuggestions(state);
+  const { qAMISSuggestions, count } = useQAMISSuggestions(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -24,18 +23,15 @@ export default function QAMISSuggestionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>QAMISSuggestion</h2>
-        <Link
-          className='border rounded'
-          href={`/crud/qamis_suggestion/add`}
-        >
+        <Link className="border rounded" href={`/crud/qamis_suggestion/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -51,19 +47,15 @@ export default function QAMISSuggestionsPage() {
                 <tr key={qAMISSuggestion.id}>
                   <td>{qAMISSuggestion.id}</td>
                   <td>
-                    {new Date(
-                      qAMISSuggestion.createdAt
-                    ).toLocaleString()}
+                    {new Date(qAMISSuggestion.createdAt).toLocaleString()}
                   </td>
                   <td>
-                    {new Date(
-                      qAMISSuggestion.updatedAt
-                    ).toLocaleString()}
+                    {new Date(qAMISSuggestion.updatedAt).toLocaleString()}
                   </td>
                   <td>
                     <Link
                       href={`/crud/citl_endorsement/${qAMISSuggestion.cITLDirectorEndorsementId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {qAMISSuggestion.cITLDirectorEndorsementId}
                     </Link>
@@ -71,7 +63,7 @@ export default function QAMISSuggestionsPage() {
                   <td>
                     <Link
                       href={`/crud/qamis_suggestion/${qAMISSuggestion.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -81,14 +73,14 @@ export default function QAMISSuggestionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

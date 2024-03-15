@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useChairpersonSuggestionItemsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useChairpersonSuggestionItems({ skip, take, filter }: useChairpersonSuggestionItemsParams) {
-  const [state, setState] = useState<{chairpersonSuggestionItems: ChairpersonSuggestionItem[], count: number}>({
+export default function useChairpersonSuggestionItems({
+  skip,
+  take,
+  filter,
+}: useChairpersonSuggestionItemsParams) {
+  const [state, setState] = useState<{
+    chairpersonSuggestionItems: ChairpersonSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    chairpersonSuggestionItems: []
+    chairpersonSuggestionItems: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useChairpersonSuggestionItems({ skip, take, filter }: us
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

@@ -58,7 +58,6 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-
       const { id } = validator.cast(req.query);
       if (!user.isAdmin) {
         const iM = await prisma.iM.findFirstOrThrow({

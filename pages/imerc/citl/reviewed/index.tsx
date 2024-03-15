@@ -17,7 +17,7 @@ export default function IMERCReviewedByCITLPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useIMERCReviewedByCITL(state);
@@ -28,7 +28,7 @@ export default function IMERCReviewedByCITLPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.REVIEWED} />}
         count={count}
         iMs={iMs}
-        title='Reviewed'
+        title="Reviewed"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

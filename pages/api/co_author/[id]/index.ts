@@ -95,12 +95,12 @@ export default async function handler(
             },
           },
         });
-        if(departmentReview) {
+        if (departmentReview) {
           return res.status(403).json({
             error: {
-              message: "Error: IM is already submitted for review"
-            }
-          })
+              message: "Error: IM is already submitted for review",
+            },
+          });
         }
       }
 

@@ -10,7 +10,7 @@ export default function AddDeanEndorsementPage() {
       activeDeanId: "",
     },
     validationSchema: Yup.object({
-        coordinatorEndorsementId: Yup.string().required(),
+      coordinatorEndorsementId: Yup.string().required(),
       activeDeanId: Yup.string().required(),
     }),
     onSubmit: (values) => {
@@ -30,16 +30,16 @@ export default function AddDeanEndorsementPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='coordinatorEndorsementId'
+          type="text"
+          placeholder="coordinatorEndorsementId"
           {...formik.getFieldProps("coordinatorEndorsementId")}
         />
         <input
-          type='text'
-          placeholder='activeDeanId'
+          type="text"
+          placeholder="activeDeanId"
           {...formik.getFieldProps("activeDeanId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

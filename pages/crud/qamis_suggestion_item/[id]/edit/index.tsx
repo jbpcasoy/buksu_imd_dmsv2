@@ -24,14 +24,11 @@ export default function EditQAMISSuggestionItemPage() {
       suggestion: Yup.string().required(),
       actionTaken: Yup.string(),
       remarks: Yup.string(),
-      pageNumber: Yup.number().min(0).required()
+      pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
       axios
-        .put(
-          `/api/qamis_suggestion_item/${qAMISSuggestionItemId}`,
-          values
-        )
+        .put(`/api/qamis_suggestion_item/${qAMISSuggestionItemId}`, values)
         .then(() => {
           alert("QAMISSuggestionItem has been updated successfully");
         })
@@ -65,26 +62,26 @@ export default function EditQAMISSuggestionItemPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='suggestion'
+          type="text"
+          placeholder="suggestion"
           {...formik.getFieldProps("suggestion")}
         />
         <input
-          type='text'
-          placeholder='pageNumber'
+          type="text"
+          placeholder="pageNumber"
           {...formik.getFieldProps("pageNumber")}
         />
         <input
-          type='text'
-          placeholder='actionTaken'
+          type="text"
+          placeholder="actionTaken"
           {...formik.getFieldProps("actionTaken")}
         />
         <input
-          type='text'
-          placeholder='remarks'
+          type="text"
+          placeholder="remarks"
           {...formik.getFieldProps("remarks")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
-import { PeerSuggestion, IM } from "@prisma/client";
+import { PeerSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface usePeerSuggestionMeParams {
   id: string;
 }
-export default function usePeerSuggestionMe({ id }: usePeerSuggestionMeParams, refreshFlag?: number) {
+export default function usePeerSuggestionMe(
+  { id }: usePeerSuggestionMeParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<PeerSuggestion | null>();
 
   useEffect(() => {
-    console.log({id})
+    console.log({ id });
     if (!id) return;
 
     let subscribe = true;

@@ -17,7 +17,7 @@ export default function IMERCCITLDirectorEndorsedPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useIMERCCITLDirectorEndorsed(state);
@@ -28,7 +28,7 @@ export default function IMERCCITLDirectorEndorsedPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
         count={count}
         iMs={iMs}
-        title='Endorsed'
+        title="Endorsed"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

@@ -5,18 +5,25 @@ import { useEffect, useState } from "react";
 export interface useQAMISSuggestionItemsIMParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useQAMISSuggestionItemsIM({ skip, take, id }: useQAMISSuggestionItemsIMParams) {
-  const [state, setState] = useState<{qAMISSuggestionItems: QAMISSuggestionItem[], count: number}>({
+export default function useQAMISSuggestionItemsIM({
+  skip,
+  take,
+  id,
+}: useQAMISSuggestionItemsIMParams) {
+  const [state, setState] = useState<{
+    qAMISSuggestionItems: QAMISSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    qAMISSuggestionItems: []
+    qAMISSuggestionItems: [],
   });
 
   useEffect(() => {
-    console.log({skip, take, id})
-    if(!id) {
-        return;
+    console.log({ skip, take, id });
+    if (!id) {
+      return;
     }
     axios
       .get(`/api/qamis_suggestion_item/im/${id}`, {

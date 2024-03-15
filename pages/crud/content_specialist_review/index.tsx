@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function ContentSpecialistReviewsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { contentSpecialistReviews, count } = useContentSpecialistReviews(state);
+  const { contentSpecialistReviews, count } =
+    useContentSpecialistReviews(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -23,15 +24,18 @@ export default function ContentSpecialistReviewsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>ContentSpecialistReview</h2>
-        <Link className='border rounded' href={`/crud/content_specialist_review/add`}>
+        <Link
+          className="border rounded"
+          href={`/crud/content_specialist_review/add`}
+        >
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -47,12 +51,20 @@ export default function ContentSpecialistReviewsPage() {
               return (
                 <tr key={contentSpecialistReview.id}>
                   <td>{contentSpecialistReview.id}</td>
-                  <td>{new Date(contentSpecialistReview.createdAt).toLocaleString()}</td>
-                  <td>{new Date(contentSpecialistReview.updatedAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(
+                      contentSpecialistReview.createdAt
+                    ).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(
+                      contentSpecialistReview.updatedAt
+                    ).toLocaleString()}
+                  </td>
                   <td>
                     <Link
                       href={`/crud/qamis_department_endorsement/${contentSpecialistReview.qAMISDepartmentEndorsementId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {contentSpecialistReview.qAMISDepartmentEndorsementId}
                     </Link>
@@ -60,7 +72,7 @@ export default function ContentSpecialistReviewsPage() {
                   <td>
                     <Link
                       href={`/crud/content_specialist/${contentSpecialistReview.contentSpecialistId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {contentSpecialistReview.contentSpecialistId}
                     </Link>
@@ -68,7 +80,7 @@ export default function ContentSpecialistReviewsPage() {
                   <td>
                     <Link
                       href={`/crud/content_specialist_review/${contentSpecialistReview.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -78,14 +90,14 @@ export default function ContentSpecialistReviewsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

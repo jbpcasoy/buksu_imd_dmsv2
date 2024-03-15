@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useDepartmentReviewsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useDepartmentReviews({ skip, take, filter }: useDepartmentReviewsParams) {
-  const [state, setState] = useState<{departmentReviews: DepartmentReview[], count: number}>({
+export default function useDepartmentReviews({
+  skip,
+  take,
+  filter,
+}: useDepartmentReviewsParams) {
+  const [state, setState] = useState<{
+    departmentReviews: DepartmentReview[];
+    count: number;
+  }>({
     count: 0,
-    departmentReviews: []
+    departmentReviews: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useDepartmentReviews({ skip, take, filter }: useDepartme
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

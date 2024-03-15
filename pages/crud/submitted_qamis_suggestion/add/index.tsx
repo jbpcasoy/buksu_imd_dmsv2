@@ -28,11 +28,11 @@ export default function AddSubmittedQAMISSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='qAMISSuggestionId'
+          type="text"
+          placeholder="qAMISSuggestionId"
           {...formik.getFieldProps("qAMISSuggestionId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

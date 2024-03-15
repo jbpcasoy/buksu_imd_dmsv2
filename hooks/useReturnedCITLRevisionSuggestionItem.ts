@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { ReturnedCITLRevisionSuggestionItem, IM } from "@prisma/client";
+import { ReturnedCITLRevisionSuggestionItem } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useReturnedCITLRevisionSuggestionItemParams {
   id: string;
 }
-export default function useReturnedCITLRevisionSuggestionItem({ id }: useReturnedCITLRevisionSuggestionItemParams) {
-  const [state, setState] = useState<ReturnedCITLRevisionSuggestionItem | null>();
+export default function useReturnedCITLRevisionSuggestionItem({
+  id,
+}: useReturnedCITLRevisionSuggestionItemParams) {
+  const [state, setState] =
+    useState<ReturnedCITLRevisionSuggestionItem | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -16,7 +19,7 @@ export default function useReturnedCITLRevisionSuggestionItem({ id }: useReturne
     axios
       .get(`/api/returned_citl_revision_suggestion_item/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -28,11 +28,11 @@ export default function AddSubmittedPeerSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='peerSuggestionId'
+          type="text"
+          placeholder="peerSuggestionId"
           {...formik.getFieldProps("peerSuggestionId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

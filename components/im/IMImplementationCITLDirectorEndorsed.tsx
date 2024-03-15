@@ -1,12 +1,11 @@
 import Loading from "@/components/Loading";
 import IMActionMenu from "@/components/im/IMActionMenu";
-import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useIM from "@/hooks/useIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import Error from "next/error";
 import Link from "next/link";
 import IMInfo from "./IMInfo";
-import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 
 interface IMImplementationCITLDirectorEndorsedProps {
   iMId: string;

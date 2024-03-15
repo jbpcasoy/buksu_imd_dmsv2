@@ -1,10 +1,8 @@
 import CrudLayout from "@/components/CrudLayout";
 import useCollege from "@/hooks/useCollege";
-import useColleges from "@/hooks/useColleges";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 export default function CollegePage() {
   const router = useRouter();
@@ -18,22 +16,30 @@ export default function CollegePage() {
       return;
     }
 
-    axios.delete(`/api/college/${collegeId}`).then(() => {
-      alert("College has been deleted successfully");
-    }).catch(error => {
-      alert(error.response?.data?.error?.message)
-    });
+    axios
+      .delete(`/api/college/${collegeId}`)
+      .then(() => {
+        alert("College has been deleted successfully");
+      })
+      .catch((error) => {
+        alert(error.response?.data?.error?.message);
+      });
   };
 
   if (!college) return null;
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>College</h2>
-        <div className='space-x-1'>
-          <Link className='border rounded' href={`/crud/college/${collegeId}/edit`}>edit</Link>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">College</h2>
+        <div className="space-x-1">
+          <Link
+            className="border rounded"
+            href={`/crud/college/${collegeId}/edit`}
+          >
+            edit
+          </Link>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>

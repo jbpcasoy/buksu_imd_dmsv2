@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { PlagiarismFile } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface usePlagiarismFileParams {
   id: string;
@@ -16,7 +16,7 @@ export default function usePlagiarismFile({ id }: usePlagiarismFileParams) {
     axios
       .get(`/api/plagiarism_file/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -41,7 +41,7 @@ export default function EditAnnouncementPage() {
     formik.setValues({
       title: announcement.title,
       description: announcement.description ?? "",
-      url: announcement.url ?? "",  
+      url: announcement.url ?? "",
     });
 
     return () => {
@@ -57,20 +57,20 @@ export default function EditAnnouncementPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='title'
+          type="text"
+          placeholder="title"
           {...formik.getFieldProps("title")}
         />
         <br />
         <textarea
-          placeholder='description'
+          placeholder="description"
           {...formik.getFieldProps("description")}
         />
         <br />
-        <input type='text' placeholder='url' {...formik.getFieldProps("url")} />
+        <input type="text" placeholder="url" {...formik.getFieldProps("url")} />
         <br />
 
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

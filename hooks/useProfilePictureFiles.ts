@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useProfilePictureFilesParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useProfilePictureFiles({ skip, take, filter }: useProfilePictureFilesParams) {
-  const [state, setState] = useState<{profilePictureFiles: ProfilePictureFile[], count: number}>({
+export default function useProfilePictureFiles({
+  skip,
+  take,
+  filter,
+}: useProfilePictureFilesParams) {
+  const [state, setState] = useState<{
+    profilePictureFiles: ProfilePictureFile[];
+    count: number;
+  }>({
     count: 0,
-    profilePictureFiles: []
+    profilePictureFiles: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useProfilePictureFiles({ skip, take, filter }: useProfil
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

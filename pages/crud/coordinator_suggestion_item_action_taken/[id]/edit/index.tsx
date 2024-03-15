@@ -28,7 +28,9 @@ export default function EditCoordinatorSuggestionItemActionTakenPage() {
           values
         )
         .then(() => {
-          alert("CoordinatorSuggestionItemActionTaken has been updated successfully");
+          alert(
+            "CoordinatorSuggestionItemActionTaken has been updated successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -57,11 +59,11 @@ export default function EditCoordinatorSuggestionItemActionTakenPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

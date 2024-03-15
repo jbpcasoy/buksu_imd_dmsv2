@@ -76,7 +76,9 @@ export default function FileManagerPlagiarismPage() {
 
             {plagiarismFile && (
               // <DynamicReactJson src={plagiarismFile} collapsed={2} />
-              <pre className="text-xs">{JSON.stringify(plagiarismFile, undefined, 4)}</pre>
+              <pre className="text-xs">
+                {JSON.stringify(plagiarismFile, undefined, 4)}
+              </pre>
             )}
             <button
               onClick={() =>
@@ -91,7 +93,9 @@ export default function FileManagerPlagiarismPage() {
           <div className="flex-1 h-full">
             <iframe
               loading="lazy"
-              src={`/api/file_manager/plagiarism/${fileManagerPlagiarismFile.url.split("/").at(-1)}/pdf`}
+              src={`/api/file_manager/plagiarism/${fileManagerPlagiarismFile.url
+                .split("/")
+                .at(-1)}/pdf`}
               title={fileManagerPlagiarismFile.url.split("/").at(-1)}
               className="w-full h-full rounded"
             />

@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useReturnedCITLRevisionsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useReturnedCITLRevisions({ skip, take, filter }: useReturnedCITLRevisionsParams) {
-  const [state, setState] = useState<{returnedCITLRevisions: ReturnedCITLRevision[], count: number}>({
+export default function useReturnedCITLRevisions({
+  skip,
+  take,
+  filter,
+}: useReturnedCITLRevisionsParams) {
+  const [state, setState] = useState<{
+    returnedCITLRevisions: ReturnedCITLRevision[];
+    count: number;
+  }>({
     count: 0,
-    returnedCITLRevisions: []
+    returnedCITLRevisions: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useReturnedCITLRevisions({ skip, take, filter }: useRetu
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

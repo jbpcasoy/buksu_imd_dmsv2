@@ -32,32 +32,34 @@ export default function ChairpersonSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ChairpersonSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ChairpersonSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/chairperson_suggestion_item/${chairpersonSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {chairpersonSuggestionItem.id}</p>
       <p>
-        createdAt: {new Date(chairpersonSuggestionItem.createdAt).toLocaleString()}
+        createdAt:{" "}
+        {new Date(chairpersonSuggestionItem.createdAt).toLocaleString()}
       </p>
       <p>
-        updatedAt: {new Date(chairpersonSuggestionItem.updatedAt).toLocaleString()}
+        updatedAt:{" "}
+        {new Date(chairpersonSuggestionItem.updatedAt).toLocaleString()}
       </p>
       <p>
         chairpersonSuggestionId:{" "}
         <Link
           href={`/crud/chairperson_suggestion/${chairpersonSuggestionItem.chairpersonSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {chairpersonSuggestionItem.chairpersonSuggestionId}
         </Link>

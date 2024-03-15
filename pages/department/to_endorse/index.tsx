@@ -17,7 +17,7 @@ export default function CoordinatorToEndorsePage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useCoordinatorToEndorse(state);
@@ -28,7 +28,7 @@ export default function CoordinatorToEndorsePage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />}
         count={count}
         iMs={iMs}
-        title='To Endorse'
+        title="To Endorse"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

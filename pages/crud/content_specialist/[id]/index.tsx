@@ -3,12 +3,13 @@ import useContentSpecialist from "@/hooks/useContentSpecialist";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 export default function ContentSpecialistPage() {
   const router = useRouter();
   const contentSpecialistId = router.query.id;
-  const contentSpecialist = useContentSpecialist({ id: contentSpecialistId as string });
+  const contentSpecialist = useContentSpecialist({
+    id: contentSpecialistId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -31,10 +32,10 @@ export default function ContentSpecialistPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ContentSpecialist</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ContentSpecialist</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -46,7 +47,7 @@ export default function ContentSpecialistPage() {
         facultyId:{" "}
         <Link
           href={`/crud/faculty/${contentSpecialist.facultyId}`}
-          className='underline'
+          className="underline"
         >
           {contentSpecialist.facultyId}
         </Link>

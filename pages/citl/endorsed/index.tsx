@@ -17,7 +17,7 @@ export default function CITLIDDEndorsedPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useCITLIDDEndorsed(state);
@@ -28,7 +28,7 @@ export default function CITLIDDEndorsedPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
         count={count}
         iMs={iMs}
-        title='Endorsed'
+        title="Endorsed"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

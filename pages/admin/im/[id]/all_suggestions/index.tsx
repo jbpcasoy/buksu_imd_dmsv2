@@ -1,3 +1,4 @@
+import AdminLayout from "@/components/AdminLayout";
 import IMChairpersonSuggestionItems from "@/components/IMChairpersonSuggestionItems";
 import IMContentEditorSuggestionItems from "@/components/IMContentEditorSuggestionItems";
 import IMContentSpecialistSuggestionItems from "@/components/IMContentSpecialistSuggestionItems";
@@ -6,14 +7,13 @@ import IMIDDCoordinatorSuggestionItems from "@/components/IMIDDCoordinatorSugges
 import IMIDDSpecialistSuggestionItems from "@/components/IMIDDSpecialistSuggestionItems";
 import IMPeerSuggestionItems from "@/components/IMPeerSuggestionItems";
 import IMQAMISSuggestionItems from "@/components/IMQAMISSuggestionItems";
+import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
 import IMReturnedDepartmentRevisionSuggestionItems from "@/components/IMReturnedDepartmentRevisionSuggestionItems";
 import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedIMERCCITLRevisionSuggestionItems";
 import Loading from "@/components/Loading";
-import AdminLayout from "@/components/AdminLayout";
 import useIM from "@/hooks/useIM";
 import Error from "next/error";
 import { useRouter } from "next/router";
-import IMReturnedCITLRevisionSuggestionItems from "@/components/IMReturnedCITLRevisionSuggestionItems";
 import { useState } from "react";
 
 export default function AllSuggestionsPage() {
@@ -29,7 +29,7 @@ export default function AllSuggestionsPage() {
   if (iM === null) {
     return (
       <AdminLayout>
-        <Error statusCode={404} title='IM Not Found' />
+        <Error statusCode={404} title="IM Not Found" />
       </AdminLayout>
     );
   }
@@ -43,8 +43,8 @@ export default function AllSuggestionsPage() {
 
   return (
     <AdminLayout>
-      <div className='space-y-1 px-1'>
-        <div className='flex space-x-4 justify-center'>
+      <div className="space-y-1 px-1">
+        <div className="flex space-x-4 justify-center">
           <p
             className={`text-center font-bold text-sm cursor-pointer hover:border-b hover:border-b-2 px-2 border-palette_orange ${
               state.tab === "DEPARTMENT REVIEW" ? "border-b" : ""

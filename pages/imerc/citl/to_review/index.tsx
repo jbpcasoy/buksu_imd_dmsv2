@@ -17,7 +17,7 @@ export default function IMERCCITLToReviewPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useIMERCCITLToReview(state);
@@ -28,7 +28,7 @@ export default function IMERCCITLToReviewPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVIEW} />}
         count={count}
         iMs={iMs}
-        title='To Review'
+        title="To Review"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

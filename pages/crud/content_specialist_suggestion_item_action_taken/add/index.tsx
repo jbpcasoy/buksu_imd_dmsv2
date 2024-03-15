@@ -17,7 +17,9 @@ export default function AddContentSpecialistSuggestionItemActionTakenPage() {
       axios
         .post("/api/content_specialist_suggestion_item_action_taken", values)
         .then(() => {
-          alert("ContentSpecialistSuggestionItemActionTaken has been added successfully");
+          alert(
+            "ContentSpecialistSuggestionItemActionTaken has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -30,16 +32,16 @@ export default function AddContentSpecialistSuggestionItemActionTakenPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='contentSpecialistSuggestionItemId'
+          type="text"
+          placeholder="contentSpecialistSuggestionItemId"
           {...formik.getFieldProps("contentSpecialistSuggestionItemId")}
         />
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

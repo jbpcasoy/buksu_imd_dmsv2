@@ -28,12 +28,8 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      const {
-        contentEditorSuggestionId,
-        remarks,
-        suggestion,
-        pageNumber,
-      } = validator.cast(req.body);
+      const { contentEditorSuggestionId, remarks, suggestion, pageNumber } =
+        validator.cast(req.body);
 
       if (!user.isAdmin) {
         const contentEditorReview =

@@ -62,7 +62,8 @@ export default async function handler(
         if (chairpersonReview.chairpersonId !== chairperson.id) {
           return res.status(403).json({
             error: {
-              message: "You are not allowed to submit this chairperson suggestion",
+              message:
+                "You are not allowed to submit this chairperson suggestion",
             },
           });
         }

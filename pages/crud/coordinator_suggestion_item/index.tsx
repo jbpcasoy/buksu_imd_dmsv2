@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function CoordinatorSuggestionItemsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { coordinatorSuggestionItems, count } = useCoordinatorSuggestionItems(state);
+  const { coordinatorSuggestionItems, count } =
+    useCoordinatorSuggestionItems(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -23,10 +24,10 @@ export default function CoordinatorSuggestionItemsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>CoordinatorSuggestionItem</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/coordinator_suggestion_item/add`}
         >
           Add
@@ -34,7 +35,7 @@ export default function CoordinatorSuggestionItemsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -50,15 +51,19 @@ export default function CoordinatorSuggestionItemsPage() {
                 <tr key={coordinatorSuggestionItem.id}>
                   <td>{coordinatorSuggestionItem.id}</td>
                   <td>
-                    {new Date(coordinatorSuggestionItem.createdAt).toLocaleString()}
+                    {new Date(
+                      coordinatorSuggestionItem.createdAt
+                    ).toLocaleString()}
                   </td>
                   <td>
-                    {new Date(coordinatorSuggestionItem.updatedAt).toLocaleString()}
+                    {new Date(
+                      coordinatorSuggestionItem.updatedAt
+                    ).toLocaleString()}
                   </td>
                   <td>
                     <Link
                       href={`/crud/coordinator_suggestion/${coordinatorSuggestionItem.coordinatorSuggestionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {coordinatorSuggestionItem.coordinatorSuggestionId}
                     </Link>
@@ -66,7 +71,7 @@ export default function CoordinatorSuggestionItemsPage() {
                   <td>
                     <Link
                       href={`/crud/coordinator_suggestion_item/${coordinatorSuggestionItem.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -76,14 +81,14 @@ export default function CoordinatorSuggestionItemsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

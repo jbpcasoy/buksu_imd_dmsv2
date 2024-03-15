@@ -3,7 +3,6 @@ import { User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import logger from "./logger";
-import { parse } from "url";
 
 export default async function getServerUser(
   req: NextApiRequest,

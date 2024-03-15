@@ -23,15 +23,18 @@ export default function ChairpersonSuggestionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>ChairpersonSuggestion</h2>
-        <Link className='border rounded' href={`/crud/chairperson_suggestion/add`}>
+        <Link
+          className="border rounded"
+          href={`/crud/chairperson_suggestion/add`}
+        >
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -46,12 +49,16 @@ export default function ChairpersonSuggestionsPage() {
               return (
                 <tr key={chairpersonSuggestion.id}>
                   <td>{chairpersonSuggestion.id}</td>
-                  <td>{new Date(chairpersonSuggestion.createdAt).toLocaleString()}</td>
-                  <td>{new Date(chairpersonSuggestion.updatedAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(chairpersonSuggestion.createdAt).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(chairpersonSuggestion.updatedAt).toLocaleString()}
+                  </td>
                   <td>
                     <Link
                       href={`/crud/chairperson_review/${chairpersonSuggestion.chairpersonReviewId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {chairpersonSuggestion.chairpersonReviewId}
                     </Link>
@@ -59,7 +66,7 @@ export default function ChairpersonSuggestionsPage() {
                   <td>
                     <Link
                       href={`/crud/chairperson_suggestion/${chairpersonSuggestion.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -69,14 +76,14 @@ export default function ChairpersonSuggestionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

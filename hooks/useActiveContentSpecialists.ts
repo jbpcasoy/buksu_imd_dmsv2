@@ -7,10 +7,17 @@ export interface useContentSpecialistsParams {
   take: number;
   filter?: object;
 }
-export default function useActiveContentSpecialists({ skip, take, filter }: useContentSpecialistsParams) {
-  const [state, setState] = useState<{activeContentSpecialists: ActiveContentSpecialist[], count: number}>({
+export default function useActiveContentSpecialists({
+  skip,
+  take,
+  filter,
+}: useContentSpecialistsParams) {
+  const [state, setState] = useState<{
+    activeContentSpecialists: ActiveContentSpecialist[];
+    count: number;
+  }>({
     count: 0,
-    activeContentSpecialists: []
+    activeContentSpecialists: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useActiveContentSpecialists({ skip, take, filter }: useC
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

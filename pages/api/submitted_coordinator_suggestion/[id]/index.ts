@@ -61,9 +61,9 @@ export default async function handler(
       if (!user.isAdmin) {
         return res.status(400).json({
           error: {
-            message: "You are not allowed to perform this action"
-          }
-        })
+            message: "You are not allowed to perform this action",
+          },
+        });
       }
 
       const submittedCoordinatorSuggestion =

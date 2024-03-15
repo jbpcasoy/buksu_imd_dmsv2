@@ -24,10 +24,10 @@ export default function SubmittedContentEditorSuggestionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>SubmittedContentEditorSuggestion</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/submitted_content_editor_suggestion/add`}
         >
           Add
@@ -35,7 +35,7 @@ export default function SubmittedContentEditorSuggestionsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -46,49 +46,53 @@ export default function SubmittedContentEditorSuggestionsPage() {
             </tr>
           </thead>
           <tbody>
-            {submittedContentEditorSuggestions.map((submittedContentEditorSuggestion) => {
-              return (
-                <tr key={submittedContentEditorSuggestion.id}>
-                  <td>{submittedContentEditorSuggestion.id}</td>
-                  <td>
-                    {new Date(
-                      submittedContentEditorSuggestion.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      submittedContentEditorSuggestion.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/content_editor_suggestion/${submittedContentEditorSuggestion.contentEditorSuggestionId}`}
-                      className='underline'
-                    >
-                      {submittedContentEditorSuggestion.contentEditorSuggestionId}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/submitted_content_editor_suggestion/${submittedContentEditorSuggestion.id}`}
-                      className='border rounded'
-                    >
-                      view
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
+            {submittedContentEditorSuggestions.map(
+              (submittedContentEditorSuggestion) => {
+                return (
+                  <tr key={submittedContentEditorSuggestion.id}>
+                    <td>{submittedContentEditorSuggestion.id}</td>
+                    <td>
+                      {new Date(
+                        submittedContentEditorSuggestion.createdAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      {new Date(
+                        submittedContentEditorSuggestion.updatedAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/content_editor_suggestion/${submittedContentEditorSuggestion.contentEditorSuggestionId}`}
+                        className="underline"
+                      >
+                        {
+                          submittedContentEditorSuggestion.contentEditorSuggestionId
+                        }
+                      </Link>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/submitted_content_editor_suggestion/${submittedContentEditorSuggestion.id}`}
+                        className="border rounded"
+                      >
+                        view
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

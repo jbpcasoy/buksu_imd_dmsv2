@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 export interface useEventsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
 export default function useEvents({ skip, take, filter }: useEventsParams) {
-  const [state, setState] = useState<{events: Event[], count: number}>({
+  const [state, setState] = useState<{ events: Event[]; count: number }>({
     count: 0,
-    events: []
+    events: [],
   });
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function useEvents({ skip, take, filter }: useEventsParams) {
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

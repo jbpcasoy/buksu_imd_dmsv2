@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { College, IM } from "@prisma/client";
+import { College } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCollegeParams {
   id?: string;
@@ -16,7 +16,7 @@ export default function useCollege({ id }: useCollegeParams) {
     axios
       .get(`/api/college/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

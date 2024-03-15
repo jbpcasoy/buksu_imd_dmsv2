@@ -7,10 +7,17 @@ export interface useChairpersonsParams {
   take: number;
   filter?: object;
 }
-export default function useActiveChairpersons({ skip, take, filter }: useChairpersonsParams) {
-  const [state, setState] = useState<{activeChairpersons: ActiveChairperson[], count: number}>({
+export default function useActiveChairpersons({
+  skip,
+  take,
+  filter,
+}: useChairpersonsParams) {
+  const [state, setState] = useState<{
+    activeChairpersons: ActiveChairperson[];
+    count: number;
+  }>({
     count: 0,
-    activeChairpersons: []
+    activeChairpersons: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useActiveChairpersons({ skip, take, filter }: useChairpe
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

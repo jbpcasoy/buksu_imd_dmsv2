@@ -1,9 +1,9 @@
 import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
 import { useSession } from "next-auth/react";
+import Error from "next/error";
 import { ReactNode, useContext, useEffect } from "react";
 import CrudHeader from "./CrudHeader";
 import CrudSidebar from "./CrudSidebar";
-import Error from "next/error";
 
 interface CrudLayoutProps {
   children: ReactNode;

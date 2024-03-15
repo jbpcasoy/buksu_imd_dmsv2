@@ -34,10 +34,10 @@ export default function QAMISChairpersonEndorsementPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>QAMISChairpersonEndorsement</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">QAMISChairpersonEndorsement</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -55,16 +55,16 @@ export default function QAMISChairpersonEndorsementPage() {
         qAMISRevisionId:{" "}
         <Link
           href={`/crud/qamis_revision/${qAMISChairpersonEndorsement.qAMISRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISChairpersonEndorsement.qAMISRevisionId}
         </Link>
       </p>
       <p>
-      chairpersonId:{" "}
+        chairpersonId:{" "}
         <Link
           href={`/crud/chairperson/${qAMISChairpersonEndorsement.chairpersonId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISChairpersonEndorsement.chairpersonId}
         </Link>

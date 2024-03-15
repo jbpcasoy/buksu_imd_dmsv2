@@ -34,16 +34,16 @@ export default function ChairpersonReviewPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ChairpersonReview</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ChairpersonReview</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/chairperson_review/${chairpersonReviewId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -55,129 +55,129 @@ export default function ChairpersonReviewPage() {
         departmentReviewId:{" "}
         <Link
           href={`/crud/department_review/${chairpersonReview.departmentReviewId}`}
-          className='underline'
+          className="underline"
         >
           {chairpersonReview.departmentReviewId}
         </Link>
       </p>
 
-      <p className='font-bold'>{ReviewSections.s1}</p>
+      <p className="font-bold">{ReviewSections.s1}</p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q1_1}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q1_1}</span> -{" "}
         {ReviewQuestions.q1_1}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q1_2}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q1_2}</span> -{" "}
         {ReviewQuestions.q1_2}
       </p>
 
-      <p className='font-bold'>{ReviewSections.s2}</p>
+      <p className="font-bold">{ReviewSections.s2}</p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q2_1}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q2_1}</span> -{" "}
         {ReviewQuestions.q2_1}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q2_2}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q2_2}</span> -{" "}
         {ReviewQuestions.q2_2}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q2_3}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q2_3}</span> -{" "}
         {ReviewQuestions.q2_3}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q2_4}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q2_4}</span> -{" "}
         {ReviewQuestions.q2_4}
       </p>
 
-      <p className='font-bold'>{ReviewSections.s3}</p>
+      <p className="font-bold">{ReviewSections.s3}</p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q3_1}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q3_1}</span> -{" "}
         {ReviewQuestions.q3_1}
       </p>
 
-      <p className='font-bold'>{ReviewSections.s4}</p>
+      <p className="font-bold">{ReviewSections.s4}</p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q4_1}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q4_1}</span> -{" "}
         {ReviewQuestions.q4_1}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q4_2}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q4_2}</span> -{" "}
         {ReviewQuestions.q4_2}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q4_3}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q4_3}</span> -{" "}
         {ReviewQuestions.q4_3}
       </p>
 
-      <p className='font-bold'>{ReviewSections.s5}</p>
+      <p className="font-bold">{ReviewSections.s5}</p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q5_1}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q5_1}</span> -{" "}
         {ReviewQuestions.q5_1}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q5_2}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q5_2}</span> -{" "}
         {ReviewQuestions.q5_2}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q5_3}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q5_3}</span> -{" "}
         {ReviewQuestions.q5_3}
       </p>
 
-      <p className='font-bold'>{ReviewSections.s6}</p>
+      <p className="font-bold">{ReviewSections.s6}</p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q6_1}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q6_1}</span> -{" "}
         {ReviewQuestions.q6_1}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q6_2}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q6_2}</span> -{" "}
         {ReviewQuestions.q6_2}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q6_3}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q6_3}</span> -{" "}
         {ReviewQuestions.q6_3}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q6_4}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q6_4}</span> -{" "}
         {ReviewQuestions.q6_4}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q6_5}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q6_5}</span> -{" "}
         {ReviewQuestions.q6_5}
       </p>
 
-      <p className='font-bold'>{ReviewSections.s7}</p>
+      <p className="font-bold">{ReviewSections.s7}</p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q7_1}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q7_1}</span> -{" "}
         {ReviewQuestions.q7_1}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q7_2}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q7_2}</span> -{" "}
         {ReviewQuestions.q7_3}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q7_3}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q7_3}</span> -{" "}
         {ReviewQuestions.q7_3}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q7_4}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q7_4}</span> -{" "}
         {ReviewQuestions.q7_4}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q7_5}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q7_5}</span> -{" "}
         {ReviewQuestions.q7_5}
       </p>
 
-      <p className='font-bold'>{ReviewSections.s8}</p>
+      <p className="font-bold">{ReviewSections.s8}</p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q8_1}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q8_1}</span> -{" "}
         {ReviewQuestions.q8_1}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q8_2}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q8_2}</span> -{" "}
         {ReviewQuestions.q8_2}
       </p>
       <p>
-        <span className='font-bold'>{chairpersonReview.q8_3}</span> -{" "}
+        <span className="font-bold">{chairpersonReview.q8_3}</span> -{" "}
         {ReviewQuestions.q8_3}
       </p>
     </CrudLayout>

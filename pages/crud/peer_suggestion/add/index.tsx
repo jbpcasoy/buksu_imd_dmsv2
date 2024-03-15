@@ -9,7 +9,7 @@ export default function AddPeerSuggestionPage() {
       peerReviewId: "",
     },
     validationSchema: Yup.object({
-        peerReviewId: Yup.string().required(),
+      peerReviewId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -28,11 +28,11 @@ export default function AddPeerSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='peerReviewId'
+          type="text"
+          placeholder="peerReviewId"
           {...formik.getFieldProps("peerReviewId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

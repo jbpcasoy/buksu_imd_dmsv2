@@ -5,18 +5,25 @@ import { useEffect, useState } from "react";
 export interface useReturnedDepartmentRevisionSuggestionItemsIMParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useReturnedDepartmentRevisionSuggestionItemsIM({ skip, take, id }: useReturnedDepartmentRevisionSuggestionItemsIMParams) {
-  const [state, setState] = useState<{returnedDepartmentRevisionSuggestionItems: ReturnedDepartmentRevisionSuggestionItem[], count: number}>({
+export default function useReturnedDepartmentRevisionSuggestionItemsIM({
+  skip,
+  take,
+  id,
+}: useReturnedDepartmentRevisionSuggestionItemsIMParams) {
+  const [state, setState] = useState<{
+    returnedDepartmentRevisionSuggestionItems: ReturnedDepartmentRevisionSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    returnedDepartmentRevisionSuggestionItems: []
+    returnedDepartmentRevisionSuggestionItems: [],
   });
 
   useEffect(() => {
-    console.log({skip, take, id})
-    if(!id) {
-        return;
+    console.log({ skip, take, id });
+    if (!id) {
+      return;
     }
     axios
       .get(`/api/returned_department_revision_suggestion_item/im/${id}`, {

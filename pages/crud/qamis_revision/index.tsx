@@ -23,15 +23,15 @@ export default function QAMISRevisionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>QAMISRevision</h2>
-        <Link className='border rounded' href={`/crud/qamis_revision/add`}>
+        <Link className="border rounded" href={`/crud/qamis_revision/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -48,16 +48,12 @@ export default function QAMISRevisionsPage() {
               return (
                 <tr key={qAMISRevision.id}>
                   <td>{qAMISRevision.id}</td>
-                  <td>
-                    {new Date(qAMISRevision.createdAt).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(qAMISRevision.updatedAt).toLocaleString()}
-                  </td>
+                  <td>{new Date(qAMISRevision.createdAt).toLocaleString()}</td>
+                  <td>{new Date(qAMISRevision.updatedAt).toLocaleString()}</td>
                   <td>
                     <Link
                       href={`/crud/qamis_file/${qAMISRevision.qAMISFileId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {qAMISRevision.qAMISFileId}
                     </Link>
@@ -65,7 +61,7 @@ export default function QAMISRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/im_file/${qAMISRevision.iMFileId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {qAMISRevision.iMFileId}
                     </Link>
@@ -73,7 +69,7 @@ export default function QAMISRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/submitted_qamis_suggestion/${qAMISRevision.submittedQAMISSuggestionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {qAMISRevision.submittedQAMISSuggestionId}
                     </Link>
@@ -81,7 +77,7 @@ export default function QAMISRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/qamis_revision/${qAMISRevision.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -91,14 +87,14 @@ export default function QAMISRevisionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

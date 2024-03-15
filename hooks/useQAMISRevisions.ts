@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useQAMISRevisionsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useQAMISRevisions({ skip, take, filter }: useQAMISRevisionsParams) {
-  const [state, setState] = useState<{qAMISRevisions: QAMISRevision[], count: number}>({
+export default function useQAMISRevisions({
+  skip,
+  take,
+  filter,
+}: useQAMISRevisionsParams) {
+  const [state, setState] = useState<{
+    qAMISRevisions: QAMISRevision[];
+    count: number;
+  }>({
     count: 0,
-    qAMISRevisions: []
+    qAMISRevisions: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useQAMISRevisions({ skip, take, filter }: useQAMISRevisi
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

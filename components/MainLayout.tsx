@@ -1,14 +1,12 @@
-import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
+import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
+import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useAnnouncements from "@/hooks/useAnnouncements";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
-import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
-import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 
 interface MainLayoutProps {
   children: ReactNode;

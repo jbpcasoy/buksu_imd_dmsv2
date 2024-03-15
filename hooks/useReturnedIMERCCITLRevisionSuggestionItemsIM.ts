@@ -5,18 +5,25 @@ import { useEffect, useState } from "react";
 export interface useReturnedIMERCCITLRevisionSuggestionItemsIMParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useReturnedIMERCCITLRevisionSuggestionItemsIM({ skip, take, id }: useReturnedIMERCCITLRevisionSuggestionItemsIMParams) {
-  const [state, setState] = useState<{returnedIMERCCITLRevisionSuggestionItems: ReturnedIMERCCITLRevisionSuggestionItem[], count: number}>({
+export default function useReturnedIMERCCITLRevisionSuggestionItemsIM({
+  skip,
+  take,
+  id,
+}: useReturnedIMERCCITLRevisionSuggestionItemsIMParams) {
+  const [state, setState] = useState<{
+    returnedIMERCCITLRevisionSuggestionItems: ReturnedIMERCCITLRevisionSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    returnedIMERCCITLRevisionSuggestionItems: []
+    returnedIMERCCITLRevisionSuggestionItems: [],
   });
 
   useEffect(() => {
-    console.log({skip, take, id})
-    if(!id) {
-        return;
+    console.log({ skip, take, id });
+    if (!id) {
+      return;
     }
     axios
       .get(`/api/returned_imerc_citl_revision_suggestion_item/im/${id}`, {

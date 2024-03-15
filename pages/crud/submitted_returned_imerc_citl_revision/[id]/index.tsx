@@ -24,7 +24,9 @@ export default function SubmittedReturnedIMERCCITLRevisionPage() {
         `/api/submitted_returned_imerc_citl_revision/${submittedReturnedIMERCCITLRevisionId}`
       )
       .then(() => {
-        alert("SubmittedReturnedIMERCCITLRevision has been deleted successfully");
+        alert(
+          "SubmittedReturnedIMERCCITLRevision has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -35,10 +37,10 @@ export default function SubmittedReturnedIMERCCITLRevisionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>SubmittedReturnedIMERCCITLRevision</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">SubmittedReturnedIMERCCITLRevision</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -60,7 +62,7 @@ export default function SubmittedReturnedIMERCCITLRevisionPage() {
         returnedIMERCCITLRevisionId:{" "}
         <Link
           href={`/crud/returned_imerc_citl_revision/${submittedReturnedIMERCCITLRevision.returnedIMERCCITLRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {submittedReturnedIMERCCITLRevision.returnedIMERCCITLRevisionId}
         </Link>

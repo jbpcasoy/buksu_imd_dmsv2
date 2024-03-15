@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { QAMISSuggestion, IM } from "@prisma/client";
+import { QAMISSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useQAMISSuggestionParams {
   id?: string;

@@ -14,7 +14,10 @@ export default function ExportPage({ models }: { models: string[] }) {
       })
       .then((res) => {
         console.log({ res });
-        saveAs(new Blob([res.data]), `export_${url.split("/").at(-1)}_${new Date()}.csv`);
+        saveAs(
+          new Blob([res.data]),
+          `export_${url.split("/").at(-1)}_${new Date()}.csv`
+        );
       })
       .catch((error) => {
         addSnackbar(

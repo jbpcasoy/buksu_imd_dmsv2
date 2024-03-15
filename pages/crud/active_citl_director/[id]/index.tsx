@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function ActiveCITLDirectorPage() {
   const router = useRouter();
   const activeCITLDirectorId = router.query.id;
-  const activeCITLDirector = useActiveCITLDirector({ id: activeCITLDirectorId as string });
+  const activeCITLDirector = useActiveCITLDirector({
+    id: activeCITLDirectorId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -30,22 +32,26 @@ export default function ActiveCITLDirectorPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ActiveCITLDirector</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ActiveCITLDirector</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {activeCITLDirector.id}</p>
-      <p>createdAt: {new Date(activeCITLDirector.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(activeCITLDirector.updatedAt).toLocaleString()}</p>
+      <p>
+        createdAt: {new Date(activeCITLDirector.createdAt).toLocaleString()}
+      </p>
+      <p>
+        updatedAt: {new Date(activeCITLDirector.updatedAt).toLocaleString()}
+      </p>
       <p>
         cITLDirectorId:{" "}
         <Link
           href={`/crud/cITLDirector/${activeCITLDirector.cITLDirectorId}`}
-          className='underline'
+          className="underline"
         >
           {activeCITLDirector.cITLDirectorId}
         </Link>

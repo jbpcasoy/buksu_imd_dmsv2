@@ -5,17 +5,23 @@ import { useEffect, useState } from "react";
 export interface useReturnedCITLRevisionSuggestionItemsOwnParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useReturnedCITLRevisionSuggestionItemsOwn({ skip, take, id }: useReturnedCITLRevisionSuggestionItemsOwnParams, refreshFlag?: number) {
-  const [state, setState] = useState<{returnedCITLRevisionSuggestionItems: ReturnedCITLRevisionSuggestionItem[], count: number}>({
+export default function useReturnedCITLRevisionSuggestionItemsOwn(
+  { skip, take, id }: useReturnedCITLRevisionSuggestionItemsOwnParams,
+  refreshFlag?: number
+) {
+  const [state, setState] = useState<{
+    returnedCITLRevisionSuggestionItems: ReturnedCITLRevisionSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    returnedCITLRevisionSuggestionItems: []
+    returnedCITLRevisionSuggestionItems: [],
   });
 
   useEffect(() => {
-    if(!id) {
-        return;
+    if (!id) {
+      return;
     }
     axios
       .get("/api/returned_citl_revision_suggestion_item", {
@@ -23,8 +29,8 @@ export default function useReturnedCITLRevisionSuggestionItemsOwn({ skip, take, 
           skip,
           take,
           filter: {
-            returnedCITLRevisionId: id
-          }
+            returnedCITLRevisionId: id,
+          },
         },
       })
       .then((res) => {

@@ -35,7 +35,7 @@ export default function useIMERCReviewedByCITL({
       .catch((error) => {
         console.error(error);
       });
-    }, [skip, take, filter, sort]);
+  }, [skip, take, filter, sort]);
 
   return state;
 }

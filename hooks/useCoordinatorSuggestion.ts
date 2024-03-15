@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { CoordinatorSuggestion, IM } from "@prisma/client";
+import { CoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCoordinatorSuggestionParams {
   id?: string;
 }
-export default function useCoordinatorSuggestion({ id }: useCoordinatorSuggestionParams) {
+export default function useCoordinatorSuggestion({
+  id,
+}: useCoordinatorSuggestionParams) {
   const [state, setState] = useState<CoordinatorSuggestion | null>();
 
   useEffect(() => {

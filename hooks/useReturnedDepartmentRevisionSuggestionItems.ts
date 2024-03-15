@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useReturnedDepartmentRevisionSuggestionItemsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useReturnedDepartmentRevisionSuggestionItems({ skip, take, filter }: useReturnedDepartmentRevisionSuggestionItemsParams) {
-  const [state, setState] = useState<{returnedDepartmentRevisionSuggestionItems: ReturnedDepartmentRevisionSuggestionItem[], count: number}>({
+export default function useReturnedDepartmentRevisionSuggestionItems({
+  skip,
+  take,
+  filter,
+}: useReturnedDepartmentRevisionSuggestionItemsParams) {
+  const [state, setState] = useState<{
+    returnedDepartmentRevisionSuggestionItems: ReturnedDepartmentRevisionSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    returnedDepartmentRevisionSuggestionItems: []
+    returnedDepartmentRevisionSuggestionItems: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useReturnedDepartmentRevisionSuggestionItems({ skip, tak
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

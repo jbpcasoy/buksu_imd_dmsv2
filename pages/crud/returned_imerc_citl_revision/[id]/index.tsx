@@ -19,7 +19,9 @@ export default function ReturnedIMERCCITLRevisionPage() {
     }
 
     axios
-      .delete(`/api/returned_imerc_citl_revision/${returnedIMERCCITLRevisionId}`)
+      .delete(
+        `/api/returned_imerc_citl_revision/${returnedIMERCCITLRevisionId}`
+      )
       .then(() => {
         alert("ReturnedIMERCCITLRevision has been deleted successfully");
       })
@@ -32,26 +34,28 @@ export default function ReturnedIMERCCITLRevisionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ReturnedIMERCCITLRevision</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ReturnedIMERCCITLRevision</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {returnedIMERCCITLRevision.id}</p>
       <p>
-        createdAt: {new Date(returnedIMERCCITLRevision.createdAt).toLocaleString()}
+        createdAt:{" "}
+        {new Date(returnedIMERCCITLRevision.createdAt).toLocaleString()}
       </p>
       <p>
-        updatedAt: {new Date(returnedIMERCCITLRevision.updatedAt).toLocaleString()}
+        updatedAt:{" "}
+        {new Date(returnedIMERCCITLRevision.updatedAt).toLocaleString()}
       </p>
       <p>
         iDDCoordinatorId:{" "}
         <Link
           href={`/crud/idd_coordinator/${returnedIMERCCITLRevision.iDDCoordinatorId}`}
-          className='underline'
+          className="underline"
         >
           {returnedIMERCCITLRevision.iDDCoordinatorId}
         </Link>
@@ -60,7 +64,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
         iMERCCITLRevisionId:{" "}
         <Link
           href={`/crud/imerc_citl_revision/${returnedIMERCCITLRevision.iMERCCITLRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {returnedIMERCCITLRevision.iMERCCITLRevisionId}
         </Link>

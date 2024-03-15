@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface usePlagiarismFilesParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function usePlagiarismFiles({ skip, take, filter }: usePlagiarismFilesParams) {
-  const [state, setState] = useState<{plagiarismFiles: PlagiarismFile[], count: number}>({
+export default function usePlagiarismFiles({
+  skip,
+  take,
+  filter,
+}: usePlagiarismFilesParams) {
+  const [state, setState] = useState<{
+    plagiarismFiles: PlagiarismFile[];
+    count: number;
+  }>({
     count: 0,
-    plagiarismFiles: []
+    plagiarismFiles: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function usePlagiarismFiles({ skip, take, filter }: usePlagiarism
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

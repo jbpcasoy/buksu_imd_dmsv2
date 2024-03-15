@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { DepartmentReviewed, IM } from "@prisma/client";
+import { DepartmentReviewed } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useDepartmentReviewedParams {
   id: string;
 }
-export default function useDepartmentReviewed({ id }: useDepartmentReviewedParams) {
+export default function useDepartmentReviewed({
+  id,
+}: useDepartmentReviewedParams) {
   const [state, setState] = useState<DepartmentReviewed | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useDepartmentReviewed({ id }: useDepartmentReviewedParam
     axios
       .get(`/api/department_reviewed/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

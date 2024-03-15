@@ -18,7 +18,6 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-
   const getHandler = async () => {
     try {
       const validator = Yup.object({
@@ -57,12 +56,12 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      if(!user.isAdmin) {
+      if (!user.isAdmin) {
         return res.status(403).json({
           error: {
-            message: "You are not allowed to remove this active faculty"
-          }
-        })
+            message: "You are not allowed to remove this active faculty",
+          },
+        });
       }
 
       const { id } = validator.cast(req.query);

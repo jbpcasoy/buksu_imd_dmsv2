@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function CITLDirectorEndorsementsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { cITLDirectorEndorsements, count } = useCITLDirectorEndorsements(state);
+  const { cITLDirectorEndorsements, count } =
+    useCITLDirectorEndorsements(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -23,10 +24,10 @@ export default function CITLDirectorEndorsementsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>CITLDirectorEndorsement</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/citl_director_endorsement/add`}
         >
           Add
@@ -34,7 +35,7 @@ export default function CITLDirectorEndorsementsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -63,7 +64,7 @@ export default function CITLDirectorEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/idd_coordinator_endorsement/${cITLDirectorEndorsement.iDDCoordinatorEndorsementId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {cITLDirectorEndorsement.iDDCoordinatorEndorsementId}
                     </Link>
@@ -71,7 +72,7 @@ export default function CITLDirectorEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/citl_director/${cITLDirectorEndorsement.cITLDirectorId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {cITLDirectorEndorsement.cITLDirectorId}
                     </Link>
@@ -79,7 +80,7 @@ export default function CITLDirectorEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/citl_director_endorsement/${cITLDirectorEndorsement.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -89,14 +90,14 @@ export default function CITLDirectorEndorsementsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

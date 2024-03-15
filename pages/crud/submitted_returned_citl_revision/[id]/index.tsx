@@ -7,10 +7,9 @@ import { useRouter } from "next/router";
 export default function SubmittedReturnedCITLRevisionPage() {
   const router = useRouter();
   const submittedReturnedCITLRevisionId = router.query.id;
-  const submittedReturnedCITLRevision =
-    useSubmittedReturnedCITLRevision({
-      id: submittedReturnedCITLRevisionId as string,
-    });
+  const submittedReturnedCITLRevision = useSubmittedReturnedCITLRevision({
+    id: submittedReturnedCITLRevisionId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -35,10 +34,10 @@ export default function SubmittedReturnedCITLRevisionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>SubmittedReturnedCITLRevision</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">SubmittedReturnedCITLRevision</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -46,21 +45,17 @@ export default function SubmittedReturnedCITLRevisionPage() {
       <p>id: {submittedReturnedCITLRevision.id}</p>
       <p>
         createdAt:{" "}
-        {new Date(
-          submittedReturnedCITLRevision.createdAt
-        ).toLocaleString()}
+        {new Date(submittedReturnedCITLRevision.createdAt).toLocaleString()}
       </p>
       <p>
         updatedAt:{" "}
-        {new Date(
-          submittedReturnedCITLRevision.updatedAt
-        ).toLocaleString()}
+        {new Date(submittedReturnedCITLRevision.updatedAt).toLocaleString()}
       </p>
       <p>
         returnedCITLRevisionId:{" "}
         <Link
           href={`/crud/returned_citl_revision/${submittedReturnedCITLRevision.returnedCITLRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {submittedReturnedCITLRevision.returnedCITLRevisionId}
         </Link>

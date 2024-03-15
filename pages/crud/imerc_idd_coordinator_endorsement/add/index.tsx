@@ -30,16 +30,16 @@ export default function AddIMERCIDDCoordinatorEndorsementPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='iMERCCITLRevisionId'
+          type="text"
+          placeholder="iMERCCITLRevisionId"
           {...formik.getFieldProps("iMERCCITLRevisionId")}
         />
         <input
-          type='text'
-          placeholder='activeIDDCoordinatorId'
+          type="text"
+          placeholder="activeIDDCoordinatorId"
           {...formik.getFieldProps("activeIDDCoordinatorId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

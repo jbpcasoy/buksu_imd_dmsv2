@@ -30,16 +30,16 @@ export default function AddCoordinatorEndorsementPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='departmentRevisionId'
+          type="text"
+          placeholder="departmentRevisionId"
           {...formik.getFieldProps("departmentRevisionId")}
         />
         <input
-          type='text'
-          placeholder='activeCoordinatorId'
+          type="text"
+          placeholder="activeCoordinatorId"
           {...formik.getFieldProps("activeCoordinatorId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

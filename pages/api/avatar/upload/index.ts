@@ -1,7 +1,5 @@
 import uploadToVercelBlob from "@/services/uploadToVercelBlob";
-import { put } from "@vercel/blob";
 import { File, Formidable } from "formidable";
-import fs from "fs";
 import type { NextApiRequest, NextApiResponse, PageConfig } from "next";
 
 export default async function handler(
@@ -29,4 +27,3 @@ export const config: PageConfig = {
     bodyParser: false,
   },
 };
-

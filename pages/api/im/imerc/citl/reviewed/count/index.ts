@@ -39,7 +39,6 @@ export default async function handler(
 }
 
 export async function iMERCReviewedByCITLCount(user: User) {
-
   const count = await prisma.iM.count({
     where: {
       AND: [

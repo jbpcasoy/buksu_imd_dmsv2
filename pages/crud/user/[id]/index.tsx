@@ -12,10 +12,10 @@ export default function UserPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>User</h2>
-        <div className='space-x-1'>
-          <Link className='border rounded' href={`/crud/user/${userId}/edit`}>
+      <div className="flex">
+        <h2 className="flex-1">User</h2>
+        <div className="space-x-1">
+          <Link className="border rounded" href={`/crud/user/${userId}/edit`}>
             edit
           </Link>
         </div>

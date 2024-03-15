@@ -7,11 +7,10 @@ export interface useIDDSpecialistSuggestionItemsOwnParams {
   take: number;
   id?: string;
 }
-export default function useIDDSpecialistSuggestionItemsOwn({
-  skip,
-  take,
-  id,
-}: useIDDSpecialistSuggestionItemsOwnParams, refreshFlag?: number) {
+export default function useIDDSpecialistSuggestionItemsOwn(
+  { skip, take, id }: useIDDSpecialistSuggestionItemsOwnParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<{
     iDDSpecialistSuggestionItems: IDDSpecialistSuggestionItem[];
     count: number;

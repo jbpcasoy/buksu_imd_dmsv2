@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { CoAuthor, IM } from "@prisma/client";
+import { CoAuthor } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCoAuthorParams {
   id?: string;
@@ -16,7 +16,7 @@ export default function useCoAuthor({ id }: useCoAuthorParams) {
     axios
       .get(`/api/co_author/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

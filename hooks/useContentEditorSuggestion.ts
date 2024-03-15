@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react";
-import { ContentEditorSuggestion, IM } from "@prisma/client";
+import { ContentEditorSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useContentEditorSuggestionParams {
   id?: string;
 }
-export default function useContentEditorSuggestion({ id }: useContentEditorSuggestionParams) {
-  const [state, setState] = useState<ContentEditorSuggestion | null | undefined>(undefined);
+export default function useContentEditorSuggestion({
+  id,
+}: useContentEditorSuggestionParams) {
+  const [state, setState] = useState<
+    ContentEditorSuggestion | null | undefined
+  >(undefined);
 
   useEffect(() => {
     if (!id) return;

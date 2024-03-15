@@ -17,7 +17,7 @@ export default function CollegeIMsPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useCollegeIMs(state);
@@ -28,7 +28,7 @@ export default function CollegeIMsPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.COLLEGE_IMS} />}
         count={count}
         iMs={iMs}
-        title='College IM&apos;s'
+        title="College IM's"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

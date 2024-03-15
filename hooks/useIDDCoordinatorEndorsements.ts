@@ -7,10 +7,17 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useIDDCoordinatorEndorsements({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{iDDCoordinatorEndorsements: IDDCoordinatorEndorsement[], count: number}>({
+export default function useIDDCoordinatorEndorsements({
+  skip,
+  take,
+  filter,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    iDDCoordinatorEndorsements: IDDCoordinatorEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    iDDCoordinatorEndorsements: []
+    iDDCoordinatorEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useIDDCoordinatorEndorsements({ skip, take, filter }: us
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

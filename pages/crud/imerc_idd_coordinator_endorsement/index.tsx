@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function IMERCIDDCoordinatorEndorsementsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { iMERCIDDCoordinatorEndorsements, count } = useIMERCIDDCoordinatorEndorsements(state);
+  const { iMERCIDDCoordinatorEndorsements, count } =
+    useIMERCIDDCoordinatorEndorsements(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -23,10 +24,10 @@ export default function IMERCIDDCoordinatorEndorsementsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>IMERCIDDCoordinatorEndorsement</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/imerc_idd_coordinator_endorsement/add`}
         >
           Add
@@ -34,7 +35,7 @@ export default function IMERCIDDCoordinatorEndorsementsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -46,57 +47,59 @@ export default function IMERCIDDCoordinatorEndorsementsPage() {
             </tr>
           </thead>
           <tbody>
-            {iMERCIDDCoordinatorEndorsements.map((iMERCIDDCoordinatorEndorsement) => {
-              return (
-                <tr key={iMERCIDDCoordinatorEndorsement.id}>
-                  <td>{iMERCIDDCoordinatorEndorsement.id}</td>
-                  <td>
-                    {new Date(
-                      iMERCIDDCoordinatorEndorsement.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      iMERCIDDCoordinatorEndorsement.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/imerc_citl_revision/${iMERCIDDCoordinatorEndorsement.iMERCCITLRevisionId}`}
-                      className='underline'
-                    >
-                      {iMERCIDDCoordinatorEndorsement.iMERCCITLRevisionId}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/idd_coordinator/${iMERCIDDCoordinatorEndorsement.iDDCoordinatorId}`}
-                      className='underline'
-                    >
-                      {iMERCIDDCoordinatorEndorsement.iDDCoordinatorId}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/imerc_idd_coordinator_endorsement/${iMERCIDDCoordinatorEndorsement.id}`}
-                      className='border rounded'
-                    >
-                      view
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
+            {iMERCIDDCoordinatorEndorsements.map(
+              (iMERCIDDCoordinatorEndorsement) => {
+                return (
+                  <tr key={iMERCIDDCoordinatorEndorsement.id}>
+                    <td>{iMERCIDDCoordinatorEndorsement.id}</td>
+                    <td>
+                      {new Date(
+                        iMERCIDDCoordinatorEndorsement.createdAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      {new Date(
+                        iMERCIDDCoordinatorEndorsement.updatedAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/imerc_citl_revision/${iMERCIDDCoordinatorEndorsement.iMERCCITLRevisionId}`}
+                        className="underline"
+                      >
+                        {iMERCIDDCoordinatorEndorsement.iMERCCITLRevisionId}
+                      </Link>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/idd_coordinator/${iMERCIDDCoordinatorEndorsement.iDDCoordinatorId}`}
+                        className="underline"
+                      >
+                        {iMERCIDDCoordinatorEndorsement.iDDCoordinatorId}
+                      </Link>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/imerc_idd_coordinator_endorsement/${iMERCIDDCoordinatorEndorsement.id}`}
+                        className="border rounded"
+                      >
+                        view
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

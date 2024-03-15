@@ -19,7 +19,9 @@ export default function ContentEditorSuggestionItemPage() {
     }
 
     axios
-      .delete(`/api/content_editor_suggestion_item/${contentEditorSuggestionItemId}`)
+      .delete(
+        `/api/content_editor_suggestion_item/${contentEditorSuggestionItemId}`
+      )
       .then(() => {
         alert("ContentEditorSuggestionItem has been deleted successfully");
       })
@@ -32,32 +34,34 @@ export default function ContentEditorSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ContentEditorSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ContentEditorSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/content_editor_suggestion_item/${contentEditorSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {contentEditorSuggestionItem.id}</p>
       <p>
-        createdAt: {new Date(contentEditorSuggestionItem.createdAt).toLocaleString()}
+        createdAt:{" "}
+        {new Date(contentEditorSuggestionItem.createdAt).toLocaleString()}
       </p>
       <p>
-        updatedAt: {new Date(contentEditorSuggestionItem.updatedAt).toLocaleString()}
+        updatedAt:{" "}
+        {new Date(contentEditorSuggestionItem.updatedAt).toLocaleString()}
       </p>
       <p>
         contentEditorSuggestionId:{" "}
         <Link
           href={`/crud/content_editor_suggestion/${contentEditorSuggestionItem.contentEditorSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {contentEditorSuggestionItem.contentEditorSuggestionId}
         </Link>

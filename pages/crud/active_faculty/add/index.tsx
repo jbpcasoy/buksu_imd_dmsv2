@@ -28,11 +28,11 @@ export default function AddActiveFacultyPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='facultyId'
+          type="text"
+          placeholder="facultyId"
           {...formik.getFieldProps("facultyId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

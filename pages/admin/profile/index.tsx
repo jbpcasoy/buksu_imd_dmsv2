@@ -1,5 +1,4 @@
 import AdminLayout from "@/components/AdminLayout";
-import MainLayout from "@/components/MainLayout";
 import { SnackbarContext } from "@/components/SnackbarProvider";
 import useCollege from "@/hooks/useCollege";
 import useDepartmentMe from "@/hooks/useDepartmentMe";

@@ -28,7 +28,7 @@ export default function IMERCToReviewPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVIEW} />}
         count={count}
         iMs={iMs}
-        title='To Review'
+        title="To Review"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

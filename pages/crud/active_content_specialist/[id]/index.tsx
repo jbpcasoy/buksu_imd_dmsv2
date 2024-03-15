@@ -32,10 +32,10 @@ export default function ActiveContentSpecialistPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ActiveContentSpecialist</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ActiveContentSpecialist</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -53,7 +53,7 @@ export default function ActiveContentSpecialistPage() {
         contentSpecialistId:{" "}
         <Link
           href={`/crud/active_content_specialist/${activeContentSpecialist.contentSpecialistId}`}
-          className='underline'
+          className="underline"
         >
           {activeContentSpecialist.contentSpecialistId}
         </Link>

@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { CoordinatorReview, IM } from "@prisma/client";
+import { CoordinatorReview } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCoordinatorReviewParams {
   id: string;
 }
-export default function useCoordinatorReviewMe({ id }: useCoordinatorReviewParams) {
+export default function useCoordinatorReviewMe({
+  id,
+}: useCoordinatorReviewParams) {
   const [state, setState] = useState<CoordinatorReview | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useCoordinatorReviewMe({ id }: useCoordinatorReviewParam
     axios
       .get(`/api/coordinator_review/im/${id}/me`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

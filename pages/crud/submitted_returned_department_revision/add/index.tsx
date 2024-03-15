@@ -15,7 +15,9 @@ export default function AddSubmittedReturnedDepartmentRevisionPage() {
       axios
         .post("/api/submitted_returned_department_revision", values)
         .then(() => {
-          alert("SubmittedReturnedDepartmentRevision has been added successfully");
+          alert(
+            "SubmittedReturnedDepartmentRevision has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -28,11 +30,11 @@ export default function AddSubmittedReturnedDepartmentRevisionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='returnedDepartmentRevisionId'
+          type="text"
+          placeholder="returnedDepartmentRevisionId"
           {...formik.getFieldProps("returnedDepartmentRevisionId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

@@ -9,7 +9,7 @@ export default function AddActiveCITLDirectorPage() {
       cITLDirectorId: "",
     },
     validationSchema: Yup.object({
-        cITLDirectorId: Yup.string().required(),
+      cITLDirectorId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -27,8 +27,12 @@ export default function AddActiveCITLDirectorPage() {
       <h2>Add ActiveCITLDirector</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input type="text" placeholder="cITLDirectorId" {...formik.getFieldProps("cITLDirectorId")} />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input
+          type="text"
+          placeholder="cITLDirectorId"
+          {...formik.getFieldProps("cITLDirectorId")}
+        />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

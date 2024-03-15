@@ -1,7 +1,7 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ActiveFaculty, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -48,9 +48,9 @@ export async function coAuthoredIMsCount(user: User) {
               Faculty: {
                 User: {
                   id: {
-                    equals: user.id
-                  }
-                }
+                    equals: user.id,
+                  },
+                },
               },
             },
           },

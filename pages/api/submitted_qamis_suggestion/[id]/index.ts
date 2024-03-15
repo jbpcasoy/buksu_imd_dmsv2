@@ -13,7 +13,6 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
-    
   } catch (error) {
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
@@ -60,12 +59,12 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
 
-      if(!user.isAdmin) {
+      if (!user.isAdmin) {
         return res.status(403).json({
           error: {
-            message: "You are not allowed to perform this action"
-          }
-        })
+            message: "You are not allowed to perform this action",
+          },
+        });
       }
       const submittedQAMISSuggestion =
         await prisma.submittedQAMISSuggestion.delete({

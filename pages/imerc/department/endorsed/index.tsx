@@ -28,7 +28,7 @@ export default function IMERCEndorsedPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
         count={count}
         iMs={iMs}
-        title='Endorsed'
+        title="Endorsed"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

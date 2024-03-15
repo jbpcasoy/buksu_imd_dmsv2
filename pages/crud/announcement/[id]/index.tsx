@@ -30,16 +30,16 @@ export default function AnnouncementPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>Announcement</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">Announcement</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/announcement/${announcementId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>

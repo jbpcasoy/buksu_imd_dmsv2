@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useSubmittedChairpersonSuggestionsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useSubmittedChairpersonSuggestions({ skip, take, filter }: useSubmittedChairpersonSuggestionsParams) {
-  const [state, setState] = useState<{submittedChairpersonSuggestions: SubmittedChairpersonSuggestion[], count: number}>({
+export default function useSubmittedChairpersonSuggestions({
+  skip,
+  take,
+  filter,
+}: useSubmittedChairpersonSuggestionsParams) {
+  const [state, setState] = useState<{
+    submittedChairpersonSuggestions: SubmittedChairpersonSuggestion[];
+    count: number;
+  }>({
     count: 0,
-    submittedChairpersonSuggestions: []
+    submittedChairpersonSuggestions: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useSubmittedChairpersonSuggestions({ skip, take, filter 
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

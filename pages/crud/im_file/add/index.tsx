@@ -1,5 +1,4 @@
 import CrudLayout from "@/components/CrudLayout";
-import { fi } from "@faker-js/faker";
 import axios from "axios";
 import { ChangeEventHandler, useState } from "react";
 

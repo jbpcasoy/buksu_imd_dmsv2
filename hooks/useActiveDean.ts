@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { ActiveDean, IM } from "@prisma/client";
+import { ActiveDean } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useActiveDeanParams {
   id: string;
@@ -16,7 +16,7 @@ export default function useActiveDean({ id }: useActiveDeanParams) {
     axios
       .get(`/api/active_dean/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

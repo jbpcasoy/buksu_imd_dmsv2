@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function ContentEditorSuggestionPage() {
   const router = useRouter();
   const contentEditorSuggestionId = router.query.id;
-  const contentEditorSuggestion = useContentEditorSuggestion({ id: contentEditorSuggestionId as string });
+  const contentEditorSuggestion = useContentEditorSuggestion({
+    id: contentEditorSuggestionId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -30,22 +32,28 @@ export default function ContentEditorSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ContentEditorSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ContentEditorSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {contentEditorSuggestion.id}</p>
-      <p>createdAt: {new Date(contentEditorSuggestion.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(contentEditorSuggestion.updatedAt).toLocaleString()}</p>
       <p>
-      contentEditorReviewId:{" "}
+        createdAt:{" "}
+        {new Date(contentEditorSuggestion.createdAt).toLocaleString()}
+      </p>
+      <p>
+        updatedAt:{" "}
+        {new Date(contentEditorSuggestion.updatedAt).toLocaleString()}
+      </p>
+      <p>
+        contentEditorReviewId:{" "}
         <Link
           href={`/crud/content_editor_review/${contentEditorSuggestion.contentEditorReviewId}`}
-          className='underline'
+          className="underline"
         >
           {contentEditorSuggestion.contentEditorReviewId}{" "}
         </Link>

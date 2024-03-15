@@ -23,15 +23,15 @@ export default function ChairpersonReviewsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>ChairpersonReview</h2>
-        <Link className='border rounded' href={`/crud/chairperson_review/add`}>
+        <Link className="border rounded" href={`/crud/chairperson_review/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -47,19 +47,24 @@ export default function ChairpersonReviewsPage() {
               return (
                 <tr key={chairpersonReview.id}>
                   <td>{chairpersonReview.id}</td>
-                  <td>{new Date(chairpersonReview.createdAt).toLocaleString()}</td>
-                  <td>{new Date(chairpersonReview.updatedAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(chairpersonReview.createdAt).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(chairpersonReview.updatedAt).toLocaleString()}
+                  </td>
                   <td>
                     <Link
                       href={`/crud/department_review/${chairpersonReview.departmentReviewId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {chairpersonReview.departmentReviewId}
                     </Link>
-                  </td><td>
+                  </td>
+                  <td>
                     <Link
                       href={`/crud/chairperson/${chairpersonReview.chairpersonId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {chairpersonReview.chairpersonId}
                     </Link>
@@ -67,7 +72,7 @@ export default function ChairpersonReviewsPage() {
                   <td>
                     <Link
                       href={`/crud/chairperson_review/${chairpersonReview.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -77,14 +82,14 @@ export default function ChairpersonReviewsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

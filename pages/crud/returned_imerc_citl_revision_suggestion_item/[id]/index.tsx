@@ -24,7 +24,9 @@ export default function ReturnedIMERCCITLRevisionSuggestionItemPage() {
         `/api/returned_imerc_citl_revision_suggestion_item/${returnedIMERCCITLRevisionSuggestionItemId}`
       )
       .then(() => {
-        alert("ReturnedIMERCCITLRevisionSuggestionItem has been deleted successfully");
+        alert(
+          "ReturnedIMERCCITLRevisionSuggestionItem has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -35,16 +37,16 @@ export default function ReturnedIMERCCITLRevisionSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ReturnedIMERCCITLRevisionSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ReturnedIMERCCITLRevisionSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/returned_imerc_citl_revision_suggestion_item/${returnedIMERCCITLRevisionSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -66,11 +68,9 @@ export default function ReturnedIMERCCITLRevisionSuggestionItemPage() {
         returnedIMERCCITLRevisionId:{" "}
         <Link
           href={`/crud/returned_imerc_citl_revision/${returnedIMERCCITLRevisionSuggestionItem.returnedIMERCCITLRevisionId}`}
-          className='underline'
+          className="underline"
         >
-          {
-            returnedIMERCCITLRevisionSuggestionItem.returnedIMERCCITLRevisionId
-          }
+          {returnedIMERCCITLRevisionSuggestionItem.returnedIMERCCITLRevisionId}
         </Link>
       </p>
       <p>suggestion: {returnedIMERCCITLRevisionSuggestionItem.suggestion}</p>

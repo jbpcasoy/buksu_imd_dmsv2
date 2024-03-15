@@ -5,18 +5,25 @@ import { useEffect, useState } from "react";
 export interface useContentSpecialistSuggestionItemsIMParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useContentSpecialistSuggestionItemsIM({ skip, take, id }: useContentSpecialistSuggestionItemsIMParams) {
-  const [state, setState] = useState<{contentSpecialistSuggestionItems: ContentSpecialistSuggestionItem[], count: number}>({
+export default function useContentSpecialistSuggestionItemsIM({
+  skip,
+  take,
+  id,
+}: useContentSpecialistSuggestionItemsIMParams) {
+  const [state, setState] = useState<{
+    contentSpecialistSuggestionItems: ContentSpecialistSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    contentSpecialistSuggestionItems: []
+    contentSpecialistSuggestionItems: [],
   });
 
   useEffect(() => {
-    console.log({skip, take, id})
-    if(!id) {
-        return;
+    console.log({ skip, take, id });
+    if (!id) {
+      return;
     }
     axios
       .get(`/api/content_specialist_suggestion_item/im/${id}`, {

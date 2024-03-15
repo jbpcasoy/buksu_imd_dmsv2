@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { CITLDirectorEndorsement, IM } from "@prisma/client";
+import { CITLDirectorEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCITLDirectorEndorsementParams {
   id?: string;
 }
-export default function useCITLDirectorEndorsement({ id }: useCITLDirectorEndorsementParams) {
+export default function useCITLDirectorEndorsement({
+  id,
+}: useCITLDirectorEndorsementParams) {
   const [state, setState] = useState<CITLDirectorEndorsement | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useCITLDirectorEndorsement({ id }: useCITLDirectorEndors
     axios
       .get(`/api/citl_director_endorsement/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

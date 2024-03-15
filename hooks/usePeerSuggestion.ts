@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
-import { PeerSuggestion, IM } from "@prisma/client";
+import { PeerSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface usePeerSuggestionParams {
   id?: string;
 }
 export default function usePeerSuggestion({ id }: usePeerSuggestionParams) {
-  const [state, setState] = useState<PeerSuggestion | null | undefined>(undefined);
+  const [state, setState] = useState<PeerSuggestion | null | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     if (!id) return;

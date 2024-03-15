@@ -30,10 +30,10 @@ export default function PlagiarismFilePage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>PlagiarismFile</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">PlagiarismFile</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -43,7 +43,10 @@ export default function PlagiarismFilePage() {
       <p>updatedAt: {new Date(plagiarismFile.updatedAt).toLocaleString()}</p>
       <p>
         iMERCCITLReviewedId:{" "}
-        <Link href={`/crud/im/${plagiarismFile.iMERCCITLReviewedId}`} className='underline'>
+        <Link
+          href={`/crud/im/${plagiarismFile.iMERCCITLReviewedId}`}
+          className="underline"
+        >
           {plagiarismFile.iMERCCITLReviewedId}
         </Link>
       </p>

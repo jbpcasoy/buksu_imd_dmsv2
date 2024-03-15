@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react";
-import { ReturnedCITLRevisionSuggestionItemActionTaken, IM } from "@prisma/client";
+import { ReturnedCITLRevisionSuggestionItemActionTaken } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItemParams {
   id: string;
 }
-export default function useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem({ id }: useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItemParams, refreshFlag?: number) {
-  const [state, setState] = useState<ReturnedCITLRevisionSuggestionItemActionTaken | null>();
+export default function useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItem(
+  {
+    id,
+  }: useReturnedCITLRevisionSuggestionItemActionTakenReturnedCITLRevisionSuggestionItemParams,
+  refreshFlag?: number
+) {
+  const [state, setState] =
+    useState<ReturnedCITLRevisionSuggestionItemActionTaken | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -14,9 +20,11 @@ export default function useReturnedCITLRevisionSuggestionItemActionTakenReturned
     let subscribe = true;
 
     axios
-      .get(`/api/returned_citl_revision_suggestion_item_action_taken/returned_citl_revision_suggestion_item/${id}`)
+      .get(
+        `/api/returned_citl_revision_suggestion_item_action_taken/returned_citl_revision_suggestion_item/${id}`
+      )
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

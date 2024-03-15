@@ -23,15 +23,15 @@ export default function IMERCCITLRevisionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>IMERCCITLRevision</h2>
-        <Link className='border rounded' href={`/crud/imerc_citl_revision/add`}>
+        <Link className="border rounded" href={`/crud/imerc_citl_revision/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -57,7 +57,7 @@ export default function IMERCCITLRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/im_file/${iMERCCITLRevision.iMFileId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iMERCCITLRevision.iMFileId}
                     </Link>
@@ -65,7 +65,7 @@ export default function IMERCCITLRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/imerc_citl_reviewed/${iMERCCITLRevision.iMERCCITLReviewedId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iMERCCITLRevision.iMERCCITLReviewedId}
                     </Link>
@@ -73,7 +73,7 @@ export default function IMERCCITLRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/plagiarism_file/${iMERCCITLRevision.plagiarismFileId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iMERCCITLRevision.plagiarismFileId}
                     </Link>
@@ -81,7 +81,7 @@ export default function IMERCCITLRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/imerc_citl_revision/${iMERCCITLRevision.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -91,14 +91,14 @@ export default function IMERCCITLRevisionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

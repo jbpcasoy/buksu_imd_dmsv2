@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
-import { PeerSuggestionItemActionTaken, IM } from "@prisma/client";
+import { PeerSuggestionItemActionTaken } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface usePeerSuggestionItemActionTakenPeerSuggestionItemParams {
   id: string;
 }
-export default function usePeerSuggestionItemActionTakenPeerSuggestionItem({ id }: usePeerSuggestionItemActionTakenPeerSuggestionItemParams, refreshFlag?: number) {
+export default function usePeerSuggestionItemActionTakenPeerSuggestionItem(
+  { id }: usePeerSuggestionItemActionTakenPeerSuggestionItemParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<PeerSuggestionItemActionTaken | null>();
 
   useEffect(() => {
@@ -16,7 +19,7 @@ export default function usePeerSuggestionItemActionTakenPeerSuggestionItem({ id 
     axios
       .get(`/api/peer_suggestion_item_action_taken/peer_suggestion_item/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

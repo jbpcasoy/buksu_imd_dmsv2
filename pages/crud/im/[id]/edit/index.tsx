@@ -54,17 +54,17 @@ export default function EditIMPage() {
 
       <form onSubmit={formik.handleSubmit} noValidate>
         <input
-          type='text'
-          placeholder='title'
+          type="text"
+          placeholder="title"
           {...formik.getFieldProps("title")}
         />
         <select>
-          <option value='MODULE'>MODULE</option>
-          <option value='COURSE_FILE'>COURSE_FILE</option>
-          <option value='WORKTEXT'>WORKTEXT</option>
-          <option value='TEXTBOOK'>TEXTBOOK</option>
+          <option value="MODULE">MODULE</option>
+          <option value="COURSE_FILE">COURSE_FILE</option>
+          <option value="WORKTEXT">WORKTEXT</option>
+          <option value="TEXTBOOK">TEXTBOOK</option>
         </select>
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

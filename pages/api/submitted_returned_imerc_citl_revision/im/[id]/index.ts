@@ -13,7 +13,6 @@ export default async function handler(
 
   try {
     user = await getServerUser(req, res);
-    
   } catch (error) {
     logger.error(error);
     return res.status(401).json({ error: { message: "Unauthorized" } });
@@ -49,7 +48,7 @@ export default async function handler(
           },
           orderBy: {
             updatedAt: "desc",
-          }
+          },
         });
 
       return res.json(submittedReturnedIMERCCITLRevision);

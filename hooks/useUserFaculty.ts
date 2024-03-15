@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-import { User, IM } from "@prisma/client";
+import { User } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useUserFacultyParams {
   id?: string;
 }
-export default function useUserFaculty({
-  id,
-}: useUserFacultyParams) {
+export default function useUserFaculty({ id }: useUserFacultyParams) {
   const [state, setState] = useState<User | null>();
 
   useEffect(() => {

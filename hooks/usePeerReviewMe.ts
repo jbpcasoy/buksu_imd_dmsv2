@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { PeerReview, IM } from "@prisma/client";
+import { PeerReview } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface usePeerReviewParams {
   id: string;
@@ -16,7 +16,7 @@ export default function usePeerReviewMe({ id }: usePeerReviewParams) {
     axios
       .get(`/api/peer_review/im/${id}/me`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -28,11 +28,11 @@ export default function AddSubmittedReturnedCITLRevisionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='returnedCITLRevisionId'
+          type="text"
+          placeholder="returnedCITLRevisionId"
           {...formik.getFieldProps("returnedCITLRevisionId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

@@ -28,19 +28,21 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
       const returnedIMERCCITLRevisionSuggestionItemActionTaken =
-        await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.findFirstOrThrow({
-          where: {
-            AND: [
-              {
-                ReturnedIMERCCITLRevisionSuggestionItem: {
-                  id: {
-                    equals: id,
+        await prisma.returnedIMERCCITLRevisionSuggestionItemActionTaken.findFirstOrThrow(
+          {
+            where: {
+              AND: [
+                {
+                  ReturnedIMERCCITLRevisionSuggestionItem: {
+                    id: {
+                      equals: id,
+                    },
                   },
                 },
-              },
-            ],
-          },
-        });
+              ],
+            },
+          }
+        );
 
       return res.json(returnedIMERCCITLRevisionSuggestionItemActionTaken);
     } catch (error: any) {

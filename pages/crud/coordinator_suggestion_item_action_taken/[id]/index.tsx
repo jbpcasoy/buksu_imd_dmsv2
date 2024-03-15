@@ -24,7 +24,9 @@ export default function CoordinatorSuggestionItemActionTakenPage() {
         `/api/coordinator_suggestion_item_action_taken/${coordinatorSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("CoordinatorSuggestionItemActionTaken has been deleted successfully");
+        alert(
+          "CoordinatorSuggestionItemActionTaken has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error.response?.data?.error?.message);
@@ -35,16 +37,16 @@ export default function CoordinatorSuggestionItemActionTakenPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>CoordinatorSuggestionItemActionTaken</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">CoordinatorSuggestionItemActionTaken</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/coordinator_suggestion_item_action_taken/${coordinatorSuggestionItemActionTakenId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -66,7 +68,7 @@ export default function CoordinatorSuggestionItemActionTakenPage() {
         coordinatorSuggestionItemId:
         <Link
           href={`/crud/coordinator_suggestion_item/${coordinatorSuggestionItemActionTaken.coordinatorSuggestionItemId}`}
-          className='underline'
+          className="underline"
         >
           {coordinatorSuggestionItemActionTaken.coordinatorSuggestionItemId}
         </Link>

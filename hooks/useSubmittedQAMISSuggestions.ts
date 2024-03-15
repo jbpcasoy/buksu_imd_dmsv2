@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useSubmittedQAMISSuggestionsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useSubmittedQAMISSuggestions({ skip, take, filter }: useSubmittedQAMISSuggestionsParams) {
-  const [state, setState] = useState<{submittedQAMISSuggestions: SubmittedQAMISSuggestion[], count: number}>({
+export default function useSubmittedQAMISSuggestions({
+  skip,
+  take,
+  filter,
+}: useSubmittedQAMISSuggestionsParams) {
+  const [state, setState] = useState<{
+    submittedQAMISSuggestions: SubmittedQAMISSuggestion[];
+    count: number;
+  }>({
     count: 0,
-    submittedQAMISSuggestions: []
+    submittedQAMISSuggestions: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useSubmittedQAMISSuggestions({ skip, take, filter }: use
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

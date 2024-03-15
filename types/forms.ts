@@ -79,7 +79,6 @@ export interface F014Props {
   cITLDirectorName: string;
 }
 
-
 export interface F015Suggestion {
   suggestion: string;
   actionTaken: string;

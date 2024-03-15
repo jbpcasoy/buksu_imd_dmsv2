@@ -12,7 +12,7 @@ export default function useIMLatestIMFile({ id }: useIMLatestIMFileParams) {
     if (!id) {
       return;
     }
-    
+
     axios
       .get(`/api/im_file/im/${id}`)
       .then((res) => {

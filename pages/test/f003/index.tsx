@@ -1,6 +1,5 @@
 // Simple example to add text to a document
 
-import BuksuLogo from "@/public/images/buksu-logo-min-512x512.png";
 import {
   AlignmentType,
   BorderStyle,
@@ -24,7 +23,6 @@ import {
   WidthType,
 } from "docx";
 import saveAs from "file-saver";
-import fs from "fs";
 import { useEffect, useState } from "react";
 
 export default function TestPage() {

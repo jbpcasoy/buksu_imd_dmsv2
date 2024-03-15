@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { QAMISFile } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useQAMISFileParams {
   id: string;
@@ -16,7 +16,7 @@ export default function useQAMISFile({ id }: useQAMISFileParams) {
     axios
       .get(`/api/qamis_file/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

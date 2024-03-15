@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { SubmittedPeerSuggestion, IM } from "@prisma/client";
+import { SubmittedPeerSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useSubmittedPeerSuggestionIMParams {
   id?: string;
 }
-export default function useSubmittedPeerSuggestionIM({ id }: useSubmittedPeerSuggestionIMParams) {
+export default function useSubmittedPeerSuggestionIM({
+  id,
+}: useSubmittedPeerSuggestionIMParams) {
   const [state, setState] = useState<SubmittedPeerSuggestion | null>();
 
   useEffect(() => {

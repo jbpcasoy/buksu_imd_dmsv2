@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function CITLDirectorEndorsementPage() {
   const router = useRouter();
   const cITLDirectorEndorsementId = router.query.id;
-  const cITLDirectorEndorsement = useCITLDirectorEndorsement({ id: cITLDirectorEndorsementId as string });
+  const cITLDirectorEndorsement = useCITLDirectorEndorsement({
+    id: cITLDirectorEndorsementId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -30,31 +32,37 @@ export default function CITLDirectorEndorsementPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>CITLDirectorEndorsement</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">CITLDirectorEndorsement</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {cITLDirectorEndorsement.id}</p>
-      <p>createdAt: {new Date(cITLDirectorEndorsement.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(cITLDirectorEndorsement.updatedAt).toLocaleString()}</p>
       <p>
-      iDDCoordinatorEndorsementId:{" "}
+        createdAt:{" "}
+        {new Date(cITLDirectorEndorsement.createdAt).toLocaleString()}
+      </p>
+      <p>
+        updatedAt:{" "}
+        {new Date(cITLDirectorEndorsement.updatedAt).toLocaleString()}
+      </p>
+      <p>
+        iDDCoordinatorEndorsementId:{" "}
         <Link
           href={`/crud/idd_coordinator_endorsement/${cITLDirectorEndorsement.iDDCoordinatorEndorsementId}`}
-          className='underline'
+          className="underline"
         >
           {cITLDirectorEndorsement.iDDCoordinatorEndorsementId}
         </Link>
       </p>
       <p>
-      cITLDirectorId:{" "}
+        cITLDirectorId:{" "}
         <Link
           href={`/crud/cITLDirector/${cITLDirectorEndorsement.cITLDirectorId}`}
-          className='underline'
+          className="underline"
         >
           {cITLDirectorEndorsement.cITLDirectorId}
         </Link>

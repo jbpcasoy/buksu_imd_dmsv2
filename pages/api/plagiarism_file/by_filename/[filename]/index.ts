@@ -2,9 +2,7 @@ import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
-import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 
 export default async function handler(
   req: NextApiRequest,

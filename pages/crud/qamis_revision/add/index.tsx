@@ -29,16 +29,16 @@ export default function AddQAMISRevisionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='iMFileId'
+          type="text"
+          placeholder="iMFileId"
           {...formik.getFieldProps("iMFileId")}
         />
         <input
-          type='text'
-          placeholder='qAMISFileId'
+          type="text"
+          placeholder="qAMISFileId"
           {...formik.getFieldProps("qAMISFileId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

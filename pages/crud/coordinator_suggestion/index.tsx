@@ -23,15 +23,18 @@ export default function CoordinatorSuggestionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>CoordinatorSuggestion</h2>
-        <Link className='border rounded' href={`/crud/coordinator_suggestion/add`}>
+        <Link
+          className="border rounded"
+          href={`/crud/coordinator_suggestion/add`}
+        >
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -46,12 +49,16 @@ export default function CoordinatorSuggestionsPage() {
               return (
                 <tr key={coordinatorSuggestion.id}>
                   <td>{coordinatorSuggestion.id}</td>
-                  <td>{new Date(coordinatorSuggestion.createdAt).toLocaleString()}</td>
-                  <td>{new Date(coordinatorSuggestion.updatedAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(coordinatorSuggestion.createdAt).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(coordinatorSuggestion.updatedAt).toLocaleString()}
+                  </td>
                   <td>
                     <Link
                       href={`/crud/coordinator_review/${coordinatorSuggestion.coordinatorReviewId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {coordinatorSuggestion.coordinatorReviewId}
                     </Link>
@@ -59,7 +66,7 @@ export default function CoordinatorSuggestionsPage() {
                   <td>
                     <Link
                       href={`/crud/coordinator_suggestion/${coordinatorSuggestion.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -69,14 +76,14 @@ export default function CoordinatorSuggestionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { QAMISDepartmentEndorsement, IM } from "@prisma/client";
+import { QAMISDepartmentEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useQAMISDepartmentEndorsementParams {
   id: string;
 }
-export default function useQAMISDepartmentEndorsement({ id }: useQAMISDepartmentEndorsementParams) {
+export default function useQAMISDepartmentEndorsement({
+  id,
+}: useQAMISDepartmentEndorsementParams) {
   const [state, setState] = useState<QAMISDepartmentEndorsement | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useQAMISDepartmentEndorsement({ id }: useQAMISDepartment
     axios
       .get(`/api/qamis_department_endorsement/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

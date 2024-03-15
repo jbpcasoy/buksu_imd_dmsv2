@@ -2,8 +2,6 @@ import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -60,12 +58,12 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      if(!user.isAdmin) {
+      if (!user.isAdmin) {
         return res.status(403).json({
           error: {
-            message: "You are not allowed to remove an active chairperson"
-          }
-        })
+            message: "You are not allowed to remove an active chairperson",
+          },
+        });
       }
 
       const { id } = validator.cast(req.query);

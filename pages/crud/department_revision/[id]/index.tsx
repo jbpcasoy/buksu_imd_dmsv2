@@ -32,16 +32,16 @@ export default function DepartmentRevisionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>DepartmentRevision</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">DepartmentRevision</h2>
+        <div className="space-x-1">
           <Link
             href={`/crud/department_revision/${departmentRevision.id}/edit`}
-            className='rounded border'
+            className="rounded border"
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -57,7 +57,7 @@ export default function DepartmentRevisionPage() {
         iMFileId:{" "}
         <Link
           href={`/crud/im_file/${departmentRevision.iMFileId}`}
-          className='underline'
+          className="underline"
         >
           {departmentRevision.iMFileId}
         </Link>
@@ -66,7 +66,7 @@ export default function DepartmentRevisionPage() {
         departmentReviewedId:{" "}
         <Link
           href={`/crud/department_reviewed/${departmentRevision.departmentReviewedId}`}
-          className='underline'
+          className="underline"
         >
           {departmentRevision.departmentReviewedId}
         </Link>

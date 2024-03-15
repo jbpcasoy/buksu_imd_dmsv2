@@ -4,10 +4,10 @@ import Link from "next/link";
 export default function CrudHeader() {
   const { data: session } = useSession();
   return (
-    <div className='flex justify-end p-1'>
+    <div className="flex justify-end p-1">
       <Link
         href={session?.user?.isAdmin ? "/admin/profile" : "/profile"}
-        className='underline'
+        className="underline"
       >
         profile
       </Link>

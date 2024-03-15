@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function IMERCCITLDirectorEndorsementPage() {
   const router = useRouter();
   const iMERCCITLDirectorEndorsementId = router.query.id;
-  const iMERCCITLDirectorEndorsement = useIMERCCITLDirectorEndorsement({ id: iMERCCITLDirectorEndorsementId as string });
+  const iMERCCITLDirectorEndorsement = useIMERCCITLDirectorEndorsement({
+    id: iMERCCITLDirectorEndorsementId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -17,7 +19,9 @@ export default function IMERCCITLDirectorEndorsementPage() {
     }
 
     axios
-      .delete(`/api/imerc_citl_director_endorsement/${iMERCCITLDirectorEndorsementId}`)
+      .delete(
+        `/api/imerc_citl_director_endorsement/${iMERCCITLDirectorEndorsementId}`
+      )
       .then(() => {
         alert("IMERCCITLDirectorEndorsement has been deleted successfully");
       })
@@ -30,31 +34,37 @@ export default function IMERCCITLDirectorEndorsementPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IMERCCITLDirectorEndorsement</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">IMERCCITLDirectorEndorsement</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {iMERCCITLDirectorEndorsement.id}</p>
-      <p>createdAt: {new Date(iMERCCITLDirectorEndorsement.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(iMERCCITLDirectorEndorsement.updatedAt).toLocaleString()}</p>
       <p>
-      iMERCIDDCoordinatorEndorsementId:{" "}
+        createdAt:{" "}
+        {new Date(iMERCCITLDirectorEndorsement.createdAt).toLocaleString()}
+      </p>
+      <p>
+        updatedAt:{" "}
+        {new Date(iMERCCITLDirectorEndorsement.updatedAt).toLocaleString()}
+      </p>
+      <p>
+        iMERCIDDCoordinatorEndorsementId:{" "}
         <Link
           href={`/crud/imerc_idd_coordinator_endorsement/${iMERCCITLDirectorEndorsement.iMERCIDDCoordinatorEndorsementId}`}
-          className='underline'
+          className="underline"
         >
           {iMERCCITLDirectorEndorsement.iMERCIDDCoordinatorEndorsementId}
         </Link>
       </p>
       <p>
-      deanId:{" "}
+        deanId:{" "}
         <Link
           href={`/crud/citl_director/${iMERCCITLDirectorEndorsement.cITLDirectorId}`}
-          className='underline'
+          className="underline"
         >
           {iMERCCITLDirectorEndorsement.cITLDirectorId}
         </Link>

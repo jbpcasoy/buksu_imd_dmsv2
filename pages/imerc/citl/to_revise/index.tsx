@@ -28,7 +28,7 @@ export default function IMERCCITLToRevisePage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVISE} />}
         count={count}
         iMs={iMs}
-        title='To Revise'
+        title="To Revise"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

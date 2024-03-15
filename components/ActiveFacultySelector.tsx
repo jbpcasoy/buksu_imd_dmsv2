@@ -1,6 +1,5 @@
 import useActiveFaculties from "@/hooks/useActiveFaculties";
 import useActiveFaculty from "@/hooks/useActiveFaculty";
-import useFaculties from "@/hooks/useFaculties";
 import useFaculty from "@/hooks/useFaculty";
 import useUser from "@/hooks/useUser";
 import { FieldInputProps } from "formik";
@@ -43,13 +42,13 @@ export default function ActiveFacultySelector(props: FieldInputProps<any>) {
   return (
     <div className="flex flex-col">
       <input
-        type='text'
+        type="text"
         onChange={onSearch}
-        placeholder='Search Faculty'
-        className='rounded-t py-1'
+        placeholder="Search Faculty"
+        className="rounded-t py-1"
       />
-      <select {...props} className='rounded-b py-1'>
-        <option value=''>Select</option>
+      <select {...props} className="rounded-b py-1">
+        <option value="">Select</option>
         {activeFaculties.map((faculty) => {
           return <FacultySelectorItem key={faculty.id} id={faculty.id} />;
         })}

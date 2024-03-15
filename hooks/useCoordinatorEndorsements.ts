@@ -7,10 +7,17 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useCoordinatorEndorsements({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{coordinatorEndorsements: CoordinatorEndorsement[], count: number}>({
+export default function useCoordinatorEndorsements({
+  skip,
+  take,
+  filter,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    coordinatorEndorsements: CoordinatorEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    coordinatorEndorsements: []
+    coordinatorEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useCoordinatorEndorsements({ skip, take, filter }: useFa
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {
