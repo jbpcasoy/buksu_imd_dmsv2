@@ -48,7 +48,7 @@ export default function AdminDashboard() {
         <div className="flex-1 flex flex-col w-full h-full">
           <form noValidate onSubmit={formik.handleSubmit}>
             <div className="flex flex-col space-y-1">
-              <div className="space-x-1 flex flex">
+              <div className="space-x-1 flex">
                 <div className="flex flex-col space-y-1 w-full justify-end">
                   <CollegeSelector {...formik.getFieldProps("collegeId")} />
                   <DepartmentSelector

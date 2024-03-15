@@ -291,7 +291,7 @@ function MenuItem({ label, link, icon }: MenuItemProps) {
   return (
     <Link
       href={link}
-      className={`rounded my-1 px-1 flex justify-between items-center py-1 px-2 hover:bg-palette_grey ${
+      className={`rounded my-1 flex justify-between items-center py-1 px-2 hover:bg-palette_grey ${
         router.pathname === link ? "border border-palette_orange" : ""
       }`}
     >

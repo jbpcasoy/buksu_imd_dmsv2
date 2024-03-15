@@ -78,9 +78,9 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
             )}
           </button>
           <div className="flex justify-center items-center space-x-1">
-            <Link href="/" className="w-72 bg-palette_blue text-lg block">
+            <Link href="/" className="w-56 bg-palette_blue text-lg block">
               <img
-                src="/images/logo.png"
+                src="/images/logo-darkmode.png"
                 alt="BukSU IMD DMS Logo"
                 className="object-cover"
               />
@@ -101,15 +101,18 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
             </p>
           </div>
         </div>
-        <div className="flex justify-center items-center space-x-2">
-          <Link href="/admin/profile" className="">
+        <Link href="/admin/profile" className="">
+          <div className="flex justify-center items-center space-x-2 p-2 rounded-lg bg-palette_orange hover:bg-opacity-90 group">
             <img
               src={session?.user?.image ?? ""}
               alt={session?.user?.name ?? "Profile"}
-              className="h-11 w-11 rounded-full hover:opacity-90 object-cover"
+              className="h-9 w-9 rounded-full group-hover:opacity-90 object-cover"
             />
-          </Link>
-        </div>
+            <p className="text-base font-semibold">
+              {session?.user?.name ?? ""}
+            </p>
+          </div>
+        </Link>
       </div>
     </div>
   );

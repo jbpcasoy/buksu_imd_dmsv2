@@ -753,7 +753,7 @@ function CoAuthorChip({ coAuthor, onDelete }: CoAuthorChipProps) {
   }
 
   return (
-    <div className="inline bg-palette_orange rounded-full px-1 text-xs flex items-center space-x-1">
+    <div className="bg-palette_orange rounded-full px-1 text-xs flex items-center space-x-1">
       <p>{user.name}</p>
       <button
         className="bg-palette_blue rounded-full h-3 w-3 hover:bg-opacity-90 active:bg-opacity-100 flex items-center justify-center"

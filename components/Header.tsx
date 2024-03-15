@@ -55,7 +55,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
       <div className="flex justify-between items-center h-20 space-x-2 bg-palette_white px-2">
         <div className="flex space-x-2 justify-center items-center">
           <button
-            className="hidden sm:flex h-6 w-6 rounded-full fill-palette_blue hover:fill-palette_grey flex justify-center items-center"
+            className="hidden sm:flex h-6 w-6 rounded-full fill-palette_blue hover:fill-palette_grey justify-center items-center"
             onClick={() => {
               setState((prev) => ({ ...prev, openSidebar: !prev.openSidebar }));
             }}
@@ -120,7 +120,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             </div>
           </Link>
           <Link href="/profile" className="">
-            <div className="flex items-center justify-center space-x-2 p-2 rounded-lg bg-palette_light_grey">
+            <div className="flex items-center justify-center space-x-2 p-2 rounded-lg bg-palette_light_grey hover:bg-opacity-90">
               <img
                 src={
                   session?.user?.image ?? "/images/buksu-logo-min-512x512.png"
@@ -129,7 +129,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
                   e.currentTarget.src = "/images/buksu-logo-min-512x512.png";
                 }}
                 alt={session?.user?.name ?? "Profile"}
-                className="h-6 w-6 sm:h-11 sm:w-11 rounded-full hover:opacity-90 object-cover"
+                className="h-6 w-6 sm:h-11 sm:w-11 rounded-full group-hover:opacity-90 object-cover"
               />
               <p className="text-base font-semibold">
                 {session?.user?.name ?? ""}

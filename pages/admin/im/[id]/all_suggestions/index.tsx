@@ -46,7 +46,7 @@ export default function AllSuggestionsPage() {
       <div className="space-y-1 px-1">
         <div className="flex space-x-4 justify-center">
           <p
-            className={`text-center font-bold text-sm cursor-pointer hover:border-b hover:border-b-2 px-2 border-palette_orange ${
+            className={`text-center font-bold text-sm cursor-pointer  hover:border-b-2 px-2 border-palette_orange ${
               state.tab === "DEPARTMENT REVIEW" ? "border-b" : ""
             }`}
             onClick={() => {
@@ -56,7 +56,7 @@ export default function AllSuggestionsPage() {
             DEPARTMENT REVIEW
           </p>
           <p
-            className={`text-center font-bold text-sm cursor-pointer hover:border-b hover:border-b-2 px-2 border-palette_orange ${
+            className={`text-center font-bold text-sm cursor-pointer  hover:border-b-2 px-2 border-palette_orange ${
               state.tab === "CITL REVIEW" ? "border-b" : ""
             }`}
             onClick={() => {
@@ -66,7 +66,7 @@ export default function AllSuggestionsPage() {
             CITL REVIEW
           </p>
           <p
-            className={`text-center font-bold text-sm cursor-pointer hover:border-b hover:border-b-2 px-2 border-palette_orange ${
+            className={`text-center font-bold text-sm cursor-pointer  hover:border-b-2 px-2 border-palette_orange ${
               state.tab === "IMERC REVIEW" ? "border-b" : ""
             }`}
             onClick={() => {

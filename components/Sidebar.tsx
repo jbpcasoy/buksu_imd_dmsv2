@@ -65,7 +65,7 @@ export default function Sidebar() {
               {activeFaculty && (
                 <Link
                   href="/department"
-                  className={`rounded my-1 px-1 flex justify-between items-center py-1 px-2 hover:bg-palette_light_grey ${
+                  className={`rounded my-1 flex justify-between items-center py-1 px-2 hover:bg-palette_light_grey ${
                     router.pathname === "/department"
                       ? "bg-palette_light_grey_2"
                       : ""
