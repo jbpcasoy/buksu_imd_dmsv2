@@ -21,7 +21,7 @@ import { DateTime } from "luxon";
 import useRefresh from "@/hooks/useRefresh";
 import { useSession } from "next-auth/react";
 
-export interface IMCoordinatorSuggestionItemsProps {
+interface IMCoordinatorSuggestionItemsProps {
   id: string;
   editable?: boolean;
 }

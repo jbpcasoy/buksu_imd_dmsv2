@@ -22,7 +22,7 @@ import useUser from "@/hooks/useUser";
 import useRefresh from "@/hooks/useRefresh";
 import { useSession } from "next-auth/react";
 
-export interface IMReturnedDepartmentRevisionSuggestionItemsProps {
+interface IMReturnedDepartmentRevisionSuggestionItemsProps {
   id: string;
   editable?: boolean;
 }

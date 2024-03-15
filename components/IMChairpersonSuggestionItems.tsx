@@ -22,7 +22,7 @@ import { SnackbarContext } from "./SnackbarProvider";
 import useRefresh from "@/hooks/useRefresh";
 import { useSession } from "next-auth/react";
 
-export interface IMChairpersonSuggestionItemsProps {
+interface IMChairpersonSuggestionItemsProps {
   id: string;
   editable?: boolean;
 }

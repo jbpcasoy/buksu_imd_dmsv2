@@ -17,7 +17,7 @@ import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 import useSerialNumber from "@/hooks/useSerialNumber";
 import useSerialNumberIM from "@/hooks/useSerialNumberIM";
 
-export interface AdminIMTableProps {
+interface AdminIMTableProps {
   count: number;
   iMs: IM[];
   title: string;

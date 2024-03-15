@@ -81,12 +81,14 @@ export default function Sidebar() {
                     >
                       <path
                         d="M0.75 19H17.25M1.5 1H16.5M2.25 1V19M15.75 1V19M6 4.75H7.5M6 7.75H7.5M6 10.75H7.5M10.5 4.75H12M10.5 7.75H12M10.5 10.75H12M6 19V15.625C6 15.004 6.504 14.5 7.125 14.5H10.875C11.496 14.5 12 15.004 12 15.625V19"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
-                    <span className="text-base font-semibold">My Department</span>
+                    <span className="text-base font-semibold">
+                      My Department
+                    </span>
                   </span>
                 </Link>
               )}
@@ -390,7 +392,9 @@ export default function Sidebar() {
                     count={iMERCCITLToReviseCount}
                     label="To Revise"
                     link="/imerc/citl/to_revise"
-                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVISE} />}
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVISE} />
+                    }
                   />
                 )}
                 {(activeIDDCoordinator || activeCITLDirector) && (
@@ -398,7 +402,9 @@ export default function Sidebar() {
                     count={iMERCCITLToReviewCount}
                     label="To Review"
                     link="/imerc/citl/to_review"
-                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVIEW} />}
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVIEW} />
+                    }
                   />
                 )}
                 {(activeIDDCoordinator || activeCITLDirector) && (
@@ -418,13 +424,17 @@ export default function Sidebar() {
                       count={iMERCCITLToEndorseCount}
                       label="To Endorse"
                       link="/imerc/citl/to_endorse"
-                      icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />}
+                      icon={
+                        <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />
+                      }
                     />
                     <MenuItem
                       count={iMERCCITLEndorsedCount}
                       label="Endorsed"
                       link="/imerc/citl/endorsed"
-                      icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
+                      icon={
+                        <SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />
+                      }
                     />
                   </div>
                 )}
@@ -437,13 +447,17 @@ export default function Sidebar() {
                       count={iMERCCITLDirectorToEndorseCount}
                       label="To Endorse"
                       link="/imerc/citl/citl_director_to_endorse"
-                      icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />}
+                      icon={
+                        <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />
+                      }
                     />
                     <MenuItem
                       count={iMERCCITLDirectorEndorsedCount}
                       label="Endorsed"
                       link="/imerc/citl/citl_director_endorsed"
-                      icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
+                      icon={
+                        <SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />
+                      }
                     />
                   </div>
                 )}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export interface ConfirmationProps {
+interface ConfirmationProps {
   onClose: () => void;
   onConfirm: () => void;
   title?: string;

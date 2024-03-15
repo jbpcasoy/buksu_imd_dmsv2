@@ -10,7 +10,7 @@ import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 
-export interface MainLayoutProps {
+interface MainLayoutProps {
   children: ReactNode;
 }
 export default function MainLayout({ children }: MainLayoutProps) {

@@ -2,7 +2,7 @@ import useDepartments from "@/hooks/useDepartments";
 import { FieldInputProps } from "formik";
 import { ChangeEventHandler, useEffect, useState } from "react";
 
-export interface DepartmentSelectorProps extends FieldInputProps<any> {
+interface DepartmentSelectorProps extends FieldInputProps<any> {
   collegeId?: string;
   disabled?: boolean;
 }

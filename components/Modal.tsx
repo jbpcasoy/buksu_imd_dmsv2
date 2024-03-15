@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export interface ModalProps {
+interface ModalProps {
   onClose: () => void;
   title: string;
   shortDescription?: string;

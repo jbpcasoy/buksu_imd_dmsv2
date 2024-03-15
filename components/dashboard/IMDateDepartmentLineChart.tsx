@@ -29,7 +29,7 @@ ChartJS.register(
   autocolors
 );
 
-export interface IMDateDepartmentLineChartProps {
+interface IMDateDepartmentLineChartProps {
   filter?: {
     status?: string;
     departmentId?: string;

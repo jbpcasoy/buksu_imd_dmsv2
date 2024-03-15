@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from "react";
 import AdminHeader from "./AdminHeader";
 import AdminSidebar from "./AdminSidebar";
 
-export interface AdminLayoutProps {
+interface AdminLayoutProps {
   children: ReactNode;
 }
 export default function AdminLayout({ children }: AdminLayoutProps) {
@@ -22,17 +22,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }, [session]);
 
   return (
-    <div className='flex flex-col h-screen w-screen'>
-      <div className='flex flex-col w-full h-full overflow-auto'>
+    <div className="flex flex-col h-screen w-screen">
+      <div className="flex flex-col w-full h-full overflow-auto">
         <AdminHeader onToggleSidebar={setOpenSidebar} />
 
-        <div className='flex-1 flex h-full overflow-y-clip overflow-x-auto'>
+        <div className="flex-1 flex h-full overflow-y-clip overflow-x-auto">
           {openSidebar && (
-            <div className='w-56 h-full overflow-auto'>
+            <div className="w-56 h-full overflow-auto">
               <AdminSidebar />
             </div>
           )}
-          <div className='flex-1 flex flex-col h-full overflow-auto p-2'>
+          <div className="flex-1 flex flex-col h-full overflow-auto p-2">
             {children}
           </div>
         </div>

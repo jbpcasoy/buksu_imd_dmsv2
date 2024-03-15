@@ -21,7 +21,7 @@ import useSubmittedReturnedIMERCCITLRevisionIM from "@/hooks/useSubmittedReturne
 import useRefresh from "@/hooks/useRefresh";
 import { useSession } from "next-auth/react";
 
-export interface IMReturnedIMERCCITLRevisionSuggestionItemsProps {
+interface IMReturnedIMERCCITLRevisionSuggestionItemsProps {
   id: string;
   editable?: boolean;
 }

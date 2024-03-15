@@ -1,6 +1,6 @@
 import { DetailedHTMLProps, InputHTMLAttributes } from "react";
 
-export interface ReviewItemProps
+interface ReviewItemProps
   extends DetailedHTMLProps<
     InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
@@ -26,9 +26,9 @@ export default function ReviewItem({
   ];
 
   return (
-    <div className='text-sm overflow-auto'>
-      <p className='text-palette_grey'>{question}</p>
-      <div className='mt-2 flex flex-col sm:flex-row'>
+    <div className="text-sm overflow-auto">
+      <p className="text-palette_grey">{question}</p>
+      <div className="mt-2 flex flex-col sm:flex-row">
         {ratings.map((rating, index) => (
           <label
             key={rating.label}
@@ -40,12 +40,12 @@ export default function ReviewItem({
           >
             <input
               {...props}
-              className='form-radio text-palette_blue active:ring-palette_blue focus:ring-palette_blue'
-              type='radio'
+              className="form-radio text-palette_blue active:ring-palette_blue focus:ring-palette_blue"
+              type="radio"
               value={rating.value}
               defaultChecked={checkedValue === rating.value}
             />
-            <span className='ml-2 text-palette_grey text-xs whitespace-nowrap'>
+            <span className="ml-2 text-palette_grey text-xs whitespace-nowrap">
               {rating.label}
             </span>
           </label>

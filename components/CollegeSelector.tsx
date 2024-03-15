@@ -2,7 +2,7 @@ import useColleges from "@/hooks/useColleges";
 import { FieldInputProps } from "formik";
 import { ChangeEventHandler, useState } from "react";
 
-export interface CollegeSelectorProps extends FieldInputProps<any> {
+interface CollegeSelectorProps extends FieldInputProps<any> {
   collegeId?: string;
   disabled?: boolean;
 }

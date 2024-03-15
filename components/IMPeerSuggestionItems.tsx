@@ -17,7 +17,7 @@ import { SnackbarContext } from "./SnackbarProvider";
 import useRefresh from "@/hooks/useRefresh";
 import { useSession } from "next-auth/react";
 
-export interface IMPeerSuggestionItemsProps {
+interface IMPeerSuggestionItemsProps {
   id: string;
   editable?: boolean;
 }

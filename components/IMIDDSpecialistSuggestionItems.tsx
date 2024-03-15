@@ -21,7 +21,7 @@ import useUser from "@/hooks/useUser";
 import useRefresh from "@/hooks/useRefresh";
 import { useSession } from "next-auth/react";
 
-export interface IMIDDSpecialistSuggestionItemsProps {
+interface IMIDDSpecialistSuggestionItemsProps {
   id: string;
   editable?: boolean;
 }

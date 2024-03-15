@@ -57,9 +57,9 @@ export default function DepartmentPage() {
             >
               <path
                 d="M0.75 19H17.25M1.5 1H16.5M2.25 1V19M15.75 1V19M6 4.75H7.5M6 7.75H7.5M6 10.75H7.5M10.5 4.75H12M10.5 7.75H12M10.5 10.75H12M6 19V15.625C6 15.004 6.504 14.5 7.125 14.5H10.875C11.496 14.5 12 15.004 12 15.625V19"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
             <h2 className="flex-1 uppercase  whitespace-nowrap">
@@ -71,13 +71,13 @@ export default function DepartmentPage() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
               className="w-6 h-6"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
               />
             </svg>
