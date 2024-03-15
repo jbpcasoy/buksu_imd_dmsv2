@@ -267,8 +267,8 @@ export default function IDDSpecialistSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row space-x-1 h-full overflow-auto">
-        <div className="space-y-1 sm:flex-1 flex flex-col sm:h-full overflow-auto">
+      <div className="flex flex-col sm:flex-row space-x-1 h-full overflow-auto sm:space-x-4">
+        <div className="space-y-1 sm:flex-1 flex flex-col sm:h-full overflow-auto bg-palette_white p-4 rounded-2xl">
           <div className="flex justify-between">
             <div>
               <h2 className="inline text-lg font-bold">
@@ -284,7 +284,7 @@ export default function IDDSpecialistSuggestionPage() {
             </div>
           </div>
 
-          <div className="flex-1 h-full overflow-auto space-y-1 overflow-auto">
+          <div className="flex-1 h-full overflow-auto space-y-1 ">
             <div className="overflow-auto">
               <div className="border border-palette_orange rounded text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10">
@@ -355,7 +355,7 @@ export default function IDDSpecialistSuggestionPage() {
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded"
+            className="w-full h-full rounded-2xl"
           />
         </div>
       </div>

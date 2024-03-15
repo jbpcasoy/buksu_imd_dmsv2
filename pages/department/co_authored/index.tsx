@@ -1,5 +1,6 @@
 import IMTable from "@/components/IMTable";
 import MainLayout from "@/components/MainLayout";
+import SidebarIcons, { SIDEBAR_ICON_LABELS } from "@/components/SidebarIcons";
 import useCoAuthoredIMs from "@/hooks/useCoAuthoredIMs";
 import { useState } from "react";
 
@@ -24,9 +25,10 @@ export default function CoAuthoredIMsPage() {
   return (
     <MainLayout>
       <IMTable
+        icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.CO_AUTHORED} />}
         count={count}
         iMs={iMs}
-        title='My IM&apos;s'
+        title='Co-authored IM&apos;s'
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

@@ -38,7 +38,7 @@ export default function DepartmentSelector({
   };
 
   return (
-    <div className='flex flex-col w-full'>
+    <div className="flex flex-col w-44">
       {/* <input
         type='text'
         onChange={onSearch}
@@ -46,8 +46,8 @@ export default function DepartmentSelector({
         disabled={disabled}
         className='rounded-t p-1'
       /> */}
-      <select {...props} disabled={disabled} className='rounded py-1'>
-        <option value=''>Select Department</option>
+      <select {...props} disabled={disabled} className="rounded p-3">
+        <option value="">Department</option>
         {departments.map((department) => {
           return (
             <option key={department.id} value={department.id}>

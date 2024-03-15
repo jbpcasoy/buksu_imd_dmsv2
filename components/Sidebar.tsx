@@ -8,6 +8,8 @@ import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useTabCount from "@/hooks/useTabCount";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { ReactNode } from "react";
+import SidebarIcons, { SIDEBAR_ICON_LABELS } from "./SidebarIcons";
 
 export default function Sidebar() {
   const activeFaculty = useActiveFacultyMe();
@@ -55,30 +57,36 @@ export default function Sidebar() {
   } = useTabCount();
 
   return (
-    <div className="h-full w-full overflow-auto flex flex-col bg-palette_blue text-white px-1">
-      <div className="my-2 flex-1 h-full overflow-auto w-full">
+    <div className="h-full w-full overflow-auto flex flex-col bg-palette_white text-palette_blue px-1">
+      <div className="mt-2 flex-1 h-full overflow-auto w-full p-6 sm:p-14">
         {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
           <div>
             <div className="flex flex-col">
               {activeFaculty && (
                 <Link
                   href="/department"
-                  className={`rounded my-1 px-1 flex justify-between items-center py-1 px-2 hover:bg-palette_grey ${
+                  className={`rounded my-1 px-1 flex justify-between items-center py-1 px-2 hover:bg-palette_light_grey ${
                     router.pathname === "/department"
-                      ? "border border-palette_orange"
+                      ? "bg-palette_light_grey_2"
                       : ""
                   }`}
                 >
-                  <span className="flex items-center space-x-4">
+                  <span className="flex items-center space-x-4 stroke-palette_grey">
                     <svg
+                      width="18"
+                      height="20"
+                      viewBox="0 0 18 20"
+                      fill="none"
                       xmlns="http://www.w3.org/2000/svg"
-                      height="1em"
-                      viewBox="0 0 384 512"
-                      className="fill-palette_white"
                     >
-                      <path d="M48 0C21.5 0 0 21.5 0 48V464c0 26.5 21.5 48 48 48h96V432c0-26.5 21.5-48 48-48s48 21.5 48 48v80h96c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48H48zM64 240c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V240zm112-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H176c-8.8 0-16-7.2-16-16V240c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V240zM80 96h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H176c-8.8 0-16-7.2-16-16V112zM272 96h32c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16z" />
+                      <path
+                        d="M0.75 19H17.25M1.5 1H16.5M2.25 1V19M15.75 1V19M6 4.75H7.5M6 7.75H7.5M6 10.75H7.5M10.5 4.75H12M10.5 7.75H12M10.5 10.75H12M6 19V15.625C6 15.004 6.504 14.5 7.125 14.5H10.875C11.496 14.5 12 15.004 12 15.625V19"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
                     </svg>
-                    <span>My Department</span>
+                    <span className="text-base font-semibold">My Department</span>
                   </span>
                 </Link>
               )}
@@ -87,6 +95,7 @@ export default function Sidebar() {
                   count={myIMsCount}
                   label="My IM's"
                   link="/department/my_ims"
+                  icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.MY_IMS} />}
                 />
               )}
               {activeFaculty && (
@@ -94,6 +103,9 @@ export default function Sidebar() {
                   count={coAuthoredIMsCount}
                   label="Co-authored IM's"
                   link="/department/co_authored"
+                  icon={
+                    <SidebarIcons label={SIDEBAR_ICON_LABELS.CO_AUTHORED} />
+                  }
                 />
               )}
 
@@ -102,6 +114,7 @@ export default function Sidebar() {
                   count={departmentIMsCount}
                   label="Department IMs"
                   link="/department/all_ims"
+                  icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ALL_IMS} />}
                 />
               )}
               {activeDean && (
@@ -109,6 +122,9 @@ export default function Sidebar() {
                   count={collegeIMsCount}
                   label="College IM's"
                   link="/college/all_ims"
+                  icon={
+                    <SidebarIcons label={SIDEBAR_ICON_LABELS.COLLEGE_IMS} />
+                  }
                 />
               )}
               {(activeCITLDirector || activeIDDCoordinator) && (
@@ -116,19 +132,26 @@ export default function Sidebar() {
                   count={cITLIMsCount}
                   label="All IM's"
                   link="/citl/all_ims"
+                  icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ALL_IMS} />}
                 />
               )}
             </div>
-            <hr />
-            <p className="text-xs text-center">IMPLEMENTATION PHASE</p>
+            <p className="text-sm text-palette_grey font-semibold py-2">
+              IMPLEMENTATION PHASE
+            </p>
             {activeFaculty && (
               <div className="flex flex-col">
-                <p className="font-bold text-sm">DEPARTMENT</p>
+                <p className="text-sm text-palette_grey font-semibold py-2">
+                  DEPARTMENT
+                </p>
                 {activeFaculty && (
                   <MenuItem
                     count={toReviseCount}
                     label="To Revise"
                     link="/department/to_revise"
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVISE} />
+                    }
                   />
                 )}
                 {activeFaculty && (
@@ -136,6 +159,9 @@ export default function Sidebar() {
                     count={toReviewCount}
                     label="To Review"
                     link="/department/to_review"
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVIEW} />
+                    }
                   />
                 )}
                 {activeFaculty && (
@@ -143,6 +169,7 @@ export default function Sidebar() {
                     count={reviewedCount}
                     label="Reviewed"
                     link="/department/reviewed"
+                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.REVIEWED} />}
                   />
                 )}
                 {activeCoordinator && (
@@ -150,6 +177,9 @@ export default function Sidebar() {
                     count={coordinatorToEndorseCount}
                     label="To Endorse"
                     link="/department/to_endorse"
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />
+                    }
                   />
                 )}
                 {activeCoordinator && (
@@ -157,19 +187,25 @@ export default function Sidebar() {
                     count={coordinatorEndorsedCount}
                     label="Endorsed"
                     link="/department/endorsed"
+                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
                   />
                 )}
               </div>
             )}
             {activeDean && (
               <div className="flex flex-col">
-                <p className="font-bold text-sm">COLLEGE</p>
+                <p className="text-sm text-palette_grey font-semibold py-2">
+                  COLLEGE
+                </p>
 
                 {activeDean && (
                   <MenuItem
                     count={deanToEndorseCount}
                     label="To Endorse"
                     link="/college/to_endorse"
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />
+                    }
                   />
                 )}
                 {activeDean && (
@@ -177,33 +213,48 @@ export default function Sidebar() {
                     count={deanEndorsedCount}
                     label="Endorsed"
                     link="/college/endorsed"
+                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
                   />
                 )}
               </div>
             )}
             {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
               <div className="flex flex-col">
-                <p className="font-bold text-sm">CITL</p>
+                <p className="text-sm text-palette_grey font-semibold py-2">
+                  CITL
+                </p>
 
                 {activeFaculty && (
                   <MenuItem
                     count={cITLToReviseCount}
                     label="To Revise"
                     link="/citl/to_revise"
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVISE} />
+                    }
                   />
                 )}
                 {activeIDDCoordinator && (
                   <div className="flex flex-col">
-                    <p className="font-bold text-xs">IDD Coordinator</p>
+                    <p className="text-sm text-palette_grey font-semibold py-2">
+                      IDD COORDINATOR
+                    </p>
+
                     <MenuItem
                       count={cITLToReviewCount}
                       label="To Review"
                       link="/citl/to_review"
+                      icon={
+                        <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVIEW} />
+                      }
                     />
                     <MenuItem
                       count={cITLReviewedCount}
                       label="Reviewed"
                       link="/citl/reviewed"
+                      icon={
+                        <SidebarIcons label={SIDEBAR_ICON_LABELS.REVIEWED} />
+                      }
                     />
                   </div>
                 )}
@@ -212,6 +263,9 @@ export default function Sidebar() {
                     count={cITLIDDToEndorseCount}
                     label="To Endorse"
                     link="/citl/to_endorse"
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />
+                    }
                   />
                 )}
                 {activeIDDCoordinator && (
@@ -219,36 +273,52 @@ export default function Sidebar() {
                     count={cITLIDDEndorsedCount}
                     label="Endorsed"
                     link="/citl/endorsed"
+                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
                   />
                 )}
                 {activeCITLDirector && (
                   <div className="flex flex-col">
-                    <p className="font-bold text-xs">CITL Director</p>
+                    <p className="text-sm text-palette_grey font-semibold py-2">
+                      CITL DIRECTOR
+                    </p>
                     <MenuItem
                       count={cITLDirectorToEndorseCount}
                       label="To Endorse"
                       link="/citl/citl_director_to_endorse"
+                      icon={
+                        <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />
+                      }
                     />
                     <MenuItem
                       count={cITLDirectorEndorsedCount}
                       label="Endorsed"
                       link="/citl/citl_director_endorsed"
+                      icon={
+                        <SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />
+                      }
                     />
                   </div>
                 )}
               </div>
             )}
             <hr />
-            <p className="text-xs text-center">IMERC</p>
+
+            <p className="text-sm text-palette_grey font-semibold py-2">
+              IMERC
+            </p>
             {activeFaculty && (
               <div className="flex flex-col">
-                <p className="font-bold text-sm">DEPARTMENT</p>
-
+                <p className="text-sm text-palette_grey font-semibold py-2">
+                  DEPARTMENT
+                </p>
                 {activeFaculty && (
                   <MenuItem
                     count={iMERCToReviseCount}
                     label="To Revise"
                     link="/imerc/department/to_revise"
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVISE} />
+                    }
                   />
                 )}
                 {activeContentSpecialist && (
@@ -256,6 +326,9 @@ export default function Sidebar() {
                     count={iMERCToReviewCount}
                     label="To Review"
                     link="/imerc/department/to_review"
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVIEW} />
+                    }
                   />
                 )}
                 {activeContentSpecialist && (
@@ -263,6 +336,7 @@ export default function Sidebar() {
                     count={iMERCReviewedCount}
                     label="Reviewed"
                     link="/imerc/department/reviewed"
+                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.REVIEWED} />}
                   />
                 )}
                 {(activeCoordinator || activeChairperson) && (
@@ -270,6 +344,9 @@ export default function Sidebar() {
                     count={iMERCToEndorseCount}
                     label="To Endorse"
                     link="/imerc/department/to_endorse"
+                    icon={
+                      <SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />
+                    }
                   />
                 )}
                 {(activeCoordinator || activeChairperson) && (
@@ -277,35 +354,43 @@ export default function Sidebar() {
                     count={iMERCEndorsedCount}
                     label="Endorsed"
                     link="/imerc/department/endorsed"
+                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
                   />
                 )}
               </div>
             )}
             {activeDean && (
               <div className="flex flex-col">
-                <p className="font-bold text-sm">COLLEGE</p>
+                <p className="text-sm text-palette_grey font-semibold py-2">
+                  COLLEGE
+                </p>
                 <MenuItem
                   count={iMERCCollegeToEndorseCount}
                   label="To Endorse"
                   link="/imerc/college/to_endorse"
+                  icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />}
                 />
                 <MenuItem
                   count={iMERCCollegeEndorsedCount}
                   label="Endorsed"
                   link="/imerc/college/endorsed"
+                  icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
                 />
               </div>
             )}
 
             {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
               <div className="flex flex-col">
-                <p className="font-bold text-sm">CITL</p>
+                <p className="text-sm text-palette_grey font-semibold py-2">
+                  CITL
+                </p>
 
                 {activeFaculty && (
                   <MenuItem
                     count={iMERCCITLToReviseCount}
                     label="To Revise"
                     link="/imerc/citl/to_revise"
+                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVISE} />}
                   />
                 )}
                 {(activeIDDCoordinator || activeCITLDirector) && (
@@ -313,6 +398,7 @@ export default function Sidebar() {
                     count={iMERCCITLToReviewCount}
                     label="To Review"
                     link="/imerc/citl/to_review"
+                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_REVIEW} />}
                   />
                 )}
                 {(activeIDDCoordinator || activeCITLDirector) && (
@@ -320,35 +406,44 @@ export default function Sidebar() {
                     count={iMERCReviewedByCITLCount}
                     label="Reviewed"
                     link="/imerc/citl/reviewed"
+                    icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.REVIEWED} />}
                   />
                 )}
                 {activeIDDCoordinator && (
                   <div className="flex flex-col">
-                    <p className="font-bold text-xs">IDD Coordinator</p>
+                    <p className="text-sm text-palette_grey font-semibold py-2">
+                      IDD Coordinator
+                    </p>
                     <MenuItem
                       count={iMERCCITLToEndorseCount}
                       label="To Endorse"
                       link="/imerc/citl/to_endorse"
+                      icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />}
                     />
                     <MenuItem
                       count={iMERCCITLEndorsedCount}
                       label="Endorsed"
                       link="/imerc/citl/endorsed"
+                      icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
                     />
                   </div>
                 )}
                 {activeCITLDirector && (
                   <div className="flex flex-col">
-                    <p className="font-bold text-xs">CITL Director</p>
+                    <p className="text-sm text-palette_grey font-semibold py-2">
+                      CITL Director
+                    </p>
                     <MenuItem
                       count={iMERCCITLDirectorToEndorseCount}
                       label="To Endorse"
                       link="/imerc/citl/citl_director_to_endorse"
+                      icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />}
                     />
                     <MenuItem
                       count={iMERCCITLDirectorEndorsedCount}
                       label="Endorsed"
                       link="/imerc/citl/citl_director_endorsed"
+                      icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
                     />
                   </div>
                 )}
@@ -358,8 +453,7 @@ export default function Sidebar() {
         )}
       </div>
 
-      <hr />
-      <div className="text-xs text-palette_grey pt-3 w-full text-center">
+      {/* <div className="text-xs text-palette_grey pt-3 w-full text-center border-t">
         <p>
           Bukidnon State University |{" "}
           <span title="Center for Innovative Teaching and Learning">CITL</span>
@@ -397,7 +491,7 @@ export default function Sidebar() {
             </svg>
           </Link>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -405,29 +499,41 @@ interface MenuItemProps {
   link: string;
   label: string;
   count: number;
+  icon?: ReactNode;
 }
-function MenuItem({ count, label, link }: MenuItemProps) {
+
+const DefaultIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="1.2em"
+      viewBox="0 0 448 512"
+      className="fill-palette_grey"
+    >
+      <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z" />
+    </svg>
+  );
+};
+function MenuItem({
+  count,
+  label,
+  link,
+  icon = <DefaultIcon />,
+}: MenuItemProps) {
   const router = useRouter();
   return (
     <Link
       href={link}
-      className={`rounded my-1 px-1 flex justify-between items-center py-1 px-2 hover:bg-palette_grey ${
-        router.pathname === link ? "border border-palette_orange" : ""
+      className={`rounded my-1 flex justify-between items-center py-1 px-2 hover:bg-palette_light_grey ${
+        router.pathname === link ? "bg-palette_light_grey_2" : ""
       }`}
     >
       <span className="flex items-center space-x-4">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="1.2em"
-          viewBox="0 0 448 512"
-          className="fill-palette_white"
-        >
-          <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z" />
-        </svg>
-        <span>{label}</span>
+        <span className="stroke-palette_grey">{icon}</span>
+        <span className="text-base font-semibold">{label}</span>
       </span>
       {count > 0 && (
-        <div className="inline-flex items-center justify-center px-1 bg-palette_orange rounded-full text-xs font-semibold text-palette_blue ">
+        <div className="flex items-center justify-center bg-palette_orange rounded-full text-xs font-semibold text-palette_blue h-7 w-7">
           {count <= 99 ? count : "99+"}
         </div>
       )}

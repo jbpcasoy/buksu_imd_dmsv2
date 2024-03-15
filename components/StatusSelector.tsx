@@ -33,11 +33,13 @@ export default function StatusSelector(props?: FieldInputProps<any>) {
   };
 
   return (
-    <div className='flex'>
-      <select {...props} className='rounded py-1'>
-        <option value=''>Select Status</option>
+    <div className="flex">
+      <select {...props} className="rounded p-3 w-44">
+        <option value="">Select Status</option>
         {state?.map((status) => (
-          <option key={status} value={status}>{iMStatusNormalizer(status)}</option>
+          <option key={status} value={status}>
+            {iMStatusNormalizer(status)}
+          </option>
         ))}
       </select>
     </div>

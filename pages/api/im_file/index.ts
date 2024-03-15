@@ -743,7 +743,6 @@ export default async function handler(
       // });
       const blob = await uploadToVercelBlob(file, `files/im/${filename}`);
       const blobFilename = blob.url.split("/").at(-1);
-      console.log({ blob });
 
       // create object to server
       const iMFile = await prisma.iMFile.create({

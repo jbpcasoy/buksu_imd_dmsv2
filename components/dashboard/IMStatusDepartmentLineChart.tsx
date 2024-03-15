@@ -129,6 +129,15 @@ export function IMStatusDepartmentLineChart({
             text: `IM statuses from ${college?.name ?? "all"} departments`,
           },
         },
+        scales: {
+          y: {
+            ticks: {
+              callback: function (value: any) {
+                return Number.isInteger(value) ? value : "";
+              },
+            },
+          },
+        },
       }}
       data={data}
     />

@@ -46,7 +46,7 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
     // </div>
 
     <div className=''>
-      <div className='flex justify-between items-center h-12 space-x-2 bg-palette_blue border-b border-palette_white px-2'>
+      <div className='flex justify-between items-center h-20 space-x-2 bg-palette_blue border-b border-palette_white px-2'>
         <div className='flex space-x-2 justify-center items-center'>
           <button
             className='h-6 w-6 rounded-full fill-palette_white hover:bg-palette_white hover:fill-palette_blue flex justify-center items-center'
@@ -78,8 +78,8 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
             )}
           </button>
           <div className='flex justify-center items-center space-x-1'>
-            <Link href='/' className='w-48 bg-palette_blue text-lg block'>
-              <img src='/images/logo.svg' alt='BukSU IMD DMS Logo' className="object-cover" />
+            <Link href='/' className='w-72 bg-palette_blue text-lg block'>
+              <img src='/images/logo.png' alt='BukSU IMD DMS Logo' className="object-cover" />
             </Link>
             <p className='bg-palette_orange px-2 rounded text-palette_white flex justify-center items-center space-x-1 text-sm'>
               <span>ADMIN</span>
@@ -102,7 +102,7 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
             <img
               src={session?.user?.image ?? ""}
               alt={session?.user?.name ?? "Profile"}
-              className='h-6 w-6 rounded-full hover:opacity-90 object-cover'
+              className='h-11 w-11 rounded-full hover:opacity-90 object-cover'
             />
           </Link>
         </div>

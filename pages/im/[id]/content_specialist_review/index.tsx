@@ -212,8 +212,8 @@ export default function AddContentSpecialistReviewPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row h-full overflow-auto">
-        <div className="flex flex-col sm:flex-1">
+      <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4">
+        <div className="flex flex-col sm:flex-1 bg-palette_white rounded-2xl p-4">
           <div className="flex justify-between pb-2">
             <div>
               <h2 className="inline text-lg font-bold">
@@ -385,7 +385,7 @@ export default function AddContentSpecialistReviewPage() {
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded"
+            className="w-full h-full rounded-2xl"
           />
         </div>
       </div>

@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { IM } from "@prisma/client";
+import IMState from "@/types/IMStatus";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIMStatusParams {
   id?: string;
+  refreshFlag?: number;
 }
-export default function useIMStatus({ id }: useIMStatusParams) {
-  const [state, setState] = useState<string | null>();
+export default function useIMStatus({ id, refreshFlag }: useIMStatusParams) {
+  const [state, setState] = useState<IMState | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -16,8 +17,8 @@ export default function useIMStatus({ id }: useIMStatusParams) {
     axios
       .get<string>(`/api/im/${id}/status`)
       .then((res) => {
-        if(!subscribe) return;
-        setState(res.data);
+        if (!subscribe) return;
+        setState(res.data as IMState);
       })
       .catch((error) => {
         console.error(error);
@@ -27,7 +28,7 @@ export default function useIMStatus({ id }: useIMStatusParams) {
     return () => {
       subscribe = false;
     };
-  }, [id]);
+  }, [id, refreshFlag]);
 
   return state;
 }

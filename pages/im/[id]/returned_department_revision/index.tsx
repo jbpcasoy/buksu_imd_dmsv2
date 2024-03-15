@@ -293,8 +293,8 @@ export default function ReturnedDepartmentRevisionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row space-x-1 h-full overflow-auto">
-        <div className="space-y-1 sm:flex-1 flex flex-col h-full overflow-auto">
+      <div className="flex flex-col sm:flex-row space-x-1 h-full sm:overflow-auto sm:space-x-4">
+        <div className="sm:flex-1 flex flex-col h-full sm:overflow-auto bg-palette_white rounded-2xl p-4 space-y-2">
           <div className="flex justify-between">
             <div>
               <h2 className="inline text-lg font-bold">
@@ -310,36 +310,34 @@ export default function ReturnedDepartmentRevisionPage() {
             </div>
           </div>
 
-          <div className="flex-1 h-full overflow-auto space-y-1">
-            <div className="overflow-auto">
-              <div className="border border-palette_orange rounded text-sm">
-                <div className="p-2 bg-palette_grey bg-opacity-10">
-                  <p className="text-left font-bold">
-                    RETURNED DEPARTMENT REVISION
-                  </p>
-                </div>
-                <hr />
-                {returnedDepartmentRevisionSuggestionItems.returnedDepartmentRevisionSuggestionItems.map(
-                  (returnedDepartmentRevisionSuggestionItem) => {
-                    return (
-                      <Item
-                        returnedDepartmentRevisionSuggestionItem={
-                          returnedDepartmentRevisionSuggestionItem
-                        }
-                        key={returnedDepartmentRevisionSuggestionItem.id}
-                        refresh={refresh}
-                      />
-                    );
-                  }
-                )}
-                {returnedDepartmentRevisionSuggestionItems.count < 1 && (
-                  <p className="text-center text-xs text-palette_error w-full">
-                    Suggestions are required
-                  </p>
-                )}
+          <div className="flex-1 h-full sm:overflow-auto space-y-2">
+            <div className="border border-palette_orange rounded text-sm">
+              <div className="p-2 bg-palette_grey bg-opacity-10">
+                <p className="text-left font-bold">
+                  RETURNED DEPARTMENT REVISION
+                </p>
               </div>
+              <hr />
+              {returnedDepartmentRevisionSuggestionItems.returnedDepartmentRevisionSuggestionItems.map(
+                (returnedDepartmentRevisionSuggestionItem) => {
+                  return (
+                    <Item
+                      returnedDepartmentRevisionSuggestionItem={
+                        returnedDepartmentRevisionSuggestionItem
+                      }
+                      key={returnedDepartmentRevisionSuggestionItem.id}
+                      refresh={refresh}
+                    />
+                  );
+                }
+              )}
+              {returnedDepartmentRevisionSuggestionItems.count < 1 && (
+                <p className="text-center text-xs text-palette_error w-full">
+                  Suggestions are required
+                </p>
+              )}
             </div>
-            <div className="space-y-1">
+            <div className="space-y-2">
               <IMCoordinatorSuggestionItems
                 id={iMId as string}
                 editable={false}
@@ -385,7 +383,7 @@ export default function ReturnedDepartmentRevisionPage() {
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded"
+            className="w-full h-full rounded-2xl"
           />
         </div>
       </div>

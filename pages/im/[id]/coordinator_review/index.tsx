@@ -201,8 +201,8 @@ export default function AddCoordinatorReviewPage() {
   return (
     <MainLayout>
       <div className="flex flex-col h-full">
-        <div className="flex flex-col sm:flex-row h-full space-x-1">
-          <div className="flex flex-col sm:flex-1">
+        <div className="flex flex-col sm:flex-row h-full sm:space-x-4">
+          <div className="flex flex-col sm:flex-1 rounded-2xl bg-palette_white p-4">
             <div className="flex justify-between pb-2">
               <div>
                 <h2 className="inline text-lg font-bold">
@@ -370,7 +370,7 @@ export default function AddCoordinatorReviewPage() {
             <iframe
               loading="lazy"
               src={`/api/im_file/im/${iMId}/pdf`}
-              className="w-full h-full rounded"
+              className="w-full h-full rounded-2xl"
             />
           </div>
         </div>

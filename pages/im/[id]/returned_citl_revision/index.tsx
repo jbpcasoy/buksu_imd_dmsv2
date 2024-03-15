@@ -273,8 +273,8 @@ export default function ReturnedCITLRevisionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row space-x-1 h-full overflow-auto">
-        <div className="space-y-1 sm:flex-1 flex flex-col h-full overflow-auto">
+      <div className="flex flex-col sm:flex-row h-full sm:overflow-auto sm:space-x-4">
+        <div className="space-y-1 sm:flex-1 flex flex-col h-full sm:overflow-auto bg-palette_white p-4 rounded-2xl">
           <div className="flex justify-between">
             <div>
               <h2 className="inline text-lg font-bold">
@@ -365,7 +365,7 @@ export default function ReturnedCITLRevisionPage() {
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded"
+            className="w-full h-full rounded-2xl"
           />
         </div>
       </div>

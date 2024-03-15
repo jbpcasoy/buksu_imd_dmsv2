@@ -310,8 +310,8 @@ export default function QAMISSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row space-x-1 h-full overflow-auto">
-        <div className="space-y-1 sm:flex-1 flex flex-col sm:h-full overflow-auto">
+      <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4">
+        <div className="space-y-1 sm:flex-1 flex flex-col sm:h-full overflow-auto p-4 bg-palette_white rounded-2xl">
           <div className="flex justify-between">
             <div>
               <h2 className="inline text-lg font-bold">
@@ -327,7 +327,7 @@ export default function QAMISSuggestionPage() {
             </div>
           </div>
 
-          <div className="flex-1 h-full overflow-auto space-x-1 p-1">
+          <div className="flex-1 h-full overflow-auto space-y-2">
             <div className="overflow-auto">
               <div className="border border-palette_orange rounded text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10">
@@ -354,7 +354,7 @@ export default function QAMISSuggestionPage() {
               </div>
             </div>
 
-            <div className="flex flex-col space-x-1">
+            <div className="flex flex-col space-y-2 flex-1">
               <FileUpload
                 label="UPLOAD QAMIS FILE"
                 onFileChange={(e) => {
@@ -369,6 +369,7 @@ export default function QAMISSuggestionPage() {
                     iMFile: undefined,
                   }));
                 }}
+                loading={loading}
               />
               <FileUpload
                 label="UPLOAD IM FILE"
@@ -384,11 +385,12 @@ export default function QAMISSuggestionPage() {
                     qAMISFile: undefined,
                   }));
                 }}
+                loading={loading}
               />
             </div>
             <>
               <button
-                className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
+                className="rounded bg-palette_blue text-palette_white py-2 w-full space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
                 disabled={
                   !Boolean(qAMISSuggestion) ||
                   !Boolean(files.iMFile) ||
@@ -397,17 +399,7 @@ export default function QAMISSuggestionPage() {
                 }
                 onClick={() => setOpenConfirmation(true)}
               >
-                <span>Submit Revision</span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    viewBox="0 0 448 512"
-                    className="fill-palette_white"
-                  >
-                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                  </svg>
-                </span>
+                Submit Revision
               </button>
               {openConfirmation && (
                 <Confirmation
@@ -422,7 +414,7 @@ export default function QAMISSuggestionPage() {
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded"
+            className="w-full h-full rounded-2xl"
           />
         </div>
       </div>

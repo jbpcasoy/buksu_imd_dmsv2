@@ -64,16 +64,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="flex flex-col h-screen">
       <Header onToggleSidebar={setOpenSidebar} />
-      <div className="flex-1 flex sm:flex-row flex-col h-full overflow-auto">
+      <div className="flex-1 flex sm:flex-row flex-col sm:h-full sm:overflow-auto">
         <div
-          className={`w-56 flex-none ${
+          className={`w-full sm:w-96 flex-none ${
             openSidebar ? "block" : "block sm:hidden"
           }`}
         >
           <Sidebar />
         </div>
-        <div className="flex-1 flex flex-col sm:h-full overflow-auto">
-          {announcements?.length > 0 &&
+        <div className="sm:flex-1 flex flex-col sm:h-full sm:overflow-auto bg-palette_dirty_white">
+          {/* {announcements?.length > 0 &&
             !router.pathname.startsWith("/im/[id]") && (
               <div className="flex justify-between items-center m-2 rounded py-5 px-2 bg-gradient-to-r from-palette_orange shadow">
                 <button
@@ -130,8 +130,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </svg>
                 </button>
               </div>
-            )}
-          <div className="flex-1 overflow-auto h-full p-2">{children}</div>
+            )} */}
+          <div className="flex-1 overflow-auto sm:h-full p-4">{children}</div>
         </div>
       </div>
     </div>

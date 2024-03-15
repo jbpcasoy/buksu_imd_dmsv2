@@ -1,0 +1,209 @@
+import Loading from "@/components/Loading";
+import IMActionMenu from "@/components/im/IMActionMenu";
+import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
+import useIM from "@/hooks/useIM";
+import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
+import Error from "next/error";
+import Link from "next/link";
+import IMInfo from "./IMInfo";
+import IMContentSpecialistSuggestionItems from "../IMContentSpecialistSuggestionItems";
+import IMIDDSpecialistSuggestionItems from "../IMIDDSpecialistSuggestionItems";
+import IMContentEditorSuggestionItems from "../IMContentEditorSuggestionItems";
+import IMReturnedIMERCCITLRevisionSuggestionItems from "../IMReturnedIMERCCITLRevisionSuggestionItems";
+import Confirmation from "../Confirmation";
+import { useContext, useState } from "react";
+import axios from "axios";
+import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
+import {
+  CoordinatorEndorsement,
+  DepartmentRevision,
+  IMERCCITLRevision,
+  IMERCIDDCoordinatorEndorsement,
+} from "@prisma/client";
+import { SnackbarContext } from "../SnackbarProvider";
+import { useRouter } from "next/router";
+
+interface IMIMERCCITLRevisedProps {
+  iMId: string;
+  onRefresh: () => any;
+  refreshFlag?: number;
+}
+export default function IMIMERCCITLRevised({
+  iMId,
+  onRefresh = () => {},
+  refreshFlag,
+}: IMIMERCCITLRevisedProps) {
+  const [state, setState] = useState<{
+    openConfirmation: boolean;
+  }>({
+    openConfirmation: false,
+  });
+  const iM = useIM({
+    id: iMId,
+    refreshFlag,
+  });
+  const iMFile = useIMLatestIMFile({
+    id: iMId,
+  });
+  const activeIDDCoordinator = useActiveIDDCoordinatorMe();
+  const closeConfirmation = () => {
+    setState((prev) => ({
+      ...prev,
+      openConfirmation: false,
+    }));
+  };
+
+  const openConfirmation = () => {
+    setState((prev) => ({
+      ...prev,
+      openConfirmation: true,
+    }));
+  };
+
+  const { addSnackbar } = useContext(SnackbarContext);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+  axios.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      console.log({ error });
+      setLoading(false);
+      return Promise.reject(error);
+    }
+  );
+
+  const iMERCIDDCoordinatorEndorsementHandler = async () => {
+    if (!activeIDDCoordinator) return;
+
+    return axios
+      .get<IMERCCITLRevision>(`/api/imerc_citl_revision/im/${iMId}`)
+      .then((res) => {
+        const iMERCCITLRevision = res.data;
+        if (!iMERCCITLRevision) return;
+
+        return axios
+          .post<IMERCIDDCoordinatorEndorsement>(
+            `/api/imerc_idd_coordinator_endorsement`,
+            {
+              iMERCCITLRevisionId: iMERCCITLRevision.id,
+              activeIDDCoordinatorId: activeIDDCoordinator.id,
+            }
+          )
+          .then(() => addSnackbar("Successfully endorsed IM"));
+      })
+      .catch((error) => {
+        addSnackbar(
+          error.response.data?.error?.message ?? "Failed to endorse IM",
+          "error"
+        );
+      })
+      .finally(() => {
+        router.reload();
+      });
+  };
+
+  const returnIMERCIDDCoordinatorEndorsementHandler = async () => {
+    return router.push(`/im/${iMId}/returned_imerc_citl_revision`);
+  };
+
+  if (iM === null) {
+    return <Error statusCode={404} title="IM Not Found" />;
+  }
+  if (iM === undefined) {
+    return <Loading />;
+  }
+
+  return (
+    <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4 space-y-4 sm:space-y-0">
+      <div className="flex-1 h-full sm:overflow-auto">
+        <div className="bg-palette_white h-full rounded-2xl p-4 overflow-auto flex flex-col space-y-2">
+          <div className="w-full flex space-between">
+            <p className="uppercase font-semibold flex-1">
+              DOCUMENT INFORMATION
+            </p>
+
+            <IMActionMenu
+              iMId={iMId}
+              onRefresh={onRefresh}
+              refreshFlag={refreshFlag}
+            />
+          </div>
+
+          <div className="sm:overflow-auto flex-1 space-y-2">
+            <IMInfo
+              iMId={iMId}
+              onRefresh={onRefresh}
+              refreshFlag={refreshFlag}
+            />
+
+            {activeIDDCoordinator && (
+              <div className="space-y-2">
+                <IMContentSpecialistSuggestionItems
+                  id={iM.id}
+                  editable={false}
+                />
+                <IMIDDSpecialistSuggestionItems id={iM.id} editable={false} />
+                <IMContentEditorSuggestionItems id={iM.id} editable={false} />
+                <IMReturnedIMERCCITLRevisionSuggestionItems
+                  id={iM.id}
+                  editable={false}
+                />
+                <div className="space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row">
+                  <>
+                    <button
+                      disabled={loading}
+                      className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                      onClick={openConfirmation}
+                    >
+                      Endorse IM
+                    </button>
+                    {state.openConfirmation && (
+                      <Confirmation
+                        onClose={closeConfirmation}
+                        onConfirm={iMERCIDDCoordinatorEndorsementHandler}
+                      />
+                    )}
+                  </>
+                  <button
+                    disabled={loading}
+                    className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                    onClick={returnIMERCIDDCoordinatorEndorsementHandler}
+                  >
+                    Return Revision
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="sm:flex-1 h-screen-3/4 sm:h-full">
+        {iMFile && (
+          <div className="sm:flex-1 h-screen-3/4 sm:h-full">
+            <iframe
+              loading="lazy"
+              src={`/api/im_file/${iMFile.id}/pdf`}
+              title={iM.title}
+              className="w-full h-full rounded-2xl"
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,7 +1,13 @@
 import useIMStatus from "@/hooks/useIMStatus";
 import { IM } from "@prisma/client";
 import Link from "next/link";
-import { ChangeEventHandler, useContext, useEffect, useState } from "react";
+import {
+  ChangeEventHandler,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { DateTime } from "luxon";
 import useUserFaculty from "@/hooks/useUserFaculty";
 import useDepartmentIM from "@/hooks/useDepartmentIM";
@@ -22,6 +28,7 @@ export interface IMTableProps {
   title: string;
   onChangeState: (state: any) => any;
   enableAdd?: boolean;
+  icon?: ReactNode;
 }
 
 export default function IMTable({
@@ -30,6 +37,7 @@ export default function IMTable({
   title,
   onChangeState,
   enableAdd = true,
+  icon,
 }: IMTableProps) {
   const [state, setState] = useState({
     take: 10,
@@ -113,14 +121,17 @@ export default function IMTable({
   };
 
   return (
-    <div className="text-sm border border-palette_grey rounded h-full flex flex-col overflow-auto">
-      <div className="p-1 bg-palette_grey bg-opacity-10">
+    <div className="bg-palette_white rounded-2xl h-full flex flex-col overflow-auto p-4">
+      <div className="pb-4">
         <div className="flex overflow-auto space-x-1">
-          <div className="flex-1 flex items-center space-x-1">
-            <h2 className="text-base border-b-2 border-palette_orange inline pb-1 px-2 whitespace-nowrap">
-              {title}
-            </h2>
-            <div className="flex flex-row space-x-1">
+          <div className="flex-1 flex items-center space-x-8">
+            <div className="flex space-x-2 items-center justify-center border border-palette_orange rounded-lg p-3 ">
+              {icon && <div className="stroke-palette_grey">{icon}</div>}
+              <h2 className="text-base inline whitespace-nowrap font-bold">
+                {title}
+              </h2>
+            </div>
+            <div className="flex flex-row space-x-4">
               <FilterSelector onFilterChange={handleFilterChange} />
 
               <SortSelector onSortChange={handleSortChange} />
@@ -132,17 +143,17 @@ export default function IMTable({
       </div>
       <div className="sm:flex-1 sm:h-full overflow-auto">
         <table className="table-auto w-full overflow-auto ">
-          <thead className="bg-palette_grey bg-opacity-10 p-1">
+          <thead className="p-1 border-b">
             <tr>
-              <th className="font-normal">TITLE</th>
-              <th className="font-normal">SERIAL NO.</th>
-              <th className="font-normal">TYPE</th>
-              <th className="font-normal">AUTHOR</th>
-              <th className="font-normal">DEPARTMENT</th>
-              <th className="font-normal">COLLEGE</th>
-              <th className="font-normal">STATUS</th>
-              <th className="font-normal">DATE CREATED</th>
-              <th className="font-normal">ACTIONS</th>
+              <th className="font-normal text-left">TITLE</th>
+              <th className="font-normal text-left">SERIAL NO.</th>
+              <th className="font-normal text-left">TYPE</th>
+              <th className="font-normal text-left">AUTHOR</th>
+              <th className="font-normal text-left">DEPARTMENT</th>
+              <th className="font-normal text-left">COLLEGE</th>
+              <th className="font-normal text-left">STATUS</th>
+              <th className="font-normal text-left">DATE CREATED</th>
+              <th className="font-normal text-left">ACTIONS</th>
             </tr>
           </thead>
           <tbody className="py-1 h-full overflow-auto">
@@ -154,7 +165,7 @@ export default function IMTable({
       </div>
 
       <div className="flex justify-end items-center space-x-1 p-1">
-        <p className="text-xs">
+        <p className="">
           {state.skip} - {state.skip + state.take} of {count}
         </p>
         <button
@@ -202,32 +213,32 @@ function IMItem({ iM }: { iM: IM }) {
   });
 
   return (
-    <tr key={iM.id} className="border-b">
+    <tr key={iM.id} className="border-b uppercase text-md">
       <td>
-        <div className="py-1 px-2 pl-4">{iM.title}</div>
+        <div className="py-1">{iM.title}</div>
       </td>
       <td>
-        <div className="py-1 px-2 pl-4">{serialNumber?.value}</div>
+        <div className="py-1">{serialNumber?.value}</div>
       </td>
       <td>
-        <div className="py-1 px-2">{iM.type}</div>
+        <div className="py-1">{iM.type}</div>
       </td>
       <td>
-        <div className="py-1 px-2">{user?.name}</div>
+        <div className="py-1">{user?.name}</div>
       </td>
       <td>
-        <div className="py-1 px-2">{department?.name}</div>
+        <div className="py-1">{department?.name}</div>
       </td>
       <td>
-        <div className="py-1 px-2">{college?.name}</div>
+        <div className="py-1">{college?.name}</div>
       </td>
       <td>
-        <div className="py-1 px-2">
+        <div className="py-1">
           <IMStatus iM={iM} />
         </div>
       </td>
       <td>
-        <div className="py-1 px-2">
+        <div className="py-1">
           {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
         </div>
       </td>
@@ -238,23 +249,6 @@ function IMItem({ iM }: { iM: IM }) {
             className="group rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
           >
             <span>View</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="1em"
-              viewBox="0 0 576 512"
-              className="fill-palette_white hidden group-hover:inline"
-            >
-              <path d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z" />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="16"
-              width="14"
-              viewBox="0 0 448 512"
-              className="fill-palette_white group-hover:hidden"
-            >
-              <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z" />
-            </svg>
           </Link>
         </div>
       </td>
@@ -297,10 +291,10 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
   }, [selectedField, filterValue]);
 
   return (
-    <div className="flex space-x-1">
+    <div className="flex">
       <select
         onChange={handleFieldChange}
-        className="py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+        className="py-1 rounded-l-lg bg-inherit border-r-0 focus:border-palette_grey focus:outline-0 focus:ring-0 text-base"
       >
         <option value="">Select field</option>
         <option value="title">Title</option>
@@ -312,7 +306,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
         type="text"
         placeholder="Search"
         value={filterValue}
-        className="bg-inherit border-b py-1 rounded-e focus:border-palette_grey focus:ring-palette_grey"
+        className="bg-inherit border-b py-1 rounded-r-lg focus:border-palette_grey focus:outline-0 focus:ring-0 text-base"
         onChange={handleValueChange}
       />
     </div>
@@ -340,11 +334,11 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
   }, [selectedField, sortDirection]);
 
   return (
-    <div className="flex space-x-1">
+    <div className="flex">
       <select
         onChange={handleFieldChange}
         value={selectedField}
-        className="py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+        className="py-1 rounded-l-lg bg-inherit border-r-0 focus:border-palette_grey focus:outline-0 focus:ring-0 text-base"
       >
         <option value="title">Title</option>
         <option value="createdAt">Date Created</option>
@@ -355,7 +349,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
       <select
         onChange={handleDirectionChange}
         value={sortDirection}
-        className="py-1 rounded-e bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+        className="py-1 rounded-r-lg bg-inherit focus:border-palette_grey focus:outline-0 focus:ring-0 text-base"
       >
         <option value="asc">↑</option>
         <option value="desc">↓</option>
@@ -427,7 +421,7 @@ function AddIM() {
     <>
       <button
         disabled={loading}
-        className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
+        className="rounded-lg bg-palette_blue text-palette_white p-2 flex justify-center items-center space-x-1"
         onClick={() => setState({ addIMOpen: true })}
       >
         <svg
@@ -438,7 +432,7 @@ function AddIM() {
         >
           <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
         </svg>
-        <span className="whitespace-nowrap">Add IM</span>
+        <span className="whitespace-nowrap text-base">Add IM</span>
       </button>
       {state.addIMOpen && (
         <Modal title="ADD IM" onClose={() => setState({ addIMOpen: false })}>
@@ -507,18 +501,35 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
     "IMERC_CITL_DIRECTOR_ENDORSED",
   ];
   return (
-    <select
-      onChange={(e) => onStatusChange(e.target.value)}
-      className="py-1 rounded bg-inherit focus:border-palette_grey focus:ring-palette_grey w-40"
-    >
-      <option value="">Select Status</option>
-      {statuses.map((status) => {
-        return (
-          <option value={status} key={status}>
-            {iMStatusNormalizer(status)}
-          </option>
-        );
-      })}
-    </select>
+    <div className="flex items-center justify-center border border-current rounded-lg space-x-2 p-2 w-40 ">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M7.5 3H17.25M7.5 3C7.5 3.39782 7.34196 3.77936 7.06066 4.06066C6.77936 4.34196 6.39782 4.5 6 4.5C5.60218 4.5 5.22064 4.34196 4.93934 4.06066C4.65804 3.77936 4.5 3.39782 4.5 3M7.5 3C7.5 2.60218 7.34196 2.22064 7.06066 1.93934C6.77936 1.65804 6.39782 1.5 6 1.5C5.60218 1.5 5.22064 1.65804 4.93934 1.93934C4.65804 2.22064 4.5 2.60218 4.5 3M4.5 3H0.75M7.5 15H17.25M7.5 15C7.5 15.3978 7.34196 15.7794 7.06066 16.0607C6.77936 16.342 6.39782 16.5 6 16.5C5.60218 16.5 5.22064 16.342 4.93934 16.0607C4.65804 15.7794 4.5 15.3978 4.5 15M7.5 15C7.5 14.6022 7.34196 14.2206 7.06066 13.9393C6.77936 13.658 6.39782 13.5 6 13.5C5.60218 13.5 5.22064 13.658 4.93934 13.9393C4.65804 14.2206 4.5 14.6022 4.5 15M4.5 15H0.75M13.5 9H17.25M13.5 9C13.5 9.39782 13.342 9.77936 13.0607 10.0607C12.7794 10.342 12.3978 10.5 12 10.5C11.6022 10.5 11.2206 10.342 10.9393 10.0607C10.658 9.77936 10.5 9.39782 10.5 9M13.5 9C13.5 8.60218 13.342 8.22064 13.0607 7.93934C12.7794 7.65804 12.3978 7.5 12 7.5C11.6022 7.5 11.2206 7.65804 10.9393 7.93934C10.658 8.22064 10.5 8.60218 10.5 9M10.5 9H0.75"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <select
+        onChange={(e) => onStatusChange(e.target.value)}
+        className="py-1 rounded-r-lg bg-inherit focus:border-none focus:outline-none focus:ring-0  border-0 w-full text-base"
+      >
+        <option value="">Status</option>
+        {statuses.map((status) => {
+          return (
+            <option value={status} key={status}>
+              {iMStatusNormalizer(status)}
+            </option>
+          );
+        })}
+      </select>
+    </div>
   );
 }

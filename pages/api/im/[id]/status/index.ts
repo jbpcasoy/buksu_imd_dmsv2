@@ -1,4 +1,3 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import iMStatus from "@/services/iMStatus";
 import logger from "@/services/logger";

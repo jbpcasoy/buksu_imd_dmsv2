@@ -255,8 +255,8 @@ export default function PeerSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row space-x-1 h-full overflow-auto">
-        <div className="space-y-1 sm:flex-1 flex flex-col h-full overflow-auto">
+      <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4">
+        <div className="space-y-1 sm:flex-1 flex flex-col h-full overflow-auto rounded-2xl bg-palette_white p-4">
           <div className="flex justify-between">
             <div>
               <h2 className="inline text-lg font-bold">
@@ -338,7 +338,7 @@ export default function PeerSuggestionPage() {
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded"
+            className="w-full h-full rounded-2xl"
           />
         </div>
       </div>

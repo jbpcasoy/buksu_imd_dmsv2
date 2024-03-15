@@ -1,5 +1,6 @@
 import IMTable from "@/components/IMTable";
 import MainLayout from "@/components/MainLayout";
+import SidebarIcons, { SIDEBAR_ICON_LABELS } from "@/components/SidebarIcons";
 import useIMERCReviewed from "@/hooks/useIMERCReviewed";
 import { useState } from "react";
 
@@ -24,6 +25,7 @@ export default function IMERCReviewedPage() {
   return (
     <MainLayout>
       <IMTable
+        icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.REVIEWED} />}
         count={count}
         iMs={iMs}
         title='Reviewed'

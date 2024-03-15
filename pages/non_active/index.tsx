@@ -1,6 +1,5 @@
 import MainLayout from "@/components/MainLayout";
 import useActiveCITLDirectorMe from "@/hooks/useActiveCITLDirectorMe";
-import useActiveFaculty from "@/hooks/useActiveFaculty";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import { useSession } from "next-auth/react";
