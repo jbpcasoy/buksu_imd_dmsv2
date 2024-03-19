@@ -43,15 +43,12 @@ export default function Confirmation({
       onClick={onClose}
     >
       <div
-        className="border w-full max-w-sm bg-palette_white rounded flex flex-col "
+        className="w-full max-w-sm bg-palette_white rounded-2xl flex flex-col overflow-clip"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between px-5 py-2">
+        <div className="flex justify-between px-5 py-2 bg-palette_light_grey_2">
           <div className="">
-            <h1 className="text-lg">{title}</h1>
-            {shortDescription && (
-              <p className="text-palette_grey">{shortDescription}</p>
-            )}
+            <h1 className="text-lg font-semibold">{title}</h1>
           </div>
           <div>
             <button
@@ -69,6 +66,10 @@ export default function Confirmation({
             </button>
           </div>
         </div>
+
+        {shortDescription && (
+          <p className="text-palette_grey p-5">{shortDescription}</p>
+        )}
         {matchText && (
           <div className="flex flex-col space-y-1 px-2">
             <p className="text-center select-none">{matchText}</p>
@@ -82,7 +83,7 @@ export default function Confirmation({
             />
           </div>
         )}
-        <div className="flex justify-end space-x-2 p-1">
+        <div className="flex justify-end space-x-2 pb-4 pr-4">
           <button
             className="px-4 py-1 bg-palette_error hover:bg-opacity-90 text-palette_white rounded disabled:bg-palette_grey"
             onClick={confirmHandler}

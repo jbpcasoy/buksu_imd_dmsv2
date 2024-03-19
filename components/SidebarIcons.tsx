@@ -41,7 +41,8 @@ export default function SidebarIcons({ label }: SidebarIconsProps) {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="1.5"
-          className="w-6 h-6"
+          width="20"
+          height="20"
         >
           <path
             strokeLinecap="round"
@@ -57,7 +58,8 @@ export default function SidebarIcons({ label }: SidebarIconsProps) {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="1.5"
-          className="w-6 h-6"
+          width="20"
+          height="22"
         >
           <path
             strokeLinecap="round"
@@ -90,7 +92,8 @@ export default function SidebarIcons({ label }: SidebarIconsProps) {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="1.5"
-          className="w-6 h-6"
+          width="20"
+          height="20"
         >
           <path
             strokeLinecap="round"

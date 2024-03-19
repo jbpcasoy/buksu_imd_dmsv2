@@ -159,7 +159,10 @@ function ActiveFacultyItem({
         <div className="flex justify-center">
           <picture>
             <img
-              src={user?.image ?? ""}
+              src={user?.image ?? "/images/buksu-logo-min-512x512.png"}
+              onError={(e) => {
+                e.currentTarget.src = "/images/buksu-logo-min-512x512.png";
+              }}
               className="h-10 w-10 rounded-full m-1 object-cover"
               alt="User avatar"
             />

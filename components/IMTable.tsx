@@ -160,6 +160,14 @@ export default function IMTable({
             {iMs.map((iM) => {
               return <IMItem iM={iM} key={iM.id} />;
             })}
+
+            {count < 1 && (
+              <tr className="border-b uppercase text-lg text-center">
+                <td colSpan={9} className="font-bold p-5 text-palette_grey">
+                  NO IMS TO DISPLAY
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -215,35 +223,35 @@ function IMItem({ iM }: { iM: IM }) {
   return (
     <tr key={iM.id} className="border-b uppercase text-md">
       <td>
-        <div className="py-1">{iM.title}</div>
+        <div className="p-1">{iM.title}</div>
       </td>
       <td>
-        <div className="py-1">{serialNumber?.value}</div>
+        <div className="p-1">{serialNumber?.value}</div>
       </td>
       <td>
-        <div className="py-1">{iM.type}</div>
+        <div className="p-1">{iM.type}</div>
       </td>
       <td>
-        <div className="py-1">{user?.name}</div>
+        <div className="p-1">{user?.name}</div>
       </td>
       <td>
-        <div className="py-1">{department?.name}</div>
+        <div className="p-1">{department?.name}</div>
       </td>
       <td>
-        <div className="py-1">{college?.name}</div>
+        <div className="p-1">{college?.name}</div>
       </td>
       <td>
-        <div className="py-1">
+        <div className="p-1">
           <IMStatus iM={iM} />
         </div>
       </td>
       <td>
-        <div className="py-1">
+        <div className="p-1">
           {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
         </div>
       </td>
       <td>
-        <div className="py-1 flex justify-center items-center">
+        <div className="p-1 flex justify-center items-center">
           <Link
             href={`/im/${iM.id}`}
             className="group rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"

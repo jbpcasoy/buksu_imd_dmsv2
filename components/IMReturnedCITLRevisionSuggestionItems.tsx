@@ -35,7 +35,7 @@ export default function IMReturnedCITLRevisionSuggestionItems({
   });
 
   const { data: session } = useSession();
-  const returnedCITLRevisionSuggestionItems =
+  const { returnedCITLRevisionSuggestionItems, count } =
     useReturnedCITLRevisionSuggestionItemsIM(state);
   const submittedReturnedCITLRevision = useSubmittedReturnedCITLRevisionIM({
     id,
@@ -46,7 +46,7 @@ export default function IMReturnedCITLRevisionSuggestionItems({
   }, [id]);
 
   return (
-    <div className="border border-palette_orange rounded text-sm">
+    <div className="border border-palette_orange rounded-lg text-sm">
       <div className="p-2 bg-palette_grey bg-opacity-10">
         <p className="text-left font-bold">RETURNED CITL REVISION</p>
         {submittedReturnedCITLRevision && session?.user?.isAdmin && (
@@ -56,7 +56,7 @@ export default function IMReturnedCITLRevisionSuggestionItems({
         )}
       </div>
       <hr />
-      {returnedCITLRevisionSuggestionItems.returnedCITLRevisionSuggestionItems.map(
+      {returnedCITLRevisionSuggestionItems.map(
         (returnedCITLRevisionSuggestionItem) => {
           return (
             <Item
@@ -68,6 +68,11 @@ export default function IMReturnedCITLRevisionSuggestionItems({
             />
           );
         }
+      )}
+      {count < 1 && (
+        <p className="text-center text-lg font-bold p-5 text-palette_grey">
+          NO SUGGESTIONS TO DISPLAY
+        </p>
       )}
     </div>
   );
@@ -285,14 +290,6 @@ function EditSuggestionItemActionTaken({
         className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
         onClick={() => setOpenEditActionTaken(true)}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="1em"
-          viewBox="0 0 512 512"
-          className="fill-palette_white"
-        >
-          <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
-        </svg>
         <span>Edit</span>
       </button>
       {openEditActionTaken && (

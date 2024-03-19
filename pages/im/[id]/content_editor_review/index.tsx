@@ -1,3 +1,4 @@
+import IMHeader from "@/components/IMHeader";
 import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import ReviewItem from "@/components/ReviewItem";
@@ -194,18 +195,8 @@ export default function AddContentEditorReviewPage() {
   return (
     <MainLayout>
       <div className="flex flex-col sm:flex-row h-full sm:space-x-4">
-        <div className="flex flex-col sm:flex-1 bg-palette_white p-4 rounded-2xl">
-          <div className="flex justify-between pb-2">
-            <div>
-              <h2 className="inline text-lg font-bold">
-                Instructional Material Review{" "}
-                <span className="bg-palette_orange text-palette_white p-1 rounded">
-                  Content Editor
-                </span>
-              </h2>
-              <p className="text-sm">IMERC Phase</p>
-            </div>
-          </div>
+        <div className="flex flex-col sm:flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
+          <IMHeader iM={iM} phase="IMERC Phase" role="Content Editor" />
           <div className="flex-1 overflow-auto">
             <form onSubmit={formik.handleSubmit} className="">
               <div className="space-y-2 mx-1">

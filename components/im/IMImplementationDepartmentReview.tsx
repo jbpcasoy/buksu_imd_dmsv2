@@ -143,7 +143,7 @@ export default function IMImplementationDepartmentReview({
                       peerReview?.facultyId !== activeFaculty?.facultyId && (
                         <button
                           disabled={true}
-                          title="A peer review already exists"
+                          title="A peer review without suggestions already exists."
                           className="bg-palette_grey text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2"
                         >
                           <span>Peer Review</span>

@@ -33,13 +33,13 @@ export default function IMQAMISSuggestionItems({
   }, [id]);
 
   const { data: session } = useSession();
-  const qAMISSuggestionItems = useQAMISSuggestionItemsIM(state);
+  const { qAMISSuggestionItems, count } = useQAMISSuggestionItemsIM(state);
   const submittedQAMISSuggestion = useSubmittedQAMISSuggestionIM({
     id,
   });
 
   return (
-    <div className="border border-palette_orange rounded text-sm">
+    <div className="border border-palette_orange rounded-lg text-sm">
       <div className="p-2 bg-palette_grey bg-opacity-10">
         <p className="text-left font-bold">QAMIS SUGGESTIONS</p>
         {submittedQAMISSuggestion && session?.user?.isAdmin && (
@@ -49,7 +49,7 @@ export default function IMQAMISSuggestionItems({
         )}
       </div>
       <hr />
-      {qAMISSuggestionItems.qAMISSuggestionItems.map((qAMISSuggestionItem) => {
+      {qAMISSuggestionItems.map((qAMISSuggestionItem) => {
         return (
           <Item
             qAMISSuggestionItem={qAMISSuggestionItem}
@@ -58,6 +58,12 @@ export default function IMQAMISSuggestionItems({
           />
         );
       })}
+
+      {count < 1 && (
+        <p className="text-center text-lg font-bold p-5 text-palette_grey">
+          NO SUGGESTIONS TO DISPLAY
+        </p>
+      )}
     </div>
   );
 }

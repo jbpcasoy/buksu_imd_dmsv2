@@ -49,15 +49,6 @@ export async function toReviewCount(user: User) {
       },
     },
   });
-  const department = await prisma.department.findFirstOrThrow({
-    where: {
-      Faculty: {
-        some: {
-          id: userActiveFaculty.facultyId,
-        },
-      },
-    },
-  });
 
   const count = await prisma.iM.count({
     where: {
@@ -66,6 +57,33 @@ export async function toReviewCount(user: User) {
           OR: [
             {
               AND: [
+                {
+                  IMFile: {
+                    some: {
+                      DepartmentReview: {
+                        PeerReview: {
+                          Faculty: {
+                            Department: {
+                              Faculty: {
+                                some: {
+                                  ActiveFaculty: {
+                                    Faculty: {
+                                      User: {
+                                        id: {
+                                          equals: user.id,
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
                 {
                   CoAuthor: {
                     none: {
@@ -80,44 +98,13 @@ export async function toReviewCount(user: User) {
                   },
                 },
                 {
-                  Faculty: {
-                    Department: {
-                      Faculty: {
-                        none: {
-                          Chairperson: {
-                            ActiveChairperson: {
-                              Chairperson: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                {
-                  Faculty: {
-                    Department: {
-                      Faculty: {
-                        none: {
-                          Coordinator: {
-                            ActiveCoordinator: {
-                              Coordinator: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
+                  IMFile: {
+                    none: {
+                      DepartmentReview: {
+                        PeerReview: {
+                          PeerSuggestion: {
+                            SubmittedPeerSuggestion: {
+                              isNot: null,
                             },
                           },
                         },
@@ -128,7 +115,49 @@ export async function toReviewCount(user: User) {
               ],
             },
             {
-              OR: [
+              AND: [
+                {
+                  Faculty: {
+                    Department: {
+                      Faculty: {
+                        some: {
+                          Coordinator: {
+                            ActiveCoordinator: {
+                              Coordinator: {
+                                Faculty: {
+                                  User: {
+                                    id: {
+                                      equals: user.id,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  IMFile: {
+                    none: {
+                      DepartmentReview: {
+                        CoordinatorReview: {
+                          CoordinatorSuggestion: {
+                            SubmittedCoordinatorSuggestion: {
+                              isNot: null,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              AND: [
                 {
                   Faculty: {
                     Department: {
@@ -153,21 +182,13 @@ export async function toReviewCount(user: User) {
                   },
                 },
                 {
-                  Faculty: {
-                    Department: {
-                      Faculty: {
-                        some: {
-                          Coordinator: {
-                            ActiveCoordinator: {
-                              Coordinator: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
+                  IMFile: {
+                    none: {
+                      DepartmentReview: {
+                        ChairpersonReview: {
+                          ChairpersonSuggestion: {
+                            SubmittedChairpersonSuggestion: {
+                              isNot: null,
                             },
                           },
                         },
@@ -180,135 +201,14 @@ export async function toReviewCount(user: User) {
           ],
         },
         {
-          Faculty: {
-            Department: {
-              id: {
-                equals: department.id,
-              },
-            },
-          },
-        },
-        {
-          NOT: {
-            AND: [
-              {
-                Faculty: {
-                  User: {
-                    id: {
-                      equals: user.id,
-                    },
-                  },
-                },
-              },
-              {
-                Faculty: {
-                  OR: [
-                    {
-                      ActiveFaculty: {
-                        is: null,
-                      },
-                    },
-                    {
-                      Chairperson: {
-                        is: null,
-                      },
-                    },
-                    {
-                      Chairperson: {
-                        ActiveChairperson: {
-                          is: null,
-                        },
-                      },
-                    },
-                    {
-                      Coordinator: {
-                        is: null,
-                      },
-                    },
-                    {
-                      Coordinator: {
-                        ActiveCoordinator: {
-                          is: null,
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-        {
-          IMFile: {
-            none: {
-              DepartmentReview: {
-                ChairpersonReview: {
-                  ChairpersonSuggestion: {
-                    SubmittedChairpersonSuggestion: {
-                      ChairpersonSuggestion: {
-                        ChairpersonReview: {
-                          Chairperson: {
-                            Faculty: {
-                              User: {
-                                id: {
-                                  equals: user.id,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
           IMFile: {
             none: {
               DepartmentReview: {
                 CoordinatorReview: {
                   CoordinatorSuggestion: {
                     SubmittedCoordinatorSuggestion: {
-                      CoordinatorSuggestion: {
-                        CoordinatorReview: {
-                          Coordinator: {
-                            Faculty: {
-                              User: {
-                                id: {
-                                  equals: user.id,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
-          IMFile: {
-            none: {
-              DepartmentReview: {
-                PeerReview: {
-                  PeerSuggestion: {
-                    SubmittedPeerSuggestion: {
-                      PeerSuggestion: {
-                        PeerReview: {
-                          Faculty: {
-                            User: {
-                              id: {
-                                equals: user.id,
-                              },
-                            },
-                          },
-                        },
+                      DepartmentReviewed: {
+                        isNot: null,
                       },
                     },
                   },
@@ -325,61 +225,6 @@ export async function toReviewCount(user: User) {
               },
             },
           },
-        },
-        {
-          AND: [
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          DepartmentReviewed: {
-                            isNot: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
         },
       ],
     },

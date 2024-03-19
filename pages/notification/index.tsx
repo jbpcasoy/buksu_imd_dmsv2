@@ -29,9 +29,28 @@ export default function NotificationPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col h-full overflow-auto bg-palette_grey bg-opacity-10 p-1 rounded border border-palette_grey">
-        <div className="flex justify-between items-center py-1">
-          <h2 className="text-palette_grey text-xl font-bold">Notifications</h2>
+      <div className="flex flex-col h-full overflow-auto p-4 rounded-2xl bg-palette_white">
+        <div className="flex justify-between items-center py-1 mb-4">
+          <div className="flex space-x-2 items-center justify-center border border-palette_orange rounded-lg p-3 ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="w-6 h-6 stroke-palette_grey"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+              />
+            </svg>
+
+            <h2 className="text-base inline whitespace-nowrap font-bold">
+              Notifications
+            </h2>
+          </div>
 
           <div>
             <select
@@ -58,6 +77,13 @@ export default function NotificationPage() {
           {events.map((event) => {
             return <Notification event={event} key={event.id} />;
           })}
+          {/* {count < 1 && ( */}
+          <div>
+            <p className="text-center text-lg font-bold p-5 text-palette_grey">
+              NO NOTIFICATIONS TO DISPLAY
+            </p>
+          </div>
+          {/* )} */}
         </div>
         <div className="flex justify-end items-center space-x-1 text-sm p-1">
           <p className="text-xs">

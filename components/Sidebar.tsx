@@ -116,7 +116,9 @@ export default function Sidebar() {
                   count={departmentIMsCount}
                   label="Department IMs"
                   link="/department/all_ims"
-                  icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ALL_IMS} />}
+                  icon={
+                    <SidebarIcons label={SIDEBAR_ICON_LABELS.DEPARTMENT_IMS} />
+                  }
                 />
               )}
               {activeDean && (
