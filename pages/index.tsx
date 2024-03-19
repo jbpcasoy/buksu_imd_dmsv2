@@ -43,7 +43,11 @@ export default function Home() {
       end: Yup.date().optional(),
     }),
     onSubmit: (values) => {
-      setState(values);
+      setState({
+        ...values,
+        start: values.start == "" ? undefined : values.start,
+        end: values.end == "" ? undefined : values.end,
+      });
     },
   });
 

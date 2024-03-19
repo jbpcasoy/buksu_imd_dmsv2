@@ -23,6 +23,7 @@ export function IMDepartmentPieChart({
   const { departments } = useDepartments({
     skip: 0,
     take: 100,
+    filter,
   });
 
   const labels = [

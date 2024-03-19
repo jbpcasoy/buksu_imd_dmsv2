@@ -69,6 +69,10 @@ export default async function handler(
       let data: { [status: string]: number } = {};
 
       for (let status of statuses) {
+        if (filterStatus && filterStatus !== status) {
+          continue;
+        }
+
         data = {
           ...data,
           [status]: await countIMs(

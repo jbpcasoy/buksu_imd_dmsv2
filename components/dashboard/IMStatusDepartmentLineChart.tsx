@@ -64,7 +64,7 @@ export function IMStatusDepartmentLineChart({
     take: 100,
     filter,
   });
-  const college = useCollege({ id: filter?.collegeId ?? "" });
+  const college = useCollege({ id: filter?.collegeId });
   const [state, setState] = useState<{
     [label: string]: { [department: string]: number };
   }>();

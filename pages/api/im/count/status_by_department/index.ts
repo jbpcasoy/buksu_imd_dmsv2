@@ -80,6 +80,9 @@ export default async function handler(
 
       for (let department of departments) {
         for (let status of statuses) {
+          if (filterStatus && filterStatus !== status) {
+            continue;
+          }
           data = {
             ...data,
             [department.name]: {

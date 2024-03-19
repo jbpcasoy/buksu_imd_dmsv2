@@ -9,7 +9,10 @@ export default function useCollege({ id }: useCollegeParams) {
   const [state, setState] = useState<College | null>();
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setState(null);
+      return;
+    }
 
     let subscribe = true;
 
