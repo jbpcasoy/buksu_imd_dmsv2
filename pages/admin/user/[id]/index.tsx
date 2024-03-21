@@ -33,7 +33,10 @@ export default function UserPage() {
             </div>
             <div className="h-full flex-1 flex flex-col justify-center items-center space-y-2 ">
               <img
-                src={user?.image ?? ""}
+                src={user?.image ?? "/images/buksu-logo-min-512x512.png"}
+                onError={(e) => {
+                  e.currentTarget.src = "/images/buksu-logo-min-512x512.png";
+                }}
                 className="w-32 h-32 shadow rounded-full object-cover"
                 alt="User profile picture"
               />
@@ -175,17 +178,22 @@ function EditModal({ user }: EditModalProps) {
   return (
     <>
       <button
-        className="rounded bg-palette_blue px-4 py-1 hover:bg-opacity-90"
+        className="rounded-lg bg-palette_blue hover:bg-opacity-90 h-7 w-7 flex justify-center items-center"
         onClick={handleOpen}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          height="16"
-          width="16"
-          viewBox="0 0 512 512"
-          className="fill-palette_white"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-5 h-5 stroke-palette_white"
         >
-          <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+          />
         </svg>
       </button>
       {state.openEdit && (

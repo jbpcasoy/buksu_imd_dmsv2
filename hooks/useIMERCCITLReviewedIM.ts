@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export interface useIMERCCITLReviewedIMParams {
-  id: string;
+  id?: string;
 }
 export default function useIMERCCITLReviewedIM({
   id,

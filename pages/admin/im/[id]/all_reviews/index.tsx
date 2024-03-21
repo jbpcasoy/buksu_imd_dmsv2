@@ -50,27 +50,50 @@ export default function AllReviewsPage() {
 
   return (
     <AdminLayout>
-      <h2 className="font-bold border-b-2 border-palette_orange pb-1 inline">
-        All Reviews
-      </h2>
-      {peerReview && <PeerReview peerReview={peerReview} />}
-      {chairpersonReview && (
-        <ChairpersonReview chairpersonReview={chairpersonReview} />
-      )}
-      {coordinatorReview && (
-        <CoordinatorReview coordinatorReview={coordinatorReview} />
-      )}
-      {contentSpecialistReview && (
-        <ContentSpecialistReview
-          contentSpecialistReview={contentSpecialistReview}
-        />
-      )}
-      {iDDSpecialistReview && (
-        <IDDSpecialistReview iDDSpecialistReview={iDDSpecialistReview} />
-      )}
-      {contentEditorReview && (
-        <ContentEditorReview contentEditorReview={contentEditorReview} />
-      )}
+      <div className="flex flex-col h-full space-y-4">
+        <div>
+          <div className="inline-flex space-x-2 p-3 bg-palette_white rounded-lg justify-center items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+              />
+            </svg>
+
+            <h2 className="font-bold ">All Reviews</h2>
+          </div>
+        </div>
+        <div className="bg-palette_white p-4 rounded-2xl sm:overflow-auto flex-1 space-y-4">
+          <div className="h-full w-full sm:overflow-auto">
+            {peerReview && <PeerReview peerReview={peerReview} />}
+            {chairpersonReview && (
+              <ChairpersonReview chairpersonReview={chairpersonReview} />
+            )}
+            {coordinatorReview && (
+              <CoordinatorReview coordinatorReview={coordinatorReview} />
+            )}
+            {contentSpecialistReview && (
+              <ContentSpecialistReview
+                contentSpecialistReview={contentSpecialistReview}
+              />
+            )}
+            {iDDSpecialistReview && (
+              <IDDSpecialistReview iDDSpecialistReview={iDDSpecialistReview} />
+            )}
+            {contentEditorReview && (
+              <ContentEditorReview contentEditorReview={contentEditorReview} />
+            )}
+          </div>
+        </div>
+      </div>
     </AdminLayout>
   );
 }

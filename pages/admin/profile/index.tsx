@@ -117,7 +117,15 @@ export default function ProfilePage() {
                 >
                   <picture>
                     <img
-                      src={state?.previewUrl ?? session?.user?.image ?? ""}
+                      src={
+                        state?.previewUrl ??
+                        session?.user?.image ??
+                        "/images/buksu-logo-min-512x512.png"
+                      }
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          "/images/buksu-logo-min-512x512.png";
+                      }}
                       className="h-32 w-32 rounded-full"
                       alt="User avatar"
                     />

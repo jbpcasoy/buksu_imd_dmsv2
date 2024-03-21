@@ -3,11 +3,15 @@ import { SnackbarContext } from "@/components/SnackbarProvider";
 import prisma from "@/prisma/client";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 export default function ExportPage({ models }: { models: string[] }) {
   const { addSnackbar } = useContext(SnackbarContext);
+  const [state, setState] = useState({
+    loading: false,
+  });
   const exportCsv = async (url: string) => {
+    setState((prev) => ({ ...prev, loading: true }));
     return axios
       .get(url, {
         responseType: "blob",
@@ -24,32 +28,76 @@ export default function ExportPage({ models }: { models: string[] }) {
           error?.response?.data?.error?.message ?? "Download Failed",
           "error"
         );
+      })
+      .finally(() => {
+        setState((prev) => ({ ...prev, loading: false }));
       });
   };
 
   return (
     <AdminLayout>
-      {models.map((model) => {
-        return (
-          <div
-            key={model}
-            className="flex odd:bg-gray-50 p-1 rounded hover:bg-gray-100 items-center"
-          >
-            <p className="flex-1 text-palette_blue">{model}</p>
-            <button onClick={() => exportCsv(`/api/export/${model}`)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                height="16"
-                width="14"
-                className="hover:fill-palette_light_blue fill-palette_blue"
-              >
-                <path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
-              </svg>
-            </button>
+      <div className="flex flex-col space-y-4 sm:overflow-auto">
+        <div>
+          <div className="space-x-2 bg-palette_white inline-flex p-3 rounded-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              className="w-5 h-5 stroke-palette_grey"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+              />
+            </svg>
+            <p className="font-bold">Export</p>
           </div>
-        );
-      })}
+        </div>
+        <div className="h-full w-full flex-1 sm:overflow-auto bg-palette_white p-4 rounded-2xl ">
+          <div className="h-full sm:overflow-auto space-y-2">
+            {models.map((model) => {
+              return (
+                <div
+                  key={model}
+                  className={`flex p-2 rounded-lg ${
+                    !state.loading
+                      ? "bg-palette_light_grey hover:bg-opacity-50 hover:cursor-pointer"
+                      : "border"
+                  } items-center group`}
+                  onClick={() => {
+                    if (!state.loading) {
+                      exportCsv(`/api/export/${model}`);
+                    }
+                  }}
+                >
+                  <p className="flex-1 text-palette_blue capitalize font-semibold">
+                    {model}
+                  </p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    className={`${
+                      !state.loading
+                        ? "group-hover:stroke-palette_light_blue"
+                        : ""
+                    } stroke-palette_blue h-5 w-5`}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                    />
+                  </svg>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </AdminLayout>
   );
 }

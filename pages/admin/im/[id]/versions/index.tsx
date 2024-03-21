@@ -20,60 +20,78 @@ export default function VersionsPage() {
   const { iMFiles } = useIMFilesIM(state);
   return (
     <AdminLayout>
-      <div>
-        <span className="border-palette_orange border-b-2 px-1 font-bold text-palette_blue">
-          VERSIONS
-        </span>
-      </div>
-      {iMId && (
-        <div className="mt-2">
-          {iMFiles.map((iMFile) => {
-            let step = "UNKNOWN";
-            if (
-              !iMFile?.departmentReviewedId &&
-              !iMFile?.submittedReturnedDepartmentRevisionId &&
-              !iMFile?.submittedIDDCoordinatorSuggestionId &&
-              !iMFile?.submittedReturnedCITLRevisionId &&
-              !iMFile?.submittedQAMISSuggestionId &&
-              !iMFile?.iMERCCITLReviewedId &&
-              !iMFile?.submittedReturnedIMERCCITLRevisionId
-            ) {
-              step = "Draft";
-            } else if (iMFile?.departmentReviewedId) {
-              step = "Department Revision";
-            } else if (iMFile?.submittedReturnedDepartmentRevisionId) {
-              step = "Returned Department Revision";
-            } else if (iMFile?.submittedIDDCoordinatorSuggestionId) {
-              step = "CITL Revision";
-            } else if (iMFile?.submittedReturnedCITLRevisionId) {
-              step = "Returned CITL Revision";
-            } else if (iMFile?.submittedQAMISSuggestionId) {
-              step = "QAMIS Revision";
-            } else if (iMFile?.iMERCCITLReviewedId) {
-              step = "IMERC CITL Revision";
-            } else if (iMFile?.submittedReturnedIMERCCITLRevisionId) {
-              step = "Returned IMERC CITL Revision";
-            }
+      <div className="h-full w-full space-y-4 flex flex-col">
+        <div>
+          <div className="inline-flex space-x-2 p-3 justify-center items-center bg-palette_white rounded-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              className="w-6 h-6 stroke-palette_grey"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"
+              />
+            </svg>
 
-            return (
-              <div
-                key={iMFile.id}
-                className="space-x-2 flex flex-row items-end"
-              >
-                <Link
-                  href={`/admin/im/${iMId}/versions/${iMFile.id}`}
-                  className="underline"
-                >
-                  {DateTime.fromJSDate(
-                    new Date(iMFile?.createdAt ?? "")
-                  ).toFormat("D | t")}{" "}
-                  {step}
-                </Link>
-              </div>
-            );
-          })}
+            <span className="font-bold text-palette_blue">VERSIONS</span>
+          </div>
         </div>
-      )}
+        <div className="bg-palette_white p-4 rounded-2xl h-full flex-1">
+          {iMId && (
+            <div className="mt-2">
+              {iMFiles.map((iMFile) => {
+                let step = "UNKNOWN";
+                if (
+                  !iMFile?.departmentReviewedId &&
+                  !iMFile?.submittedReturnedDepartmentRevisionId &&
+                  !iMFile?.submittedIDDCoordinatorSuggestionId &&
+                  !iMFile?.submittedReturnedCITLRevisionId &&
+                  !iMFile?.submittedQAMISSuggestionId &&
+                  !iMFile?.iMERCCITLReviewedId &&
+                  !iMFile?.submittedReturnedIMERCCITLRevisionId
+                ) {
+                  step = "Draft";
+                } else if (iMFile?.departmentReviewedId) {
+                  step = "Department Revision";
+                } else if (iMFile?.submittedReturnedDepartmentRevisionId) {
+                  step = "Returned Department Revision";
+                } else if (iMFile?.submittedIDDCoordinatorSuggestionId) {
+                  step = "CITL Revision";
+                } else if (iMFile?.submittedReturnedCITLRevisionId) {
+                  step = "Returned CITL Revision";
+                } else if (iMFile?.submittedQAMISSuggestionId) {
+                  step = "QAMIS Revision";
+                } else if (iMFile?.iMERCCITLReviewedId) {
+                  step = "IMERC CITL Revision";
+                } else if (iMFile?.submittedReturnedIMERCCITLRevisionId) {
+                  step = "Returned IMERC CITL Revision";
+                }
+
+                return (
+                  <div
+                    key={iMFile.id}
+                    className="space-x-2 flex flex-row items-end"
+                  >
+                    <Link
+                      href={`/admin/im/${iMId}/versions/${iMFile.id}`}
+                      className="underline"
+                    >
+                      {DateTime.fromJSDate(
+                        new Date(iMFile?.createdAt ?? "")
+                      ).toFormat("D | t")}{" "}
+                      {step}
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
     </AdminLayout>
   );
 }

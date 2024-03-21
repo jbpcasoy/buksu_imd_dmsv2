@@ -58,8 +58,8 @@ export default function FileManagerIMPage() {
   return (
     <AdminLayout>
       {fileManagerIMFile && (
-        <div className="flex flex-row h-full">
-          <div className="flex-1">
+        <div className="flex flex-row h-full sm:space-x-4">
+          <div className="flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
             <div>
               <p className="text-lg font-bold">
                 {fileManagerIMFile.url.split("/").at(-1)}
@@ -97,7 +97,7 @@ export default function FileManagerIMPage() {
                 .split("/")
                 .at(-1)}/pdf`}
               title={fileManagerIMFile.url.split("/").at(-1)}
-              className="w-full h-full rounded"
+              className="w-full h-full rounded-2xl"
             />
           </div>
 

@@ -43,7 +43,7 @@ export default function AllSuggestionsPage() {
 
   return (
     <AdminLayout>
-      <div className="space-y-1 px-1">
+      <div className="p-4 bg-palette_white rounded-2xl space-y-4 overflow-auto flex flex-col h-full">
         <div className="flex space-x-4 justify-center">
           <p
             className={`text-center font-bold text-sm cursor-pointer  hover:border-b-2 px-2 border-palette_orange ${
@@ -77,58 +77,60 @@ export default function AllSuggestionsPage() {
           </p>
         </div>
 
-        {state.tab === "DEPARTMENT REVIEW" && (
-          <>
-            <IMPeerSuggestionItems id={iMId as string} editable={false} />
-            <IMChairpersonSuggestionItems
-              id={iMId as string}
-              editable={false}
-            />
-            <IMCoordinatorSuggestionItems
-              id={iMId as string}
-              editable={false}
-            />
-            <IMReturnedDepartmentRevisionSuggestionItems
-              id={iMId as string}
-              editable={false}
-            />
-          </>
-        )}
+        <div className="flex-1 overflow-auto space-y-4">
+          {state.tab === "DEPARTMENT REVIEW" && (
+            <>
+              <IMPeerSuggestionItems id={iMId as string} editable={false} />
+              <IMChairpersonSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+              <IMCoordinatorSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+              <IMReturnedDepartmentRevisionSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+            </>
+          )}
 
-        {state.tab === "CITL REVIEW" && (
-          <>
-            <IMIDDCoordinatorSuggestionItems
-              id={iMId as string}
-              editable={false}
-            />
-            <IMReturnedCITLRevisionSuggestionItems
-              id={iMId as string}
-              editable={false}
-            />
-          </>
-        )}
+          {state.tab === "CITL REVIEW" && (
+            <>
+              <IMIDDCoordinatorSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+              <IMReturnedCITLRevisionSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+            </>
+          )}
 
-        {state.tab === "IMERC REVIEW" && (
-          <>
-            <IMQAMISSuggestionItems id={iMId as string} editable={false} />
-            <IMIDDSpecialistSuggestionItems
-              id={iMId as string}
-              editable={false}
-            />
-            <IMContentSpecialistSuggestionItems
-              id={iMId as string}
-              editable={false}
-            />
-            <IMContentEditorSuggestionItems
-              id={iMId as string}
-              editable={false}
-            />
-            <IMReturnedIMERCCITLRevisionSuggestionItems
-              id={iMId as string}
-              editable={false}
-            />
-          </>
-        )}
+          {state.tab === "IMERC REVIEW" && (
+            <>
+              <IMQAMISSuggestionItems id={iMId as string} editable={false} />
+              <IMIDDSpecialistSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+              <IMContentSpecialistSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+              <IMContentEditorSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+              <IMReturnedIMERCCITLRevisionSuggestionItems
+                id={iMId as string}
+                editable={false}
+              />
+            </>
+          )}
+        </div>
       </div>
     </AdminLayout>
   );

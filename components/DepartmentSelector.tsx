@@ -5,11 +5,13 @@ import { ChangeEventHandler, useEffect, useState } from "react";
 interface DepartmentSelectorProps extends FieldInputProps<any> {
   collegeId?: string;
   disabled?: boolean;
+  compact?: boolean;
 }
 
 export default function DepartmentSelector({
   collegeId,
   disabled = false,
+  compact = false,
   ...props
 }: DepartmentSelectorProps) {
   const [state, setState] = useState({
@@ -38,7 +40,7 @@ export default function DepartmentSelector({
   };
 
   return (
-    <div className="flex flex-col w-44">
+    <div className={`flex flex-col ${compact ? "w-full" : "w-44"}`}>
       {/* <input
         type='text'
         onChange={onSearch}
@@ -46,7 +48,11 @@ export default function DepartmentSelector({
         disabled={disabled}
         className='rounded-t p-1'
       /> */}
-      <select {...props} disabled={disabled} className="rounded p-3">
+      <select
+        {...props}
+        disabled={disabled}
+        className={`rounded ${compact ? "" : "p-3"}`}
+      >
         <option value="">Department</option>
         {departments.map((department) => {
           return (

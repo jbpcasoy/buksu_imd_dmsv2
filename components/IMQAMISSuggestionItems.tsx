@@ -101,7 +101,10 @@ function UserInformation({ submittedQAMISSuggestion }: UserInformationProps) {
   return (
     <div className="flex flex-row items-center space-x-2">
       <img
-        src={user?.image ?? ""}
+        src={user?.image ?? "/images/buksu-logo-min-512x512.png"}
+        onError={(e) => {
+          e.currentTarget.src = "/images/buksu-logo-min-512x512.png";
+        }}
         alt="User profile picture"
         className="h-8 w-8 rounded-full object-cover"
       />

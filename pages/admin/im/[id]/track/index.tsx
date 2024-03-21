@@ -21,6 +21,7 @@ import useCoordinatorSuggestion from "@/hooks/useCoordinatorSuggestion";
 import useDean from "@/hooks/useDean";
 import useDeanEndorsementIM from "@/hooks/useDeanEndorsementIM";
 import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
+import useDepartmentReviewedIM from "@/hooks/useDepartmentReviewedIM";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useFaculty from "@/hooks/useFaculty";
 import useIDDCoordinator from "@/hooks/useIDDCoordinator";
@@ -30,6 +31,7 @@ import useIDDSpecialistReview from "@/hooks/useIDDSpecialistReview";
 import useIDDSpecialistSuggestion from "@/hooks/useIDDSpecialistSuggestion";
 import useIM from "@/hooks/useIM";
 import useIMERCCITLDirectorEndorsementIM from "@/hooks/useIMERCCITLDirectorEndorsementIM";
+import useIMERCCITLReviewedIM from "@/hooks/useIMERCCITLReviewedIM";
 import useIMERCCITLRevisionIM from "@/hooks/useIMERCCITLRevisionIM";
 import useIMERCIDDCoordinatorEndorsementIM from "@/hooks/useIMERCIDDCoordinatorEndorsementIM";
 import usePeerReview from "@/hooks/usePeerReview";
@@ -76,14 +78,8 @@ import { DateTime } from "luxon";
 import Error from "next/error";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
-import ReactFlow, {
-  Background,
-  Controls,
-  Edge,
-  Node,
-  PanOnScrollMode,
-} from "reactflow";
+import { ReactNode, useContext, useState } from "react";
+import { Edge, Node } from "reactflow";
 
 export default function IMTrackingPage() {
   const [state, setState] = useState({
@@ -95,7 +91,10 @@ export default function IMTrackingPage() {
     id: iMId,
   });
   const departmentReview = useDepartmentReviewIM({
-    id: iM?.id,
+    id: iMId,
+  });
+  const departmentReviewed = useDepartmentReviewedIM({
+    id: iMId,
   });
   const submittedPeerSuggestion = useSubmittedPeerSuggestionIM({
     id: iM?.id,
@@ -131,6 +130,9 @@ export default function IMTrackingPage() {
   const qAMISRevision = useQAMISRevisionIM({
     id: iM?.id,
   });
+  const qAMISDepartmentEndorsed = useQAMISDepartmentEndorsementByIM({
+    id: iM?.id,
+  });
   const qAMISChairpersonEndorsement = useQAMISChairpersonEndorsementIM({
     id: iM?.id,
   });
@@ -158,6 +160,10 @@ export default function IMTrackingPage() {
   const iMERCCITLRevision = useIMERCCITLRevisionIM({
     id: iM?.id,
   });
+
+  const iMERCCITLReviewed = useIMERCCITLReviewedIM({
+    id: iM?.id,
+  });
   const iMERCIDDCoordinatorEndorsement = useIMERCIDDCoordinatorEndorsementIM({
     id: iM?.id,
   });
@@ -176,9 +182,6 @@ export default function IMTrackingPage() {
       id: "1",
       data: {
         label: "Draft",
-        object: {
-          departmentReview,
-        },
       },
       position: { x: 300, y: 10 },
       hidden: !Boolean(departmentReview),
@@ -339,17 +342,17 @@ export default function IMTrackingPage() {
       target: "3",
     },
     {
-      id: "2_2-3",
+      id: "2_2-3_1",
       source: "2_2",
       target: "3",
     },
     {
-      id: "2_2-3",
+      id: "2_2-3_2",
       source: "2_2",
       target: "3",
     },
     {
-      id: "2_3-3",
+      id: "2_3-3_3",
       source: "2_3",
       target: "3",
     },
@@ -489,171 +492,569 @@ export default function IMTrackingPage() {
 
   return (
     <AdminLayout>
-      <div className="h-full w-full mr-50">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodesConnectable={false}
-          elementsSelectable={false}
-          panOnScroll={true}
-          panOnScrollMode={PanOnScrollMode.Vertical}
-          translateExtent={[
-            [0, 0],
-            [800, 1700],
-          ]}
-          onNodeClick={(e, node) => {
-            setState((prev) => ({ ...prev, openModal: node.data.label }));
-          }}
-        >
-          <Background />
-          <Controls showInteractive={false} />
-        </ReactFlow>
+      <div className="h-full w-full bg-palette_white p-4 rounded-2xl overflow-auto">
+        <div className="h-full w-full overflow-auto">
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="Draft"
+            mode={iM ? "success" : "pending"}
+            secondaryLabel={
+              iM
+                ? DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            label="Department Review"
+            mode={departmentReviewed ? "success" : "pending"}
+            secondaryLabel={
+              departmentReviewed
+                ? DateTime.fromJSDate(
+                    new Date(departmentReviewed.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          >
+            <TimelineSegment
+              onView={(label: string) =>
+                setState((prev) => ({ ...prev, openModal: label }))
+              }
+              label="Peer Review"
+              end={true}
+              mode={submittedPeerSuggestion ? "success" : "pending"}
+              secondaryLabel={
+                submittedPeerSuggestion
+                  ? DateTime.fromJSDate(
+                      new Date(submittedPeerSuggestion.createdAt)
+                    ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              onView={(label: string) =>
+                setState((prev) => ({ ...prev, openModal: label }))
+              }
+              label="Chairperson Review"
+              end={true}
+              mode={submittedChairpersonSuggestion ? "success" : "pending"}
+              secondaryLabel={
+                submittedChairpersonSuggestion
+                  ? DateTime.fromJSDate(
+                      new Date(submittedChairpersonSuggestion.createdAt)
+                    ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              onView={(label: string) =>
+                setState((prev) => ({ ...prev, openModal: label }))
+              }
+              label="Coordinator Review"
+              end={true}
+              mode={submittedCoordinatorSuggestion ? "success" : "pending"}
+              secondaryLabel={
+                submittedCoordinatorSuggestion
+                  ? DateTime.fromJSDate(
+                      new Date(submittedCoordinatorSuggestion.createdAt)
+                    ).toFormat("D | t")
+                  : undefined
+              }
+            />
+          </TimelineSegment>
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="Department Revision"
+            mode={departmentRevision ? "success" : "pending"}
+            secondaryLabel={
+              departmentRevision
+                ? DateTime.fromJSDate(
+                    new Date(departmentRevision.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="Coordinator Endorsement"
+            mode={coordinatorEndorsement ? "success" : "pending"}
+            secondaryLabel={
+              coordinatorEndorsement
+                ? DateTime.fromJSDate(
+                    new Date(coordinatorEndorsement.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="Dean Endorsement"
+            mode={deanEndorsement ? "success" : "pending"}
+            secondaryLabel={
+              deanEndorsement
+                ? DateTime.fromJSDate(
+                    new Date(deanEndorsement.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="IDD Coordinator Review"
+            mode={submittedIDDCoordinatorSuggestion ? "success" : "pending"}
+            secondaryLabel={
+              submittedIDDCoordinatorSuggestion
+                ? DateTime.fromJSDate(
+                    new Date(submittedIDDCoordinatorSuggestion.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="CITL Revision"
+            mode={cITLRevision ? "success" : "pending"}
+            secondaryLabel={
+              cITLRevision
+                ? DateTime.fromJSDate(
+                    new Date(cITLRevision.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="IDD Coordinator Endorsement"
+            mode={iDDCoordinatorEndorsement ? "success" : "pending"}
+            secondaryLabel={
+              iDDCoordinatorEndorsement
+                ? DateTime.fromJSDate(
+                    new Date(iDDCoordinatorEndorsement.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="CITL Director Endorsement"
+            mode={cITLDirectorEndorsement ? "success" : "pending"}
+            secondaryLabel={
+              cITLDirectorEndorsement
+                ? DateTime.fromJSDate(
+                    new Date(cITLDirectorEndorsement.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="Try-out"
+            mode={cITLDirectorEndorsement ? "success" : "pending"}
+            secondaryLabel="IM will be utilized for 1 semester."
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="QAMIS Revision"
+            mode={qAMISRevision ? "success" : "pending"}
+            secondaryLabel={
+              qAMISRevision
+                ? DateTime.fromJSDate(
+                    new Date(qAMISRevision.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            label="QAMIS Department Endorsement"
+            mode={qAMISDepartmentEndorsed ? "success" : "pending"}
+            secondaryLabel={
+              qAMISDepartmentEndorsed
+                ? DateTime.fromJSDate(
+                    new Date(qAMISDepartmentEndorsed.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          >
+            <TimelineSegment
+              onView={(label: string) =>
+                setState((prev) => ({ ...prev, openModal: label }))
+              }
+              label="QAMIS Chairperson Endorsement"
+              end={true}
+              mode={qAMISChairpersonEndorsement ? "success" : "pending"}
+              secondaryLabel={
+                qAMISChairpersonEndorsement
+                  ? DateTime.fromJSDate(
+                      new Date(qAMISChairpersonEndorsement.createdAt)
+                    ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              onView={(label: string) =>
+                setState((prev) => ({ ...prev, openModal: label }))
+              }
+              label="QAMIS Coordinator Endorsement"
+              end={true}
+              mode={qAMISCoordinatorEndorsement ? "success" : "pending"}
+              secondaryLabel={
+                qAMISCoordinatorEndorsement
+                  ? DateTime.fromJSDate(
+                      new Date(qAMISCoordinatorEndorsement.createdAt)
+                    ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              onView={(label: string) =>
+                setState((prev) => ({ ...prev, openModal: label }))
+              }
+              label="QAMIS Dean Endorsement"
+              end={true}
+              mode={qAMISDeanEndorsement ? "success" : "pending"}
+              secondaryLabel={
+                qAMISDeanEndorsement
+                  ? DateTime.fromJSDate(
+                      new Date(qAMISDeanEndorsement.createdAt)
+                    ).toFormat("D | t")
+                  : undefined
+              }
+            />
+          </TimelineSegment>
+          <TimelineSegment
+            label="IMERC Review"
+            mode={iMERCCITLReviewed ? "success" : "pending"}
+            secondaryLabel={
+              iMERCCITLReviewed
+                ? DateTime.fromJSDate(
+                    new Date(iMERCCITLReviewed.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          >
+            <TimelineSegment
+              onView={(label: string) =>
+                setState((prev) => ({ ...prev, openModal: label }))
+              }
+              label="Content Specialist Review"
+              end={true}
+              mode={
+                submittedContentSpecialistSuggestion ? "success" : "pending"
+              }
+              secondaryLabel={
+                submittedContentSpecialistSuggestion
+                  ? DateTime.fromJSDate(
+                      new Date(submittedContentSpecialistSuggestion.createdAt)
+                    ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              onView={(label: string) =>
+                setState((prev) => ({ ...prev, openModal: label }))
+              }
+              label="IDD Specialist Review"
+              end={true}
+              mode={submittedIDDSpecialistSuggestion ? "success" : "pending"}
+              secondaryLabel={
+                submittedIDDSpecialistSuggestion
+                  ? DateTime.fromJSDate(
+                      new Date(submittedIDDSpecialistSuggestion.createdAt)
+                    ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              onView={(label: string) =>
+                setState((prev) => ({ ...prev, openModal: label }))
+              }
+              label="Content Editor Review"
+              end={true}
+              mode={submittedContentEditorSuggestion ? "success" : "pending"}
+              secondaryLabel={
+                submittedContentEditorSuggestion
+                  ? DateTime.fromJSDate(
+                      new Date(submittedContentEditorSuggestion.createdAt)
+                    ).toFormat("D | t")
+                  : undefined
+              }
+            />
+          </TimelineSegment>
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="IMERC Revision"
+            mode={iMERCCITLRevision ? "success" : "pending"}
+            secondaryLabel={
+              iMERCCITLRevision
+                ? DateTime.fromJSDate(
+                    new Date(iMERCCITLRevision.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="IMERC IDD Coordinator Endorsement"
+            mode={iMERCIDDCoordinatorEndorsement ? "success" : "pending"}
+            secondaryLabel={
+              iMERCIDDCoordinatorEndorsement
+                ? DateTime.fromJSDate(
+                    new Date(iMERCIDDCoordinatorEndorsement.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+          <TimelineSegment
+            onView={(label: string) =>
+              setState((prev) => ({ ...prev, openModal: label }))
+            }
+            label="IMERC CITL Director Endorsement"
+            end={true}
+            mode={iMERCCITLDirectorEndorsement ? "success" : "pending"}
+            secondaryLabel={
+              iMERCCITLDirectorEndorsement
+                ? DateTime.fromJSDate(
+                    new Date(iMERCCITLDirectorEndorsement.createdAt)
+                  ).toFormat("D | t")
+                : undefined
+            }
+          />
+        </div>
+
+        {state.openModal !== "" && (
+          <Modal onClose={closeModal} title={state.openModal}>
+            {state.openModal === "Draft" && departmentReview && (
+              <DepartmentReviewModal departmentReview={departmentReview} />
+            )}
+            {state.openModal === "Peer Review" && submittedPeerSuggestion && (
+              <PeerReviewModal
+                iMId={iMId}
+                submittedPeerSuggestion={submittedPeerSuggestion}
+              />
+            )}
+            {state.openModal === "Chairperson Review" &&
+              submittedChairpersonSuggestion && (
+                <ChairpersonReviewModal
+                  iMId={iMId}
+                  submittedChairpersonSuggestion={
+                    submittedChairpersonSuggestion
+                  }
+                />
+              )}
+            {state.openModal === "Coordinator Review" &&
+              submittedCoordinatorSuggestion && (
+                <CoordinatorReviewModal
+                  iMId={iMId}
+                  submittedCoordinatorSuggestion={
+                    submittedCoordinatorSuggestion
+                  }
+                />
+              )}
+
+            {state.openModal === "Department Revision" &&
+              departmentRevision && (
+                <DepartmentRevisionModal
+                  departmentRevision={departmentRevision}
+                  iMId={iMId}
+                />
+              )}
+
+            {state.openModal === "Coordinator Endorsement" &&
+              coordinatorEndorsement && (
+                <CoordinatorEndorsementModal
+                  coordinatorEndorsement={coordinatorEndorsement}
+                />
+              )}
+            {state.openModal === "Dean Endorsement" && deanEndorsement && (
+              <DeanEndorsementModal deanEndorsement={deanEndorsement} />
+            )}
+            {state.openModal === "IDD Coordinator Review" &&
+              submittedIDDCoordinatorSuggestion && (
+                <IDDCoordinatorReviewModal
+                  iMId={iMId}
+                  submittedIDDCoordinatorSuggestion={
+                    submittedIDDCoordinatorSuggestion
+                  }
+                />
+              )}
+            {state.openModal === "CITL Revision" && cITLRevision && (
+              <CITLRevisionModal cITLRevision={cITLRevision} iMId={iMId} />
+            )}
+            {state.openModal === "IDD Coordinator Endorsement" &&
+              iDDCoordinatorEndorsement && (
+                <IDDCoordinatorEndorsementModal
+                  iDDCoordinatorEndorsement={iDDCoordinatorEndorsement}
+                />
+              )}
+            {state.openModal === "CITL Director Endorsement" &&
+              cITLDirectorEndorsement && (
+                <CITLDirectorEndorsementModal
+                  cITLDirectorEndorsement={cITLDirectorEndorsement}
+                />
+              )}
+            {state.openModal === "Try-out" && cITLDirectorEndorsement && (
+              <TryOutModal cITLDirectorEndorsement={cITLDirectorEndorsement} />
+            )}
+            {state.openModal === "QAMIS Revision" && qAMISRevision && (
+              <QAMISRevisionModal qAMISRevision={qAMISRevision} iMId={iMId} />
+            )}
+            {state.openModal === "QAMIS Chairperson Endorsement" &&
+              qAMISChairpersonEndorsement && (
+                <QAMISChairpersonEndorsementModal
+                  qAMISChairpersonEndorsement={qAMISChairpersonEndorsement}
+                />
+              )}
+            {state.openModal === "QAMIS Coordinator Endorsement" &&
+              qAMISCoordinatorEndorsement && (
+                <QAMISCoordinatorEndorsementModal
+                  qAMISCoordinatorEndorsement={qAMISCoordinatorEndorsement}
+                />
+              )}
+            {state.openModal === "QAMIS Dean Endorsement" &&
+              qAMISDeanEndorsement && (
+                <QAMISDeanEndorsementModal
+                  qAMISDeanEndorsement={qAMISDeanEndorsement}
+                />
+              )}
+            {state.openModal === "Department Endorsement" &&
+              qAMISDepartmentEndorsement && (
+                <QAMISDepartmentEndorsementModal
+                  qAMISDepartmentEndorsement={qAMISDepartmentEndorsement}
+                />
+              )}
+            {state?.openModal === "Content Specialist Review" &&
+              submittedContentSpecialistSuggestion && (
+                <ContentSpecialistReviewModal
+                  iMId={iMId}
+                  submittedContentSpecialistSuggestion={
+                    submittedContentSpecialistSuggestion
+                  }
+                />
+              )}
+            {state?.openModal === "IDD Specialist Review" &&
+              submittedIDDSpecialistSuggestion && (
+                <IDDSpecialistReviewModal
+                  iMId={iMId}
+                  submittedIDDSpecialistSuggestion={
+                    submittedIDDSpecialistSuggestion
+                  }
+                />
+              )}
+            {state?.openModal === "Content Editor Review" &&
+              submittedContentEditorSuggestion && (
+                <ContentEditorReviewModal
+                  iMId={iMId}
+                  submittedContentEditorSuggestion={
+                    submittedContentEditorSuggestion
+                  }
+                />
+              )}
+            {state?.openModal === "IMERC Revision" && iMERCCITLRevision && (
+              <IMERCCITLRevisionModal
+                iMERCCITLRevision={iMERCCITLRevision}
+                iMId={iMId}
+              />
+            )}
+            {state?.openModal === "IMERC IDD Coordinator Endorsement" &&
+              iMERCIDDCoordinatorEndorsement && (
+                <IMERCIDDCoordinatorEndorsementModal
+                  iMERCIDDCoordinatorEndorsement={
+                    iMERCIDDCoordinatorEndorsement
+                  }
+                />
+              )}
+            {state?.openModal === "IMERC CITL Director Endorsement" &&
+              iMERCCITLDirectorEndorsement && (
+                <IMERCCITLDirectorEndorsementModal
+                  iMERCCITLDirectorEndorsement={iMERCCITLDirectorEndorsement}
+                />
+              )}
+          </Modal>
+        )}
       </div>
-
-      {state.openModal !== "" && (
-        <Modal onClose={closeModal} title={state.openModal}>
-          {state.openModal === "Draft" && departmentReview && (
-            <DepartmentReviewModal departmentReview={departmentReview} />
-          )}
-          {state.openModal === "Peer Review" && submittedPeerSuggestion && (
-            <PeerReviewModal
-              iMId={iMId}
-              submittedPeerSuggestion={submittedPeerSuggestion}
-            />
-          )}
-          {state.openModal === "Chairperson Review" &&
-            submittedChairpersonSuggestion && (
-              <ChairpersonReviewModal
-                iMId={iMId}
-                submittedChairpersonSuggestion={submittedChairpersonSuggestion}
-              />
-            )}
-          {state.openModal === "Coordinator Review" &&
-            submittedCoordinatorSuggestion && (
-              <CoordinatorReviewModal
-                iMId={iMId}
-                submittedCoordinatorSuggestion={submittedCoordinatorSuggestion}
-              />
-            )}
-
-          {state.openModal === "Department Revision" && departmentRevision && (
-            <DepartmentRevisionModal
-              departmentRevision={departmentRevision}
-              iMId={iMId}
-            />
-          )}
-
-          {state.openModal === "Coordinator Endorsement" &&
-            coordinatorEndorsement && (
-              <CoordinatorEndorsementModal
-                coordinatorEndorsement={coordinatorEndorsement}
-              />
-            )}
-          {state.openModal === "Dean Endorsement" && deanEndorsement && (
-            <DeanEndorsementModal deanEndorsement={deanEndorsement} />
-          )}
-          {state.openModal === "IDD Coordinator Review" &&
-            submittedIDDCoordinatorSuggestion && (
-              <IDDCoordinatorReviewModal
-                iMId={iMId}
-                submittedIDDCoordinatorSuggestion={
-                  submittedIDDCoordinatorSuggestion
-                }
-              />
-            )}
-          {state.openModal === "CITL Revision" && cITLRevision && (
-            <CITLRevisionModal cITLRevision={cITLRevision} iMId={iMId} />
-          )}
-          {state.openModal === "IDD Coordinator Endorsement" &&
-            iDDCoordinatorEndorsement && (
-              <IDDCoordinatorEndorsementModal
-                iDDCoordinatorEndorsement={iDDCoordinatorEndorsement}
-              />
-            )}
-          {state.openModal === "CITL Director Endorsement" &&
-            cITLDirectorEndorsement && (
-              <CITLDirectorEndorsementModal
-                cITLDirectorEndorsement={cITLDirectorEndorsement}
-              />
-            )}
-          {state.openModal === "Try-out" && cITLDirectorEndorsement && (
-            <TryOutModal cITLDirectorEndorsement={cITLDirectorEndorsement} />
-          )}
-          {state.openModal === "QAMIS Revision" && qAMISRevision && (
-            <QAMISRevisionModal qAMISRevision={qAMISRevision} iMId={iMId} />
-          )}
-          {state.openModal === "QAMIS Chairperson Endorsement" &&
-            qAMISChairpersonEndorsement && (
-              <QAMISChairpersonEndorsementModal
-                qAMISChairpersonEndorsement={qAMISChairpersonEndorsement}
-              />
-            )}
-          {state.openModal === "QAMIS Coordinator Endorsement" &&
-            qAMISCoordinatorEndorsement && (
-              <QAMISCoordinatorEndorsementModal
-                qAMISCoordinatorEndorsement={qAMISCoordinatorEndorsement}
-              />
-            )}
-          {state.openModal === "QAMIS Dean Endorsement" &&
-            qAMISDeanEndorsement && (
-              <QAMISDeanEndorsementModal
-                qAMISDeanEndorsement={qAMISDeanEndorsement}
-              />
-            )}
-          {state.openModal === "Department Endorsement" &&
-            qAMISDepartmentEndorsement && (
-              <QAMISDepartmentEndorsementModal
-                qAMISDepartmentEndorsement={qAMISDepartmentEndorsement}
-              />
-            )}
-          {state?.openModal === "Content Specialist Review" &&
-            submittedContentSpecialistSuggestion && (
-              <ContentSpecialistReviewModal
-                iMId={iMId}
-                submittedContentSpecialistSuggestion={
-                  submittedContentSpecialistSuggestion
-                }
-              />
-            )}
-          {state?.openModal === "IDD Specialist Review" &&
-            submittedIDDSpecialistSuggestion && (
-              <IDDSpecialistReviewModal
-                iMId={iMId}
-                submittedIDDSpecialistSuggestion={
-                  submittedIDDSpecialistSuggestion
-                }
-              />
-            )}
-          {state?.openModal === "Content Editor Review" &&
-            submittedContentEditorSuggestion && (
-              <ContentEditorReviewModal
-                iMId={iMId}
-                submittedContentEditorSuggestion={
-                  submittedContentEditorSuggestion
-                }
-              />
-            )}
-          {state?.openModal === "IMERC Revision" && iMERCCITLRevision && (
-            <IMERCCITLRevisionModal
-              iMERCCITLRevision={iMERCCITLRevision}
-              iMId={iMId}
-            />
-          )}
-          {state?.openModal === "IMERC IDD Coordinator Endorsement" &&
-            iMERCIDDCoordinatorEndorsement && (
-              <IMERCIDDCoordinatorEndorsementModal
-                iMERCIDDCoordinatorEndorsement={iMERCIDDCoordinatorEndorsement}
-              />
-            )}
-          {state?.openModal === "IMERC CITL Director Endorsement" &&
-            iMERCCITLDirectorEndorsement && (
-              <IMERCCITLDirectorEndorsementModal
-                iMERCCITLDirectorEndorsement={iMERCCITLDirectorEndorsement}
-              />
-            )}
-        </Modal>
-      )}
     </AdminLayout>
+  );
+}
+
+interface TimelineSegmentProps {
+  label: string;
+  mode?: "success" | "pending";
+  end?: boolean;
+  children?: ReactNode;
+  secondaryLabel?: string;
+  onView?: (label: string) => any;
+}
+function TimelineSegment({
+  label,
+  mode = "pending",
+  end = false,
+  children,
+  secondaryLabel,
+  onView,
+}: TimelineSegmentProps) {
+  return (
+    <div
+      className={`${end ? "" : "border-l border-l-palette_light_grey"} ${
+        children || end ? "" : "pb-10"
+      } flex space-x-4 ml-5`}
+    >
+      <div
+        className={`-ml-5 rounded-full w-10 h-10 flex items-center justify-center ${
+          onView &&
+          "hover:bg-opacity-50 active:bg-opacity-100 hover:cursor-pointer bg-palette_light_grey bg-opacity-70"
+        }`}
+        onClick={() => {
+          if (onView) {
+            onView(label);
+          }
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className={`w-7 h-7 ${
+            mode === "success" ? "bg-palette_timeline_green" : "bg-palette_grey"
+          } text-palette_white rounded-full p-2`}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="m4.5 12.75 6 6 9-13.5"
+          />
+        </svg>
+      </div>
+      <div className="flex flex-col">
+        <span className="pt-1">{label}</span>
+        {secondaryLabel && <span className="text-xs">{secondaryLabel}</span>}
+        <div>{children}</div>
+      </div>
+    </div>
   );
 }
 

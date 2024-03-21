@@ -77,14 +77,28 @@ export default function IDDCoordinatorsPage() {
 
   return (
     <AdminLayout>
-      <div className="h-full border border-palette_grey flex flex-col rounded">
-        <div className="flex justify-between p-1 bg-palette_grey bg-opacity-10">
-          <div className="flex space-x-1 justify-center items-end">
-            <h2 className="border-b-2 border-palette_orange px-2">
-              IDD coordinator
-            </h2>
+      <div className="space-y-4 flex flex-col h-full">
+        <div className="flex justify-between p-1 ">
+          <div className="flex justify-center items-end space-x-4">
+            <div className="flex space-x-2 justify-center items-center p-3 rounded-lg bg-palette_white">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5 stroke-palette_grey"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                />
+              </svg>
+              <h2 className="font-bold">IDD coordinator</h2>
+            </div>
 
-            <div className="flex flex-row space-x-1">
+            <div className="flex flex-row h-full space-x-4">
               <FilterSelector onFilterChange={handleFilterChange} />
 
               <SortSelector onSortChange={handleSortChange} />
@@ -93,60 +107,61 @@ export default function IDDCoordinatorsPage() {
 
           <AddModal />
         </div>
-
-        <div className="flex-1">
-          <table className="table-auto w-full text-sm">
-            <thead className="bg-palette_grey bg-opacity-10">
-              <tr>
-                <th className="font-normal">USER</th>
-                <th className="font-normal">ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {iDDCoordinators.map((iDDCoordinator) => {
-                return (
-                  <IDDCoordinatorItem
-                    iDDCoordinator={iDDCoordinator}
-                    key={iDDCoordinator.id}
-                  />
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div className="flex justify-end items-center space-x-1 p-1">
-          <p className="text-xs">
-            {state.skip} - {state.skip + state.take} of {count}
-          </p>
-          <button
-            disabled={state.skip - state.take < 0}
-            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
-            onClick={previousHandler}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="1em"
-              viewBox="0 0 448 512"
+        <div className="h-full flex flex-col bg-palette_white rounded-2xl p-4 flex-1">
+          <div className="flex-1">
+            <table className="table-auto w-full">
+              <thead className="">
+                <tr>
+                  <th className="font-medium text-left">USER</th>
+                  <th className="font-medium text-center">ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                {iDDCoordinators.map((iDDCoordinator) => {
+                  return (
+                    <IDDCoordinatorItem
+                      iDDCoordinator={iDDCoordinator}
+                      key={iDDCoordinator.id}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-end items-center space-x-1 p-1">
+            <p className="text-xs">
+              {state.skip} - {state.skip + state.take} of {count}
+            </p>
+            <button
+              disabled={state.skip - state.take < 0}
+              className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
+              onClick={previousHandler}
             >
-              <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-            </svg>
-            <span>Previous</span>
-          </button>
-          <button
-            disabled={state.skip + state.take >= count}
-            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
-            onClick={nextHandler}
-          >
-            <span>Next</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="1em"
-              viewBox="0 0 448 512"
-              className="fill-inherit"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="1em"
+                viewBox="0 0 448 512"
+              >
+                <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+              </svg>
+              <span>Previous</span>
+            </button>
+            <button
+              disabled={state.skip + state.take >= count}
+              className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
+              onClick={nextHandler}
             >
-              <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
-            </svg>
-          </button>
+              <span>Next</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="1em"
+                viewBox="0 0 448 512"
+                className="fill-inherit"
+              >
+                <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </AdminLayout>
@@ -325,7 +340,7 @@ function AddModal() {
   return (
     <>
       <button
-        className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1 hover:bg-opacity-90"
+        className="rounded-lg bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1 hover:bg-opacity-90"
         onClick={handleOpen}
       >
         <svg
@@ -395,10 +410,10 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
   }, [selectedField, filterValue]);
 
   return (
-    <div>
+    <div className="flex">
       <select
         onChange={handleFieldChange}
-        className="py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+        className="py-1 rounded-s-lg bg-palette_white bg-inherit focus:border-palette_grey focus:ring-palette_grey"
       >
         <option value="">Select field</option>
         <option value="name">Name</option>
@@ -407,7 +422,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
         type="text"
         placeholder="Search"
         value={filterValue}
-        className="bg-inherit border-b py-1 rounded-e focus:border-palette_grey focus:ring-palette_grey"
+        className="bg-inherit border-b py-1 rounded-e-lg  bg-palette_white focus:border-palette_grey focus:ring-palette_grey"
         onChange={handleValueChange}
       />
     </div>
@@ -435,18 +450,18 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
   }, [selectedField, sortDirection]);
 
   return (
-    <div>
+    <div className="flex">
       <select
         onChange={handleFieldChange}
         value={selectedField}
-        className="py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+        className="py-1 rounded-s-lg bg-palette_white bg-inherit focus:border-palette_grey focus:ring-palette_grey"
       >
         <option value="name">Name</option>
       </select>
       <select
         onChange={handleDirectionChange}
         value={sortDirection}
-        className="py-1 rounded-e bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+        className="py-1 rounded-e-lg bg-palette_white bg-inherit focus:border-palette_grey focus:ring-palette_grey"
       >
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>

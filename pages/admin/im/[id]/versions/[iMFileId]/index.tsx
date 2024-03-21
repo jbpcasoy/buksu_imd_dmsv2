@@ -42,127 +42,120 @@ export default function VersionsPage() {
 
   return (
     <AdminLayout>
-      <div className="h-full flex flex-col overflow-auto">
-        <div className="h-full flex flex-row space-x-1 overflow-auto">
-          {iMFile && (
-            <div className="flex-1 overflow-auto flex flex-col">
-              <div>
-                <p className="text-palette_grey">{iMFile?.filename}</p>
-                <p className="text-palette_grey text-xs">
-                  {DateTime.fromJSDate(
-                    new Date(iMFile?.createdAt ?? "")
-                  ).toFormat("D | t")}
-                </p>
-              </div>
-              <div className="flex-1 overflow-auto">
-                {!iMFile?.departmentReviewedId &&
-                  !iMFile?.submittedReturnedDepartmentRevisionId &&
-                  !iMFile?.submittedIDDCoordinatorSuggestionId &&
-                  !iMFile?.submittedReturnedCITLRevisionId &&
-                  !iMFile?.submittedQAMISSuggestionId &&
-                  !iMFile?.iMERCCITLReviewedId &&
-                  !iMFile?.submittedReturnedIMERCCITLRevisionId && (
-                    <div className="space-y-1">
-                      <p className="font-bold">Draft</p>
-                      <p className="text-palette_grey text-center">
-                        NO REVIEWS YET
-                      </p>
-                    </div>
-                  )}
-                {iMFile?.departmentReviewedId && (
-                  <div className="space-y-1">
-                    <p className="font-bold">Department Revision</p>
-                    <IMPeerSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                    <IMChairpersonSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                    <IMCoordinatorSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                  </div>
-                )}
-                {iMFile?.submittedReturnedDepartmentRevisionId && (
-                  <div className="space-y-1">
-                    <p className="font-bold">Returned Department Revision</p>
-                    <IMReturnedDepartmentRevisionSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                  </div>
-                )}
-                {iMFile?.submittedIDDCoordinatorSuggestionId && (
-                  <div className="space-y-1">
-                    <p className="font-bold">CITL Revision</p>
-                    <IMIDDCoordinatorSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                  </div>
-                )}
-                {iMFile?.submittedReturnedCITLRevisionId && (
-                  <div className="space-y-1">
-                    <p className="font-bold">Returned CITL Revision</p>
-                    <IMReturnedCITLRevisionSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                  </div>
-                )}
-                {iMFile?.submittedQAMISSuggestionId && (
-                  <div className="space-y-1">
-                    <p className="font-bold">QAMIS Revision</p>
-                    <IMQAMISSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                  </div>
-                )}
-                {iMFile?.iMERCCITLReviewedId && (
-                  <div className="space-y-1">
-                    <p className="font-bold">IMERC CITL Revision</p>
-                    <IMIDDSpecialistSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                    <IMContentSpecialistSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                    <IMContentEditorSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                  </div>
-                )}
-                {iMFile?.submittedReturnedIMERCCITLRevisionId && (
-                  <div className="space-y-1">
-                    <p className="font-bold">Returned IMERC CITL Revision</p>
-                    <IMReturnedIMERCCITLRevisionSuggestionItems
-                      id={iMId as string}
-                      editable={false}
-                    />
-                  </div>
-                )}
-              </div>
+      {iMFile && (
+        <div className="h-full flex flex-row overflow-auto space-x-4">
+          <div className="flex-1 overflow-auto flex flex-col bg-palette_white p-4 rounded-2xl space-y-4">
+            <div>
+              <p className="text-palette_grey">{iMFile?.filename}</p>
+              <p className="text-palette_grey text-xs">
+                {DateTime.fromJSDate(
+                  new Date(iMFile?.createdAt ?? "")
+                ).toFormat("D | t")}
+              </p>
             </div>
-          )}
-          {iMFile && (
             <div className="flex-1 overflow-auto">
-              <iframe
-                loading="lazy"
-                src={`/api/im_file/${iMFile.id}/pdf`}
-                title={iMFile.filename}
-                className="w-full h-full rounded"
-              />
+              {!iMFile?.departmentReviewedId &&
+                !iMFile?.submittedReturnedDepartmentRevisionId &&
+                !iMFile?.submittedIDDCoordinatorSuggestionId &&
+                !iMFile?.submittedReturnedCITLRevisionId &&
+                !iMFile?.submittedQAMISSuggestionId &&
+                !iMFile?.iMERCCITLReviewedId &&
+                !iMFile?.submittedReturnedIMERCCITLRevisionId && (
+                  <div className="space-y-1">
+                    <p className="font-bold">Draft</p>
+                    <p className="text-palette_grey text-center">
+                      NO REVIEWS YET
+                    </p>
+                  </div>
+                )}
+              {iMFile?.departmentReviewedId && (
+                <div className="space-y-1">
+                  <p className="font-bold">Department Revision</p>
+                  <IMPeerSuggestionItems id={iMId as string} editable={false} />
+                  <IMChairpersonSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                  <IMCoordinatorSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                </div>
+              )}
+              {iMFile?.submittedReturnedDepartmentRevisionId && (
+                <div className="space-y-1">
+                  <p className="font-bold">Returned Department Revision</p>
+                  <IMReturnedDepartmentRevisionSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                </div>
+              )}
+              {iMFile?.submittedIDDCoordinatorSuggestionId && (
+                <div className="space-y-1">
+                  <p className="font-bold">CITL Revision</p>
+                  <IMIDDCoordinatorSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                </div>
+              )}
+              {iMFile?.submittedReturnedCITLRevisionId && (
+                <div className="space-y-1">
+                  <p className="font-bold">Returned CITL Revision</p>
+                  <IMReturnedCITLRevisionSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                </div>
+              )}
+              {iMFile?.submittedQAMISSuggestionId && (
+                <div className="space-y-1">
+                  <p className="font-bold">QAMIS Revision</p>
+                  <IMQAMISSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                </div>
+              )}
+              {iMFile?.iMERCCITLReviewedId && (
+                <div className="space-y-1">
+                  <p className="font-bold">IMERC CITL Revision</p>
+                  <IMIDDSpecialistSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                  <IMContentSpecialistSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                  <IMContentEditorSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                </div>
+              )}
+              {iMFile?.submittedReturnedIMERCCITLRevisionId && (
+                <div className="space-y-1">
+                  <p className="font-bold">Returned IMERC CITL Revision</p>
+                  <IMReturnedIMERCCITLRevisionSuggestionItems
+                    id={iMId as string}
+                    editable={false}
+                  />
+                </div>
+              )}
             </div>
-          )}
+          </div>
+          <div className="flex-1 overflow-auto">
+            <iframe
+              loading="lazy"
+              src={`/api/im_file/${iMFile.id}/pdf`}
+              title={iMFile.filename}
+              className="w-full h-full rounded-2xl"
+            />
+          </div>
         </div>
-      </div>
+      )}
     </AdminLayout>
   );
 }
