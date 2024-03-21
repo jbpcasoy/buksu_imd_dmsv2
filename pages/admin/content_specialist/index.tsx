@@ -10,7 +10,7 @@ import useContentSpecialists from "@/hooks/useContentSpecialists";
 import useDepartment from "@/hooks/useDepartment";
 import useFaculty from "@/hooks/useFaculty";
 import useUserFaculty from "@/hooks/useUserFaculty";
-import { ContentSpecialist as ContentSpecialistItem } from "@prisma/client";
+import { ContentSpecialist } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
@@ -179,7 +179,7 @@ export default function ContentSpecialistsPage() {
 }
 
 interface ContentSpecialistItemProps {
-  contentSpecialist: ContentSpecialistItem;
+  contentSpecialist: ContentSpecialist;
 }
 
 function ContentSpecialistItem({

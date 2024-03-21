@@ -72,23 +72,27 @@ export default function AllReviewsPage() {
           </div>
         </div>
         <div className="overflow-auto">
-          {peerReview && <PeerReview peerReview={peerReview} />}
+          {peerReview && <PeerReviewView peerReview={peerReview} />}
           {chairpersonReview && (
-            <ChairpersonReview chairpersonReview={chairpersonReview} />
+            <ChairpersonReviewView chairpersonReview={chairpersonReview} />
           )}
           {coordinatorReview && (
-            <CoordinatorReview coordinatorReview={coordinatorReview} />
+            <CoordinatorReviewView coordinatorReview={coordinatorReview} />
           )}
           {contentSpecialistReview && (
-            <ContentSpecialistReview
+            <ContentSpecialistReviewView
               contentSpecialistReview={contentSpecialistReview}
             />
           )}
           {iDDSpecialistReview && (
-            <IDDSpecialistReview iDDSpecialistReview={iDDSpecialistReview} />
+            <IDDSpecialistReviewView
+              iDDSpecialistReview={iDDSpecialistReview}
+            />
           )}
           {contentEditorReview && (
-            <ContentEditorReview contentEditorReview={contentEditorReview} />
+            <ContentEditorReviewView
+              contentEditorReview={contentEditorReview}
+            />
           )}
         </div>
       </div>
@@ -96,7 +100,7 @@ export default function AllReviewsPage() {
   );
 }
 
-function PeerReview({ peerReview }: { peerReview: PeerReview }) {
+function PeerReviewView({ peerReview }: { peerReview: PeerReview }) {
   return (
     <div>
       <div>
@@ -266,7 +270,7 @@ function PeerReview({ peerReview }: { peerReview: PeerReview }) {
   );
 }
 
-function CoordinatorReview({
+function CoordinatorReviewView({
   coordinatorReview,
 }: {
   coordinatorReview: CoordinatorReview;
@@ -440,7 +444,7 @@ function CoordinatorReview({
   );
 }
 
-function ChairpersonReview({
+function ChairpersonReviewView({
   chairpersonReview,
 }: {
   chairpersonReview: ChairpersonReview;
@@ -614,7 +618,7 @@ function ChairpersonReview({
   );
 }
 
-function ContentSpecialistReview({
+function ContentSpecialistReviewView({
   contentSpecialistReview,
 }: {
   contentSpecialistReview: ContentSpecialistReview;
@@ -793,7 +797,7 @@ function ContentSpecialistReview({
   );
 }
 
-function ContentEditorReview({
+function ContentEditorReviewView({
   contentEditorReview,
 }: {
   contentEditorReview: ContentEditorReview;
@@ -971,7 +975,7 @@ function ContentEditorReview({
   );
 }
 
-function IDDSpecialistReview({
+function IDDSpecialistReviewView({
   iDDSpecialistReview,
 }: {
   iDDSpecialistReview: IDDSpecialistReview;
