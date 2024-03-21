@@ -325,7 +325,9 @@ export default async function handler(
 
       if (existingIMERCCITLRevision) {
         return res.status(400).json({
-          error: { message: "Error: IM has already been submitted for endorsement" },
+          error: {
+            message: "Error: IM has already been submitted for endorsement",
+          },
         });
       }
 

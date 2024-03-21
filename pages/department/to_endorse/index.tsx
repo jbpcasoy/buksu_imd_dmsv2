@@ -1,5 +1,6 @@
 import IMTable from "@/components/IMTable";
 import MainLayout from "@/components/MainLayout";
+import SidebarIcons, { SIDEBAR_ICON_LABELS } from "@/components/SidebarIcons";
 import useCoordinatorToEndorse from "@/hooks/useCoordinatorToEndorse";
 import { useState } from "react";
 
@@ -16,7 +17,7 @@ export default function CoordinatorToEndorsePage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useCoordinatorToEndorse(state);
@@ -24,9 +25,10 @@ export default function CoordinatorToEndorsePage() {
   return (
     <MainLayout>
       <IMTable
+        icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.TO_ENDORSE} />}
         count={count}
         iMs={iMs}
-        title='To Endorse'
+        title="To Endorse"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

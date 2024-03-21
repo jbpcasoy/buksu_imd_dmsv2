@@ -7,7 +7,11 @@ export interface useIMFilesIMParams {
   take: number;
   filter?: object;
 }
-export default function useIMFilesIM({ skip, take, filter }: useIMFilesIMParams) {
+export default function useIMFilesIM({
+  skip,
+  take,
+  filter,
+}: useIMFilesIMParams) {
   const [state, setState] = useState<{ iMFiles: IMFile[]; count: number }>({
     count: 0,
     iMFiles: [],

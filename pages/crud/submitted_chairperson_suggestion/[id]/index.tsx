@@ -34,10 +34,10 @@ export default function SubmittedChairpersonSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>SubmittedChairpersonSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">SubmittedChairpersonSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -55,7 +55,7 @@ export default function SubmittedChairpersonSuggestionPage() {
         chairpersonSuggestionId:{" "}
         <Link
           href={`/crud/chairperson_suggestion/${submittedChairpersonSuggestion.chairpersonSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {submittedChairpersonSuggestion.chairpersonSuggestionId}
         </Link>

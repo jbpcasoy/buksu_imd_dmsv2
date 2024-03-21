@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { ActiveFaculty, IM } from "@prisma/client";
+import { ActiveFaculty } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useActiveFacultyParams {
   id: string;
@@ -16,7 +16,7 @@ export default function useActiveFaculty({ id }: useActiveFacultyParams) {
     axios
       .get(`/api/active_faculty/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

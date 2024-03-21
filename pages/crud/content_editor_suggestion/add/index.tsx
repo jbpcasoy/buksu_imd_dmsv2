@@ -9,7 +9,7 @@ export default function AddContentEditorSuggestionPage() {
       contentEditorReviewId: "",
     },
     validationSchema: Yup.object({
-        contentEditorReviewId: Yup.string().required(),
+      contentEditorReviewId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -28,11 +28,11 @@ export default function AddContentEditorSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='contentEditorReviewId'
+          type="text"
+          placeholder="contentEditorReviewId"
           {...formik.getFieldProps("contentEditorReviewId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

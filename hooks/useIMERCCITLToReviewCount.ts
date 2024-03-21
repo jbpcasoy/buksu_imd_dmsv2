@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function useIMERCCITLToReviewCount() {
-  const [state, setState] = useState<{count: number}>({
+  const [state, setState] = useState<{ count: number }>({
     count: 0,
   });
 

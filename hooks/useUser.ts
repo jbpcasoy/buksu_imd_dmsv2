@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { User, IM } from "@prisma/client";
+import { User } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useUserParams {
   id?: string;
@@ -16,7 +16,7 @@ export default function useUser({ id }: useUserParams) {
     axios
       .get(`/api/user/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { ActiveCITLDirector, IM } from "@prisma/client";
+import { ActiveCITLDirector } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useActiveCITLDirectorParams {
   id: string;
 }
-export default function useActiveCITLDirector({ id }: useActiveCITLDirectorParams) {
+export default function useActiveCITLDirector({
+  id,
+}: useActiveCITLDirectorParams) {
   const [state, setState] = useState<ActiveCITLDirector | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useActiveCITLDirector({ id }: useActiveCITLDirectorParam
     axios
       .get(`/api/active_citl_director/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

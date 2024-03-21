@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { QAMISChairpersonEndorsement, IM } from "@prisma/client";
+import { QAMISChairpersonEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useQAMISChairpersonEndorsementIMParams {
   id?: string;

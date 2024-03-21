@@ -9,7 +9,7 @@ import * as Yup from "yup";
 export default function EditUserPage() {
   const router = useRouter();
   const userId = router.query.id;
-  const user = useUser({id: userId as string})
+  const user = useUser({ id: userId as string });
 
   const formik = useFormik({
     initialValues: {
@@ -30,22 +30,20 @@ export default function EditUserPage() {
     },
   });
 
-  
   useEffect(() => {
-    if(!user) return;
+    if (!user) return;
     let subscribe = true;
-    
+
     formik.setValues({
-      name: user.name ?? ""
-    })
+      name: user.name ?? "",
+    });
 
     return () => {
       subscribe = false;
-    }
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
-
+  }, [user]);
 
   return (
     <CrudLayout>
@@ -53,11 +51,11 @@ export default function EditUserPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='Name'
+          type="text"
+          placeholder="Name"
           {...formik.getFieldProps("name")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

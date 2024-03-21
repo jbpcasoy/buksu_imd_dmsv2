@@ -23,12 +23,12 @@ export default function UsersPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>User</h2>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -47,7 +47,7 @@ export default function UsersPage() {
                   <td>
                     <Link
                       href={`/crud/user/${user.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -57,14 +57,14 @@ export default function UsersPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

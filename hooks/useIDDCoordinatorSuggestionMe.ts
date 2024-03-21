@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
-import { IDDCoordinatorSuggestion, IM } from "@prisma/client";
+import { IDDCoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIDDCoordinatorSuggestionMeParams {
   id: string;
 }
-export default function useIDDCoordinatorSuggestionMe({ id }: useIDDCoordinatorSuggestionMeParams, refreshFlag?: number) {
+export default function useIDDCoordinatorSuggestionMe(
+  { id }: useIDDCoordinatorSuggestionMeParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<IDDCoordinatorSuggestion | null>();
 
   useEffect(() => {
-    console.log({id})
+    console.log({ id });
     if (!id) return;
 
     let subscribe = true;

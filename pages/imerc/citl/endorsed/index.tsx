@@ -1,5 +1,6 @@
 import IMTable from "@/components/IMTable";
 import MainLayout from "@/components/MainLayout";
+import SidebarIcons, { SIDEBAR_ICON_LABELS } from "@/components/SidebarIcons";
 import useIMERCCITLEndorsed from "@/hooks/useIMERCCITLEndorsed";
 import { useState } from "react";
 
@@ -24,9 +25,10 @@ export default function IMERCCITLEndorsedPage() {
   return (
     <MainLayout>
       <IMTable
+        icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ENDORSED} />}
         count={count}
         iMs={iMs}
-        title='Endorsed'
+        title="Endorsed"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

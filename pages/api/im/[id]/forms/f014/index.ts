@@ -2,7 +2,7 @@ import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { F014Props } from "@/types/forms";
-import { Rating, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(

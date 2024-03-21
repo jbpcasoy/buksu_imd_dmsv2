@@ -2,7 +2,7 @@ import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
 import logger from "@/services/logger";
-import { ActiveFaculty, Prisma, User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 

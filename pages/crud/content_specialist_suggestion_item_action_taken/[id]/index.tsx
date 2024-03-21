@@ -24,7 +24,9 @@ export default function ContentSpecialistSuggestionItemActionTakenPage() {
         `/api/content_specialist_suggestion_item_action_taken/${contentSpecialistSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ContentSpecialistSuggestionItemActionTaken has been deleted successfully");
+        alert(
+          "ContentSpecialistSuggestionItemActionTaken has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error.response?.data?.error?.message);
@@ -35,16 +37,16 @@ export default function ContentSpecialistSuggestionItemActionTakenPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ContentSpecialistSuggestionItemActionTaken</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ContentSpecialistSuggestionItemActionTaken</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/content_specialist_suggestion_item_action_taken/${contentSpecialistSuggestionItemActionTakenId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -66,9 +68,11 @@ export default function ContentSpecialistSuggestionItemActionTakenPage() {
         contentSpecialistSuggestionItemId:
         <Link
           href={`/crud/content_specialist_suggestion_item/${contentSpecialistSuggestionItemActionTaken.contentSpecialistSuggestionItemId}`}
-          className='underline'
+          className="underline"
         >
-          {contentSpecialistSuggestionItemActionTaken.contentSpecialistSuggestionItemId}
+          {
+            contentSpecialistSuggestionItemActionTaken.contentSpecialistSuggestionItemId
+          }
         </Link>
       </p>
       <p>value: {contentSpecialistSuggestionItemActionTaken.value}</p>

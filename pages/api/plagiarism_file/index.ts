@@ -4,9 +4,7 @@ import logger from "@/services/logger";
 import uploadToVercelBlob from "@/services/uploadToVercelBlob";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
-import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 import * as Yup from "yup";
 
 //set bodyParser
@@ -162,7 +160,10 @@ export default async function handler(
       //   if (err) throw err;
       // });
 
-      const blob = await uploadToVercelBlob(file, `files/plagiarism/${filename}`);
+      const blob = await uploadToVercelBlob(
+        file,
+        `files/plagiarism/${filename}`
+      );
       const blobFilename = blob.url.split("/").at(-1);
       console.log({ blob });
 

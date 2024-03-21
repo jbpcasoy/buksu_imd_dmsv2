@@ -8,7 +8,8 @@ export interface useSubmittedContentSpecialistSuggestionParams {
 export default function useSubmittedContentSpecialistSuggestion({
   id,
 }: useSubmittedContentSpecialistSuggestionParams) {
-  const [state, setState] = useState<SubmittedContentSpecialistSuggestion | null>();
+  const [state, setState] =
+    useState<SubmittedContentSpecialistSuggestion | null>();
 
   useEffect(() => {
     if (!id) return;

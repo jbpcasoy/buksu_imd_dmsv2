@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useQAMISSuggestionItemsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useQAMISSuggestionItems({ skip, take, filter }: useQAMISSuggestionItemsParams) {
-  const [state, setState] = useState<{qAMISSuggestionItems: QAMISSuggestionItem[], count: number}>({
+export default function useQAMISSuggestionItems({
+  skip,
+  take,
+  filter,
+}: useQAMISSuggestionItemsParams) {
+  const [state, setState] = useState<{
+    qAMISSuggestionItems: QAMISSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    qAMISSuggestionItems: []
+    qAMISSuggestionItems: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useQAMISSuggestionItems({ skip, take, filter }: useQAMIS
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

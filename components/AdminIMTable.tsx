@@ -1,23 +1,22 @@
-import useIMStatus from "@/hooks/useIMStatus";
-import { IM } from "@prisma/client";
-import Link from "next/link";
-import { ChangeEventHandler, useContext, useEffect, useState } from "react";
-import { DateTime } from "luxon";
-import useUserFaculty from "@/hooks/useUserFaculty";
-import useDepartmentIM from "@/hooks/useDepartmentIM";
-import useCollegeIM from "@/hooks/useCollegeIM";
-import axios from "axios";
-import { useRouter } from "next/router";
 import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
+import useCollegeIM from "@/hooks/useCollegeIM";
+import useDepartmentIM from "@/hooks/useDepartmentIM";
+import useIMStatus from "@/hooks/useIMStatus";
+import useSerialNumberIM from "@/hooks/useSerialNumberIM";
+import useUserFaculty from "@/hooks/useUserFaculty";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
+import { IM } from "@prisma/client";
+import axios from "axios";
 import { useFormik } from "formik";
+import { DateTime } from "luxon";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { ChangeEventHandler, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
-import iMStatusNormalizer from "@/services/iMStatusNormalizer";
-import useSerialNumber from "@/hooks/useSerialNumber";
-import useSerialNumberIM from "@/hooks/useSerialNumberIM";
 
-export interface AdminIMTableProps {
+interface AdminIMTableProps {
   count: number;
   iMs: IM[];
   title: string;
@@ -114,14 +113,27 @@ export default function AdminIMTable({
   };
 
   return (
-    <div className="text-sm border border-palette_grey rounded h-full flex flex-col overflow-auto">
-      <div className="p-1 bg-palette_grey bg-opacity-10">
+    <div className="flex flex-col space-y-4 h-full">
+      <div className="p-1 ">
         <div className="flex">
-          <div className="flex-1 flex items-center space-x-1">
-            <h2 className="text-base border-b-2 border-palette_orange inline pb-1 px-2">
-              {title}
-            </h2>
-            <div className="flex flex-row space-x-1">
+          <div className="flex-1 flex items-center space-x-4">
+            <div className="flex item-center justify-center p-3 rounded-lg bg-palette_white space-x-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                className="w-5 h-5 stroke-palette_grey"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                />
+              </svg>
+              <h2 className="font-bold">{title}</h2>
+            </div>
+            <div className="flex flex-row h-full space-x-4">
               <FilterSelector onFilterChange={handleFilterChange} />
 
               <SortSelector onSortChange={handleSortChange} />
@@ -131,62 +143,64 @@ export default function AdminIMTable({
           {enableAdd && <AddIM />}
         </div>
       </div>
-      <div className="flex-1 h-full overflow-auto">
-        <table className="table-auto w-full overflow-auto ">
-          <thead className="bg-palette_grey bg-opacity-10 p-1">
-            <tr>
-              <th className="font-normal">TITLE</th>
-              <th className="font-normal">SERIAL No.</th>
-              <th className="font-normal">TYPE</th>
-              <th className="font-normal">AUTHOR</th>
-              <th className="font-normal">DEPARTMENT</th>
-              <th className="font-normal">COLLEGE</th>
-              <th className="font-normal">STATUS</th>
-              <th className="font-normal">DATE CREATED</th>
-              <th className="font-normal">ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody className="py-1 h-full overflow-auto">
-            {iMs.map((iM) => {
-              return <IMItem iM={iM} key={iM.id} />;
-            })}
-          </tbody>
-        </table>
-      </div>
+      <div className="rounded-2xl p-4 bg-palette_white h-full flex flex-col overflow-auto flex-1">
+        <div className="flex-1 h-full overflow-auto">
+          <table className="table-auto w-full overflow-auto ">
+            <thead className="p-1">
+              <tr>
+                <th className="font-medium text-left">TITLE</th>
+                <th className="font-medium text-left">SERIAL No.</th>
+                <th className="font-medium text-left">TYPE</th>
+                <th className="font-medium text-left">AUTHOR</th>
+                <th className="font-medium text-left">DEPARTMENT</th>
+                <th className="font-medium text-left">COLLEGE</th>
+                <th className="font-medium text-left">STATUS</th>
+                <th className="font-medium text-left">DATE CREATED</th>
+                <th className="font-medium text-center">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody className="py-1 h-full overflow-auto">
+              {iMs.map((iM) => {
+                return <IMItem iM={iM} key={iM.id} />;
+              })}
+            </tbody>
+          </table>
+        </div>
 
-      <div className="flex justify-end items-center space-x-1 p-1">
-        <p className="text-xs">
-          {state.skip} - {state.skip + state.take} of {count}
-        </p>
-        <button
-          disabled={state.skip - state.take < 0}
-          className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
-          onClick={previousHandler}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="1em"
-            viewBox="0 0 448 512"
+        <div className="flex justify-end items-center space-x-1 p-1">
+          <p className="text-xs">
+            {state.skip} - {state.skip + state.take} of {count}
+          </p>
+          <button
+            disabled={state.skip - state.take < 0}
+            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
+            onClick={previousHandler}
           >
-            <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-          </svg>
-          <span>Previous</span>
-        </button>
-        <button
-          disabled={state.skip + state.take >= count}
-          className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
-          onClick={nextHandler}
-        >
-          <span>Next</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="1em"
-            viewBox="0 0 448 512"
-            className="fill-inherit"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 448 512"
+            >
+              <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
+            <span>Previous</span>
+          </button>
+          <button
+            disabled={state.skip + state.take >= count}
+            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
+            onClick={nextHandler}
           >
-            <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
-          </svg>
-        </button>
+            <span>Next</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 448 512"
+              className="fill-inherit"
+            >
+              <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -238,15 +252,7 @@ function IMItem({ iM }: { iM: IM }) {
             href={`/admin/im/${iM.id}`}
             className="rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
           >
-            <span>View</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="1em"
-              viewBox="0 0 576 512"
-              className="fill-palette_white"
-            >
-              <path d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z" />
-            </svg>
+            <span>VIEW</span>
           </Link>
         </div>
       </td>
@@ -289,10 +295,10 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
   }, [selectedField, filterValue]);
 
   return (
-    <div>
+    <div className="flex">
       <select
         onChange={handleFieldChange}
-        className="py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+        className="py-1 rounded-s-lg bg-palette_white  focus:border-palette_grey focus:ring-palette_grey"
       >
         <option value="">Select field</option>
         <option value="title">Title</option>
@@ -304,7 +310,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
         type="text"
         placeholder="Search"
         value={filterValue}
-        className="bg-inherit border-b py-1 rounded-e focus:border-palette_grey focus:ring-palette_grey"
+        className="bg-inherit border-b py-1 rounded-e-lg bg-palette_white focus:border-palette_grey focus:ring-palette_grey"
         onChange={handleValueChange}
       />
     </div>
@@ -332,11 +338,11 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
   }, [selectedField, sortDirection]);
 
   return (
-    <div>
+    <div className="flex">
       <select
         onChange={handleFieldChange}
         value={selectedField}
-        className="py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+        className="py-1 rounded-s-lg bg-palette_white bg-inherit focus:border-palette_grey focus:ring-palette_grey"
       >
         <option value="title">Title</option>
         <option value="createdAt">Date Created</option>
@@ -347,7 +353,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
       <select
         onChange={handleDirectionChange}
         value={sortDirection}
-        className="py-1 rounded-e bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+        className="py-1 rounded-e-lg bg-palette_white bg-inherit focus:border-palette_grey focus:ring-palette_grey"
       >
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>
@@ -501,7 +507,7 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
   return (
     <select
       onChange={(e) => onStatusChange(e.target.value)}
-      className="py-1 rounded bg-inherit focus:border-palette_grey focus:ring-palette_grey"
+      className="py-1 rounded-lg bg-palette_white  focus:border-palette_grey focus:ring-palette_grey"
     >
       <option value="">Select Status</option>
       {statuses.map((status) => {

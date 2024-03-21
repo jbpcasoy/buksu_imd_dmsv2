@@ -30,10 +30,10 @@ export default function IMFilePage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IMFile</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">IMFile</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -43,7 +43,7 @@ export default function IMFilePage() {
       <p>updatedAt: {new Date(iMFile.updatedAt).toLocaleString()}</p>
       <p>
         iMId:{" "}
-        <Link href={`/crud/im/${iMFile.iMId}`} className='underline'>
+        <Link href={`/crud/im/${iMFile.iMId}`} className="underline">
           {iMFile.iMId}
         </Link>
       </p>

@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { SubmittedCoordinatorSuggestion, IM } from "@prisma/client";
+import { SubmittedCoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useSubmittedCoordinatorSuggestionIMParams {
   id?: string;
 }
-export default function useSubmittedCoordinatorSuggestionIM({ id }: useSubmittedCoordinatorSuggestionIMParams) {
+export default function useSubmittedCoordinatorSuggestionIM({
+  id,
+}: useSubmittedCoordinatorSuggestionIMParams) {
   const [state, setState] = useState<SubmittedCoordinatorSuggestion | null>();
 
   useEffect(() => {

@@ -28,12 +28,8 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      const {
-        returnedDepartmentRevisionId,
-        remarks,
-        suggestion,
-        pageNumber,
-      } = validator.cast(req.body);
+      const { returnedDepartmentRevisionId, remarks, suggestion, pageNumber } =
+        validator.cast(req.body);
 
       if (!user.isAdmin) {
         const coordinator = await prisma.coordinator.findFirst({
@@ -91,7 +87,8 @@ export default async function handler(
         if (submittedReturnedDepartmentRevision) {
           return res.status(400).json({
             error: {
-              message: "Error: Returned department suggestion is already submitted",
+              message:
+                "Error: Returned department suggestion is already submitted",
             },
           });
         }

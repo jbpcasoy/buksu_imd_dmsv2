@@ -24,7 +24,9 @@ export default function ReturnedCITLRevisionSuggestionItemPage() {
         `/api/returned_citl_revision_suggestion_item/${returnedCITLRevisionSuggestionItemId}`
       )
       .then(() => {
-        alert("ReturnedCITLRevisionSuggestionItem has been deleted successfully");
+        alert(
+          "ReturnedCITLRevisionSuggestionItem has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -35,16 +37,16 @@ export default function ReturnedCITLRevisionSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ReturnedCITLRevisionSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ReturnedCITLRevisionSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/returned_citl_revision_suggestion_item/${returnedCITLRevisionSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -66,11 +68,9 @@ export default function ReturnedCITLRevisionSuggestionItemPage() {
         returnedCITLRevisionId:{" "}
         <Link
           href={`/crud/returned_citl_revision/${returnedCITLRevisionSuggestionItem.returnedCITLRevisionId}`}
-          className='underline'
+          className="underline"
         >
-          {
-            returnedCITLRevisionSuggestionItem.returnedCITLRevisionId
-          }
+          {returnedCITLRevisionSuggestionItem.returnedCITLRevisionId}
         </Link>
       </p>
       <p>suggestion: {returnedCITLRevisionSuggestionItem.suggestion}</p>

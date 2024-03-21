@@ -24,7 +24,9 @@ export default function ReturnedDepartmentRevisionSuggestionItemPage() {
         `/api/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItemId}`
       )
       .then(() => {
-        alert("ReturnedDepartmentRevisionSuggestionItem has been deleted successfully");
+        alert(
+          "ReturnedDepartmentRevisionSuggestionItem has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error?.response?.data?.error?.message);
@@ -35,16 +37,16 @@ export default function ReturnedDepartmentRevisionSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ReturnedDepartmentRevisionSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ReturnedDepartmentRevisionSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -66,7 +68,7 @@ export default function ReturnedDepartmentRevisionSuggestionItemPage() {
         returnedDepartmentRevisionId:{" "}
         <Link
           href={`/crud/returned_department_revision/${returnedDepartmentRevisionSuggestionItem.returnedDepartmentRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {
             returnedDepartmentRevisionSuggestionItem.returnedDepartmentRevisionId

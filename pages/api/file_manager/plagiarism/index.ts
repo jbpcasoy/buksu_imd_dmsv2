@@ -1,5 +1,3 @@
-import getFilenames from "@/services/getFilenames";
-import getFilesWithMetadata from "@/services/getFilesWithMetadata";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";

@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function ActiveIDDCoordinatorPage() {
   const router = useRouter();
   const activeIDDCoordinatorId = router.query.id;
-  const activeIDDCoordinator = useActiveIDDCoordinator({ id: activeIDDCoordinatorId as string });
+  const activeIDDCoordinator = useActiveIDDCoordinator({
+    id: activeIDDCoordinatorId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -30,22 +32,26 @@ export default function ActiveIDDCoordinatorPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ActiveIDDCoordinator</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ActiveIDDCoordinator</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {activeIDDCoordinator.id}</p>
-      <p>createdAt: {new Date(activeIDDCoordinator.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(activeIDDCoordinator.updatedAt).toLocaleString()}</p>
+      <p>
+        createdAt: {new Date(activeIDDCoordinator.createdAt).toLocaleString()}
+      </p>
+      <p>
+        updatedAt: {new Date(activeIDDCoordinator.updatedAt).toLocaleString()}
+      </p>
       <p>
         iDDCoordinatorId:{" "}
         <Link
           href={`/crud/iDDCoordinator/${activeIDDCoordinator.iDDCoordinatorId}`}
-          className='underline'
+          className="underline"
         >
           {activeIDDCoordinator.iDDCoordinatorId}
         </Link>

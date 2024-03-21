@@ -1,17 +1,11 @@
 import prisma from "@/prisma/client";
-import archiveExport from "@/services/archiveExport";
 import exportDataToCSV from "@/services/exportDataToCsv";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import { del } from "@vercel/blob";
-import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import fetch from "node-fetch";
-import path from "path";
-import { promisify } from "util";
-import { v4 as uuidv4 } from "uuid";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,

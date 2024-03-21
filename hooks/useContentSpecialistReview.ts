@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { ContentSpecialistReview, IM } from "@prisma/client";
+import { ContentSpecialistReview } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useContentSpecialistReviewParams {
   id?: string;
 }
-export default function useContentSpecialistReview({ id }: useContentSpecialistReviewParams) {
+export default function useContentSpecialistReview({
+  id,
+}: useContentSpecialistReviewParams) {
   const [state, setState] = useState<ContentSpecialistReview | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useContentSpecialistReview({ id }: useContentSpecialistR
     axios
       .get(`/api/content_specialist_review/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

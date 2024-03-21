@@ -12,28 +12,29 @@ export default async function handler(
       const validator = Yup.object({
         "filter[departmentId]": Yup.string().optional(),
         "filter[collegeId]": Yup.string().optional(),
-        "filter[status]": Yup.string().oneOf([
-          "IMERC_CITL_DIRECTOR_ENDORSED",
-          "IMERC_CITL_IDD_COORDINATOR_ENDORSED",
-          "IMERC_CITL_REVISED",
-          "IMERC_CITL_REVIEWED",
-          "IMERC_QAMIS_DEPARTMENT_ENDORSED",
-          "IMERC_QAMIS_REVISED",
-          "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED",
-          "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED",
-          "IMPLEMENTATION_CITL_REVISED",
-          "IMPLEMENTATION_CITL_REVIEWED",
-          "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED",
-          "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED",
-          "IMPLEMENTATION_DEPARTMENT_REVISED",
-          "IMPLEMENTATION_DEPARTMENT_REVIEWED",
-          "IMPLEMENTATION_DEPARTMENT_REVIEW",
-          "IMPLEMENTATION_DRAFT",
-        ])
-        .optional()
-        .transform((originalValue) => {
-          return originalValue === "" ? undefined : originalValue;
-        }),
+        "filter[status]": Yup.string()
+          .oneOf([
+            "IMERC_CITL_DIRECTOR_ENDORSED",
+            "IMERC_CITL_IDD_COORDINATOR_ENDORSED",
+            "IMERC_CITL_REVISED",
+            "IMERC_CITL_REVIEWED",
+            "IMERC_QAMIS_DEPARTMENT_ENDORSED",
+            "IMERC_QAMIS_REVISED",
+            "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED",
+            "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED",
+            "IMPLEMENTATION_CITL_REVISED",
+            "IMPLEMENTATION_CITL_REVIEWED",
+            "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED",
+            "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED",
+            "IMPLEMENTATION_DEPARTMENT_REVISED",
+            "IMPLEMENTATION_DEPARTMENT_REVIEWED",
+            "IMPLEMENTATION_DEPARTMENT_REVIEW",
+            "IMPLEMENTATION_DRAFT",
+          ])
+          .optional()
+          .transform((originalValue) => {
+            return originalValue === "" ? undefined : originalValue;
+          }),
         "filter[start]": Yup.date().optional(),
         "filter[end]": Yup.date().optional(),
       });
@@ -68,6 +69,10 @@ export default async function handler(
       let data: { [status: string]: number } = {};
 
       for (let status of statuses) {
+        if (filterStatus && filterStatus !== status) {
+          continue;
+        }
+
         data = {
           ...data,
           [status]: await countIMs(

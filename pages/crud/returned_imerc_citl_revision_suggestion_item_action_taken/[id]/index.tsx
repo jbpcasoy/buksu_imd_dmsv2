@@ -7,9 +7,10 @@ import { useRouter } from "next/router";
 export default function ReturnedIMERCCITLRevisionSuggestionItemActionTakenPage() {
   const router = useRouter();
   const returnedIMERCCITLRevisionSuggestionItemActionTakenId = router.query.id;
-  const returnedIMERCCITLRevisionSuggestionItemActionTaken = useReturnedIMERCCITLRevisionSuggestionItemActionTaken({
-    id: returnedIMERCCITLRevisionSuggestionItemActionTakenId as string,
-  });
+  const returnedIMERCCITLRevisionSuggestionItemActionTaken =
+    useReturnedIMERCCITLRevisionSuggestionItemActionTaken({
+      id: returnedIMERCCITLRevisionSuggestionItemActionTakenId as string,
+    });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -23,7 +24,9 @@ export default function ReturnedIMERCCITLRevisionSuggestionItemActionTakenPage()
         `/api/returned_imerc_citl_revision_suggestion_item_action_taken/${returnedIMERCCITLRevisionSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ReturnedIMERCCITLRevisionSuggestionItemActionTaken has been deleted successfully");
+        alert(
+          "ReturnedIMERCCITLRevisionSuggestionItemActionTaken has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error.response?.data?.error?.message);
@@ -34,16 +37,18 @@ export default function ReturnedIMERCCITLRevisionSuggestionItemActionTakenPage()
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ReturnedIMERCCITLRevisionSuggestionItemActionTaken</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">
+          ReturnedIMERCCITLRevisionSuggestionItemActionTaken
+        </h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/returned_imerc_citl_revision_suggestion_item_action_taken/${returnedIMERCCITLRevisionSuggestionItemActionTakenId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -51,19 +56,25 @@ export default function ReturnedIMERCCITLRevisionSuggestionItemActionTakenPage()
       <p>id: {returnedIMERCCITLRevisionSuggestionItemActionTaken.id}</p>
       <p>
         createdAt:{" "}
-        {new Date(returnedIMERCCITLRevisionSuggestionItemActionTaken.createdAt).toLocaleString()}
+        {new Date(
+          returnedIMERCCITLRevisionSuggestionItemActionTaken.createdAt
+        ).toLocaleString()}
       </p>
       <p>
         updatedAt:{" "}
-        {new Date(returnedIMERCCITLRevisionSuggestionItemActionTaken.updatedAt).toLocaleString()}
+        {new Date(
+          returnedIMERCCITLRevisionSuggestionItemActionTaken.updatedAt
+        ).toLocaleString()}
       </p>
       <p>
         returnedIMERCCITLRevisionSuggestionItemId:
         <Link
           href={`/crud/returned_imerc_citl_revision_suggestion_item/${returnedIMERCCITLRevisionSuggestionItemActionTaken.returnedIMERCCITLRevisionSuggestionItemId}`}
-          className='underline'
+          className="underline"
         >
-          {returnedIMERCCITLRevisionSuggestionItemActionTaken.returnedIMERCCITLRevisionSuggestionItemId}
+          {
+            returnedIMERCCITLRevisionSuggestionItemActionTaken.returnedIMERCCITLRevisionSuggestionItemId
+          }
         </Link>
       </p>
       <p>value: {returnedIMERCCITLRevisionSuggestionItemActionTaken.value}</p>

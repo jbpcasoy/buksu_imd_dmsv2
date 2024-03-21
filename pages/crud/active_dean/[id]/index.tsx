@@ -30,10 +30,10 @@ export default function ActiveDeanPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ActiveDean</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ActiveDean</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -43,10 +43,7 @@ export default function ActiveDeanPage() {
       <p>updatedAt: {new Date(activeDean.updatedAt).toLocaleString()}</p>
       <p>
         deanId:{" "}
-        <Link
-          href={`/crud/dean/${activeDean.deanId}`}
-          className='underline'
-        >
+        <Link href={`/crud/dean/${activeDean.deanId}`} className="underline">
           {activeDean.deanId}
         </Link>
       </p>

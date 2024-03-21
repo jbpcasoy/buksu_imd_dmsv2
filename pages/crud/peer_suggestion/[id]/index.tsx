@@ -30,10 +30,10 @@ export default function PeerSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>PeerSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">PeerSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -45,7 +45,7 @@ export default function PeerSuggestionPage() {
         peerReviewId:{" "}
         <Link
           href={`/crud/peer_review/${peerSuggestion.peerReviewId}`}
-          className='underline'
+          className="underline"
         >
           {peerSuggestion.peerReviewId}{" "}
         </Link>

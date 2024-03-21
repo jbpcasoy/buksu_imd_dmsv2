@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { IDDSpecialistSuggestionItem, IM } from "@prisma/client";
+import { IDDSpecialistSuggestionItem } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIDDSpecialistSuggestionItemParams {
   id: string;
 }
-export default function useIDDSpecialistSuggestionItem({ id }: useIDDSpecialistSuggestionItemParams) {
+export default function useIDDSpecialistSuggestionItem({
+  id,
+}: useIDDSpecialistSuggestionItemParams) {
   const [state, setState] = useState<IDDSpecialistSuggestionItem | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useIDDSpecialistSuggestionItem({ id }: useIDDSpecialistS
     axios
       .get(`/api/idd_specialist_suggestion_item/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

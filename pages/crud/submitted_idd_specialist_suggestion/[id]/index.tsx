@@ -19,7 +19,9 @@ export default function SubmittedIDDSpecialistSuggestionPage() {
     }
 
     axios
-      .delete(`/api/submitted_idd_specialist_suggestion/${submittedIDDSpecialistSuggestionId}`)
+      .delete(
+        `/api/submitted_idd_specialist_suggestion/${submittedIDDSpecialistSuggestionId}`
+      )
       .then(() => {
         alert("SubmittedIDDSpecialistSuggestion has been deleted successfully");
       })
@@ -32,10 +34,10 @@ export default function SubmittedIDDSpecialistSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>SubmittedIDDSpecialistSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">SubmittedIDDSpecialistSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -53,7 +55,7 @@ export default function SubmittedIDDSpecialistSuggestionPage() {
         iDDSpecialistSuggestionId:{" "}
         <Link
           href={`/crud/idd_specialist_suggestion/${submittedIDDSpecialistSuggestion.iDDSpecialistSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {submittedIDDSpecialistSuggestion.iDDSpecialistSuggestionId}
         </Link>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { IMERCCITLDirectorEndorsement, IM } from "@prisma/client";
+import { IMERCCITLDirectorEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIMERCCITLDirectorEndorsementIMParams {
   id?: string;

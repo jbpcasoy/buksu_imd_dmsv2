@@ -1,5 +1,6 @@
 import IMTable from "@/components/IMTable";
 import MainLayout from "@/components/MainLayout";
+import SidebarIcons, { SIDEBAR_ICON_LABELS } from "@/components/SidebarIcons";
 import useReviewed from "@/hooks/useReviewed";
 import { useState } from "react";
 
@@ -16,7 +17,7 @@ export default function ReviewedPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useReviewed(state);
@@ -24,9 +25,10 @@ export default function ReviewedPage() {
   return (
     <MainLayout>
       <IMTable
+        icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.REVIEWED} />}
         count={count}
         iMs={iMs}
-        title='Reviewed'
+        title="Reviewed"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

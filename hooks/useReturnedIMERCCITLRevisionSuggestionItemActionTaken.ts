@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { ReturnedIMERCCITLRevisionSuggestionItemActionTaken, IM } from "@prisma/client";
+import { ReturnedIMERCCITLRevisionSuggestionItemActionTaken } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useReturnedIMERCCITLRevisionSuggestionItemActionTakenParams {
   id: string;
 }
-export default function useReturnedIMERCCITLRevisionSuggestionItemActionTaken({ id }: useReturnedIMERCCITLRevisionSuggestionItemActionTakenParams) {
-  const [state, setState] = useState<ReturnedIMERCCITLRevisionSuggestionItemActionTaken | null>();
+export default function useReturnedIMERCCITLRevisionSuggestionItemActionTaken({
+  id,
+}: useReturnedIMERCCITLRevisionSuggestionItemActionTakenParams) {
+  const [state, setState] =
+    useState<ReturnedIMERCCITLRevisionSuggestionItemActionTaken | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -14,9 +17,11 @@ export default function useReturnedIMERCCITLRevisionSuggestionItemActionTaken({ 
     let subscribe = true;
 
     axios
-      .get(`/api/returned_imerc_citl_revision_suggestion_item_action_taken/${id}`)
+      .get(
+        `/api/returned_imerc_citl_revision_suggestion_item_action_taken/${id}`
+      )
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

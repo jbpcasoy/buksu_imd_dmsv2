@@ -5,8 +5,7 @@ import { useState } from "react";
 
 export default function ReturnedCITLRevisionsPage() {
   const [state, setState] = useState({ skip: 0, take: 10 });
-  const { returnedCITLRevisions, count } =
-    useReturnedCITLRevisions(state);
+  const { returnedCITLRevisions, count } = useReturnedCITLRevisions(state);
 
   const handleNext = () => {
     setState((prev) => {
@@ -24,10 +23,10 @@ export default function ReturnedCITLRevisionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>ReturnedCITLRevision</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/returned_citl_revision/add`}
         >
           Add
@@ -35,7 +34,7 @@ export default function ReturnedCITLRevisionsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -52,19 +51,15 @@ export default function ReturnedCITLRevisionsPage() {
                 <tr key={returnedCITLRevision.id}>
                   <td>{returnedCITLRevision.id}</td>
                   <td>
-                    {new Date(
-                      returnedCITLRevision.createdAt
-                    ).toLocaleString()}
+                    {new Date(returnedCITLRevision.createdAt).toLocaleString()}
                   </td>
                   <td>
-                    {new Date(
-                      returnedCITLRevision.updatedAt
-                    ).toLocaleString()}
+                    {new Date(returnedCITLRevision.updatedAt).toLocaleString()}
                   </td>
                   <td>
                     <Link
                       href={`/crud/coordinator/${returnedCITLRevision.iDDCoordinatorId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {returnedCITLRevision.iDDCoordinatorId}
                     </Link>
@@ -72,7 +67,7 @@ export default function ReturnedCITLRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/citl_revision/${returnedCITLRevision.cITLRevisionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {returnedCITLRevision.cITLRevisionId}
                     </Link>
@@ -80,7 +75,7 @@ export default function ReturnedCITLRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/returned_citl_revision/${returnedCITLRevision.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -90,14 +85,14 @@ export default function ReturnedCITLRevisionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

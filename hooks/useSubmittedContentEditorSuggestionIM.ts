@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { SubmittedContentEditorSuggestion, IM } from "@prisma/client";
+import { SubmittedContentEditorSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useSubmittedContentEditorSuggestionIMParams {
   id?: string;
@@ -8,8 +8,7 @@ export interface useSubmittedContentEditorSuggestionIMParams {
 export default function useSubmittedContentEditorSuggestionIM({
   id,
 }: useSubmittedContentEditorSuggestionIMParams) {
-  const [state, setState] =
-    useState<SubmittedContentEditorSuggestion | null>();
+  const [state, setState] = useState<SubmittedContentEditorSuggestion | null>();
 
   useEffect(() => {
     if (!id) return;

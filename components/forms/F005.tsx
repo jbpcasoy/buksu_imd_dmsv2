@@ -28,7 +28,6 @@ import {
 import saveAs from "file-saver";
 import { useEffect, useState } from "react";
 
-
 export default function F005({ iMTitle }: F005Props) {
   const [buksuLogo, setBuksuLogo] = useState<ArrayBuffer>();
 
@@ -844,7 +843,9 @@ export default function F005({ iMTitle }: F005Props) {
 
   return (
     <div>
-      <button onClick={download} className="underline">F005 - Teacher-User Evaluation</button>
+      <button onClick={download} className="underline">
+        F005 - Teacher-User Evaluation
+      </button>
     </div>
   );
 }

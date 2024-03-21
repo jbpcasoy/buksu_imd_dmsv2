@@ -5,18 +5,25 @@ import { useEffect, useState } from "react";
 export interface useContentEditorSuggestionItemsIMParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useContentEditorSuggestionItemsIM({ skip, take, id }: useContentEditorSuggestionItemsIMParams) {
-  const [state, setState] = useState<{contentEditorSuggestionItems: ContentEditorSuggestionItem[], count: number}>({
+export default function useContentEditorSuggestionItemsIM({
+  skip,
+  take,
+  id,
+}: useContentEditorSuggestionItemsIMParams) {
+  const [state, setState] = useState<{
+    contentEditorSuggestionItems: ContentEditorSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    contentEditorSuggestionItems: []
+    contentEditorSuggestionItems: [],
   });
 
   useEffect(() => {
-    console.log({skip, take, id})
-    if(!id) {
-        return;
+    console.log({ skip, take, id });
+    if (!id) {
+      return;
     }
     axios
       .get(`/api/content_editor_suggestion_item/im/${id}`, {

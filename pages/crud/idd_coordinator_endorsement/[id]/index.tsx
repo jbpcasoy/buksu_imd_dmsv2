@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function IDDCoordinatorEndorsementPage() {
   const router = useRouter();
   const iDDCoordinatorEndorsementId = router.query.id;
-  const iDDCoordinatorEndorsement = useIDDCoordinatorEndorsement({ id: iDDCoordinatorEndorsementId as string });
+  const iDDCoordinatorEndorsement = useIDDCoordinatorEndorsement({
+    id: iDDCoordinatorEndorsementId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -30,31 +32,37 @@ export default function IDDCoordinatorEndorsementPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IDDCoordinatorEndorsement</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">IDDCoordinatorEndorsement</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {iDDCoordinatorEndorsement.id}</p>
-      <p>createdAt: {new Date(iDDCoordinatorEndorsement.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(iDDCoordinatorEndorsement.updatedAt).toLocaleString()}</p>
       <p>
-      cITLRevisionId:{" "}
+        createdAt:{" "}
+        {new Date(iDDCoordinatorEndorsement.createdAt).toLocaleString()}
+      </p>
+      <p>
+        updatedAt:{" "}
+        {new Date(iDDCoordinatorEndorsement.updatedAt).toLocaleString()}
+      </p>
+      <p>
+        cITLRevisionId:{" "}
         <Link
           href={`/crud/department_revision/${iDDCoordinatorEndorsement.cITLRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {iDDCoordinatorEndorsement.cITLRevisionId}
         </Link>
       </p>
       <p>
-      iDDCoordinatorId:{" "}
+        iDDCoordinatorId:{" "}
         <Link
           href={`/crud/iDDCoordinator/${iDDCoordinatorEndorsement.iDDCoordinatorId}`}
-          className='underline'
+          className="underline"
         >
           {iDDCoordinatorEndorsement.iDDCoordinatorId}
         </Link>

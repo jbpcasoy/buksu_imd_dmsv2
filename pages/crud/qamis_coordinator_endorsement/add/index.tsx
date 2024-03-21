@@ -30,16 +30,16 @@ export default function AddQAMISCoordinatorEndorsementPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='qAMISRevisionId'
+          type="text"
+          placeholder="qAMISRevisionId"
           {...formik.getFieldProps("qAMISRevisionId")}
         />
         <input
-          type='text'
-          placeholder='activeCoordinatorId'
+          type="text"
+          placeholder="activeCoordinatorId"
           {...formik.getFieldProps("activeCoordinatorId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

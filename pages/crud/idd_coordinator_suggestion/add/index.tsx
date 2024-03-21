@@ -30,16 +30,16 @@ export default function AddIDDCoordinatorSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='activeIDDCoordinatorId'
+          type="text"
+          placeholder="activeIDDCoordinatorId"
           {...formik.getFieldProps("activeIDDCoordinatorId")}
         />
         <input
-          type='text'
-          placeholder='deanEndorsementId'
+          type="text"
+          placeholder="deanEndorsementId"
           {...formik.getFieldProps("deanEndorsementId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

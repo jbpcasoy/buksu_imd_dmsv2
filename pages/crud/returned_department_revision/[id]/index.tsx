@@ -34,10 +34,10 @@ export default function ReturnedDepartmentRevisionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ReturnedDepartmentRevision</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ReturnedDepartmentRevision</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -55,7 +55,7 @@ export default function ReturnedDepartmentRevisionPage() {
         coordinatorId:{" "}
         <Link
           href={`/crud/coordinator/${returnedDepartmentRevision.coordinatorId}`}
-          className='underline'
+          className="underline"
         >
           {returnedDepartmentRevision.coordinatorId}
         </Link>
@@ -64,7 +64,7 @@ export default function ReturnedDepartmentRevisionPage() {
         departmentRevisionId:{" "}
         <Link
           href={`/crud/department_revision/${returnedDepartmentRevision.departmentRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {returnedDepartmentRevision.departmentRevisionId}
         </Link>

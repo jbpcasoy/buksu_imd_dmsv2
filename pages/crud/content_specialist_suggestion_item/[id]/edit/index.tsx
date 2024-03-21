@@ -22,7 +22,7 @@ export default function EditContentSpecialistSuggestionItemPage() {
     validationSchema: Yup.object({
       suggestion: Yup.string().required(),
       remarks: Yup.string(),
-      pageNumber: Yup.number().min(0).required()
+      pageNumber: Yup.number().min(0).required(),
     }),
     onSubmit: (values) => {
       axios
@@ -31,7 +31,9 @@ export default function EditContentSpecialistSuggestionItemPage() {
           values
         )
         .then(() => {
-          alert("ContentSpecialistSuggestionItem has been updated successfully");
+          alert(
+            "ContentSpecialistSuggestionItem has been updated successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -62,21 +64,21 @@ export default function EditContentSpecialistSuggestionItemPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='suggestion'
+          type="text"
+          placeholder="suggestion"
           {...formik.getFieldProps("suggestion")}
         />
         <input
-          type='text'
-          placeholder='pageNumber'
+          type="text"
+          placeholder="pageNumber"
           {...formik.getFieldProps("pageNumber")}
         />
         <input
-          type='text'
-          placeholder='remarks'
+          type="text"
+          placeholder="remarks"
           {...formik.getFieldProps("remarks")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

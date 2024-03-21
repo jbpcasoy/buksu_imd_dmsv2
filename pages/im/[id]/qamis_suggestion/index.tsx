@@ -1,5 +1,6 @@
 import Confirmation from "@/components/Confirmation";
 import FileUpload from "@/components/FileUpload";
+import IMHeader from "@/components/IMHeader";
 import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import Modal from "@/components/Modal";
@@ -310,28 +311,16 @@ export default function QAMISSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row space-x-1 h-full overflow-auto">
-        <div className="space-y-1 sm:flex-1 flex flex-col sm:h-full overflow-auto">
-          <div className="flex justify-between">
-            <div>
-              <h2 className="inline text-lg font-bold">
-                Instructional Material Review{" "}
-                <span className="bg-palette_orange text-palette_white p-1 rounded">
-                  QAMIS
-                </span>
-              </h2>
-              <p className="text-sm">IMERC Phase</p>
-            </div>
-            <div>
-              <AddSuggestionItem />
-            </div>
-          </div>
+      <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4">
+        <div className="sm:flex-1 flex flex-col sm:h-full overflow-auto p-4 bg-palette_white rounded-2xl space-y-4">
+          <IMHeader iM={iM} phase="IMERC Phase" role="Author" />
 
-          <div className="flex-1 h-full overflow-auto space-x-1 p-1">
+          <div className="flex-1 h-full overflow-auto space-y-2">
             <div className="overflow-auto">
               <div className="border border-palette_orange rounded text-sm">
-                <div className="p-2 bg-palette_grey bg-opacity-10">
+                <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
                   <p className="text-left font-bold">QAMIS SUGGESTIONS</p>
+                  <AddSuggestionItem />
                 </div>
                 <hr />
                 {qAMISSuggestionItems.qAMISSuggestionItems.map(
@@ -354,7 +343,7 @@ export default function QAMISSuggestionPage() {
               </div>
             </div>
 
-            <div className="flex flex-col space-x-1">
+            <div className="flex flex-col space-y-2 flex-1">
               <FileUpload
                 label="UPLOAD QAMIS FILE"
                 onFileChange={(e) => {
@@ -369,6 +358,7 @@ export default function QAMISSuggestionPage() {
                     iMFile: undefined,
                   }));
                 }}
+                loading={loading}
               />
               <FileUpload
                 label="UPLOAD IM FILE"
@@ -384,11 +374,12 @@ export default function QAMISSuggestionPage() {
                     qAMISFile: undefined,
                   }));
                 }}
+                loading={loading}
               />
             </div>
             <>
               <button
-                className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
+                className="rounded bg-palette_blue text-palette_white py-2 w-full space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
                 disabled={
                   !Boolean(qAMISSuggestion) ||
                   !Boolean(files.iMFile) ||
@@ -397,17 +388,7 @@ export default function QAMISSuggestionPage() {
                 }
                 onClick={() => setOpenConfirmation(true)}
               >
-                <span>Submit Revision</span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    viewBox="0 0 448 512"
-                    className="fill-palette_white"
-                  >
-                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                  </svg>
-                </span>
+                Submit Revision
               </button>
               {openConfirmation && (
                 <Confirmation
@@ -422,7 +403,7 @@ export default function QAMISSuggestionPage() {
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded"
+            className="w-full h-full rounded-2xl"
           />
         </div>
       </div>
@@ -499,15 +480,6 @@ export function Item({
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="16"
-              width="14"
-              viewBox="0 0 448 512"
-              className="fill-palette_white"
-            >
-              <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-            </svg>
             <span>Delete</span>
           </button>
           {state.openConfirmation && (
@@ -636,14 +608,6 @@ function EditSuggestionItem({
         className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
         onClick={() => setOpenEdit(true)}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="1em"
-          viewBox="0 0 512 512"
-          className="fill-palette_white"
-        >
-          <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
-        </svg>
         <span>Edit</span>
       </button>
 

@@ -3,7 +3,6 @@ import Confirmation from "@/components/Confirmation";
 import DepartmentSelector from "@/components/DepartmentSelector";
 import Modal from "@/components/Modal";
 import { SnackbarContext } from "@/components/SnackbarProvider";
-import ToggleSwitch from "@/components/ToggleSwitch";
 import UserSelector from "@/components/UserSelector";
 import useActiveFacultyByFacultyId from "@/hooks/useActiveFacultyByFacultyId";
 import useCollege from "@/hooks/useCollege";
@@ -84,12 +83,29 @@ export default function FacultiesPage() {
 
   return (
     <AdminLayout>
-      <div className='h-full flex flex-col rounded border border-palette_grey'>
-        <div className='flex justify-between bg-palette_grey bg-opacity-10 p-1'>
-          <div className='flex space-x-1 justify-between items-end'>
-            <h2 className='px-2 border-b-2 border-palette_orange'>Faculty</h2>
+      <div className="flex flex-col h-full space-y-4">
+        <div className="flex justify-between p-1">
+          <div className="flex space-x-4 justify-between items-end h-full">
+            <div className="inline-flex space-x-2 p-3 bg-palette_white justify-center items-center rounded-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5 stroke-palette_grey"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                />
+              </svg>
 
-            <div className='flex flex-row space-x-1'>
+              <h2 className="font-bold">Faculty</h2>
+            </div>
+
+            <div className="flex flex-row space-x-4 h-full">
               <FilterSelector onFilterChange={handleFilterChange} />
 
               <SortSelector onSortChange={handleSortChange} />
@@ -97,58 +113,59 @@ export default function FacultiesPage() {
           </div>
           <AddModal />
         </div>
+        <div className="flex-1 h-full flex flex-col bg-palette_white p-4 rounded-2xl">
+          <div className="flex-1 h-full">
+            <table className="table-auto w-full">
+              <thead className=" bg-opacity-10">
+                <tr>
+                  <th className="font-medium text-left">USER</th>
+                  <th className="font-medium text-left">DEPARTMENT</th>
+                  <th className="font-medium text-left">COLLEGE</th>
+                  <th className="font-medium text-center">ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                {faculties.map((faculty) => {
+                  return <FacultyItem faculty={faculty} key={faculty.id} />;
+                })}
+              </tbody>
+            </table>
+          </div>
 
-        <div className='flex-1 h-full'>
-          <table className='table-auto w-full text-sm'>
-            <thead className='bg-palette_grey bg-opacity-10'>
-              <tr>
-                <th className='font-normal'>USER</th>
-                <th className='font-normal'>DEPARTMENT</th>
-                <th className='font-normal'>COLLEGE</th>
-                <th className='font-normal'>ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {faculties.map((faculty) => {
-                return <FacultyItem faculty={faculty} key={faculty.id} />;
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        <div className='flex justify-end items-center space-x-1 p-1'>
-          <p className='text-xs'>
-            {state.skip} - {state.skip + state.take} of {count}
-          </p>
-          <button
-            disabled={state.skip - state.take < 0}
-            className='rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50'
-            onClick={previousHandler}
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='1em'
-              viewBox='0 0 448 512'
+          <div className="flex justify-end items-center space-x-1 p-1">
+            <p className="text-xs">
+              {state.skip} - {state.skip + state.take} of {count}
+            </p>
+            <button
+              disabled={state.skip - state.take < 0}
+              className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
+              onClick={previousHandler}
             >
-              <path d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z' />
-            </svg>
-            <span>Previous</span>
-          </button>
-          <button
-            disabled={state.skip + state.take >= count}
-            className='rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50'
-            onClick={nextHandler}
-          >
-            <span>Next</span>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='1em'
-              viewBox='0 0 448 512'
-              className='fill-inherit'
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="1em"
+                viewBox="0 0 448 512"
+              >
+                <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+              </svg>
+              <span>Previous</span>
+            </button>
+            <button
+              disabled={state.skip + state.take >= count}
+              className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
+              onClick={nextHandler}
             >
-              <path d='M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z' />
-            </svg>
-          </button>
+              <span>Next</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="1em"
+                viewBox="0 0 448 512"
+                className="fill-inherit"
+              >
+                <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </AdminLayout>
@@ -234,39 +251,43 @@ function FacultyItem({ faculty }: FacultyItemProps) {
   };
 
   return (
-    <tr key={faculty.id} className='border-b'>
-      <td className='py-1 pl-4'>
-        <Link href={`/admin/user/${faculty.userId}`} className='underline'>
+    <tr key={faculty.id} className="border-b">
+      <td className="py-1 pl-4">
+        <Link href={`/admin/user/${faculty.userId}`} className="underline">
           {user?.name}
         </Link>
       </td>
-      <td className='py-1'>{department?.name}</td>
-      <td className='py-1'>{college?.name}</td>
-      <td className='py-1 flex justify-center items-center space-x-1'>
+      <td className="py-1">{department?.name}</td>
+      <td className="py-1">{college?.name}</td>
+      <td className="py-1 flex justify-center items-center space-x-1">
         <input
-          type='checkbox'
-          id='toggleSwitch'
-          className='rounded text-palette_blue focus:border-palette_blue focus:ring focus:ring-offset-0 focus:ring-palette_blue focus:ring-opacity-10 cursor-pointer h-5 w-5'
+          type="checkbox"
+          id="toggleSwitch"
+          className="rounded text-palette_blue focus:border-palette_blue focus:ring focus:ring-offset-0 focus:ring-palette_blue focus:ring-opacity-10 cursor-pointer h-7 w-7"
           checked={Boolean(activeFaculty)}
           onChange={(e) => toggleHandler(e.target.checked)}
-          title='Active'
+          title="Active"
         />
 
         <>
           <button
-            className='rounded px-4 py-1 bg-palette_blue text-palette_white'
+            className="rounded bg-palette_blue text-palette_white w-7 h-7 flex justify-center items-center"
             onClick={() =>
               setState((prev) => ({ ...prev, openDeleteConfirmation: true }))
             }
           >
             <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='16'
-              width='14'
-              viewBox='0 0 448 512'
-              className='fill-palette_white'
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              className="w-5 h-5 stroke-palette_white"
             >
-              <path d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z' />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+              />
             </svg>
           </button>
           {state.openDeleteConfirmation && (
@@ -327,38 +348,41 @@ function AddModal() {
   return (
     <>
       <button
-        className='rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1 hover:bg-opacity-90'
+        className="rounded-lg bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1 hover:bg-opacity-90"
         onClick={handleOpen}
       >
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          height='1em'
-          viewBox='0 0 448 512'
-          className='fill-palette_white'
+          xmlns="http://www.w3.org/2000/svg"
+          height="1em"
+          viewBox="0 0 448 512"
+          className="fill-palette_white"
         >
-          <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
+          <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
         </svg>
         <span>Add</span>
       </button>
       {state.openAddModal && (
-        <Modal title='Add Faculty' onClose={handleClose}>
+        <Modal title="Add Faculty" onClose={handleClose}>
           <form onSubmit={formik.handleSubmit} noValidate>
-            <div className='flex flex-col space-y-1 w-full'>
-              <DepartmentSelector {...formik.getFieldProps("departmentId")} />
+            <div className="flex flex-col space-y-1 w-full">
+              <DepartmentSelector
+                {...formik.getFieldProps("departmentId")}
+                compact={true}
+              />
               <UserSelector {...formik.getFieldProps("userId")} />
               <button
-                type='submit'
-                className='bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90'
+                type="submit"
+                className="bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90"
               >
                 <span>Submit</span>
                 <span>
                   <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    height='1em'
-                    viewBox='0 0 448 512'
-                    className='fill-palette_white'
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="1em"
+                    viewBox="0 0 448 512"
+                    className="fill-palette_white"
                   >
-                    <path d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z' />
+                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
                   </svg>
                 </span>
               </button>
@@ -397,21 +421,21 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
   }, [selectedField, filterValue]);
 
   return (
-    <div>
+    <div className="flex bg-palette_white">
       <select
         onChange={handleFieldChange}
-        className='py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+        className="py-1 rounded-s-lg bg-inherit focus:border-palette_grey focus:ring-palette_grey "
       >
-        <option value=''>Select field</option>
-        <option value='name'>Name</option>
-        <option value='departmentName'>Department</option>
-        <option value='collegeName'>College</option>
+        <option value="">Select field</option>
+        <option value="name">Name</option>
+        <option value="departmentName">Department</option>
+        <option value="collegeName">College</option>
       </select>
       <input
-        type='text'
-        placeholder='Search'
+        type="text"
+        placeholder="Search"
         value={filterValue}
-        className='bg-inherit border-b py-1 rounded-e focus:border-palette_grey focus:ring-palette_grey'
+        className="bg-inherit py-1 rounded-e-lg focus:border-palette_grey focus:ring-palette_grey"
         onChange={handleValueChange}
       />
     </div>
@@ -439,23 +463,23 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
   }, [selectedField, sortDirection]);
 
   return (
-    <div>
+    <div className="flex bg-palette_white">
       <select
         onChange={handleFieldChange}
         value={selectedField}
-        className='py-1 rounded-s bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+        className="py-1 rounded-s-lg focus:border-palette_grey focus:ring-palette_grey"
       >
-        <option value='name'>Name</option>
-        <option value='departmentName'>Department</option>
-        <option value='collegeName'>College</option>
+        <option value="name">Name</option>
+        <option value="departmentName">Department</option>
+        <option value="collegeName">College</option>
       </select>
       <select
         onChange={handleDirectionChange}
         value={sortDirection}
-        className='py-1 rounded-e bg-inherit focus:border-palette_grey focus:ring-palette_grey'
+        className="py-1 rounded-e-lg focus:border-palette_grey focus:ring-palette_grey"
       >
-        <option value='asc'>Ascending</option>
-        <option value='desc'>Descending</option>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
       </select>
     </div>
   );

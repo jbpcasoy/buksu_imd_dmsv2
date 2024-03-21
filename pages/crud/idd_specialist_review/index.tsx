@@ -23,15 +23,18 @@ export default function IDDSpecialistReviewsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>IDDSpecialistReview</h2>
-        <Link className='border rounded' href={`/crud/idd_specialist_review/add`}>
+        <Link
+          className="border rounded"
+          href={`/crud/idd_specialist_review/add`}
+        >
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -47,12 +50,16 @@ export default function IDDSpecialistReviewsPage() {
               return (
                 <tr key={iDDSpecialistReview.id}>
                   <td>{iDDSpecialistReview.id}</td>
-                  <td>{new Date(iDDSpecialistReview.createdAt).toLocaleString()}</td>
-                  <td>{new Date(iDDSpecialistReview.updatedAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(iDDSpecialistReview.createdAt).toLocaleString()}
+                  </td>
+                  <td>
+                    {new Date(iDDSpecialistReview.updatedAt).toLocaleString()}
+                  </td>
                   <td>
                     <Link
                       href={`/crud/qamis_department_endorsement/${iDDSpecialistReview.qAMISDepartmentEndorsementId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iDDSpecialistReview.qAMISDepartmentEndorsementId}
                     </Link>
@@ -60,7 +67,7 @@ export default function IDDSpecialistReviewsPage() {
                   <td>
                     <Link
                       href={`/crud/idd_coordinator/${iDDSpecialistReview.iDDCoordinatorId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iDDSpecialistReview.iDDCoordinatorId}
                     </Link>
@@ -68,7 +75,7 @@ export default function IDDSpecialistReviewsPage() {
                   <td>
                     <Link
                       href={`/crud/idd_specialist_review/${iDDSpecialistReview.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -78,14 +85,14 @@ export default function IDDSpecialistReviewsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

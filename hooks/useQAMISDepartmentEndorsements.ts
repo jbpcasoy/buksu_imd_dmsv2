@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useQAMISDepartmentEndorsementsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useQAMISDepartmentEndorsements({ skip, take, filter }: useQAMISDepartmentEndorsementsParams) {
-  const [state, setState] = useState<{qAMISDepartmentEndorsements: QAMISDepartmentEndorsement[], count: number}>({
+export default function useQAMISDepartmentEndorsements({
+  skip,
+  take,
+  filter,
+}: useQAMISDepartmentEndorsementsParams) {
+  const [state, setState] = useState<{
+    qAMISDepartmentEndorsements: QAMISDepartmentEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    qAMISDepartmentEndorsements: []
+    qAMISDepartmentEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useQAMISDepartmentEndorsements({ skip, take, filter }: u
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

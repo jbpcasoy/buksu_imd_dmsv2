@@ -19,7 +19,9 @@ export default function IDDCoordinatorSuggestionItemPage() {
     }
 
     axios
-      .delete(`/api/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItemId}`)
+      .delete(
+        `/api/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItemId}`
+      )
       .then(() => {
         alert("IDDCoordinatorSuggestionItem has been deleted successfully");
       })
@@ -32,32 +34,34 @@ export default function IDDCoordinatorSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IDDCoordinatorSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">IDDCoordinatorSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {iDDCoordinatorSuggestionItem.id}</p>
       <p>
-        createdAt: {new Date(iDDCoordinatorSuggestionItem.createdAt).toLocaleString()}
+        createdAt:{" "}
+        {new Date(iDDCoordinatorSuggestionItem.createdAt).toLocaleString()}
       </p>
       <p>
-        updatedAt: {new Date(iDDCoordinatorSuggestionItem.updatedAt).toLocaleString()}
+        updatedAt:{" "}
+        {new Date(iDDCoordinatorSuggestionItem.updatedAt).toLocaleString()}
       </p>
       <p>
         iDDCoordinatorSuggestionId:{" "}
         <Link
           href={`/crud/idd_coordinator_suggestion/${iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}
         </Link>

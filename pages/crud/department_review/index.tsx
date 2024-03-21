@@ -23,15 +23,15 @@ export default function DepartmentReviewsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>DepartmentReview</h2>
-        <Link className='border rounded' href={`/crud/department_review/add`}>
+        <Link className="border rounded" href={`/crud/department_review/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -55,7 +55,7 @@ export default function DepartmentReviewsPage() {
                   <td>
                     <Link
                       href={`/crud/im_file/${departmentReview.iMFileId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {departmentReview.iMFileId}
                     </Link>
@@ -63,7 +63,7 @@ export default function DepartmentReviewsPage() {
                   <td>
                     <Link
                       href={`/crud/department_review/${departmentReview.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -73,14 +73,14 @@ export default function DepartmentReviewsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

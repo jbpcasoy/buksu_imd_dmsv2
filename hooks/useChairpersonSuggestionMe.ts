@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
-import { ChairpersonSuggestion, IM } from "@prisma/client";
+import { ChairpersonSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useChairpersonSuggestionMeParams {
   id: string;
 }
-export default function useChairpersonSuggestionMe({ id }: useChairpersonSuggestionMeParams, refreshFlag?: number) {
+export default function useChairpersonSuggestionMe(
+  { id }: useChairpersonSuggestionMeParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<ChairpersonSuggestion | null>();
 
   useEffect(() => {
-    console.log({id})
+    console.log({ id });
     if (!id) return;
 
     let subscribe = true;

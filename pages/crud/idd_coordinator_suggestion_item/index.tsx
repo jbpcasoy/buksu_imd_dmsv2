@@ -24,10 +24,10 @@ export default function IDDCoordinatorSuggestionItemsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>IDDCoordinatorSuggestionItem</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/idd_coordinator_suggestion_item/add`}
         >
           Add
@@ -35,7 +35,7 @@ export default function IDDCoordinatorSuggestionItemsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -64,7 +64,7 @@ export default function IDDCoordinatorSuggestionItemsPage() {
                     <td>
                       <Link
                         href={`/crud/idd_coordinator_suggestion/${iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId}`}
-                        className='underline'
+                        className="underline"
                       >
                         {
                           iDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId
@@ -74,7 +74,7 @@ export default function IDDCoordinatorSuggestionItemsPage() {
                     <td>
                       <Link
                         href={`/crud/idd_coordinator_suggestion_item/${iDDCoordinatorSuggestionItem.id}`}
-                        className='border rounded'
+                        className="border rounded"
                       >
                         view
                       </Link>
@@ -85,14 +85,14 @@ export default function IDDCoordinatorSuggestionItemsPage() {
             )}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

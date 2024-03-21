@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useIMERCCITLReviewedsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useIMERCCITLRevieweds({ skip, take, filter }: useIMERCCITLReviewedsParams) {
-  const [state, setState] = useState<{iMERCCITLRevieweds: IMERCCITLReviewed[], count: number}>({
+export default function useIMERCCITLRevieweds({
+  skip,
+  take,
+  filter,
+}: useIMERCCITLReviewedsParams) {
+  const [state, setState] = useState<{
+    iMERCCITLRevieweds: IMERCCITLReviewed[];
+    count: number;
+  }>({
     count: 0,
-    iMERCCITLRevieweds: []
+    iMERCCITLRevieweds: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useIMERCCITLRevieweds({ skip, take, filter }: useIMERCCI
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

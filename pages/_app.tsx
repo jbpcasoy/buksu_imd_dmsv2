@@ -1,12 +1,10 @@
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import { SessionProvider } from "next-auth/react";
+import SnackbarContextProvider from "@/components/SnackbarProvider";
 import { ActiveFacultyContextProvider } from "@/contexts/ActiveFacultyContext";
+import "@/styles/globals.css";
+import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
 import Head from "next/head";
 import "reactflow/dist/style.css";
-import SnackbarContextProvider, {
-  SnackbarContext,
-} from "@/components/SnackbarProvider";
 
 export default function App({
   Component,

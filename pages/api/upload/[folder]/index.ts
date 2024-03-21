@@ -1,5 +1,5 @@
 import { put } from "@vercel/blob";
-import type { NextApiResponse, NextApiRequest, PageConfig } from "next";
+import type { NextApiRequest, NextApiResponse, PageConfig } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,7 +14,7 @@ export default async function handler(
       },
     });
   }
-  
+
   const blob = await put(req.query.filename as string, req, {
     access: "public",
   });

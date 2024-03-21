@@ -2,7 +2,11 @@ import { ActiveChairperson } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function useActiveChairpersonByChairpersonId({ id }: { id: string }) {
+export default function useActiveChairpersonByChairpersonId({
+  id,
+}: {
+  id: string;
+}) {
   const [state, setState] = useState<ActiveChairperson>();
 
   useEffect(() => {

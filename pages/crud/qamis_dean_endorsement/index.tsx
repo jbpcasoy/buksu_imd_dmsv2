@@ -23,10 +23,10 @@ export default function QAMISDeanEndorsementsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>QAMISDeanEndorsement</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/qamis_dean_endorsement/add`}
         >
           Add
@@ -34,7 +34,7 @@ export default function QAMISDeanEndorsementsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -51,19 +51,15 @@ export default function QAMISDeanEndorsementsPage() {
                 <tr key={qAMISDeanEndorsement.id}>
                   <td>{qAMISDeanEndorsement.id}</td>
                   <td>
-                    {new Date(
-                      qAMISDeanEndorsement.createdAt
-                    ).toLocaleString()}
+                    {new Date(qAMISDeanEndorsement.createdAt).toLocaleString()}
                   </td>
                   <td>
-                    {new Date(
-                      qAMISDeanEndorsement.updatedAt
-                    ).toLocaleString()}
+                    {new Date(qAMISDeanEndorsement.updatedAt).toLocaleString()}
                   </td>
                   <td>
                     <Link
                       href={`/crud/qamis_revision/${qAMISDeanEndorsement.qAMISRevisionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {qAMISDeanEndorsement.qAMISRevisionId}
                     </Link>
@@ -71,7 +67,7 @@ export default function QAMISDeanEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/dean/${qAMISDeanEndorsement.deanId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {qAMISDeanEndorsement.deanId}
                     </Link>
@@ -79,7 +75,7 @@ export default function QAMISDeanEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/qamis_dean_endorsement/${qAMISDeanEndorsement.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -89,14 +85,14 @@ export default function QAMISDeanEndorsementsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

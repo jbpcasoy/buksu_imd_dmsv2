@@ -36,7 +36,7 @@ export default function AllReviewsPage() {
   if (iM === null) {
     return (
       <MainLayout>
-        <Error statusCode={404} title='IM Not Found' />
+        <Error statusCode={404} title="IM Not Found" />
       </MainLayout>
     );
   }
@@ -50,45 +50,70 @@ export default function AllReviewsPage() {
 
   return (
     <MainLayout>
-      <h2 className='font-bold border-b-2 border-palette_orange pb-1 inline'>
-        All Reviews
-      </h2>
-      {peerReview && <PeerReview peerReview={peerReview} />}
-      {chairpersonReview && (
-        <ChairpersonReview chairpersonReview={chairpersonReview} />
-      )}
-      {coordinatorReview && (
-        <CoordinatorReview coordinatorReview={coordinatorReview} />
-      )}
-      {contentSpecialistReview && (
-        <ContentSpecialistReview
-          contentSpecialistReview={contentSpecialistReview}
-        />
-      )}
-      {iDDSpecialistReview && (
-        <IDDSpecialistReview iDDSpecialistReview={iDDSpecialistReview} />
-      )}
-      {contentEditorReview && (
-        <ContentEditorReview contentEditorReview={contentEditorReview} />
-      )}
+      <div className="bg-palette_white rounded-2xl p-4 overflow-auto flex flex-col h-full w-full">
+        <div className="pb-4">
+          <div className="border border-palette_orange p-4 rounded-lg inline-flex space-x-2">
+            <svg
+              width="18"
+              height="22"
+              viewBox="0 0 18 22"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-palette_grey"
+            >
+              <path
+                d="M16.5 13.25V10.625C16.5 9.72989 16.1444 8.87145 15.5115 8.23851C14.8786 7.60558 14.0201 7.25 13.125 7.25H11.625C11.3266 7.25 11.0405 7.13147 10.8295 6.9205C10.6185 6.70952 10.5 6.42337 10.5 6.125V4.625C10.5 3.72989 10.1444 2.87145 9.51149 2.23851C8.87855 1.60558 8.02011 1.25 7.125 1.25H5.25M5.25 14H12.75M5.25 17H9M7.5 1.25H2.625C2.004 1.25 1.5 1.754 1.5 2.375V19.625C1.5 20.246 2.004 20.75 2.625 20.75H15.375C15.996 20.75 16.5 20.246 16.5 19.625V10.25C16.5 7.86305 15.5518 5.57387 13.864 3.88604C12.1761 2.19821 9.88695 1.25 7.5 1.25Z"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <h2 className="font-bold text-base">All Reviews</h2>
+          </div>
+        </div>
+        <div className="overflow-auto">
+          {peerReview && <PeerReviewView peerReview={peerReview} />}
+          {chairpersonReview && (
+            <ChairpersonReviewView chairpersonReview={chairpersonReview} />
+          )}
+          {coordinatorReview && (
+            <CoordinatorReviewView coordinatorReview={coordinatorReview} />
+          )}
+          {contentSpecialistReview && (
+            <ContentSpecialistReviewView
+              contentSpecialistReview={contentSpecialistReview}
+            />
+          )}
+          {iDDSpecialistReview && (
+            <IDDSpecialistReviewView
+              iDDSpecialistReview={iDDSpecialistReview}
+            />
+          )}
+          {contentEditorReview && (
+            <ContentEditorReviewView
+              contentEditorReview={contentEditorReview}
+            />
+          )}
+        </div>
+      </div>
     </MainLayout>
   );
 }
 
-function PeerReview({ peerReview }: { peerReview: PeerReview }) {
+function PeerReviewView({ peerReview }: { peerReview: PeerReview }) {
   return (
     <div>
       <div>
-        <h2 className='inline text-lg font-bold'>
+        <h2 className="inline text-lg font-bold">
           Instructional Material Review{" "}
-          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+          <span className="bg-palette_orange text-palette_white p-1 rounded">
             Peer
           </span>
         </h2>
-        <p className='text-sm'>Implementation Phase</p>
+        <p className="text-sm">Implementation Phase</p>
       </div>
 
-      <div className='flex flex-col space-y-2 p-1'>
+      <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
             question={ReviewQuestions.q1_1}
@@ -245,7 +270,7 @@ function PeerReview({ peerReview }: { peerReview: PeerReview }) {
   );
 }
 
-function CoordinatorReview({
+function CoordinatorReviewView({
   coordinatorReview,
 }: {
   coordinatorReview: CoordinatorReview;
@@ -253,16 +278,16 @@ function CoordinatorReview({
   return (
     <div>
       <div>
-        <h2 className='inline text-lg font-bold'>
+        <h2 className="inline text-lg font-bold">
           Instructional Material Review{" "}
-          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+          <span className="bg-palette_orange text-palette_white p-1 rounded">
             Coordinator
           </span>
         </h2>
-        <p className='text-sm'>Implementation Phase</p>
+        <p className="text-sm">Implementation Phase</p>
       </div>
 
-      <div className='flex flex-col space-y-2 p-1'>
+      <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
             question={ReviewQuestions.q1_1}
@@ -419,7 +444,7 @@ function CoordinatorReview({
   );
 }
 
-function ChairpersonReview({
+function ChairpersonReviewView({
   chairpersonReview,
 }: {
   chairpersonReview: ChairpersonReview;
@@ -427,16 +452,16 @@ function ChairpersonReview({
   return (
     <div>
       <div>
-        <h2 className='inline text-lg font-bold'>
+        <h2 className="inline text-lg font-bold">
           Instructional Material Review{" "}
-          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+          <span className="bg-palette_orange text-palette_white p-1 rounded">
             Chairperson
           </span>
         </h2>
-        <p className='text-sm'>Implementation Phase</p>
+        <p className="text-sm">Implementation Phase</p>
       </div>
 
-      <div className='flex flex-col space-y-2 p-1'>
+      <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
             question={ReviewQuestions.q1_1}
@@ -593,7 +618,7 @@ function ChairpersonReview({
   );
 }
 
-function ContentSpecialistReview({
+function ContentSpecialistReviewView({
   contentSpecialistReview,
 }: {
   contentSpecialistReview: ContentSpecialistReview;
@@ -601,16 +626,16 @@ function ContentSpecialistReview({
   return (
     <div>
       <div>
-        <h2 className='inline text-lg font-bold'>
+        <h2 className="inline text-lg font-bold">
           Instructional Material Review{" "}
-          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+          <span className="bg-palette_orange text-palette_white p-1 rounded">
             Content Specialist
           </span>
         </h2>
-        <p className='text-sm'>IMERC Phase</p>
+        <p className="text-sm">IMERC Phase</p>
       </div>
 
-      <div className='flex flex-col space-y-2 p-1'>
+      <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
             question={ReviewQuestions.q1_1}
@@ -772,7 +797,7 @@ function ContentSpecialistReview({
   );
 }
 
-function ContentEditorReview({
+function ContentEditorReviewView({
   contentEditorReview,
 }: {
   contentEditorReview: ContentEditorReview;
@@ -780,15 +805,15 @@ function ContentEditorReview({
   return (
     <div>
       <div>
-        <h2 className='inline text-lg font-bold'>
+        <h2 className="inline text-lg font-bold">
           Instructional Material Review{" "}
-          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+          <span className="bg-palette_orange text-palette_white p-1 rounded">
             Content Editor
           </span>
         </h2>
-        <p className='text-sm'>IMERC Phase</p>
+        <p className="text-sm">IMERC Phase</p>
       </div>
-      <div className='flex flex-col space-y-2 p-1'>
+      <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
             question={ReviewQuestions.q1_1}
@@ -950,7 +975,7 @@ function ContentEditorReview({
   );
 }
 
-function IDDSpecialistReview({
+function IDDSpecialistReviewView({
   iDDSpecialistReview,
 }: {
   iDDSpecialistReview: IDDSpecialistReview;
@@ -958,15 +983,15 @@ function IDDSpecialistReview({
   return (
     <div>
       <div>
-        <h2 className='inline text-lg font-bold'>
+        <h2 className="inline text-lg font-bold">
           Instructional Material Review{" "}
-          <span className='bg-palette_orange text-palette_white p-1 rounded'>
+          <span className="bg-palette_orange text-palette_white p-1 rounded">
             IDD Specialist
           </span>
         </h2>
-        <p className='text-sm'>IMERC Phase</p>
+        <p className="text-sm">IMERC Phase</p>
       </div>
-      <div className='flex flex-col space-y-2 p-1'>
+      <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
             question={ReviewQuestions.q1_1}

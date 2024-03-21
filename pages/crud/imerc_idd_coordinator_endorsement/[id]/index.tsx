@@ -34,10 +34,10 @@ export default function IMERCIDDCoordinatorEndorsementPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IMERCIDDCoordinatorEndorsement</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">IMERCIDDCoordinatorEndorsement</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -55,7 +55,7 @@ export default function IMERCIDDCoordinatorEndorsementPage() {
         departmentRevisionId:{" "}
         <Link
           href={`/crud/imerc_citl_revision/${iMERCIDDCoordinatorEndorsement.iMERCCITLRevisionId}`}
-          className='underline'
+          className="underline"
         >
           {iMERCIDDCoordinatorEndorsement.iMERCCITLRevisionId}
         </Link>
@@ -64,7 +64,7 @@ export default function IMERCIDDCoordinatorEndorsementPage() {
         coordinatorId:{" "}
         <Link
           href={`/crud/idd_coordinator/${iMERCIDDCoordinatorEndorsement.iDDCoordinatorId}`}
-          className='underline'
+          className="underline"
         >
           {iMERCIDDCoordinatorEndorsement.iDDCoordinatorId}
         </Link>

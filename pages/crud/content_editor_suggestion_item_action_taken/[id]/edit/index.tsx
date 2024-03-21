@@ -9,9 +9,10 @@ import * as Yup from "yup";
 export default function EditContentEditorSuggestionItemActionTakenPage() {
   const router = useRouter();
   const contentEditorSuggestionItemActionTakenId = router.query.id;
-  const contentEditorSuggestionItemActionTaken = useContentEditorSuggestionItemActionTaken({
-    id: contentEditorSuggestionItemActionTakenId as string,
-  });
+  const contentEditorSuggestionItemActionTaken =
+    useContentEditorSuggestionItemActionTaken({
+      id: contentEditorSuggestionItemActionTakenId as string,
+    });
 
   const formik = useFormik({
     initialValues: {
@@ -29,7 +30,9 @@ export default function EditContentEditorSuggestionItemActionTakenPage() {
           values
         )
         .then(() => {
-          alert("ContentEditorSuggestionItemActionTaken has been updated successfully");
+          alert(
+            "ContentEditorSuggestionItemActionTaken has been updated successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -43,7 +46,8 @@ export default function EditContentEditorSuggestionItemActionTakenPage() {
 
     formik.setValues({
       value: contentEditorSuggestionItemActionTaken.value,
-      contentEditorSuggestionItemId: contentEditorSuggestionItemActionTaken.contentEditorSuggestionItemId,
+      contentEditorSuggestionItemId:
+        contentEditorSuggestionItemActionTaken.contentEditorSuggestionItemId,
     });
 
     return () => {
@@ -59,16 +63,16 @@ export default function EditContentEditorSuggestionItemActionTakenPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='contentEditorSuggestionItemId'
+          type="text"
+          placeholder="contentEditorSuggestionItemId"
           {...formik.getFieldProps("contentEditorSuggestionItemId")}
         />
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { QAMISRevision, IM } from "@prisma/client";
+import { QAMISRevision } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useQAMISRevisionParams {
   id: string;
@@ -16,7 +16,7 @@ export default function useQAMISRevision({ id }: useQAMISRevisionParams) {
     axios
       .get(`/api/qamis_revision/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

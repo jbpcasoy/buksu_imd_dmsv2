@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { ReturnedIMERCCITLRevision, IM } from "@prisma/client";
+import { ReturnedIMERCCITLRevision } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useReturnedIMERCCITLRevisionParams {
   id?: string;
 }
-export default function useReturnedIMERCCITLRevision({ id }: useReturnedIMERCCITLRevisionParams) {
+export default function useReturnedIMERCCITLRevision({
+  id,
+}: useReturnedIMERCCITLRevisionParams) {
   const [state, setState] = useState<ReturnedIMERCCITLRevision | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useReturnedIMERCCITLRevision({ id }: useReturnedIMERCCIT
     axios
       .get(`/api/returned_imerc_citl_revision/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

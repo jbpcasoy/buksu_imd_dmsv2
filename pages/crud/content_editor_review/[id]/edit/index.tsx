@@ -11,7 +11,9 @@ import * as Yup from "yup";
 export default function EditContentEditorReviewPage() {
   const router = useRouter();
   const contentEditorReviewId = router.query.id;
-  const contentEditorReview = useContentEditorReview({ id: contentEditorReviewId as string });
+  const contentEditorReview = useContentEditorReview({
+    id: contentEditorReviewId as string,
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -141,13 +143,13 @@ export default function EditContentEditorReviewPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <div>
-          <p className='font-bold'>{ReviewSections.s1}</p>
+          <p className="font-bold">{ReviewSections.s1}</p>
           <p>{ReviewQuestions.q1_1}</p>
           <RateSelector {...formik.getFieldProps("q1_1")} />
           <p>{ReviewQuestions.q1_2}</p>
           <RateSelector {...formik.getFieldProps("q1_2")} />
 
-          <p className='font-bold'>{ReviewSections.s2}</p>
+          <p className="font-bold">{ReviewSections.s2}</p>
           <p>{ReviewQuestions.q2_1}</p>
           <RateSelector {...formik.getFieldProps("q2_1")} />
           <p>{ReviewQuestions.q2_2}</p>
@@ -157,11 +159,11 @@ export default function EditContentEditorReviewPage() {
           <p>{ReviewQuestions.q2_4}</p>
           <RateSelector {...formik.getFieldProps("q2_4")} />
 
-          <p className='font-bold'>{ReviewSections.s3}</p>
+          <p className="font-bold">{ReviewSections.s3}</p>
           <p>{ReviewQuestions.q3_1}</p>
           <RateSelector {...formik.getFieldProps("q3_1")} />
 
-          <p className='font-bold'>{ReviewSections.s4}</p>
+          <p className="font-bold">{ReviewSections.s4}</p>
           <p>{ReviewQuestions.q4_1}</p>
           <RateSelector {...formik.getFieldProps("q4_1")} />
           <p>{ReviewQuestions.q4_2}</p>
@@ -169,7 +171,7 @@ export default function EditContentEditorReviewPage() {
           <p>{ReviewQuestions.q4_3}</p>
           <RateSelector {...formik.getFieldProps("q4_3")} />
 
-          <p className='font-bold'>{ReviewSections.s5}</p>
+          <p className="font-bold">{ReviewSections.s5}</p>
           <p>{ReviewQuestions.q5_1}</p>
           <RateSelector {...formik.getFieldProps("q5_1")} />
           <p>{ReviewQuestions.q5_2}</p>
@@ -179,7 +181,7 @@ export default function EditContentEditorReviewPage() {
           <p>{ReviewQuestions.q5_4}</p>
           <RateSelector {...formik.getFieldProps("q5_4")} />
 
-          <p className='font-bold'>{ReviewSections.s6}</p>
+          <p className="font-bold">{ReviewSections.s6}</p>
           <p>{ReviewQuestions.q6_1}</p>
           <RateSelector {...formik.getFieldProps("q6_1")} />
           <p>{ReviewQuestions.q6_2}</p>
@@ -191,7 +193,7 @@ export default function EditContentEditorReviewPage() {
           <p>{ReviewQuestions.q6_5}</p>
           <RateSelector {...formik.getFieldProps("q6_5")} />
 
-          <p className='font-bold'>{ReviewSections.s7}</p>
+          <p className="font-bold">{ReviewSections.s7}</p>
           <p>{ReviewQuestions.q7_1}</p>
           <RateSelector {...formik.getFieldProps("q7_1")} />
           <p>{ReviewQuestions.q7_2}</p>
@@ -203,7 +205,7 @@ export default function EditContentEditorReviewPage() {
           <p>{ReviewQuestions.q7_5}</p>
           <RateSelector {...formik.getFieldProps("q7_5")} />
 
-          <p className='font-bold'>{ReviewSections.s8}</p>
+          <p className="font-bold">{ReviewSections.s8}</p>
           <p>{ReviewQuestions.q8_1}</p>
           <RateSelector {...formik.getFieldProps("q8_1")} />
           <p>{ReviewQuestions.q8_2}</p>
@@ -211,7 +213,7 @@ export default function EditContentEditorReviewPage() {
           <p>{ReviewQuestions.q8_3}</p>
           <RateSelector {...formik.getFieldProps("q8_3")} />
         </div>
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );
@@ -225,12 +227,12 @@ function RateSelector(
 ) {
   return (
     <select {...props}>
-      <option value=''>Select</option>
-      <option value='VM'>VM</option>
-      <option value='M'>M</option>
-      <option value='JE'>JE</option>
-      <option value='NM'>NM</option>
-      <option value='NAA'>NAA</option>
+      <option value="">Select</option>
+      <option value="VM">VM</option>
+      <option value="M">M</option>
+      <option value="JE">JE</option>
+      <option value="NM">NM</option>
+      <option value="NAA">NAA</option>
     </select>
   );
 }

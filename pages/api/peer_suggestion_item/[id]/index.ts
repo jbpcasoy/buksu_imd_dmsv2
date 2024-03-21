@@ -1,7 +1,6 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -151,9 +150,7 @@ export default async function handler(
       await validator.validate(req.body);
 
       const { id } = req.query;
-      const { remarks, suggestion, pageNumber } = validator.cast(
-        req.body
-      );
+      const { remarks, suggestion, pageNumber } = validator.cast(req.body);
 
       if (!user.isAdmin) {
         const faculty = await prisma.faculty.findFirst({
@@ -216,9 +213,9 @@ export default async function handler(
       if (submittedPeerSuggestion) {
         return res.status(400).json({
           error: {
-            message: "Error: Peer suggestion is already submitted"
-          }
-        })
+            message: "Error: Peer suggestion is already submitted",
+          },
+        });
       }
 
       const peerSuggestionItem = await prisma.peerSuggestionItem.update({

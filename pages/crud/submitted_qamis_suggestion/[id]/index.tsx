@@ -19,9 +19,7 @@ export default function SubmittedQAMISSuggestionPage() {
     }
 
     axios
-      .delete(
-        `/api/submitted_qamis_suggestion/${submittedQAMISSuggestionId}`
-      )
+      .delete(`/api/submitted_qamis_suggestion/${submittedQAMISSuggestionId}`)
       .then(() => {
         alert("SubmittedQAMISSuggestion has been deleted successfully");
       })
@@ -34,10 +32,10 @@ export default function SubmittedQAMISSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>SubmittedQAMISSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">SubmittedQAMISSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -55,7 +53,7 @@ export default function SubmittedQAMISSuggestionPage() {
         qAMISSuggestionId:{" "}
         <Link
           href={`/crud/qamis_suggestion/${submittedQAMISSuggestion.qAMISSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {submittedQAMISSuggestion.qAMISSuggestionId}
         </Link>

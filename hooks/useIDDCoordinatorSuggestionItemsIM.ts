@@ -5,18 +5,25 @@ import { useEffect, useState } from "react";
 export interface useIDDCoordinatorSuggestionItemsIMParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useIDDCoordinatorSuggestionItemsIM({ skip, take, id }: useIDDCoordinatorSuggestionItemsIMParams) {
-  const [state, setState] = useState<{iDDCoordinatorSuggestionItems: IDDCoordinatorSuggestionItem[], count: number}>({
+export default function useIDDCoordinatorSuggestionItemsIM({
+  skip,
+  take,
+  id,
+}: useIDDCoordinatorSuggestionItemsIMParams) {
+  const [state, setState] = useState<{
+    iDDCoordinatorSuggestionItems: IDDCoordinatorSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    iDDCoordinatorSuggestionItems: []
+    iDDCoordinatorSuggestionItems: [],
   });
 
   useEffect(() => {
-    console.log({skip, take, id})
-    if(!id) {
-        return;
+    console.log({ skip, take, id });
+    if (!id) {
+      return;
     }
     axios
       .get(`/api/idd_coordinator_suggestion_item/im/${id}`, {

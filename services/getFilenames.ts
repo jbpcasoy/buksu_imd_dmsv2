@@ -1,5 +1,5 @@
-import path from "path";
 import fs from "fs";
+import path from "path";
 
 export default function getFilenames(folderPath: string) {
   // Get the full path of the folder

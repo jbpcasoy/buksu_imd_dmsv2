@@ -23,15 +23,15 @@ export default function PlagiarismFilesPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>PlagiarismFile</h2>
-        <Link className='border rounded' href={`/crud/plagiarism_file/add`}>
+        <Link className="border rounded" href={`/crud/plagiarism_file/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -59,7 +59,7 @@ export default function PlagiarismFilesPage() {
                   <td>
                     <Link
                       href={`/crud/im/${plagiarismFile.iMERCCITLReviewedId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {plagiarismFile.iMERCCITLReviewedId}
                     </Link>
@@ -67,7 +67,7 @@ export default function PlagiarismFilesPage() {
                   <td>
                     <Link
                       href={`/crud/plagiarism_file/${plagiarismFile.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -77,14 +77,14 @@ export default function PlagiarismFilesPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

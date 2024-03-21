@@ -39,9 +39,9 @@ export default function FacultySelector(props: FieldInputProps<any>) {
 
   return (
     <div>
-      <input type='text' onChange={onSearch} placeholder='Search faculty' />
+      <input type="text" onChange={onSearch} placeholder="Search faculty" />
       <select {...props}>
-        <option value=''>Select</option>
+        <option value="">Select</option>
         {faculties.map((faculty) => {
           return <FacultySelectorItem key={faculty.id} id={faculty.id} />;
         })}

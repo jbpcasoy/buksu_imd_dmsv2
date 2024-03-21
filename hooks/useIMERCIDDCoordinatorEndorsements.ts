@@ -7,10 +7,17 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useIMERCIDDCoordinatorEndorsements({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{iMERCIDDCoordinatorEndorsements: IMERCIDDCoordinatorEndorsement[], count: number}>({
+export default function useIMERCIDDCoordinatorEndorsements({
+  skip,
+  take,
+  filter,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    iMERCIDDCoordinatorEndorsements: IMERCIDDCoordinatorEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    iMERCIDDCoordinatorEndorsements: []
+    iMERCIDDCoordinatorEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useIMERCIDDCoordinatorEndorsements({ skip, take, filter 
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

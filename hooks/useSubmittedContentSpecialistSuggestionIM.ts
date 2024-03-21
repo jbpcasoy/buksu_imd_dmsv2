@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { SubmittedContentSpecialistSuggestion, IM } from "@prisma/client";
+import { SubmittedContentSpecialistSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useSubmittedContentSpecialistSuggestionIMParams {
   id?: string;

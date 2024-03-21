@@ -24,10 +24,10 @@ export default function IDDCoordinatorSuggestionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>IDDCoordinatorSuggestion</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/idd_coordinator_suggestion/add`}
         >
           Add
@@ -35,7 +35,7 @@ export default function IDDCoordinatorSuggestionsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -64,7 +64,7 @@ export default function IDDCoordinatorSuggestionsPage() {
                   <td>
                     <Link
                       href={`/crud/dean_endorsement/${iDDCoordinatorSuggestion.deanEndorsementId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iDDCoordinatorSuggestion.deanEndorsementId}
                     </Link>
@@ -72,7 +72,7 @@ export default function IDDCoordinatorSuggestionsPage() {
                   <td>
                     <Link
                       href={`/crud/idd_coordinator/${iDDCoordinatorSuggestion.iDDCoordinatorId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iDDCoordinatorSuggestion.iDDCoordinatorId}
                     </Link>
@@ -80,7 +80,7 @@ export default function IDDCoordinatorSuggestionsPage() {
                   <td>
                     <Link
                       href={`/crud/idd_coordinator_suggestion/${iDDCoordinatorSuggestion.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -90,14 +90,14 @@ export default function IDDCoordinatorSuggestionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

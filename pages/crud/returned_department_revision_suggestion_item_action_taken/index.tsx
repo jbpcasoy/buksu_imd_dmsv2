@@ -24,10 +24,10 @@ export default function ReturnedDepartmentRevisionSuggestionItemActionTakensPage
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>ReturnedDepartmentRevisionSuggestionItemActionTaken</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/returned_department_revision_suggestion_item_action_taken/add`}
         >
           Add
@@ -35,7 +35,7 @@ export default function ReturnedDepartmentRevisionSuggestionItemActionTakensPage
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -50,8 +50,12 @@ export default function ReturnedDepartmentRevisionSuggestionItemActionTakensPage
             {returnedDepartmentRevisionSuggestionItemActionTakens.map(
               (returnedDepartmentRevisionSuggestionItemActionTaken) => {
                 return (
-                  <tr key={returnedDepartmentRevisionSuggestionItemActionTaken.id}>
-                    <td>{returnedDepartmentRevisionSuggestionItemActionTaken.id}</td>
+                  <tr
+                    key={returnedDepartmentRevisionSuggestionItemActionTaken.id}
+                  >
+                    <td>
+                      {returnedDepartmentRevisionSuggestionItemActionTaken.id}
+                    </td>
                     <td>
                       {new Date(
                         returnedDepartmentRevisionSuggestionItemActionTaken.createdAt
@@ -65,16 +69,22 @@ export default function ReturnedDepartmentRevisionSuggestionItemActionTakensPage
                     <td>
                       <Link
                         href={`/crud/returned_department_revision_suggestion_item/${returnedDepartmentRevisionSuggestionItemActionTaken.returnedDepartmentRevisionSuggestionItemId}`}
-                        className='underline'
+                        className="underline"
                       >
-                        {returnedDepartmentRevisionSuggestionItemActionTaken.returnedDepartmentRevisionSuggestionItemId}
+                        {
+                          returnedDepartmentRevisionSuggestionItemActionTaken.returnedDepartmentRevisionSuggestionItemId
+                        }
                       </Link>
                     </td>
-                    <td>{returnedDepartmentRevisionSuggestionItemActionTaken.value}</td>
+                    <td>
+                      {
+                        returnedDepartmentRevisionSuggestionItemActionTaken.value
+                      }
+                    </td>
                     <td>
                       <Link
                         href={`/crud/returned_department_revision_suggestion_item_action_taken/${returnedDepartmentRevisionSuggestionItemActionTaken.id}`}
-                        className='border rounded'
+                        className="border rounded"
                       >
                         view
                       </Link>
@@ -85,14 +95,14 @@ export default function ReturnedDepartmentRevisionSuggestionItemActionTakensPage
             )}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

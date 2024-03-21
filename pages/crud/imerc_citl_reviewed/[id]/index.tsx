@@ -1,6 +1,5 @@
 import CrudLayout from "@/components/CrudLayout";
 import useIMERCCITLReviewed from "@/hooks/useIMERCCITLReviewed";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 

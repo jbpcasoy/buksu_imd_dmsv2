@@ -58,8 +58,8 @@ export default function FileManagerQAMISPage() {
   return (
     <AdminLayout>
       {fileManagerQAMISFile && (
-        <div className="flex flex-row h-full">
-          <div className="flex-1">
+        <div className="flex flex-row h-full sm:space-x-4">
+          <div className="flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
             <div>
               <p className="text-lg font-bold">
                 {fileManagerQAMISFile.url.split("/").at(-1)}
@@ -76,7 +76,9 @@ export default function FileManagerQAMISPage() {
 
             {qAMISFile && (
               // <DynamicReactJson src={qAMISFile} collapsed={2} />
-              <pre className="text-xs">{JSON.stringify(qAMISFile, undefined, 4)}</pre>
+              <pre className="text-xs">
+                {JSON.stringify(qAMISFile, undefined, 4)}
+              </pre>
             )}
             <button
               onClick={() =>
@@ -91,9 +93,11 @@ export default function FileManagerQAMISPage() {
           <div className="flex-1 h-full">
             <iframe
               loading="lazy"
-              src={`/api/file_manager/qamis/${fileManagerQAMISFile.url.split("/").at(-1)}/pdf`}
+              src={`/api/file_manager/qamis/${fileManagerQAMISFile.url
+                .split("/")
+                .at(-1)}/pdf`}
               title={fileManagerQAMISFile.url.split("/").at(-1)}
-              className="w-full h-full rounded"
+              className="w-full h-full rounded-2xl"
             />
           </div>
 

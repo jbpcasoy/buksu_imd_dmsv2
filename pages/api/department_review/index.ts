@@ -56,7 +56,7 @@ export default async function handler(
         const iM = await prisma.iM.findFirstOrThrow({
           where: {
             id: {
-              equals: iMFile.iMId
+              equals: iMFile.iMId,
             },
           },
         });

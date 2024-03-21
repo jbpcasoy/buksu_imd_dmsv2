@@ -34,16 +34,16 @@ export default function PeerSuggestionItemActionTakenPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>PeerSuggestionItemActionTaken</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">PeerSuggestionItemActionTaken</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/peer_suggestion_item_action_taken/${peerSuggestionItemActionTakenId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -61,7 +61,7 @@ export default function PeerSuggestionItemActionTakenPage() {
         peerSuggestionItemId:
         <Link
           href={`/crud/peer_suggestion_item/${peerSuggestionItemActionTaken.peerSuggestionItemId}`}
-          className='underline'
+          className="underline"
         >
           {peerSuggestionItemActionTaken.peerSuggestionItemId}
         </Link>

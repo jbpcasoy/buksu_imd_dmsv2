@@ -55,13 +55,12 @@ export default function EditPeerSuggestionItemActionTakenPage() {
       <h2>Edit PeerSuggestionItemActionTaken</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

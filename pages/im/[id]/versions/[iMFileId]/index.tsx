@@ -12,11 +12,9 @@ import IMReturnedIMERCCITLRevisionSuggestionItems from "@/components/IMReturnedI
 import Loading from "@/components/Loading";
 import MainLayout from "@/components/MainLayout";
 import useIMFile from "@/hooks/useIMFile";
-import useIMFilesIM from "@/hooks/useIMFilesIM";
 import { DateTime } from "luxon";
 import Error from "next/error";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 export default function VersionsPage() {
   const router = useRouter();
@@ -45,10 +43,10 @@ export default function VersionsPage() {
   return (
     <MainLayout>
       <div className="h-full flex flex-col overflow-auto">
-        <div className="h-full flex flex-row space-x-1 overflow-auto">
+        <div className="h-full flex flex-row sm:space-x-4 overflow-auto">
           {iMFile && (
-            <div className="flex-1 overflow-auto flex flex-col">
-              <div>
+            <div className="flex-1 overflow-auto flex flex-col bg-palette_white p-4 rounded-2xl space-y-4">
+              <div className="">
                 <p className="text-palette_grey">{iMFile?.filename}</p>
                 <p className="text-palette_grey text-xs">
                   {DateTime.fromJSDate(
@@ -159,7 +157,7 @@ export default function VersionsPage() {
                 loading="lazy"
                 src={`/api/im_file/${iMFile.id}/pdf`}
                 title={iMFile.filename}
-                className="w-full h-full rounded"
+                className="w-full h-full rounded-2xl"
               />
             </div>
           )}

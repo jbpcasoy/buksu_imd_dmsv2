@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
-import { ContentSpecialistSuggestion, IM } from "@prisma/client";
+import { ContentSpecialistSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useContentSpecialistSuggestionMeParams {
   id: string;
 }
-export default function useContentSpecialistSuggestionMe({ id }: useContentSpecialistSuggestionMeParams, refreshFlag?: number) {
+export default function useContentSpecialistSuggestionMe(
+  { id }: useContentSpecialistSuggestionMeParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<ContentSpecialistSuggestion | null>();
 
   useEffect(() => {
-    console.log({id})
+    console.log({ id });
     if (!id) return;
 
     let subscribe = true;

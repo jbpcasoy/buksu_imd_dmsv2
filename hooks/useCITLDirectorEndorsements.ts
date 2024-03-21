@@ -7,10 +7,17 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useCITLDirectorEndorsements({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{cITLDirectorEndorsements: CITLDirectorEndorsement[], count: number}>({
+export default function useCITLDirectorEndorsements({
+  skip,
+  take,
+  filter,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    cITLDirectorEndorsements: CITLDirectorEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    cITLDirectorEndorsements: []
+    cITLDirectorEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useCITLDirectorEndorsements({ skip, take, filter }: useF
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

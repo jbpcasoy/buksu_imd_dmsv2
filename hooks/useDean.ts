@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Dean, IM } from "@prisma/client";
+import { Dean } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useDeanParams {
   id: string;
@@ -16,7 +16,7 @@ export default function useDean({ id }: useDeanParams) {
     axios
       .get(`/api/dean/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

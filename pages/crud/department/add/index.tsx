@@ -34,16 +34,16 @@ export default function AddDepartmentPage() {
 
       <form onSubmit={formik.handleSubmit} noValidate>
         <input
-          type='text'
-          placeholder='collegeId'
+          type="text"
+          placeholder="collegeId"
           {...formik.getFieldProps("collegeId")}
         />
         <input
-          type='text'
-          placeholder='Name'
+          type="text"
+          placeholder="Name"
           {...formik.getFieldProps("name")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

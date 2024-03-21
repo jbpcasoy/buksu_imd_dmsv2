@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
-import { QAMISSuggestion, IM } from "@prisma/client";
+import { QAMISSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useQAMISSuggestionMeParams {
   id: string;
 }
-export default function useQAMISSuggestionMe({ id }: useQAMISSuggestionMeParams, refreshFlag?: number) {
+export default function useQAMISSuggestionMe(
+  { id }: useQAMISSuggestionMeParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<QAMISSuggestion | null>();
 
   useEffect(() => {
-    console.log({id})
+    console.log({ id });
     if (!id) return;
 
     let subscribe = true;

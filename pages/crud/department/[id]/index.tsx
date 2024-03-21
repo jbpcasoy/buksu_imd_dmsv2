@@ -1,10 +1,8 @@
 import CrudLayout from "@/components/CrudLayout";
 import useDepartment from "@/hooks/useDepartment";
-import useDepartments from "@/hooks/useDepartments";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 export default function DepartmentPage() {
   const router = useRouter();

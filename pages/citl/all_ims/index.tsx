@@ -1,5 +1,6 @@
 import IMTable from "@/components/IMTable";
 import MainLayout from "@/components/MainLayout";
+import SidebarIcons, { SIDEBAR_ICON_LABELS } from "@/components/SidebarIcons";
 import useCITLIMs from "@/hooks/useCITLIMs";
 import { useState } from "react";
 
@@ -16,7 +17,7 @@ export default function CITLIMsPage() {
     sort: {
       field: "createdAt",
       direction: "desc",
-    }
+    },
   });
 
   const { iMs, count } = useCITLIMs(state);
@@ -24,9 +25,10 @@ export default function CITLIMsPage() {
   return (
     <MainLayout>
       <IMTable
+        icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ALL_IMS} />}
         count={count}
         iMs={iMs}
-        title='All IM&apos;s'
+        title="All IM's"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

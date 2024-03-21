@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { ReturnedDepartmentRevisionSuggestionItem, IM } from "@prisma/client";
+import { ReturnedDepartmentRevisionSuggestionItem } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useReturnedDepartmentRevisionSuggestionItemParams {
   id: string;
 }
-export default function useReturnedDepartmentRevisionSuggestionItem({ id }: useReturnedDepartmentRevisionSuggestionItemParams) {
-  const [state, setState] = useState<ReturnedDepartmentRevisionSuggestionItem | null>();
+export default function useReturnedDepartmentRevisionSuggestionItem({
+  id,
+}: useReturnedDepartmentRevisionSuggestionItemParams) {
+  const [state, setState] =
+    useState<ReturnedDepartmentRevisionSuggestionItem | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -16,7 +19,7 @@ export default function useReturnedDepartmentRevisionSuggestionItem({ id }: useR
     axios
       .get(`/api/returned_department_revision_suggestion_item/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

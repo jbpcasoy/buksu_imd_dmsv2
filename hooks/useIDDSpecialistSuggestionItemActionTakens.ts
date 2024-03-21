@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useIDDSpecialistSuggestionItemActionTakensParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useIDDSpecialistSuggestionItemActionTakens({ skip, take, filter }: useIDDSpecialistSuggestionItemActionTakensParams) {
-  const [state, setState] = useState<{iDDSpecialistSuggestionItemActionTakens: IDDSpecialistSuggestionItemActionTaken[], count: number}>({
+export default function useIDDSpecialistSuggestionItemActionTakens({
+  skip,
+  take,
+  filter,
+}: useIDDSpecialistSuggestionItemActionTakensParams) {
+  const [state, setState] = useState<{
+    iDDSpecialistSuggestionItemActionTakens: IDDSpecialistSuggestionItemActionTaken[];
+    count: number;
+  }>({
     count: 0,
-    iDDSpecialistSuggestionItemActionTakens: []
+    iDDSpecialistSuggestionItemActionTakens: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useIDDSpecialistSuggestionItemActionTakens({ skip, take,
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

@@ -4,9 +4,7 @@ import logger from "@/services/logger";
 import uploadToVercelBlob from "@/services/uploadToVercelBlob";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
-import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 import * as Yup from "yup";
 
 //set bodyParser
@@ -743,7 +741,6 @@ export default async function handler(
       // });
       const blob = await uploadToVercelBlob(file, `files/im/${filename}`);
       const blobFilename = blob.url.split("/").at(-1);
-      console.log({ blob });
 
       // create object to server
       const iMFile = await prisma.iMFile.create({

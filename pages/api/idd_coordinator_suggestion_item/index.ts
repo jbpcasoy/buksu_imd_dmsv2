@@ -1,8 +1,6 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
-import { accessibleBy } from "@casl/prisma";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -30,12 +28,8 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      const {
-        iDDCoordinatorSuggestionId,
-        remarks,
-        suggestion,
-        pageNumber,
-      } = validator.cast(req.body);
+      const { iDDCoordinatorSuggestionId, remarks, suggestion, pageNumber } =
+        validator.cast(req.body);
 
       if (!user.isAdmin) {
         const iDDCoordinator = await prisma.iDDCoordinator.findFirst({

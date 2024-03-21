@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { SubmittedIDDCoordinatorSuggestion, IM } from "@prisma/client";
+import { SubmittedIDDCoordinatorSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useSubmittedIDDCoordinatorSuggestionIMParams {
   id?: string;

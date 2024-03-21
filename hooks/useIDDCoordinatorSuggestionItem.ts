@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { IDDCoordinatorSuggestionItem, IM } from "@prisma/client";
+import { IDDCoordinatorSuggestionItem } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIDDCoordinatorSuggestionItemParams {
   id: string;
 }
-export default function useIDDCoordinatorSuggestionItem({ id }: useIDDCoordinatorSuggestionItemParams) {
+export default function useIDDCoordinatorSuggestionItem({
+  id,
+}: useIDDCoordinatorSuggestionItemParams) {
   const [state, setState] = useState<IDDCoordinatorSuggestionItem | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useIDDCoordinatorSuggestionItem({ id }: useIDDCoordinato
     axios
       .get(`/api/idd_coordinator_suggestion_item/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

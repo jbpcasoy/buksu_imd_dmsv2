@@ -1,7 +1,6 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { ForbiddenError } from "@casl/ability";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -93,12 +92,12 @@ export default async function handler(
           });
         }
 
-        if(iM.facultyId !== faculty?.id) {
+        if (iM.facultyId !== faculty?.id) {
           return res.status(403).json({
             error: {
-              message: "You are not allowed to create this QAMIS suggestion"
-            }
-          })
+              message: "You are not allowed to create this QAMIS suggestion",
+            },
+          });
         }
       }
 

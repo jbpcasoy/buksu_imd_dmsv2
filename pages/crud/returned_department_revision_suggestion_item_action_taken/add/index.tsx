@@ -15,9 +15,14 @@ export default function AddReturnedDepartmentRevisionSuggestionItemActionTakenPa
     }),
     onSubmit: (values) => {
       axios
-        .post("/api/returned_department_revision_suggestion_item_action_taken", values)
+        .post(
+          "/api/returned_department_revision_suggestion_item_action_taken",
+          values
+        )
         .then(() => {
-          alert("ReturnedDepartmentRevisionSuggestionItemActionTaken has been added successfully");
+          alert(
+            "ReturnedDepartmentRevisionSuggestionItemActionTaken has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -30,16 +35,18 @@ export default function AddReturnedDepartmentRevisionSuggestionItemActionTakenPa
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='returnedDepartmentRevisionSuggestionItemId'
-          {...formik.getFieldProps("returnedDepartmentRevisionSuggestionItemId")}
+          type="text"
+          placeholder="returnedDepartmentRevisionSuggestionItemId"
+          {...formik.getFieldProps(
+            "returnedDepartmentRevisionSuggestionItemId"
+          )}
         />
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

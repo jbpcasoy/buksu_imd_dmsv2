@@ -28,11 +28,11 @@ export default function AddSubmittedIDDSpecialistSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='iDDSpecialistSuggestionId'
+          type="text"
+          placeholder="iDDSpecialistSuggestionId"
           {...formik.getFieldProps("iDDSpecialistSuggestionId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

@@ -23,15 +23,15 @@ export default function DepartmentRevisionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>DepartmentRevision</h2>
-        <Link className='border rounded' href={`/crud/department_revision/add`}>
+        <Link className="border rounded" href={`/crud/department_revision/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -56,7 +56,7 @@ export default function DepartmentRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/im_file/${departmentRevision.iMFileId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {departmentRevision.iMFileId}
                     </Link>
@@ -64,7 +64,7 @@ export default function DepartmentRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/department_reviewed/${departmentRevision.departmentReviewedId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {departmentRevision.departmentReviewedId}
                     </Link>
@@ -72,7 +72,7 @@ export default function DepartmentRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/department_revision/${departmentRevision.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -82,14 +82,14 @@ export default function DepartmentRevisionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

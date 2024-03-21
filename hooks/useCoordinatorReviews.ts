@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useCoordinatorReviewsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useCoordinatorReviews({ skip, take, filter }: useCoordinatorReviewsParams) {
-  const [state, setState] = useState<{coordinatorReviews: CoordinatorReview[], count: number}>({
+export default function useCoordinatorReviews({
+  skip,
+  take,
+  filter,
+}: useCoordinatorReviewsParams) {
+  const [state, setState] = useState<{
+    coordinatorReviews: CoordinatorReview[];
+    count: number;
+  }>({
     count: 0,
-    coordinatorReviews: []
+    coordinatorReviews: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useCoordinatorReviews({ skip, take, filter }: useCoordin
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

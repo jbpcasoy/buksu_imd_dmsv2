@@ -35,7 +35,7 @@ export default function useCITLDirectorToEndorse({
       .catch((error) => {
         console.error(error);
       });
-    }, [skip, take, filter, sort]);
-  
+  }, [skip, take, filter, sort]);
+
   return state;
 }

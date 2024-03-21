@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { SubmittedReturnedIMERCCITLRevision, IM } from "@prisma/client";
+import { SubmittedReturnedIMERCCITLRevision } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useSubmittedReturnedIMERCCITLRevisionReturnedIMERCCITLRevisionParams {
   id?: string;
 }
-export default function useSubmittedReturnedIMERCCITLRevisionReturnedIMERCCITLRevision({ id }: useSubmittedReturnedIMERCCITLRevisionReturnedIMERCCITLRevisionParams) {
-  const [state, setState] = useState<SubmittedReturnedIMERCCITLRevision | null>();
+export default function useSubmittedReturnedIMERCCITLRevisionReturnedIMERCCITLRevision({
+  id,
+}: useSubmittedReturnedIMERCCITLRevisionReturnedIMERCCITLRevisionParams) {
+  const [state, setState] =
+    useState<SubmittedReturnedIMERCCITLRevision | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -14,7 +17,9 @@ export default function useSubmittedReturnedIMERCCITLRevisionReturnedIMERCCITLRe
     let subscribe = true;
 
     axios
-      .get(`/api/submitted_returned_imerc_citl_revision/returned_imerc_citl_revision/${id}`)
+      .get(
+        `/api/submitted_returned_imerc_citl_revision/returned_imerc_citl_revision/${id}`
+      )
       .then((res) => {
         if (!subscribe) return;
         setState(res.data);

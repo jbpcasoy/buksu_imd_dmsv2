@@ -9,7 +9,7 @@ export default function AddQAMISSuggestionPage() {
       cITLDirectorEndorsementId: "",
     },
     validationSchema: Yup.object({
-        cITLDirectorEndorsementId: Yup.string().required(),
+      cITLDirectorEndorsementId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -28,11 +28,11 @@ export default function AddQAMISSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='cITLDirectorEndorsementId'
+          type="text"
+          placeholder="cITLDirectorEndorsementId"
           {...formik.getFieldProps("cITLDirectorEndorsementId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

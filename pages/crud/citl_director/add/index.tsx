@@ -32,11 +32,11 @@ export default function AddCITLDirectorPage() {
 
       <form onSubmit={formik.handleSubmit} noValidate>
         <input
-          type='text'
-          placeholder='userId'
+          type="text"
+          placeholder="userId"
           {...formik.getFieldProps("userId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

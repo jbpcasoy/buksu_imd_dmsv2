@@ -5,17 +5,23 @@ import { useEffect, useState } from "react";
 export interface useReturnedIMERCCITLRevisionSuggestionItemsOwnParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useReturnedIMERCCITLRevisionSuggestionItemsOwn({ skip, take, id }: useReturnedIMERCCITLRevisionSuggestionItemsOwnParams, refreshFlag?: number) {
-  const [state, setState] = useState<{returnedIMERCCITLRevisionSuggestionItems: ReturnedIMERCCITLRevisionSuggestionItem[], count: number}>({
+export default function useReturnedIMERCCITLRevisionSuggestionItemsOwn(
+  { skip, take, id }: useReturnedIMERCCITLRevisionSuggestionItemsOwnParams,
+  refreshFlag?: number
+) {
+  const [state, setState] = useState<{
+    returnedIMERCCITLRevisionSuggestionItems: ReturnedIMERCCITLRevisionSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    returnedIMERCCITLRevisionSuggestionItems: []
+    returnedIMERCCITLRevisionSuggestionItems: [],
   });
 
   useEffect(() => {
-    if(!id) {
-        return;
+    if (!id) {
+      return;
     }
     axios
       .get("/api/returned_imerc_citl_revision_suggestion_item", {
@@ -23,8 +29,8 @@ export default function useReturnedIMERCCITLRevisionSuggestionItemsOwn({ skip, t
           skip,
           take,
           filter: {
-            returnedIMERCCITLRevisionId: id
-          }
+            returnedIMERCCITLRevisionId: id,
+          },
         },
       })
       .then((res) => {

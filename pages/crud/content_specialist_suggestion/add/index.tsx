@@ -9,7 +9,7 @@ export default function AddContentSpecialistSuggestionPage() {
       contentSpecialistReviewId: "",
     },
     validationSchema: Yup.object({
-        contentSpecialistReviewId: Yup.string().required(),
+      contentSpecialistReviewId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -28,11 +28,11 @@ export default function AddContentSpecialistSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='contentSpecialistReviewId'
+          type="text"
+          placeholder="contentSpecialistReviewId"
           {...formik.getFieldProps("contentSpecialistReviewId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

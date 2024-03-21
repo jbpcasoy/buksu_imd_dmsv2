@@ -24,10 +24,10 @@ export default function ContentSpecialistSuggestionItemActionTakensPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>ContentSpecialistSuggestionItemActionTaken</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/content_specialist_suggestion_item_action_taken/add`}
         >
           Add
@@ -35,7 +35,7 @@ export default function ContentSpecialistSuggestionItemActionTakensPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -65,7 +65,7 @@ export default function ContentSpecialistSuggestionItemActionTakensPage() {
                     <td>
                       <Link
                         href={`/crud/content_specialist_suggestion_item/${contentSpecialistSuggestionItemActionTaken.contentSpecialistSuggestionItemId}`}
-                        className='underline'
+                        className="underline"
                       >
                         {
                           contentSpecialistSuggestionItemActionTaken.contentSpecialistSuggestionItemId
@@ -76,7 +76,7 @@ export default function ContentSpecialistSuggestionItemActionTakensPage() {
                     <td>
                       <Link
                         href={`/crud/content_specialist_suggestion_item_action_taken/${contentSpecialistSuggestionItemActionTaken.id}`}
-                        className='border rounded'
+                        className="border rounded"
                       >
                         view
                       </Link>
@@ -87,14 +87,14 @@ export default function ContentSpecialistSuggestionItemActionTakensPage() {
             )}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

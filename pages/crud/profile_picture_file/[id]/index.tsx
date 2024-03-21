@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function ProfilePictureFilePage() {
   const router = useRouter();
   const profilePictureFileId = router.query.id;
-  const profilePictureFile = useProfilePictureFile({ id: profilePictureFileId as string });
+  const profilePictureFile = useProfilePictureFile({
+    id: profilePictureFileId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -30,20 +32,27 @@ export default function ProfilePictureFilePage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ProfilePictureFile</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ProfilePictureFile</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {profilePictureFile.id}</p>
-      <p>createdAt: {new Date(profilePictureFile.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(profilePictureFile.updatedAt).toLocaleString()}</p>
+      <p>
+        createdAt: {new Date(profilePictureFile.createdAt).toLocaleString()}
+      </p>
+      <p>
+        updatedAt: {new Date(profilePictureFile.updatedAt).toLocaleString()}
+      </p>
       <p>
         userId:{" "}
-        <Link href={`/crud/user/${profilePictureFile.userId}`} className='underline'>
+        <Link
+          href={`/crud/user/${profilePictureFile.userId}`}
+          className="underline"
+        >
           {profilePictureFile.userId}
         </Link>
       </p>

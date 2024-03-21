@@ -2,14 +2,16 @@ import useDepartments from "@/hooks/useDepartments";
 import { FieldInputProps } from "formik";
 import { ChangeEventHandler, useEffect, useState } from "react";
 
-export interface DepartmentSelectorProps extends FieldInputProps<any> {
+interface DepartmentSelectorProps extends FieldInputProps<any> {
   collegeId?: string;
   disabled?: boolean;
+  compact?: boolean;
 }
 
 export default function DepartmentSelector({
   collegeId,
   disabled = false,
+  compact = false,
   ...props
 }: DepartmentSelectorProps) {
   const [state, setState] = useState({
@@ -38,7 +40,7 @@ export default function DepartmentSelector({
   };
 
   return (
-    <div className='flex flex-col w-full'>
+    <div className={`flex flex-col ${compact ? "w-full" : "w-44"}`}>
       {/* <input
         type='text'
         onChange={onSearch}
@@ -46,8 +48,12 @@ export default function DepartmentSelector({
         disabled={disabled}
         className='rounded-t p-1'
       /> */}
-      <select {...props} disabled={disabled} className='rounded py-1'>
-        <option value=''>Select Department</option>
+      <select
+        {...props}
+        disabled={disabled}
+        className={`rounded ${compact ? "" : "p-3"}`}
+      >
+        <option value="">Department</option>
         {departments.map((department) => {
           return (
             <option key={department.id} value={department.id}>

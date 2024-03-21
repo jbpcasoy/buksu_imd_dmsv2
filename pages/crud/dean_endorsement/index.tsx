@@ -23,18 +23,15 @@ export default function DeanEndorsementsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>DeanEndorsement</h2>
-        <Link
-          className='border rounded'
-          href={`/crud/dean_endorsement/add`}
-        >
+        <Link className="border rounded" href={`/crud/dean_endorsement/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -51,19 +48,15 @@ export default function DeanEndorsementsPage() {
                 <tr key={deanEndorsement.id}>
                   <td>{deanEndorsement.id}</td>
                   <td>
-                    {new Date(
-                      deanEndorsement.createdAt
-                    ).toLocaleString()}
+                    {new Date(deanEndorsement.createdAt).toLocaleString()}
                   </td>
                   <td>
-                    {new Date(
-                      deanEndorsement.updatedAt
-                    ).toLocaleString()}
+                    {new Date(deanEndorsement.updatedAt).toLocaleString()}
                   </td>
                   <td>
                     <Link
                       href={`/crud/department_revision/${deanEndorsement.coordinatorEndorsementId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {deanEndorsement.coordinatorEndorsementId}
                     </Link>
@@ -71,7 +64,7 @@ export default function DeanEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/department_revision/${deanEndorsement.deanId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {deanEndorsement.deanId}
                     </Link>
@@ -79,7 +72,7 @@ export default function DeanEndorsementsPage() {
                   <td>
                     <Link
                       href={`/crud/dean_endorsement/${deanEndorsement.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -89,14 +82,14 @@ export default function DeanEndorsementsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

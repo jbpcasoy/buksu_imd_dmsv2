@@ -28,19 +28,21 @@ export default async function handler(
 
       const { id } = validator.cast(req.query);
       const returnedDepartmentRevisionSuggestionItemActionTaken =
-        await prisma.returnedDepartmentRevisionSuggestionItemActionTaken.findFirstOrThrow({
-          where: {
-            AND: [
-              {
-                ReturnedDepartmentRevisionSuggestionItem: {
-                  id: {
-                    equals: id,
+        await prisma.returnedDepartmentRevisionSuggestionItemActionTaken.findFirstOrThrow(
+          {
+            where: {
+              AND: [
+                {
+                  ReturnedDepartmentRevisionSuggestionItem: {
+                    id: {
+                      equals: id,
+                    },
                   },
                 },
-              },
-            ],
-          },
-        });
+              ],
+            },
+          }
+        );
 
       return res.json(returnedDepartmentRevisionSuggestionItemActionTaken);
     } catch (error: any) {

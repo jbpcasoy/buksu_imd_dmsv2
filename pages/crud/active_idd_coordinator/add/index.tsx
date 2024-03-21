@@ -9,7 +9,7 @@ export default function AddActiveIDDCoordinatorPage() {
       iDDCoordinatorId: "",
     },
     validationSchema: Yup.object({
-        iDDCoordinatorId: Yup.string().required(),
+      iDDCoordinatorId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -27,8 +27,12 @@ export default function AddActiveIDDCoordinatorPage() {
       <h2>Add ActiveIDDCoordinator</h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input type="text" placeholder="iDDCoordinatorId" {...formik.getFieldProps("iDDCoordinatorId")} />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input
+          type="text"
+          placeholder="iDDCoordinatorId"
+          {...formik.getFieldProps("iDDCoordinatorId")}
+        />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

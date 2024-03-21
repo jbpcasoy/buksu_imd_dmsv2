@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { DepartmentRevision, IM } from "@prisma/client";
+import { DepartmentRevision } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useDepartmentRevisionIMParams {
   id?: string;

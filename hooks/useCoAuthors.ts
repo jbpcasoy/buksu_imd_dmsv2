@@ -19,8 +19,8 @@ export default function useCoAuthors(
   });
 
   useEffect(() => {
-    if(strict) {
-      if(!filter?.iMId || !filter?.facultyId) {
+    if (strict) {
+      if (!filter?.iMId || !filter?.facultyId) {
         return;
       }
     }

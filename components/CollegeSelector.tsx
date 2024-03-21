@@ -2,7 +2,7 @@ import useColleges from "@/hooks/useColleges";
 import { FieldInputProps } from "formik";
 import { ChangeEventHandler, useState } from "react";
 
-export interface CollegeSelectorProps extends FieldInputProps<any> {
+interface CollegeSelectorProps extends FieldInputProps<any> {
   collegeId?: string;
   disabled?: boolean;
 }
@@ -29,7 +29,7 @@ export default function CollegeSelector({
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-44">
       {/* <input
         type='text'
         onChange={onSearch}
@@ -37,8 +37,8 @@ export default function CollegeSelector({
         disabled={disabled}
         className='rounded-t p-1'
       /> */}
-      <select {...props} disabled={disabled} className='rounded py-1'>
-        <option value=''>Select College</option>
+      <select {...props} disabled={disabled} className="rounded p-3">
+        <option value="">College</option>
         {colleges.map((college) => {
           return (
             <option key={college.id} value={college.id}>

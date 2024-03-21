@@ -15,7 +15,9 @@ export default function AddSubmittedContentSpecialistSuggestionPage() {
       axios
         .post("/api/submitted_content_specialist_suggestion", values)
         .then(() => {
-          alert("SubmittedContentSpecialistSuggestion has been added successfully");
+          alert(
+            "SubmittedContentSpecialistSuggestion has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -28,11 +30,11 @@ export default function AddSubmittedContentSpecialistSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='contentSpecialistSuggestionId'
+          type="text"
+          placeholder="contentSpecialistSuggestionId"
           {...formik.getFieldProps("contentSpecialistSuggestionId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

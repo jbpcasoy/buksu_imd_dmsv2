@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { IDDCoordinator, IM } from "@prisma/client";
+import { IDDCoordinator } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIDDCoordinatorParams {
   id?: string;
@@ -16,7 +16,7 @@ export default function useIDDCoordinator({ id }: useIDDCoordinatorParams) {
     axios
       .get(`/api/idd_coordinator/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

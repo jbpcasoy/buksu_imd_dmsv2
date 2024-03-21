@@ -245,10 +245,7 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      const {
-        skip,
-        take,
-      } = validator.cast(req.query);
+      const { skip, take } = validator.cast(req.query);
 
       const submittedPeerSuggestions =
         await prisma.submittedPeerSuggestion.findMany({

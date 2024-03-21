@@ -32,10 +32,10 @@ export default function DepartmentReviewPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>DepartmentReview</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">DepartmentReview</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -47,7 +47,7 @@ export default function DepartmentReviewPage() {
         iMFileId:{" "}
         <Link
           href={`/crud/im_file/${departmentReview.iMFileId}`}
-          className='underline'
+          className="underline"
         >
           {departmentReview.iMFileId}
         </Link>

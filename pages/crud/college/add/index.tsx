@@ -28,11 +28,11 @@ export default function AddCollegePage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='Name'
+          type="text"
+          placeholder="Name"
           {...formik.getFieldProps("name")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

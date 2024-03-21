@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { QAMISSuggestionItem, IM } from "@prisma/client";
+import { QAMISSuggestionItem } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useQAMISSuggestionItemParams {
   id: string;
 }
-export default function useQAMISSuggestionItem({ id }: useQAMISSuggestionItemParams) {
+export default function useQAMISSuggestionItem({
+  id,
+}: useQAMISSuggestionItemParams) {
   const [state, setState] = useState<QAMISSuggestionItem | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useQAMISSuggestionItem({ id }: useQAMISSuggestionItemPar
     axios
       .get(`/api/qamis_suggestion_item/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

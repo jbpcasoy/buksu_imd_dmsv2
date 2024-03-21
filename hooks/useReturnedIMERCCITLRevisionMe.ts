@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
-import { ReturnedIMERCCITLRevision, IM } from "@prisma/client";
+import { ReturnedIMERCCITLRevision } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useReturnedIMERCCITLRevisionMeParams {
   id: string;
 }
-export default function useReturnedIMERCCITLRevisionMe({ id }: useReturnedIMERCCITLRevisionMeParams, refreshFlag?: number) {
+export default function useReturnedIMERCCITLRevisionMe(
+  { id }: useReturnedIMERCCITLRevisionMeParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<ReturnedIMERCCITLRevision | null>();
 
   useEffect(() => {
-    console.log({id})
+    console.log({ id });
     if (!id) return;
 
     let subscribe = true;

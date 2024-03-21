@@ -1,5 +1,10 @@
 import useIMs from "@/hooks/useIMs";
-import { ChangeEventHandler, DetailedHTMLProps, SelectHTMLAttributes, useState } from "react";
+import {
+  ChangeEventHandler,
+  DetailedHTMLProps,
+  SelectHTMLAttributes,
+  useState,
+} from "react";
 
 export default function IMSelector(
   props: DetailedHTMLProps<
@@ -25,9 +30,9 @@ export default function IMSelector(
 
   return (
     <div>
-      <input type='text' onChange={onSearch} placeholder='IM search' />
+      <input type="text" onChange={onSearch} placeholder="IM search" />
       <select {...props}>
-        <option value=''>Select</option>
+        <option value="">Select</option>
         {iMs.map((iM) => {
           return (
             <option key={iM.id} value={iM.id}>

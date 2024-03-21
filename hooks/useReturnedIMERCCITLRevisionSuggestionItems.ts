@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useReturnedIMERCCITLRevisionSuggestionItemsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useReturnedIMERCCITLRevisionSuggestionItems({ skip, take, filter }: useReturnedIMERCCITLRevisionSuggestionItemsParams) {
-  const [state, setState] = useState<{returnedIMERCCITLRevisionSuggestionItems: ReturnedIMERCCITLRevisionSuggestionItem[], count: number}>({
+export default function useReturnedIMERCCITLRevisionSuggestionItems({
+  skip,
+  take,
+  filter,
+}: useReturnedIMERCCITLRevisionSuggestionItemsParams) {
+  const [state, setState] = useState<{
+    returnedIMERCCITLRevisionSuggestionItems: ReturnedIMERCCITLRevisionSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    returnedIMERCCITLRevisionSuggestionItems: []
+    returnedIMERCCITLRevisionSuggestionItems: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useReturnedIMERCCITLRevisionSuggestionItems({ skip, take
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

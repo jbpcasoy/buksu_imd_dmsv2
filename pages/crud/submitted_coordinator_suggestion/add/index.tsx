@@ -28,11 +28,11 @@ export default function AddSubmittedCoordinatorSuggestionPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='coordinatorSuggestionId'
+          type="text"
+          placeholder="coordinatorSuggestionId"
           {...formik.getFieldProps("coordinatorSuggestionId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

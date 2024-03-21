@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useCoordinatorSuggestionItemActionTakensParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useCoordinatorSuggestionItemActionTakens({ skip, take, filter }: useCoordinatorSuggestionItemActionTakensParams) {
-  const [state, setState] = useState<{coordinatorSuggestionItemActionTakens: CoordinatorSuggestionItemActionTaken[], count: number}>({
+export default function useCoordinatorSuggestionItemActionTakens({
+  skip,
+  take,
+  filter,
+}: useCoordinatorSuggestionItemActionTakensParams) {
+  const [state, setState] = useState<{
+    coordinatorSuggestionItemActionTakens: CoordinatorSuggestionItemActionTaken[];
+    count: number;
+  }>({
     count: 0,
-    coordinatorSuggestionItemActionTakens: []
+    coordinatorSuggestionItemActionTakens: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useCoordinatorSuggestionItemActionTakens({ skip, take, f
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

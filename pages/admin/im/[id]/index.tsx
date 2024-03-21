@@ -88,8 +88,8 @@ export default function IMPage() {
 
   return (
     <AdminLayout>
-      <div className="flex h-full">
-        <div className="flex-1 p-1">
+      <div className="flex h-full md:space-x-4">
+        <div className="flex-1 bg-palette_white rounded-2xl p-4">
           <div className="flex">
             <h2 className="flex-1 uppercase">
               {iM.title}{" "}
@@ -118,7 +118,10 @@ export default function IMPage() {
             <div className="flex space-x-2 mt-2">
               <img
                 className="w-10 h-10 rounded-full object-cover"
-                src={user?.image ?? ""}
+                src={user?.image ?? "/images/buksu-logo-min-512x512.png"}
+                onError={(e) => {
+                  e.currentTarget.src = "/images/buksu-logo-min-512x512.png";
+                }}
                 alt="User profile picture"
               />
               <div className="text-xs text-palette_grey">
@@ -155,7 +158,7 @@ export default function IMPage() {
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded"
+              className="w-full h-full rounded-2xl"
             />
           )}
         </div>
@@ -221,7 +224,7 @@ function ActionMenu({
       <div>
         <button
           type="button"
-          className="inline-flex justify-center items-center space-x-2 w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="inline-flex justify-center items-center space-x-2 w-full rounded-md border shadow-sm px-2 py-1 bg-palette_blue text-sm font-medium text-palette_white hover:bg-opacity-90"
           id="options-menu"
           aria-haspopup="true"
           aria-expanded="true"
@@ -235,7 +238,7 @@ function ActionMenu({
               xmlns="http://www.w3.org/2000/svg"
               height="1em"
               viewBox="0 0 320 512"
-              className="fill-palette_blue"
+              className="fill-palette_white"
             >
               <path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z" />
             </svg>
@@ -245,7 +248,7 @@ function ActionMenu({
               xmlns="http://www.w3.org/2000/svg"
               height="1em"
               viewBox="0 0 320 512"
-              className="fill-palette_blue"
+              className="fill-palette_white"
             >
               <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z" />
             </svg>
@@ -753,7 +756,7 @@ function CoAuthorChip({ coAuthor, onDelete }: CoAuthorChipProps) {
   }
 
   return (
-    <div className="inline bg-palette_orange rounded-full px-1 text-xs flex items-center space-x-1">
+    <div className="bg-palette_orange rounded-full px-1 text-xs flex items-center space-x-1">
       <p>{user.name}</p>
       <button
         className="bg-palette_blue rounded-full h-3 w-3 hover:bg-opacity-90 active:bg-opacity-100 flex items-center justify-center"

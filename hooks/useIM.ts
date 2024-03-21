@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { IM } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIMParams {
   id?: string;
@@ -17,7 +17,7 @@ export default function useIM({ id, refreshFlag }: useIMParams) {
     axios
       .get(`/api/im/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -80,32 +80,32 @@ export default function IMsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>IM</h2>
-        <Link className='border rounded' href={`/crud/im/add`}>
+        <Link className="border rounded" href={`/crud/im/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <input type='text' placeholder='title' onChange={handleTitleChange} />
+        <input type="text" placeholder="title" onChange={handleTitleChange} />
         <input
-          type='text'
-          placeholder='userName'
+          type="text"
+          placeholder="userName"
           onChange={handleUserNameChange}
         />
         <input
-          type='text'
-          placeholder='departmentName'
+          type="text"
+          placeholder="departmentName"
           onChange={handleDepartmentNameChange}
         />
         <input
-          type='text'
-          placeholder='collegeName'
+          type="text"
+          placeholder="collegeName"
           onChange={handleCollegeNameChange}
         />
         <select onChange={handleStatusChange}>
-        <option value="">Select Status</option>
+          <option value="">Select Status</option>
           <option>IMPLEMENTATION_DRAFT</option>
           <option>IMPLEMENTATION_DEPARTMENT_REVIEW</option>
           <option>IMPLEMENTATION_DEPARTMENT_REVIEWED</option>
@@ -126,7 +126,7 @@ export default function IMsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -150,13 +150,13 @@ export default function IMsPage() {
                   <td>
                     <Link
                       href={`/crud/faculty/${iM.facultyId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {iM.facultyId}
                     </Link>
                   </td>
                   <td>
-                    <Link href={`/crud/im/${iM.id}`} className='border rounded'>
+                    <Link href={`/crud/im/${iM.id}`} className="border rounded">
                       view
                     </Link>
                   </td>
@@ -165,14 +165,14 @@ export default function IMsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

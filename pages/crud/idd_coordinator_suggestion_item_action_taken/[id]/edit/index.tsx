@@ -9,9 +9,10 @@ import * as Yup from "yup";
 export default function EditIDDCoordinatorSuggestionItemActionTakenPage() {
   const router = useRouter();
   const iDDCoordinatorSuggestionItemActionTakenId = router.query.id;
-  const iDDCoordinatorSuggestionItemActionTaken = useIDDCoordinatorSuggestionItemActionTaken({
-    id: iDDCoordinatorSuggestionItemActionTakenId as string,
-  });
+  const iDDCoordinatorSuggestionItemActionTaken =
+    useIDDCoordinatorSuggestionItemActionTaken({
+      id: iDDCoordinatorSuggestionItemActionTakenId as string,
+    });
 
   const formik = useFormik({
     initialValues: {
@@ -27,7 +28,9 @@ export default function EditIDDCoordinatorSuggestionItemActionTakenPage() {
           values
         )
         .then(() => {
-          alert("IDDCoordinatorSuggestionItemActionTaken has been updated successfully");
+          alert(
+            "IDDCoordinatorSuggestionItemActionTaken has been updated successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -56,11 +59,11 @@ export default function EditIDDCoordinatorSuggestionItemActionTakenPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='value'
+          type="text"
+          placeholder="value"
           {...formik.getFieldProps("value")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

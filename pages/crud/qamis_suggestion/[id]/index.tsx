@@ -32,10 +32,10 @@ export default function QAMISSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>QAMISSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">QAMISSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -47,7 +47,7 @@ export default function QAMISSuggestionPage() {
         cITLDirectorEndorsementId:{" "}
         <Link
           href={`/crud/citl_director_endorsement/${qAMISSuggestion.cITLDirectorEndorsementId}`}
-          className='underline'
+          className="underline"
         >
           {qAMISSuggestion.cITLDirectorEndorsementId}{" "}
         </Link>

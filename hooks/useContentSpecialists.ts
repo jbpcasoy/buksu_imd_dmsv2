@@ -8,10 +8,18 @@ export interface useContentSpecialistsParams {
   filter?: object;
   sort?: object;
 }
-export default function useContentSpecialists({ skip, take, filter, sort }: useContentSpecialistsParams) {
-  const [state, setState] = useState<{contentSpecialists: ContentSpecialist[], count: number}>({
+export default function useContentSpecialists({
+  skip,
+  take,
+  filter,
+  sort,
+}: useContentSpecialistsParams) {
+  const [state, setState] = useState<{
+    contentSpecialists: ContentSpecialist[];
+    count: number;
+  }>({
     count: 0,
-    contentSpecialists: []
+    contentSpecialists: [],
   });
 
   useEffect(() => {
@@ -21,7 +29,7 @@ export default function useContentSpecialists({ skip, take, filter, sort }: useC
           skip,
           take,
           filter,
-          sort
+          sort,
         },
       })
       .then((res) => {

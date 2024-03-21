@@ -6,11 +6,18 @@ export interface useFacultiesParams {
   skip: number;
   take: number;
   filter?: object;
+  options?: object;
 }
-export default function useActiveFaculties({ skip, take, filter }: useFacultiesParams, refreshFlag?: number) {
-  const [state, setState] = useState<{activeFaculties: ActiveFaculty[], count: number}>({
+export default function useActiveFaculties(
+  { skip, take, filter, options }: useFacultiesParams,
+  refreshFlag?: number
+) {
+  const [state, setState] = useState<{
+    activeFaculties: ActiveFaculty[];
+    count: number;
+  }>({
     count: 0,
-    activeFaculties: []
+    activeFaculties: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,8 @@ export default function useActiveFaculties({ skip, take, filter }: useFacultiesP
         params: {
           skip,
           take,
-          filter
+          filter,
+          options,
         },
       })
       .then((res) => {
@@ -28,7 +36,7 @@ export default function useActiveFaculties({ skip, take, filter }: useFacultiesP
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter, refreshFlag]);
+  }, [skip, take, filter, options, refreshFlag]);
 
   return state;
 }

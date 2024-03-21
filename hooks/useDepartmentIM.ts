@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Department, IM } from "@prisma/client";
+import { Department } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useDepartmentIMParams {
   id: string;
@@ -16,7 +16,7 @@ export default function useDepartmentIM({ id }: useDepartmentIMParams) {
     axios
       .get(`/api/department/im/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

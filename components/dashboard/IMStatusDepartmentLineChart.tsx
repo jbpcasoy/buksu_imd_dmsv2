@@ -1,3 +1,6 @@
+import useCollege from "@/hooks/useCollege";
+import useDepartments from "@/hooks/useDepartments";
+import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 import axios from "axios";
 import {
   CategoryScale,
@@ -10,13 +13,9 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { DateTime } from "luxon";
+import autocolors from "chartjs-plugin-autocolors";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import autocolors from "chartjs-plugin-autocolors";
-import useDepartments from "@/hooks/useDepartments";
-import useCollege from "@/hooks/useCollege";
-import iMStatusNormalizer from "@/services/iMStatusNormalizer";
 
 ChartJS.register(
   CategoryScale,
@@ -29,7 +28,7 @@ ChartJS.register(
   autocolors
 );
 
-export interface IMStatusDepartmentLineChartProps {
+interface IMStatusDepartmentLineChartProps {
   filter?: {
     status?: string;
     departmentId?: string;
@@ -65,7 +64,7 @@ export function IMStatusDepartmentLineChart({
     take: 100,
     filter,
   });
-  const college = useCollege({ id: filter?.collegeId ?? "" });
+  const college = useCollege({ id: filter?.collegeId });
   const [state, setState] = useState<{
     [label: string]: { [department: string]: number };
   }>();
@@ -127,6 +126,15 @@ export function IMStatusDepartmentLineChart({
           title: {
             display: true,
             text: `IM statuses from ${college?.name ?? "all"} departments`,
+          },
+        },
+        scales: {
+          y: {
+            ticks: {
+              callback: function (value: any) {
+                return Number.isInteger(value) ? value : "";
+              },
+            },
           },
         },
       }}

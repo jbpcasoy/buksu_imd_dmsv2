@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { IMERCCITLDirectorEndorsement, IM } from "@prisma/client";
+import { IMERCCITLDirectorEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIMERCCITLDirectorEndorsementParams {
   id: string;
 }
-export default function useIMERCCITLDirectorEndorsement({ id }: useIMERCCITLDirectorEndorsementParams) {
+export default function useIMERCCITLDirectorEndorsement({
+  id,
+}: useIMERCCITLDirectorEndorsementParams) {
   const [state, setState] = useState<IMERCCITLDirectorEndorsement | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useIMERCCITLDirectorEndorsement({ id }: useIMERCCITLDire
     axios
       .get(`/api/imerc_citl_director_endorsement/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

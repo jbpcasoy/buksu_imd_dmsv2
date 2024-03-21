@@ -24,7 +24,9 @@ export default function IDDSpecialistSuggestionItemActionTakenPage() {
         `/api/idd_specialist_suggestion_item_action_taken/${iDDSpecialistSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("IDDSpecialistSuggestionItemActionTaken has been deleted successfully");
+        alert(
+          "IDDSpecialistSuggestionItemActionTaken has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error.response?.data?.error?.message);
@@ -35,16 +37,16 @@ export default function IDDSpecialistSuggestionItemActionTakenPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IDDSpecialistSuggestionItemActionTaken</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">IDDSpecialistSuggestionItemActionTaken</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/idd_specialist_suggestion_item_action_taken/${iDDSpecialistSuggestionItemActionTakenId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -66,7 +68,7 @@ export default function IDDSpecialistSuggestionItemActionTakenPage() {
         iDDSpecialistSuggestionItemId:
         <Link
           href={`/crud/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItemActionTaken.iDDSpecialistSuggestionItemId}`}
-          className='underline'
+          className="underline"
         >
           {iDDSpecialistSuggestionItemActionTaken.iDDSpecialistSuggestionItemId}
         </Link>

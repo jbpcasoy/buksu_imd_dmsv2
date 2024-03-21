@@ -87,6 +87,7 @@ export default async function handler(
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
         "filter[notCoAuthorOfIM]": Yup.string().optional(),
+        "options[includeName]": Yup.boolean().optional(),
       });
 
       await validator.validate(req.query);
@@ -96,6 +97,7 @@ export default async function handler(
         take,
         "filter[name]": filterName,
         "filter[notCoAuthorOfIM]": notCoAuthorOfIM,
+        "options[includeName]": optionsIncludeName,
       } = validator.cast(req.query);
 
       const activeFaculties = await prisma.activeFaculty.findMany({
@@ -163,9 +165,21 @@ export default async function handler(
         orderBy: {
           updatedAt: "desc",
         },
+        include: optionsIncludeName
+          ? {
+              Faculty: {
+                select: {
+                  User: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            }
+          : undefined,
       });
       const count = await prisma.activeFaculty.count({
-        
         where: {
           AND: [
             {

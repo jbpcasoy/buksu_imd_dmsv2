@@ -34,26 +34,26 @@ export default function AddIDDCoordinatorSuggestionItemPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='iDDCoordinatorSuggestionId'
+          type="text"
+          placeholder="iDDCoordinatorSuggestionId"
           {...formik.getFieldProps("iDDCoordinatorSuggestionId")}
         />
         <input
-          type='text'
-          placeholder='suggestion'
+          type="text"
+          placeholder="suggestion"
           {...formik.getFieldProps("suggestion")}
         />
         <input
-          type='text'
-          placeholder='pageNumber'
+          type="text"
+          placeholder="pageNumber"
           {...formik.getFieldProps("pageNumber")}
         />
         <input
-          type='text'
-          placeholder='remarks'
+          type="text"
+          placeholder="remarks"
           {...formik.getFieldProps("remarks")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

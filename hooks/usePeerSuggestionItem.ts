@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { PeerSuggestionItem, IM } from "@prisma/client";
+import { PeerSuggestionItem } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface usePeerSuggestionItemParams {
   id: string;
 }
-export default function usePeerSuggestionItem({ id }: usePeerSuggestionItemParams) {
+export default function usePeerSuggestionItem({
+  id,
+}: usePeerSuggestionItemParams) {
   const [state, setState] = useState<PeerSuggestionItem | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function usePeerSuggestionItem({ id }: usePeerSuggestionItemParam
     axios
       .get(`/api/peer_suggestion_item/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

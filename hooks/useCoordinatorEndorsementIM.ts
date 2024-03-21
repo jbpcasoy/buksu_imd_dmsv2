@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { CoordinatorEndorsement, IM } from "@prisma/client";
+import { CoordinatorEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCoordinatorEndorsementIMParams {
   id?: string;

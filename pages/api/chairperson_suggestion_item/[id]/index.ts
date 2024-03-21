@@ -155,9 +155,7 @@ export default async function handler(
 
       await validator.validate(req.body);
       const { id } = req.query;
-      const { remarks, suggestion, pageNumber } = validator.cast(
-        req.body
-      );
+      const { remarks, suggestion, pageNumber } = validator.cast(req.body);
 
       if (!user.isAdmin) {
         const chairperson = await prisma.chairperson.findFirst({

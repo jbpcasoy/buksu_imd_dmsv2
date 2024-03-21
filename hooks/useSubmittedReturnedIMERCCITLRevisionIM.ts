@@ -8,7 +8,8 @@ export interface useSubmittedReturnedIMERCCITLRevisionIMParams {
 export default function useSubmittedReturnedIMERCCITLRevisionIM({
   id,
 }: useSubmittedReturnedIMERCCITLRevisionIMParams) {
-  const [state, setState] = useState<SubmittedReturnedIMERCCITLRevision | null>();
+  const [state, setState] =
+    useState<SubmittedReturnedIMERCCITLRevision | null>();
 
   useEffect(() => {
     if (!id) return;

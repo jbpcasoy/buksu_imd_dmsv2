@@ -1,9 +1,6 @@
-import prisma from "@/prisma/client";
-import getFilenames from "@/services/getFilenames";
-import getFilesWithMetadata from "@/services/getFilesWithMetadata";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { list } from "@vercel/blob";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";

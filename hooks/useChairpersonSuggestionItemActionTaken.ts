@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { ChairpersonSuggestionItemActionTaken, IM } from "@prisma/client";
+import { ChairpersonSuggestionItemActionTaken } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useChairpersonSuggestionItemActionTakenParams {
   id: string;
 }
-export default function useChairpersonSuggestionItemActionTaken({ id }: useChairpersonSuggestionItemActionTakenParams) {
-  const [state, setState] = useState<ChairpersonSuggestionItemActionTaken | null>();
+export default function useChairpersonSuggestionItemActionTaken({
+  id,
+}: useChairpersonSuggestionItemActionTakenParams) {
+  const [state, setState] =
+    useState<ChairpersonSuggestionItemActionTaken | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -16,7 +19,7 @@ export default function useChairpersonSuggestionItemActionTaken({ id }: useChair
     axios
       .get(`/api/chairperson_suggestion_item_action_taken/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

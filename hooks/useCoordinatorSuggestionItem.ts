@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { CoordinatorSuggestionItem, IM } from "@prisma/client";
+import { CoordinatorSuggestionItem } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useCoordinatorSuggestionItemParams {
   id: string;
 }
-export default function useCoordinatorSuggestionItem({ id }: useCoordinatorSuggestionItemParams) {
+export default function useCoordinatorSuggestionItem({
+  id,
+}: useCoordinatorSuggestionItemParams) {
   const [state, setState] = useState<CoordinatorSuggestionItem | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useCoordinatorSuggestionItem({ id }: useCoordinatorSugge
     axios
       .get(`/api/coordinator_suggestion_item/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
-import { ReturnedDepartmentRevision, IM } from "@prisma/client";
+import { ReturnedDepartmentRevision } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useReturnedDepartmentRevisionMeParams {
   id: string;
 }
-export default function useReturnedDepartmentRevisionMe({ id }: useReturnedDepartmentRevisionMeParams, refreshFlag?: number) {
+export default function useReturnedDepartmentRevisionMe(
+  { id }: useReturnedDepartmentRevisionMeParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<ReturnedDepartmentRevision | null>();
 
   useEffect(() => {
-    console.log({id})
+    console.log({ id });
     if (!id) return;
 
     let subscribe = true;

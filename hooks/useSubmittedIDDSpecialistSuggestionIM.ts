@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { SubmittedIDDSpecialistSuggestion, IM } from "@prisma/client";
+import { SubmittedIDDSpecialistSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useSubmittedIDDSpecialistSuggestionIMParams {
   id?: string;
@@ -8,8 +8,7 @@ export interface useSubmittedIDDSpecialistSuggestionIMParams {
 export default function useSubmittedIDDSpecialistSuggestionIM({
   id,
 }: useSubmittedIDDSpecialistSuggestionIMParams) {
-  const [state, setState] =
-    useState<SubmittedIDDSpecialistSuggestion | null>();
+  const [state, setState] = useState<SubmittedIDDSpecialistSuggestion | null>();
 
   useEffect(() => {
     if (!id) return;

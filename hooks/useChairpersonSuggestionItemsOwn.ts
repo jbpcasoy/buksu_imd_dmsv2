@@ -5,17 +5,23 @@ import { useEffect, useState } from "react";
 export interface useChairpersonSuggestionItemsOwnParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useChairpersonSuggestionItemsOwn({ skip, take, id }: useChairpersonSuggestionItemsOwnParams, refreshFlag?: number) {
-  const [state, setState] = useState<{chairpersonSuggestionItems: ChairpersonSuggestionItem[], count: number}>({
+export default function useChairpersonSuggestionItemsOwn(
+  { skip, take, id }: useChairpersonSuggestionItemsOwnParams,
+  refreshFlag?: number
+) {
+  const [state, setState] = useState<{
+    chairpersonSuggestionItems: ChairpersonSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    chairpersonSuggestionItems: []
+    chairpersonSuggestionItems: [],
   });
 
   useEffect(() => {
-    if(!id) {
-        return;
+    if (!id) {
+      return;
     }
     axios
       .get("/api/chairperson_suggestion_item", {
@@ -23,8 +29,8 @@ export default function useChairpersonSuggestionItemsOwn({ skip, take, id }: use
           skip,
           take,
           filter: {
-            chairpersonSuggestionId: id
-          }
+            chairpersonSuggestionId: id,
+          },
         },
       })
       .then((res) => {

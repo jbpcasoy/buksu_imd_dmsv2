@@ -30,10 +30,10 @@ export default function ActiveFacultyPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ActiveFaculty</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ActiveFaculty</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -45,7 +45,7 @@ export default function ActiveFacultyPage() {
         facultyId:{" "}
         <Link
           href={`/crud/faculty/${activeFaculty.facultyId}`}
-          className='underline'
+          className="underline"
         >
           {activeFaculty.facultyId}
         </Link>

@@ -1,11 +1,13 @@
-import { IDDCoordinatorSuggestionItem, QAMISFile } from "@prisma/client";
+import { QAMISFile } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 export interface useIMLatestQAMISFileParams {
   id?: string;
 }
-export default function useIMLatestQAMISFile({ id }: useIMLatestQAMISFileParams) {
+export default function useIMLatestQAMISFile({
+  id,
+}: useIMLatestQAMISFileParams) {
   const [state, setState] = useState<QAMISFile>();
 
   useEffect(() => {

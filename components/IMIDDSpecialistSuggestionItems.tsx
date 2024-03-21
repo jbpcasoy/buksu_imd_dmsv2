@@ -1,5 +1,11 @@
+import useIDDCoordinator from "@/hooks/useIDDCoordinator";
+import useIDDSpecialistReview from "@/hooks/useIDDSpecialistReview";
+import useIDDSpecialistSuggestion from "@/hooks/useIDDSpecialistSuggestion";
 import useIDDSpecialistSuggestionItemActionTakenIDDSpecialistSuggestionItem from "@/hooks/useIDDSpecialistSuggestionItemActionTakenIDDSpecialistSuggestionItem";
 import useIDDSpecialistSuggestionItemsIM from "@/hooks/useIDDSpecialistSuggestionItemsIM";
+import useRefresh from "@/hooks/useRefresh";
+import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
+import useUser from "@/hooks/useUser";
 import {
   IDDSpecialistSuggestionItem,
   SubmittedIDDSpecialistSuggestion,
@@ -7,21 +13,14 @@ import {
 import axios from "axios";
 import { useFormik } from "formik";
 import { DateTime } from "luxon";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import Modal from "./Modal";
 import { SnackbarContext } from "./SnackbarProvider";
-import useSubmittedIDDSpecialistSuggestionIM from "@/hooks/useSubmittedIDDSpecialistSuggestionIM";
-import useIDDSpecialistSuggestion from "@/hooks/useIDDSpecialistSuggestion";
-import useIDDSpecialistReview from "@/hooks/useIDDSpecialistReview";
-import useIDDCoordinator from "@/hooks/useIDDCoordinator";
-import useFaculty from "@/hooks/useFaculty";
-import useUser from "@/hooks/useUser";
-import useRefresh from "@/hooks/useRefresh";
-import { useSession } from "next-auth/react";
 
-export interface IMIDDSpecialistSuggestionItemsProps {
+interface IMIDDSpecialistSuggestionItemsProps {
   id: string;
   editable?: boolean;
 }
@@ -37,7 +36,8 @@ export default function IMIDDSpecialistSuggestionItems({
   });
 
   const { data: session } = useSession();
-  const iDDSpecialistSuggestionItems = useIDDSpecialistSuggestionItemsIM(state);
+  const { iDDSpecialistSuggestionItems, count } =
+    useIDDSpecialistSuggestionItemsIM(state);
   const submittedIDDSpecialistSuggestion =
     useSubmittedIDDSpecialistSuggestionIM({
       id,
@@ -48,7 +48,7 @@ export default function IMIDDSpecialistSuggestionItems({
   }, [id]);
 
   return (
-    <div className="border border-palette_orange rounded text-sm">
+    <div className="border border-palette_orange rounded-lg text-sm">
       <div className="p-2 bg-palette_grey bg-opacity-10">
         <p className="text-left font-bold">IDD SPECIALIST SUGGESTIONS</p>
         {submittedIDDSpecialistSuggestion && session?.user?.isAdmin && (
@@ -58,16 +58,19 @@ export default function IMIDDSpecialistSuggestionItems({
         )}
       </div>
       <hr />
-      {iDDSpecialistSuggestionItems.iDDSpecialistSuggestionItems.map(
-        (iDDSpecialistSuggestionItem) => {
-          return (
-            <Item
-              iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
-              key={iDDSpecialistSuggestionItem.id}
-              editable={editable}
-            />
-          );
-        }
+      {iDDSpecialistSuggestionItems.map((iDDSpecialistSuggestionItem) => {
+        return (
+          <Item
+            iDDSpecialistSuggestionItem={iDDSpecialistSuggestionItem}
+            key={iDDSpecialistSuggestionItem.id}
+            editable={editable}
+          />
+        );
+      })}
+      {count < 1 && (
+        <p className="text-center text-lg font-bold p-5 text-palette_grey">
+          NO SUGGESTIONS TO DISPLAY
+        </p>
       )}
     </div>
   );
@@ -95,7 +98,10 @@ function UserInformation({
   return (
     <div className="flex flex-row items-center space-x-2">
       <img
-        src={user?.image ?? ""}
+        src={user?.image ?? "/images/buksu-logo-min-512x512.png"}
+        onError={(e) => {
+          e.currentTarget.src = "/images/buksu-logo-min-512x512.png";
+        }}
         alt="User profile picture"
         className="h-8 w-8 rounded-full object-cover"
       />
@@ -286,14 +292,6 @@ function EditSuggestionItemActionTaken({
         className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
         onClick={() => setOpenEdit(true)}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="1em"
-          viewBox="0 0 512 512"
-          className="fill-palette_white"
-        >
-          <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
-        </svg>
         <span>Edit</span>
       </button>
 

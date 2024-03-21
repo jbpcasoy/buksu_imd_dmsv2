@@ -1,5 +1,3 @@
-import getFilenames from "@/services/getFilenames";
-import getFilesWithMetadata from "@/services/getFilesWithMetadata";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
@@ -28,7 +26,7 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      const { take, cursor} = validator.cast(req.query);
+      const { take, cursor } = validator.cast(req.query);
 
       if (!user.isAdmin) {
         return res.status(403).json({

@@ -7,10 +7,17 @@ export interface useCoordinatorsParams {
   take: number;
   filter?: object;
 }
-export default function useActiveCoordinators({ skip, take, filter }: useCoordinatorsParams) {
-  const [state, setState] = useState<{activeCoordinators: ActiveCoordinator[], count: number}>({
+export default function useActiveCoordinators({
+  skip,
+  take,
+  filter,
+}: useCoordinatorsParams) {
+  const [state, setState] = useState<{
+    activeCoordinators: ActiveCoordinator[];
+    count: number;
+  }>({
     count: 0,
-    activeCoordinators: []
+    activeCoordinators: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useActiveCoordinators({ skip, take, filter }: useCoordin
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

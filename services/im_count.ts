@@ -19,7 +19,7 @@ export async function countIMs(
       lte: filterEnd,
     },
   };
-  let statusWhere = iMStatusQueryBuilder(filterStatus)
+  let statusWhere = iMStatusQueryBuilder(filterStatus);
 
   const count = await prisma.iM.count({
     where: {

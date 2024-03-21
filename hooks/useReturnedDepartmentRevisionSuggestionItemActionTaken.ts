@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { ReturnedDepartmentRevisionSuggestionItemActionTaken, IM } from "@prisma/client";
+import { ReturnedDepartmentRevisionSuggestionItemActionTaken } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useReturnedDepartmentRevisionSuggestionItemActionTakenParams {
   id: string;
 }
-export default function useReturnedDepartmentRevisionSuggestionItemActionTaken({ id }: useReturnedDepartmentRevisionSuggestionItemActionTakenParams) {
-  const [state, setState] = useState<ReturnedDepartmentRevisionSuggestionItemActionTaken | null>();
+export default function useReturnedDepartmentRevisionSuggestionItemActionTaken({
+  id,
+}: useReturnedDepartmentRevisionSuggestionItemActionTakenParams) {
+  const [state, setState] =
+    useState<ReturnedDepartmentRevisionSuggestionItemActionTaken | null>();
 
   useEffect(() => {
     if (!id) return;
@@ -14,9 +17,11 @@ export default function useReturnedDepartmentRevisionSuggestionItemActionTaken({
     let subscribe = true;
 
     axios
-      .get(`/api/returned_department_revision_suggestion_item_action_taken/${id}`)
+      .get(
+        `/api/returned_department_revision_suggestion_item_action_taken/${id}`
+      )
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

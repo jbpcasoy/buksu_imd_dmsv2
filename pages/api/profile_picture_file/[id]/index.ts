@@ -3,9 +3,7 @@ import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import { del } from "@vercel/blob";
-import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 
 export default async function handler(
   req: NextApiRequest,
@@ -80,13 +78,12 @@ export default async function handler(
       //   throw error;
       // });
 
-
       const profilePictureFile = await prisma.profilePictureFile.delete({
         where: {
           id: id as string,
         },
       });
-      
+
       await del(
         `${process.env.BLOB_URL}/${process.env.NODE_ENV}/files/profile_picture/${profilePictureFileToDelete.filename}`
       );

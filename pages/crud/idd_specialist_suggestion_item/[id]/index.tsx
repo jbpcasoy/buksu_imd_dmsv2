@@ -19,7 +19,9 @@ export default function IDDSpecialistSuggestionItemPage() {
     }
 
     axios
-      .delete(`/api/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItemId}`)
+      .delete(
+        `/api/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItemId}`
+      )
       .then(() => {
         alert("IDDSpecialistSuggestionItem has been deleted successfully");
       })
@@ -32,32 +34,34 @@ export default function IDDSpecialistSuggestionItemPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>IDDSpecialistSuggestionItem</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">IDDSpecialistSuggestionItem</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/idd_specialist_suggestion_item/${iDDSpecialistSuggestionItemId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {iDDSpecialistSuggestionItem.id}</p>
       <p>
-        createdAt: {new Date(iDDSpecialistSuggestionItem.createdAt).toLocaleString()}
+        createdAt:{" "}
+        {new Date(iDDSpecialistSuggestionItem.createdAt).toLocaleString()}
       </p>
       <p>
-        updatedAt: {new Date(iDDSpecialistSuggestionItem.updatedAt).toLocaleString()}
+        updatedAt:{" "}
+        {new Date(iDDSpecialistSuggestionItem.updatedAt).toLocaleString()}
       </p>
       <p>
         iDDSpecialistSuggestionId:{" "}
         <Link
           href={`/crud/idd_specialist_suggestion/${iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {iDDSpecialistSuggestionItem.iDDSpecialistSuggestionId}
         </Link>

@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { IMERCIDDCoordinatorEndorsement, IM } from "@prisma/client";
+import { IMERCIDDCoordinatorEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIMERCIDDCoordinatorEndorsementParams {
   id: string;
 }
-export default function useIMERCIDDCoordinatorEndorsement({ id }: useIMERCIDDCoordinatorEndorsementParams) {
+export default function useIMERCIDDCoordinatorEndorsement({
+  id,
+}: useIMERCIDDCoordinatorEndorsementParams) {
   const [state, setState] = useState<IMERCIDDCoordinatorEndorsement | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useIMERCIDDCoordinatorEndorsement({ id }: useIMERCIDDCoo
     axios
       .get(`/api/imerc_idd_coordinator_endorsement/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

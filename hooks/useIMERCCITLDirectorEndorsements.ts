@@ -7,10 +7,17 @@ export interface useFacultiesParams {
   take: number;
   filter?: object;
 }
-export default function useIMERCCITLDirectorEndorsements({ skip, take, filter }: useFacultiesParams) {
-  const [state, setState] = useState<{iMERCCITLDirectorEndorsements: IMERCCITLDirectorEndorsement[], count: number}>({
+export default function useIMERCCITLDirectorEndorsements({
+  skip,
+  take,
+  filter,
+}: useFacultiesParams) {
+  const [state, setState] = useState<{
+    iMERCCITLDirectorEndorsements: IMERCCITLDirectorEndorsement[];
+    count: number;
+  }>({
     count: 0,
-    iMERCCITLDirectorEndorsements: []
+    iMERCCITLDirectorEndorsements: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useIMERCCITLDirectorEndorsements({ skip, take, filter }:
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

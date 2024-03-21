@@ -1,7 +1,5 @@
 import AdminIMTable from "@/components/AdminIMTable";
 import AdminLayout from "@/components/AdminLayout";
-import IMTable from "@/components/IMTable";
-import MainLayout from "@/components/MainLayout";
 import useCITLIMs from "@/hooks/useCITLIMs";
 import { useState } from "react";
 
@@ -28,7 +26,7 @@ export default function AdminIMsPage() {
       <AdminIMTable
         count={count}
         iMs={iMs}
-        title='IM'
+        title="IM"
         onChangeState={(state) => setState(state)}
         enableAdd={false}
       />

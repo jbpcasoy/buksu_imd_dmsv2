@@ -3,7 +3,6 @@ import useSubmittedPeerSuggestion from "@/hooks/useSubmittedPeerSuggestion";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 export default function SubmittedPeerSuggestionPage() {
   const router = useRouter();
@@ -33,10 +32,10 @@ export default function SubmittedPeerSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>SubmittedPeerSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">SubmittedPeerSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -54,7 +53,7 @@ export default function SubmittedPeerSuggestionPage() {
         peerSuggestionId:{" "}
         <Link
           href={`/crud/peer_suggestion/${submittedPeerSuggestion.peerSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {submittedPeerSuggestion.peerSuggestionId}
         </Link>

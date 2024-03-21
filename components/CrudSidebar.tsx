@@ -1,6 +1,4 @@
-import ActiveFacultyContext from "@/contexts/ActiveFacultyContext";
 import Link from "next/link";
-import { useContext } from "react";
 
 export default function CrudSidebar() {
   const items: {

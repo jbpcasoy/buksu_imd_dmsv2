@@ -5,18 +5,25 @@ import { useEffect, useState } from "react";
 export interface useChairpersonSuggestionItemsIMParams {
   skip: number;
   take: number;
-  id?: string
+  id?: string;
 }
-export default function useChairpersonSuggestionItemsIM({ skip, take, id }: useChairpersonSuggestionItemsIMParams) {
-  const [state, setState] = useState<{chairpersonSuggestionItems: ChairpersonSuggestionItem[], count: number}>({
+export default function useChairpersonSuggestionItemsIM({
+  skip,
+  take,
+  id,
+}: useChairpersonSuggestionItemsIMParams) {
+  const [state, setState] = useState<{
+    chairpersonSuggestionItems: ChairpersonSuggestionItem[];
+    count: number;
+  }>({
     count: 0,
-    chairpersonSuggestionItems: []
+    chairpersonSuggestionItems: [],
   });
 
   useEffect(() => {
-    console.log({skip, take, id})
-    if(!id) {
-        return;
+    console.log({ skip, take, id });
+    if (!id) {
+      return;
     }
     axios
       .get(`/api/chairperson_suggestion_item/im/${id}`, {

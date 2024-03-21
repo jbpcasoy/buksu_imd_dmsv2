@@ -7,10 +7,17 @@ export interface useCITLDirectorsParams {
   take: number;
   filter?: object;
 }
-export default function useActiveCITLDirectors({ skip, take, filter }: useCITLDirectorsParams) {
-  const [state, setState] = useState<{activeCITLDirectors: ActiveCITLDirector[], count: number}>({
+export default function useActiveCITLDirectors({
+  skip,
+  take,
+  filter,
+}: useCITLDirectorsParams) {
+  const [state, setState] = useState<{
+    activeCITLDirectors: ActiveCITLDirector[];
+    count: number;
+  }>({
     count: 0,
-    activeCITLDirectors: []
+    activeCITLDirectors: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useActiveCITLDirectors({ skip, take, filter }: useCITLDi
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

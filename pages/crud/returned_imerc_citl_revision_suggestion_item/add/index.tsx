@@ -21,7 +21,9 @@ export default function AddReturnedIMERCCITLRevisionSuggestionItemPage() {
       axios
         .post("/api/returned_imerc_citl_revision_suggestion_item", values)
         .then(() => {
-          alert("ReturnedIMERCCITLRevisionSuggestionItem has been added successfully");
+          alert(
+            "ReturnedIMERCCITLRevisionSuggestionItem has been added successfully"
+          );
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -34,26 +36,26 @@ export default function AddReturnedIMERCCITLRevisionSuggestionItemPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='returnedIMERCCITLRevisionId'
+          type="text"
+          placeholder="returnedIMERCCITLRevisionId"
           {...formik.getFieldProps("returnedIMERCCITLRevisionId")}
         />
         <input
-          type='text'
-          placeholder='suggestion'
+          type="text"
+          placeholder="suggestion"
           {...formik.getFieldProps("suggestion")}
         />
         <input
-          type='text'
-          placeholder='pageNumber'
+          type="text"
+          placeholder="pageNumber"
           {...formik.getFieldProps("pageNumber")}
         />
         <input
-          type='text'
-          placeholder='remarks'
+          type="text"
+          placeholder="remarks"
           {...formik.getFieldProps("remarks")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

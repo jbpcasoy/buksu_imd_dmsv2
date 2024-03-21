@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { QAMISChairpersonEndorsement, IM } from "@prisma/client";
+import { QAMISChairpersonEndorsement } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useQAMISChairpersonEndorsementParams {
   id: string;
 }
-export default function useQAMISChairpersonEndorsement({ id }: useQAMISChairpersonEndorsementParams) {
+export default function useQAMISChairpersonEndorsement({
+  id,
+}: useQAMISChairpersonEndorsementParams) {
   const [state, setState] = useState<QAMISChairpersonEndorsement | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useQAMISChairpersonEndorsement({ id }: useQAMISChairpers
     axios
       .get(`/api/qamis_chairperson_endorsement/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

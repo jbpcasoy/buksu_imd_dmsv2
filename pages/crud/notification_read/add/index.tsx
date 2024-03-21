@@ -9,7 +9,7 @@ export default function AddNotificationReadPage() {
       eventId: "",
     },
     validationSchema: Yup.object({
-        eventId: Yup.string().required(),
+      eventId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
@@ -28,11 +28,11 @@ export default function AddNotificationReadPage() {
 
       <form onSubmit={formik.handleSubmit}>
         <input
-          type='text'
-          placeholder='eventId'
+          type="text"
+          placeholder="eventId"
           {...formik.getFieldProps("eventId")}
         />
-        <input type='submit' value='Submit' className='rounded border' />
+        <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>
   );

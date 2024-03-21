@@ -24,7 +24,9 @@ export default function ContentEditorSuggestionItemActionTakenPage() {
         `/api/content_editor_suggestion_item_action_taken/${contentEditorSuggestionItemActionTakenId}`
       )
       .then(() => {
-        alert("ContentEditorSuggestionItemActionTaken has been deleted successfully");
+        alert(
+          "ContentEditorSuggestionItemActionTaken has been deleted successfully"
+        );
       })
       .catch((error) => {
         alert(error.response?.data?.error?.message);
@@ -35,16 +37,16 @@ export default function ContentEditorSuggestionItemActionTakenPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ContentEditorSuggestionItemActionTaken</h2>
-        <div className='space-x-1'>
+      <div className="flex">
+        <h2 className="flex-1">ContentEditorSuggestionItemActionTaken</h2>
+        <div className="space-x-1">
           <Link
-            className='border rounded'
+            className="border rounded"
             href={`/crud/content_editor_suggestion_item_action_taken/${contentEditorSuggestionItemActionTakenId}/edit`}
           >
             edit
           </Link>
-          <button className='border rounded' onClick={deleteHandler}>
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -66,7 +68,7 @@ export default function ContentEditorSuggestionItemActionTakenPage() {
         contentEditorSuggestionItemId:
         <Link
           href={`/crud/content_editor_suggestion_item/${contentEditorSuggestionItemActionTaken.contentEditorSuggestionItemId}`}
-          className='underline'
+          className="underline"
         >
           {contentEditorSuggestionItemActionTaken.contentEditorSuggestionItemId}
         </Link>

@@ -23,15 +23,15 @@ export default function QAMISFilesPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>QAMISFile</h2>
-        <Link className='border rounded' href={`/crud/qamis_file/add`}>
+        <Link className="border rounded" href={`/crud/qamis_file/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -59,7 +59,7 @@ export default function QAMISFilesPage() {
                   <td>
                     <Link
                       href={`/crud/submitted_qamis_suggestion/${qAMISFile.submittedQAMISSuggestionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {qAMISFile.submittedQAMISSuggestionId}
                     </Link>
@@ -67,7 +67,7 @@ export default function QAMISFilesPage() {
                   <td>
                     <Link
                       href={`/crud/qamis_file/${qAMISFile.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -77,14 +77,14 @@ export default function QAMISFilesPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

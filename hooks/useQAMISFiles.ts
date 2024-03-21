@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useQAMISFilesParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useQAMISFiles({ skip, take, filter }: useQAMISFilesParams) {
-  const [state, setState] = useState<{qAMISFiles: QAMISFile[], count: number}>({
+export default function useQAMISFiles({
+  skip,
+  take,
+  filter,
+}: useQAMISFilesParams) {
+  const [state, setState] = useState<{
+    qAMISFiles: QAMISFile[];
+    count: number;
+  }>({
     count: 0,
-    qAMISFiles: []
+    qAMISFiles: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useQAMISFiles({ skip, take, filter }: useQAMISFilesParam
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

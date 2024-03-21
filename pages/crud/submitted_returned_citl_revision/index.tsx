@@ -24,10 +24,10 @@ export default function SubmittedReturnedCITLRevisionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>SubmittedReturnedCITLRevision</h2>
         <Link
-          className='border rounded'
+          className="border rounded"
           href={`/crud/submitted_returned_citl_revision/add`}
         >
           Add
@@ -35,7 +35,7 @@ export default function SubmittedReturnedCITLRevisionsPage() {
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -46,49 +46,51 @@ export default function SubmittedReturnedCITLRevisionsPage() {
             </tr>
           </thead>
           <tbody>
-            {submittedReturnedCITLRevisions.map((submittedReturnedCITLRevision) => {
-              return (
-                <tr key={submittedReturnedCITLRevision.id}>
-                  <td>{submittedReturnedCITLRevision.id}</td>
-                  <td>
-                    {new Date(
-                      submittedReturnedCITLRevision.createdAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(
-                      submittedReturnedCITLRevision.updatedAt
-                    ).toLocaleString()}
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/returned_citl_revision/${submittedReturnedCITLRevision.returnedCITLRevisionId}`}
-                      className='underline'
-                    >
-                      {submittedReturnedCITLRevision.returnedCITLRevisionId}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/crud/submitted_returned_citl_revision/${submittedReturnedCITLRevision.id}`}
-                      className='border rounded'
-                    >
-                      view
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
+            {submittedReturnedCITLRevisions.map(
+              (submittedReturnedCITLRevision) => {
+                return (
+                  <tr key={submittedReturnedCITLRevision.id}>
+                    <td>{submittedReturnedCITLRevision.id}</td>
+                    <td>
+                      {new Date(
+                        submittedReturnedCITLRevision.createdAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      {new Date(
+                        submittedReturnedCITLRevision.updatedAt
+                      ).toLocaleString()}
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/returned_citl_revision/${submittedReturnedCITLRevision.returnedCITLRevisionId}`}
+                        className="underline"
+                      >
+                        {submittedReturnedCITLRevision.returnedCITLRevisionId}
+                      </Link>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/crud/submitted_returned_citl_revision/${submittedReturnedCITLRevision.id}`}
+                        className="border rounded"
+                      >
+                        view
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

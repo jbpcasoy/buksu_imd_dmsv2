@@ -19,7 +19,9 @@ export default function SubmittedContentEditorSuggestionPage() {
     }
 
     axios
-      .delete(`/api/submitted_content_editor_suggestion/${submittedContentEditorSuggestionId}`)
+      .delete(
+        `/api/submitted_content_editor_suggestion/${submittedContentEditorSuggestionId}`
+      )
       .then(() => {
         alert("SubmittedContentEditorSuggestion has been deleted successfully");
       })
@@ -32,10 +34,10 @@ export default function SubmittedContentEditorSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>SubmittedContentEditorSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">SubmittedContentEditorSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
@@ -53,7 +55,7 @@ export default function SubmittedContentEditorSuggestionPage() {
         contentEditorSuggestionId:{" "}
         <Link
           href={`/crud/content_editor_suggestion/${submittedContentEditorSuggestion.contentEditorSuggestionId}`}
-          className='underline'
+          className="underline"
         >
           {submittedContentEditorSuggestion.contentEditorSuggestionId}
         </Link>

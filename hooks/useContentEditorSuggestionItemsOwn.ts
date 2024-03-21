@@ -7,11 +7,10 @@ export interface useContentEditorSuggestionItemsOwnParams {
   take: number;
   id?: string;
 }
-export default function useContentEditorSuggestionItemsOwn({
-  skip,
-  take,
-  id,
-}: useContentEditorSuggestionItemsOwnParams, refreshFlag?: number) {
+export default function useContentEditorSuggestionItemsOwn(
+  { skip, take, id }: useContentEditorSuggestionItemsOwnParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<{
     contentEditorSuggestionItems: ContentEditorSuggestionItem[];
     count: number;

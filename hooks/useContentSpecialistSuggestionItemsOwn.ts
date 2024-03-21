@@ -7,11 +7,10 @@ export interface useContentSpecialistSuggestionItemsOwnParams {
   take: number;
   id?: string;
 }
-export default function useContentSpecialistSuggestionItemsOwn({
-  skip,
-  take,
-  id,
-}: useContentSpecialistSuggestionItemsOwnParams, refreshFlag?: number) {
+export default function useContentSpecialistSuggestionItemsOwn(
+  { skip, take, id }: useContentSpecialistSuggestionItemsOwnParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<{
     contentSpecialistSuggestionItems: ContentSpecialistSuggestionItem[];
     count: number;

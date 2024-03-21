@@ -23,15 +23,15 @@ export default function CITLRevisionsPage() {
 
   return (
     <CrudLayout>
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h2>CITLRevision</h2>
-        <Link className='border rounded' href={`/crud/citl_revision/add`}>
+        <Link className="border rounded" href={`/crud/citl_revision/add`}>
           Add
         </Link>
       </div>
 
       <div>
-        <table className='table-auto w-full'>
+        <table className="table-auto w-full">
           <thead>
             <tr>
               <th>id</th>
@@ -47,16 +47,12 @@ export default function CITLRevisionsPage() {
               return (
                 <tr key={cITLRevision.id}>
                   <td>{cITLRevision.id}</td>
-                  <td>
-                    {new Date(cITLRevision.createdAt).toLocaleString()}
-                  </td>
-                  <td>
-                    {new Date(cITLRevision.updatedAt).toLocaleString()}
-                  </td>
+                  <td>{new Date(cITLRevision.createdAt).toLocaleString()}</td>
+                  <td>{new Date(cITLRevision.updatedAt).toLocaleString()}</td>
                   <td>
                     <Link
                       href={`/crud/im_file/${cITLRevision.iMFileId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {cITLRevision.iMFileId}
                     </Link>
@@ -64,7 +60,7 @@ export default function CITLRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/submitted_idd_coordinator_suggestion/${cITLRevision.submittedIDDCoordinatorSuggestionId}`}
-                      className='underline'
+                      className="underline"
                     >
                       {cITLRevision.submittedIDDCoordinatorSuggestionId}
                     </Link>
@@ -72,7 +68,7 @@ export default function CITLRevisionsPage() {
                   <td>
                     <Link
                       href={`/crud/citl_revision/${cITLRevision.id}`}
-                      className='border rounded'
+                      className="border rounded"
                     >
                       view
                     </Link>
@@ -82,14 +78,14 @@ export default function CITLRevisionsPage() {
             })}
           </tbody>
         </table>
-        <div className='flex justify-end space-x-1'>
+        <div className="flex justify-end space-x-1">
           <p>
             {state.skip} - {state.skip + state.take} of {count}
           </p>
-          <button className='border rounded' onClick={handlePrev}>
+          <button className="border rounded" onClick={handlePrev}>
             prev
           </button>
-          <button className='border rounded' onClick={handleNext}>
+          <button className="border rounded" onClick={handleNext}>
             next
           </button>
         </div>

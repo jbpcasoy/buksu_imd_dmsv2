@@ -26,11 +26,9 @@ export default async function handler(
       await validator.validate(req.body);
 
       if (!user.isAdmin) {
-        return res
-          .status(403)
-          .json({
-            error: { message: "You are not allowed to create a college" },
-          });
+        return res.status(403).json({
+          error: { message: "You are not allowed to create a college" },
+        });
       }
 
       const { name } = validator.cast(req.body);

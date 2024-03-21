@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
-import { IDDSpecialistSuggestion, IM } from "@prisma/client";
+import { IDDSpecialistSuggestion } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIDDSpecialistSuggestionMeParams {
   id: string;
 }
-export default function useIDDSpecialistSuggestionMe({ id }: useIDDSpecialistSuggestionMeParams, refreshFlag?: number) {
+export default function useIDDSpecialistSuggestionMe(
+  { id }: useIDDSpecialistSuggestionMeParams,
+  refreshFlag?: number
+) {
   const [state, setState] = useState<IDDSpecialistSuggestion | null>();
 
   useEffect(() => {
-    console.log({id})
+    console.log({ id });
     if (!id) return;
 
     let subscribe = true;

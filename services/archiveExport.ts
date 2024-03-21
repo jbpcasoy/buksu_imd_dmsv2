@@ -1,6 +1,6 @@
 // require modules
-import fs from "fs";
 import archiver from "archiver";
+import fs from "fs";
 import path from "path";
 import logger from "./logger";
 
@@ -8,7 +8,9 @@ import logger from "./logger";
 export default async function archiveExport() {
   return new Promise((resolve, reject) => {
     const destination = path.join(process.cwd(), `/files/export`);
-    const output = fs.createWriteStream(path.join(process.cwd(), `/export.zip`));
+    const output = fs.createWriteStream(
+      path.join(process.cwd(), `/export.zip`)
+    );
     const archive = archiver("zip", {
       zlib: { level: 9 }, // Sets the compression level.
     });

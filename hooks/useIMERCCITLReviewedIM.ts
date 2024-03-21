@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { IMERCCITLReviewed, IM } from "@prisma/client";
+import { IMERCCITLReviewed } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useIMERCCITLReviewedIMParams {
-  id: string;
+  id?: string;
 }
-export default function useIMERCCITLReviewedIM({ id }: useIMERCCITLReviewedIMParams) {
+export default function useIMERCCITLReviewedIM({
+  id,
+}: useIMERCCITLReviewedIMParams) {
   const [state, setState] = useState<IMERCCITLReviewed | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useIMERCCITLReviewedIM({ id }: useIMERCCITLReviewedIMPar
     axios
       .get(`/api/imerc_citl_reviewed/im/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {

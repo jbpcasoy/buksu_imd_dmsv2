@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 export default function ContentSpecialistSuggestionPage() {
   const router = useRouter();
   const contentSpecialistSuggestionId = router.query.id;
-  const contentSpecialistSuggestion = useContentSpecialistSuggestion({ id: contentSpecialistSuggestionId as string });
+  const contentSpecialistSuggestion = useContentSpecialistSuggestion({
+    id: contentSpecialistSuggestionId as string,
+  });
 
   const deleteHandler = () => {
     const ok = confirm("Are you sure?");
@@ -17,7 +19,9 @@ export default function ContentSpecialistSuggestionPage() {
     }
 
     axios
-      .delete(`/api/content_specialist_suggestion/${contentSpecialistSuggestionId}`)
+      .delete(
+        `/api/content_specialist_suggestion/${contentSpecialistSuggestionId}`
+      )
       .then(() => {
         alert("ContentSpecialistSuggestion has been deleted successfully");
       })
@@ -30,22 +34,28 @@ export default function ContentSpecialistSuggestionPage() {
 
   return (
     <CrudLayout>
-      <div className='flex'>
-        <h2 className='flex-1'>ContentSpecialistSuggestion</h2>
-        <div className='space-x-1'>
-          <button className='border rounded' onClick={deleteHandler}>
+      <div className="flex">
+        <h2 className="flex-1">ContentSpecialistSuggestion</h2>
+        <div className="space-x-1">
+          <button className="border rounded" onClick={deleteHandler}>
             delete
           </button>
         </div>
       </div>
       <p>id: {contentSpecialistSuggestion.id}</p>
-      <p>createdAt: {new Date(contentSpecialistSuggestion.createdAt).toLocaleString()}</p>
-      <p>updatedAt: {new Date(contentSpecialistSuggestion.updatedAt).toLocaleString()}</p>
       <p>
-      contentSpecialistReviewId:{" "}
+        createdAt:{" "}
+        {new Date(contentSpecialistSuggestion.createdAt).toLocaleString()}
+      </p>
+      <p>
+        updatedAt:{" "}
+        {new Date(contentSpecialistSuggestion.updatedAt).toLocaleString()}
+      </p>
+      <p>
+        contentSpecialistReviewId:{" "}
         <Link
           href={`/crud/content_specialist_review/${contentSpecialistSuggestion.contentSpecialistReviewId}`}
-          className='underline'
+          className="underline"
         >
           {contentSpecialistSuggestion.contentSpecialistReviewId}{" "}
         </Link>

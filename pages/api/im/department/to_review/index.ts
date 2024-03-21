@@ -36,22 +36,13 @@ export default async function handler(
 
       await validator.validate(req.query);
 
-      let ability: AppAbility;
+      let ability: AppAbility; // TODO remove App Ability
       let userActiveFaculty: ActiveFaculty;
       userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
         where: {
           Faculty: {
             userId: {
               equals: user.id,
-            },
-          },
-        },
-      });
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              id: userActiveFaculty.facultyId,
             },
           },
         },
@@ -116,84 +107,29 @@ export default async function handler(
           AND: [
             statusQuery,
             {
-              OR: [
-                {
-                  AND: [
-                    {
-                      CoAuthor: {
-                        none: {
-                          Faculty: {
-                            User: {
-                              id: {
-                                equals: user.id,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                    {
-                      Faculty: {
-                        Department: {
-                          Faculty: {
-                            none: {
-                              Chairperson: {
-                                ActiveChairperson: {
-                                  Chairperson: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                    {
-                      Faculty: {
-                        Department: {
-                          Faculty: {
-                            none: {
-                              Coordinator: {
-                                ActiveCoordinator: {
-                                  Coordinator: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  ],
-                },
+              AND: [
                 {
                   OR: [
                     {
-                      Faculty: {
-                        Department: {
-                          Faculty: {
+                      AND: [
+                        {
+                          IMFile: {
                             some: {
-                              Chairperson: {
-                                ActiveChairperson: {
-                                  Chairperson: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
+                              DepartmentReview: {
+                                PeerReview: {
+                                  Faculty: {
+                                    Department: {
+                                      Faculty: {
+                                        some: {
+                                          ActiveFaculty: {
+                                            Faculty: {
+                                              User: {
+                                                id: {
+                                                  equals: user.id,
+                                                },
+                                              },
+                                            },
+                                          },
                                         },
                                       },
                                     },
@@ -203,157 +139,9 @@ export default async function handler(
                             },
                           },
                         },
-                      },
-                    },
-                    {
-                      Faculty: {
-                        Department: {
-                          Faculty: {
-                            some: {
-                              Coordinator: {
-                                ActiveCoordinator: {
-                                  Coordinator: {
-                                    Faculty: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
-            {
-              NOT: {
-                AND: [
-                  {
-                    Faculty: {
-                      User: {
-                        id: {
-                          equals: user.id,
-                        },
-                      },
-                    },
-                  },
-                  {
-                    Faculty: {
-                      OR: [
                         {
-                          ActiveFaculty: {
-                            is: null,
-                          },
-                        },
-                        {
-                          Chairperson: {
-                            is: null,
-                          },
-                        },
-                        {
-                          Chairperson: {
-                            ActiveChairperson: {
-                              is: null,
-                            },
-                          },
-                        },
-                        {
-                          Coordinator: {
-                            is: null,
-                          },
-                        },
-                        {
-                          Coordinator: {
-                            ActiveCoordinator: {
-                              is: null,
-                            },
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          ChairpersonSuggestion: {
-                            ChairpersonReview: {
-                              Chairperson: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          CoordinatorSuggestion: {
-                            CoordinatorReview: {
-                              Coordinator: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          PeerSuggestion: {
-                            PeerReview: {
+                          CoAuthor: {
+                            none: {
                               Faculty: {
                                 User: {
                                   id: {
@@ -364,23 +152,109 @@ export default async function handler(
                             },
                           },
                         },
-                      },
+                        {
+                          IMFile: {
+                            none: {
+                              DepartmentReview: {
+                                PeerReview: {
+                                  PeerSuggestion: {
+                                    SubmittedPeerSuggestion: {
+                                      isNot: null,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
                     },
-                  },
+                    {
+                      AND: [
+                        {
+                          Faculty: {
+                            Department: {
+                              Faculty: {
+                                some: {
+                                  Coordinator: {
+                                    ActiveCoordinator: {
+                                      Coordinator: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        {
+                          IMFile: {
+                            none: {
+                              DepartmentReview: {
+                                CoordinatorReview: {
+                                  CoordinatorSuggestion: {
+                                    SubmittedCoordinatorSuggestion: {
+                                      isNot: null,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      AND: [
+                        {
+                          Faculty: {
+                            Department: {
+                              Faculty: {
+                                some: {
+                                  Chairperson: {
+                                    ActiveChairperson: {
+                                      Chairperson: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        {
+                          IMFile: {
+                            none: {
+                              DepartmentReview: {
+                                ChairpersonReview: {
+                                  ChairpersonSuggestion: {
+                                    SubmittedChairpersonSuggestion: {
+                                      isNot: null,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  ],
                 },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    isNot: null,
-                  },
-                },
-              },
-            },
-            {
-              AND: [
                 {
                   IMFile: {
                     none: {
@@ -400,34 +274,9 @@ export default async function handler(
                 },
                 {
                   IMFile: {
-                    none: {
+                    some: {
                       DepartmentReview: {
-                        ChairpersonReview: {
-                          ChairpersonSuggestion: {
-                            SubmittedChairpersonSuggestion: {
-                              DepartmentReviewed: {
-                                isNot: null,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                {
-                  IMFile: {
-                    none: {
-                      DepartmentReview: {
-                        PeerReview: {
-                          PeerSuggestion: {
-                            SubmittedPeerSuggestion: {
-                              DepartmentReviewed: {
-                                isNot: null,
-                              },
-                            },
-                          },
-                        },
+                        isNot: null,
                       },
                     },
                   },
@@ -483,78 +332,31 @@ export default async function handler(
           AND: [
             statusQuery,
             {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
-            {
-              NOT: {
-                AND: [
-                  {
-                    Faculty: {
-                      User: {
-                        id: {
-                          equals: user.id,
-                        },
-                      },
-                    },
-                  },
-                  {
-                    Faculty: {
-                      OR: [
+              AND: [
+                {
+                  OR: [
+                    {
+                      AND: [
                         {
-                          ActiveFaculty: {
-                            is: null,
-                          },
-                        },
-                        {
-                          Chairperson: {
-                            is: null,
-                          },
-                        },
-                        {
-                          Chairperson: {
-                            ActiveChairperson: {
-                              is: null,
-                            },
-                          },
-                        },
-                        {
-                          Coordinator: {
-                            is: null,
-                          },
-                        },
-                        {
-                          Coordinator: {
-                            ActiveCoordinator: {
-                              is: null,
-                            },
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          ChairpersonSuggestion: {
-                            ChairpersonReview: {
-                              Chairperson: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
+                          IMFile: {
+                            some: {
+                              DepartmentReview: {
+                                PeerReview: {
+                                  Faculty: {
+                                    Department: {
+                                      Faculty: {
+                                        some: {
+                                          ActiveFaculty: {
+                                            Faculty: {
+                                              User: {
+                                                id: {
+                                                  equals: user.id,
+                                                },
+                                              },
+                                            },
+                                          },
+                                        },
+                                      },
                                     },
                                   },
                                 },
@@ -562,48 +364,9 @@ export default async function handler(
                             },
                           },
                         },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          CoordinatorSuggestion: {
-                            CoordinatorReview: {
-                              Coordinator: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                none: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          PeerSuggestion: {
-                            PeerReview: {
+                        {
+                          CoAuthor: {
+                            none: {
                               Faculty: {
                                 User: {
                                   id: {
@@ -614,23 +377,109 @@ export default async function handler(
                             },
                           },
                         },
-                      },
+                        {
+                          IMFile: {
+                            none: {
+                              DepartmentReview: {
+                                PeerReview: {
+                                  PeerSuggestion: {
+                                    SubmittedPeerSuggestion: {
+                                      isNot: null,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
                     },
-                  },
+                    {
+                      AND: [
+                        {
+                          Faculty: {
+                            Department: {
+                              Faculty: {
+                                some: {
+                                  Coordinator: {
+                                    ActiveCoordinator: {
+                                      Coordinator: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        {
+                          IMFile: {
+                            none: {
+                              DepartmentReview: {
+                                CoordinatorReview: {
+                                  CoordinatorSuggestion: {
+                                    SubmittedCoordinatorSuggestion: {
+                                      isNot: null,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      AND: [
+                        {
+                          Faculty: {
+                            Department: {
+                              Faculty: {
+                                some: {
+                                  Chairperson: {
+                                    ActiveChairperson: {
+                                      Chairperson: {
+                                        Faculty: {
+                                          User: {
+                                            id: {
+                                              equals: user.id,
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        {
+                          IMFile: {
+                            none: {
+                              DepartmentReview: {
+                                ChairpersonReview: {
+                                  ChairpersonSuggestion: {
+                                    SubmittedChairpersonSuggestion: {
+                                      isNot: null,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  ],
                 },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    isNot: null,
-                  },
-                },
-              },
-            },
-            {
-              AND: [
                 {
                   IMFile: {
                     none: {
@@ -650,34 +499,9 @@ export default async function handler(
                 },
                 {
                   IMFile: {
-                    none: {
+                    some: {
                       DepartmentReview: {
-                        ChairpersonReview: {
-                          ChairpersonSuggestion: {
-                            SubmittedChairpersonSuggestion: {
-                              DepartmentReviewed: {
-                                isNot: null,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                {
-                  IMFile: {
-                    none: {
-                      DepartmentReview: {
-                        PeerReview: {
-                          PeerSuggestion: {
-                            SubmittedPeerSuggestion: {
-                              DepartmentReviewed: {
-                                isNot: null,
-                              },
-                            },
-                          },
-                        },
+                        isNot: null,
                       },
                     },
                   },

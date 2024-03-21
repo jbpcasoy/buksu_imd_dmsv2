@@ -1,7 +1,7 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { F003Suggestion, F003Props } from "@/types/forms";
+import { F003Props, F003Suggestion } from "@/types/forms";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 

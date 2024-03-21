@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 export interface useSubmittedCoordinatorSuggestionsParams {
   skip: number;
   take: number;
-  filter?: object
+  filter?: object;
 }
-export default function useSubmittedCoordinatorSuggestions({ skip, take, filter }: useSubmittedCoordinatorSuggestionsParams) {
-  const [state, setState] = useState<{submittedCoordinatorSuggestions: SubmittedCoordinatorSuggestion[], count: number}>({
+export default function useSubmittedCoordinatorSuggestions({
+  skip,
+  take,
+  filter,
+}: useSubmittedCoordinatorSuggestionsParams) {
+  const [state, setState] = useState<{
+    submittedCoordinatorSuggestions: SubmittedCoordinatorSuggestion[];
+    count: number;
+  }>({
     count: 0,
-    submittedCoordinatorSuggestions: []
+    submittedCoordinatorSuggestions: [],
   });
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export default function useSubmittedCoordinatorSuggestions({ skip, take, filter 
         params: {
           skip,
           take,
-          filter
+          filter,
         },
       })
       .then((res) => {

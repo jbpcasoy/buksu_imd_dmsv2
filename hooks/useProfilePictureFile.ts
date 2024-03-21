@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
 import { ProfilePictureFile } from "@prisma/client";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface useProfilePictureFileParams {
   id: string;
 }
-export default function useProfilePictureFile({ id }: useProfilePictureFileParams) {
+export default function useProfilePictureFile({
+  id,
+}: useProfilePictureFileParams) {
   const [state, setState] = useState<ProfilePictureFile | null>();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function useProfilePictureFile({ id }: useProfilePictureFileParam
     axios
       .get(`/api/profile_picture_file/${id}`)
       .then((res) => {
-        if(!subscribe) return;
+        if (!subscribe) return;
         setState(res.data);
       })
       .catch((error) => {
