@@ -311,8 +311,8 @@ export default function QAMISSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4">
-        <div className="sm:flex-1 flex flex-col sm:h-full overflow-auto p-4 bg-palette_white rounded-2xl space-y-4">
+      <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4">
+        <div className="md:flex-1 flex flex-col md:h-full overflow-auto p-4 bg-palette_white rounded-2xl space-y-4">
           <IMHeader iM={iM} phase="IMERC Phase" role="Author" />
 
           <div className="flex-1 h-full overflow-auto space-y-2">
@@ -399,7 +399,7 @@ export default function QAMISSuggestionPage() {
             </>
           </div>
         </div>
-        <div className="sm:flex-1 h-screen-3/4 sm:h-auto">
+        <div className="md:flex-1 h-screen-3/4 md:h-auto">
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
@@ -493,28 +493,28 @@ export function Item({
         </>
       </div>
       <div className="grid grid-cols-5">
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Page No.
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4">
           {qAMISSuggestionItem.pageNumber}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Suggestion
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {qAMISSuggestionItem.suggestion}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Remarks
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {qAMISSuggestionItem.remarks}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Action Taken
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {qAMISSuggestionItem.actionTaken}
         </p>
       </div>

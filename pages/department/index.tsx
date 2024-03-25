@@ -84,12 +84,12 @@ export default function DepartmentPage() {
 
             <input
               placeholder="Search"
-              className="p-2 border-0 focus:border-0 focus:ring-0 bg-palette_light_grey text-base"
+              className="p-2 border-0 focus:border-0 focus:ring-0 bg-palette_light_grey "
               onChange={handleNameChange}
             />
           </div>
         </div>
-        <table className="table-auto w-full text-base">
+        <table className="table-auto w-full ">
           {/* <thead>
             <tr>
               <th className="font-normal">IMAGE</th>
@@ -108,13 +108,13 @@ export default function DepartmentPage() {
           </tbody>
         </table>
         <div className="flex-1"></div>
-        <div className="flex justify-end items-center space-x-1 text-base">
-          <p className="text-base">
+        <div className="flex justify-end items-center space-x-1 ">
+          <p className="">
             {state.skip} - {state.skip + state.take} of {count}
           </p>
           <button
             disabled={state.skip - state.take < 0}
-            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50 text-base"
+            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50 "
             onClick={previousHandler}
           >
             <svg
@@ -128,7 +128,7 @@ export default function DepartmentPage() {
           </button>
           <button
             disabled={state.skip + state.take >= count}
-            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50 text-base"
+            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50 "
             onClick={nextHandler}
           >
             <span>Next</span>

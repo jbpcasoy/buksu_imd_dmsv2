@@ -36,7 +36,7 @@ export default function ExportPage({ models }: { models: string[] }) {
 
   return (
     <AdminLayout>
-      <div className="flex flex-col space-y-4 sm:overflow-auto">
+      <div className="flex flex-col space-y-4 md:overflow-auto">
         <div>
           <div className="space-x-2 bg-palette_white inline-flex p-3 rounded-lg">
             <svg
@@ -55,8 +55,8 @@ export default function ExportPage({ models }: { models: string[] }) {
             <p className="font-bold">Export</p>
           </div>
         </div>
-        <div className="h-full w-full flex-1 sm:overflow-auto bg-palette_white p-4 rounded-2xl ">
-          <div className="h-full sm:overflow-auto space-y-2">
+        <div className="h-full w-full flex-1 md:overflow-auto bg-palette_white p-4 rounded-2xl ">
+          <div className="h-full md:overflow-auto space-y-2">
             {models.map((model) => {
               return (
                 <div

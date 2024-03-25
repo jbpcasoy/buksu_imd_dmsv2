@@ -28,7 +28,7 @@ export default function ReviewItem({
   return (
     <div className="text-sm overflow-auto">
       <p className="text-palette_grey">{question}</p>
-      <div className="mt-2 flex flex-col sm:flex-row">
+      <div className="mt-2 flex flex-col xl:flex-row">
         {ratings.map((rating, index) => (
           <label
             key={rating.label}

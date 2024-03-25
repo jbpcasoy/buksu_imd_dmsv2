@@ -80,14 +80,14 @@ export default function SnackbarContextProvider({
         addSnackbar,
       }}
     >
-      <div className="h-full w-full sm:w-auto">
+      <div className="h-full w-full md:w-auto">
         <div className="h-full overflow-auto">{children}</div>
-        <div className="absolute bottom-0 right-0 p-2 w-full sm:w-auto">
+        <div className="absolute bottom-0 right-0 p-2 w-full md:w-auto">
           {state.snackbars.map((snackbar) => {
             return (
               <div
                 key={snackbar.id}
-                className={`w-full sm:w-96 rounded m-2 py-2 px-4 flex justify-between items-center space-x-2 ${
+                className={`w-full md:w-96 rounded m-2 py-2 px-4 flex justify-between items-center space-x-2 ${
                   snackbar.type === "success"
                     ? "bg-palette_success"
                     : "bg-palette_error"

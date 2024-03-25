@@ -47,7 +47,7 @@ export default function NotificationPage() {
               />
             </svg>
 
-            <h2 className="text-base inline whitespace-nowrap font-bold">
+            <h2 className=" inline whitespace-nowrap font-bold">
               Notifications
             </h2>
           </div>
@@ -79,7 +79,7 @@ export default function NotificationPage() {
           })}
           {/* {count < 1 && ( */}
           <div>
-            <p className="text-center text-lg font-bold p-5 text-palette_grey">
+            <p className="text-center  font-bold p-5 text-palette_grey">
               NO NOTIFICATIONS TO DISPLAY
             </p>
           </div>

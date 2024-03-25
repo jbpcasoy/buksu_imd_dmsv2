@@ -381,10 +381,7 @@ export default function CrudSidebar() {
 
   return (
     <div className="h-full overflow-y-auto pb-10">
-      <Link
-        href="/crud"
-        className="py-2 sticky top-0 bg-white shadow text-lg block"
-      >
+      <Link href="/crud" className="py-2 sticky top-0 bg-white shadow  block">
         BUKSU IMD DMS <span className="text-sm text-gray-500">CRUD</span>
       </Link>
 

@@ -441,7 +441,7 @@ function AddIM() {
       {state.addIMOpen && (
         <Modal title="ADD IM" onClose={() => setState({ addIMOpen: false })}>
           <form onSubmit={formik.handleSubmit} noValidate>
-            <div className="text-base flex flex-col space-y-1">
+            <div className=" flex flex-col space-y-1">
               <input
                 placeholder="Title"
                 {...formik.getFieldProps("title")}

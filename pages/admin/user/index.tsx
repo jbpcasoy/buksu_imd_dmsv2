@@ -68,7 +68,7 @@ export default function AdminUsersPage() {
 
   return (
     <AdminLayout>
-      <div className="space-y-4 flex flex-col h-full sm:overflow-auto">
+      <div className="space-y-4 flex flex-col h-full md:overflow-auto">
         <div className="flex justify-between p-1">
           <div className="flex items-end space-x-4 w-full h-full">
             <div className="inline-flex space-x-2 p-3 justify-center items-center rounded-lg bg-palette_white">
@@ -97,7 +97,7 @@ export default function AdminUsersPage() {
             </div>
           </div>
         </div>
-        <div className="rounded-2xl flex-1 h-full flex flex-col bg-palette_white p-4 sm:overflow-auto">
+        <div className="rounded-2xl flex-1 h-full flex flex-col bg-palette_white p-4 md:overflow-auto">
           <div className="flex-1">
             <table className="table-auto w-full">
               <thead className="p-1">

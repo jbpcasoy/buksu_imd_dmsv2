@@ -4,9 +4,9 @@ import { ReactNode } from "react";
 
 export default function AdminSidebar() {
   return (
-    <div className="h-full sm:overflow-auto flex flex-col bg-palette_white text-palette_blue px-1">
-      <div className="flex flex-col h-full sm:overflow-auto ">
-        <div className="flex flex-col flex-1 h-full sm:overflow-auto p-6 sm:p-14 space-y-1">
+    <div className="h-full md:overflow-auto flex flex-col bg-palette_white text-palette_blue px-1">
+      <div className="flex flex-col h-full md:overflow-auto ">
+        <div className="flex flex-col flex-1 h-full md:overflow-auto p-6  space-y-1">
           <MenuItem
             label="User"
             link="/admin/user"
@@ -368,7 +368,7 @@ function MenuItem({ label, link, icon }: MenuItemProps) {
     >
       <span className="flex items-center space-x-4">
         {icon}
-        <span className="text-base font-semibold">{label}</span>
+        <span className=" font-semibold">{label}</span>
       </span>
     </Link>
   );

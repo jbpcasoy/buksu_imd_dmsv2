@@ -67,15 +67,14 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
           )}
         </button>
         <div className="flex justify-center items-center space-x-1">
-          <Link href="/" className="w-24 sm:w-72 text-lg block">
+          <Link href="/" className="w-24 md:w-72  block">
             <img
               src="/images/logo.png"
               alt="BukSU IMD DMS Logo"
-              className="object-cover"
+              className="object-cover h-9 md:h-11 lg:h-14"
             />
           </Link>
-          <p className="bg-palette_orange px-2 rounded text-palette_white flex justify-center items-center space-x-1 text-sm">
-            <span>ADMIN</span>
+          <p className="bg-palette_orange p-1 rounded-full text-palette_white flex justify-center items-center space-x-1 text-sm">
             <span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -98,9 +97,9 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
               e.currentTarget.src = "/images/buksu-logo-min-512x512.png";
             }}
             alt={session?.user?.name ?? "Profile"}
-            className="h-6 w-6 sm:h-11 sm:w-11 rounded-full group-hover:opacity-90 object-cover"
+            className="h-6 w-6 md:h-11 md:w-11 rounded-full group-hover:opacity-90 object-cover"
           />
-          <p className="text-base font-semibold">{session?.user?.name ?? ""}</p>
+          <p className=" font-semibold">{session?.user?.name ?? ""}</p>
         </div>
       </Link>
     </div>

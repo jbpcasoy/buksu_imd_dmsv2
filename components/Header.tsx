@@ -53,9 +53,9 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
   return (
     <div className="">
       <div className="flex justify-between items-center h-20 space-x-2 bg-palette_white px-2">
-        <div className="flex space-x-2 justify-center items-center">
+        <div className="w-1/2 md:w-1/4 md:1/5 flex space-x-2 justify-left items-center">
           <button
-            className="hidden sm:flex h-6 w-6 rounded-full fill-palette_blue hover:fill-palette_grey justify-center items-center"
+            className="hidden md:flex h-6 w-6 rounded-full fill-palette_blue hover:fill-palette_grey justify-center items-center"
             onClick={() => {
               setState((prev) => ({ ...prev, openSidebar: !prev.openSidebar }));
             }}
@@ -93,9 +93,13 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
                 ? "/"
                 : "/department/my_ims"
             }
-            className="w-24 sm:w-72 text-lg block"
+            className="flex-1  flex justify-left"
           >
-            <img src="/images/logo.png" alt="BukSU IMD DMS Logo" />
+            <img
+              src="/images/logo.png"
+              alt="BukSU IMD DMS Logo"
+              className="h-9 md:h-11 lg:h-14"
+            />
           </Link>
         </div>
         <div className="flex justify-center items-center space-x-2">
@@ -108,7 +112,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  className="w-8 h-8 sm:w-11 sm:h-11"
+                  className="w-5 h-5 md:w-8 md:h-8"
                 >
                   <path
                     strokeLinecap="round"
@@ -129,9 +133,9 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
                   e.currentTarget.src = "/images/buksu-logo-min-512x512.png";
                 }}
                 alt={session?.user?.name ?? "Profile"}
-                className="h-6 w-6 sm:h-11 sm:w-11 rounded-full group-hover:opacity-90 object-cover"
+                className="h-5 w-5 md:h-8 md:w-8 rounded-full group-hover:opacity-90 object-cover"
               />
-              <p className="text-base font-semibold">
+              <p className="text-sm xl:text-base font-semibold">
                 {session?.user?.name ?? ""}
               </p>
             </div>

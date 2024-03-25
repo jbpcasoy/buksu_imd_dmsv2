@@ -278,8 +278,8 @@ export default function CoordinatorSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4">
-        <div className="sm:flex-1 flex flex-col h-full overflow-auto rounded-2xl bg-palette_white p-4 space-y-4">
+      <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4">
+        <div className="md:flex-1 flex flex-col h-full overflow-auto rounded-2xl bg-palette_white p-4 space-y-4">
           <IMHeader iM={iM} phase="Implementation Phase" role="Coordinator" />
 
           <div className="flex-1 h-full overflow-auto space-y-1">
@@ -342,7 +342,7 @@ export default function CoordinatorSuggestionPage() {
             </>
           </div>
         </div>
-        <div className="sm:flex-1 h-screen-3/4 sm:h-auto">
+        <div className="md:flex-1 h-screen-3/4 md:h-auto">
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
@@ -429,22 +429,22 @@ function Item({ coordinatorSuggestionItem, refresh }: ItemProps) {
         </>
       </div>
       <div className="grid grid-cols-5">
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Page No.
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4">
           {coordinatorSuggestionItem.pageNumber}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Suggestion
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {coordinatorSuggestionItem.suggestion}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Remarks
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {coordinatorSuggestionItem.remarks}
         </p>
       </div>
