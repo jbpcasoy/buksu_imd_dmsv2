@@ -62,15 +62,15 @@ export default function FileManagerQAMISPage() {
           <div className="flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
             <div>
               <p className="text-lg font-bold">
-                {fileManagerQAMISFile.url.split("/").at(-1)}
+                {fileManagerQAMISFile.filename}
               </p>
               <div className="text-xs palette_grey flex space-x-2">
                 <p>
                   {DateTime.fromJSDate(
-                    new Date(fileManagerQAMISFile.uploadedAt)
+                    new Date(fileManagerQAMISFile.metadata.lastModified)
                   ).toFormat("D | t")}
                 </p>
-                <p>{formatBytes(fileManagerQAMISFile.size)}</p>
+                <p>{formatBytes(fileManagerQAMISFile.metadata.size)}</p>
               </div>
             </div>
 
@@ -93,10 +93,8 @@ export default function FileManagerQAMISPage() {
           <div className="flex-1 h-full">
             <iframe
               loading="lazy"
-              src={`/api/file_manager/qamis/${fileManagerQAMISFile.url
-                .split("/")
-                .at(-1)}/pdf`}
-              title={fileManagerQAMISFile.url.split("/").at(-1)}
+              src={`/api/file_manager/qamis/${fileManagerQAMISFile.filename}/pdf`}
+              title={fileManagerQAMISFile.filename}
               className="w-full h-full rounded-2xl"
             />
           </div>

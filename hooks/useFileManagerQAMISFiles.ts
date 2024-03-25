@@ -1,23 +1,21 @@
-import { ListBlobResultBlob } from "@vercel/blob";
+import FileMetadata from "@/constants/FileMetadata";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface UseFileManagerQAMISFilesProps {
+  skip: number;
   take: number;
   filter?: object;
-  cursor?: string;
 }
 
 export default function useFileManagerQAMISFiles({
+  skip,
   take,
   filter,
-  cursor,
 }: UseFileManagerQAMISFilesProps) {
   const [state, setState] = useState<{
-    fileMetadatas: ListBlobResultBlob[];
+    fileMetadatas: FileMetadata[];
     count: number;
-    cursor?: string;
-    hasMore?: boolean;
   }>({
     count: 0,
     fileMetadatas: [],
@@ -27,9 +25,9 @@ export default function useFileManagerQAMISFiles({
     axios
       .get("/api/file_manager/qamis", {
         params: {
+          skip,
           take,
           filter,
-          cursor,
         },
       })
       .then((res) => {
@@ -38,7 +36,7 @@ export default function useFileManagerQAMISFiles({
       .catch((error) => {
         console.error(error);
       });
-  }, [take, filter, cursor]);
+  }, [skip, take, filter]);
 
   return state;
 }

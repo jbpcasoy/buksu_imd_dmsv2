@@ -153,7 +153,9 @@ export default async function handler(
           },
         });
         if (iMERCCITLRevision) {
-          throw new Error("Error: IM is already revised");
+          throw new Error(
+            "Error: A revision has already been submitted for that suggestion"
+          );
         }
       }
 
@@ -276,7 +278,9 @@ export default async function handler(
           },
         });
         if (iMERCCITLRevision) {
-          throw new Error("Error: IM is already revised");
+          throw new Error(
+            "Error: A revision has already been submitted for that suggestion"
+          );
         }
       }
 

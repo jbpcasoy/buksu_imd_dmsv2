@@ -3,6 +3,7 @@ import IMActionMenu from "@/components/im/IMActionMenu";
 import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useIM from "@/hooks/useIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
+import useIMStatus from "@/hooks/useIMStatus";
 import useSubmittedIDDCoordinatorSuggestionIM from "@/hooks/useSubmittedIDDCoordinatorSuggestionIM";
 import useSubmittedReturnedCITLRevisionIM from "@/hooks/useSubmittedReturnedCITLRevisionIM";
 import { DepartmentReview, IMFile } from "@prisma/client";
@@ -41,6 +42,9 @@ export default function IMImplementationCITLReviewed({
     openConfirmation: boolean;
   }>({
     openConfirmation: false,
+  });
+  const iMStatus = useIMStatus({
+    id: iMId,
   });
 
   const { addSnackbar } = useContext(SnackbarContext);
@@ -193,7 +197,12 @@ export default function IMImplementationCITLReviewed({
               {iM.facultyId === activeFaculty?.facultyId && (
                 <div className="space-y-2">
                   <div className="space-y-2">
-                    <IMIDDCoordinatorSuggestionItems id={iM.id} />
+                    <IMIDDCoordinatorSuggestionItems
+                      id={iM.id}
+                      editable={
+                        iMStatus !== "IMPLEMENTATION_CITL_RETURNED_REVISION"
+                      }
+                    />
                     <IMReturnedCITLRevisionSuggestionItems id={iM.id} />
                   </div>
                   <div className="space-y-2">

@@ -62,15 +62,19 @@ export default function FileManagerProfilePicturePage() {
           <div className="flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
             <div>
               <p className="text-lg font-bold">
-                {fileManagerProfilePictureFile.url.split("/").at(-1)}
+                {fileManagerProfilePictureFile.filename}
               </p>
               <div className="text-xs palette_grey flex space-x-2">
                 <p>
                   {DateTime.fromJSDate(
-                    new Date(fileManagerProfilePictureFile.uploadedAt)
+                    new Date(
+                      fileManagerProfilePictureFile.metadata.lastModified
+                    )
                   ).toFormat("D | t")}
                 </p>
-                <p>{formatBytes(fileManagerProfilePictureFile.size)}</p>
+                <p>
+                  {formatBytes(fileManagerProfilePictureFile.metadata.size)}
+                </p>
               </div>
             </div>
 
@@ -94,10 +98,8 @@ export default function FileManagerProfilePicturePage() {
             <img
               alt="user profile"
               loading="lazy"
-              src={`/api/file_manager/profile_picture/${fileManagerProfilePictureFile.url
-                .split("/")
-                .at(-1)}/image`}
-              title={fileManagerProfilePictureFile.url.split("/").at(-1)}
+              src={`/api/file_manager/profile_picture/${fileManagerProfilePictureFile.filename}/image`}
+              title={fileManagerProfilePictureFile.filename}
             />
           </div>
 

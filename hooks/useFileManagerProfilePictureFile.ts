@@ -1,4 +1,4 @@
-import { ListBlobResultBlob } from "@vercel/blob";
+import FileMetadata from "@/constants/FileMetadata";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -9,7 +9,7 @@ interface UseFileManagerProfilePictureFileProps {
 export default function useFileManagerProfilePictureFile({
   filename,
 }: UseFileManagerProfilePictureFileProps) {
-  const [state, setState] = useState<ListBlobResultBlob | null>();
+  const [state, setState] = useState<FileMetadata | null>();
 
   useEffect(() => {
     if (!filename) {

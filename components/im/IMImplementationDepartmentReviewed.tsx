@@ -4,6 +4,7 @@ import useActiveFacultyMe from "@/hooks/useActiveFacultyMe";
 import useDepartmentReviewedIM from "@/hooks/useDepartmentReviewedIM";
 import useIM from "@/hooks/useIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
+import useIMStatus from "@/hooks/useIMStatus";
 import useSubmittedReturnedDepartmentRevisionIM from "@/hooks/useSubmittedReturnedDepartmentRevisionIM";
 import { DepartmentReview, IMFile } from "@prisma/client";
 import axios from "axios";
@@ -71,6 +72,10 @@ export default function IMImplementationDepartmentReviewed({
     useSubmittedReturnedDepartmentRevisionIM({
       id: iMId,
     });
+
+  const iMStatus = useIMStatus({
+    id: iMId,
+  });
 
   const submitForEndorsementHandler = async () => {
     if (!state?.iMFile || !iMId || !departmentReviewed) return;
@@ -194,9 +199,27 @@ export default function IMImplementationDepartmentReviewed({
               {iM.facultyId === activeFaculty?.facultyId && (
                 <div className="space-y-2">
                   <div className="space-y-2">
-                    <IMPeerSuggestionItems id={iM.id} />
-                    <IMChairpersonSuggestionItems id={iM.id} />
-                    <IMCoordinatorSuggestionItems id={iM.id} />
+                    <IMPeerSuggestionItems
+                      id={iM.id}
+                      editable={
+                        iMStatus !==
+                        "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION"
+                      }
+                    />
+                    <IMChairpersonSuggestionItems
+                      id={iM.id}
+                      editable={
+                        iMStatus !==
+                        "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION"
+                      }
+                    />
+                    <IMCoordinatorSuggestionItems
+                      id={iM.id}
+                      editable={
+                        iMStatus !==
+                        "IMPLEMENTATION_DEPARTMENT_RETURNED_REVISION"
+                      }
+                    />
                     <IMReturnedDepartmentRevisionSuggestionItems id={iM.id} />
                   </div>
                   <div className="space-y-2">

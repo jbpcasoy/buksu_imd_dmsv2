@@ -140,7 +140,8 @@ export default async function handler(
         if (departmentRevision) {
           return res.status(400).json({
             error: {
-              message: "Error: IM is already revised",
+              message:
+                "Error: A revision has already been submitted for that suggestion",
             },
           });
         }
@@ -253,7 +254,8 @@ export default async function handler(
         if (departmentRevision) {
           return res.status(400).json({
             error: {
-              message: "Error: IM is already revised",
+              message:
+                "Error: A revision has already been submitted for that suggestion",
             },
           });
         }

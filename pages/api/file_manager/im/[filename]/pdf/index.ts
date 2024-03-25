@@ -1,8 +1,9 @@
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
+import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import fetch from "node-fetch";
+import path from "path";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,26 +22,26 @@ export default async function handler(
     try {
       const { filename } = req.query;
 
-      // res.setHeader("Content-Type", `application/pdf`);
-
-      // const destination = path.join(process.cwd(), `/files/im/${filename}`);
-      // const file = fs.createReadStream(destination);
-      // file.pipe(res);
-
       try {
-        const response = await fetch(
-          `${process.env.BLOB_URL}/${process.env.NODE_ENV}/files/im/${filename}`
-        );
+        // res.setHeader("Content-Type", `application/pdf`);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
-        // Set appropriate headers
+        const destination = path.join(process.cwd(), `/files/im/${filename}`);
+        const file = fs.createReadStream(destination);
         res.setHeader("Content-Type", "application/pdf");
         res.setHeader("Content-Disposition", "inline");
+        file.pipe(res);
+
+        // const response = await fetch(
+        //   `${process.env.BLOB_URL}/${process.env.NODE_ENV}/files/im/${filename}`
+        // );
+
+        // if (!response.ok) {
+        //   throw new Error("Failed to fetch data");
+        // }
+
+        // Set appropriate headers
         // res.send(response.blob);
-        response.body?.pipe(res);
+        // response.body?.pipe(res);
       } catch (error) {
         console.error("Error fetching data:", error);
         res.status(500).send("Error fetching data");

@@ -1,7 +1,6 @@
 import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import uploadToVercelBlob from "@/services/uploadToVercelBlob";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -160,12 +159,11 @@ export default async function handler(
       //   if (err) throw err;
       // });
 
-      const blob = await uploadToVercelBlob(
-        file,
-        `files/plagiarism/${filename}`
-      );
-      const blobFilename = blob.url.split("/").at(-1);
-      console.log({ blob });
+      // const blob = await uploadToVercelBlob(
+      //   file,
+      //   `files/plagiarism/${filename}`
+      // );
+      // const blobFilename = blob.url.split("/").at(-1);
 
       // create object to server
       const plagiarismFile = await prisma.plagiarismFile.create({
@@ -175,7 +173,7 @@ export default async function handler(
               id: iMERCCITLReviewedId,
             },
           },
-          filename: blobFilename as string,
+          filename: filename as string,
           mimetype: file.mimetype,
           size: file.size,
           originalFilename: file.originalFilename,
