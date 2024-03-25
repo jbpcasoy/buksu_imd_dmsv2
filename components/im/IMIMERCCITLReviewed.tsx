@@ -5,6 +5,7 @@ import useIM from "@/hooks/useIM";
 import useIMERCCITLReviewedIM from "@/hooks/useIMERCCITLReviewedIM";
 import useIMLatestIMFile from "@/hooks/useIMLatestIMFile.";
 import useIMLatestPlagiarismFile from "@/hooks/useIMLatestPlagiarismFile";
+import useIMStatus from "@/hooks/useIMStatus";
 import useSubmittedReturnedIMERCCITLRevisionIM from "@/hooks/useSubmittedReturnedIMERCCITLRevisionIM";
 import axios from "axios";
 import Error from "next/error";
@@ -44,6 +45,9 @@ export default function IMIMERCCITLReviewed({
     id: iMId,
   });
   const plagiarismFile = useIMLatestPlagiarismFile({ id: iMId as string });
+  const iMStatus = useIMStatus({
+    id: iMId,
+  });
 
   const [loading, setLoading] = useState(false);
 
@@ -195,9 +199,18 @@ export default function IMIMERCCITLReviewed({
             />
             {iM.facultyId === activeFaculty?.facultyId && (
               <>
-                <IMContentSpecialistSuggestionItems id={iM.id} />
-                <IMIDDSpecialistSuggestionItems id={iM.id} />
-                <IMContentEditorSuggestionItems id={iM.id} />
+                <IMContentSpecialistSuggestionItems
+                  id={iM.id}
+                  editable={iMStatus !== "IMERC_CITL_RETURNED_REVISION"}
+                />
+                <IMIDDSpecialistSuggestionItems
+                  id={iM.id}
+                  editable={iMStatus !== "IMERC_CITL_RETURNED_REVISION"}
+                />
+                <IMContentEditorSuggestionItems
+                  id={iM.id}
+                  editable={iMStatus !== "IMERC_CITL_RETURNED_REVISION"}
+                />
                 <IMReturnedIMERCCITLRevisionSuggestionItems id={iM.id} />
                 <div className="space-y-2">
                   {!plagiarismFile && (

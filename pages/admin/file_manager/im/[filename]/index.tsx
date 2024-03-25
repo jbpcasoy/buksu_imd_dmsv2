@@ -61,16 +61,14 @@ export default function FileManagerIMPage() {
         <div className="flex flex-row h-full sm:space-x-4">
           <div className="flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
             <div>
-              <p className="text-lg font-bold">
-                {fileManagerIMFile.url.split("/").at(-1)}
-              </p>
+              <p className="text-lg font-bold">{fileManagerIMFile.filename}</p>
               <div className="text-xs palette_grey flex space-x-2">
                 <p>
                   {DateTime.fromJSDate(
-                    new Date(fileManagerIMFile.uploadedAt)
+                    new Date(fileManagerIMFile.metadata.lastModified)
                   ).toFormat("D | t")}
                 </p>
-                <p>{formatBytes(fileManagerIMFile.size)}</p>
+                <p>{formatBytes(fileManagerIMFile.metadata.size)}</p>
               </div>
             </div>
 
@@ -93,10 +91,8 @@ export default function FileManagerIMPage() {
           <div className="flex-1 h-full">
             <iframe
               loading="lazy"
-              src={`/api/file_manager/im/${fileManagerIMFile.url
-                .split("/")
-                .at(-1)}/pdf`}
-              title={fileManagerIMFile.url.split("/").at(-1)}
+              src={`/api/file_manager/im/${fileManagerIMFile.filename}/pdf`}
+              title={fileManagerIMFile.filename}
               className="w-full h-full rounded-2xl"
             />
           </div>

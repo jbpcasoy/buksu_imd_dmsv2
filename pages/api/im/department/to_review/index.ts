@@ -113,6 +113,53 @@ export default async function handler(
                     {
                       AND: [
                         {
+                          Faculty: {
+                            Department: {
+                              Faculty: {
+                                some: {
+                                  ActiveFaculty: {
+                                    Faculty: {
+                                      User: {
+                                        id: {
+                                          equals: user.id,
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        {
+                          IMFile: {
+                            none: {
+                              DepartmentReview: {
+                                PeerReview: {
+                                  isNot: null,
+                                },
+                              },
+                            },
+                          },
+                        },
+                        {
+                          CoAuthor: {
+                            none: {
+                              Faculty: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      AND: [
+                        {
                           IMFile: {
                             some: {
                               DepartmentReview: {
@@ -335,6 +382,53 @@ export default async function handler(
               AND: [
                 {
                   OR: [
+                    {
+                      AND: [
+                        {
+                          Faculty: {
+                            Department: {
+                              Faculty: {
+                                some: {
+                                  ActiveFaculty: {
+                                    Faculty: {
+                                      User: {
+                                        id: {
+                                          equals: user.id,
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        {
+                          IMFile: {
+                            none: {
+                              DepartmentReview: {
+                                PeerReview: {
+                                  isNot: null,
+                                },
+                              },
+                            },
+                          },
+                        },
+                        {
+                          CoAuthor: {
+                            none: {
+                              Faculty: {
+                                User: {
+                                  id: {
+                                    equals: user.id,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
                     {
                       AND: [
                         {

@@ -62,15 +62,15 @@ export default function FileManagerPlagiarismPage() {
           <div className="flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
             <div>
               <p className="text-lg font-bold">
-                {fileManagerPlagiarismFile.url.split("/").at(-1)}
+                {fileManagerPlagiarismFile.filename}
               </p>
               <div className="text-xs palette_grey flex space-x-2">
                 <p>
                   {DateTime.fromJSDate(
-                    new Date(fileManagerPlagiarismFile.uploadedAt)
+                    new Date(fileManagerPlagiarismFile.metadata.lastModified)
                   ).toFormat("D | t")}
                 </p>
-                <p>{formatBytes(fileManagerPlagiarismFile.size)}</p>
+                <p>{formatBytes(fileManagerPlagiarismFile.metadata.size)}</p>
               </div>
             </div>
 
@@ -93,10 +93,8 @@ export default function FileManagerPlagiarismPage() {
           <div className="flex-1 h-full">
             <iframe
               loading="lazy"
-              src={`/api/file_manager/plagiarism/${fileManagerPlagiarismFile.url
-                .split("/")
-                .at(-1)}/pdf`}
-              title={fileManagerPlagiarismFile.url.split("/").at(-1)}
+              src={`/api/file_manager/plagiarism/${fileManagerPlagiarismFile.filename}/pdf`}
+              title={fileManagerPlagiarismFile.filename}
               className="w-full h-full rounded-2xl"
             />
           </div>
