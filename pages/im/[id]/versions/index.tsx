@@ -35,7 +35,7 @@ export default function VersionsPage() {
             />
           </svg>
 
-          <span className="text-base">VERSIONS</span>
+          <span className="">VERSIONS</span>
         </div>
         {iMId && (
           <div className="mt-2">

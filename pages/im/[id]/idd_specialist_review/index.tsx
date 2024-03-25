@@ -197,8 +197,8 @@ export default function AddIDDSpecialistReviewPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row h-full sm:space-x-4">
-        <div className="flex flex-col sm:flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
+      <div className="flex flex-col md:flex-row h-full md:space-x-4">
+        <div className="flex flex-col md:flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
           <IMHeader iM={iM} phase="IMERC Phase" role="IDD Specialist" />
 
           <div className="flex-1 overflow-auto">
@@ -358,7 +358,7 @@ export default function AddIDDSpecialistReviewPage() {
             </form>
           </div>
         </div>
-        <div className="sm:flex-1 h-screen-3/4 sm:h-auto">
+        <div className="md:flex-1 h-screen-3/4 md:h-auto">
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}

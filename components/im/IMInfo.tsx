@@ -84,7 +84,7 @@ export default function IMInfo({ iMId, onRefresh, refreshFlag }: IMInfoProps) {
           </p>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row sm:space-x-4">
+      <div className="flex flex-col md:flex-row md:space-x-4">
         <div className="space-y-2">
           <div className="space-y-2">
             <p className="text-xs">DATE/TIME</p>

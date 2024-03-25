@@ -117,8 +117,8 @@ export default function IMImplementationDepartmentRevised({
   }
 
   return (
-    <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4 space-y-4 sm:space-y-0">
-      <div className="flex-1 h-full sm:overflow-auto bg-palette_white p-4 rounded-2xl flex flex-col space-y-2">
+    <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4 space-y-4 md:space-y-0">
+      <div className="flex-1 h-full md:overflow-auto bg-palette_white p-4 rounded-2xl flex flex-col space-y-2">
         <div className="w-full flex space-between">
           <p className="uppercase font-semibold flex-1">DOCUMENT INFORMATION</p>
 
@@ -129,11 +129,11 @@ export default function IMImplementationDepartmentRevised({
           />
         </div>
 
-        <div className="space-y-2 flex-1 sm:overflow-auto ">
+        <div className="space-y-2 flex-1 md:overflow-auto ">
           <IMInfo iMId={iMId} onRefresh={onRefresh} refreshFlag={refreshFlag} />
-          <div className="flex-1 sm:overflow-auto space-y-2">
+          <div className="flex-1 md:overflow-auto space-y-2">
             {activeCoordinator && (
-              <div className="space-y-1 sm:space-y-0 sm:space-x-1 flex flex-col sm:flex-row">
+              <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row">
                 <>
                   <button
                     disabled={loading}
@@ -161,9 +161,9 @@ export default function IMImplementationDepartmentRevised({
           </div>
         </div>
       </div>
-      <div className="sm:flex-1 h-screen-3/4 sm:h-full">
+      <div className="md:flex-1 h-screen-3/4 md:h-full">
         {iMFile && (
-          <div className="sm:flex-1 h-screen-3/4 sm:h-full">
+          <div className="md:flex-1 h-screen-3/4 md:h-full">
             <iframe
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}

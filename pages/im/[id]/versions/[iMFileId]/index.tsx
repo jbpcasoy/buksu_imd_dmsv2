@@ -43,7 +43,7 @@ export default function VersionsPage() {
   return (
     <MainLayout>
       <div className="h-full flex flex-col overflow-auto">
-        <div className="h-full flex flex-row sm:space-x-4 overflow-auto">
+        <div className="h-full flex flex-row md:space-x-4 overflow-auto">
           {iMFile && (
             <div className="flex-1 overflow-auto flex flex-col bg-palette_white p-4 rounded-2xl space-y-4">
               <div className="">

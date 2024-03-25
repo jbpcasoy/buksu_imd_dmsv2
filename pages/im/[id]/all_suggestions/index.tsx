@@ -55,7 +55,7 @@ export default function AllSuggestionsPage() {
               />
             </svg>
 
-            <h2 className="font-bold text-base">All Suggestions</h2>
+            <h2 className="font-bold ">All Suggestions</h2>
           </div>
         </div>
         <div className="h-full overflow-auto space-y-2">

@@ -60,17 +60,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
   }, [session]);
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen text-sm xl:text-base">
       <Header onToggleSidebar={setOpenSidebar} />
-      <div className="flex-1 flex sm:flex-row flex-col sm:h-full sm:overflow-auto">
+      <div className="flex-1 flex md:flex-row flex-col md:h-full md:overflow-auto">
         <div
-          className={`w-full sm:w-96 flex-none ${
-            openSidebar ? "block" : "block sm:hidden"
+          className={`w-full lg:w-1/5 flex-none ${
+            openSidebar ? "block" : "block md:hidden"
           }`}
         >
           <Sidebar />
         </div>
-        <div className="sm:flex-1 flex flex-col sm:h-full sm:overflow-auto bg-palette_dirty_white">
+        <div className="md:flex-1 flex flex-col lg:h-full md:overflow-auto bg-palette_dirty_white">
           {/* {announcements?.length > 0 &&
             !router.pathname.startsWith("/im/[id]") && (
               <div className="flex justify-between items-center m-2 rounded py-5 px-2 bg-gradient-to-r from-palette_orange shadow">
@@ -87,8 +87,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
                   </svg>
                 </button>
-                <div className="flex-1 sm:px-10 text-palette_blue overflow-auto">
-                  <p className="text-lg font-bold whitespace-nowrap overflow-auto">
+                <div className="flex-1 md:px-10 text-palette_blue overflow-auto">
+                  <p className=" font-bold whitespace-nowrap overflow-auto">
                     {announcements?.[0].title}
                   </p>
                   <p className="whitespace-nowrap overflow-auto">
@@ -129,7 +129,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </button>
               </div>
             )} */}
-          <div className="flex-1 overflow-auto sm:h-full p-4">{children}</div>
+          <div className="flex-1 overflow-auto md:h-full p-4">{children}</div>
         </div>
       </div>
     </div>

@@ -122,14 +122,12 @@ export default function IMTable({
 
   return (
     <div className="bg-palette_white rounded-2xl h-full flex flex-col overflow-auto p-4">
-      <div className="pb-4">
-        <div className="flex overflow-auto space-x-1">
+      <div className="pb-4 overflow-auto">
+        <div className="flex space-x-1">
           <div className="flex-1 flex items-center space-x-8">
-            <div className="flex space-x-2 items-center justify-center border border-palette_orange rounded-lg p-3 ">
+            <div className="flex space-x-2 items-center justify-center border border-palette_orange rounded-lg p-2 ">
               {icon && <div className="stroke-palette_grey">{icon}</div>}
-              <h2 className="text-base inline whitespace-nowrap font-bold">
-                {title}
-              </h2>
+              <h2 className="inline whitespace-nowrap font-bold">{title}</h2>
             </div>
             <div className="flex flex-row space-x-4">
               <FilterSelector onFilterChange={handleFilterChange} />
@@ -141,19 +139,35 @@ export default function IMTable({
           {enableAdd && <AddIM />}
         </div>
       </div>
-      <div className="sm:flex-1 sm:h-full overflow-auto">
-        <table className="table-auto w-full overflow-auto ">
+      <div className="md:flex-1 md:h-full overflow-auto">
+        <table className="table-auto lg:table-fixed w-full overflow-auto ">
           <thead className="p-1 border-b">
             <tr>
-              <th className="font-normal text-left">TITLE</th>
-              <th className="font-normal text-left">SERIAL NO.</th>
-              <th className="font-normal text-left">TYPE</th>
-              <th className="font-normal text-left">AUTHOR</th>
-              <th className="font-normal text-left">DEPARTMENT</th>
-              <th className="font-normal text-left">COLLEGE</th>
-              <th className="font-normal text-left">STATUS</th>
-              <th className="font-normal text-left">DATE CREATED</th>
-              <th className="font-normal text-left">ACTIONS</th>
+              <th className="font-normal text-left truncate" title="TITLE">
+                TITLE
+              </th>
+              <th className="font-normal text-left truncate" title="SERIAL">
+                SERIAL NO.
+              </th>
+              <th className="font-normal text-left truncate" title="TYPE">
+                TYPE
+              </th>
+              <th className="font-normal text-left truncate" title="AUTHOR">
+                AUTHOR
+              </th>
+              <th className="font-normal text-left truncate" title="DEPARTMENT">
+                DEPARTMENT
+              </th>
+              <th className="font-normal text-left truncate" title="COLLEGE">
+                COLLEGE
+              </th>
+              <th className="font-normal text-left truncate" title="STATUS">
+                STATUS
+              </th>
+              <th className="font-normal text-left truncate" title="DATE">
+                DATE CREATED
+              </th>
+              <th className="font-normal text-center">ACTIONS</th>
             </tr>
           </thead>
           <tbody className="py-1 h-full overflow-auto">
@@ -162,7 +176,7 @@ export default function IMTable({
             })}
 
             {count < 1 && (
-              <tr className="border-b uppercase text-lg text-center">
+              <tr className="border-b uppercase  text-center">
                 <td colSpan={9} className="font-bold p-5 text-palette_grey">
                   NO IMS TO DISPLAY
                 </td>
@@ -219,54 +233,53 @@ function IMItem({ iM }: { iM: IM }) {
   const serialNumber = useSerialNumberIM({
     id: iM.id,
   });
+  const iMStatus = useIMStatus({ id: iM.id });
 
   return (
-    <tr key={iM.id} className="border-b uppercase text-md">
-      <td>
-        <div className="p-1">{iM.title}</div>
+    <tr key={iM.id} className="border-b uppercase">
+      <td className="p-1 text-nowrap truncate text-sm" title={iM.title}>
+        {iM.title}
       </td>
-      <td>
-        <div className="p-1">{serialNumber?.value}</div>
+      <td
+        className="p-1 text-nowrap truncate text-sm"
+        title={serialNumber?.value}
+      >
+        {serialNumber?.value}
       </td>
-      <td>
-        <div className="p-1">{iM.type}</div>
+      <td className="p-1 text-nowrap truncate text-sm" title={iM.type}>
+        {iM.type}
       </td>
-      <td>
-        <div className="p-1">{user?.name}</div>
+      <td className="p-1 text-nowrap truncate text-sm" title={user?.name ?? ""}>
+        {user?.name}
       </td>
-      <td>
-        <div className="p-1">{department?.name}</div>
+      <td className="p-1 text-nowrap truncate text-sm" title={department?.name}>
+        {department?.name}
       </td>
-      <td>
-        <div className="p-1">{college?.name}</div>
+      <td className="p-1 text-nowrap truncate text-sm" title={college?.name}>
+        {college?.name}
       </td>
-      <td>
-        <div className="p-1">
-          <IMStatus iM={iM} />
-        </div>
+      <td
+        className="p-1 text-nowrap truncate text-sm"
+        title={iMStatusNormalizer(iMStatus)}
+      >
+        {iMStatusNormalizer(iMStatus)}
       </td>
-      <td>
-        <div className="p-1">
-          {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
-        </div>
+      <td
+        className="p-1 text-nowrap truncate text-sm"
+        title={DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
+      >
+        {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
       </td>
-      <td>
-        <div className="p-1 flex justify-center items-center">
-          <Link
-            href={`/im/${iM.id}`}
-            className="group rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
-          >
-            <span>View</span>
-          </Link>
-        </div>
+      <td className="p-1 flex justify-center items-center">
+        <Link
+          href={`/im/${iM.id}`}
+          className="group rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
+        >
+          <span>View</span>
+        </Link>
       </td>
     </tr>
   );
-}
-
-function IMStatus({ iM }: { iM: IM }) {
-  const iMStatus = useIMStatus({ id: iM.id });
-  return <>{iMStatusNormalizer(iMStatus)}</>;
 }
 
 // FilterSelector.tsx
@@ -302,7 +315,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
     <div className="flex">
       <select
         onChange={handleFieldChange}
-        className="py-1 rounded-l-lg bg-inherit border-r-0 focus:border-palette_grey focus:outline-0 focus:ring-0 text-base"
+        className="py-1 rounded-l-lg bg-inherit border-r-0 focus:border-palette_grey focus:outline-0 focus:ring-0"
       >
         <option value="">Select field</option>
         <option value="title">Title</option>
@@ -314,7 +327,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
         type="text"
         placeholder="Search"
         value={filterValue}
-        className="bg-inherit border-b py-1 rounded-r-lg focus:border-palette_grey focus:outline-0 focus:ring-0 text-base"
+        className="bg-inherit border-b py-1 rounded-r-lg focus:border-palette_grey focus:outline-0 focus:ring-0 "
         onChange={handleValueChange}
       />
     </div>
@@ -346,7 +359,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
       <select
         onChange={handleFieldChange}
         value={selectedField}
-        className="py-1 rounded-l-lg bg-inherit border-r-0 focus:border-palette_grey focus:outline-0 focus:ring-0 text-base"
+        className="py-1 rounded-l-lg bg-inherit border-r-0 focus:border-palette_grey focus:outline-0 focus:ring-0"
       >
         <option value="title">Title</option>
         <option value="createdAt">Date Created</option>
@@ -357,7 +370,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
       <select
         onChange={handleDirectionChange}
         value={sortDirection}
-        className="py-1 rounded-r-lg bg-inherit focus:border-palette_grey focus:outline-0 focus:ring-0 text-base"
+        className="py-1 rounded-r-lg bg-inherit focus:border-palette_grey focus:outline-0 focus:ring-0"
       >
         <option value="asc">↑</option>
         <option value="desc">↓</option>
@@ -429,7 +442,7 @@ function AddIM() {
     <>
       <button
         disabled={loading}
-        className="rounded-lg bg-palette_blue text-palette_white p-2 flex justify-center items-center space-x-1"
+        className="rounded-lg bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
         onClick={() => setState({ addIMOpen: true })}
       >
         <svg
@@ -440,12 +453,12 @@ function AddIM() {
         >
           <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
         </svg>
-        <span className="whitespace-nowrap text-base">Add IM</span>
+        <span className="whitespace-nowrap">Add IM</span>
       </button>
       {state.addIMOpen && (
         <Modal title="ADD IM" onClose={() => setState({ addIMOpen: false })}>
           <form onSubmit={formik.handleSubmit} noValidate>
-            <div className="text-base flex flex-col space-y-1">
+            <div className="flex flex-col space-y-1">
               <input
                 placeholder="Title"
                 {...formik.getFieldProps("title")}
@@ -509,7 +522,7 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
     "IMERC_CITL_DIRECTOR_ENDORSED",
   ];
   return (
-    <div className="flex items-center justify-center border border-current rounded-lg space-x-2 p-2 w-40 ">
+    <div className="flex items-center justify-center border border-current rounded-lg space-x-2 p-1 w-40 ">
       <svg
         width="18"
         height="18"
@@ -527,7 +540,7 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
       </svg>
       <select
         onChange={(e) => onStatusChange(e.target.value)}
-        className="py-1 rounded-r-lg bg-inherit focus:border-none focus:outline-none focus:ring-0  border-0 w-full text-base"
+        className="py-1 rounded-r-lg bg-inherit focus:border-none focus:outline-none focus:ring-0  border-0 w-full"
       >
         <option value="">Status</option>
         {statuses.map((status) => {

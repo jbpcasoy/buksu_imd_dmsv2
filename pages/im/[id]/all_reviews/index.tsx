@@ -68,7 +68,7 @@ export default function AllReviewsPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <h2 className="font-bold text-base">All Reviews</h2>
+            <h2 className="font-bold ">All Reviews</h2>
           </div>
         </div>
         <div className="overflow-auto">
@@ -104,7 +104,7 @@ function PeerReviewView({ peerReview }: { peerReview: PeerReview }) {
   return (
     <div>
       <div>
-        <h2 className="inline text-lg font-bold">
+        <h2 className="inline  font-bold">
           Instructional Material Review{" "}
           <span className="bg-palette_orange text-palette_white p-1 rounded">
             Peer
@@ -278,7 +278,7 @@ function CoordinatorReviewView({
   return (
     <div>
       <div>
-        <h2 className="inline text-lg font-bold">
+        <h2 className="inline  font-bold">
           Instructional Material Review{" "}
           <span className="bg-palette_orange text-palette_white p-1 rounded">
             Coordinator
@@ -452,7 +452,7 @@ function ChairpersonReviewView({
   return (
     <div>
       <div>
-        <h2 className="inline text-lg font-bold">
+        <h2 className="inline  font-bold">
           Instructional Material Review{" "}
           <span className="bg-palette_orange text-palette_white p-1 rounded">
             Chairperson
@@ -626,7 +626,7 @@ function ContentSpecialistReviewView({
   return (
     <div>
       <div>
-        <h2 className="inline text-lg font-bold">
+        <h2 className="inline  font-bold">
           Instructional Material Review{" "}
           <span className="bg-palette_orange text-palette_white p-1 rounded">
             Content Specialist
@@ -805,7 +805,7 @@ function ContentEditorReviewView({
   return (
     <div>
       <div>
-        <h2 className="inline text-lg font-bold">
+        <h2 className="inline  font-bold">
           Instructional Material Review{" "}
           <span className="bg-palette_orange text-palette_white p-1 rounded">
             Content Editor
@@ -983,7 +983,7 @@ function IDDSpecialistReviewView({
   return (
     <div>
       <div>
-        <h2 className="inline text-lg font-bold">
+        <h2 className="inline  font-bold">
           Instructional Material Review{" "}
           <span className="bg-palette_orange text-palette_white p-1 rounded">
             IDD Specialist

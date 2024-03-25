@@ -136,9 +136,9 @@ export default function IMImplementationDraft({
   }
 
   return (
-    <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4 space-y-4 sm:space-y-0">
-      <div className="flex-1 h-full sm:overflow-auto">
-        <div className="bg-palette_white h-full rounded-2xl p-4 sm:overflow-auto flex flex-col space-y-2">
+    <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4 space-y-4 md:space-y-0">
+      <div className="flex-1 h-full md:overflow-auto">
+        <div className="bg-palette_white h-full rounded-2xl p-4 md:overflow-auto flex flex-col space-y-2">
           <div className="w-full flex space-between">
             <p className="uppercase font-semibold flex-1">
               DOCUMENT INFORMATION
@@ -151,7 +151,7 @@ export default function IMImplementationDraft({
             />
           </div>
 
-          <div className="space-y-2 flex-1 sm:overflow-auto">
+          <div className="space-y-2 flex-1 md:overflow-auto">
             <IMInfo
               iMId={iMId}
               onRefresh={onRefresh}
@@ -184,7 +184,7 @@ export default function IMImplementationDraft({
           </div>
         </div>
       </div>
-      <div className="sm:flex-1 h-screen-3/4 sm:h-full">
+      <div className="md:flex-1 h-screen-3/4 md:h-full">
         {iM.facultyId === activeFaculty?.facultyId && (
           <div className="w-full h-full">
             {!state?.filePreview && (

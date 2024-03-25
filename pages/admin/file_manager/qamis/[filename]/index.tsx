@@ -58,12 +58,10 @@ export default function FileManagerQAMISPage() {
   return (
     <AdminLayout>
       {fileManagerQAMISFile && (
-        <div className="flex flex-row h-full sm:space-x-4">
+        <div className="flex flex-row h-full md:space-x-4">
           <div className="flex-1 bg-palette_white p-4 rounded-2xl space-y-4">
             <div>
-              <p className="text-lg font-bold">
-                {fileManagerQAMISFile.filename}
-              </p>
+              <p className=" font-bold">{fileManagerQAMISFile.filename}</p>
               <div className="text-xs palette_grey flex space-x-2">
                 <p>
                   {DateTime.fromJSDate(

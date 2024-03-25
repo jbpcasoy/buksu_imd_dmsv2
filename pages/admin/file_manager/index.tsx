@@ -69,22 +69,22 @@ export default function FileManagerPage() {
         </div>
         <div className="rounded-2xl h-full flex flex-col p-4 bg-palette_white flex-1">
           {state.tab === "IM" && (
-            <div className="sm:flex-1 sm:h-full overflow-auto">
+            <div className="md:flex-1 md:h-full overflow-auto">
               <IMFiles query={state.query} />
             </div>
           )}
           {state.tab === "QAMIS" && (
-            <div className="sm:flex-1 sm:h-full overflow-auto">
+            <div className="md:flex-1 md:h-full overflow-auto">
               <QAMISFiles query={state.query} />
             </div>
           )}
           {state.tab === "Plagiarism" && (
-            <div className="sm:flex-1 sm:h-full overflow-auto">
+            <div className="md:flex-1 md:h-full overflow-auto">
               <PlagiarismFiles query={state.query} />
             </div>
           )}
           {state.tab === "Profile Picture" && (
-            <div className="sm:flex-1 sm:h-full overflow-auto">
+            <div className="md:flex-1 md:h-full overflow-auto">
               <ProfilePictureFiles query={state.query} />
             </div>
           )}

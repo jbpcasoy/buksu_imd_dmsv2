@@ -278,8 +278,8 @@ export default function ReturnedIMERCCITLRevisionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col sm:flex-row space-x-1 h-full overflow-auto sm:space-x-4">
-        <div className="space-y-1 sm:flex-1 flex flex-col sm:h-full overflow-auto bg-palette_white p-4 rounded-2xl">
+      <div className="flex flex-col md:flex-row space-x-1 h-full overflow-auto md:space-x-4">
+        <div className="space-y-1 md:flex-1 flex flex-col md:h-full overflow-auto bg-palette_white p-4 rounded-2xl">
           <IMHeader iM={iM} phase="IMERC Phase" role="Content Editor" />
           <div className="flex-1 h-full overflow-auto space-y-2">
             <div className="overflow-auto">
@@ -357,7 +357,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
             </>
           </div>
         </div>
-        <div className="sm:flex-1 h-screen-3/4 sm:h-auto">
+        <div className="md:flex-1 h-screen-3/4 md:h-auto">
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
@@ -455,22 +455,22 @@ export function Item({
         </>
       </div>
       <div className="grid grid-cols-5">
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Page No.
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4">
           {returnedIMERCCITLRevisionSuggestionItem.pageNumber}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Suggestion
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {returnedIMERCCITLRevisionSuggestionItem.suggestion}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Remarks
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {returnedIMERCCITLRevisionSuggestionItem.remarks}
         </p>
       </div>

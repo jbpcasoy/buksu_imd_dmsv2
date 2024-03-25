@@ -203,7 +203,7 @@ export default function AddPeerReviewPage() {
   return (
     <MainLayout>
       <div className="flex flex-col h-full">
-        <div className="sm:flex-1 flex flex-col sm:flex-row h-full sm:space-x-4">
+        <div className="md:flex-1 flex flex-col md:flex-row h-full md:space-x-4">
           <div className="flex flex-col flex-1 overflow-auto rounded-2xl bg-palette_white p-4 space-y-4">
             <IMHeader iM={iM} phase="Implementation Phase" role="Peer" />
             <div className="flex-1 overflow-auto">
@@ -359,7 +359,7 @@ export default function AddPeerReviewPage() {
               </form>
             </div>
           </div>
-          <div className="sm:flex-1 h-screen-3/4 sm:h-auto">
+          <div className="md:flex-1 h-screen-3/4 md:h-auto">
             <iframe
               loading="lazy"
               src={`/api/im_file/im/${iMId}/pdf`}

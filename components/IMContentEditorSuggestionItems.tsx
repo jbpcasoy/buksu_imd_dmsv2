@@ -66,7 +66,7 @@ export default function IMContentEditorSuggestionItems({
         );
       })}
       {count < 1 && (
-        <p className="text-center text-lg font-bold p-5 text-palette_grey">
+        <p className="text-center  font-bold p-5 text-palette_grey">
           NO SUGGESTIONS TO DISPLAY
         </p>
       )}
@@ -141,28 +141,28 @@ function Item({
         </div>
       )}
       <div className="grid grid-cols-5">
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Page No.
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4">
           {contentEditorSuggestionItem.pageNumber}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Suggestion
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {contentEditorSuggestionItem.suggestion}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Remarks
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {contentEditorSuggestionItem.remarks}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 sm:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
           Action Taken
         </p>
-        <p className="px-5 flex-1 col-span-2 sm:col-span-4 whitespace-pre-wrap">
+        <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {contentEditorSuggestionItemActionTaken?.value ?? (
             <>
               {editable && (

@@ -69,8 +69,8 @@ export default function IMImplementationDepartmentReview({
   }
 
   return (
-    <div className="flex flex-col sm:flex-row h-full overflow-auto sm:space-x-4 space-y-4 sm:space-y-0">
-      <div className="flex-1 h-full sm:overflow-auto">
+    <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4 space-y-4 md:space-y-0">
+      <div className="flex-1 h-full md:overflow-auto">
         <div className="bg-palette_white h-full rounded-2xl p-4 overflow-auto flex flex-col space-y-2">
           <div className="w-full flex space-between">
             <p className="uppercase font-semibold flex-1">
@@ -84,7 +84,7 @@ export default function IMImplementationDepartmentReview({
             />
           </div>
 
-          <div className="sm:overflow-auto flex-1">
+          <div className="md:overflow-auto flex-1">
             <IMInfo
               iMId={iMId}
               onRefresh={onRefresh}
@@ -203,9 +203,9 @@ export default function IMImplementationDepartmentReview({
           </div>
         </div>
       </div>
-      <div className="sm:flex-1 h-screen-3/4 sm:h-full">
+      <div className="md:flex-1 h-screen-3/4 md:h-full">
         {iMFile && (
-          <div className="sm:flex-1 h-screen-3/4 sm:h-full">
+          <div className="md:flex-1 h-screen-3/4 md:h-full">
             <iframe
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}

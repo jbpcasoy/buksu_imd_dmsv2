@@ -113,8 +113,8 @@ export default function TrackPage() {
 
   return (
     <MainLayout>
-      <div className="flex h-full sm:space-x-4 sm:overflow-auto">
-        <div className="bg-palette_white p-4 rounded-2xl sm:flex-1 h-screen-3/4 sm:h-auto sm:overflow-auto flex flex-col">
+      <div className="flex h-full md:space-x-4 md:overflow-auto">
+        <div className="bg-palette_white p-4 rounded-2xl md:flex-1 h-screen-3/4 md:h-auto md:overflow-auto flex flex-col">
           <div className="pb-2">
             <div className="border inline-block p-4 border-palette_orange rounded-lg">
               <div className="flex space-x-2 items-center justify-center">
@@ -136,7 +136,7 @@ export default function TrackPage() {
               </div>
             </div>
           </div>
-          <div className="bg-palette_white flex-1 sm:overflow-auto">
+          <div className="bg-palette_white flex-1 md:overflow-auto">
             <TimelineSegment
               label="Draft"
               mode={iM ? "success" : "pending"}
@@ -423,7 +423,7 @@ export default function TrackPage() {
             />
           </div>
         </div>
-        <div className="sm:flex-1 h-screen-3/4 sm:h-auto">
+        <div className="md:flex-1 h-screen-3/4 md:h-auto">
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
