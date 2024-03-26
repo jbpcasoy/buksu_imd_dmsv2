@@ -29,7 +29,6 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
-// TODO continue implementing icons, animation, confirmation and snackbar
 export default function ReturnedDepartmentRevisionPage() {
   const [loading, setLoading] = useState(false);
 
