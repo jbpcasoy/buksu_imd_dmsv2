@@ -4,9 +4,11 @@ import useActiveCoordinatorMe from "@/hooks/useActiveCoordinatorMe";
 import useActiveDeanMe from "@/hooks/useActiveDeanMe";
 import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useEventsMe from "@/hooks/useEventsMe";
+import { Event } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Notification from "./Notification";
 
 interface HeaderProps {
   onToggleSidebar: (open: boolean) => any;
@@ -22,9 +24,9 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
     initialized: false,
     openSidebar: true,
   });
-  const { count } = useEventsMe({
+  const { count, events } = useEventsMe({
     skip: 0,
-    take: 0,
+    take: 5,
   });
 
   useEffect(() => {
@@ -103,24 +105,31 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
           </Link>
         </div>
         <div className="flex justify-center items-center space-x-2">
+          <div className="hidden sm:block">
+            <DropDown count={count} events={events} />
+          </div>
           <Link href="/notification" className="group">
-            <div className="relative">
-              <div className="inline-flex items-center justify-center px-1 rounded-full text-xs text-palette_blue hover:text-palette_grey p-1 space-x-1">
-                {/* <span>{count <= 99 ? count : "99+"}</span> */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-5 h-5 md:w-8 md:h-8"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-                  />
-                </svg>
-              </div>
+            <div className="inline-flex items-center justify-center px-1 rounded-full text-xs text-palette_blue hover:text-palette_grey p-1 space-x-1 relative md:hidden">
+              {count > 0 && (
+                <div className="absolute bottom-0 right-0 animate-bounce">
+                  <div className="bg-palette_orange h-4 w-4 rounded-full flex justify-center items-center">
+                    <span>{count <= 99 ? count : "99+"}</span>
+                  </div>
+                </div>
+              )}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-5 h-5 md:w-8 md:h-8"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+                />
+              </svg>
             </div>
           </Link>
           <Link href="/profile" className="">
@@ -142,6 +151,112 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
           </Link>
         </div>
       </div>
+    </div>
+  );
+}
+
+function DropDown({ count, events = [] }: { count: number; events: Event[] }) {
+  const [state, setState] = useState({
+    openNotifications: false,
+  });
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setState((prev) => ({ ...prev, openNotifications: false }));
+      }
+    }
+
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setState((prev) => ({ ...prev, openNotifications: false }));
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div className="relative inline-block text-left" ref={dropdownRef}>
+      <div>
+        {/* <button
+          type="button"
+          className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900"
+          id="menu-button"
+          aria-expanded="true"
+          aria-haspopup="true"
+          onClick={() => {
+            setState((prev) => ({
+              ...prev,
+              openNotifications: !prev.openNotifications,
+            }));
+          }}
+        > */}
+        <div
+          className="inline-flex items-center justify-center px-1 rounded-full text-xs text-palette_blue hover:text-palette_grey p-1 space-x-1 relative cursor-pointer"
+          onClick={() => {
+            setState((prev) => ({
+              ...prev,
+              openNotifications: !prev.openNotifications,
+            }));
+          }}
+        >
+          {count > 0 && (
+            <div className="absolute bottom-0 right-0 animate-bounce">
+              <div className="bg-palette_orange h-4 w-4 rounded-full flex justify-center items-center">
+                <span>{count <= 99 ? count : "99+"}</span>
+              </div>
+            </div>
+          )}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-5 h-5 md:w-8 md:h-8"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+            />
+          </svg>
+        </div>
+        {/* </button> */}
+      </div>
+
+      {state.openNotifications && (
+        <div
+          className="absolute right-0 z-10 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="menu-button"
+          tabIndex={-1}
+        >
+          <div className="py-1" role="none">
+            {/* <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" --> */}
+            {events.map((event) => {
+              return <Notification event={event} key={event.id} />;
+            })}
+            <Link
+              href="/notification"
+              className="text-center block hover:text-palette_light_blue underline"
+            >
+              See all
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
