@@ -216,10 +216,10 @@ export default function IMIMERCCITLReviewed({
                   {!plagiarismFile && (
                     <FileUpload
                       label="UPLOAD PLAGIARISM FILE"
-                      onFileChange={(e) => {
+                      onFileChange={(file) => {
                         setState((prev) => ({
                           ...prev,
-                          plagiarismFile: e.target.files?.item(0),
+                          plagiarismFile: file,
                         }));
                       }}
                       onFileReset={() => {
@@ -233,10 +233,10 @@ export default function IMIMERCCITLReviewed({
                   )}
                   <FileUpload
                     label="UPLOAD IM FILE"
-                    onFileChange={(e) => {
+                    onFileChange={(file) => {
                       setState((prev) => ({
                         ...prev,
-                        iMFile: e.target.files?.item(0),
+                        iMFile: file,
                       }));
                     }}
                     onFileReset={() => {

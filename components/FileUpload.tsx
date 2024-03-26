@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, DragEvent, useState } from "react";
 
 function FileUpload({
   onFileChange,
@@ -6,7 +6,7 @@ function FileUpload({
   label = "UPLOAD FILE",
   loading = false,
 }: {
-  onFileChange: (event: ChangeEvent<HTMLInputElement>) => any;
+  onFileChange: (file: File) => any;
   onFileReset: () => any;
   label?: string;
   loading?: boolean;
@@ -18,19 +18,30 @@ function FileUpload({
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     const file = files?.item(0);
+    handleFile(file);
+  };
+
+  const handleFileDrop = (e: DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    const file = files?.item(0);
+    handleFile(file);
+  };
+
+  function handleFile(file: File | null | undefined) {
     if (file) {
       setState((prev) => ({
         ...prev,
         filePreview: URL.createObjectURL(file),
       }));
-      onFileChange(e);
+      onFileChange(file);
     } else {
       setState((prev) => ({
         ...prev,
         filePreview: undefined,
       }));
     }
-  };
+  }
 
   const handleFileReset = () => {
     setState((prev) => ({
@@ -53,12 +64,37 @@ function FileUpload({
           />
           <label
             htmlFor="implementation_draft_upload"
-            className="border-2 border-dashed rounded h-full flex justify-center items-center cursor-pointer"
-            onDrop={(e) => {
-              e.dataTransfer.files;
+            className="border-2 border-dashed rounded-2xl h-full flex justify-center items-center cursor-pointer"
+            onDrop={handleFileDrop}
+            onDragOver={(e) => {
+              e.preventDefault();
             }}
           >
-            <span className="text-palette_grey text-sm">{label}</span>
+            <div className="flex flex-col justify-center items-center space-y-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                className="w-6 h-6 stroke-palette_grey"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+                />
+              </svg>
+
+              {label && (
+                <span className="font-semibold text-palette_grey">{label}</span>
+              )}
+
+              <span className="text-palette_grey">
+                <span className="font-bold">Click to upload</span> or drag and{" "}
+                <br />
+                drop PDF only (MAX 100MB)
+              </span>
+            </div>
           </label>
         </div>
       )}

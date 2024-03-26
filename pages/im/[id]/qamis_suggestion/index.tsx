@@ -346,10 +346,10 @@ export default function QAMISSuggestionPage() {
             <div className="flex flex-col space-y-2 flex-1">
               <FileUpload
                 label="UPLOAD QAMIS FILE"
-                onFileChange={(e) => {
+                onFileChange={(file) => {
                   setFiles((prev) => ({
                     ...prev,
-                    iMFile: e.target.files?.item(0) as File,
+                    iMFile: file,
                   }));
                 }}
                 onFileReset={() => {
@@ -362,10 +362,10 @@ export default function QAMISSuggestionPage() {
               />
               <FileUpload
                 label="UPLOAD IM FILE"
-                onFileChange={(e) => {
+                onFileChange={(file) => {
                   setFiles((prev) => ({
                     ...prev,
-                    qAMISFile: e.target.files?.item(0) as File,
+                    qAMISFile: file,
                   }));
                 }}
                 onFileReset={() => {
