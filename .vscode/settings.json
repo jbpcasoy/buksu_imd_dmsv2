@@ -13,9 +13,11 @@
     "CITL",
     "CITLIDD",
     "CITLIMs",
+    "conninfo",
     "createdb",
     "createuser",
     "darkmode",
+    "dbname",
     "dmsv",
     "EACCES",
     "EFFE",
@@ -51,5 +53,8 @@
     "unsubmit",
     "uuidv",
     "Worktext"
-  ]
+  ],
+  "docify.commentService.sidePanelReviewMode": false,
+  "docify.commentService.programmingLanguage": "javascript",
+  "docify.commentService.docstringFormat": "JsDoc"
 }

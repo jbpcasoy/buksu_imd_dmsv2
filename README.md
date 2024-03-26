@@ -43,11 +43,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Color Palette
 
-![#152033](https://placehold.co/15x15/152033/152033.png) `#152033 (Dark Blue)`<br/>
-![#E1EFFE](https://placehold.co/15x15/E1EFFE/E1EFFE.png) `#E1EFFE (Pattens Blue)`<br/>
+![#152033](https://placehold.co/15x15/152033/152033.png) `#152033 (Blue)`<br/>
 ![#F2C050](https://placehold.co/15x15/F2C050/F2C050.png) `#F2C050 (Orange)`<br/>
 ![#FFFFFF](https://placehold.co/15x15/FFFFFF/FFFFFF.png) `#FFFFFF (White)`<br/>
-![#717883](https://placehold.co/15x15/717883/717883.png) `#717883 (Gray)`<br/>
 
 # Tools used:
 
@@ -400,4 +398,139 @@ To start a Next.js web application using PM2 on an Ubuntu server, you'll need to
 
 That's it! Your Next.js application should now be running using PM2 on your Ubuntu server. You can access it through the specified port or domain, depending on your configuration.
 
+# Backup database
+
+### Backup using `pg_dump`:
+
+1. **Backup the Entire Database**:
+
+   ```bash
+   pg_dump -U username dbname > backup.sql
+   ```
+
+   Replace `username` with your PostgreSQL username and `dbname` with the name of the database you want to backup.
+
+2. **Backup Specific Tables**:
+
+   ```bash
+   pg_dump -U username dbname -t table1 -t table2 > backup.sql
+   ```
+
+   Replace `table1` and `table2` with the names of the tables you want to backup.
+
+3. **Backup Schema Only**:
+
+   ```bash
+   pg_dump -U username dbname --schema-only > schema_backup.sql
+   ```
+
+### Restore using `psql`:
+
+1. **Restore the Entire Database**:
+
+   ```bash
+   psql -U username dbname < backup.sql
+   ```
+
+   Replace `backup.sql` with the filename of your backup.
+
+2. **Restore Specific Tables**:
+
+   ```bash
+   psql -U username dbname -c "DROP TABLE IF EXISTS table1, table2 CASCADE;" && psql -U username dbname < backup.sql
+   ```
+
+   Replace `table1` and `table2` with the names of the tables you want to restore.
+
+3. **Restore Schema Only**:
+
+   ```bash
+   psql -U username dbname < schema_backup.sql
+   ```
+
+Ensure that PostgreSQL is running on your local machine and that you have appropriate permissions to perform these operations.
+
+# Transferring Files
+
 **The web app is now available to the users.**
+
+WinSCP (Windows Secure Copy) is a popular open-source SFTP (SSH File Transfer Protocol), FTP (File Transfer Protocol), and SCP (Secure Copy Protocol) client for Windows. It allows you to securely transfer files between your local computer and a remote server. Here's a step-by-step guide on how to use WinSCP:
+
+### Installation:
+
+1. **Download WinSCP:**
+   Go to the WinSCP website (https://winscp.net/eng/download.php) and download the latest version of WinSCP.
+
+2. **Install WinSCP:**
+   Run the installer and follow the on-screen instructions to install WinSCP on your Windows machine.
+
+### Connecting to a Remote Server:
+
+1. **Open WinSCP:**
+   Launch WinSCP from the Start menu or desktop shortcut.
+
+2. **Configure Session:**
+
+   - Click "New Site".
+   - In the "Session" panel, enter the following details:
+     - **File Protocol:** Select the protocol you want to use (SFTP, FTP, SCP).
+     - **Host name:** Enter the hostname or IP address of the remote server.
+     - **Port number:** If required, specify the port number for the connection.
+     - **Username:** Your username on the remote server.
+     - **Password:** Your password for the specified username.
+     - **Private key file (optional):** If you're using SSH key authentication, specify the path to your private key file.
+   - Click "Save" to save the session configuration for future use.
+
+3. **Connect:**
+   - Click on the "Login" button to establish a connection to the remote server.
+
+### Transferring Files:
+
+1. **Navigate Directories:**
+
+   - Once connected, you'll see two panels: one for your local machine and one for the remote server. Navigate through the directories by double-clicking folders.
+
+2. **Transfer Files:**
+
+   - To transfer files from your local machine to the remote server, select the files in the local panel, then drag and drop them to the remote panel.
+   - To transfer files from the remote server to your local machine, select the files in the remote panel, then drag and drop them to the local panel.
+
+3. **Upload/Download:**
+   - Alternatively, you can use the "Upload" and "Download" buttons to transfer files in either direction.
+
+### Managing Files:
+
+1. **File Operations:**
+
+   - Right-click on files or folders to access various file operations such as copy, move, delete, rename, etc.
+
+2. **Permissions:**
+   - You can change file permissions on the remote server by right-clicking on a file or folder and selecting "Properties."
+
+### Advanced Features:
+
+1. **Site Manager:**
+
+   - The Site Manager allows you to save and organize multiple connection profiles for different servers.
+
+2. **Synchronization:**
+
+   - WinSCP includes a synchronization feature that allows you to synchronize the contents of two directories.
+
+3. **Scripting and Automation:**
+
+   - WinSCP supports scripting and automation through its command-line interface, allowing you to perform various tasks without manual intervention.
+
+4. **Text Editor:**
+   - WinSCP includes a built-in text editor for editing files directly on the remote server.
+
+### Disconnecting:
+
+1. **Close Session:**
+
+   - To disconnect from the remote server, simply close the WinSCP application or click the "Disconnect" button in the toolbar.
+
+2. **Save Settings:**
+   - If you've made any changes to the session settings, WinSCP will prompt you to save them before disconnecting.
+
+That's a basic guide on how to use WinSCP on Windows for transferring files securely between your local machine and a remote server.
