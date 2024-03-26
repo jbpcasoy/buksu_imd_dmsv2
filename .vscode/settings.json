@@ -1,8 +1,10 @@
 {
   "cSpell.words": [
     "Acaso",
+    "adduser",
     "autocolors",
     "AUTOFIT",
+    "autorestart",
     "BPED",
     "Bukidnon",
     "BUKSU",
@@ -11,7 +13,13 @@
     "CITL",
     "CITLIDD",
     "CITLIMs",
+    "conninfo",
+    "createdb",
+    "createuser",
     "darkmode",
+    "dbname",
+    "dmsv",
+    "EACCES",
     "EFFE",
     "formik",
     "gapless",
@@ -26,11 +34,14 @@
     "IMQAMIS",
     "IPPTU",
     "IPTTU",
+    "keepalive",
     "luxon",
     "MERCCITL",
     "Metadatas",
     "msapplication",
+    "nextjs",
     "Opinionnaire",
+    "psql",
     "QAMIS",
     "QAMISPDF",
     "reactflow",
@@ -42,5 +53,8 @@
     "unsubmit",
     "uuidv",
     "Worktext"
-  ]
+  ],
+  "docify.commentService.sidePanelReviewMode": false,
+  "docify.commentService.programmingLanguage": "javascript",
+  "docify.commentService.docstringFormat": "JsDoc"
 }

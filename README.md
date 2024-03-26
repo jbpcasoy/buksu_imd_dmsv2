@@ -43,11 +43,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Color Palette
 
-![#152033](https://placehold.co/15x15/152033/152033.png) `#152033 (Dark Blue)`<br/>
-![#E1EFFE](https://placehold.co/15x15/E1EFFE/E1EFFE.png) `#E1EFFE (Pattens Blue)`<br/>
+![#152033](https://placehold.co/15x15/152033/152033.png) `#152033 (Blue)`<br/>
 ![#F2C050](https://placehold.co/15x15/F2C050/F2C050.png) `#F2C050 (Orange)`<br/>
 ![#FFFFFF](https://placehold.co/15x15/FFFFFF/FFFFFF.png) `#FFFFFF (White)`<br/>
-![#717883](https://placehold.co/15x15/717883/717883.png) `#717883 (Gray)`<br/>
 
 # Tools used:
 
@@ -58,6 +56,242 @@ See package.json for more info
 3. nginx
 4. pm2
 5. Next-auth
+
+# PuTTY
+
+Below is a step-by-step guide on how to use PuTTY to access an Ubuntu server that's configured with a custom SSH port:
+
+_Take note that the server may be blocking some networks try changing networks when experiencing problems. It is also worth noting that when connecting via ssh, use the ip address not the subdomain_
+
+1. **Download PuTTY**:
+
+   - If you haven't already, download PuTTY from the official website: [PuTTY Download Page](https://www.putty.org/).
+
+2. **Install PuTTY**:
+
+   - Once downloaded, run the installer and follow the installation instructions.
+
+3. **Open PuTTY**:
+
+   - After installation, open PuTTY by double-clicking the PuTTY icon.
+
+4. **Enter Connection Information**:
+
+   - In the "Host Name (or IP address)" field, enter the IP address or hostname of your Ubuntu server.
+   - Enter the custom SSH port number in the "Port" field. By default, SSH uses port 22, so make sure to enter the custom port if it's different.
+   - Ensure that the connection type is set to "SSH".
+
+5. **Save the Session** (Optional):
+
+   - If you plan to connect to this server frequently, you can save the session settings by entering a name under "Saved Sessions" and clicking the "Save" button. This allows you to quickly load these settings in the future.
+
+6. **Configure SSH Options** (Optional):
+
+   - You can configure additional SSH options by navigating to the "Connection" -> "SSH" category in the left panel. Here you can set options like SSH keepalive intervals, preferred SSH authentication methods, etc.
+
+7. **Connect**:
+
+   - Click the "Open" button at the bottom of the PuTTY window to initiate the connection.
+
+8. **Authenticate**:
+
+   - Once the connection is established, PuTTY will prompt you for your username. Enter the username for your Ubuntu server and press Enter.
+   - Next, PuTTY will prompt you for your password. Type your password (Note: Password characters won't be displayed for security reasons) and press Enter.
+
+9. **Terminal Session**:
+
+   - If everything is configured correctly, you should now have access to the command-line interface of your Ubuntu server via PuTTY.
+
+10. **Close Connection**:
+
+    - To close the connection, simply type `exit` and press Enter in the PuTTY terminal window, or click the close button at the top right corner of the PuTTY window.
+
+That's it! You've successfully connected to your Ubuntu server using PuTTY with a custom SSH port. You can now manage your server via the command line.
+
+# How to Run on a Server
+
+1. **Clone github repository**
+   ```
+   user@server:~$ git clone <SSH>
+   ```
+2. **Install npm packages**
+   ```
+   user@server:~$ cd buksu_imd_dmsv2
+   user@server:~$ npm i
+   ```
+3. **Install and Setup PostgreSQL**
+
+   See PostgreSQL section for info.
+
+4. **Add .env file**
+
+   _This should be given to you_ and place it on the main directory of the project.
+
+5. **Migrate prisma database**
+
+   ```
+   user@server:~$ npx prisma migrate dev
+   ```
+
+6. **Build the Web App**
+
+   ```
+   user@server:~$ npm run build
+   ```
+
+7. **Start the Web App**
+
+   ```
+   user@server:~$ npm run start
+   ```
+
+# PostgreSQL
+
+1. **Installing PostgreSQL**
+
+   To install PostgreSQL, first refresh your server’s local package index:
+
+   ```
+   $ sudo apt update
+   ```
+
+   Then, install the Postgres package along with a -contrib package that adds some additional utilities and functionality:
+
+   ```
+   $ sudo apt install postgresql postgresql-contrib
+   ```
+
+   Press Y when prompted to confirm installation. If you are prompted to restart any services, press ENTER to accept the defaults and continue.
+
+2. **Using PostgreSQL Roles and Databases**
+
+   By default, Postgres uses a concept called “roles” to handle authentication and authorization. These are, in some ways, similar to regular Unix-style users and groups.
+
+   Upon installation, Postgres is set up to use ident authentication, meaning that it associates Postgres roles with a matching Unix/Linux system account. If a role exists within Postgres, a Unix/Linux username with the same name is able to sign in as that role.
+
+   The installation procedure created a user account called postgres that is associated with the default Postgres role. There are a few ways to utilize this account to access Postgres. One way is to switch over to the postgres account on your server by running the following command:
+
+   ```
+   $ sudo -i -u postgres
+   ```
+
+   Then you can access the Postgres prompt by running:
+
+   ```
+   $ psql
+   ```
+
+   This will log you into the PostgreSQL prompt, and from here you are free to interact with the database management system right away.
+
+   To exit out of the PostgreSQL prompt, run the following:
+
+   ```
+   postgres=# \q
+   ```
+
+   This will bring you back to the postgres Linux command prompt. To return to your regular system user, run the exit command:
+
+   ```
+   postgres@server:~$ exit
+   ```
+
+   Another way to connect to the Postgres prompt is to run the psql command as the postgres account directly with sudo:
+
+   ```
+   $ sudo -u postgres psql
+   ```
+
+   This will log you directly into Postgres without the intermediary bash shell in between.
+
+   Again, you can exit the interactive Postgres session by running the following:
+
+   ```
+   postgres=# \q
+   ```
+
+3. **Creating a New Role**
+
+   If you are logged in as the **postgres** account, you can create a new role by running the following command:
+
+   ```
+   postgres@server:~$ createuser --interactive
+   ```
+
+   If, instead, you prefer to use sudo for each command without switching from your normal account, run:
+
+   ```
+   $ sudo -u postgres createuser --interactive
+   ```
+
+   Either way, the script will prompt you with some choices and, based on your responses, execute the correct Postgres commands to create a user to your specifications.
+
+   ```
+   Output
+   Enter name of role to add: sammy
+   Shall the new role be a superuser? (y/n) y
+   ```
+
+4. **Creating a New Database**
+
+   Another assumption that the Postgres authentication system makes by default is that for any role used to log in, that role will have a database with the same name which it can access.
+
+   This means that if the user you created in the last section is called **sammy**, that role will attempt to connect to a database which is also called “sammy” by default. You can create the appropriate database with the createdb command.
+
+   If you are logged in as the **postgres** account, you would type something like the following:
+
+   ```
+   postgres@server:~$ createdb sammy
+   ```
+
+   If, instead, you prefer to use sudo for each command without switching from your normal account, you would run:
+
+   ```
+   $ sudo -u postgres createdb sammy
+   ```
+
+5. **Opening a Postgres Prompt with the New Role**
+
+   To log in with ident based authentication, you’ll need a Linux user with the same name as your Postgres role and database.
+
+   If you don’t have a matching Linux user available, you can create one with the adduser command. You will have to do this from your non-**root** account with sudo privileges (meaning, not logged in as the **postgres** user):
+
+   ```
+   $ sudo adduser sammy
+   ```
+
+   Once this new account is available, you can either switch over and connect to the database by running the following:
+
+   ```
+   $ sudo -i -u sammy
+   $ psql
+   ```
+
+   Or, you can do this inline:
+
+   ```
+   $ sudo -u sammy psql
+   ```
+
+   This command will log you in automatically, assuming that all of the components have been properly configured.
+
+   If you want your user to connect to a different database, you can do so by specifying the database like the following:
+
+   ```
+   $ psql -d postgres
+   ```
+
+   Once logged in, you can get check your current connection information by running:
+
+   ```
+   sammy=# \conninfo
+   ```
+
+   ```
+   Output
+   You are connected to database "sammy" as user "sammy" via socket in "/var/run/postgresql" at port "5432".
+   ```
+
+_The web app will now be running on localhost:3000 however this will not be accessible to the users. We must run it on port 80 in order for the user to access we do that by using nginx._
 
 # NGINX Setup
 
@@ -125,3 +359,178 @@ To use Nginx to solve the "EACCES: permission denied" problem when running your 
    If Nginx is running correctly, you should see a message indicating that it's active and running.
 
 After following these steps, Nginx should be configured to forward requests to your Next.js application, allowing it to listen on port 80 without requiring root privileges.
+
+_The web app will now be accessible to the users however it will shutdown if the putty session is closed_
+
+# PM2
+
+To start a Next.js web application using PM2 on an Ubuntu server, you'll need to ensure that you have Node.js, npm, and PM2 installed on your server. Additionally, assuming you have already configured your Next.js application's ecosystem file for PM2, here's a step-by-step instruction:
+
+1. **SSH into Your Ubuntu Server**: Connect to your Ubuntu server using SSH.
+
+2. **Navigate to Your Next.js Application Directory**: Use the `cd` command to move to the directory where your Next.js application is located.
+
+3. **Install PM2 (if not already installed)**: If PM2 is not installed on your server, you can install it globally using npm with the following command:
+
+   ```
+   npm install pm2 -g
+   ```
+
+4. **Start Your Next.js Application with PM2**: Once PM2 is installed, you can start your Next.js application using the ecosystem file you've configured. Assuming your ecosystem file is named `ecosystem.config.js`, you can start your application with PM2 using the following command:
+
+   ```
+   pm2 start ecosystem.config.js
+   ```
+
+5. **Verify Application Status**: To ensure that your application is running correctly, you can check its status with PM2:
+
+   ```
+   pm2 status
+   ```
+
+6. **(Optional) Set Up PM2 Startup Script**: If you want your Next.js application to automatically start when the server reboots, you can generate a startup script for PM2:
+
+   ```
+   pm2 startup
+   ```
+
+   Follow the instructions provided by PM2 to set up the startup script. Once done, your Next.js application will automatically start when the server boots.
+
+That's it! Your Next.js application should now be running using PM2 on your Ubuntu server. You can access it through the specified port or domain, depending on your configuration.
+
+# Backup database
+
+### Backup using `pg_dump`:
+
+1. **Backup the Entire Database**:
+
+   ```bash
+   pg_dump -U username dbname > backup.sql
+   ```
+
+   Replace `username` with your PostgreSQL username and `dbname` with the name of the database you want to backup.
+
+2. **Backup Specific Tables**:
+
+   ```bash
+   pg_dump -U username dbname -t table1 -t table2 > backup.sql
+   ```
+
+   Replace `table1` and `table2` with the names of the tables you want to backup.
+
+3. **Backup Schema Only**:
+
+   ```bash
+   pg_dump -U username dbname --schema-only > schema_backup.sql
+   ```
+
+### Restore using `psql`:
+
+1. **Restore the Entire Database**:
+
+   ```bash
+   psql -U username dbname < backup.sql
+   ```
+
+   Replace `backup.sql` with the filename of your backup.
+
+2. **Restore Specific Tables**:
+
+   ```bash
+   psql -U username dbname -c "DROP TABLE IF EXISTS table1, table2 CASCADE;" && psql -U username dbname < backup.sql
+   ```
+
+   Replace `table1` and `table2` with the names of the tables you want to restore.
+
+3. **Restore Schema Only**:
+
+   ```bash
+   psql -U username dbname < schema_backup.sql
+   ```
+
+Ensure that PostgreSQL is running on your local machine and that you have appropriate permissions to perform these operations.
+
+# Transferring Files
+
+**The web app is now available to the users.**
+
+WinSCP (Windows Secure Copy) is a popular open-source SFTP (SSH File Transfer Protocol), FTP (File Transfer Protocol), and SCP (Secure Copy Protocol) client for Windows. It allows you to securely transfer files between your local computer and a remote server. Here's a step-by-step guide on how to use WinSCP:
+
+### Installation:
+
+1. **Download WinSCP:**
+   Go to the WinSCP website (https://winscp.net/eng/download.php) and download the latest version of WinSCP.
+
+2. **Install WinSCP:**
+   Run the installer and follow the on-screen instructions to install WinSCP on your Windows machine.
+
+### Connecting to a Remote Server:
+
+1. **Open WinSCP:**
+   Launch WinSCP from the Start menu or desktop shortcut.
+
+2. **Configure Session:**
+
+   - Click "New Site".
+   - In the "Session" panel, enter the following details:
+     - **File Protocol:** Select the protocol you want to use (SFTP, FTP, SCP).
+     - **Host name:** Enter the hostname or IP address of the remote server.
+     - **Port number:** If required, specify the port number for the connection.
+     - **Username:** Your username on the remote server.
+     - **Password:** Your password for the specified username.
+     - **Private key file (optional):** If you're using SSH key authentication, specify the path to your private key file.
+   - Click "Save" to save the session configuration for future use.
+
+3. **Connect:**
+   - Click on the "Login" button to establish a connection to the remote server.
+
+### Transferring Files:
+
+1. **Navigate Directories:**
+
+   - Once connected, you'll see two panels: one for your local machine and one for the remote server. Navigate through the directories by double-clicking folders.
+
+2. **Transfer Files:**
+
+   - To transfer files from your local machine to the remote server, select the files in the local panel, then drag and drop them to the remote panel.
+   - To transfer files from the remote server to your local machine, select the files in the remote panel, then drag and drop them to the local panel.
+
+3. **Upload/Download:**
+   - Alternatively, you can use the "Upload" and "Download" buttons to transfer files in either direction.
+
+### Managing Files:
+
+1. **File Operations:**
+
+   - Right-click on files or folders to access various file operations such as copy, move, delete, rename, etc.
+
+2. **Permissions:**
+   - You can change file permissions on the remote server by right-clicking on a file or folder and selecting "Properties."
+
+### Advanced Features:
+
+1. **Site Manager:**
+
+   - The Site Manager allows you to save and organize multiple connection profiles for different servers.
+
+2. **Synchronization:**
+
+   - WinSCP includes a synchronization feature that allows you to synchronize the contents of two directories.
+
+3. **Scripting and Automation:**
+
+   - WinSCP supports scripting and automation through its command-line interface, allowing you to perform various tasks without manual intervention.
+
+4. **Text Editor:**
+   - WinSCP includes a built-in text editor for editing files directly on the remote server.
+
+### Disconnecting:
+
+1. **Close Session:**
+
+   - To disconnect from the remote server, simply close the WinSCP application or click the "Disconnect" button in the toolbar.
+
+2. **Save Settings:**
+   - If you've made any changes to the session settings, WinSCP will prompt you to save them before disconnecting.
+
+That's a basic guide on how to use WinSCP on Windows for transferring files securely between your local machine and a remote server.
