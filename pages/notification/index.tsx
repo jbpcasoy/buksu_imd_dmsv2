@@ -77,13 +77,13 @@ export default function NotificationPage() {
           {events.map((event) => {
             return <Notification event={event} key={event.id} />;
           })}
-          {/* {count < 1 && ( */}
-          <div>
-            <p className="text-center  font-bold p-5 text-palette_grey">
-              NO NOTIFICATIONS TO DISPLAY
-            </p>
-          </div>
-          {/* )} */}
+          {count < 1 && (
+            <div>
+              <p className="text-center  font-bold p-5 text-palette_grey">
+                NO NOTIFICATIONS TO DISPLAY
+              </p>
+            </div>
+          )}
         </div>
         <div className="flex justify-end items-center space-x-1 text-sm p-1">
           <p className="text-xs">

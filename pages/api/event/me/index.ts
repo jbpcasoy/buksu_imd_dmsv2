@@ -1382,13 +1382,17 @@ export default async function handler(
         events = await prisma.event.findMany({
           skip,
           take,
-          where: {},
+          where: {
+            AND: [whereQuery],
+          },
           orderBy: {
             updatedAt: "desc",
           },
         });
         count = await prisma.event.count({
-          where: {},
+          where: {
+            AND: [whereQuery],
+          },
         });
       }
 
