@@ -113,7 +113,7 @@ export default function ProfilePage() {
 
   return (
     <MainLayout>
-      <div className="h-full flex flex-col space-y-1">
+      <div className="h-full flex flex-col space-y-1 bg-palette_white p-4 rounded-2xl">
         <div className="flex justify-end">
           <button
             disabled={loading}
@@ -127,7 +127,7 @@ export default function ProfilePage() {
         <div className="h-full">
           <form noValidate onSubmit={formik.handleSubmit} className="h-full">
             <div className="h-full flex justify-center items-center">
-              <div className="space-x-1 flex flex-col justify-center items-center space-y-1 mx-auto border p-9 rounded-lg shadow">
+              <div className="space-x-1 flex flex-col justify-center items-center space-y-1 mx-auto border p-4 sm:p-9 rounded-lg shadow">
                 <input
                   id="profile-picture"
                   type="file"

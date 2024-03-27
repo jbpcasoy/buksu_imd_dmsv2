@@ -112,8 +112,10 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             <div className="inline-flex items-center justify-center px-1 rounded-full text-xs text-palette_blue hover:text-palette_grey p-1 space-x-1 relative md:hidden">
               {count > 0 && (
                 <div className="absolute bottom-0 right-0 animate-bounce">
-                  <div className="bg-palette_orange h-4 w-4 rounded-full flex justify-center items-center">
-                    <span>{count <= 99 ? count : "99+"}</span>
+                  <div className="bg-palette_orange h-5 w-5 rounded-full flex justify-center items-center">
+                    <span className="text-xs">
+                      {count <= 99 ? count : "99+"}
+                    </span>
                   </div>
                 </div>
               )}
@@ -189,19 +191,6 @@ function DropDown({ count, events = [] }: { count: number; events: Event[] }) {
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <div>
-        {/* <button
-          type="button"
-          className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900"
-          id="menu-button"
-          aria-expanded="true"
-          aria-haspopup="true"
-          onClick={() => {
-            setState((prev) => ({
-              ...prev,
-              openNotifications: !prev.openNotifications,
-            }));
-          }}
-        > */}
         <div
           className="inline-flex items-center justify-center px-1 rounded-full text-xs text-palette_blue hover:text-palette_grey p-1 space-x-1 relative cursor-pointer"
           onClick={() => {
@@ -213,8 +202,8 @@ function DropDown({ count, events = [] }: { count: number; events: Event[] }) {
         >
           {count > 0 && (
             <div className="absolute bottom-0 right-0 animate-bounce">
-              <div className="bg-palette_orange h-4 w-4 rounded-full flex justify-center items-center">
-                <span>{count <= 99 ? count : "99+"}</span>
+              <div className="bg-palette_orange h-5 w-5 rounded-full flex justify-center items-center">
+                <span className="text-xs">{count <= 99 ? count : "99+"}</span>
               </div>
             </div>
           )}
@@ -232,7 +221,6 @@ function DropDown({ count, events = [] }: { count: number; events: Event[] }) {
             />
           </svg>
         </div>
-        {/* </button> */}
       </div>
 
       {state.openNotifications && (
@@ -248,6 +236,11 @@ function DropDown({ count, events = [] }: { count: number; events: Event[] }) {
             {events.map((event) => {
               return <Notification event={event} key={event.id} />;
             })}
+            {count < 1 && (
+              <p className="text-center  font-bold p-5 text-palette_grey">
+                NO NOTIFICATION TO DISPLAY
+              </p>
+            )}
             <Link
               href="/notification"
               className="text-center block hover:text-palette_light_blue underline"
