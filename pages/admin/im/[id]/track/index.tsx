@@ -2119,7 +2119,9 @@ function QAMISRevisionModal({ qAMISRevision, iMId }: QAMISRevisionModalProps) {
 
   async function deleteHandler() {
     return axios
-      .delete(`/api/im_file/${qAMISRevision.iMFileId}`)
+      .delete(
+        `/api/submitted_qamis_suggestion/${qAMISRevision.submittedQAMISSuggestionId}`
+      )
       .then((res) => {
         addSnackbar("QAMIS revision has been deleted successfully");
       })

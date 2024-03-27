@@ -65,7 +65,7 @@ export default function NotificationPage() {
                   },
                 }))
               }
-              className="rounded py-1 text-palette_blue bg-inherit text-xs focus:border-palette_grey focus:ring-palette_grey"
+              className="rounded py-1 text-palette_blue bg-inherit focus:border-palette_grey focus:ring-palette_grey"
             >
               <option value="read">Read</option>
               <option value="unread">Unread</option>
@@ -85,8 +85,8 @@ export default function NotificationPage() {
             </div>
           )}
         </div>
-        <div className="flex justify-end items-center space-x-1 text-sm p-1">
-          <p className="text-xs">
+        <div className="flex justify-end items-center space-x-1 p-1">
+          <p className="">
             {state.skip} - {state.skip + state.take} of {count}
           </p>
           <button
