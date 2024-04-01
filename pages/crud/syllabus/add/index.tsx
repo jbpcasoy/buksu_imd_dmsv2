@@ -4,25 +4,23 @@ import { useFormik } from "formik";
 import { useEffect } from "react";
 import * as Yup from "yup";
 
-export default function AddIMPage() {
+export default function AddSyllabus() {
   const formik = useFormik({
     initialValues: {
-      title: "",
+      courseTitle: "",
+      courseCode: "",
       activeFacultyId: "",
-      type: "MODULE",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required(),
+      courseTitle: Yup.string().required(),
+      courseCode: Yup.string().required(),
       activeFacultyId: Yup.string().required(),
-      type: Yup.string()
-        .oneOf(["MODULE", "COURSE_FILE", "WORKTEXT", "TEXTBOOK"])
-        .required(),
     }),
     onSubmit: (values) => {
       axios
-        .post("/api/im", values)
+        .post("/api/syllabus", values)
         .then(() => {
-          alert("IM has been added successfully");
+          alert("Syllabus has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -36,7 +34,7 @@ export default function AddIMPage() {
 
   return (
     <CrudLayout>
-      <h2>Add IM</h2>
+      <h2>Add Syllabus</h2>
 
       <form onSubmit={formik.handleSubmit} noValidate>
         <input
@@ -46,15 +44,14 @@ export default function AddIMPage() {
         />
         <input
           type="text"
-          placeholder="title"
-          {...formik.getFieldProps("title")}
+          placeholder="courseTitle"
+          {...formik.getFieldProps("courseTitle")}
         />
-        <select>
-          <option value="MODULE">MODULE</option>
-          <option value="COURSE_FILE">COURSE_FILE</option>
-          <option value="WORKTEXT">WORKTEXT</option>
-          <option value="TEXTBOOK">TEXTBOOK</option>
-        </select>
+        <input
+          type="text"
+          placeholder="courseCode"
+          {...formik.getFieldProps("courseCode")}
+        />
         <input type="submit" value="Submit" className="rounded border" />
       </form>
     </CrudLayout>

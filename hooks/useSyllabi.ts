@@ -1,31 +1,26 @@
-import { IM } from "@prisma/client";
+import { Syllabus } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export interface useIMsParams {
+interface useSyllabiProps {
   skip: number;
   take: number;
-  filter?: object;
 }
-
-export default function useIMs({ skip, take, filter }: useIMsParams) {
+export default function useSyllabi({ skip, take }: useSyllabiProps) {
   const [state, setState] = useState<{
-    iMs: IM[];
+    syllabi: Syllabus[];
     count: number;
   }>({
     count: 0,
-    iMs: [],
+    syllabi: [],
   });
-
-  // TODO: why did we not add subscribe? we may need to add this on all hooks
 
   useEffect(() => {
     axios
-      .get("/api/im", {
+      .get("/api/syllabus", {
         params: {
           skip,
           take,
-          filter,
         },
       })
       .then((res) => {
@@ -34,7 +29,7 @@ export default function useIMs({ skip, take, filter }: useIMsParams) {
       .catch((error) => {
         console.error(error);
       });
-  }, [skip, take, filter]);
+  }, [skip, take]);
 
   return state;
 }

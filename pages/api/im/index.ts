@@ -206,6 +206,7 @@ export default async function handler(
           ],
         },
       });
+
       return res.json({ iMs, count });
     } catch (error: any) {
       logger.error(error);

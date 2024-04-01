@@ -98,6 +98,7 @@ model Faculty {
     PeerReview        PeerReview[]
     ContentSpecialist ContentSpecialist?
     CoAuthor          CoAuthor[]
+    Syllabus          Syllabus[]
 
     @@unique([departmentId, userId])
 }
@@ -1175,6 +1176,8 @@ model Event {
     SubmittedReturnedIMERCCITLRevision     SubmittedReturnedIMERCCITLRevision?   @relation(fields: [submittedReturnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
     submittedReturnedIMERCCITLRevisionId   String?
     NotificationRead                       NotificationRead[]
+    Syllabus                               Syllabus?                             @relation(fields: [syllabusId], references: [id])
+    syllabusId                             String?
 }
 
 model NotificationRead {
@@ -1457,4 +1460,32 @@ model CoAuthor {
     facultyId String
 
     @@unique([facultyId, iMId])
+}
+
+model Syllabus {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Faculty      Faculty        @relation(fields: [facultyId], references: [id])
+    facultyId    String
+    SyllabusFile SyllabusFile[]
+    Event        Event[]
+    courseCode   String
+    courseTitle  String
+
+    //TODO: add co-author
+}
+
+model SyllabusFile {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Syllabus         Syllabus @relation(fields: [syllabusId], references: [id])
+    syllabusId       String
+    filename         String
+    size             Int
+    mimetype         String
+    originalFilename String
 }
