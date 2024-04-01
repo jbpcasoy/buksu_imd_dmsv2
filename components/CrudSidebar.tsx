@@ -377,6 +377,14 @@ export default function CrudSidebar() {
       link: "/crud/co_author",
       label: "Co-author",
     },
+    {
+      link: "/crud/syllabus",
+      label: "Syllabus",
+    },
+    {
+      link: "/crud/syllabus_file",
+      label: "Syllabus File",
+    },
   ];
 
   return (

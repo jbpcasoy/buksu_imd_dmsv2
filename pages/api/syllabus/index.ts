@@ -28,8 +28,8 @@ export default async function handler(
       const { skip, take } = validator.cast(req.query);
 
       const syllabi = await prisma.syllabus.findMany({
-        skip: skip ?? 0,
-        take: take ?? 10,
+        skip: skip,
+        take: take,
       });
       const count = await prisma.syllabus.count();
 
