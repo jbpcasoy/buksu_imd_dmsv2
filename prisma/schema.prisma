@@ -51,6 +51,8 @@ model User {
     Event              Event[]
     NotificationRead   NotificationRead[]
     ProfilePictureFile ProfilePictureFile[]
+    FDIS               FDIS?
+    VPAA               VPAA?
 }
 
 model VerificationToken {
@@ -138,17 +140,18 @@ model IMFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    IM                                    IM                                   @relation(fields: [iMId], references: [id], onDelete: Cascade)
-    iMId                                  String
-    filename                              String
-    size                                  Int
-    mimetype                              String
-    originalFilename                      String
-    DepartmentReview                      DepartmentReview?
-    DepartmentRevision                    DepartmentRevision?
-    CITLRevision                          CITLRevision?
-    QAMISRevision                         QAMISRevision?
-    IMERCCITLRevision                     IMERCCITLRevision?
+    IM                 IM                  @relation(fields: [iMId], references: [id], onDelete: Cascade)
+    iMId               String
+    filename           String
+    size               Int
+    mimetype           String
+    originalFilename   String
+    DepartmentReview   DepartmentReview?
+    DepartmentRevision DepartmentRevision?
+    CITLRevision       CITLRevision?
+    QAMISRevision      QAMISRevision?
+    IMERCCITLRevision  IMERCCITLRevision?
+
     DepartmentReviewed                    DepartmentReviewed?                  @relation(fields: [departmentReviewedId], references: [id], onDelete: Cascade)
     departmentReviewedId                  String?                              @unique
     SubmittedReturnedDepartmentRevision   SubmittedReturnedDepartmentRevision? @relation(fields: [submittedReturnedDepartmentRevisionId], references: [id], onDelete: Cascade)
@@ -170,11 +173,14 @@ model Chairperson {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty                     Faculty                       @relation(fields: [facultyId], references: [id])
-    facultyId                   String                        @unique
-    ActiveChairperson           ActiveChairperson?
-    ChairpersonReview           ChairpersonReview[]
-    QAMISChairpersonEndorsement QAMISChairpersonEndorsement[]
+    Faculty                            Faculty                              @relation(fields: [facultyId], references: [id])
+    facultyId                          String                               @unique
+    ActiveChairperson                  ActiveChairperson?
+    ChairpersonReview                  ChairpersonReview[]
+    QAMISChairpersonEndorsement        QAMISChairpersonEndorsement[]
+    SyllabusChairpersonReview          SyllabusChairpersonReview[]
+    ReturnedSyllabusDepartmentRevision ReturnedSyllabusDepartmentRevision[]
+    SyllabusChairpersonEndorsement     SyllabusChairpersonEndorsement[]
 }
 
 model Coordinator {
@@ -196,11 +202,12 @@ model Dean {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Faculty              Faculty                @relation(fields: [facultyId], references: [id])
-    facultyId            String                 @unique
-    ActiveDean           ActiveDean?
-    DeanEndorsement      DeanEndorsement[]
-    QAMISDeanEndorsement QAMISDeanEndorsement[]
+    Faculty                 Faculty                   @relation(fields: [facultyId], references: [id])
+    facultyId               String                    @unique
+    ActiveDean              ActiveDean?
+    DeanEndorsement         DeanEndorsement[]
+    QAMISDeanEndorsement    QAMISDeanEndorsement[]
+    SyllabusDeanEndorsement SyllabusDeanEndorsement[]
 }
 
 model ActiveCoordinator {
@@ -559,12 +566,13 @@ model CITLDirector {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    User                         User                           @relation(fields: [userId], references: [id])
-    userId                       String                         @unique
-    ActiveCITLDirector           ActiveCITLDirector?
-    CITLDirectorEndorsement      CITLDirectorEndorsement[]
-    ContentEditorReview          ContentEditorReview[]
-    IMERCCITLDirectorEndorsement IMERCCITLDirectorEndorsement[]
+    User                            User                              @relation(fields: [userId], references: [id])
+    userId                          String                            @unique
+    ActiveCITLDirector              ActiveCITLDirector?
+    CITLDirectorEndorsement         CITLDirectorEndorsement[]
+    ContentEditorReview             ContentEditorReview[]
+    IMERCCITLDirectorEndorsement    IMERCCITLDirectorEndorsement[]
+    SyllabusCITLDirectorEndorsement SyllabusCITLDirectorEndorsement[]
 }
 
 model ActiveCITLDirector {
@@ -1176,8 +1184,6 @@ model Event {
     SubmittedReturnedIMERCCITLRevision     SubmittedReturnedIMERCCITLRevision?   @relation(fields: [submittedReturnedIMERCCITLRevisionId], references: [id], onDelete: Cascade)
     submittedReturnedIMERCCITLRevisionId   String?
     NotificationRead                       NotificationRead[]
-    Syllabus                               Syllabus?                             @relation(fields: [syllabusId], references: [id])
-    syllabusId                             String?
 }
 
 model NotificationRead {
@@ -1470,7 +1476,6 @@ model Syllabus {
     Faculty      Faculty        @relation(fields: [facultyId], references: [id])
     facultyId    String
     SyllabusFile SyllabusFile[]
-    Event        Event[]
     courseCode   String
     courseTitle  String
 
@@ -1482,10 +1487,447 @@ model SyllabusFile {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    Syllabus         Syllabus @relation(fields: [syllabusId], references: [id])
-    syllabusId       String
-    filename         String
-    size             Int
-    mimetype         String
-    originalFilename String
+    Syllabus                   Syllabus                    @relation(fields: [syllabusId], references: [id])
+    syllabusId                 String
+    filename                   String
+    size                       Int
+    mimetype                   String
+    originalFilename           String
+    SyllabusDepartmentReview   SyllabusDepartmentReview?
+    SyllabusDepartmentRevision SyllabusDepartmentRevision?
+    SyllabusCITLRevision       SyllabusCITLRevision?
+
+    SubmittedSyllabusChairpersonSuggestion        SubmittedSyllabusChairpersonSuggestion?      @relation(fields: [submittedSyllabusChairpersonSuggestionId], references: [id])
+    submittedSyllabusChairpersonSuggestionId      String?                                      @unique
+    SubmittedReturnedSyllabusDepartmentRevision   SubmittedReturnedSyllabusDepartmentRevision? @relation(fields: [submittedReturnedSyllabusDepartmentRevisionId], references: [id])
+    submittedReturnedSyllabusDepartmentRevisionId String?                                      @unique
+    SubmittedSyllabusFDISSuggestion               SubmittedSyllabusFDISSuggestion?             @relation(fields: [submittedSyllabusFDISSuggestionId], references: [id])
+    submittedSyllabusFDISSuggestionId             String?                                      @unique
+    SubmittedReturnedSyllabusCITLRevision         SubmittedReturnedSyllabusCITLRevision?       @relation(fields: [submittedReturnedSyllabusCITLRevisionId], references: [id])
+    submittedReturnedSyllabusCITLRevisionId       String?                                      @unique
+    SubmittedReturnedSyllabusVPAARevision         SubmittedReturnedSyllabusVPAARevision?       @relation(fields: [submittedReturnedSyllabusVPAARevisionId], references: [id])
+    submittedReturnedSyllabusVPAARevisionId       String?                                      @unique
+}
+
+model SyllabusDepartmentReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SyllabusFile              SyllabusFile               @relation(fields: [syllabusFileId], references: [id])
+    syllabusFileId            String                     @unique
+    SyllabusChairpersonReview SyllabusChairpersonReview?
+}
+
+enum SyllabusRating {
+    YES
+    NO
+}
+
+model SyllabusChairpersonReview {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Chairperson                Chairperson              @relation(fields: [chairpersonId], references: [id])
+    chairpersonId              String
+    SyllabusDepartmentReview   SyllabusDepartmentReview @relation(fields: [syllabusDepartmentReviewId], references: [id])
+    syllabusDepartmentReviewId String                   @unique
+
+    q1_1 SyllabusRating?
+    q1_2 SyllabusRating?
+    q1_3 SyllabusRating?
+    q2_1 SyllabusRating?
+    q2_2 SyllabusRating?
+    q2_3 SyllabusRating?
+    q2_4 SyllabusRating?
+    q2_5 SyllabusRating?
+    q2_6 SyllabusRating?
+    q3_1 SyllabusRating?
+    q3_2 SyllabusRating?
+    q3_3 SyllabusRating?
+    q3_4 SyllabusRating?
+    q3_5 SyllabusRating?
+    q4_1 SyllabusRating?
+    q4_2 SyllabusRating?
+    q4_3 SyllabusRating?
+    q4_4 SyllabusRating?
+    q5_1 SyllabusRating?
+    q5_2 SyllabusRating?
+    q5_3 SyllabusRating?
+    q5_4 SyllabusRating?
+    q5_5 SyllabusRating?
+    q6_1 SyllabusRating?
+    q6_2 SyllabusRating?
+    q6_3 SyllabusRating?
+    q6_4 SyllabusRating?
+    q6_5 SyllabusRating?
+    q6_6 SyllabusRating?
+    q7_1 SyllabusRating?
+    q7_2 SyllabusRating?
+    q7_3 SyllabusRating?
+    q7_4 SyllabusRating?
+    q8_1 SyllabusRating?
+    q8_2 SyllabusRating?
+    q8_3 SyllabusRating?
+    q8_4 SyllabusRating?
+    q8_5 SyllabusRating?
+    q8_6 SyllabusRating?
+}
+
+model SyllabusChairpersonSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SyllabusChairpersonSuggestionItem      SyllabusChairpersonSuggestionItem[]
+    SubmittedSyllabusChairpersonSuggestion SubmittedSyllabusChairpersonSuggestion?
+}
+
+model SyllabusChairpersonSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SyllabusChairpersonSuggestion                SyllabusChairpersonSuggestion                 @relation(fields: [syllabusChairpersonSuggestionId], references: [id])
+    syllabusChairpersonSuggestionId              String
+    suggestion                                   String
+    remarks                                      String?
+    pageNumber                                   Int
+    SyllabusChairpersonSuggestionItemActionTaken SyllabusChairpersonSuggestionItemActionTaken?
+}
+
+model SyllabusChairpersonSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SyllabusChairpersonSuggestionItem   SyllabusChairpersonSuggestionItem @relation(fields: [syllabusChairpersonSuggestionItemId], references: [id])
+    syllabusChairpersonSuggestionItemId String                            @unique
+    value                               String
+}
+
+model SubmittedSyllabusChairpersonSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SyllabusChairpersonSuggestion   SyllabusChairpersonSuggestion @relation(fields: [syllabusChairpersonSuggestionId], references: [id])
+    syllabusChairpersonSuggestionId String                        @unique
+    SyllabusDepartmentRevision      SyllabusDepartmentRevision[]
+    SyllabusFile                    SyllabusFile?
+}
+
+model SyllabusDepartmentRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SubmittedSyllabusChairpersonSuggestion   SubmittedSyllabusChairpersonSuggestion @relation(fields: [submittedSyllabusChairpersonSuggestionId], references: [id])
+    submittedSyllabusChairpersonSuggestionId String
+    SyllabusFile                             SyllabusFile                           @relation(fields: [syllabusFileId], references: [id])
+    syllabusFileId                           String                                 @unique
+    SyllabusChairpersonEndorsement           SyllabusChairpersonEndorsement?
+    ReturnedSyllabusDepartmentRevision       ReturnedSyllabusDepartmentRevision?
+}
+
+model ReturnedSyllabusDepartmentRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SyllabusDepartmentRevision                       SyllabusDepartmentRevision                         @relation(fields: [syllabusDepartmentRevisionId], references: [id])
+    syllabusDepartmentRevisionId                     String                                             @unique
+    Chairperson                                      Chairperson                                        @relation(fields: [chairpersonId], references: [id])
+    chairpersonId                                    String
+    SubmittedReturnedSyllabusDepartmentRevision      SubmittedReturnedSyllabusDepartmentRevision?
+    ReturnedSyllabusDepartmentRevisionSuggestionItem ReturnedSyllabusDepartmentRevisionSuggestionItem[]
+}
+
+model ReturnedSyllabusDepartmentRevisionSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    suggestion                                                  String
+    remarks                                                     String?
+    pageNumber                                                  Int
+    ReturnedSyllabusDepartmentRevisionSuggestionItemActionTaken ReturnedSyllabusDepartmentRevisionSuggestionItemActionTaken?
+    ReturnedSyllabusDepartmentRevision                          ReturnedSyllabusDepartmentRevision                           @relation(fields: [returnedSyllabusDepartmentRevisionId], references: [id])
+    returnedSyllabusDepartmentRevisionId                        String
+}
+
+model ReturnedSyllabusDepartmentRevisionSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedSyllabusDepartmentRevisionSuggestionItem   ReturnedSyllabusDepartmentRevisionSuggestionItem @relation(fields: [returnedSyllabusDepartmentRevisionSuggestionItemId], references: [id])
+    returnedSyllabusDepartmentRevisionSuggestionItemId String                                           @unique
+    value                                              String
+}
+
+model SubmittedReturnedSyllabusDepartmentRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedSyllabusDepartmentRevision   ReturnedSyllabusDepartmentRevision @relation(fields: [returnedSyllabusDepartmentRevisionId], references: [id])
+    returnedSyllabusDepartmentRevisionId String                             @unique
+    SyllabusFile                         SyllabusFile?
+}
+
+model SyllabusChairpersonEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Chairperson                  Chairperson                @relation(fields: [chairpersonId], references: [id])
+    chairpersonId                String
+    SyllabusDepartmentRevision   SyllabusDepartmentRevision @relation(fields: [syllabusDepartmentRevisionId], references: [id])
+    syllabusDepartmentRevisionId String                     @unique
+    SyllabusDeanEndorsement      SyllabusDeanEndorsement?
+}
+
+model SyllabusDeanEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    Dean                             Dean                           @relation(fields: [deanId], references: [id])
+    deanId                           String
+    SyllabusChairpersonEndorsement   SyllabusChairpersonEndorsement @relation(fields: [syllabusChairpersonEndorsementId], references: [id])
+    syllabusChairpersonEndorsementId String                         @unique
+    SyllabusFDISSuggestion           SyllabusFDISSuggestion?
+}
+
+model FDIS {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    User                         User                           @relation(fields: [userId], references: [id])
+    userId                       String                         @unique
+    ActiveFDIS                   ActiveFDIS?
+    SyllabusFDISSuggestion       SyllabusFDISSuggestion[]
+    ReturnedSyllabusCITLRevision ReturnedSyllabusCITLRevision[]
+    SyllabusFDISEndorsement      SyllabusFDISEndorsement[]
+}
+
+model ActiveFDIS {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    FDIS   FDIS   @relation(fields: [fDISId], references: [id])
+    fDISId String @unique
+}
+
+model SyllabusFDISSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SyllabusDeanEndorsement         SyllabusDeanEndorsement          @relation(fields: [syllabusDeanEndorsementId], references: [id])
+    syllabusDeanEndorsementId       String                           @unique
+    FDIS                            FDIS                             @relation(fields: [fDISId], references: [id])
+    fDISId                          String
+    SyllabusFDISSuggestionItem      SyllabusFDISSuggestionItem[]
+    SubmittedSyllabusFDISSuggestion SubmittedSyllabusFDISSuggestion?
+}
+
+model SyllabusFDISSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    suggestion                            String
+    remarks                               String?
+    pageNumber                            Int
+    SyllabusFDISSuggestion                SyllabusFDISSuggestion                 @relation(fields: [syllabusFDISSuggestionId], references: [id])
+    syllabusFDISSuggestionId              String
+    SyllabusFDISSuggestionItemActionTaken SyllabusFDISSuggestionItemActionTaken?
+}
+
+model SyllabusFDISSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    value                        String
+    SyllabusFDISSuggestionItem   SyllabusFDISSuggestionItem @relation(fields: [syllabusFDISSuggestionItemId], references: [id])
+    syllabusFDISSuggestionItemId String                     @unique
+}
+
+model SubmittedSyllabusFDISSuggestion {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SyllabusFDISSuggestion   SyllabusFDISSuggestion @relation(fields: [syllabusFDISSuggestionId], references: [id])
+    syllabusFDISSuggestionId String                 @unique
+    SyllabusCITLRevision     SyllabusCITLRevision?
+    SyllabusFile             SyllabusFile?
+}
+
+model SyllabusCITLRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SubmittedSyllabusFDISSuggestion   SubmittedSyllabusFDISSuggestion @relation(fields: [submittedSyllabusFDISSuggestionId], references: [id])
+    submittedSyllabusFDISSuggestionId String                          @unique
+    SyllabusFile                      SyllabusFile                    @relation(fields: [syllabusFileId], references: [id])
+    syllabusFileId                    String                          @unique
+    ReturnedSyllabusCITLRevision      ReturnedSyllabusCITLRevision?
+    SyllabusFDISEndorsement           SyllabusFDISEndorsement?
+    SyllabusVPAAEndorsement           SyllabusVPAAEndorsement?
+}
+
+model ReturnedSyllabusCITLRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    FDIS                                       FDIS                                         @relation(fields: [fDISId], references: [id])
+    fDISId                                     String
+    SyllabusCITLRevision                       SyllabusCITLRevision                         @relation(fields: [syllabusCITLRevisionId], references: [id])
+    syllabusCITLRevisionId                     String                                       @unique
+    ReturnedSyllabusCITLRevisionSuggestionItem ReturnedSyllabusCITLRevisionSuggestionItem[]
+    SubmittedReturnedSyllabusCITLRevision      SubmittedReturnedSyllabusCITLRevision?
+}
+
+model ReturnedSyllabusCITLRevisionSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedSyllabusCITLRevision                          ReturnedSyllabusCITLRevision                           @relation(fields: [returnedSyllabusCITLRevisionId], references: [id])
+    returnedSyllabusCITLRevisionId                        String
+    suggestion                                            String
+    remarks                                               String?
+    pageNumber                                            Int
+    ReturnedSyllabusCITLRevisionSuggestionItemActionTaken ReturnedSyllabusCITLRevisionSuggestionItemActionTaken?
+}
+
+model ReturnedSyllabusCITLRevisionSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    value                                        String
+    ReturnedSyllabusCITLRevisionSuggestionItem   ReturnedSyllabusCITLRevisionSuggestionItem @relation(fields: [returnedSyllabusCITLRevisionSuggestionItemId], references: [id])
+    returnedSyllabusCITLRevisionSuggestionItemId String                                     @unique
+}
+
+model SubmittedReturnedSyllabusCITLRevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedSyllabusCITLRevision   ReturnedSyllabusCITLRevision @relation(fields: [returnedSyllabusCITLRevisionId], references: [id])
+    returnedSyllabusCITLRevisionId String                       @unique
+    SyllabusFile                   SyllabusFile?
+}
+
+model SyllabusFDISEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    FDIS                            FDIS                             @relation(fields: [fDISId], references: [id])
+    fDISId                          String
+    SyllabusCITLRevision            SyllabusCITLRevision             @relation(fields: [syllabusCITLRevisionId], references: [id])
+    syllabusCITLRevisionId          String                           @unique
+    SyllabusCITLDirectorEndorsement SyllabusCITLDirectorEndorsement?
+}
+
+model SyllabusCITLDirectorEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    CITLDirector                 CITLDirector                  @relation(fields: [cITLDirectorId], references: [id])
+    cITLDirectorId               String
+    SyllabusFDISEndorsement      SyllabusFDISEndorsement       @relation(fields: [syllabusFDISEndorsementId], references: [id])
+    syllabusFDISEndorsementId    String                        @unique
+    ReturnedSyllabusVPAARevision ReturnedSyllabusVPAARevision?
+}
+
+model VPAA {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    User                         User                           @relation(fields: [userId], references: [id])
+    userId                       String                         @unique
+    ActiveVPAA                   ActiveVPAA?
+    ReturnedSyllabusVPAARevision ReturnedSyllabusVPAARevision[]
+    SyllabusVPAAEndorsement      SyllabusVPAAEndorsement[]
+}
+
+model ActiveVPAA {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    VPAA   VPAA   @relation(fields: [vPAAId], references: [id])
+    vPAAId String @unique
+}
+
+model ReturnedSyllabusVPAARevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    SyllabusCITLDirectorEndorsement            SyllabusCITLDirectorEndorsement              @relation(fields: [syllabusCITLDirectorEndorsementId], references: [id])
+    syllabusCITLDirectorEndorsementId          String                                       @unique
+    VPAA                                       VPAA                                         @relation(fields: [vPAAId], references: [id])
+    vPAAId                                     String
+    ReturnedSyllabusVPAARevisionSuggestionItem ReturnedSyllabusVPAARevisionSuggestionItem[]
+    SubmittedReturnedSyllabusVPAARevision      SubmittedReturnedSyllabusVPAARevision?
+}
+
+model ReturnedSyllabusVPAARevisionSuggestionItem {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    suggestion                                            String
+    remarks                                               String?
+    pageNumber                                            Int
+    ReturnedSyllabusVPAARevision                          ReturnedSyllabusVPAARevision                           @relation(fields: [returnedSyllabusVPAARevisionId], references: [id])
+    returnedSyllabusVPAARevisionId                        String
+    ReturnedSyllabusVPAARevisionSuggestionItemActionTaken ReturnedSyllabusVPAARevisionSuggestionItemActionTaken?
+}
+
+model ReturnedSyllabusVPAARevisionSuggestionItemActionTaken {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    value                                        String
+    ReturnedSyllabusVPAARevisionSuggestionItem   ReturnedSyllabusVPAARevisionSuggestionItem @relation(fields: [returnedSyllabusVPAARevisionSuggestionItemId], references: [id])
+    returnedSyllabusVPAARevisionSuggestionItemId String                                     @unique
+}
+
+model SubmittedReturnedSyllabusVPAARevision {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ReturnedSyllabusVPAARevision   ReturnedSyllabusVPAARevision @relation(fields: [returnedSyllabusVPAARevisionId], references: [id])
+    returnedSyllabusVPAARevisionId String                       @unique
+    SyllabusFile                   SyllabusFile?
+}
+
+model SyllabusVPAAEndorsement {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    VPAA                   VPAA                 @relation(fields: [vPAAId], references: [id])
+    vPAAId                 String
+    SyllabusCITLRevision   SyllabusCITLRevision @relation(fields: [syllabusCITLRevisionId], references: [id])
+    syllabusCITLRevisionId String               @unique
 }

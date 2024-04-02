@@ -3,19 +3,19 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddDepartmentReviewPage() {
+export default function AddSyllabusDepartmentReview() {
   const formik = useFormik({
     initialValues: {
-      iMFileId: "",
+      syllabusFileId: "",
     },
     validationSchema: Yup.object({
-      iMFileId: Yup.string().required(),
+      syllabusFileId: Yup.string().required(),
     }),
     onSubmit: (values) => {
       axios
-        .post("/api/department_review", values)
+        .post(`/api/syllabus_department_review`, values)
         .then(() => {
-          alert("DepartmentReview has been added successfully");
+          alert("SyllabusDepartmentReview has been added successfully");
         })
         .catch((error) => {
           alert(error?.response?.data?.error?.message);
@@ -25,13 +25,13 @@ export default function AddDepartmentReviewPage() {
 
   return (
     <CrudLayout>
-      <h2>Add DepartmentReview</h2>
+      <h2>Add SyllabusDepartmentReview</h2>
 
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} noValidate>
         <input
           type="text"
-          placeholder="iMFileId"
-          {...formik.getFieldProps("iMFileId")}
+          placeholder="syllabusFileId"
+          {...formik.getFieldProps("syllabusFileId")}
         />
         <input type="submit" value="Submit" className="rounded border" />
       </form>
