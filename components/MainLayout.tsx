@@ -6,13 +6,14 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
 import Header from "./Header";
+import Loading from "./Loading";
 import Sidebar from "./Sidebar";
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 export default function MainLayout({ children }: MainLayoutProps) {
-  const { data: session } = useSession({
+  const { data: session, status } = useSession({
     required: true,
   });
   const router = useRouter();
@@ -58,6 +59,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
+
+  if (status === "loading") {
+    return (
+      <div className="w-full h-screen flex flex-col justify-center items-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen text-sm xl:text-base">
