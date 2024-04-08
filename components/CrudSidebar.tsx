@@ -389,6 +389,10 @@ export default function CrudSidebar() {
       link: "/crud/syllabus_department_review",
       label: "Syllabus Department Review",
     },
+    {
+      link: "/crud/syllabus_chairperson_review",
+      label: "Syllabus Chairperson Review",
+    },
   ];
 
   return (

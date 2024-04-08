@@ -1571,8 +1571,12 @@ model SyllabusChairpersonReview {
     q8_2 SyllabusRating?
     q8_3 SyllabusRating?
     q8_4 SyllabusRating?
-    q8_5 SyllabusRating?
-    q8_6 SyllabusRating?
+    q9_1 SyllabusRating?
+    q9_2 SyllabusRating?
+    q9_3 SyllabusRating?
+    q9_4 SyllabusRating?
+    q9_5 SyllabusRating?
+    q9_6 SyllabusRating?
 }
 
 model SyllabusChairpersonSuggestion {
