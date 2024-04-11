@@ -349,7 +349,7 @@ export default function QAMISSuggestionPage() {
                 onFileChange={(file) => {
                   setFiles((prev) => ({
                     ...prev,
-                    iMFile: file,
+                    qAMISFile: file,
                   }));
                 }}
                 onFileReset={() => {
