@@ -355,7 +355,7 @@ export default function QAMISSuggestionPage() {
                 onFileReset={() => {
                   setState((prev) => ({
                     ...prev,
-                    iMFile: undefined,
+                    qAMISFile: undefined,
                   }));
                 }}
                 loading={loading}
@@ -365,13 +365,13 @@ export default function QAMISSuggestionPage() {
                 onFileChange={(file) => {
                   setFiles((prev) => ({
                     ...prev,
-                    qAMISFile: file,
+                    iMFile: file,
                   }));
                 }}
                 onFileReset={() => {
                   setState((prev) => ({
                     ...prev,
-                    qAMISFile: undefined,
+                    iMFile: undefined,
                   }));
                 }}
                 loading={loading}
