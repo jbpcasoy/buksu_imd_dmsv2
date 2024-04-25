@@ -41,6 +41,9 @@ export default async function handler(
         });
         const faculty = await prisma.faculty.findFirst({
           where: {
+            ActiveFaculty: {
+              isNot: null,
+            },
             User: {
               id: {
                 equals: user.id,
