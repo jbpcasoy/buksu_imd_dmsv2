@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import { createCollege, readColleges } from "@/services/collegeService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
@@ -24,34 +24,9 @@ export default async function handler(
         name: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: { message: "You are not allowed to create a college" },
-        });
-      }
-
       const { name } = validator.cast(req.body);
 
-      const existingCollege = await prisma.college.findFirst({
-        where: {
-          name: {
-            equals: name,
-          },
-        },
-      });
-      if (existingCollege) {
-        return res
-          .status(409)
-          .json({ error: { message: "College name is already used" } });
-      }
-
-      const college = await prisma.college.create({
-        data: {
-          name,
-        },
-      });
-
+      const college = await createCollege({ user, name });
       return res.json(college);
     } catch (error: any) {
       logger.error(error);
@@ -81,34 +56,12 @@ export default async function handler(
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
 
-      const colleges = await prisma.college.findMany({
+      const { colleges, count } = await readColleges({
         skip,
         take,
-        where: {
-          AND: [
-            {
-              name: {
-                contains: filterName,
-                mode: "insensitive",
-              },
-            },
-          ],
-        },
-        orderBy: {
-          [sortField || "name"]: sortDirection || "asc",
-        },
-      });
-      const count = await prisma.college.count({
-        where: {
-          AND: [
-            {
-              name: {
-                contains: filterName,
-                mode: "insensitive",
-              },
-            },
-          ],
-        },
+        filterName,
+        sortField,
+        sortDirection,
       });
 
       return res.json({ colleges, count });

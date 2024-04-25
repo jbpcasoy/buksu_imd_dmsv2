@@ -1,4 +1,8 @@
-import prisma from "@/prisma/client";
+import {
+  deleteCollege,
+  readCollege,
+  updateCollege,
+} from "@/services/collegeService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
@@ -27,17 +31,8 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const college = await prisma.college.findFirstOrThrow({
-        where: {
-          AND: [
-            {
-              id: {
-                equals: id,
-              },
-            },
-          ],
-        },
-      });
+
+      const college = await readCollege({ id });
 
       return res.json(college);
     } catch (error: any) {
@@ -55,20 +50,9 @@ export default async function handler(
       });
 
       await validator.validate(req.query);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: { message: "You are not allowed to delete this college" },
-        });
-      }
-
       const { id } = validator.cast(req.query);
 
-      const college = await prisma.college.delete({
-        where: {
-          id,
-        },
-      });
+      const college = await deleteCollege({ user, id });
 
       return res.json(college);
     } catch (error: any) {
@@ -86,45 +70,10 @@ export default async function handler(
       });
 
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: { message: "You are not allowed to update this college" },
-        });
-      }
-
-      const { id } = req.query;
+      const id = req.query.id as string;
       const { name } = validator.cast(req.body);
 
-      const existingCollege = await prisma.college.findFirst({
-        where: {
-          AND: [
-            {
-              name: {
-                equals: name,
-              },
-            },
-            {
-              id: {
-                not: id as string,
-              },
-            },
-          ],
-        },
-      });
-      if (existingCollege) {
-        return res
-          .status(409)
-          .json({ error: { message: "College name is already used" } });
-      }
-      const college = await prisma.college.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          name,
-        },
-      });
+      const college = await updateCollege({ id, name, user });
 
       return res.json(college);
     } catch (error: any) {

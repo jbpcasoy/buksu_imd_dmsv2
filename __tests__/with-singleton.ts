@@ -42,7 +42,7 @@ test("should fail if user does not accept terms", async () => {
     id: 1,
     name: "Rich Haines",
     email: "hello@prisma.io",
-    acceptTermsAndConditions: true,
+    acceptTermsAndConditions: false,
   };
 
   prismaMock.userTest.create.mockImplementation();
