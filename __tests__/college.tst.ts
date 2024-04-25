@@ -29,7 +29,7 @@ const college: College = {
   id: "clveswte60002p8yaq1khl7ub",
   createdAt: new Date("2024-04-25T05:26:25.230Z"),
   updatedAt: new Date("2024-04-25T05:26:25.230Z"),
-  name: "Information Technology",
+  name: "College of Technology",
 };
 
 describe("Action: CREATE College", () => {
@@ -38,7 +38,7 @@ describe("Action: CREATE College", () => {
       prismaMock.college.create.mockResolvedValueOnce(college);
 
       await expect(
-        createCollege({ user: adminUser, name: "Information Technology" })
+        createCollege({ user: adminUser, name: "College of Technology" })
       ).resolves.toEqual(college);
     });
 
@@ -47,7 +47,7 @@ describe("Action: CREATE College", () => {
       prismaMock.college.create.mockResolvedValueOnce(college);
 
       await expect(
-        createCollege({ user: adminUser, name: "Information Technology" })
+        createCollege({ user: adminUser, name: "College of Technology" })
       ).rejects.toThrow("College name is already used");
     });
   });
@@ -56,7 +56,7 @@ describe("Action: CREATE College", () => {
     prismaMock.college.create.mockResolvedValueOnce(college);
 
     await expect(
-      createCollege({ user: nonAdminUser, name: "Information Technology" })
+      createCollege({ user: nonAdminUser, name: "College of Technology" })
     ).rejects.toThrow("You are not allowed to create a college");
   });
 });
@@ -77,9 +77,7 @@ describe("Action: READ College", () => {
   test("Role: User", async () => {
     prismaMock.college.findUnique.mockResolvedValueOnce(college);
 
-    await expect(
-      readCollege({ id: "clveswte60002p8yaq1khl7ub" })
-    ).resolves.toEqual(college);
+    await expect(readCollege({ id: college.id })).resolves.toEqual(college);
   });
 });
 
@@ -91,8 +89,8 @@ describe("Action: UPDATE College", () => {
       await expect(
         updateCollege({
           user: adminUser,
-          id: "clveswte60002p8yaq1khl7ub",
-          name: "Information Technology",
+          id: college.id,
+          name: "College of Technology",
         })
       ).resolves.toEqual(college);
     });
@@ -104,8 +102,8 @@ describe("Action: UPDATE College", () => {
       await expect(
         updateCollege({
           user: adminUser,
-          id: "clveswte60002p8yaq1khl7ub",
-          name: "Information Technology",
+          id: college.id,
+          name: "College of Technology",
         })
       ).rejects.toThrow("College name is already used");
     });
@@ -117,8 +115,8 @@ describe("Action: UPDATE College", () => {
     await expect(
       updateCollege({
         user: nonAdminUser,
-        id: "clveswte60002p8yaq1khl7ub",
-        name: "Information Technology",
+        id: college.id,
+        name: "College of Technology",
       })
     ).rejects.toThrow("You are not allowed to update this college");
   });
@@ -129,7 +127,7 @@ describe("Action: DELETE College", () => {
     prismaMock.college.delete.mockResolvedValueOnce(college);
 
     await expect(
-      deleteCollege({ user: adminUser, id: "clveswte60002p8yaq1khl7ub" })
+      deleteCollege({ user: adminUser, id: college.id })
     ).resolves.toEqual(college);
   });
 
@@ -137,7 +135,7 @@ describe("Action: DELETE College", () => {
     prismaMock.college.delete.mockResolvedValueOnce(college);
 
     await expect(
-      deleteCollege({ user: nonAdminUser, id: "clveswte60002p8yaq1khl7ub" })
+      deleteCollege({ user: nonAdminUser, id: college.id })
     ).rejects.toThrow("You are not allowed to delete this college");
   });
 });

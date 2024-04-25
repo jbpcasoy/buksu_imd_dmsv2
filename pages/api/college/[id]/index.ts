@@ -24,13 +24,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
-
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
+      const id = req.query.id as string;
 
       const college = await readCollege({ id });
 
@@ -45,12 +39,7 @@ export default async function handler(
 
   const deleteHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
-
-      await validator.validate(req.query);
-      const { id } = validator.cast(req.query);
+      const id = req.query.id as string;
 
       const college = await deleteCollege({ user, id });
 
