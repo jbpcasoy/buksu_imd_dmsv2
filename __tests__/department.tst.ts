@@ -6,163 +6,139 @@ import {
   readDepartments,
   updateDepartment,
 } from "@/services/departmentService";
-import { College, Department, User } from "@prisma/client";
+import {
+  MockAdminUser,
+  MockCollege,
+  MockDepartment,
+  MockNonAdminUser,
+} from "@/services/mockData";
 
-const adminUser: User = {
-  id: "clventgry000020jex6bravtc",
-  name: "Harriett Gregory",
-  email: "mur@zipo.cz",
-  emailVerified: null,
-  image: "http://de.gl/ropus",
-  isAdmin: true,
-};
-const nonAdminUser: User = {
-  id: "clventgry000020jex6bravtd",
-  name: "Ina Weaver",
-  email: "sarvakjaz@gupul.tp",
-  emailVerified: null,
-  image: "http://joknum.nz/filuv",
-  isAdmin: false,
-};
+describe("Model: Department", () => {
+  describe("Action: CREATE Department", () => {
+    describe("Role: Admin", () => {
+      test("Scenario: Unique Name", async () => {
+        prismaMock.college.findFirstOrThrow.mockResolvedValueOnce(MockCollege);
+        prismaMock.department.create.mockResolvedValueOnce(MockDepartment);
 
-const college: College = {
-  id: "clveswte60002p8yaq1khl7ub",
-  createdAt: new Date("2024-04-25T05:26:25.230Z"),
-  updatedAt: new Date("2024-04-25T05:26:25.230Z"),
-  name: "College of Technology",
-};
+        await expect(
+          createDepartment({
+            user: MockAdminUser,
+            name: "Information Technology",
+            collegeId: MockCollege.id,
+          })
+        ).resolves.toEqual(MockDepartment);
+      });
 
-const department: Department = {
-  id: "clveyh1m500004vkgv2k0hi4u",
-  createdAt: new Date("2024-04-25T08:02:07.085Z"),
-  updatedAt: new Date("2024-04-25T08:02:07.085Z"),
-  name: "Information Technology",
-  collegeId: "clveswte60002p8yaq1khl7ub",
-};
+      test("Scenario: Duplicate Name", async () => {
+        prismaMock.college.findFirstOrThrow.mockResolvedValueOnce(MockCollege);
+        prismaMock.department.findFirst.mockResolvedValueOnce(MockDepartment);
 
-describe("Action: CREATE Department", () => {
-  describe("Role: Admin", () => {
-    test("Scenario: Unique Name", async () => {
-      prismaMock.college.findFirstOrThrow.mockResolvedValueOnce(college);
-      prismaMock.department.create.mockResolvedValueOnce(department);
+        await expect(
+          createDepartment({
+            user: MockAdminUser,
+            name: "Information Technology",
+            collegeId: MockCollege.id,
+          })
+        ).rejects.toThrow("Department name is already used");
+      });
+    });
+
+    test("Role: User", async () => {
+      prismaMock.department.create.mockResolvedValueOnce(MockDepartment);
 
       await expect(
         createDepartment({
-          user: adminUser,
+          user: MockNonAdminUser,
           name: "Information Technology",
-          collegeId: college.id,
+          collegeId: MockCollege.id,
         })
-      ).resolves.toEqual(department);
+      ).rejects.toThrow("You are not allowed to create a department");
     });
+  });
 
-    test("Scenario: Duplicate Name", async () => {
-      prismaMock.college.findFirstOrThrow.mockResolvedValueOnce(college);
-      prismaMock.department.findFirst.mockResolvedValueOnce(department);
-      prismaMock.department.create.mockResolvedValueOnce(department);
+  describe("Action: READ Departments", () => {
+    test("Role: User", async () => {
+      prismaMock.department.findMany.mockResolvedValueOnce([MockDepartment]);
+      prismaMock.department.count.mockResolvedValueOnce(1);
 
       await expect(
-        createDepartment({
-          user: adminUser,
-          name: "Information Technology",
-          collegeId: college.id,
+        readDepartments({
+          skip: 0,
+          take: 10,
         })
-      ).rejects.toThrow("Department name is already used");
+      ).resolves.toEqual({
+        count: 1,
+        departments: [MockDepartment],
+      });
     });
   });
 
-  test("Role: User", async () => {
-    prismaMock.department.create.mockResolvedValueOnce(department);
+  describe("Action: READ Department", () => {
+    test("Role: User", async () => {
+      prismaMock.department.findUnique.mockResolvedValueOnce(MockDepartment);
 
-    await expect(
-      createDepartment({
-        user: nonAdminUser,
-        name: "Information Technology",
-        collegeId: college.id,
-      })
-    ).rejects.toThrow("You are not allowed to create a department");
-  });
-});
-
-describe("Action: READ Departments", () => {
-  test("Role: User", async () => {
-    prismaMock.department.findMany.mockResolvedValueOnce([department]);
-    prismaMock.department.count.mockResolvedValueOnce(1);
-
-    await expect(
-      readDepartments({
-        skip: 0,
-        take: 10,
-      })
-    ).resolves.toEqual({
-      count: 1,
-      departments: [department],
+      expect(readDepartment({ id: MockDepartment.id })).resolves.toEqual(
+        MockDepartment
+      );
     });
   });
-});
 
-describe("Action: READ Department", () => {
-  test("Role: User", async () => {
-    prismaMock.department.findUnique.mockResolvedValueOnce(department);
+  describe("Action: UPDATE Department", () => {
+    describe("Role: Admin", () => {
+      test("Scenario: Unique Name", async () => {
+        prismaMock.department.update.mockResolvedValueOnce(MockDepartment);
 
-    expect(readDepartment({ id: department.id })).resolves.toEqual(department);
-  });
-});
+        expect(
+          updateDepartment({
+            id: MockDepartment.id,
+            name: "Information Technology",
+            user: MockAdminUser,
+          })
+        ).resolves.toEqual(MockDepartment);
+      });
 
-describe("Action: UPDATE Department", () => {
-  describe("Role: Admin", () => {
-    test("Scenario: Unique Name", async () => {
-      prismaMock.department.update.mockResolvedValueOnce(department);
+      test("Scenario: Duplicate Name", async () => {
+        prismaMock.department.findFirst.mockResolvedValueOnce(MockDepartment);
+        prismaMock.department.update.mockResolvedValueOnce(MockDepartment);
+
+        expect(
+          updateDepartment({
+            id: MockDepartment.id,
+            name: "Information Technology",
+            user: MockAdminUser,
+          })
+        ).rejects.toThrow("Department name is already used");
+      });
+    });
+
+    test("Role: User", async () => {
+      prismaMock.department.update.mockResolvedValueOnce(MockDepartment);
 
       expect(
         updateDepartment({
-          id: department.id,
-          name: "Information Technology",
-          user: adminUser,
+          id: MockDepartment.id,
+          name: "Information technology",
+          user: MockNonAdminUser,
         })
-      ).resolves.toEqual(department);
+      ).rejects.toThrow("You are not allowed to update this department");
     });
+  });
 
-    test("Scenario: Duplicate Name", async () => {
-      prismaMock.department.findFirst.mockResolvedValueOnce(department);
-      prismaMock.department.update.mockResolvedValueOnce(department);
+  describe("Action: DELETE Department", () => {
+    test("Role: Admin", async () => {
+      prismaMock.department.delete.mockResolvedValueOnce(MockDepartment);
 
       expect(
-        updateDepartment({
-          id: department.id,
-          name: "Information Technology",
-          user: adminUser,
-        })
-      ).rejects.toThrow("Department name is already used");
+        deleteDepartment({ id: MockDepartment.id, user: MockAdminUser })
+      ).resolves.toEqual(MockDepartment);
     });
-  });
 
-  test("Role: User", async () => {
-    prismaMock.department.update.mockResolvedValueOnce(department);
+    test("Role: User", async () => {
+      prismaMock.department.delete.mockResolvedValueOnce(MockDepartment);
 
-    expect(
-      updateDepartment({
-        id: department.id,
-        name: "Information technology",
-        user: nonAdminUser,
-      })
-    ).rejects.toThrow("You are not allowed to update this department");
-  });
-});
-
-describe("Action: DELETE Department", () => {
-  test("Role: Admin", async () => {
-    prismaMock.department.delete.mockResolvedValueOnce(department);
-
-    expect(
-      deleteDepartment({ id: department.id, user: adminUser })
-    ).resolves.toEqual(department);
-  });
-
-  test("Role: User", async () => {
-    prismaMock.department.delete.mockResolvedValueOnce(department);
-
-    expect(
-      deleteDepartment({ id: department.id, user: nonAdminUser })
-    ).rejects.toThrow("You are not allowed to delete this department");
+      expect(
+        deleteDepartment({ id: MockDepartment.id, user: MockNonAdminUser })
+      ).rejects.toThrow("You are not allowed to delete this department");
+    });
   });
 });

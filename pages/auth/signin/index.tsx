@@ -75,7 +75,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // To avoid an infinite loop!
   if (session) {
     return {
-      redirect: { destination: session.user?.isAdmin ? "/admin" : "/" },
+      redirect: {
+        destination: session.user?.isAdmin ? "/admin" : "/non_active", //it wil redirect the user if they're an active faculty
+      },
     };
   }
 

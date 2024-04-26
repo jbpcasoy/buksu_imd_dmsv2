@@ -1,4 +1,7 @@
-import prisma from "@/prisma/client";
+import {
+  createActiveFaculty,
+  readActiveFaculties,
+} from "@/services/activeFacultyService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -11,6 +14,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let user: User;
+
   try {
     user = await getServerUser(req, res);
   } catch (error) {
@@ -24,52 +28,9 @@ export default async function handler(
         facultyId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to set an active faculty",
-          },
-        });
-      }
-
       const { facultyId } = validator.cast(req.body);
 
-      const faculty = await prisma.faculty.findFirstOrThrow({
-        where: {
-          id: {
-            equals: facultyId,
-          },
-        },
-      });
-
-      const userActiveFacultyCount = await prisma.activeFaculty.count({
-        where: {
-          Faculty: {
-            User: {
-              id: {
-                equals: faculty.userId,
-              },
-            },
-          },
-        },
-      });
-
-      if (userActiveFacultyCount > 0) {
-        return res.status(409).json({
-          error: { message: "Faculty can only belong to one department" },
-        });
-      }
-
-      const activeFaculty = await prisma.activeFaculty.create({
-        data: {
-          Faculty: {
-            connect: {
-              id: faculty.id,
-            },
-          },
-        },
-      });
+      const activeFaculty = await createActiveFaculty({ facultyId, user });
 
       return res.json(activeFaculty);
     } catch (error: any) {
@@ -100,145 +61,13 @@ export default async function handler(
         "options[includeName]": optionsIncludeName,
       } = validator.cast(req.query);
 
-      const activeFaculties = await prisma.activeFaculty.findMany({
+      const { activeFaculties, count } = await readActiveFaculties({
         skip,
         take,
-        where: {
-          AND: [
-            {
-              Faculty: {
-                User: {
-                  name: {
-                    contains: filterName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            notCoAuthorOfIM
-              ? {
-                  AND: [
-                    {
-                      Faculty: {
-                        Department: {
-                          Faculty: {
-                            some: {
-                              IM: {
-                                some: {
-                                  id: {
-                                    equals: notCoAuthorOfIM,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                    {
-                      Faculty: {
-                        User: {
-                          id: {
-                            not: user.id,
-                          },
-                        },
-                      },
-                    },
-                    {
-                      Faculty: {
-                        CoAuthor: {
-                          none: {
-                            IM: {
-                              id: {
-                                equals: notCoAuthorOfIM,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  ],
-                }
-              : {},
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-        include: optionsIncludeName
-          ? {
-              Faculty: {
-                select: {
-                  User: {
-                    select: {
-                      name: true,
-                    },
-                  },
-                },
-              },
-            }
-          : undefined,
-      });
-      const count = await prisma.activeFaculty.count({
-        where: {
-          AND: [
-            {
-              Faculty: {
-                User: {
-                  name: {
-                    contains: filterName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            notCoAuthorOfIM
-              ? {
-                  AND: [
-                    {
-                      Faculty: {
-                        Department: {
-                          Faculty: {
-                            some: {
-                              IM: {
-                                some: {
-                                  id: {
-                                    equals: notCoAuthorOfIM,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                    {
-                      Faculty: {
-                        User: {
-                          id: {
-                            not: user.id,
-                          },
-                        },
-                      },
-                    },
-                    {
-                      Faculty: {
-                        CoAuthor: {
-                          none: {
-                            IM: {
-                              id: {
-                                equals: notCoAuthorOfIM,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  ],
-                }
-              : {},
-          ],
-        },
+        user,
+        filterName,
+        notCoAuthorOfIM,
+        optionsIncludeName,
       });
 
       return res.json({ activeFaculties, count });

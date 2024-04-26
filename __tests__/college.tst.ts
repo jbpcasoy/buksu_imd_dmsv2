@@ -6,136 +6,112 @@ import {
   readColleges,
   updateCollege,
 } from "@/services/collegeService";
-import { College, User } from "@prisma/client";
+import {
+  MockAdminUser,
+  MockCollege,
+  MockNonAdminUser,
+} from "@/services/mockData";
 
-const adminUser: User = {
-  id: "clventgry000020jex6bravtc",
-  name: "Harriett Gregory",
-  email: "mur@zipo.cz",
-  emailVerified: null,
-  image: "http://de.gl/ropus",
-  isAdmin: true,
-};
-const nonAdminUser: User = {
-  id: "clventgry000020jex6bravtd",
-  name: "Ina Weaver",
-  email: "sarvakjaz@gupul.tp",
-  emailVerified: null,
-  image: "http://joknum.nz/filuv",
-  isAdmin: false,
-};
+describe("Model: College", () => {
+  describe("Action: CREATE College", () => {
+    describe("Role: Admin", () => {
+      test("Scenario: Unique Name", async () => {
+        prismaMock.college.create.mockResolvedValueOnce(MockCollege);
 
-const college: College = {
-  id: "clveswte60002p8yaq1khl7ub",
-  createdAt: new Date("2024-04-25T05:26:25.230Z"),
-  updatedAt: new Date("2024-04-25T05:26:25.230Z"),
-  name: "College of Technology",
-};
+        await expect(
+          createCollege({ user: MockAdminUser, name: "College of Technology" })
+        ).resolves.toEqual(MockCollege);
+      });
 
-describe("Action: CREATE College", () => {
-  describe("Role: Admin", () => {
-    test("Scenario: Unique Name", async () => {
-      prismaMock.college.create.mockResolvedValueOnce(college);
+      test("Scenario: Duplicate Name", async () => {
+        prismaMock.college.findFirst.mockResolvedValueOnce(MockCollege);
 
+        await expect(
+          createCollege({ user: MockAdminUser, name: "College of Technology" })
+        ).rejects.toThrow("College name is already used");
+      });
+    });
+
+    test("Role: User", async () => {
       await expect(
-        createCollege({ user: adminUser, name: "College of Technology" })
-      ).resolves.toEqual(college);
-    });
-
-    test("Scenario: Duplicate Name", async () => {
-      prismaMock.college.findFirst.mockResolvedValueOnce(college);
-      prismaMock.college.create.mockResolvedValueOnce(college);
-
-      await expect(
-        createCollege({ user: adminUser, name: "College of Technology" })
-      ).rejects.toThrow("College name is already used");
+        createCollege({ user: MockNonAdminUser, name: "College of Technology" })
+      ).rejects.toThrow("You are not allowed to create a college");
     });
   });
 
-  test("Role: User", async () => {
-    prismaMock.college.create.mockResolvedValueOnce(college);
+  describe("Action: READ Colleges", () => {
+    test("Role: User", async () => {
+      prismaMock.college.findMany.mockResolvedValueOnce([MockCollege]);
+      prismaMock.college.count.mockResolvedValueOnce(1);
 
-    await expect(
-      createCollege({ user: nonAdminUser, name: "College of Technology" })
-    ).rejects.toThrow("You are not allowed to create a college");
-  });
-});
-
-describe("Action: READ Colleges", () => {
-  test("Role: User", async () => {
-    prismaMock.college.findMany.mockResolvedValueOnce([college]);
-    prismaMock.college.count.mockResolvedValueOnce(1);
-
-    await expect(readColleges({ skip: 0, take: 10 })).resolves.toEqual({
-      colleges: [college],
-      count: 1,
+      await expect(readColleges({ skip: 0, take: 10 })).resolves.toEqual({
+        colleges: [MockCollege],
+        count: 1,
+      });
     });
   });
-});
 
-describe("Action: READ College", () => {
-  test("Role: User", async () => {
-    prismaMock.college.findUnique.mockResolvedValueOnce(college);
+  describe("Action: READ College", () => {
+    test("Role: User", async () => {
+      prismaMock.college.findUnique.mockResolvedValueOnce(MockCollege);
 
-    await expect(readCollege({ id: college.id })).resolves.toEqual(college);
+      await expect(readCollege({ id: MockCollege.id })).resolves.toEqual(
+        MockCollege
+      );
+    });
   });
-});
 
-describe("Action: UPDATE College", () => {
-  describe("Role: Admin", () => {
-    test("Scenario: Unique Name", async () => {
-      prismaMock.college.update.mockResolvedValueOnce(college);
+  describe("Action: UPDATE College", () => {
+    describe("Role: Admin", () => {
+      test("Scenario: Unique Name", async () => {
+        prismaMock.college.update.mockResolvedValueOnce(MockCollege);
 
-      await expect(
-        updateCollege({
-          user: adminUser,
-          id: college.id,
-          name: "College of Technology",
-        })
-      ).resolves.toEqual(college);
+        await expect(
+          updateCollege({
+            user: MockAdminUser,
+            id: MockCollege.id,
+            name: "College of Technology",
+          })
+        ).resolves.toEqual(MockCollege);
+      });
+
+      test("Scenario: Duplicate Name", async () => {
+        prismaMock.college.findFirst.mockResolvedValueOnce(MockCollege);
+
+        await expect(
+          updateCollege({
+            user: MockAdminUser,
+            id: MockCollege.id,
+            name: "College of Technology",
+          })
+        ).rejects.toThrow("College name is already used");
+      });
     });
 
-    test("Scenario: Duplicate Name", async () => {
-      prismaMock.college.update.mockResolvedValueOnce(college);
-      prismaMock.college.findFirst.mockResolvedValueOnce(college);
-
+    test("Role: User", async () => {
       await expect(
         updateCollege({
-          user: adminUser,
-          id: college.id,
+          user: MockNonAdminUser,
+          id: MockCollege.id,
           name: "College of Technology",
         })
-      ).rejects.toThrow("College name is already used");
+      ).rejects.toThrow("You are not allowed to update this college");
     });
   });
 
-  test("Role: User", async () => {
-    prismaMock.college.update.mockResolvedValueOnce(college);
+  describe("Action: DELETE College", () => {
+    test("Role: Admin", async () => {
+      prismaMock.college.delete.mockResolvedValueOnce(MockCollege);
 
-    await expect(
-      updateCollege({
-        user: nonAdminUser,
-        id: college.id,
-        name: "College of Technology",
-      })
-    ).rejects.toThrow("You are not allowed to update this college");
-  });
-});
+      await expect(
+        deleteCollege({ user: MockAdminUser, id: MockCollege.id })
+      ).resolves.toEqual(MockCollege);
+    });
 
-describe("Action: DELETE College", () => {
-  test("Role: Admin", async () => {
-    prismaMock.college.delete.mockResolvedValueOnce(college);
-
-    await expect(
-      deleteCollege({ user: adminUser, id: college.id })
-    ).resolves.toEqual(college);
-  });
-
-  test("Role: User", async () => {
-    prismaMock.college.delete.mockResolvedValueOnce(college);
-
-    await expect(
-      deleteCollege({ user: nonAdminUser, id: college.id })
-    ).rejects.toThrow("You are not allowed to delete this college");
+    test("Role: User", async () => {
+      await expect(
+        deleteCollege({ user: MockNonAdminUser, id: MockCollege.id })
+      ).rejects.toThrow("You are not allowed to delete this college");
+    });
   });
 });
