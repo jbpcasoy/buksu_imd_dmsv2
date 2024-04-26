@@ -10,7 +10,7 @@
     "pm2-dev": "pm2 restart ecosystem.config.js --env production",
     "pm2-prod": "pm2 restart ecosystem.config.js --env production",
     "test": "jest --verbose",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --verbose --watch"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.5.0",

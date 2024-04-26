@@ -43,8 +43,6 @@ export async function createDepartment({
     },
   });
 
-  console.log({ department });
-
   return department;
 }
 
