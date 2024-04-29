@@ -12,42 +12,60 @@ export async function createChairperson({
     throw new Error("You are not allowed to create a chairperson");
   }
 
-  const existingChairperson = await prisma.chairperson.findFirst({
-    where: {
-      Faculty: {
+  let faculty;
+  try {
+    faculty = await prisma.faculty.findFirst({
+      where: {
         ActiveFaculty: {
           id: {
             equals: activeFacultyId,
           },
         },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find Faculty");
+  }
+  if (!faculty) {
+    throw new Error("Faculty not found");
+  }
+
+  let existingChairperson;
+  try {
+    existingChairperson = await prisma.chairperson.findFirst({
+      where: {
+        Faculty: {
+          ActiveFaculty: {
+            id: {
+              equals: activeFacultyId,
+            },
+          },
+        },
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find existing Chairperson");
+  }
   if (existingChairperson) {
     throw new Error("Chairperson already exists");
   }
 
-  const faculty = await prisma.faculty.findFirstOrThrow({
-    where: {
-      ActiveFaculty: {
-        id: {
-          equals: activeFacultyId,
+  let chairperson;
+  try {
+    chairperson = await prisma.chairperson.create({
+      data: {
+        Faculty: {
+          connect: {
+            id: faculty.id,
+          },
         },
       },
-    },
-  });
+    });
 
-  const chairperson = await prisma.chairperson.create({
-    data: {
-      Faculty: {
-        connect: {
-          id: faculty.id,
-        },
-      },
-    },
-  });
-
-  return chairperson;
+    return chairperson;
+  } catch (error: any) {
+    throw new Error("Failed to create Chairperson");
+  }
 }
 
 export async function readChairpersons({
@@ -67,127 +85,142 @@ export async function readChairpersons({
   sortField?: string;
   sortDirection?: string;
 }) {
-  const chairpersons = await prisma.chairperson.findMany({
-    skip,
-    take,
-    where: {
-      AND: [
-        {
-          Faculty: {
-            User: {
-              name: {
-                contains: filterName,
-                mode: "insensitive",
-              },
-            },
-          },
-        },
-        {
-          Faculty: {
-            Department: {
-              name: {
-                contains: filterDepartmentName,
-                mode: "insensitive",
-              },
-            },
-          },
-        },
-        {
-          Faculty: {
-            Department: {
-              College: {
+  let chairpersons;
+  try {
+    chairpersons = await prisma.chairperson.findMany({
+      skip,
+      take,
+      where: {
+        AND: [
+          {
+            Faculty: {
+              User: {
                 name: {
-                  contains: filterCollegeName,
+                  contains: filterName,
                   mode: "insensitive",
                 },
               },
             },
           },
-        },
-      ],
-    },
-    orderBy:
-      sortField === "name"
-        ? ({
-            Faculty: {
-              User: {
-                name: sortDirection ?? "asc",
-              },
-            },
-          } as Prisma.FacultyOrderByWithRelationInput)
-        : sortField === "departmentName"
-        ? ({
+          {
             Faculty: {
               Department: {
-                name: sortDirection ?? "asc",
+                name: {
+                  contains: filterDepartmentName,
+                  mode: "insensitive",
+                },
               },
             },
-          } as Prisma.FacultyOrderByWithRelationInput)
-        : sortField === "collegeName"
-        ? ({
+          },
+          {
             Faculty: {
               Department: {
                 College: {
-                  name: sortDirection ?? "asc",
+                  name: {
+                    contains: filterCollegeName,
+                    mode: "insensitive",
+                  },
                 },
               },
             },
-          } as Prisma.FacultyOrderByWithRelationInput)
-        : ({
-            updatedAt: "desc",
-          } as Prisma.FacultyOrderByWithRelationInput),
-  });
-  const count = await prisma.chairperson.count({
-    where: {
-      AND: [
-        {
-          Faculty: {
-            User: {
-              name: {
-                contains: filterName,
-                mode: "insensitive",
-              },
-            },
           },
-        },
-        {
-          Faculty: {
-            Department: {
-              name: {
-                contains: filterDepartmentName,
-                mode: "insensitive",
+        ],
+      },
+      orderBy:
+        sortField === "name"
+          ? ({
+              Faculty: {
+                User: {
+                  name: sortDirection ?? "asc",
+                },
               },
-            },
-          },
-        },
-        {
-          Faculty: {
-            Department: {
-              College: {
+            } as Prisma.FacultyOrderByWithRelationInput)
+          : sortField === "departmentName"
+          ? ({
+              Faculty: {
+                Department: {
+                  name: sortDirection ?? "asc",
+                },
+              },
+            } as Prisma.FacultyOrderByWithRelationInput)
+          : sortField === "collegeName"
+          ? ({
+              Faculty: {
+                Department: {
+                  College: {
+                    name: sortDirection ?? "asc",
+                  },
+                },
+              },
+            } as Prisma.FacultyOrderByWithRelationInput)
+          : ({
+              updatedAt: "desc",
+            } as Prisma.FacultyOrderByWithRelationInput),
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find chairpersons");
+  }
+
+  let count;
+  try {
+    count = await prisma.chairperson.count({
+      where: {
+        AND: [
+          {
+            Faculty: {
+              User: {
                 name: {
-                  contains: filterCollegeName,
+                  contains: filterName,
                   mode: "insensitive",
                 },
               },
             },
           },
-        },
-      ],
-    },
-  });
+          {
+            Faculty: {
+              Department: {
+                name: {
+                  contains: filterDepartmentName,
+                  mode: "insensitive",
+                },
+              },
+            },
+          },
+          {
+            Faculty: {
+              Department: {
+                College: {
+                  name: {
+                    contains: filterCollegeName,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to count chairpersons");
+  }
 
   const result = { count, chairpersons };
   return result;
 }
 
 export async function readChairperson({ id }: { id: string }) {
-  const chairperson = await prisma.chairperson.findUnique({
-    where: {
-      id,
-    },
-  });
+  try {
+    const chairperson = await prisma.chairperson.findUnique({
+      where: {
+        id,
+      },
+    });
 
-  return chairperson;
+    return chairperson;
+  } catch (error: any) {
+    throw new Error("Failed to find chairperson");
+  }
 }
 
 export async function deleteChairperson({
@@ -201,11 +234,15 @@ export async function deleteChairperson({
     throw new Error("You are not allowed to delete this chairperson");
   }
 
-  const chairperson = await prisma.chairperson.delete({
-    where: {
-      id,
-    },
-  });
+  try {
+    const chairperson = await prisma.chairperson.delete({
+      where: {
+        id,
+      },
+    });
 
-  return chairperson;
+    return chairperson;
+  } catch (error: any) {
+    throw new Error("Failed to delete chairperson");
+  }
 }

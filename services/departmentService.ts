@@ -14,36 +14,54 @@ export async function createDepartment({
     throw new Error("You are not allowed to create a department");
   }
 
-  const existingDepartment = await prisma.department.findFirst({
-    where: {
-      name: {
-        equals: name,
+  let existingDepartment;
+  try {
+    existingDepartment = await prisma.department.findFirst({
+      where: {
+        name: {
+          equals: name,
+        },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find existing Department");
+  }
   if (existingDepartment) {
     throw new Error("Department name is already used");
   }
 
-  const college = await prisma.college.findFirstOrThrow({
-    where: {
-      id: {
-        equals: collegeId,
-      },
-    },
-  });
-  const department = await prisma.department.create({
-    data: {
-      name,
-      College: {
-        connect: {
-          id: college.id,
+  let college;
+  try {
+    college = await prisma.college.findFirst({
+      where: {
+        id: {
+          equals: collegeId,
         },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find College");
+  }
+  if (!college) {
+    throw new Error("College not found");
+  }
 
-  return department;
+  try {
+    const department = await prisma.department.create({
+      data: {
+        name,
+        College: {
+          connect: {
+            id: college.id,
+          },
+        },
+      },
+    });
+
+    return department;
+  } catch (error: any) {
+    throw new Error("Failed to create Department");
+  }
 }
 
 export async function readDepartments({

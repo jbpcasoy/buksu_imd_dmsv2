@@ -38,17 +38,21 @@ export async function createActiveFaculty({
     throw new Error("Faculty can only belong to one department");
   }
 
-  const activeFaculty = await prisma.activeFaculty.create({
-    data: {
-      Faculty: {
-        connect: {
-          id: faculty.id,
+  try {
+    const activeFaculty = await prisma.activeFaculty.create({
+      data: {
+        Faculty: {
+          connect: {
+            id: faculty.id,
+          },
         },
       },
-    },
-  });
+    });
 
-  return activeFaculty;
+    return activeFaculty;
+  } catch (error: any) {
+    throw new Error("Failed to create ActiveFaculty");
+  }
 }
 
 export async function readActiveFaculties({
@@ -66,110 +70,36 @@ export async function readActiveFaculties({
   user: User;
   optionsIncludeName?: boolean;
 }) {
-  const activeFaculties = await prisma.activeFaculty.findMany({
-    skip,
-    take,
-    where: {
-      AND: [
-        {
-          Faculty: {
-            User: {
-              name: {
-                contains: filterName,
-                mode: "insensitive",
-              },
-            },
-          },
-        },
-        notCoAuthorOfIM
-          ? {
-              AND: [
-                {
-                  Faculty: {
-                    Department: {
-                      Faculty: {
-                        some: {
-                          IM: {
-                            some: {
-                              id: {
-                                equals: notCoAuthorOfIM,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                {
-                  Faculty: {
-                    User: {
-                      id: {
-                        not: user.id,
-                      },
-                    },
-                  },
-                },
-                {
-                  Faculty: {
-                    CoAuthor: {
-                      none: {
-                        IM: {
-                          id: {
-                            equals: notCoAuthorOfIM,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            }
-          : {},
-      ],
-    },
-    orderBy: {
-      updatedAt: "desc",
-    },
-    include: optionsIncludeName
-      ? {
-          Faculty: {
-            select: {
+  let activeFaculties;
+  try {
+    activeFaculties = await prisma.activeFaculty.findMany({
+      skip,
+      take,
+      where: {
+        AND: [
+          {
+            Faculty: {
               User: {
-                select: {
-                  name: true,
+                name: {
+                  contains: filterName,
+                  mode: "insensitive",
                 },
               },
             },
           },
-        }
-      : undefined,
-  });
-  const count = await prisma.activeFaculty.count({
-    where: {
-      AND: [
-        {
-          Faculty: {
-            User: {
-              name: {
-                contains: filterName,
-                mode: "insensitive",
-              },
-            },
-          },
-        },
-        notCoAuthorOfIM
-          ? {
-              AND: [
-                {
-                  Faculty: {
-                    Department: {
-                      Faculty: {
-                        some: {
-                          IM: {
-                            some: {
-                              id: {
-                                equals: notCoAuthorOfIM,
+          notCoAuthorOfIM
+            ? {
+                AND: [
+                  {
+                    Faculty: {
+                      Department: {
+                        Faculty: {
+                          some: {
+                            IM: {
+                              some: {
+                                id: {
+                                  equals: notCoAuthorOfIM,
+                                },
                               },
                             },
                           },
@@ -177,35 +107,120 @@ export async function readActiveFaculties({
                       },
                     },
                   },
-                },
-                {
-                  Faculty: {
-                    User: {
-                      id: {
-                        not: user.id,
+                  {
+                    Faculty: {
+                      User: {
+                        id: {
+                          not: user.id,
+                        },
                       },
                     },
                   },
-                },
-                {
-                  Faculty: {
-                    CoAuthor: {
-                      none: {
-                        IM: {
-                          id: {
-                            equals: notCoAuthorOfIM,
+                  {
+                    Faculty: {
+                      CoAuthor: {
+                        none: {
+                          IM: {
+                            id: {
+                              equals: notCoAuthorOfIM,
+                            },
                           },
                         },
                       },
                     },
                   },
+                ],
+              }
+            : {},
+        ],
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+      include: optionsIncludeName
+        ? {
+            Faculty: {
+              select: {
+                User: {
+                  select: {
+                    name: true,
+                  },
                 },
-              ],
-            }
-          : {},
-      ],
-    },
-  });
+              },
+            },
+          }
+        : undefined,
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find ActiveFaculties");
+  }
+
+  let count;
+  try {
+    count = await prisma.activeFaculty.count({
+      where: {
+        AND: [
+          {
+            Faculty: {
+              User: {
+                name: {
+                  contains: filterName,
+                  mode: "insensitive",
+                },
+              },
+            },
+          },
+          notCoAuthorOfIM
+            ? {
+                AND: [
+                  {
+                    Faculty: {
+                      Department: {
+                        Faculty: {
+                          some: {
+                            IM: {
+                              some: {
+                                id: {
+                                  equals: notCoAuthorOfIM,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    Faculty: {
+                      User: {
+                        id: {
+                          not: user.id,
+                        },
+                      },
+                    },
+                  },
+                  {
+                    Faculty: {
+                      CoAuthor: {
+                        none: {
+                          IM: {
+                            id: {
+                              equals: notCoAuthorOfIM,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                ],
+              }
+            : {},
+        ],
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to count ActiveFaculties");
+  }
 
   const result = { count, activeFaculties };
   return result;
@@ -217,6 +232,53 @@ export async function readActiveFaculty({ id }: { id: string }) {
       id,
     },
   });
+
+  if (!activeFaculty) {
+    throw new Error("ActiveFaculty not found");
+  }
+
+  return activeFaculty;
+}
+
+export async function readActiveFacultyMe({ user }: { user: User }) {
+  const activeFaculty = await prisma.activeFaculty.findFirst({
+    where: {
+      AND: [
+        {
+          Faculty: {
+            userId: {
+              equals: user.id,
+            },
+          },
+        },
+      ],
+    },
+  });
+
+  if (!activeFaculty) {
+    throw new Error("ActiveFaculty not found");
+  }
+
+  return activeFaculty;
+}
+
+export async function readActiveFacultyByFaculty({ id }: { id: string }) {
+  const activeFaculty = await prisma.activeFaculty.findFirst({
+    where: {
+      AND: [
+        {
+          Faculty: {
+            id: {
+              equals: id,
+            },
+          },
+        },
+      ],
+    },
+  });
+  if (!activeFaculty) {
+    throw new Error("ActiveFaculty not found");
+  }
 
   return activeFaculty;
 }
@@ -232,59 +294,75 @@ export async function deleteActiveFaculty({
     throw new Error("You are not allowed to remove this active faculty");
   }
 
-  const activeCoordinator = await prisma.activeCoordinator.findFirst({
-    where: {
-      Coordinator: {
-        Faculty: {
-          ActiveFaculty: {
-            id: {
-              equals: id,
+  let activeCoordinator;
+  try {
+    activeCoordinator = await prisma.activeCoordinator.findFirst({
+      where: {
+        Coordinator: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: id,
+              },
             },
           },
         },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find ActiveCoordinator");
+  }
   if (activeCoordinator) {
     throw new Error("Cannot deactivate, please remove coordinator role first");
   }
 
-  const activeChairperson = await prisma.activeChairperson.findFirst({
-    where: {
-      Chairperson: {
-        Faculty: {
-          ActiveFaculty: {
-            id: {
-              equals: id,
+  let activeChairperson;
+  try {
+    activeChairperson = await prisma.activeChairperson.findFirst({
+      where: {
+        Chairperson: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: id,
+              },
             },
           },
         },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find ActiveChairperson");
+  }
   if (activeChairperson) {
     throw new Error("Cannot deactivate, please remove chairperson role first");
   }
 
-  const activeDean = await prisma.activeDean.findFirst({
-    where: {
-      Dean: {
-        Faculty: {
-          ActiveFaculty: {
-            id: {
-              equals: id,
+  let activeDean;
+  try {
+    activeDean = await prisma.activeDean.findFirst({
+      where: {
+        Dean: {
+          Faculty: {
+            ActiveFaculty: {
+              id: {
+                equals: id,
+              },
             },
           },
         },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find ActiveDean");
+  }
   if (activeDean) {
     throw new Error("Cannot deactivate, please remove dean role first");
   }
 
-  const activeContentSpecialist =
-    await prisma.activeContentSpecialist.findFirst({
+  let activeContentSpecialist;
+  try {
+    activeContentSpecialist = await prisma.activeContentSpecialist.findFirst({
       where: {
         ContentSpecialist: {
           Faculty: {
@@ -297,17 +375,24 @@ export async function deleteActiveFaculty({
         },
       },
     });
+  } catch (error: any) {
+    throw new Error("Failed to find ActiveContentSpecialist");
+  }
   if (activeContentSpecialist) {
     throw new Error(
       "Cannot deactivate, please remove content specialist role first"
     );
   }
 
-  const activeFaculty = await prisma.activeFaculty.delete({
-    where: {
-      id,
-    },
-  });
+  try {
+    const activeFaculty = await prisma.activeFaculty.delete({
+      where: {
+        id,
+      },
+    });
 
-  return activeFaculty;
+    return activeFaculty;
+  } catch (error: any) {
+    throw new Error("Failed to delete ActiveFaculty");
+  }
 }

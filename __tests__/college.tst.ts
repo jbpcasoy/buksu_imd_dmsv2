@@ -30,6 +30,14 @@ describe("Model: College", () => {
           createCollege({ user: MockAdminUser, name: "College of Technology" })
         ).rejects.toThrow("College name is already used");
       });
+
+      test("Scenario: Failed to create college", async () => {
+        prismaMock.college.create.mockRejectedValueOnce(null);
+
+        await expect(
+          createCollege({ user: MockAdminUser, name: "College of Technology" })
+        ).rejects.toThrow("Failed to create college");
+      });
     });
 
     test("Role: User", async () => {
@@ -52,12 +60,22 @@ describe("Model: College", () => {
   });
 
   describe("Action: READ College", () => {
-    test("Role: User", async () => {
-      prismaMock.college.findUnique.mockResolvedValueOnce(MockCollege);
+    describe("Role: User", () => {
+      test("Scenario: Failed to find college", async () => {
+        prismaMock.college.findUnique.mockRejectedValueOnce(null);
 
-      await expect(readCollege({ id: MockCollege.id })).resolves.toEqual(
-        MockCollege
-      );
+        await expect(readCollege({ id: MockCollege.id })).rejects.toThrow(
+          "Failed to find college"
+        );
+      });
+
+      test("Scenario: Success", async () => {
+        prismaMock.college.findUnique.mockResolvedValueOnce(MockCollege);
+
+        await expect(readCollege({ id: MockCollege.id })).resolves.toEqual(
+          MockCollege
+        );
+      });
     });
   });
 
@@ -86,6 +104,30 @@ describe("Model: College", () => {
           })
         ).rejects.toThrow("College name is already used");
       });
+
+      test("Scenario: Failed to find existing College", async () => {
+        prismaMock.college.findFirst.mockRejectedValueOnce(null);
+
+        await expect(
+          updateCollege({
+            user: MockAdminUser,
+            id: MockCollege.id,
+            name: "College of Technology",
+          })
+        ).rejects.toThrow("Failed to find existing College");
+      });
+
+      test("Scenario: Failed to update", async () => {
+        prismaMock.college.update.mockRejectedValueOnce(null);
+
+        await expect(
+          updateCollege({
+            user: MockAdminUser,
+            id: MockCollege.id,
+            name: "College of Technology",
+          })
+        ).rejects.toThrow("Failed to update college");
+      });
     });
 
     test("Role: User", async () => {
@@ -100,12 +142,22 @@ describe("Model: College", () => {
   });
 
   describe("Action: DELETE College", () => {
-    test("Role: Admin", async () => {
-      prismaMock.college.delete.mockResolvedValueOnce(MockCollege);
+    describe("Action: DELETE College", () => {
+      test("Scenario: Failed to delete college", async () => {
+        prismaMock.college.delete.mockRejectedValueOnce(null);
 
-      await expect(
-        deleteCollege({ user: MockAdminUser, id: MockCollege.id })
-      ).resolves.toEqual(MockCollege);
+        await expect(
+          deleteCollege({ user: MockAdminUser, id: MockCollege.id })
+        ).rejects.toThrow("Failed to delete college");
+      });
+
+      test("Scenario: Success", async () => {
+        prismaMock.college.delete.mockResolvedValueOnce(MockCollege);
+
+        await expect(
+          deleteCollege({ user: MockAdminUser, id: MockCollege.id })
+        ).resolves.toEqual(MockCollege);
+      });
     });
 
     test("Role: User", async () => {

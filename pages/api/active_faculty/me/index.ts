@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import { readActiveFacultyMe } from "@/services/activeFacultyService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -19,19 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const activeFaculty = await prisma.activeFaculty.findFirstOrThrow({
-        where: {
-          AND: [
-            {
-              Faculty: {
-                userId: {
-                  equals: user.id,
-                },
-              },
-            },
-          ],
-        },
-      });
+      const activeFaculty = await readActiveFacultyMe({ user });
 
       return res.json(activeFaculty);
     } catch (error: any) {

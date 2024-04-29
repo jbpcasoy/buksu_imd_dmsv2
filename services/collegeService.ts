@@ -12,24 +12,34 @@ export async function createCollege({
     throw new Error("You are not allowed to create a college");
   }
 
-  const existingCollege = await prisma.college.findFirst({
-    where: {
-      name: {
-        equals: name,
+  let existingCollege;
+  try {
+    existingCollege = await prisma.college.findFirst({
+      where: {
+        name: {
+          equals: name,
+        },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find existing College");
+  }
   if (existingCollege) {
     throw new Error("College name is already used");
   }
 
-  const college = await prisma.college.create({
-    data: {
-      name,
-    },
-  });
+  let college;
+  try {
+    college = await prisma.college.create({
+      data: {
+        name,
+      },
+    });
 
-  return college;
+    return college;
+  } catch (error: any) {
+    throw new Error("Failed to create college");
+  }
 }
 
 export async function readColleges({
@@ -45,47 +55,63 @@ export async function readColleges({
   sortField?: string;
   sortDirection?: string;
 }) {
-  const colleges = await prisma.college.findMany({
-    skip,
-    take,
-    where: {
-      AND: [
-        {
-          name: {
-            contains: filterName,
-            mode: "insensitive",
+  let colleges;
+  try {
+    colleges = await prisma.college.findMany({
+      skip,
+      take,
+      where: {
+        AND: [
+          {
+            name: {
+              contains: filterName,
+              mode: "insensitive",
+            },
           },
-        },
-      ],
-    },
-    orderBy: {
-      [sortField || "name"]: sortDirection || "asc",
-    },
-  });
-  const count = await prisma.college.count({
-    where: {
-      AND: [
-        {
-          name: {
-            contains: filterName,
-            mode: "insensitive",
+        ],
+      },
+      orderBy: {
+        [sortField || "name"]: sortDirection || "asc",
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find colleges");
+  }
+
+  let count;
+  try {
+    count = await prisma.college.count({
+      where: {
+        AND: [
+          {
+            name: {
+              contains: filterName,
+              mode: "insensitive",
+            },
           },
-        },
-      ],
-    },
-  });
+        ],
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to count colleges");
+  }
+
   const result = { count, colleges };
   return result;
 }
 
 export async function readCollege({ id }: { id: string }) {
-  const college = await prisma.college.findUnique({
-    where: {
-      id,
-    },
-  });
+  try {
+    const college = await prisma.college.findUnique({
+      where: {
+        id,
+      },
+    });
 
-  return college;
+    return college;
+  } catch (error: any) {
+    throw new Error("Failed to find college");
+  }
 }
 
 export async function deleteCollege({ id, user }: { user: User; id: string }) {
@@ -93,13 +119,17 @@ export async function deleteCollege({ id, user }: { user: User; id: string }) {
     throw new Error("You are not allowed to delete this college");
   }
 
-  const college = await prisma.college.delete({
-    where: {
-      id,
-    },
-  });
+  try {
+    const college = await prisma.college.delete({
+      where: {
+        id,
+      },
+    });
 
-  return college;
+    return college;
+  } catch (error: any) {
+    throw new Error("Failed to delete college");
+  }
 }
 
 export async function updateCollege({
@@ -115,34 +145,43 @@ export async function updateCollege({
     throw new Error("You are not allowed to update this college");
   }
 
-  const existingCollege = await prisma.college.findFirst({
-    where: {
-      AND: [
-        {
-          name: {
-            equals: name,
+  let existingCollege;
+  try {
+    existingCollege = await prisma.college.findFirst({
+      where: {
+        AND: [
+          {
+            name: {
+              equals: name,
+            },
           },
-        },
-        {
-          id: {
-            equals: id,
+          {
+            id: {
+              equals: id,
+            },
           },
-        },
-      ],
-    },
-  });
+        ],
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find existing College");
+  }
   if (existingCollege) {
     throw new Error("College name is already used");
   }
 
-  const college = await prisma.college.update({
-    where: {
-      id: id as string,
-    },
-    data: {
-      name,
-    },
-  });
+  try {
+    const college = await prisma.college.update({
+      where: {
+        id: id as string,
+      },
+      data: {
+        name,
+      },
+    });
 
-  return college;
+    return college;
+  } catch (error: any) {
+    throw new Error("Failed to update college");
+  }
 }

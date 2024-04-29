@@ -16,11 +16,35 @@ import {
 describe("Model: Department", () => {
   describe("Action: CREATE Department", () => {
     describe("Role: Admin", () => {
+      test("Scenario: Failed to find College", async () => {
+        prismaMock.college.findFirst.mockRejectedValueOnce(null);
+
+        expect(
+          createDepartment({
+            collegeId: MockCollege.id,
+            name: "Information Technology",
+            user: MockAdminUser,
+          })
+        ).rejects.toThrow("Failed to find College");
+      });
+
+      test("Scenario: College not found", async () => {
+        prismaMock.college.findFirst.mockResolvedValueOnce(null);
+
+        expect(
+          createDepartment({
+            collegeId: MockCollege.id,
+            name: "Information Technology",
+            user: MockAdminUser,
+          })
+        ).rejects.toThrow("College not found");
+      });
+
       test("Scenario: Unique Name", async () => {
-        prismaMock.college.findFirstOrThrow.mockResolvedValueOnce(MockCollege);
+        prismaMock.college.findFirst.mockResolvedValueOnce(MockCollege);
         prismaMock.department.create.mockResolvedValueOnce(MockDepartment);
 
-        await expect(
+        expect(
           createDepartment({
             user: MockAdminUser,
             name: "Information Technology",
@@ -30,10 +54,10 @@ describe("Model: Department", () => {
       });
 
       test("Scenario: Duplicate Name", async () => {
-        prismaMock.college.findFirstOrThrow.mockResolvedValueOnce(MockCollege);
+        prismaMock.college.findFirst.mockResolvedValueOnce(MockCollege);
         prismaMock.department.findFirst.mockResolvedValueOnce(MockDepartment);
 
-        await expect(
+        expect(
           createDepartment({
             user: MockAdminUser,
             name: "Information Technology",

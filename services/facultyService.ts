@@ -14,36 +14,45 @@ export async function createFaculty({
     throw new Error("You are not allowed to create a faculty");
   }
 
-  const existingFaculty = await prisma.faculty.findFirst({
-    where: {
-      userId: {
-        equals: userId,
+  let existingFaculty;
+  try {
+    existingFaculty = await prisma.faculty.findFirst({
+      where: {
+        userId: {
+          equals: userId,
+        },
+        departmentId: {
+          equals: departmentId,
+        },
       },
-      departmentId: {
-        equals: departmentId,
-      },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find existing Faculty");
+  }
   if (existingFaculty) {
     throw new Error("Faculty already exists");
   }
 
-  const faculty = await prisma.faculty.create({
-    data: {
-      User: {
-        connect: {
-          id: userId,
+  try {
+    const faculty = await prisma.faculty.create({
+      data: {
+        User: {
+          connect: {
+            id: userId,
+          },
+        },
+        Department: {
+          connect: {
+            id: departmentId,
+          },
         },
       },
-      Department: {
-        connect: {
-          id: departmentId,
-        },
-      },
-    },
-  });
+    });
 
-  return faculty;
+    return faculty;
+  } catch (error: any) {
+    throw new Error("Failed to create Faculty");
+  }
 }
 
 export async function readFaculties({
@@ -63,109 +72,123 @@ export async function readFaculties({
   sortField?: string;
   sortDirection?: string;
 }) {
-  const faculties = await prisma.faculty.findMany({
-    skip,
-    take,
-    where: {
-      AND: [
-        {
-          User: {
-            name: {
-              contains: filterName,
-              mode: "insensitive",
-            },
-          },
-        },
-        {
-          Department: {
-            name: {
-              contains: filterDepartmentName,
-              mode: "insensitive",
-            },
-          },
-        },
-        {
-          Department: {
-            College: {
+  let faculties;
+  try {
+    faculties = await prisma.faculty.findMany({
+      skip,
+      take,
+      where: {
+        AND: [
+          {
+            User: {
               name: {
-                contains: filterCollegeName,
+                contains: filterName,
                 mode: "insensitive",
               },
             },
           },
-        },
-      ],
-    },
-    orderBy:
-      sortField === "name"
-        ? ({
-            User: {
-              name: sortDirection ?? "asc",
-            },
-          } as Prisma.FacultyOrderByWithRelationInput)
-        : sortField === "departmentName"
-        ? ({
+          {
             Department: {
-              name: sortDirection ?? "asc",
+              name: {
+                contains: filterDepartmentName,
+                mode: "insensitive",
+              },
             },
-          } as Prisma.FacultyOrderByWithRelationInput)
-        : sortField === "collegeName"
-        ? ({
+          },
+          {
             Department: {
               College: {
-                name: sortDirection ?? "asc",
+                name: {
+                  contains: filterCollegeName,
+                  mode: "insensitive",
+                },
               },
             },
-          } as Prisma.FacultyOrderByWithRelationInput)
-        : ({
-            updatedAt: "desc",
-          } as Prisma.FacultyOrderByWithRelationInput),
-  });
-  const count = await prisma.faculty.count({
-    where: {
-      AND: [
-        {
-          User: {
-            name: {
-              contains: filterName,
-              mode: "insensitive",
-            },
           },
-        },
-        {
-          Department: {
-            name: {
-              contains: filterDepartmentName,
-              mode: "insensitive",
-            },
-          },
-        },
-        {
-          Department: {
-            College: {
+        ],
+      },
+      orderBy:
+        sortField === "name"
+          ? ({
+              User: {
+                name: sortDirection ?? "asc",
+              },
+            } as Prisma.FacultyOrderByWithRelationInput)
+          : sortField === "departmentName"
+          ? ({
+              Department: {
+                name: sortDirection ?? "asc",
+              },
+            } as Prisma.FacultyOrderByWithRelationInput)
+          : sortField === "collegeName"
+          ? ({
+              Department: {
+                College: {
+                  name: sortDirection ?? "asc",
+                },
+              },
+            } as Prisma.FacultyOrderByWithRelationInput)
+          : ({
+              updatedAt: "desc",
+            } as Prisma.FacultyOrderByWithRelationInput),
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find Faculties");
+  }
+  let count;
+  try {
+    count = await prisma.faculty.count({
+      where: {
+        AND: [
+          {
+            User: {
               name: {
-                contains: filterCollegeName,
+                contains: filterName,
                 mode: "insensitive",
               },
             },
           },
-        },
-      ],
-    },
-  });
+          {
+            Department: {
+              name: {
+                contains: filterDepartmentName,
+                mode: "insensitive",
+              },
+            },
+          },
+          {
+            Department: {
+              College: {
+                name: {
+                  contains: filterCollegeName,
+                  mode: "insensitive",
+                },
+              },
+            },
+          },
+        ],
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to count Faculties");
+  }
 
   const result = { count, faculties };
   return result;
 }
 
 export async function readFaculty({ id }: { id: string }) {
-  const faculty = await prisma.faculty.findUnique({
-    where: {
-      id,
-    },
-  });
+  try {
+    const faculty = await prisma.faculty.findUnique({
+      where: {
+        id,
+      },
+    });
 
-  return faculty;
+    return faculty;
+  } catch (error: any) {
+    throw new Error("Failed to find Faculty");
+  }
 }
 
 export async function deleteFaculty({ id, user }: { user: User; id: string }) {
@@ -173,11 +196,15 @@ export async function deleteFaculty({ id, user }: { user: User; id: string }) {
     throw new Error("You are not allowed to delete this faculty");
   }
 
-  const faculty = await prisma.faculty.delete({
-    where: {
-      id,
-    },
-  });
+  try {
+    const faculty = await prisma.faculty.delete({
+      where: {
+        id,
+      },
+    });
 
-  return faculty;
+    return faculty;
+  } catch (error: any) {
+    throw new Error("Failed to delete Faculty");
+  }
 }
