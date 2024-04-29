@@ -40,7 +40,7 @@ describe("Model: Chairperson", () => {
 
       test("Scenario: Failed to find existing Chairperson", async () => {
         prismaMock.faculty.findFirst.mockResolvedValueOnce(MockFaculty);
-        prismaMock.chairperson.findFirst.mockRejectedValueOnce(MockChairperson);
+        prismaMock.chairperson.findFirst.mockRejectedValueOnce(null);
 
         expect(
           createChairperson({
@@ -48,18 +48,6 @@ describe("Model: Chairperson", () => {
             user: MockAdminUser,
           })
         ).rejects.toThrow("Failed to find existing Chairperson");
-      });
-
-      test("Scenario: Unique Chairperson", async () => {
-        prismaMock.faculty.findFirst.mockResolvedValueOnce(MockFaculty);
-        prismaMock.chairperson.create.mockResolvedValueOnce(MockChairperson);
-
-        expect(
-          createChairperson({
-            activeFacultyId: MockActiveFaculty.id,
-            user: MockAdminUser,
-          })
-        ).resolves.toEqual(MockChairperson);
       });
 
       test("Scenario: Duplicate Chairperson", async () => {
@@ -72,6 +60,18 @@ describe("Model: Chairperson", () => {
             user: MockAdminUser,
           })
         ).rejects.toThrow("Chairperson already exists");
+      });
+
+      test("Scenario: Unique Chairperson", async () => {
+        prismaMock.faculty.findFirst.mockResolvedValueOnce(MockFaculty);
+        prismaMock.chairperson.create.mockResolvedValueOnce(MockChairperson);
+
+        expect(
+          createChairperson({
+            activeFacultyId: MockActiveFaculty.id,
+            user: MockAdminUser,
+          })
+        ).resolves.toEqual(MockChairperson);
       });
 
       test("Scenario: Failed to create", async () => {
@@ -131,13 +131,11 @@ describe("Model: Chairperson", () => {
 
   describe("Action: READ Chairperson", () => {
     describe("Role: User", () => {
-      test("Scenario: Failed to find chairperson", async () => {
-        prismaMock.chairperson.findUnique.mockRejectedValueOnce(
-          MockChairperson
-        );
+      test("Scenario: Chairperson not found", async () => {
+        prismaMock.chairperson.findUnique.mockRejectedValueOnce(null);
 
         expect(readChairperson({ id: MockChairperson.id })).rejects.toThrow(
-          "Failed to find chairperson"
+          "Chairperson not found"
         );
       });
 

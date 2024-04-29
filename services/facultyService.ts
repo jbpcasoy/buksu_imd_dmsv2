@@ -187,7 +187,7 @@ export async function readFaculty({ id }: { id: string }) {
 
     return faculty;
   } catch (error: any) {
-    throw new Error("Failed to find Faculty");
+    throw new Error("Faculty not found");
   }
 }
 

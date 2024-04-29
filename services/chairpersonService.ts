@@ -219,7 +219,7 @@ export async function readChairperson({ id }: { id: string }) {
 
     return chairperson;
   } catch (error: any) {
-    throw new Error("Failed to find chairperson");
+    throw new Error("Chairperson not found");
   }
 }
 

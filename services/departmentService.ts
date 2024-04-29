@@ -81,88 +81,103 @@ export async function readDepartments({
   sortField?: string;
   sortDirection?: string;
 }) {
-  const departments = await prisma.department.findMany({
-    skip,
-    take,
-    where: {
-      AND: [
-        {
-          name: {
-            contains: filterName,
-            mode: "insensitive",
-          },
-        },
-        {
-          College: {
-            id: {
-              contains: filterCollegeId,
-            },
-          },
-        },
-        {
-          College: {
+  let departments;
+  try {
+    departments = await prisma.department.findMany({
+      skip,
+      take,
+      where: {
+        AND: [
+          {
             name: {
-              contains: filterCollegeName,
+              contains: filterName,
               mode: "insensitive",
             },
           },
-        },
-      ],
-    },
-    orderBy:
-      sortField === "name"
-        ? ({
-            name: sortDirection ?? "asc",
-          } as Prisma.DepartmentOrderByWithRelationInput)
-        : sortField === "collegeName"
-        ? ({
+          {
             College: {
+              id: {
+                contains: filterCollegeId,
+              },
+            },
+          },
+          {
+            College: {
+              name: {
+                contains: filterCollegeName,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+      },
+      orderBy:
+        sortField === "name"
+          ? ({
               name: sortDirection ?? "asc",
-            },
-          } as Prisma.DepartmentOrderByWithRelationInput)
-        : ({
-            name: sortDirection ?? "asc",
-          } as Prisma.DepartmentOrderByWithRelationInput),
-  });
-  const count = await prisma.department.count({
-    where: {
-      AND: [
-        {
-          name: {
-            contains: filterName,
-            mode: "insensitive",
-          },
-        },
-        {
-          College: {
-            id: {
-              contains: filterCollegeId,
-            },
-          },
-        },
-        {
-          College: {
+            } as Prisma.DepartmentOrderByWithRelationInput)
+          : sortField === "collegeName"
+          ? ({
+              College: {
+                name: sortDirection ?? "asc",
+              },
+            } as Prisma.DepartmentOrderByWithRelationInput)
+          : ({
+              name: sortDirection ?? "asc",
+            } as Prisma.DepartmentOrderByWithRelationInput),
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find Departments");
+  }
+
+  let count;
+  try {
+    count = await prisma.department.count({
+      where: {
+        AND: [
+          {
             name: {
-              contains: filterCollegeName,
+              contains: filterName,
               mode: "insensitive",
             },
           },
-        },
-      ],
-    },
-  });
+          {
+            College: {
+              id: {
+                contains: filterCollegeId,
+              },
+            },
+          },
+          {
+            College: {
+              name: {
+                contains: filterCollegeName,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to count departments");
+  }
 
   const result = { count, departments };
   return result;
 }
 
 export async function readDepartment({ id }: { id: string }) {
-  const department = await prisma.department.findUnique({
-    where: {
-      id,
-    },
-  });
-  return department;
+  try {
+    const department = await prisma.department.findUnique({
+      where: {
+        id,
+      },
+    });
+    return department;
+  } catch (error: any) {
+    throw new Error("Department not found");
+  }
 }
 
 export async function updateDepartment({
@@ -178,22 +193,27 @@ export async function updateDepartment({
     throw new Error("You are not allowed to update this department");
   }
 
-  const existingDepartment = await prisma.department.findFirst({
-    where: {
-      AND: [
-        {
-          name: {
-            equals: name,
+  let existingDepartment;
+  try {
+    existingDepartment = await prisma.department.findFirst({
+      where: {
+        AND: [
+          {
+            name: {
+              equals: name,
+            },
           },
-        },
-        {
-          id: {
-            not: id as string,
+          {
+            id: {
+              not: id as string,
+            },
           },
-        },
-      ],
-    },
-  });
+        ],
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find existing Department");
+  }
   if (existingDepartment) {
     throw new Error("Department name is already used");
   }
@@ -221,11 +241,15 @@ export async function deleteDepartment({
     throw new Error("You are not allowed to delete this department");
   }
 
-  const department = await prisma.department.delete({
-    where: {
-      id,
-    },
-  });
+  try {
+    const department = await prisma.department.delete({
+      where: {
+        id,
+      },
+    });
 
-  return department;
+    return department;
+  } catch (error: any) {
+    throw new Error("Failed to delete Department");
+  }
 }

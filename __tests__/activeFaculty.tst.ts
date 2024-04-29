@@ -21,6 +21,16 @@ import {
 describe("Model: ActiveFaculty", () => {
   describe("Action: CREATE ActiveFaculty", () => {
     describe("Role: Admin", () => {
+      test("Scenario: Failed to find faculty", async () => {
+        prismaMock.faculty.findFirst.mockRejectedValueOnce(null);
+
+        expect(
+          createActiveFaculty({
+            facultyId: MockFaculty.id,
+            user: MockAdminUser,
+          })
+        ).rejects.toThrow("Failed to find Faculty");
+      });
       test("Scenario: Faculty not found", async () => {
         prismaMock.faculty.findFirst.mockResolvedValueOnce(null);
 
@@ -30,6 +40,18 @@ describe("Model: ActiveFaculty", () => {
             user: MockAdminUser,
           })
         ).rejects.toThrow("Faculty not found");
+      });
+
+      test("Scenario: Failed to count current ActiveFaculties", async () => {
+        prismaMock.faculty.findFirst.mockResolvedValueOnce(MockFaculty);
+        prismaMock.activeFaculty.count.mockRejectedValueOnce(null);
+
+        expect(
+          createActiveFaculty({
+            facultyId: MockFaculty.id,
+            user: MockAdminUser,
+          })
+        ).rejects.toThrow("Failed to count current ActiveFaculties");
       });
 
       test("Scenario: Faculty is already active on another department", async () => {
@@ -135,13 +157,14 @@ describe("Model: ActiveFaculty", () => {
   describe("Action: READ ActiveFaculty", () => {
     describe("Role: User", () => {
       test("Scenario: ActiveFaculty not found", async () => {
-        prismaMock.activeFaculty.findUnique.mockResolvedValueOnce(null);
+        prismaMock.activeFaculty.findUnique.mockRejectedValueOnce(null);
 
         expect(readActiveFaculty({ id: MockActiveFaculty.id })).rejects.toThrow(
           "ActiveFaculty not found"
         );
       });
-      test("Scenario: ActiveFaculty found", async () => {
+
+      test("Scenario: Success", async () => {
         prismaMock.activeFaculty.findUnique.mockResolvedValueOnce(
           MockActiveFaculty
         );
@@ -155,6 +178,14 @@ describe("Model: ActiveFaculty", () => {
 
   describe("Action: Read My ActiveFaculty", () => {
     describe("Role: User", () => {
+      test("Scenario: Failed to find users ActiveFaculty", async () => {
+        prismaMock.activeFaculty.findFirst.mockRejectedValueOnce(null);
+
+        expect(readActiveFacultyMe({ user: MockNonAdminUser })).rejects.toThrow(
+          "Failed to find users ActiveFaculty"
+        );
+      });
+
       test("Scenario: ActiveFaculty not found", async () => {
         prismaMock.activeFaculty.findFirst.mockResolvedValueOnce(null);
 
@@ -163,7 +194,7 @@ describe("Model: ActiveFaculty", () => {
         );
       });
 
-      test("Scenario: ActiveFaculty found", async () => {
+      test("Scenario: Success", async () => {
         prismaMock.activeFaculty.findFirst.mockResolvedValueOnce(
           MockActiveFaculty
         );
@@ -177,6 +208,14 @@ describe("Model: ActiveFaculty", () => {
 
   describe("Action: Read ActiveFaculty by Faculty", () => {
     describe("Role: User", () => {
+      test("Scenario: Failed to find ActiveFaculty", () => {
+        prismaMock.activeFaculty.findFirst.mockRejectedValueOnce(null);
+
+        expect(
+          readActiveFacultyByFaculty({ id: MockFaculty.id })
+        ).rejects.toThrow("Failed to find ActiveFaculty");
+      });
+
       test("Scenario: ActiveFaculty not found", () => {
         prismaMock.activeFaculty.findFirst.mockResolvedValueOnce(null);
 
@@ -185,7 +224,7 @@ describe("Model: ActiveFaculty", () => {
         ).rejects.toThrow("ActiveFaculty not found");
       });
 
-      test("Scenario: ActiveFaculty found", () => {
+      test("Scenario: Success", () => {
         prismaMock.activeFaculty.findFirst.mockResolvedValueOnce(
           MockActiveFaculty
         );
@@ -199,26 +238,6 @@ describe("Model: ActiveFaculty", () => {
 
   describe("Action: DELETE ActiveFaculty", () => {
     describe("Role: Admin", () => {
-      test("Scenario: Faculty is an Active Chairperson", async () => {
-        prismaMock.activeChairperson.findFirst.mockResolvedValueOnce(
-          MockActiveChairperson
-        );
-
-        expect(
-          deleteActiveFaculty({ id: MockActiveFaculty.id, user: MockAdminUser })
-        ).rejects.toThrow(
-          "Cannot deactivate, please remove chairperson role first"
-        );
-      });
-
-      test("Scenario: Failed to find ActiveChairperson", async () => {
-        prismaMock.activeChairperson.findFirst.mockRejectedValueOnce(null);
-
-        expect(
-          deleteActiveFaculty({ id: MockActiveFaculty.id, user: MockAdminUser })
-        ).rejects.toThrow("Failed to find ActiveChairperson");
-      });
-
       test("Scenario: Faculty is an Active Coordinator", async () => {
         prismaMock.activeCoordinator.findFirst.mockResolvedValueOnce(
           MockActiveCoordinator
@@ -239,15 +258,35 @@ describe("Model: ActiveFaculty", () => {
         ).rejects.toThrow("Failed to find ActiveCoordinator");
       });
 
+      test("Scenario: Faculty is an ActiveChairperson", async () => {
+        prismaMock.activeChairperson.findFirst.mockResolvedValueOnce(
+          MockActiveChairperson
+        );
+
+        expect(
+          deleteActiveFaculty({ id: MockActiveFaculty.id, user: MockAdminUser })
+        ).rejects.toThrow(
+          "Cannot deactivate, please remove chairperson role first"
+        );
+      });
+
+      test("Scenario: Failed to find ActiveChairperson", async () => {
+        prismaMock.activeChairperson.findFirst.mockRejectedValueOnce(null);
+
+        expect(
+          deleteActiveFaculty({ id: MockActiveFaculty.id, user: MockAdminUser })
+        ).rejects.toThrow("Failed to find ActiveChairperson");
+      });
+
       test("Scenario: Failed to find ActiveDean", async () => {
-        prismaMock.activeDean.findFirst.mockRejectedValueOnce(MockActiveDean);
+        prismaMock.activeDean.findFirst.mockRejectedValueOnce(null);
 
         expect(
           deleteActiveFaculty({ id: MockActiveFaculty.id, user: MockAdminUser })
         ).rejects.toThrow("Failed to find ActiveDean");
       });
 
-      test("Scenario: Faculty is an Active Dean", async () => {
+      test("Scenario: Faculty is an ActiveDean", async () => {
         prismaMock.activeDean.findFirst.mockResolvedValueOnce(MockActiveDean);
 
         expect(
@@ -265,7 +304,7 @@ describe("Model: ActiveFaculty", () => {
         ).rejects.toThrow("Failed to find ActiveContentSpecialist");
       });
 
-      test("Scenario: Faculty is an Active Content Specialist", async () => {
+      test("Scenario: Faculty is an ActiveContentSpecialist", async () => {
         prismaMock.activeContentSpecialist.findFirst.mockResolvedValueOnce(
           MockActiveContentSpecialist
         );

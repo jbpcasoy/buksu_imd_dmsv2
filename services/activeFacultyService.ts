@@ -12,28 +12,38 @@ export async function createActiveFaculty({
     throw new Error("You are not allowed to set an active faculty");
   }
 
-  const faculty = await prisma.faculty.findFirst({
-    where: {
-      id: {
-        equals: facultyId,
+  let faculty;
+  try {
+    faculty = await prisma.faculty.findFirst({
+      where: {
+        id: {
+          equals: facultyId,
+        },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find Faculty");
+  }
   if (!faculty) {
     throw new Error("Faculty not found");
   }
 
-  const userActiveFacultyCount = await prisma.activeFaculty.count({
-    where: {
-      Faculty: {
-        User: {
-          id: {
-            equals: faculty.userId,
+  let userActiveFacultyCount;
+  try {
+    userActiveFacultyCount = await prisma.activeFaculty.count({
+      where: {
+        Faculty: {
+          User: {
+            id: {
+              equals: faculty.userId,
+            },
           },
         },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    throw new Error("Failed to count current ActiveFaculties");
+  }
   if (userActiveFacultyCount > 0) {
     throw new Error("Faculty can only belong to one department");
   }
@@ -227,34 +237,38 @@ export async function readActiveFaculties({
 }
 
 export async function readActiveFaculty({ id }: { id: string }) {
-  const activeFaculty = await prisma.activeFaculty.findUnique({
-    where: {
-      id,
-    },
-  });
+  try {
+    const activeFaculty = await prisma.activeFaculty.findUnique({
+      where: {
+        id,
+      },
+    });
 
-  if (!activeFaculty) {
+    return activeFaculty;
+  } catch (error: any) {
     throw new Error("ActiveFaculty not found");
   }
-
-  return activeFaculty;
 }
 
 export async function readActiveFacultyMe({ user }: { user: User }) {
-  const activeFaculty = await prisma.activeFaculty.findFirst({
-    where: {
-      AND: [
-        {
-          Faculty: {
-            userId: {
-              equals: user.id,
+  let activeFaculty;
+  try {
+    activeFaculty = await prisma.activeFaculty.findFirst({
+      where: {
+        AND: [
+          {
+            Faculty: {
+              userId: {
+                equals: user.id,
+              },
             },
           },
-        },
-      ],
-    },
-  });
-
+        ],
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find users ActiveFaculty");
+  }
   if (!activeFaculty) {
     throw new Error("ActiveFaculty not found");
   }
@@ -263,19 +277,24 @@ export async function readActiveFacultyMe({ user }: { user: User }) {
 }
 
 export async function readActiveFacultyByFaculty({ id }: { id: string }) {
-  const activeFaculty = await prisma.activeFaculty.findFirst({
-    where: {
-      AND: [
-        {
-          Faculty: {
-            id: {
-              equals: id,
+  let activeFaculty;
+  try {
+    activeFaculty = await prisma.activeFaculty.findFirst({
+      where: {
+        AND: [
+          {
+            Faculty: {
+              id: {
+                equals: id,
+              },
             },
           },
-        },
-      ],
-    },
-  });
+        ],
+      },
+    });
+  } catch (error: any) {
+    throw new Error("Failed to find ActiveFaculty");
+  }
   if (!activeFaculty) {
     throw new Error("ActiveFaculty not found");
   }

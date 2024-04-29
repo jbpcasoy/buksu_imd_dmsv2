@@ -16,6 +16,32 @@ import {
 describe("Model: Department", () => {
   describe("Action: CREATE Department", () => {
     describe("Role: Admin", () => {
+      test("Scenario: Failed to find existing Department", async () => {
+        prismaMock.college.findFirst.mockResolvedValueOnce(MockCollege);
+        prismaMock.department.findFirst.mockRejectedValueOnce(null);
+
+        expect(
+          createDepartment({
+            user: MockAdminUser,
+            name: "Information Technology",
+            collegeId: MockCollege.id,
+          })
+        ).rejects.toThrow("Failed to find existing Department");
+      });
+
+      test("Scenario: Duplicate Name", async () => {
+        prismaMock.college.findFirst.mockResolvedValueOnce(MockCollege);
+        prismaMock.department.findFirst.mockResolvedValueOnce(MockDepartment);
+
+        expect(
+          createDepartment({
+            user: MockAdminUser,
+            name: "Information Technology",
+            collegeId: MockCollege.id,
+          })
+        ).rejects.toThrow("Department name is already used");
+      });
+
       test("Scenario: Failed to find College", async () => {
         prismaMock.college.findFirst.mockRejectedValueOnce(null);
 
@@ -53,9 +79,9 @@ describe("Model: Department", () => {
         ).resolves.toEqual(MockDepartment);
       });
 
-      test("Scenario: Duplicate Name", async () => {
+      test("Scenario: Failed to create Department", async () => {
         prismaMock.college.findFirst.mockResolvedValueOnce(MockCollege);
-        prismaMock.department.findFirst.mockResolvedValueOnce(MockDepartment);
+        prismaMock.department.create.mockRejectedValueOnce(null);
 
         expect(
           createDepartment({
@@ -63,7 +89,7 @@ describe("Model: Department", () => {
             name: "Information Technology",
             collegeId: MockCollege.id,
           })
-        ).rejects.toThrow("Department name is already used");
+        ).rejects.toThrow("Failed to create Department");
       });
     });
 
@@ -81,36 +107,70 @@ describe("Model: Department", () => {
   });
 
   describe("Action: READ Departments", () => {
-    test("Role: User", async () => {
-      prismaMock.department.findMany.mockResolvedValueOnce([MockDepartment]);
-      prismaMock.department.count.mockResolvedValueOnce(1);
+    describe("Role: User", () => {
+      test("Scenario: Failed to find Departments", async () => {
+        prismaMock.department.findMany.mockRejectedValueOnce(null);
 
-      await expect(
-        readDepartments({
-          skip: 0,
-          take: 10,
-        })
-      ).resolves.toEqual({
-        count: 1,
-        departments: [MockDepartment],
+        await expect(
+          readDepartments({
+            skip: 0,
+            take: 10,
+          })
+        ).rejects.toThrow("Failed to find Departments");
+      });
+
+      test("Scenario: Failed to count Departments", async () => {
+        prismaMock.department.findMany.mockResolvedValueOnce([MockDepartment]);
+        prismaMock.department.count.mockRejectedValueOnce(null);
+
+        await expect(
+          readDepartments({
+            skip: 0,
+            take: 10,
+          })
+        ).rejects.toThrow("Failed to count departments");
+      });
+
+      test("Scenario: Success", async () => {
+        prismaMock.department.findMany.mockResolvedValueOnce([MockDepartment]);
+        prismaMock.department.count.mockResolvedValueOnce(1);
+
+        await expect(
+          readDepartments({
+            skip: 0,
+            take: 10,
+          })
+        ).resolves.toEqual({
+          count: 1,
+          departments: [MockDepartment],
+        });
       });
     });
   });
 
   describe("Action: READ Department", () => {
-    test("Role: User", async () => {
-      prismaMock.department.findUnique.mockResolvedValueOnce(MockDepartment);
+    describe("Role: User", () => {
+      test("Scenario: Department not found", async () => {
+        prismaMock.department.findUnique.mockRejectedValueOnce(null);
 
-      expect(readDepartment({ id: MockDepartment.id })).resolves.toEqual(
-        MockDepartment
-      );
+        expect(readDepartment({ id: MockDepartment.id })).rejects.toThrow(
+          "Department not found"
+        );
+      });
+      test("Scenario: Success", async () => {
+        prismaMock.department.findUnique.mockResolvedValueOnce(MockDepartment);
+
+        expect(readDepartment({ id: MockDepartment.id })).resolves.toEqual(
+          MockDepartment
+        );
+      });
     });
   });
 
   describe("Action: UPDATE Department", () => {
     describe("Role: Admin", () => {
-      test("Scenario: Unique Name", async () => {
-        prismaMock.department.update.mockResolvedValueOnce(MockDepartment);
+      test("Scenario: Failed to find existing Department", async () => {
+        prismaMock.department.findFirst.mockRejectedValueOnce(null);
 
         expect(
           updateDepartment({
@@ -118,7 +178,7 @@ describe("Model: Department", () => {
             name: "Information Technology",
             user: MockAdminUser,
           })
-        ).resolves.toEqual(MockDepartment);
+        ).rejects.toThrow("Failed to find existing Department");
       });
 
       test("Scenario: Duplicate Name", async () => {
@@ -132,6 +192,18 @@ describe("Model: Department", () => {
             user: MockAdminUser,
           })
         ).rejects.toThrow("Department name is already used");
+      });
+
+      test("Scenario: Unique Name", async () => {
+        prismaMock.department.update.mockResolvedValueOnce(MockDepartment);
+
+        expect(
+          updateDepartment({
+            id: MockDepartment.id,
+            name: "Information Technology",
+            user: MockAdminUser,
+          })
+        ).resolves.toEqual(MockDepartment);
       });
     });
 
@@ -149,12 +221,22 @@ describe("Model: Department", () => {
   });
 
   describe("Action: DELETE Department", () => {
-    test("Role: Admin", async () => {
-      prismaMock.department.delete.mockResolvedValueOnce(MockDepartment);
+    describe("Role: Admin", () => {
+      test("Scenario: Failed to delete Department", async () => {
+        prismaMock.department.delete.mockRejectedValueOnce(null);
 
-      expect(
-        deleteDepartment({ id: MockDepartment.id, user: MockAdminUser })
-      ).resolves.toEqual(MockDepartment);
+        expect(
+          deleteDepartment({ id: MockDepartment.id, user: MockAdminUser })
+        ).rejects.toThrow("Failed to delete Department");
+      });
+
+      test("Scenario: Success", async () => {
+        prismaMock.department.delete.mockResolvedValueOnce(MockDepartment);
+
+        expect(
+          deleteDepartment({ id: MockDepartment.id, user: MockAdminUser })
+        ).resolves.toEqual(MockDepartment);
+      });
     });
 
     test("Role: User", async () => {

@@ -28,18 +28,6 @@ describe("Model: Faculty", () => {
         ).rejects.toThrow("Failed to find existing Faculty");
       });
 
-      test("Scenario: Unique Faculty", async () => {
-        prismaMock.faculty.create.mockResolvedValueOnce(MockFaculty);
-
-        expect(
-          createFaculty({
-            departmentId: MockDepartment.id,
-            user: MockAdminUser,
-            userId: MockFacultyUser.id,
-          })
-        ).resolves.toEqual(MockFaculty);
-      });
-
       test("Scenario: Duplicate Faculty", async () => {
         prismaMock.faculty.findFirst.mockResolvedValueOnce(MockFaculty);
         prismaMock.faculty.create.mockResolvedValueOnce(MockFaculty);
@@ -63,6 +51,18 @@ describe("Model: Faculty", () => {
             userId: MockFacultyUser.id,
           })
         ).rejects.toThrow("Failed to create Faculty");
+      });
+
+      test("Scenario: Unique Faculty", async () => {
+        prismaMock.faculty.create.mockResolvedValueOnce(MockFaculty);
+
+        expect(
+          createFaculty({
+            departmentId: MockDepartment.id,
+            user: MockAdminUser,
+            userId: MockFacultyUser.id,
+          })
+        ).resolves.toEqual(MockFaculty);
       });
     });
 
@@ -112,11 +112,11 @@ describe("Model: Faculty", () => {
 
   describe("Action: READ Faculty", () => {
     describe("Role: User", () => {
-      test("Scenario: Failed to find Faculty", async () => {
+      test("Scenario: Faculty not found", async () => {
         prismaMock.faculty.findUnique.mockRejectedValueOnce(null);
 
         expect(readFaculty({ id: MockFaculty.id })).rejects.toThrow(
-          "Failed to find Faculty"
+          "Faculty not found"
         );
       });
 
@@ -133,7 +133,7 @@ describe("Model: Faculty", () => {
   describe("Action: DELETE Faculty", () => {
     describe("Role: Admin", () => {
       test("Scenario: Failed to delete Faculty", async () => {
-        prismaMock.faculty.delete.mockRejectedValueOnce(MockFaculty);
+        prismaMock.faculty.delete.mockRejectedValueOnce(null);
 
         expect(
           deleteFaculty({ user: MockAdminUser, id: MockFaculty.id })

@@ -38,7 +38,7 @@ export async function createCollege({
 
     return college;
   } catch (error: any) {
-    throw new Error("Failed to create college");
+    throw new Error("Failed to create College");
   }
 }
 
@@ -75,7 +75,7 @@ export async function readColleges({
       },
     });
   } catch (error: any) {
-    throw new Error("Failed to find colleges");
+    throw new Error("Failed to find Colleges");
   }
 
   let count;
@@ -93,7 +93,7 @@ export async function readColleges({
       },
     });
   } catch (error: any) {
-    throw new Error("Failed to count colleges");
+    throw new Error("Failed to count Colleges");
   }
 
   const result = { count, colleges };
@@ -110,25 +110,7 @@ export async function readCollege({ id }: { id: string }) {
 
     return college;
   } catch (error: any) {
-    throw new Error("Failed to find college");
-  }
-}
-
-export async function deleteCollege({ id, user }: { user: User; id: string }) {
-  if (!user.isAdmin) {
-    throw new Error("You are not allowed to delete this college");
-  }
-
-  try {
-    const college = await prisma.college.delete({
-      where: {
-        id,
-      },
-    });
-
-    return college;
-  } catch (error: any) {
-    throw new Error("Failed to delete college");
+    throw new Error("College not found");
   }
 }
 
@@ -183,5 +165,23 @@ export async function updateCollege({
     return college;
   } catch (error: any) {
     throw new Error("Failed to update college");
+  }
+}
+
+export async function deleteCollege({ id, user }: { user: User; id: string }) {
+  if (!user.isAdmin) {
+    throw new Error("You are not allowed to delete this college");
+  }
+
+  try {
+    const college = await prisma.college.delete({
+      where: {
+        id,
+      },
+    });
+
+    return college;
+  } catch (error: any) {
+    throw new Error("Failed to delete college");
   }
 }
