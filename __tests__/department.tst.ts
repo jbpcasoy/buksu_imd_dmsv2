@@ -3,6 +3,7 @@ import {
   createDepartment,
   deleteDepartment,
   readDepartment,
+  readDepartmentByUser,
   readDepartments,
   updateDepartment,
 } from "@/services/departmentService";
@@ -163,6 +164,25 @@ describe("Model: Department", () => {
         expect(readDepartment({ id: MockDepartment.id })).resolves.toEqual(
           MockDepartment
         );
+      });
+    });
+  });
+
+  describe("Action: READ Department By User", () => {
+    describe("Role: User", () => {
+      test("Scenario: Department not found for that user", async () => {
+        prismaMock.department.findFirst.mockRejectedValueOnce(null);
+
+        expect(
+          readDepartmentByUser({ user: MockNonAdminUser })
+        ).rejects.toThrow("Failed to find Department");
+      });
+      test("Scenario: Success", async () => {
+        prismaMock.department.findFirst.mockResolvedValueOnce(MockDepartment);
+
+        expect(
+          readDepartmentByUser({ user: MockNonAdminUser })
+        ).resolves.toEqual(MockDepartment);
       });
     });
   });

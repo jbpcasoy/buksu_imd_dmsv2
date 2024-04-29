@@ -180,6 +180,38 @@ export async function readDepartment({ id }: { id: string }) {
   }
 }
 
+export async function readDepartmentByUser({ user }: { user: User }) {
+  let department;
+  try {
+    department = await prisma.department.findFirst({
+      where: {
+        AND: [
+          {
+            Faculty: {
+              some: {
+                ActiveFaculty: {
+                  Faculty: {
+                    User: {
+                      id: user.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    });
+  } catch (error) {
+    throw new Error("Failed to find Department");
+  }
+  if (!department) {
+    throw new Error("Department not found for that user");
+  }
+
+  return department;
+}
+
 export async function updateDepartment({
   id,
   name,

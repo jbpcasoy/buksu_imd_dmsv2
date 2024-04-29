@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import { readDepartmentByUser } from "@/services/departmentService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
@@ -19,25 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          AND: [
-            {
-              Faculty: {
-                some: {
-                  ActiveFaculty: {
-                    Faculty: {
-                      User: {
-                        id: user.id,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+      const department = await readDepartmentByUser({ user });
 
       return res.json(department);
     } catch (error: any) {
