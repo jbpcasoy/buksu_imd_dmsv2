@@ -1,4 +1,7 @@
-import prisma from "@/prisma/client";
+import {
+  createActiveChairperson,
+  readActiveChairpersons,
+} from "@/services/activeChairpersonService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -25,91 +28,10 @@ export default async function handler(
       });
       await validator.validate(req.body);
 
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to set an active chairperson",
-          },
-        });
-      }
-
       const { activeFacultyId } = validator.cast(req.body);
-      const chairperson = await prisma.chairperson.findFirstOrThrow({
-        where: {
-          Faculty: {
-            ActiveFaculty: {
-              id: {
-                equals: activeFacultyId,
-              },
-            },
-          },
-        },
-      });
-
-      const userActiveChairpersonCount = await prisma.activeChairperson.count({
-        where: {
-          Chairperson: {
-            Faculty: {
-              id: {
-                equals: chairperson.facultyId,
-              },
-            },
-          },
-        },
-      });
-
-      if (userActiveChairpersonCount > 0) {
-        return res.status(409).json({
-          error: {
-            message:
-              "Faculty can only be an active chairperson on one department",
-          },
-        });
-      }
-
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              Chairperson: {
-                id: {
-                  equals: chairperson.id,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      const departmentActiveChairpersonCount =
-        await prisma.activeChairperson.count({
-          where: {
-            Chairperson: {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
-          },
-        });
-
-      if (departmentActiveChairpersonCount > 0) {
-        return res.status(409).json({
-          error: { message: "Department can only have one active chairperson" },
-        });
-      }
-
-      const activeChairperson = await prisma.activeChairperson.create({
-        data: {
-          Chairperson: {
-            connect: {
-              id: chairperson.id,
-            },
-          },
-        },
+      const activeChairperson = await createActiveChairperson({
+        activeFacultyId,
+        user,
       });
 
       return res.json(activeChairperson);
@@ -136,46 +58,10 @@ export default async function handler(
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      const activeChairpersons = await prisma.activeChairperson.findMany({
+      const { activeChairpersons, count } = await readActiveChairpersons({
+        filterName,
         skip,
         take,
-        where: {
-          AND: [
-            {
-              Chairperson: {
-                Faculty: {
-                  User: {
-                    name: {
-                      contains: filterName,
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
-      const count = await prisma.activeChairperson.count({
-        where: {
-          AND: [
-            {
-              Chairperson: {
-                Faculty: {
-                  User: {
-                    name: {
-                      contains: filterName,
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
       });
 
       return res.json({ activeChairpersons, count });
