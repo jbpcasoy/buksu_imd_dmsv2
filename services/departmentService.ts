@@ -169,7 +169,7 @@ export async function readDepartments({
 
 export async function readDepartment({ id }: { id: string }) {
   try {
-    const department = await prisma.department.findUnique({
+    const department = await prisma.department.findUniqueOrThrow({
       where: {
         id,
       },

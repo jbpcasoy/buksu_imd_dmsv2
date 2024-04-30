@@ -179,7 +179,7 @@ export async function readFaculties({
 
 export async function readFaculty({ id }: { id: string }) {
   try {
-    const faculty = await prisma.faculty.findUnique({
+    const faculty = await prisma.faculty.findUniqueOrThrow({
       where: {
         id,
       },

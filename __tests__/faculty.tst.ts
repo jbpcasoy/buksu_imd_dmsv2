@@ -113,7 +113,7 @@ describe("Model: Faculty", () => {
   describe("Action: READ Faculty", () => {
     describe("Role: User", () => {
       test("Scenario: Faculty not found", async () => {
-        prismaMock.faculty.findUnique.mockRejectedValueOnce(null);
+        prismaMock.faculty.findUniqueOrThrow.mockRejectedValueOnce(null);
 
         expect(readFaculty({ id: MockFaculty.id })).rejects.toThrow(
           "Faculty not found"
@@ -121,7 +121,7 @@ describe("Model: Faculty", () => {
       });
 
       test("Scenario: Success", async () => {
-        prismaMock.faculty.findUnique.mockResolvedValueOnce(MockFaculty);
+        prismaMock.faculty.findUniqueOrThrow.mockResolvedValueOnce(MockFaculty);
 
         expect(readFaculty({ id: MockFaculty.id })).resolves.toEqual(
           MockFaculty

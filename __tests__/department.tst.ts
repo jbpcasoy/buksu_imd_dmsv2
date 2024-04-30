@@ -152,14 +152,16 @@ describe("Model: Department", () => {
   describe("Action: READ Department", () => {
     describe("Role: User", () => {
       test("Scenario: Department not found", async () => {
-        prismaMock.department.findUnique.mockRejectedValueOnce(null);
+        prismaMock.department.findUniqueOrThrow.mockRejectedValueOnce(null);
 
         expect(readDepartment({ id: MockDepartment.id })).rejects.toThrow(
           "Department not found"
         );
       });
       test("Scenario: Success", async () => {
-        prismaMock.department.findUnique.mockResolvedValueOnce(MockDepartment);
+        prismaMock.department.findUniqueOrThrow.mockResolvedValueOnce(
+          MockDepartment
+        );
 
         expect(readDepartment({ id: MockDepartment.id })).resolves.toEqual(
           MockDepartment

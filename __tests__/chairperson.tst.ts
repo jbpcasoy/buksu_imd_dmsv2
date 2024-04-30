@@ -132,7 +132,7 @@ describe("Model: Chairperson", () => {
   describe("Action: READ Chairperson", () => {
     describe("Role: User", () => {
       test("Scenario: Chairperson not found", async () => {
-        prismaMock.chairperson.findUnique.mockRejectedValueOnce(null);
+        prismaMock.chairperson.findUniqueOrThrow.mockRejectedValueOnce(null);
 
         expect(readChairperson({ id: MockChairperson.id })).rejects.toThrow(
           "Chairperson not found"
@@ -140,7 +140,7 @@ describe("Model: Chairperson", () => {
       });
 
       test("Scenario: Success", async () => {
-        prismaMock.chairperson.findUnique.mockResolvedValueOnce(
+        prismaMock.chairperson.findUniqueOrThrow.mockResolvedValueOnce(
           MockChairperson
         );
 

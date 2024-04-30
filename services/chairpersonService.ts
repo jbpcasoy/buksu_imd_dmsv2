@@ -211,7 +211,7 @@ export async function readChairpersons({
 
 export async function readChairperson({ id }: { id: string }) {
   try {
-    const chairperson = await prisma.chairperson.findUnique({
+    const chairperson = await prisma.chairperson.findUniqueOrThrow({
       where: {
         id,
       },

@@ -102,7 +102,7 @@ export async function readColleges({
 
 export async function readCollege({ id }: { id: string }) {
   try {
-    const college = await prisma.college.findUnique({
+    const college = await prisma.college.findUniqueOrThrow({
       where: {
         id,
       },

@@ -89,7 +89,7 @@ describe("Model: College", () => {
   describe("Action: READ College", () => {
     describe("Role: User", () => {
       test("Scenario: College not found", async () => {
-        prismaMock.college.findUnique.mockRejectedValueOnce(null);
+        prismaMock.college.findUniqueOrThrow.mockRejectedValueOnce(null);
 
         await expect(readCollege({ id: MockCollege.id })).rejects.toThrow(
           "College not found"
@@ -97,7 +97,7 @@ describe("Model: College", () => {
       });
 
       test("Scenario: Success", async () => {
-        prismaMock.college.findUnique.mockResolvedValueOnce(MockCollege);
+        prismaMock.college.findUniqueOrThrow.mockResolvedValueOnce(MockCollege);
 
         await expect(readCollege({ id: MockCollege.id })).resolves.toEqual(
           MockCollege

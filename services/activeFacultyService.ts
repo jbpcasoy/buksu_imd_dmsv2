@@ -238,7 +238,7 @@ export async function readActiveFaculties({
 
 export async function readActiveFaculty({ id }: { id: string }) {
   try {
-    const activeFaculty = await prisma.activeFaculty.findUnique({
+    const activeFaculty = await prisma.activeFaculty.findUniqueOrThrow({
       where: {
         id,
       },
