@@ -255,7 +255,7 @@ describe("Model: ActiveChairperson", () => {
       });
 
       test("Scenario: Success", async () => {
-        prismaMock.activeChairperson.findFirst.mockResolvedValue(
+        prismaMock.activeChairperson.findFirst.mockResolvedValueOnce(
           MockActiveChairperson
         );
 
