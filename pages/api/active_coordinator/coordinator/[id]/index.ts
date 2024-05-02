@@ -1,10 +1,9 @@
-import prisma from "@/prisma/client";
+import { readActiveCoordinatorByCoordinator } from "@/services/activeCoordinatorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,29 +19,11 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
+      const id = req.query.id as string;
+
+      const activeCoordinator = await readActiveCoordinatorByCoordinator({
+        id,
       });
-
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
-
-      const activeCoordinator = await prisma.activeCoordinator.findFirstOrThrow(
-        {
-          where: {
-            AND: [
-              {
-                Coordinator: {
-                  id: {
-                    equals: id,
-                  },
-                },
-              },
-            ],
-          },
-        }
-      );
 
       return res.json(activeCoordinator);
     } catch (error: any) {

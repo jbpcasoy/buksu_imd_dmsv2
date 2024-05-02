@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import { readActiveCoordinatorByUser } from "@/services/activeCoordinatorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -19,24 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const activeCoordinator = await prisma.activeCoordinator.findFirstOrThrow(
-        {
-          where: {
-            AND: [
-              {
-                Coordinator: {
-                  Faculty: {
-                    userId: {
-                      equals: user.id,
-                    },
-                  },
-                },
-              },
-            ],
-          },
-        }
-      );
-
+      const activeCoordinator = await readActiveCoordinatorByUser({ user });
       return res.json(activeCoordinator);
     } catch (error: any) {
       logger.error(error);
