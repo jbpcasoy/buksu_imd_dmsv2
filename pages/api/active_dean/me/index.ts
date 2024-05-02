@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import { readActiveDeanByUser } from "@/services/activeDeanService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -19,20 +19,8 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const activeDean = await prisma.activeDean.findFirstOrThrow({
-        where: {
-          AND: [
-            {
-              Dean: {
-                Faculty: {
-                  userId: {
-                    equals: user.id,
-                  },
-                },
-              },
-            },
-          ],
-        },
+      const activeDean = await readActiveDeanByUser({
+        user,
       });
 
       return res.json(activeDean);

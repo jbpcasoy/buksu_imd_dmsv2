@@ -1,10 +1,9 @@
-import prisma from "@/prisma/client";
+import { deleteActiveDean, readActiveDean } from "@/services/activeDeanService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,24 +19,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      const id = req.query.id as string;
 
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
-      const activeDean = await prisma.activeDean.findFirstOrThrow({
-        where: {
-          AND: [
-            {
-              id: {
-                equals: id,
-              },
-            },
-          ],
-        },
-      });
+      const activeDean = await readActiveDean({ id });
 
       return res.json(activeDean);
     } catch (error: any) {
@@ -50,27 +34,9 @@ export default async function handler(
 
   const deleteHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      const id = req.query.id as string;
 
-      await validator.validate(req.query);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to remove an active dean",
-          },
-        });
-      }
-
-      const { id } = validator.cast(req.query);
-
-      const activeDean = await prisma.activeDean.delete({
-        where: {
-          id,
-        },
-      });
+      const activeDean = await deleteActiveDean({ id, user });
 
       return res.json(activeDean);
     } catch (error: any) {

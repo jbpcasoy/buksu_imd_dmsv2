@@ -1,10 +1,9 @@
-import prisma from "@/prisma/client";
+import { readActiveDeanByDean } from "@/services/activeDeanService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,26 +19,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      const id = req.query.id as string;
 
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
-      const activeDean = await prisma.activeDean.findFirstOrThrow({
-        where: {
-          AND: [
-            {
-              Dean: {
-                id: {
-                  equals: id,
-                },
-              },
-            },
-          ],
-        },
-      });
+      const activeDean = await readActiveDeanByDean({ id });
 
       return res.json(activeDean);
     } catch (error: any) {
