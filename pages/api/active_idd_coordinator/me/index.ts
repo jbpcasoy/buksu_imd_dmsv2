@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import { readActiveIDDCoordinatorByUser } from "@/services/activeIDDCoordinatorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -19,20 +19,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const activeIDDCoordinator =
-        await prisma.activeIDDCoordinator.findFirstOrThrow({
-          where: {
-            AND: [
-              {
-                IDDCoordinator: {
-                  userId: {
-                    equals: user.id,
-                  },
-                },
-              },
-            ],
-          },
-        });
+      const activeIDDCoordinator = await readActiveIDDCoordinatorByUser({
+        user,
+      });
 
       return res.json(activeIDDCoordinator);
     } catch (error: any) {

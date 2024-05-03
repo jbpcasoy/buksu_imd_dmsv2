@@ -1,10 +1,12 @@
-import prisma from "@/prisma/client";
+import {
+  deleteActiveIDDCoordinator,
+  readActiveIDDCoordinator,
+} from "@/services/activeIDDCoordinatorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,25 +22,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      const id = req.query.id as string;
 
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
-      const activeIDDCoordinator =
-        await prisma.activeIDDCoordinator.findFirstOrThrow({
-          where: {
-            AND: [
-              {
-                id: {
-                  equals: id,
-                },
-              },
-            ],
-          },
-        });
+      const activeIDDCoordinator = await readActiveIDDCoordinator({ id });
 
       return res.json(activeIDDCoordinator);
     } catch (error: any) {
@@ -51,26 +37,10 @@ export default async function handler(
 
   const deleteHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
-
-      await validator.validate(req.query);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to remove an active IDD coordinator",
-          },
-        });
-      }
-
-      const { id } = validator.cast(req.query);
-
-      const activeIDDCoordinator = await prisma.activeIDDCoordinator.delete({
-        where: {
-          id,
-        },
+      const id = req.query.id as string;
+      const activeIDDCoordinator = await deleteActiveIDDCoordinator({
+        id,
+        user,
       });
 
       return res.json(activeIDDCoordinator);

@@ -1,4 +1,7 @@
-import prisma from "@/prisma/client";
+import {
+  createActiveIDDCoordinator,
+  readActiveIDDCoordinators,
+} from "@/services/activeIDDCoordinatorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -24,43 +27,11 @@ export default async function handler(
         iDDCoordinatorId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      // ForbiddenError.from(ability).throwUnlessCan("create", "ActiveIDDCoordinator");
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to set an active IDD coordinator",
-          },
-        });
-      }
-
       const { iDDCoordinatorId } = validator.cast(req.body);
 
-      const iDDCoordinator = await prisma.iDDCoordinator.findFirstOrThrow({
-        where: {
-          id: {
-            equals: iDDCoordinatorId,
-          },
-        },
-      });
-
-      const userActiveIDDCoordinatorCount =
-        await prisma.activeIDDCoordinator.count();
-
-      if (userActiveIDDCoordinatorCount > 0) {
-        return res.status(409).json({
-          error: { message: "There can only be one active IDD coordinator" },
-        });
-      }
-
-      const activeIDDCoordinator = await prisma.activeIDDCoordinator.create({
-        data: {
-          IDDCoordinator: {
-            connect: {
-              id: iDDCoordinator.id,
-            },
-          },
-        },
+      const activeIDDCoordinator = await createActiveIDDCoordinator({
+        iDDCoordinatorId,
+        user,
       });
 
       return res.json(activeIDDCoordinator);
@@ -88,42 +59,10 @@ export default async function handler(
         "filter[name]": filterName,
       } = validator.cast(req.query);
 
-      const activeIDDCoordinators = await prisma.activeIDDCoordinator.findMany({
+      const { activeIDDCoordinators, count } = await readActiveIDDCoordinators({
         skip,
         take,
-        where: {
-          AND: [
-            {
-              IDDCoordinator: {
-                User: {
-                  name: {
-                    contains: filterName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
-      const count = await prisma.activeIDDCoordinator.count({
-        where: {
-          AND: [
-            {
-              IDDCoordinator: {
-                User: {
-                  name: {
-                    contains: filterName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          ],
-        },
+        filterName,
       });
 
       return res.json({ activeIDDCoordinators, count });
