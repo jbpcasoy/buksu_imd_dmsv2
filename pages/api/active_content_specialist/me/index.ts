@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import { readActiveContentSpecialistByUser } from "@/services/activeContentSpecialistService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -19,22 +19,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const activeContentSpecialist =
-        await prisma.activeContentSpecialist.findFirstOrThrow({
-          where: {
-            AND: [
-              {
-                ContentSpecialist: {
-                  Faculty: {
-                    User: {
-                      id: user.id,
-                    },
-                  },
-                },
-              },
-            ],
-          },
-        });
+      const activeContentSpecialist = await readActiveContentSpecialistByUser({
+        user,
+      });
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {

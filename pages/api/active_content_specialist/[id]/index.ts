@@ -1,10 +1,12 @@
-import prisma from "@/prisma/client";
+import {
+  deleteActiveContentSpecialist,
+  readActiveContentSpecialist,
+} from "@/services/activeContentSpecialistService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,25 +22,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      const id = req.query.id as string;
 
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
-      const activeContentSpecialist =
-        await prisma.activeContentSpecialist.findFirstOrThrow({
-          where: {
-            AND: [
-              {
-                id: {
-                  equals: id,
-                },
-              },
-            ],
-          },
-        });
+      const activeContentSpecialist = await readActiveContentSpecialist({ id });
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {
@@ -51,28 +37,12 @@ export default async function handler(
 
   const deleteHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
+      const id = req.query.id as string;
+
+      const activeContentSpecialist = await deleteActiveContentSpecialist({
+        id,
+        user,
       });
-
-      await validator.validate(req.query);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message:
-              "You are not allowed to remove an active content specialist",
-          },
-        });
-      }
-
-      const { id } = validator.cast(req.query);
-      const activeContentSpecialist =
-        await prisma.activeContentSpecialist.delete({
-          where: {
-            id,
-          },
-        });
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {
