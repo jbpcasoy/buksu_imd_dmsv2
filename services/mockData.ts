@@ -1,9 +1,12 @@
 import {
+  ActiveCITLDirector,
   ActiveChairperson,
   ActiveContentSpecialist,
   ActiveCoordinator,
   ActiveDean,
   ActiveFaculty,
+  ActiveIDDCoordinator,
+  CITLDirector,
   Chairperson,
   College,
   ContentSpecialist,
@@ -11,6 +14,7 @@ import {
   Dean,
   Department,
   Faculty,
+  IDDCoordinator,
   User,
 } from "@prisma/client";
 
@@ -123,4 +127,32 @@ export const MockActiveContentSpecialist: ActiveContentSpecialist = {
   createdAt: new Date("2024-04-26T00:17:32.519Z"),
   updatedAt: new Date("2024-04-26T00:17:32.519Z"),
   contentSpecialistId: "clvfxbg4n0002zt1ijhzxgk8q",
+};
+
+export const MockIDDCoordinator: IDDCoordinator = {
+  id: "clvfxbg4n0002zt1ijhzxgk8s",
+  createdAt: new Date("2024-04-26T00:17:32.519Z"),
+  updatedAt: new Date("2024-04-26T00:17:32.519Z"),
+  userId: "clvfxbg4n0002zt1ijhzxgk8t",
+};
+
+export const MockActiveIDDCoordinator: ActiveIDDCoordinator = {
+  id: "clvfxbg4n0002zt1ijhzxgk8u",
+  createdAt: new Date("2024-04-26T00:17:32.519Z"),
+  updatedAt: new Date("2024-04-26T00:17:32.519Z"),
+  iDDCoordinatorId: "clvfxbg4n0002zt1ijhzxgk8s",
+};
+
+export const MockCITLDirector: CITLDirector = {
+  id: "clvfxbg4n0002zt1ijhzxgk8v",
+  createdAt: new Date("2024-04-26T00:17:32.519Z"),
+  updatedAt: new Date("2024-04-26T00:17:32.519Z"),
+  userId: "clvfxbg4n0002zt1ijhzxgk8x",
+};
+
+export const MockActiveCITLDirector: ActiveCITLDirector = {
+  id: "clvfxbg4n0002zt1ijhzxgk8w",
+  createdAt: new Date("2024-04-26T00:17:32.519Z"),
+  updatedAt: new Date("2024-04-26T00:17:32.519Z"),
+  cITLDirectorId: "clvfxbg4n0002zt1ijhzxgk8v",
 };
