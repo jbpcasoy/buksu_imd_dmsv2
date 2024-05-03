@@ -1,4 +1,7 @@
-import prisma from "@/prisma/client";
+import {
+  createContentSpecialist,
+  readContentSpecialists,
+} from "@/services/contestSpecialistService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
@@ -23,52 +26,11 @@ export default async function handler(
         activeFacultyId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to create a content specialist",
-          },
-        });
-      }
-
       const { activeFacultyId } = validator.cast(req.body);
 
-      const existingContentSpecialist =
-        await prisma.contentSpecialist.findFirst({
-          where: {
-            Faculty: {
-              ActiveFaculty: {
-                id: {
-                  equals: activeFacultyId,
-                },
-              },
-            },
-          },
-        });
-      if (existingContentSpecialist) {
-        return res
-          .status(409)
-          .json({ error: { message: "Content specialist already exists" } });
-      }
-      const faculty = await prisma.faculty.findFirstOrThrow({
-        where: {
-          ActiveFaculty: {
-            id: {
-              equals: activeFacultyId,
-            },
-          },
-        },
-      });
-
-      const contentSpecialist = await prisma.contentSpecialist.create({
-        data: {
-          Faculty: {
-            connect: {
-              id: faculty.id,
-            },
-          },
-        },
+      const contentSpecialist = await createContentSpecialist({
+        activeFacultyId,
+        user,
       });
 
       return res.json(contentSpecialist);
@@ -89,9 +51,7 @@ export default async function handler(
         "filter[departmentName]": Yup.string().optional(),
         "filter[collegeName]": Yup.string().optional(),
       });
-
       await validator.validate(req.query);
-
       const {
         skip,
         take,
@@ -99,86 +59,13 @@ export default async function handler(
         "filter[departmentName]": filterDepartmentName,
         "filter[collegeName]": filterCollegeName,
       } = validator.cast(req.query);
-      const contentSpecialists = await prisma.contentSpecialist.findMany({
+
+      const { contentSpecialists, count } = await readContentSpecialists({
         skip,
         take,
-        where: {
-          AND: [
-            {
-              Faculty: {
-                User: {
-                  name: {
-                    contains: filterName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  name: {
-                    contains: filterDepartmentName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  College: {
-                    name: {
-                      contains: filterCollegeName,
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
-      const count = await prisma.contentSpecialist.count({
-        where: {
-          AND: [
-            {
-              Faculty: {
-                User: {
-                  name: {
-                    contains: filterName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  name: {
-                    contains: filterDepartmentName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  College: {
-                    name: {
-                      contains: filterCollegeName,
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
+        filterCollegeName,
+        filterDepartmentName,
+        filterName,
       });
 
       return res.json({ contentSpecialists, count });
