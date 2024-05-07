@@ -95,7 +95,7 @@ describe("Model: Coordinator", () => {
     });
   });
 
-  describe("Action: READ Coordinator", () => {
+  describe("Action: READ Coordinators", () => {
     describe("Role: User", () => {
       test("Scenario: Failed to find Coordinators", async () => {
         prismaMock.coordinator.findMany.mockRejectedValueOnce(null);
@@ -153,6 +153,11 @@ describe("Model: Coordinator", () => {
   });
 
   describe("Action: DELETE Coordinator", () => {
+    test("Role: User", async () => {
+      expect(
+        deleteCoordinator({ id: MockCoordinator.id, user: MockNonAdminUser })
+      ).rejects.toThrow("You are not allowed to delete this coordinator");
+    });
     describe("Role: Admin", () => {
       test("Scenario: Failed to delete Coordinator", async () => {
         prismaMock.coordinator.delete.mockRejectedValueOnce(null);

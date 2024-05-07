@@ -116,7 +116,7 @@ describe("Model: IDDCoordinator", () => {
           readIDDCoordinator({ id: MockIDDCoordinator.id })
         ).rejects.toThrow("IDDCoordinator not found");
       });
-      test("Scenario: IDDCoordinator not found", async () => {
+      test("Scenario: Success", async () => {
         prismaMock.iDDCoordinator.findUniqueOrThrow.mockResolvedValueOnce(
           MockIDDCoordinator
         );

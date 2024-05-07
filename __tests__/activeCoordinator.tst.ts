@@ -10,6 +10,7 @@ import {
 import {
   MockActiveCoordinator,
   MockActiveFaculty,
+  MockActiveIDDCoordinator,
   MockAdminUser,
   MockCoordinator,
   MockDepartment,
@@ -268,6 +269,15 @@ describe("Model: ActiveCoordinator", () => {
             id: MockActiveCoordinator.id,
           })
         ).rejects.toThrow("ActiveCoordinator not found");
+      });
+      test("Scenario: Success", async () => {
+        prismaMock.activeCoordinator.findUniqueOrThrow.mockResolvedValue(
+          MockActiveCoordinator
+        );
+
+        expect(
+          readActiveCoordinator({ id: MockActiveIDDCoordinator.id })
+        ).resolves.toEqual(MockActiveCoordinator);
       });
     });
   });

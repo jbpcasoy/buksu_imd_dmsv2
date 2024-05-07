@@ -83,6 +83,20 @@ describe("Model: ContentSpecialist", () => {
           })
         ).rejects.toThrow("Failed to create ContentSpecialist");
       });
+      test("Scenario: Success", () => {
+        prismaMock.contentSpecialist.findFirst.mockResolvedValueOnce(null);
+        prismaMock.faculty.findFirst.mockResolvedValueOnce(MockFaculty);
+        prismaMock.contentSpecialist.create.mockResolvedValueOnce(
+          MockContentSpecialist
+        );
+
+        expect(
+          createContentSpecialist({
+            activeFacultyId: MockActiveFaculty.id,
+            user: MockAdminUser,
+          })
+        ).resolves.toEqual(MockContentSpecialist);
+      });
     });
   });
 

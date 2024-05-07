@@ -35,16 +35,12 @@ export default async function handler(
   };
 
   const deleteHandler = async () => {
+    // TODO find all "if (!user.isAdmin)" instances on  /api files there should be none left
+
     try {
       const id = req.query.id as string;
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to remove an active chairperson",
-          },
-        });
-      }
-      const activeChairperson = await deleteActiveChairperson({ id });
+
+      const activeChairperson = await deleteActiveChairperson({ id, user });
 
       return res.json(activeChairperson);
     } catch (error: any) {

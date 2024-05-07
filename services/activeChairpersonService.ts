@@ -253,7 +253,17 @@ export async function readActiveChairpersonByUser({ user }: { user: User }) {
   return activeChairperson;
 }
 
-export async function deleteActiveChairperson({ id }: { id: string }) {
+export async function deleteActiveChairperson({
+  id,
+  user,
+}: {
+  id: string;
+  user: User;
+}) {
+  if (!user.isAdmin) {
+    throw new Error("You are not allowed to remove an active chairperson");
+  }
+
   try {
     const activeChairperson = await prisma.activeChairperson.delete({
       where: {

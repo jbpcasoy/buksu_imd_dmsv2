@@ -88,7 +88,7 @@ describe("Model: ActiveIDDCoordinator", () => {
           })
         ).rejects.toThrow("Failed to create ActiveIDDCoordinator");
       });
-      test("Scenario: Failed to create ActiveIDDCoordinator", async () => {
+      test("Scenario: Success", async () => {
         prismaMock.iDDCoordinator.findFirst.mockResolvedValueOnce(
           MockIDDCoordinator
         );

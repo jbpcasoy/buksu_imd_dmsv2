@@ -18,6 +18,14 @@ import {
 
 describe("Model: ActiveDean", () => {
   describe("Action: CREATE ActiveDean", () => {
+    test("Role: User", () => {
+      expect(
+        createActiveDean({
+          activeFacultyId: MockActiveFaculty.id,
+          user: MockNonAdminUser,
+        })
+      ).rejects.toThrow("You are not allowed to set an active dean");
+    });
     describe("Role: Admin", () => {
       test("Scenario: Failed to find Dean", async () => {
         prismaMock.dean.findFirst.mockRejectedValueOnce(null);
@@ -259,6 +267,11 @@ describe("Model: ActiveDean", () => {
   });
 
   describe("Action: DELETE ActiveDean", () => {
+    test("Role: User", async () => {
+      expect(
+        deleteActiveDean({ id: MockActiveDean.id, user: MockNonAdminUser })
+      ).rejects.toThrow("You are not allowed to remove an active dean");
+    });
     describe("Role: Admin", () => {
       test("Scenario: Failed to delete ActiveDean", async () => {
         prismaMock.activeDean.delete.mockRejectedValueOnce(null);

@@ -267,12 +267,23 @@ describe("Model: ActiveChairperson", () => {
   });
 
   describe("Action: DELETE ActiveChairperson", () => {
+    test("Role: User", async () => {
+      expect(
+        deleteActiveChairperson({
+          id: MockActiveChairperson.id,
+          user: MockNonAdminUser,
+        })
+      ).rejects.toThrow("You are not allowed to remove an active chairperson");
+    });
     describe("Role: Admin", () => {
       test("Scenario: Failed to delete ActiveChairperson", async () => {
         prismaMock.activeChairperson.delete.mockRejectedValueOnce(null);
 
         expect(
-          deleteActiveChairperson({ id: MockActiveChairperson.id })
+          deleteActiveChairperson({
+            id: MockActiveChairperson.id,
+            user: MockAdminUser,
+          })
         ).rejects.toThrow("Failed to delete ActiveChairperson");
       });
 
@@ -282,7 +293,10 @@ describe("Model: ActiveChairperson", () => {
         );
 
         expect(
-          deleteActiveChairperson({ id: MockActiveChairperson.id })
+          deleteActiveChairperson({
+            id: MockActiveChairperson.id,
+            user: MockAdminUser,
+          })
         ).resolves.toEqual(MockActiveChairperson);
       });
     });
