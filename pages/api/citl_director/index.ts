@@ -1,7 +1,10 @@
-import prisma from "@/prisma/client";
+import {
+  createCITLDirector,
+  readCITLDirectors,
+} from "@/services/cITLDirectorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -24,38 +27,9 @@ export default async function handler(
         userId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: { message: "You are not allowed to create a CITL director" },
-        });
-      }
-
       const { userId } = validator.cast(req.body);
-      const existingCITLDirector = await prisma.cITLDirector.findFirst({
-        where: {
-          User: {
-            id: {
-              equals: userId,
-            },
-          },
-        },
-      });
-      if (existingCITLDirector) {
-        return res
-          .status(409)
-          .json({ error: { message: "CITL director already exists" } });
-      }
 
-      const cITLDirector = await prisma.cITLDirector.create({
-        data: {
-          User: {
-            connect: {
-              id: userId,
-            },
-          },
-        },
-      });
+      const cITLDirector = createCITLDirector({ user, userId });
 
       return res.json(cITLDirector);
     } catch (error: any) {
@@ -85,45 +59,12 @@ export default async function handler(
         "sort[field]": sortField,
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
-      const cITLDirectors = await prisma.cITLDirector.findMany({
+      const { cITLDirectors, count } = await readCITLDirectors({
         skip,
         take,
-        where: {
-          AND: [
-            {
-              User: {
-                name: {
-                  contains: filterName,
-                  mode: "insensitive",
-                },
-              },
-            },
-          ],
-        },
-        orderBy:
-          sortField === "name"
-            ? ({
-                User: {
-                  name: sortDirection ?? "asc",
-                },
-              } as Prisma.CITLDirectorOrderByWithRelationInput)
-            : ({
-                updatedAt: "desc",
-              } as Prisma.CITLDirectorOrderByWithRelationInput),
-      });
-      const count = await prisma.cITLDirector.count({
-        where: {
-          AND: [
-            {
-              User: {
-                name: {
-                  contains: filterName,
-                  mode: "insensitive",
-                },
-              },
-            },
-          ],
-        },
+        filterName,
+        sortDirection,
+        sortField,
       });
 
       return res.json({ cITLDirectors, count });
