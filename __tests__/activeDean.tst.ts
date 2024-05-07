@@ -165,7 +165,7 @@ describe("Model: ActiveDean", () => {
       });
 
       test("Scenario: Failed to count ActiveDeans", async () => {
-        prismaMock.activeDean.findMany.mockResolvedValue([MockActiveDean]);
+        prismaMock.activeDean.findMany.mockResolvedValueOnce([MockActiveDean]);
         prismaMock.activeDean.count.mockRejectedValueOnce(null);
 
         expect(
@@ -177,7 +177,7 @@ describe("Model: ActiveDean", () => {
       });
 
       test("Scenario: Success", async () => {
-        prismaMock.activeDean.findMany.mockResolvedValue([MockActiveDean]);
+        prismaMock.activeDean.findMany.mockResolvedValueOnce([MockActiveDean]);
         prismaMock.activeDean.count.mockResolvedValueOnce(1);
 
         expect(readActiveDeans({ skip: 0, take: 10 })).resolves.toEqual({
@@ -227,7 +227,7 @@ describe("Model: ActiveDean", () => {
       });
 
       test("Scenario: ActiveDean not found for this Dean", async () => {
-        prismaMock.activeDean.findFirst.mockResolvedValue(null);
+        prismaMock.activeDean.findFirst.mockResolvedValueOnce(null);
 
         expect(readActiveDeanByDean({ id: MockDean.id })).rejects.toThrow(
           "ActiveDean not found for this Dean"

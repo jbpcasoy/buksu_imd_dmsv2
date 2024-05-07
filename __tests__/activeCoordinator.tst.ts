@@ -165,7 +165,7 @@ describe("Model: ActiveCoordinator", () => {
   describe("Action: READ ActiveCoordinators", () => {
     describe("Role: User", () => {
       test("Scenario: Failed to find ActiveCoordinators", async () => {
-        prismaMock.activeCoordinator.findMany.mockRejectedValue(null);
+        prismaMock.activeCoordinator.findMany.mockRejectedValueOnce(null);
 
         expect(readActiveCoordinators({ skip: 0, take: 10 })).rejects.toThrow(
           "Failed to find ActiveCoordinators"
@@ -173,10 +173,10 @@ describe("Model: ActiveCoordinator", () => {
       });
 
       test("Scenario: Failed to count ActiveCoordinators", async () => {
-        prismaMock.activeCoordinator.findMany.mockResolvedValue([
+        prismaMock.activeCoordinator.findMany.mockResolvedValueOnce([
           MockActiveCoordinator,
         ]);
-        prismaMock.activeCoordinator.count.mockRejectedValue(null);
+        prismaMock.activeCoordinator.count.mockRejectedValueOnce(null);
 
         expect(readActiveCoordinators({ skip: 0, take: 10 })).rejects.toThrow(
           "Failed to count ActiveCoordinator"
@@ -184,10 +184,10 @@ describe("Model: ActiveCoordinator", () => {
       });
 
       test("Scenario: Success", async () => {
-        prismaMock.activeCoordinator.findMany.mockResolvedValue([
+        prismaMock.activeCoordinator.findMany.mockResolvedValueOnce([
           MockActiveCoordinator,
         ]);
-        prismaMock.activeCoordinator.count.mockResolvedValue(1);
+        prismaMock.activeCoordinator.count.mockResolvedValueOnce(1);
 
         expect(readActiveCoordinators({ skip: 0, take: 10 })).resolves.toEqual({
           activeCoordinators: [MockActiveCoordinator],
@@ -248,7 +248,7 @@ describe("Model: ActiveCoordinator", () => {
       });
 
       test("Scenario: Success", async () => {
-        prismaMock.activeCoordinator.findFirst.mockResolvedValue(
+        prismaMock.activeCoordinator.findFirst.mockResolvedValueOnce(
           MockActiveCoordinator
         );
 
@@ -262,7 +262,9 @@ describe("Model: ActiveCoordinator", () => {
   describe("Action: READ ActiveCoordinator", () => {
     describe("Role: User", () => {
       test("Scenario: ActiveCoordinator not found", async () => {
-        prismaMock.activeCoordinator.findUniqueOrThrow.mockRejectedValue(null);
+        prismaMock.activeCoordinator.findUniqueOrThrow.mockRejectedValueOnce(
+          null
+        );
 
         expect(
           readActiveCoordinator({
@@ -271,7 +273,7 @@ describe("Model: ActiveCoordinator", () => {
         ).rejects.toThrow("ActiveCoordinator not found");
       });
       test("Scenario: Success", async () => {
-        prismaMock.activeCoordinator.findUniqueOrThrow.mockResolvedValue(
+        prismaMock.activeCoordinator.findUniqueOrThrow.mockResolvedValueOnce(
           MockActiveCoordinator
         );
 

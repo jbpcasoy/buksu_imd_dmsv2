@@ -197,7 +197,7 @@ describe("Model: ActiveIDDCoordinator", () => {
       });
 
       test("Scenario: Success", async () => {
-        prismaMock.activeIDDCoordinator.findFirst.mockResolvedValue(
+        prismaMock.activeIDDCoordinator.findFirst.mockResolvedValueOnce(
           MockActiveIDDCoordinator
         );
 
@@ -248,7 +248,7 @@ describe("Model: ActiveIDDCoordinator", () => {
 
     describe("Role: Admin", () => {
       test("Scenario: Failed to delete ActiveIDDCoordinator", async () => {
-        prismaMock.activeIDDCoordinator.delete.mockRejectedValue(null);
+        prismaMock.activeIDDCoordinator.delete.mockRejectedValueOnce(null);
 
         expect(
           deleteActiveIDDCoordinator({

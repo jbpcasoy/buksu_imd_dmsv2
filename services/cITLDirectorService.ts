@@ -27,7 +27,7 @@ export async function createCITLDirector({
     throw new Error("Failed to find CITLDirector");
   }
   if (existingCITLDirector) {
-    throw new Error("CITL director already exists");
+    throw new Error("CITLDirector already exists");
   }
 
   let cITLDirector;

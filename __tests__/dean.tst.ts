@@ -72,7 +72,7 @@ describe("Model: Dean", () => {
       });
 
       test("Scenario: Failed to create Dean", () => {
-        prismaMock.dean.findFirst.mockResolvedValue(null);
+        prismaMock.dean.findFirst.mockResolvedValueOnce(null);
         prismaMock.faculty.findFirst.mockResolvedValueOnce(MockFaculty);
         prismaMock.dean.create.mockRejectedValueOnce(MockDean);
 
@@ -85,7 +85,7 @@ describe("Model: Dean", () => {
       });
 
       test("Scenario: Success", () => {
-        prismaMock.dean.findFirst.mockResolvedValue(null);
+        prismaMock.dean.findFirst.mockResolvedValueOnce(null);
         prismaMock.faculty.findFirst.mockResolvedValueOnce(MockFaculty);
         prismaMock.dean.create.mockResolvedValueOnce(MockDean);
 
@@ -133,13 +133,13 @@ describe("Model: Dean", () => {
   describe("Action: READ Dean", () => {
     describe("Role: User", () => {
       test("Scenario: Dean not found", async () => {
-        prismaMock.dean.findUniqueOrThrow.mockRejectedValue(null);
+        prismaMock.dean.findUniqueOrThrow.mockRejectedValueOnce(null);
 
         expect(readDean({ id: MockDean.id })).rejects.toThrow("Dean not found");
       });
 
       test("Scenario: Success", async () => {
-        prismaMock.dean.findUniqueOrThrow.mockResolvedValue(MockDean);
+        prismaMock.dean.findUniqueOrThrow.mockResolvedValueOnce(MockDean);
 
         expect(readDean({ id: MockDean.id })).resolves.toEqual(MockDean);
       });
