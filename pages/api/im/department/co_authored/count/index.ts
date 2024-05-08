@@ -1,5 +1,5 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
+import { countDepartmentCoAuthoredIMs } from "@/services/iMService";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -19,7 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const count = await coAuthoredIMsCount(user);
+      const count = await countDepartmentCoAuthoredIMs({ user });
 
       return res.json({ count });
     } catch (error: any) {
@@ -36,27 +36,4 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
-}
-
-export async function coAuthoredIMsCount(user: User) {
-  const count = await prisma.iM.count({
-    where: {
-      AND: [
-        {
-          CoAuthor: {
-            some: {
-              Faculty: {
-                User: {
-                  id: {
-                    equals: user.id,
-                  },
-                },
-              },
-            },
-          },
-        },
-      ],
-    },
-  });
-  return count;
 }

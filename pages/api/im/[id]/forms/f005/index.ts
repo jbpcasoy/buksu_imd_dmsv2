@@ -1,7 +1,6 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
+import { readIMF005 } from "@/services/iMService";
 import logger from "@/services/logger";
-import { F005Props } from "@/types/forms";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -19,25 +18,10 @@ export default async function handler(
   }
 
   const getHandler = async () => {
-    const iMTypeMap = {
-      MODULE: "Module",
-      COURSE_FILE: "Course File",
-      WORKTEXT: "Worktext",
-      TEXTBOOK: "Textbook",
-    };
-
-    const { id } = req.query;
+    const id = req.query.id as string;
 
     try {
-      const iM = await prisma.iM.findUniqueOrThrow({
-        where: {
-          id: id as string,
-        },
-      });
-
-      const response: F005Props = {
-        iMTitle: iM?.title,
-      };
+      const response = await readIMF005({ id });
 
       return res.json(response);
     } catch (error: any) {

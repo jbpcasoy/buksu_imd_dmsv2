@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import { countIMs } from "@/services/im_count";
+import { countIMs } from "@/services/iMService";
 import logger from "@/services/logger";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";

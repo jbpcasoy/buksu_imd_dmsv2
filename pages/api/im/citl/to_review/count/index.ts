@@ -1,6 +1,5 @@
-import prisma from "@/prisma/client";
-import { AppAbility } from "@/services/ability/abilityBuilder";
 import getServerUser from "@/services/getServerUser";
+import { countCITLToReviewIMs } from "@/services/iMService";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -20,7 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const count = await cITLToReviewCount(user);
+      const count = await countCITLToReviewIMs();
 
       return res.json({ count });
     } catch (error: any) {
@@ -37,48 +36,4 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
-}
-
-export async function cITLToReviewCount(user: User) {
-  let ability: AppAbility;
-
-  const count = await prisma.iM.count({
-    where: {
-      AND: [
-        {
-          IMFile: {
-            some: {
-              DepartmentRevision: {
-                CoordinatorEndorsement: {
-                  DeanEndorsement: {
-                    isNot: null,
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
-          NOT: {
-            IMFile: {
-              some: {
-                DepartmentRevision: {
-                  CoordinatorEndorsement: {
-                    DeanEndorsement: {
-                      IDDCoordinatorSuggestion: {
-                        SubmittedIDDCoordinatorSuggestion: {
-                          isNot: null,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      ],
-    },
-  });
-  return count;
 }

@@ -1,9 +1,7 @@
-import prisma from "@/prisma/client";
-import { AppAbility } from "@/services/ability/abilityBuilder";
 import getServerUser from "@/services/getServerUser";
-import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
+import { readCITLCITLDirectorEndorsedIMs } from "@/services/iMService";
 import logger from "@/services/logger";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -33,11 +31,7 @@ export default async function handler(
         "sort[field]": Yup.string().optional(),
         "sort[direction]": Yup.string().oneOf(["asc", "desc"]).optional(),
       });
-
       await validator.validate(req.query);
-
-      let ability: AppAbility;
-
       const {
         skip,
         take,
@@ -49,273 +43,18 @@ export default async function handler(
         "sort[field]": sortField,
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
-      let statusQuery = iMStatusQueryBuilder(filterStatus);
 
-      const orderBy: Prisma.IMOrderByWithRelationInput =
-        sortField === "title"
-          ? {
-              title: sortDirection,
-            }
-          : sortField === "createdAt"
-          ? {
-              createdAt: sortDirection,
-            }
-          : sortField === "userName"
-          ? {
-              Faculty: {
-                User: {
-                  name: sortDirection,
-                },
-              },
-            }
-          : sortField === "departmentName"
-          ? {
-              Faculty: {
-                Department: {
-                  name: sortDirection,
-                },
-              },
-            }
-          : sortField === "collegeName"
-          ? {
-              Faculty: {
-                Department: {
-                  College: {
-                    name: sortDirection,
-                  },
-                },
-              },
-            }
-          : {
-              createdAt: "desc",
-            };
-
-      const iMs = await prisma.iM.findMany({
+      const { count, iMs } = await readCITLCITLDirectorEndorsedIMs({
         skip,
         take,
-        where: {
-          AND: [
-            statusQuery,
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        IDDCoordinatorSuggestion: {
-                          SubmittedIDDCoordinatorSuggestion: {
-                            CITLRevision: {
-                              some: {
-                                IDDCoordinatorEndorsement: {
-                                  isNot: null,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        IDDCoordinatorSuggestion: {
-                          SubmittedIDDCoordinatorSuggestion: {
-                            CITLRevision: {
-                              some: {
-                                IDDCoordinatorEndorsement: {
-                                  CITLDirectorEndorsement: {
-                                    CITLDirector: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                User: {
-                  name: {
-                    contains: filterUserName ?? "",
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              title: {
-                contains: filterTitle ?? "",
-                mode: "insensitive",
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  name: {
-                    contains: filterDepartmentName ?? "",
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  College: {
-                    name: {
-                      contains: filterCollegeName ?? "",
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-        orderBy,
-      });
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            statusQuery,
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        isNot: null,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        IDDCoordinatorSuggestion: {
-                          SubmittedIDDCoordinatorSuggestion: {
-                            CITLRevision: {
-                              some: {
-                                IDDCoordinatorEndorsement: {
-                                  isNot: null,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentRevision: {
-                    CoordinatorEndorsement: {
-                      DeanEndorsement: {
-                        IDDCoordinatorSuggestion: {
-                          SubmittedIDDCoordinatorSuggestion: {
-                            CITLRevision: {
-                              some: {
-                                IDDCoordinatorEndorsement: {
-                                  CITLDirectorEndorsement: {
-                                    CITLDirector: {
-                                      User: {
-                                        id: {
-                                          equals: user.id,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                User: {
-                  name: {
-                    contains: filterUserName ?? "",
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              title: {
-                contains: filterTitle ?? "",
-                mode: "insensitive",
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  name: {
-                    contains: filterDepartmentName ?? "",
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  College: {
-                    name: {
-                      contains: filterCollegeName ?? "",
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
+        user,
+        filterCollegeName,
+        filterDepartmentName,
+        filterStatus,
+        filterTitle,
+        filterUserName,
+        sortDirection,
+        sortField,
       });
 
       return res.json({ iMs, count });
