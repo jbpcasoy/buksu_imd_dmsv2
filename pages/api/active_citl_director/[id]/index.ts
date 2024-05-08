@@ -1,4 +1,7 @@
-import prisma from "@/prisma/client";
+import {
+  deleteActiveCITLDirector,
+  readActiveCITLDirector,
+} from "@/services/activeCITLDirectorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -27,18 +30,7 @@ export default async function handler(
       await validator.validate(req.query);
 
       const { id } = validator.cast(req.query);
-      const activeCITLDirector =
-        await prisma.activeCITLDirector.findFirstOrThrow({
-          where: {
-            AND: [
-              {
-                id: {
-                  equals: id,
-                },
-              },
-            ],
-          },
-        });
+      const activeCITLDirector = await readActiveCITLDirector({ id });
 
       return res.json(activeCITLDirector);
     } catch (error: any) {
@@ -51,27 +43,8 @@ export default async function handler(
 
   const deleteHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
-
-      await validator.validate(req.query);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to remove an active CITL director",
-          },
-        });
-      }
-
-      const { id } = validator.cast(req.query);
-
-      const activeCITLDirector = await prisma.activeCITLDirector.delete({
-        where: {
-          id,
-        },
-      });
+      const id = req.query.id as string;
+      const activeCITLDirector = await deleteActiveCITLDirector({ user, id });
 
       return res.json(activeCITLDirector);
     } catch (error: any) {

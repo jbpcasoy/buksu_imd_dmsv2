@@ -1,4 +1,7 @@
-import prisma from "@/prisma/client";
+import {
+  createActiveCITLDirector,
+  readActiveCITLDirectors,
+} from "@/services/activeCITLDirectorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -24,42 +27,11 @@ export default async function handler(
         cITLDirectorId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to set an active CITL director",
-          },
-        });
-      }
-
       const { cITLDirectorId } = validator.cast(req.body);
 
-      const cITLDirector = await prisma.cITLDirector.findFirstOrThrow({
-        where: {
-          id: {
-            equals: cITLDirectorId,
-          },
-        },
-      });
-
-      const userActiveCITLDirectorCount =
-        await prisma.activeCITLDirector.count();
-
-      if (userActiveCITLDirectorCount > 0) {
-        return res.status(409).json({
-          error: { message: "There can only be one active CITL director" },
-        });
-      }
-
-      const activeCITLDirector = await prisma.activeCITLDirector.create({
-        data: {
-          CITLDirector: {
-            connect: {
-              id: cITLDirector.id,
-            },
-          },
-        },
+      const activeCITLDirector = await createActiveCITLDirector({
+        cITLDirectorId,
+        user,
       });
 
       return res.json(activeCITLDirector);
@@ -87,42 +59,10 @@ export default async function handler(
         "filter[name]": filterName,
       } = validator.cast(req.query);
 
-      const activeCITLDirectors = await prisma.activeCITLDirector.findMany({
+      const { activeCITLDirectors, count } = await readActiveCITLDirectors({
         skip,
         take,
-        where: {
-          AND: [
-            {
-              CITLDirector: {
-                User: {
-                  name: {
-                    contains: filterName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          ],
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
-      const count = await prisma.activeCITLDirector.count({
-        where: {
-          AND: [
-            {
-              CITLDirector: {
-                User: {
-                  name: {
-                    contains: filterName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          ],
-        },
+        filterName,
       });
 
       return res.json({ activeCITLDirectors, count });

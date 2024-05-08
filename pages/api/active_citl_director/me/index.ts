@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import { readActiveCITLDirectorByUser } from "@/services/activeCITLDirectorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -19,20 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const activeCITLDirector =
-        await prisma.activeCITLDirector.findFirstOrThrow({
-          where: {
-            AND: [
-              {
-                CITLDirector: {
-                  userId: {
-                    equals: user.id,
-                  },
-                },
-              },
-            ],
-          },
-        });
+      const activeCITLDirector = readActiveCITLDirectorByUser({ user });
 
       return res.json(activeCITLDirector);
     } catch (error: any) {
