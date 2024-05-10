@@ -5,8 +5,8 @@ datasource db {
 }
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["metrics"]
+    provider = "prisma-client-js"
+    // previewFeatures = ["metrics"]
 }
 
 generator dbml {

@@ -19,7 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const activeCITLDirector = readActiveCITLDirectorByUser({ user });
+      const activeCITLDirector = await readActiveCITLDirectorByUser({ user });
 
       return res.json(activeCITLDirector);
     } catch (error: any) {
