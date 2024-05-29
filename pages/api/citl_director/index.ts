@@ -29,7 +29,7 @@ export default async function handler(
       await validator.validate(req.body);
       const { userId } = validator.cast(req.body);
 
-      const cITLDirector = createCITLDirector({ user, userId });
+      const cITLDirector = await createCITLDirector({ user, userId });
 
       return res.json(cITLDirector);
     } catch (error: any) {

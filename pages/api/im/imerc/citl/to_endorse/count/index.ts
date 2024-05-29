@@ -19,7 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const count = await countIMERCCITLToEndorseIMs({ user });
+      const count = await countIMERCCITLToEndorseIMs();
 
       return res.json({ count });
     } catch (error: any) {

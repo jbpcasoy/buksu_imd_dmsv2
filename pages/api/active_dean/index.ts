@@ -1,4 +1,4 @@
-import { readActiveDeans } from "@/services/activeDeanService";
+import { createActiveDean, readActiveDeans } from "@/services/activeDeanService";
 import { createDean } from "@/services/deanService.tst";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
@@ -26,7 +26,7 @@ export default async function handler(
       });
       await validator.validate(req.body);
       const { activeFacultyId } = validator.cast(req.body);
-      const activeDean = await createDean({ activeFacultyId, user });
+      const activeDean = await createActiveDean({ activeFacultyId, user });
 
       return res.json(activeDean);
     } catch (error: any) {

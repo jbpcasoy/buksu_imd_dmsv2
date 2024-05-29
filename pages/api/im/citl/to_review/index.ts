@@ -47,7 +47,6 @@ export default async function handler(
       const { count, iMs } = await readCITLToReviewIMs({
         skip,
         take,
-        user,
         filterCollegeName,
         filterDepartmentName,
         filterStatus,

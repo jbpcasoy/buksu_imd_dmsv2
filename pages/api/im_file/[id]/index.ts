@@ -210,12 +210,14 @@ export default async function handler(
             },
           });
 
-          return res.status(400).json({
-            error: {
-              message:
-                "Error: IM file is already submitted for CITL endorsement",
-            },
-          });
+          if(cITLRevision) {
+              return res.status(400).json({
+              error: {
+                message:
+                  "Error: IM file is already submitted for CITL endorsement",
+              },
+            });
+          }
         }
 
         if (submittedQAMISSuggestionId) {

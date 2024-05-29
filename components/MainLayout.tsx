@@ -46,7 +46,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       activeFaculty === null &&
       activeCITLDirector === null &&
       activeIDDCoordinator === null &&
-      router.pathname !== "/non_active"
+      router.pathname !== "/non_active" &&
+      router.pathname !== "/profile"
     ) {
       router.replace("/non_active");
     }

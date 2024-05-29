@@ -20,7 +20,7 @@ export default async function handler(
   const getHandler = async () => {
     try {
       const id = req.query.id as string;
-      const activeFaculty = readActiveFacultyByFaculty({ id });
+      const activeFaculty = await readActiveFacultyByFaculty({ id });
 
       return res.json(activeFaculty);
     } catch (error: any) {

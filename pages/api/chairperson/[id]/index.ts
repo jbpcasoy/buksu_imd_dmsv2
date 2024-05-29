@@ -24,7 +24,7 @@ export default async function handler(
     try {
       const id = req.query.id as string;
 
-      const chairperson = readChairperson({ id });
+      const chairperson = await readChairperson({ id });
 
       return res.json(chairperson);
     } catch (error: any) {
