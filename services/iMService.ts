@@ -236,41 +236,41 @@ export async function readIMERCDepartmentToReviseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -550,41 +550,41 @@ export async function readIMERCDepartmentToReviewIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -924,41 +924,41 @@ export async function readIMERCDepartmentToEndorseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -1462,41 +1462,41 @@ export async function readIMERCDepartmentReviewedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -1811,41 +1811,41 @@ export async function readIMERCDepartmentEndorsedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -2145,41 +2145,41 @@ export async function readIMERCCollegeToEndorseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -2503,41 +2503,41 @@ export async function readIMERCCollegeEndorsedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -2766,41 +2766,41 @@ export async function readIMERCCITLToReviseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -3273,41 +3273,41 @@ export async function readIMERCCITLToReviewIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -3917,41 +3917,41 @@ export async function readIMERCCITLToEndorseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -4412,41 +4412,41 @@ export async function readIMERCCITLReviewedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -4770,41 +4770,41 @@ export async function readIMERCCITLEndorsedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -5378,41 +5378,41 @@ export async function readIMERCCITLDirectorToEndorseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -6105,41 +6105,41 @@ export async function readIMERCCITLDirectorEndorsedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -6458,6 +6458,11 @@ export async function readIMERCCITLDirectorEndorsedIMs({
                                 OR: [
                                   {
                                     ReturnedIMERCCITLRevision: {
+                                      is: null,
+                                    },
+                                  },
+                                  {
+                                    ReturnedIMERCCITLRevision: {
                                       SubmittedReturnedIMERCCITLRevision: {
                                         is: null,
                                       },
@@ -6489,6 +6494,11 @@ export async function readIMERCCITLDirectorEndorsedIMs({
                             IMERCCITLRevision: {
                               some: {
                                 OR: [
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      is: null,
+                                    },
+                                  },
                                   {
                                     ReturnedIMERCCITLRevision: {
                                       SubmittedReturnedIMERCCITLRevision: {
@@ -6525,6 +6535,11 @@ export async function readIMERCCITLDirectorEndorsedIMs({
                             IMERCCITLRevision: {
                               some: {
                                 OR: [
+                                  {
+                                    ReturnedIMERCCITLRevision: {
+                                      is: null,
+                                    },
+                                  },
                                   {
                                     ReturnedIMERCCITLRevision: {
                                       SubmittedReturnedIMERCCITLRevision: {
@@ -6844,41 +6859,41 @@ export async function readDepartmentToReviseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -7372,41 +7387,41 @@ export async function readDepartmentToReviewIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -8250,41 +8265,41 @@ export async function readDepartmentToEndorseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -8568,41 +8583,41 @@ export async function readDepartmentReviewedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -9000,41 +9015,41 @@ export async function readMyIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -9199,41 +9214,41 @@ export async function readDepartmentEndorsedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -9428,41 +9443,41 @@ export async function readDepartmentCoAuthoredIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -9527,13 +9542,18 @@ export async function readDepartmentCoAuthoredIMs({
   });
   const count = await prisma.iM.count({
     where: {
+
       AND: [
         statusQuery,
         {
-          Faculty: {
-            User: {
-              id: {
-                equals: user.id,
+          CoAuthor: {
+            some: {
+              Faculty: {
+                User: {
+                  id: {
+                    equals: user.id,
+                  },
+                },
               },
             },
           },
@@ -9654,41 +9674,41 @@ export async function readDepartmentIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -9962,41 +9982,41 @@ export async function readCollegeToEndorseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -10375,41 +10395,41 @@ export async function readCollegeEndorsedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -10805,41 +10825,41 @@ export async function readCollegeIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -11054,41 +11074,41 @@ export async function readCITLToReviseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -11450,41 +11470,41 @@ export async function readCITLToReviewIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -11718,41 +11738,41 @@ export async function readCITLToEndorseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -12070,41 +12090,41 @@ export async function readCITLReviewedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -12356,41 +12376,41 @@ export async function readCITLEndorsedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
   const iMs = await prisma.iM.findMany({
     skip,
     take,
@@ -12653,41 +12673,41 @@ export async function readCITLCITLDirectorToEndorseIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -13014,41 +13034,41 @@ export async function readCITLCITLDirectorEndorsedIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -13391,41 +13411,41 @@ export async function readCITLIMs({
   const orderBy: Prisma.IMOrderByWithRelationInput =
     sortField === "title"
       ? {
-          title: sortDirection,
-        }
+        title: sortDirection,
+      }
       : sortField === "createdAt"
-      ? {
+        ? {
           createdAt: sortDirection,
         }
-      : sortField === "userName"
-      ? {
-          Faculty: {
-            User: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "departmentName"
-      ? {
-          Faculty: {
-            Department: {
-              name: sortDirection,
-            },
-          },
-        }
-      : sortField === "collegeName"
-      ? {
-          Faculty: {
-            Department: {
-              College: {
+        : sortField === "userName"
+          ? {
+            Faculty: {
+              User: {
                 name: sortDirection,
               },
             },
-          },
-        }
-      : {
-          createdAt: "desc",
-        };
+          }
+          : sortField === "departmentName"
+            ? {
+              Faculty: {
+                Department: {
+                  name: sortDirection,
+                },
+              },
+            }
+            : sortField === "collegeName"
+              ? {
+                Faculty: {
+                  Department: {
+                    College: {
+                      name: sortDirection,
+                    },
+                  },
+                },
+              }
+              : {
+                createdAt: "desc",
+              };
 
   const iMs = await prisma.iM.findMany({
     skip,
@@ -14980,7 +15000,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q1_1) +
             ratingToNumber(chairpersonReview.q1_1) +
             ratingToNumber(coordinatorReview.q1_1)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -14988,7 +15008,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q1_2) +
             ratingToNumber(chairpersonReview.q1_2) +
             ratingToNumber(coordinatorReview.q1_2)) /
-            3
+          3
         )
       ),
     ],
@@ -14998,7 +15018,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q2_1) +
             ratingToNumber(chairpersonReview.q2_1) +
             ratingToNumber(coordinatorReview.q2_1)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15006,7 +15026,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q2_2) +
             ratingToNumber(chairpersonReview.q2_2) +
             ratingToNumber(coordinatorReview.q2_2)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15014,7 +15034,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q2_3) +
             ratingToNumber(chairpersonReview.q2_3) +
             ratingToNumber(coordinatorReview.q2_3)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15022,7 +15042,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q2_4) +
             ratingToNumber(chairpersonReview.q2_4) +
             ratingToNumber(coordinatorReview.q2_4)) /
-            3
+          3
         )
       ),
     ],
@@ -15032,7 +15052,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q3_1) +
             ratingToNumber(chairpersonReview.q3_1) +
             ratingToNumber(coordinatorReview.q3_1)) /
-            3
+          3
         )
       ),
     ],
@@ -15042,7 +15062,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q4_1) +
             ratingToNumber(chairpersonReview.q4_1) +
             ratingToNumber(coordinatorReview.q4_1)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15050,7 +15070,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q4_2) +
             ratingToNumber(chairpersonReview.q4_2) +
             ratingToNumber(coordinatorReview.q4_2)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15058,7 +15078,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q4_3) +
             ratingToNumber(chairpersonReview.q4_3) +
             ratingToNumber(coordinatorReview.q4_3)) /
-            3
+          3
         )
       ),
     ],
@@ -15068,7 +15088,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q5_1) +
             ratingToNumber(chairpersonReview.q5_1) +
             ratingToNumber(coordinatorReview.q5_1)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15076,7 +15096,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q5_2) +
             ratingToNumber(chairpersonReview.q5_2) +
             ratingToNumber(coordinatorReview.q5_2)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15084,7 +15104,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q5_3) +
             ratingToNumber(chairpersonReview.q5_3) +
             ratingToNumber(coordinatorReview.q5_3)) /
-            3
+          3
         )
       ),
     ],
@@ -15094,7 +15114,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q6_1) +
             ratingToNumber(chairpersonReview.q6_1) +
             ratingToNumber(coordinatorReview.q6_1)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15102,7 +15122,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q6_2) +
             ratingToNumber(chairpersonReview.q6_2) +
             ratingToNumber(coordinatorReview.q6_2)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15110,7 +15130,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q6_3) +
             ratingToNumber(chairpersonReview.q6_3) +
             ratingToNumber(coordinatorReview.q6_3)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15118,7 +15138,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q6_4) +
             ratingToNumber(chairpersonReview.q6_4) +
             ratingToNumber(coordinatorReview.q6_4)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15126,7 +15146,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q6_5) +
             ratingToNumber(chairpersonReview.q6_5) +
             ratingToNumber(coordinatorReview.q6_5)) /
-            3
+          3
         )
       ),
     ],
@@ -15136,7 +15156,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q7_1) +
             ratingToNumber(chairpersonReview.q7_1) +
             ratingToNumber(coordinatorReview.q7_1)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15144,7 +15164,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q7_2) +
             ratingToNumber(chairpersonReview.q7_2) +
             ratingToNumber(coordinatorReview.q7_2)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15152,7 +15172,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q7_3) +
             ratingToNumber(chairpersonReview.q7_3) +
             ratingToNumber(coordinatorReview.q7_3)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15160,7 +15180,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q7_4) +
             ratingToNumber(chairpersonReview.q7_4) +
             ratingToNumber(coordinatorReview.q7_4)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15168,7 +15188,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q7_5) +
             ratingToNumber(chairpersonReview.q7_5) +
             ratingToNumber(coordinatorReview.q7_5)) /
-            3
+          3
         )
       ),
     ],
@@ -15178,7 +15198,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q8_1) +
             ratingToNumber(chairpersonReview.q8_1) +
             ratingToNumber(coordinatorReview.q8_1)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15186,7 +15206,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q8_2) +
             ratingToNumber(chairpersonReview.q8_2) +
             ratingToNumber(coordinatorReview.q8_2)) /
-            3
+          3
         )
       ),
       numberToRating(
@@ -15194,7 +15214,7 @@ export async function readIMF013({ id }: { id: string }) {
           (ratingToNumber(peerReview.q8_3) +
             ratingToNumber(chairpersonReview.q8_3) +
             ratingToNumber(coordinatorReview.q8_3)) /
-            3
+          3
         )
       ),
     ],
