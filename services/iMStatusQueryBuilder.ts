@@ -77,9 +77,33 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                     CoordinatorSuggestion: {
                       SubmittedCoordinatorSuggestion: {
                         DepartmentReviewed: {
-                          DepartmentRevision: {
-                            none: {},
-                          },
+                          OR: [
+                            {
+                              DepartmentRevision: {
+                                none: {}
+                              }
+                            },
+                            {
+                              DepartmentRevision: {
+                                every: {
+                                  AND: [
+                                    {
+                                      CoordinatorEndorsement: {
+                                        is: null,
+                                      }
+                                    },
+                                    {
+                                      ReturnedDepartmentRevision: {
+                                        SubmittedReturnedDepartmentRevision: {
+                                          isNot: null,
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                            }
+                          ],
                         },
                       },
                     },
@@ -117,6 +141,26 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                 },
                               },
                             },
+                            {
+                              DepartmentRevision: {
+                                some: {
+                                  OR: [
+                                    {
+                                      ReturnedDepartmentRevision: {
+                                        is: null
+                                      }
+                                    },
+                                    {
+                                      ReturnedDepartmentRevision: {
+                                        SubmittedReturnedDepartmentRevision: {
+                                          is: null,
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
                           ],
                         },
                       },
@@ -221,9 +265,33 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                 DeanEndorsement: {
                                   IDDCoordinatorSuggestion: {
                                     SubmittedIDDCoordinatorSuggestion: {
-                                      CITLRevision: {
-                                        none: {},
-                                      },
+                                      OR: [
+                                        {
+                                          CITLRevision: {
+                                            none: {},
+                                          },
+                                        },
+                                        {
+                                          CITLRevision: {
+                                            every: {
+                                              AND: [
+                                                {
+                                                  IDDCoordinatorEndorsement: {
+                                                    is: null,
+                                                  }
+                                                },
+                                                {
+                                                  ReturnedCITLRevision: {
+                                                    SubmittedReturnedCITLRevision: {
+                                                      isNot: null,
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      ]
                                     },
                                   },
                                 },
@@ -273,6 +341,26 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                             },
                                           },
                                         },
+                                        {
+                                          CITLRevision: {
+                                            some: {
+                                              OR: [
+                                                {
+                                                  ReturnedCITLRevision: {
+                                                    is: null,
+                                                  }
+                                                },
+                                                {
+                                                  ReturnedCITLRevision: {
+                                                    SubmittedReturnedCITLRevision: {
+                                                      is: null,
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
                                       ],
                                     },
                                   },
@@ -584,10 +672,33 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                                             {
                                                               IMERCCITLReviewed:
                                                               {
-                                                                IMERCCITLRevision:
-                                                                {
-                                                                  none: {},
-                                                                },
+                                                                OR: [
+                                                                  {
+                                                                    IMERCCITLRevision:
+                                                                    {
+                                                                      none: {},
+                                                                    },
+                                                                  },
+                                                                  {
+                                                                    IMERCCITLRevision: {
+                                                                      every: {
+                                                                        AND: [
+                                                                          {
+                                                                            IMERCIDDCoordinatorEndorsement: {
+                                                                              is: null
+                                                                            }
+                                                                          },
+                                                                          {
+                                                                            ReturnedIMERCCITLRevision: {
+                                                                              SubmittedReturnedIMERCCITLRevision: {
+                                                                                isNot: null
+                                                                              }
+                                                                            }
+                                                                          }]
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                ]
                                                               },
                                                             },
                                                           },
@@ -667,6 +778,29 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                                                         {
                                                                           isNot: null,
                                                                         },
+                                                                      },
+                                                                    },
+                                                                  },
+
+                                                                  {
+                                                                    IMERCCITLRevision:
+                                                                    {
+                                                                      some: {
+                                                                        OR: [
+                                                                          {
+                                                                            ReturnedIMERCCITLRevision:
+                                                                            {
+                                                                              is: null,
+                                                                            },
+                                                                          },
+                                                                          {
+                                                                            ReturnedIMERCCITLRevision: {
+                                                                              SubmittedReturnedIMERCCITLRevision: {
+                                                                                is: null,
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                        ]
                                                                       },
                                                                     },
                                                                   },

@@ -20,6 +20,7 @@ import {
   countDepartmentToReviseIMs,
   countIMERCCITLDirectorEndorsedIMs,
   countIMERCCITLDirectorToEndorseIMs,
+  countIMERCCITLEndorsedIMs,
   countIMERCCITLReviewedIMs,
   countIMERCCITLToEndorseIMs,
   countIMERCCITLToReviewIMs,
@@ -299,7 +300,7 @@ export default async function handler(
         counts.iMERCCITLDirectorEndorsedCount = 0;
       }
       try {
-        counts.iMERCCITLEndorsedCount = await countIMERCCITLToEndorseIMs();
+        counts.iMERCCITLEndorsedCount = await countIMERCCITLEndorsedIMs({ user });
       } catch (error) {
         logger.error({ error });
         counts.iMERCCITLEndorsedCount = 0;
