@@ -24,15 +24,23 @@ export default async function handler(
         where: {
           AND: [
             {
-              QAMISRevision: {
-                IMFile: {
-                  IM: {
-                    id: {
-                      equals: id as string,
-                    },
-                  },
-                },
-              },
+              SubmittedQAMISSuggestion: {
+                QAMISSuggestion: {
+                  CITLDirectorEndorsement: {
+                    IDDCoordinatorEndorsement: {
+                      CITLRevision: {
+                        IMFile: {
+                          IM: {
+                            id: {
+                              equals: id as string,
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             },
           ],
         },
