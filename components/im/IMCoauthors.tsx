@@ -122,7 +122,7 @@ export default function IMCoAuthors({ iMId }: IMCoAuthorsProps) {
           )}
         </div>
       )}
-      <div className="flex flex-wrap items-center gap-1">
+      <div className="flex flex-col items-left gap-1">
         {coAuthors.map((coAuthor) => {
           return (
             <CoAuthorChip
@@ -133,11 +133,6 @@ export default function IMCoAuthors({ iMId }: IMCoAuthorsProps) {
             />
           );
         })}
-        {coAuthors.length < 1 && (
-          <div className="bg-palette_light_grey_2 rounded-full px-1 text-xs flex items-center space-x-1">
-            <p>None</p>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -201,7 +196,7 @@ function CoAuthorChip({
   }
 
   return (
-    <div className="bg-palette_orange rounded-lg p-2 text-xs flex items-center space-x-1">
+    <div className="bg-palette_orange rounded-lg p-2 text-xs flex items-center justify-between space-x-1">
       <p>{user.name}</p>
       {allowDelete && (
         <button
