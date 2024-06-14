@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import { readActiveChairpersonByUser } from "@/services/activeChairpersonService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -19,23 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const activeChairperson = await prisma.activeChairperson.findFirstOrThrow(
-        {
-          where: {
-            AND: [
-              {
-                Chairperson: {
-                  Faculty: {
-                    userId: {
-                      equals: user.id,
-                    },
-                  },
-                },
-              },
-            ],
-          },
-        }
-      );
+      const activeChairperson = await readActiveChairpersonByUser({ user });
 
       return res.json(activeChairperson);
     } catch (error: any) {

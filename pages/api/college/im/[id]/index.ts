@@ -18,6 +18,7 @@ export default async function handler(
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
+  // TODO create a test when  IM tests are started
   const getHandler = async () => {
     try {
       const validator = Yup.object({

@@ -1,7 +1,10 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
+import {
+  createIDDCoordinator,
+  readIDDCoordinators,
+} from "@/services/iDDCoordinatorService";
 import logger from "@/services/logger";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -24,40 +27,9 @@ export default async function handler(
         userId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to create an IDD coordinator",
-          },
-        });
-      }
-
       const { userId } = validator.cast(req.body);
 
-      const existingIDDCoordinator = await prisma.iDDCoordinator.findFirst({
-        where: {
-          User: {
-            id: {
-              equals: userId,
-            },
-          },
-        },
-      });
-      if (existingIDDCoordinator) {
-        return res
-          .status(409)
-          .json({ error: { message: "IDD coordinator already exists" } });
-      }
-      const iDDCoordinator = await prisma.iDDCoordinator.create({
-        data: {
-          User: {
-            connect: {
-              id: userId,
-            },
-          },
-        },
-      });
+      const iDDCoordinator = await createIDDCoordinator({ user, userId });
 
       return res.json(iDDCoordinator);
     } catch (error: any) {
@@ -77,9 +49,7 @@ export default async function handler(
         "sort[field]": Yup.string().optional(),
         "sort[direction]": Yup.string().optional(),
       });
-
       await validator.validate(req.query);
-
       const {
         skip,
         take,
@@ -87,47 +57,13 @@ export default async function handler(
         "sort[field]": sortField,
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
-      const iDDCoordinators = await prisma.iDDCoordinator.findMany({
+
+      const { count, iDDCoordinators } = await readIDDCoordinators({
         skip,
         take,
-        where: {
-          AND: [
-            {
-              User: {
-                name: {
-                  contains: filterName,
-                  mode: "insensitive",
-                },
-              },
-            },
-          ],
-        },
-        orderBy:
-          sortField === "name"
-            ? ({
-                User: {
-                  name: sortDirection ?? "asc",
-                },
-              } as Prisma.IDDCoordinatorOrderByWithRelationInput)
-            : ({
-                User: {
-                  name: sortDirection ?? "asc",
-                },
-              } as Prisma.IDDCoordinatorOrderByWithRelationInput),
-      });
-      const count = await prisma.iDDCoordinator.count({
-        where: {
-          AND: [
-            {
-              User: {
-                name: {
-                  contains: filterName,
-                  mode: "insensitive",
-                },
-              },
-            },
-          ],
-        },
+        filterName,
+        sortDirection,
+        sortField,
       });
 
       return res.json({ iDDCoordinators, count });

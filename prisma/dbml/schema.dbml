@@ -1,0 +1,1687 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Account {
+  id String [pk]
+  userId String [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+  user User [not null]
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table Session {
+  id String [pk]
+  sessionToken String [unique, not null]
+  userId String [not null]
+  expires DateTime [not null]
+  user User [not null]
+}
+
+Table User {
+  id String [pk]
+  name String
+  email String [unique]
+  emailVerified DateTime
+  image String
+  accounts Account [not null]
+  sessions Session [not null]
+  isAdmin Boolean [not null, default: false]
+  Faculty Faculty [not null]
+  IDDCoordinator IDDCoordinator
+  CITLDirector CITLDirector
+  Event Event [not null]
+  NotificationRead NotificationRead [not null]
+  ProfilePictureFile ProfilePictureFile [not null]
+}
+
+Table VerificationToken {
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
+}
+
+Table College {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [unique, not null]
+  Department Department [not null]
+}
+
+Table Department {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  College College [not null]
+  name String [unique, not null]
+  collegeId String [not null]
+  Faculty Faculty [not null]
+}
+
+Table Faculty {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  User User [not null]
+  userId String [not null]
+  Department Department [not null]
+  departmentId String [not null]
+  IM IM [not null]
+  ActiveFaculty ActiveFaculty
+  Chairperson Chairperson
+  Coordinator Coordinator
+  Dean Dean
+  PeerReview PeerReview [not null]
+  ContentSpecialist ContentSpecialist
+  CoAuthor CoAuthor [not null]
+
+  indexes {
+    (departmentId, userId) [unique]
+  }
+}
+
+Table ActiveFaculty {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Faculty Faculty [not null]
+  facultyId String [unique, not null]
+}
+
+Table IM {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Faculty Faculty [not null]
+  facultyId String [not null]
+  title String [not null]
+  type IMType [not null]
+  IMFile IMFile [not null]
+  Event Event [not null]
+  CoAuthor CoAuthor [not null]
+}
+
+Table IMFile {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IM IM [not null]
+  iMId String [not null]
+  filename String [not null]
+  size Int [not null]
+  mimetype String [not null]
+  originalFilename String [not null]
+  DepartmentReview DepartmentReview
+  DepartmentRevision DepartmentRevision
+  CITLRevision CITLRevision
+  QAMISRevision QAMISRevision
+  IMERCCITLRevision IMERCCITLRevision
+  DepartmentReviewed DepartmentReviewed
+  departmentReviewedId String [unique]
+  SubmittedReturnedDepartmentRevision SubmittedReturnedDepartmentRevision
+  submittedReturnedDepartmentRevisionId String [unique]
+  SubmittedIDDCoordinatorSuggestion SubmittedIDDCoordinatorSuggestion
+  submittedIDDCoordinatorSuggestionId String [unique]
+  SubmittedReturnedCITLRevision SubmittedReturnedCITLRevision
+  submittedReturnedCITLRevisionId String [unique]
+  SubmittedQAMISSuggestion SubmittedQAMISSuggestion
+  submittedQAMISSuggestionId String [unique]
+  IMERCCITLReviewed IMERCCITLReviewed
+  iMERCCITLReviewedId String [unique]
+  SubmittedReturnedIMERCCITLRevision SubmittedReturnedIMERCCITLRevision
+  submittedReturnedIMERCCITLRevisionId String [unique]
+}
+
+Table Chairperson {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Faculty Faculty [not null]
+  facultyId String [unique, not null]
+  ActiveChairperson ActiveChairperson
+  ChairpersonReview ChairpersonReview [not null]
+  QAMISChairpersonEndorsement QAMISChairpersonEndorsement [not null]
+}
+
+Table Coordinator {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Faculty Faculty [not null]
+  facultyId String [unique, not null]
+  ActiveCoordinator ActiveCoordinator
+  CoordinatorReview CoordinatorReview [not null]
+  CoordinatorEndorsement CoordinatorEndorsement [not null]
+  QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement [not null]
+  ReturnedDepartmentRevision ReturnedDepartmentRevision [not null]
+}
+
+Table Dean {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Faculty Faculty [not null]
+  facultyId String [unique, not null]
+  ActiveDean ActiveDean
+  DeanEndorsement DeanEndorsement [not null]
+  QAMISDeanEndorsement QAMISDeanEndorsement [not null]
+}
+
+Table ActiveCoordinator {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Coordinator Coordinator [not null]
+  coordinatorId String [unique, not null]
+}
+
+Table ActiveChairperson {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Chairperson Chairperson [not null]
+  chairpersonId String [unique, not null]
+}
+
+Table ActiveDean {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Dean Dean [not null]
+  deanId String [unique, not null]
+}
+
+Table DepartmentReview {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IMFile IMFile [not null]
+  iMFileId String [unique, not null]
+  PeerReview PeerReview
+  ChairpersonReview ChairpersonReview
+  CoordinatorReview CoordinatorReview
+  Event Event [not null]
+}
+
+Table PeerReview {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  q1_1 Rating
+  q1_2 Rating
+  q2_1 Rating
+  q2_2 Rating
+  q2_3 Rating
+  q2_4 Rating
+  q3_1 Rating
+  q4_1 Rating
+  q4_2 Rating
+  q4_3 Rating
+  q5_1 Rating
+  q5_2 Rating
+  q5_3 Rating
+  q6_1 Rating
+  q6_2 Rating
+  q6_3 Rating
+  q6_4 Rating
+  q6_5 Rating
+  q7_1 Rating
+  q7_2 Rating
+  q7_3 Rating
+  q7_4 Rating
+  q7_5 Rating
+  q8_1 Rating
+  q8_2 Rating
+  q8_3 Rating
+  PeerSuggestion PeerSuggestion
+  DepartmentReview DepartmentReview [not null]
+  departmentReviewId String [unique, not null]
+  Faculty Faculty [not null]
+  facultyId String [not null]
+}
+
+Table PeerSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  PeerReview PeerReview [not null]
+  peerReviewId String [unique, not null]
+  PeerSuggestionItem PeerSuggestionItem [not null]
+  SubmittedPeerSuggestion SubmittedPeerSuggestion
+}
+
+Table PeerSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  suggestion String [not null]
+  remarks String
+  PeerSuggestion PeerSuggestion [not null]
+  peerSuggestionId String [not null]
+  pageNumber Int [not null]
+  PeerSuggestionItemActionTaken PeerSuggestionItemActionTaken
+}
+
+Table SubmittedPeerSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  PeerSuggestion PeerSuggestion [not null]
+  peerSuggestionId String [unique, not null]
+  DepartmentReviewed DepartmentReviewed
+  Event Event [not null]
+}
+
+Table ChairpersonReview {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  q1_1 Rating
+  q1_2 Rating
+  q2_1 Rating
+  q2_2 Rating
+  q2_3 Rating
+  q2_4 Rating
+  q3_1 Rating
+  q4_1 Rating
+  q4_2 Rating
+  q4_3 Rating
+  q5_1 Rating
+  q5_2 Rating
+  q5_3 Rating
+  q6_1 Rating
+  q6_2 Rating
+  q6_3 Rating
+  q6_4 Rating
+  q6_5 Rating
+  q7_1 Rating
+  q7_2 Rating
+  q7_3 Rating
+  q7_4 Rating
+  q7_5 Rating
+  q8_1 Rating
+  q8_2 Rating
+  q8_3 Rating
+  ChairpersonSuggestion ChairpersonSuggestion
+  DepartmentReview DepartmentReview [not null]
+  departmentReviewId String [unique, not null]
+  Chairperson Chairperson [not null]
+  chairpersonId String [not null]
+}
+
+Table ChairpersonSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ChairpersonReview ChairpersonReview [not null]
+  chairpersonReviewId String [unique, not null]
+  ChairpersonSuggestionItem ChairpersonSuggestionItem [not null]
+  SubmittedChairpersonSuggestion SubmittedChairpersonSuggestion
+}
+
+Table ChairpersonSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  suggestion String [not null]
+  remarks String
+  ChairpersonSuggestion ChairpersonSuggestion [not null]
+  chairpersonSuggestionId String [not null]
+  pageNumber Int [not null]
+  ChairpersonSuggestionItemActionTaken ChairpersonSuggestionItemActionTaken
+}
+
+Table SubmittedChairpersonSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ChairpersonSuggestion ChairpersonSuggestion [not null]
+  chairpersonSuggestionId String [unique, not null]
+  DepartmentReviewed DepartmentReviewed
+  Event Event [not null]
+}
+
+Table CoordinatorReview {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  q1_1 Rating
+  q1_2 Rating
+  q2_1 Rating
+  q2_2 Rating
+  q2_3 Rating
+  q2_4 Rating
+  q3_1 Rating
+  q4_1 Rating
+  q4_2 Rating
+  q4_3 Rating
+  q5_1 Rating
+  q5_2 Rating
+  q5_3 Rating
+  q6_1 Rating
+  q6_2 Rating
+  q6_3 Rating
+  q6_4 Rating
+  q6_5 Rating
+  q7_1 Rating
+  q7_2 Rating
+  q7_3 Rating
+  q7_4 Rating
+  q7_5 Rating
+  q8_1 Rating
+  q8_2 Rating
+  q8_3 Rating
+  CoordinatorSuggestion CoordinatorSuggestion
+  DepartmentReview DepartmentReview [not null]
+  departmentReviewId String [unique, not null]
+  Coordinator Coordinator [not null]
+  coordinatorId String [not null]
+}
+
+Table CoordinatorSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  CoordinatorReview CoordinatorReview [not null]
+  coordinatorReviewId String [unique, not null]
+  CoordinatorSuggestionItem CoordinatorSuggestionItem [not null]
+  SubmittedCoordinatorSuggestion SubmittedCoordinatorSuggestion
+}
+
+Table CoordinatorSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  suggestion String [not null]
+  remarks String
+  CoordinatorSuggestion CoordinatorSuggestion [not null]
+  coordinatorSuggestionId String [not null]
+  pageNumber Int [not null]
+  CoordinatorSuggestionItemActionTaken CoordinatorSuggestionItemActionTaken
+}
+
+Table SubmittedCoordinatorSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  CoordinatorSuggestion CoordinatorSuggestion [not null]
+  coordinatorSuggestionId String [unique, not null]
+  DepartmentReviewed DepartmentReviewed
+  Event Event [not null]
+}
+
+Table DepartmentReviewed {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  SubmittedCoordinatorSuggestion SubmittedCoordinatorSuggestion [not null]
+  submittedCoordinatorSuggestionId String [unique, not null]
+  SubmittedChairpersonSuggestion SubmittedChairpersonSuggestion [not null]
+  submittedChairpersonSuggestionId String [unique, not null]
+  SubmittedPeerSuggestion SubmittedPeerSuggestion [not null]
+  submittedPeerSuggestionId String [unique, not null]
+  DepartmentRevision DepartmentRevision [not null]
+  Event Event [not null]
+  IMFile IMFile
+}
+
+Table DepartmentRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  DepartmentReviewed DepartmentReviewed [not null]
+  departmentReviewedId String [not null]
+  IMFile IMFile [not null]
+  iMFileId String [unique, not null]
+  CoordinatorEndorsement CoordinatorEndorsement
+  Event Event [not null]
+  ReturnedDepartmentRevision ReturnedDepartmentRevision
+}
+
+Table CoordinatorEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  DepartmentRevision DepartmentRevision [not null]
+  departmentRevisionId String [unique, not null]
+  Coordinator Coordinator [not null]
+  coordinatorId String [not null]
+  DeanEndorsement DeanEndorsement
+  Event Event [not null]
+}
+
+Table DeanEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  CoordinatorEndorsement CoordinatorEndorsement [not null]
+  coordinatorEndorsementId String [unique, not null]
+  Dean Dean [not null]
+  deanId String [not null]
+  IDDCoordinatorSuggestion IDDCoordinatorSuggestion
+  Event Event [not null]
+}
+
+Table IDDCoordinator {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  User User [not null]
+  userId String [unique, not null]
+  ActiveIDDCoordinator ActiveIDDCoordinator
+  IDDCoordinatorSuggestion IDDCoordinatorSuggestion [not null]
+  IDDCoordinatorEndorsement IDDCoordinatorEndorsement [not null]
+  IDDSpecialistReview IDDSpecialistReview [not null]
+  IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement [not null]
+  ReturnedCITLRevision ReturnedCITLRevision [not null]
+  ReturnedIMERCCITLRevision ReturnedIMERCCITLRevision [not null]
+}
+
+Table ActiveIDDCoordinator {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDCoordinator IDDCoordinator [not null]
+  iDDCoordinatorId String [unique, not null]
+}
+
+Table CITLDirector {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  User User [not null]
+  userId String [unique, not null]
+  ActiveCITLDirector ActiveCITLDirector
+  CITLDirectorEndorsement CITLDirectorEndorsement [not null]
+  ContentEditorReview ContentEditorReview [not null]
+  IMERCCITLDirectorEndorsement IMERCCITLDirectorEndorsement [not null]
+}
+
+Table ActiveCITLDirector {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  CITLDirector CITLDirector [not null]
+  cITLDirectorId String [unique, not null]
+}
+
+Table IDDCoordinatorSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  DeanEndorsement DeanEndorsement [not null]
+  deanEndorsementId String [unique, not null]
+  IDDCoordinator IDDCoordinator [not null]
+  iDDCoordinatorId String [not null]
+  IDDCoordinatorSuggestionItem IDDCoordinatorSuggestionItem [not null]
+  SubmittedIDDCoordinatorSuggestion SubmittedIDDCoordinatorSuggestion
+}
+
+Table IDDCoordinatorSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDCoordinatorSuggestion IDDCoordinatorSuggestion [not null]
+  iDDCoordinatorSuggestionId String [not null]
+  suggestion String [not null]
+  remarks String
+  pageNumber Int [not null]
+  IDDCoordinatorSuggestionItemActionTaken IDDCoordinatorSuggestionItemActionTaken
+}
+
+Table SubmittedIDDCoordinatorSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDCoordinatorSuggestion IDDCoordinatorSuggestion [not null]
+  iDDCoordinatorSuggestionId String [unique, not null]
+  CITLRevision CITLRevision [not null]
+  Event Event [not null]
+  IMFile IMFile
+}
+
+Table CITLRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  SubmittedIDDCoordinatorSuggestion SubmittedIDDCoordinatorSuggestion [not null]
+  submittedIDDCoordinatorSuggestionId String [not null]
+  IMFile IMFile [not null]
+  iMFileId String [unique, not null]
+  IDDCoordinatorEndorsement IDDCoordinatorEndorsement
+  Event Event [not null]
+  ReturnedCITLRevision ReturnedCITLRevision
+}
+
+Table IDDCoordinatorEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDCoordinator IDDCoordinator [not null]
+  iDDCoordinatorId String [not null]
+  CITLRevision CITLRevision [not null]
+  cITLRevisionId String [unique, not null]
+  CITLDirectorEndorsement CITLDirectorEndorsement
+  Event Event [not null]
+}
+
+Table CITLDirectorEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDCoordinatorEndorsement IDDCoordinatorEndorsement [not null]
+  iDDCoordinatorEndorsementId String [unique, not null]
+  CITLDirector CITLDirector [not null]
+  cITLDirectorId String [not null]
+  QAMISSuggestion QAMISSuggestion
+  Event Event [not null]
+}
+
+Table QAMISSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  CITLDirectorEndorsement CITLDirectorEndorsement [not null]
+  cITLDirectorEndorsementId String [unique, not null]
+  QAMISSuggestionItem QAMISSuggestionItem [not null]
+  SubmittedQAMISSuggestion SubmittedQAMISSuggestion
+}
+
+Table QAMISSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  QAMISSuggestion QAMISSuggestion [not null]
+  qAMISSuggestionId String [not null]
+  suggestion String [not null]
+  actionTaken String
+  remarks String
+  pageNumber Int [not null]
+}
+
+Table SubmittedQAMISSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  QAMISSuggestion QAMISSuggestion [not null]
+  qAMISSuggestionId String [unique, not null]
+  QAMISRevision QAMISRevision
+  QAMISFile QAMISFile
+  IMFile IMFile
+}
+
+Table QAMISFile {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  filename String [not null]
+  size Int [not null]
+  mimetype String [not null]
+  originalFilename String [not null]
+  SubmittedQAMISSuggestion SubmittedQAMISSuggestion [not null]
+  submittedQAMISSuggestionId String [unique, not null]
+  QAMISRevision QAMISRevision
+}
+
+Table QAMISRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  QAMISFile QAMISFile [not null]
+  qAMISFileId String [unique, not null]
+  SubmittedQAMISSuggestion SubmittedQAMISSuggestion [not null]
+  submittedQAMISSuggestionId String [unique, not null]
+  IMFile IMFile [not null]
+  iMFileId String [unique, not null]
+  QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement
+  QAMISChairpersonEndorsement QAMISChairpersonEndorsement
+  QAMISDeanEndorsement QAMISDeanEndorsement
+  Event Event [not null]
+}
+
+Table QAMISCoordinatorEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  QAMISRevision QAMISRevision [not null]
+  qAMISRevisionId String [unique, not null]
+  Coordinator Coordinator [not null]
+  coordinatorId String [not null]
+  QAMISDepartmentEndorsement QAMISDepartmentEndorsement
+  Event Event [not null]
+}
+
+Table QAMISChairpersonEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  QAMISRevision QAMISRevision [not null]
+  qAMISRevisionId String [unique, not null]
+  Chairperson Chairperson [not null]
+  chairpersonId String [not null]
+  QAMISDepartmentEndorsement QAMISDepartmentEndorsement
+  Event Event [not null]
+}
+
+Table QAMISDeanEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  QAMISRevision QAMISRevision [not null]
+  qAMISRevisionId String [unique, not null]
+  Dean Dean [not null]
+  deanId String [not null]
+  QAMISDepartmentEndorsement QAMISDepartmentEndorsement
+  Event Event [not null]
+}
+
+Table QAMISDepartmentEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  QAMISDeanEndorsement QAMISDeanEndorsement [not null]
+  qAMISDeanEndorsementId String [unique, not null]
+  QAMISChairpersonEndorsement QAMISChairpersonEndorsement [not null]
+  qAMISChairpersonEndorsementId String [unique, not null]
+  QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement [not null]
+  qAMISCoordinatorEndorsementId String [unique, not null]
+  ContentSpecialistReview ContentSpecialistReview
+  ContentEditorReview ContentEditorReview
+  IDDSpecialistReview IDDSpecialistReview
+  Event Event [not null]
+}
+
+Table ContentSpecialistReview {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  q1_1 Rating
+  q1_2 Rating
+  q2_1 Rating
+  q2_2 Rating
+  q2_3 Rating
+  q2_4 Rating
+  q3_1 Rating
+  q4_1 Rating
+  q4_2 Rating
+  q4_3 Rating
+  q5_1 Rating
+  q5_2 Rating
+  q5_3 Rating
+  q5_4 Rating
+  q6_1 Rating
+  q6_2 Rating
+  q6_3 Rating
+  q6_4 Rating
+  q6_5 Rating
+  q7_1 Rating
+  q7_2 Rating
+  q7_3 Rating
+  q7_4 Rating
+  q7_5 Rating
+  q8_1 Rating
+  q8_2 Rating
+  q8_3 Rating
+  QAMISDepartmentEndorsement QAMISDepartmentEndorsement [not null]
+  qAMISDepartmentEndorsementId String [unique, not null]
+  ContentSpecialistSuggestion ContentSpecialistSuggestion
+  ContentSpecialist ContentSpecialist [not null]
+  contentSpecialistId String [not null]
+}
+
+Table ContentSpecialistSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ContentSpecialistReview ContentSpecialistReview [not null]
+  contentSpecialistReviewId String [unique, not null]
+  ContentSpecialistSuggestionItem ContentSpecialistSuggestionItem [not null]
+  SubmittedContentSpecialistSuggestion SubmittedContentSpecialistSuggestion
+}
+
+Table ContentSpecialistSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ContentSpecialistSuggestion ContentSpecialistSuggestion [not null]
+  contentSpecialistSuggestionId String [not null]
+  suggestion String [not null]
+  remarks String
+  pageNumber Int [not null]
+  ContentSpecialistSuggestionItemActionTaken ContentSpecialistSuggestionItemActionTaken
+}
+
+Table SubmittedContentSpecialistSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ContentSpecialistSuggestion ContentSpecialistSuggestion [not null]
+  contentSpecialistSuggestionId String [unique, not null]
+  IMERCCITLReviewed IMERCCITLReviewed
+  Event Event [not null]
+}
+
+Table ContentEditorReview {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  q1_1 Rating
+  q1_2 Rating
+  q2_1 Rating
+  q2_2 Rating
+  q2_3 Rating
+  q2_4 Rating
+  q3_1 Rating
+  q4_1 Rating
+  q4_2 Rating
+  q4_3 Rating
+  q5_1 Rating
+  q5_2 Rating
+  q5_3 Rating
+  q5_4 Rating
+  q6_1 Rating
+  q6_2 Rating
+  q6_3 Rating
+  q6_4 Rating
+  q6_5 Rating
+  q7_1 Rating
+  q7_2 Rating
+  q7_3 Rating
+  q7_4 Rating
+  q7_5 Rating
+  q8_1 Rating
+  q8_2 Rating
+  q8_3 Rating
+  CITLDirector CITLDirector [not null]
+  cITLDirectorId String [not null]
+  QAMISDepartmentEndorsement QAMISDepartmentEndorsement [not null]
+  qAMISDepartmentEndorsementId String [unique, not null]
+  ContentEditorSuggestion ContentEditorSuggestion
+}
+
+Table ContentEditorSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ContentEditorReview ContentEditorReview [not null]
+  contentEditorReviewId String [unique, not null]
+  ContentEditorSuggestionItem ContentEditorSuggestionItem [not null]
+  SubmittedContentEditorSuggestion SubmittedContentEditorSuggestion
+}
+
+Table ContentEditorSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ContentEditorSuggestion ContentEditorSuggestion [not null]
+  contentEditorSuggestionId String [not null]
+  suggestion String [not null]
+  remarks String
+  pageNumber Int [not null]
+  ContentEditorSuggestionItemActionTaken ContentEditorSuggestionItemActionTaken
+}
+
+Table SubmittedContentEditorSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ContentEditorSuggestion ContentEditorSuggestion [not null]
+  contentEditorSuggestionId String [unique, not null]
+  IMERCCITLReviewed IMERCCITLReviewed
+  Event Event [not null]
+}
+
+Table IDDSpecialistReview {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  q1_1 Rating
+  q1_2 Rating
+  q2_1 Rating
+  q2_2 Rating
+  q2_3 Rating
+  q2_4 Rating
+  q3_1 Rating
+  q4_1 Rating
+  q4_2 Rating
+  q4_3 Rating
+  q5_1 Rating
+  q5_2 Rating
+  q5_3 Rating
+  q5_4 Rating
+  q6_1 Rating
+  q6_2 Rating
+  q6_3 Rating
+  q6_4 Rating
+  q6_5 Rating
+  q7_1 Rating
+  q7_2 Rating
+  q7_3 Rating
+  q7_4 Rating
+  q7_5 Rating
+  q8_1 Rating
+  q8_2 Rating
+  q8_3 Rating
+  IDDCoordinator IDDCoordinator [not null]
+  iDDCoordinatorId String [not null]
+  QAMISDepartmentEndorsement QAMISDepartmentEndorsement [not null]
+  qAMISDepartmentEndorsementId String [unique, not null]
+  IDDSpecialistSuggestion IDDSpecialistSuggestion
+}
+
+Table IDDSpecialistSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDSpecialistReview IDDSpecialistReview [not null]
+  iDDSpecialistReviewId String [unique, not null]
+  SubmittedIDDSpecialistSuggestion SubmittedIDDSpecialistSuggestion
+  IDDSpecialistSuggestionItem IDDSpecialistSuggestionItem [not null]
+}
+
+Table IDDSpecialistSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDSpecialistSuggestion IDDSpecialistSuggestion [not null]
+  iDDSpecialistSuggestionId String [not null]
+  suggestion String [not null]
+  remarks String
+  pageNumber Int [not null]
+  IDDSpecialistSuggestionItemActionTaken IDDSpecialistSuggestionItemActionTaken
+}
+
+Table SubmittedIDDSpecialistSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDSpecialistSuggestion IDDSpecialistSuggestion [not null]
+  iDDSpecialistSuggestionId String [unique, not null]
+  IMERCCITLReviewed IMERCCITLReviewed
+  Event Event [not null]
+}
+
+Table IMERCCITLReviewed {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  SubmittedIDDSpecialistSuggestion SubmittedIDDSpecialistSuggestion [not null]
+  submittedIDDSpecialistSuggestionId String [unique, not null]
+  SubmittedContentEditorSuggestion SubmittedContentEditorSuggestion [not null]
+  submittedContentEditorSuggestionId String [unique, not null]
+  SubmittedContentSpecialistSuggestion SubmittedContentSpecialistSuggestion [not null]
+  submittedContentSpecialistSuggestionId String [unique, not null]
+  IMERCCITLRevision IMERCCITLRevision [not null]
+  Event Event [not null]
+  IMFile IMFile
+  PlagiarismFile PlagiarismFile
+}
+
+Table IMERCCITLRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  PlagiarismFile PlagiarismFile [not null]
+  plagiarismFileId String [not null]
+  IMERCCITLReviewed IMERCCITLReviewed [not null]
+  iMERCCITLReviewedId String [not null]
+  IMFile IMFile [not null]
+  iMFileId String [unique, not null]
+  IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement
+  Event Event [not null]
+  ReturnedIMERCCITLRevision ReturnedIMERCCITLRevision
+}
+
+Table IMERCIDDCoordinatorEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDCoordinator IDDCoordinator [not null]
+  iDDCoordinatorId String [not null]
+  IMERCCITLRevision IMERCCITLRevision [not null]
+  iMERCCITLRevisionId String [unique, not null]
+  IMERCCITLDirectorEndorsement IMERCCITLDirectorEndorsement
+  Event Event [not null]
+}
+
+Table IMERCCITLDirectorEndorsement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  CITLDirector CITLDirector [not null]
+  cITLDirectorId String [not null]
+  IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement [not null]
+  iMERCIDDCoordinatorEndorsementId String [unique, not null]
+  Event Event [not null]
+  SerialNumber SerialNumber
+}
+
+Table ContentSpecialist {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Faculty Faculty [not null]
+  facultyId String [unique, not null]
+  ActiveContentSpecialist ActiveContentSpecialist
+  ContentSpecialistReview ContentSpecialistReview [not null]
+}
+
+Table ActiveContentSpecialist {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ContentSpecialist ContentSpecialist [not null]
+  contentSpecialistId String [unique, not null]
+}
+
+Table Event {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  message String
+  url String
+  User User [not null]
+  userId String [not null]
+  type EventType [not null]
+  IM IM
+  iMId String
+  DepartmentReview DepartmentReview
+  departmentReviewId String
+  SubmittedPeerSuggestion SubmittedPeerSuggestion
+  submittedPeerSuggestionId String
+  SubmittedCoordinatorSuggestion SubmittedCoordinatorSuggestion
+  submittedCoordinatorSuggestionId String
+  SubmittedChairpersonSuggestion SubmittedChairpersonSuggestion
+  submittedChairpersonSuggestionId String
+  DepartmentReviewed DepartmentReviewed
+  departmentReviewedId String
+  DepartmentRevision DepartmentRevision
+  departmentRevisionId String
+  CoordinatorEndorsement CoordinatorEndorsement
+  coordinatorEndorsementId String
+  DeanEndorsement DeanEndorsement
+  deanEndorsementId String
+  SubmittedIDDCoordinatorSuggestion SubmittedIDDCoordinatorSuggestion
+  submittedIDDCoordinatorSuggestionId String
+  CITLRevision CITLRevision
+  cITLRevisionId String
+  IDDCoordinatorEndorsement IDDCoordinatorEndorsement
+  iDDCoordinatorEndorsementId String
+  CITLDirectorEndorsement CITLDirectorEndorsement
+  cITLDirectorEndorsementId String
+  QAMISRevision QAMISRevision
+  qAMISRevisionId String
+  QAMISCoordinatorEndorsement QAMISCoordinatorEndorsement
+  qAMISCoordinatorEndorsementId String
+  QAMISChairpersonEndorsement QAMISChairpersonEndorsement
+  qAMISChairpersonEndorsementId String
+  QAMISDeanEndorsement QAMISDeanEndorsement
+  qAMISDeanEndorsementId String
+  QAMISDepartmentEndorsement QAMISDepartmentEndorsement
+  qAMISDepartmentEndorsementId String
+  SubmittedContentSpecialistSuggestion SubmittedContentSpecialistSuggestion
+  submittedContentSpecialistSuggestionId String
+  SubmittedContentEditorSuggestion SubmittedContentEditorSuggestion
+  submittedContentEditorSuggestionId String
+  SubmittedIDDSpecialistSuggestion SubmittedIDDSpecialistSuggestion
+  submittedIDDSpecialistSuggestionId String
+  IMERCCITLReviewed IMERCCITLReviewed
+  iMERCCITLReviewedId String
+  IMERCCITLRevision IMERCCITLRevision
+  iMERCCITLRevisionId String
+  IMERCIDDCoordinatorEndorsement IMERCIDDCoordinatorEndorsement
+  iMERCIDDCoordinatorEndorsementId String
+  IMERCCITLDirectorEndorsement IMERCCITLDirectorEndorsement
+  iMERCCITLDirectorEndorsementId String
+  SubmittedReturnedDepartmentRevision SubmittedReturnedDepartmentRevision
+  submittedReturnedDepartmentRevisionId String
+  SubmittedReturnedCITLRevision SubmittedReturnedCITLRevision
+  submittedReturnedCITLRevisionId String
+  SubmittedReturnedIMERCCITLRevision SubmittedReturnedIMERCCITLRevision
+  submittedReturnedIMERCCITLRevisionId String
+  NotificationRead NotificationRead [not null]
+}
+
+Table NotificationRead {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  User User [not null]
+  userId String [not null]
+  Event Event [not null]
+  eventId String [not null]
+}
+
+Table ProfilePictureFile {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  User User [not null]
+  userId String [not null]
+  filename String [not null]
+  size Int [not null]
+  mimetype String [not null]
+  originalFilename String [not null]
+}
+
+Table PlagiarismFile {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  filename String [not null]
+  size Int [not null]
+  mimetype String [not null]
+  originalFilename String [not null]
+  IMERCCITLRevision IMERCCITLRevision [not null]
+  IMERCCITLReviewed IMERCCITLReviewed [not null]
+  iMERCCITLReviewedId String [unique, not null]
+}
+
+Table Announcement {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  title String [not null]
+  description String
+  url String
+}
+
+Table ReturnedDepartmentRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  DepartmentRevision DepartmentRevision [not null]
+  departmentRevisionId String [unique, not null]
+  ReturnedDepartmentRevisionSuggestionItem ReturnedDepartmentRevisionSuggestionItem [not null]
+  SubmittedReturnedDepartmentRevision SubmittedReturnedDepartmentRevision
+  Coordinator Coordinator [not null]
+  coordinatorId String [not null]
+}
+
+Table ReturnedDepartmentRevisionSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ReturnedDepartmentRevision ReturnedDepartmentRevision [not null]
+  returnedDepartmentRevisionId String [not null]
+  suggestion String [not null]
+  remarks String
+  pageNumber Int [not null]
+  ReturnedDepartmentRevisionSuggestionItemActionTaken ReturnedDepartmentRevisionSuggestionItemActionTaken
+}
+
+Table SubmittedReturnedDepartmentRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ReturnedDepartmentRevision ReturnedDepartmentRevision [not null]
+  returnedDepartmentRevisionId String [unique, not null]
+  Event Event [not null]
+  IMFile IMFile
+}
+
+Table ReturnedCITLRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  CITLRevision CITLRevision [not null]
+  cITLRevisionId String [unique, not null]
+  ReturnedCITLRevisionSuggestionItem ReturnedCITLRevisionSuggestionItem [not null]
+  SubmittedReturnedCITLRevision SubmittedReturnedCITLRevision
+  IDDCoordinator IDDCoordinator [not null]
+  iDDCoordinatorId String [not null]
+}
+
+Table ReturnedCITLRevisionSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ReturnedCITLRevision ReturnedCITLRevision [not null]
+  returnedCITLRevisionId String [not null]
+  suggestion String [not null]
+  remarks String
+  pageNumber Int [not null]
+  ReturnedCITLRevisionSuggestionItemActionTaken ReturnedCITLRevisionSuggestionItemActionTaken
+}
+
+Table SubmittedReturnedCITLRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ReturnedCITLRevision ReturnedCITLRevision [not null]
+  returnedCITLRevisionId String [unique, not null]
+  Event Event [not null]
+  IMFile IMFile
+}
+
+Table ReturnedIMERCCITLRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IMERCCITLRevision IMERCCITLRevision [not null]
+  iMERCCITLRevisionId String [unique, not null]
+  IDDCoordinator IDDCoordinator [not null]
+  iDDCoordinatorId String [not null]
+  ReturnedIMERCCITLRevisionSuggestionItem ReturnedIMERCCITLRevisionSuggestionItem [not null]
+  SubmittedReturnedIMERCCITLRevision SubmittedReturnedIMERCCITLRevision
+}
+
+Table ReturnedIMERCCITLRevisionSuggestionItem {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ReturnedIMERCCITLRevision ReturnedIMERCCITLRevision [not null]
+  returnedIMERCCITLRevisionId String [not null]
+  suggestion String [not null]
+  remarks String
+  pageNumber Int [not null]
+  ReturnedIMERCCITLRevisionSuggestionItemActionTaken ReturnedIMERCCITLRevisionSuggestionItemActionTaken
+}
+
+Table SubmittedReturnedIMERCCITLRevision {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ReturnedIMERCCITLRevision ReturnedIMERCCITLRevision [not null]
+  returnedIMERCCITLRevisionId String [unique, not null]
+  Event Event [not null]
+  IMFile IMFile
+}
+
+Table PeerSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  PeerSuggestionItem PeerSuggestionItem [not null]
+  peerSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table ChairpersonSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ChairpersonSuggestionItem ChairpersonSuggestionItem [not null]
+  chairpersonSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table CoordinatorSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  CoordinatorSuggestionItem CoordinatorSuggestionItem [not null]
+  coordinatorSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table ReturnedDepartmentRevisionSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ReturnedDepartmentRevisionSuggestionItem ReturnedDepartmentRevisionSuggestionItem [not null]
+  returnedDepartmentRevisionSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table IDDCoordinatorSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDCoordinatorSuggestionItem IDDCoordinatorSuggestionItem [not null]
+  iDDCoordinatorSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table ReturnedCITLRevisionSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ReturnedCITLRevisionSuggestionItem ReturnedCITLRevisionSuggestionItem [not null]
+  returnedCITLRevisionSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table ContentSpecialistSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ContentSpecialistSuggestionItem ContentSpecialistSuggestionItem [not null]
+  contentSpecialistSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table ContentEditorSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ContentEditorSuggestionItem ContentEditorSuggestionItem [not null]
+  contentEditorSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table IDDSpecialistSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IDDSpecialistSuggestionItem IDDSpecialistSuggestionItem [not null]
+  iDDSpecialistSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table ReturnedIMERCCITLRevisionSuggestionItemActionTaken {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ReturnedIMERCCITLRevisionSuggestionItem ReturnedIMERCCITLRevisionSuggestionItem [not null]
+  returnedIMERCCITLRevisionSuggestionItemId String [unique, not null]
+  value String [not null]
+}
+
+Table SerialNumber {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  value String [unique, not null]
+  IMERCCITLDirectorEndorsement IMERCCITLDirectorEndorsement [not null]
+  iMERCCITLDirectorEndorsementId String [unique, not null]
+}
+
+Table CoAuthor {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  IM IM [not null]
+  iMId String [not null]
+  Faculty Faculty [not null]
+  facultyId String [not null]
+
+  indexes {
+    (facultyId, iMId) [unique]
+  }
+}
+
+Enum IMType {
+  MODULE
+  COURSE_FILE
+  WORKTEXT
+  TEXTBOOK
+}
+
+Enum Rating {
+  VM
+  M
+  JE
+  NM
+  NAA
+}
+
+Enum EventType {
+  IM_CREATED
+  DEPARTMENT_REVIEW_CREATED
+  SUBMITTED_PEER_SUGGESTION_CREATED
+  SUBMITTED_COORDINATOR_SUGGESTION_CREATED
+  SUBMITTED_CHAIRPERSON_SUGGESTION_CREATED
+  DEPARTMENT_REVIEWED_CREATED
+  DEPARTMENT_REVISION_CREATED
+  COORDINATOR_ENDORSEMENT_CREATED
+  DEAN_ENDORSEMENT_CREATED
+  SUBMITTED_IDD_COORDINATOR_SUGGESTION_CREATED
+  CITL_REVISION_CREATED
+  IDD_COORDINATOR_ENDORSEMENT_CREATED
+  CITL_DIRECTOR_ENDORSEMENT_CREATED
+  QAMIS_REVISION_CREATED
+  QAMIS_COORDINATOR_ENDORSEMENT_CREATED
+  QAMIS_CHAIRPERSON_ENDORSEMENT_CREATED
+  QAMIS_DEAN_ENDORSEMENT_CREATED
+  QAMIS_DEPARTMENT_ENDORSEMENT_CREATED
+  SUBMITTED_CONTENT_SPECIALIST_SUGGESTION_CREATED
+  SUBMITTED_IDD_SPECIALIST_SUGGESTION_CREATED
+  SUBMITTED_CONTENT_EDITOR_SUGGESTION_CREATED
+  IMERC_CITL_REVIEWED_CREATED
+  IMERC_CITL_REVISION_CREATED
+  IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED
+  IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED
+  SUBMITTED_RETURNED_DEPARTMENT_REVISION_CREATED
+  SUBMITTED_RETURNED_CITL_REVISION_CREATED
+  SUBMITTED_RETURNED_IMERC_CITL_REVISION_CREATED
+}
+
+Ref: Account.userId > User.id [delete: Cascade]
+
+Ref: Session.userId > User.id [delete: Cascade]
+
+Ref: Department.collegeId > College.id
+
+Ref: Faculty.userId > User.id
+
+Ref: Faculty.departmentId > Department.id
+
+Ref: ActiveFaculty.facultyId - Faculty.id
+
+Ref: IM.facultyId > Faculty.id
+
+Ref: IMFile.iMId > IM.id [delete: Cascade]
+
+Ref: IMFile.departmentReviewedId - DepartmentReviewed.id [delete: Cascade]
+
+Ref: IMFile.submittedReturnedDepartmentRevisionId - SubmittedReturnedDepartmentRevision.id [delete: Cascade]
+
+Ref: IMFile.submittedIDDCoordinatorSuggestionId - SubmittedIDDCoordinatorSuggestion.id [delete: Cascade]
+
+Ref: IMFile.submittedReturnedCITLRevisionId - SubmittedReturnedCITLRevision.id [delete: Cascade]
+
+Ref: IMFile.submittedQAMISSuggestionId - SubmittedQAMISSuggestion.id [delete: Cascade]
+
+Ref: IMFile.iMERCCITLReviewedId - IMERCCITLReviewed.id [delete: Cascade]
+
+Ref: IMFile.submittedReturnedIMERCCITLRevisionId - SubmittedReturnedIMERCCITLRevision.id [delete: Cascade]
+
+Ref: Chairperson.facultyId - Faculty.id
+
+Ref: Coordinator.facultyId - Faculty.id
+
+Ref: Dean.facultyId - Faculty.id
+
+Ref: ActiveCoordinator.coordinatorId - Coordinator.id
+
+Ref: ActiveChairperson.chairpersonId - Chairperson.id
+
+Ref: ActiveDean.deanId - Dean.id
+
+Ref: DepartmentReview.iMFileId - IMFile.id [delete: Cascade]
+
+Ref: PeerReview.departmentReviewId - DepartmentReview.id [delete: Cascade]
+
+Ref: PeerReview.facultyId > Faculty.id
+
+Ref: PeerSuggestion.peerReviewId - PeerReview.id [delete: Cascade]
+
+Ref: PeerSuggestionItem.peerSuggestionId > PeerSuggestion.id [delete: Cascade]
+
+Ref: SubmittedPeerSuggestion.peerSuggestionId - PeerSuggestion.id [delete: Cascade]
+
+Ref: ChairpersonReview.departmentReviewId - DepartmentReview.id [delete: Cascade]
+
+Ref: ChairpersonReview.chairpersonId > Chairperson.id
+
+Ref: ChairpersonSuggestion.chairpersonReviewId - ChairpersonReview.id [delete: Cascade]
+
+Ref: ChairpersonSuggestionItem.chairpersonSuggestionId > ChairpersonSuggestion.id [delete: Cascade]
+
+Ref: SubmittedChairpersonSuggestion.chairpersonSuggestionId - ChairpersonSuggestion.id [delete: Cascade]
+
+Ref: CoordinatorReview.departmentReviewId - DepartmentReview.id [delete: Cascade]
+
+Ref: CoordinatorReview.coordinatorId > Coordinator.id
+
+Ref: CoordinatorSuggestion.coordinatorReviewId - CoordinatorReview.id [delete: Cascade]
+
+Ref: CoordinatorSuggestionItem.coordinatorSuggestionId > CoordinatorSuggestion.id [delete: Cascade]
+
+Ref: SubmittedCoordinatorSuggestion.coordinatorSuggestionId - CoordinatorSuggestion.id [delete: Cascade]
+
+Ref: DepartmentReviewed.submittedCoordinatorSuggestionId - SubmittedCoordinatorSuggestion.id [delete: Cascade]
+
+Ref: DepartmentReviewed.submittedChairpersonSuggestionId - SubmittedChairpersonSuggestion.id [delete: Cascade]
+
+Ref: DepartmentReviewed.submittedPeerSuggestionId - SubmittedPeerSuggestion.id [delete: Cascade]
+
+Ref: DepartmentRevision.departmentReviewedId > DepartmentReviewed.id [delete: Cascade]
+
+Ref: DepartmentRevision.iMFileId - IMFile.id [delete: Cascade]
+
+Ref: CoordinatorEndorsement.departmentRevisionId - DepartmentRevision.id [delete: Cascade]
+
+Ref: CoordinatorEndorsement.coordinatorId > Coordinator.id
+
+Ref: DeanEndorsement.coordinatorEndorsementId - CoordinatorEndorsement.id [delete: Cascade]
+
+Ref: DeanEndorsement.deanId > Dean.id
+
+Ref: IDDCoordinator.userId - User.id
+
+Ref: ActiveIDDCoordinator.iDDCoordinatorId - IDDCoordinator.id
+
+Ref: CITLDirector.userId - User.id
+
+Ref: ActiveCITLDirector.cITLDirectorId - CITLDirector.id
+
+Ref: IDDCoordinatorSuggestion.deanEndorsementId - DeanEndorsement.id [delete: Cascade]
+
+Ref: IDDCoordinatorSuggestion.iDDCoordinatorId > IDDCoordinator.id
+
+Ref: IDDCoordinatorSuggestionItem.iDDCoordinatorSuggestionId > IDDCoordinatorSuggestion.id [delete: Cascade]
+
+Ref: SubmittedIDDCoordinatorSuggestion.iDDCoordinatorSuggestionId - IDDCoordinatorSuggestion.id [delete: Cascade]
+
+Ref: CITLRevision.submittedIDDCoordinatorSuggestionId > SubmittedIDDCoordinatorSuggestion.id [delete: Cascade]
+
+Ref: CITLRevision.iMFileId - IMFile.id [delete: Cascade]
+
+Ref: IDDCoordinatorEndorsement.iDDCoordinatorId > IDDCoordinator.id
+
+Ref: IDDCoordinatorEndorsement.cITLRevisionId - CITLRevision.id [delete: Cascade]
+
+Ref: CITLDirectorEndorsement.iDDCoordinatorEndorsementId - IDDCoordinatorEndorsement.id [delete: Cascade]
+
+Ref: CITLDirectorEndorsement.cITLDirectorId > CITLDirector.id
+
+Ref: QAMISSuggestion.cITLDirectorEndorsementId - CITLDirectorEndorsement.id [delete: Cascade]
+
+Ref: QAMISSuggestionItem.qAMISSuggestionId > QAMISSuggestion.id [delete: Cascade]
+
+Ref: SubmittedQAMISSuggestion.qAMISSuggestionId - QAMISSuggestion.id [delete: Cascade]
+
+Ref: QAMISFile.submittedQAMISSuggestionId - SubmittedQAMISSuggestion.id [delete: Cascade]
+
+Ref: QAMISRevision.qAMISFileId - QAMISFile.id [delete: Cascade]
+
+Ref: QAMISRevision.submittedQAMISSuggestionId - SubmittedQAMISSuggestion.id [delete: Cascade]
+
+Ref: QAMISRevision.iMFileId - IMFile.id [delete: Cascade]
+
+Ref: QAMISCoordinatorEndorsement.qAMISRevisionId - QAMISRevision.id [delete: Cascade]
+
+Ref: QAMISCoordinatorEndorsement.coordinatorId > Coordinator.id
+
+Ref: QAMISChairpersonEndorsement.qAMISRevisionId - QAMISRevision.id [delete: Cascade]
+
+Ref: QAMISChairpersonEndorsement.chairpersonId > Chairperson.id
+
+Ref: QAMISDeanEndorsement.qAMISRevisionId - QAMISRevision.id [delete: Cascade]
+
+Ref: QAMISDeanEndorsement.deanId > Dean.id
+
+Ref: QAMISDepartmentEndorsement.qAMISDeanEndorsementId - QAMISDeanEndorsement.id [delete: Cascade]
+
+Ref: QAMISDepartmentEndorsement.qAMISChairpersonEndorsementId - QAMISChairpersonEndorsement.id [delete: Cascade]
+
+Ref: QAMISDepartmentEndorsement.qAMISCoordinatorEndorsementId - QAMISCoordinatorEndorsement.id [delete: Cascade]
+
+Ref: ContentSpecialistReview.qAMISDepartmentEndorsementId - QAMISDepartmentEndorsement.id [delete: Cascade]
+
+Ref: ContentSpecialistReview.contentSpecialistId > ContentSpecialist.id
+
+Ref: ContentSpecialistSuggestion.contentSpecialistReviewId - ContentSpecialistReview.id [delete: Cascade]
+
+Ref: ContentSpecialistSuggestionItem.contentSpecialistSuggestionId > ContentSpecialistSuggestion.id [delete: Cascade]
+
+Ref: SubmittedContentSpecialistSuggestion.contentSpecialistSuggestionId - ContentSpecialistSuggestion.id [delete: Cascade]
+
+Ref: ContentEditorReview.cITLDirectorId > CITLDirector.id
+
+Ref: ContentEditorReview.qAMISDepartmentEndorsementId - QAMISDepartmentEndorsement.id [delete: Cascade]
+
+Ref: ContentEditorSuggestion.contentEditorReviewId - ContentEditorReview.id [delete: Cascade]
+
+Ref: ContentEditorSuggestionItem.contentEditorSuggestionId > ContentEditorSuggestion.id [delete: Cascade]
+
+Ref: SubmittedContentEditorSuggestion.contentEditorSuggestionId - ContentEditorSuggestion.id [delete: Cascade]
+
+Ref: IDDSpecialistReview.iDDCoordinatorId > IDDCoordinator.id
+
+Ref: IDDSpecialistReview.qAMISDepartmentEndorsementId - QAMISDepartmentEndorsement.id [delete: Cascade]
+
+Ref: IDDSpecialistSuggestion.iDDSpecialistReviewId - IDDSpecialistReview.id [delete: Cascade]
+
+Ref: IDDSpecialistSuggestionItem.iDDSpecialistSuggestionId > IDDSpecialistSuggestion.id [delete: Cascade]
+
+Ref: SubmittedIDDSpecialistSuggestion.iDDSpecialistSuggestionId - IDDSpecialistSuggestion.id [delete: Cascade]
+
+Ref: IMERCCITLReviewed.submittedIDDSpecialistSuggestionId - SubmittedIDDSpecialistSuggestion.id [delete: Cascade]
+
+Ref: IMERCCITLReviewed.submittedContentEditorSuggestionId - SubmittedContentEditorSuggestion.id [delete: Cascade]
+
+Ref: IMERCCITLReviewed.submittedContentSpecialistSuggestionId - SubmittedContentSpecialistSuggestion.id [delete: Cascade]
+
+Ref: IMERCCITLRevision.plagiarismFileId > PlagiarismFile.id [delete: Cascade]
+
+Ref: IMERCCITLRevision.iMERCCITLReviewedId > IMERCCITLReviewed.id [delete: Cascade]
+
+Ref: IMERCCITLRevision.iMFileId - IMFile.id [delete: Cascade]
+
+Ref: IMERCIDDCoordinatorEndorsement.iDDCoordinatorId > IDDCoordinator.id
+
+Ref: IMERCIDDCoordinatorEndorsement.iMERCCITLRevisionId - IMERCCITLRevision.id [delete: Cascade]
+
+Ref: IMERCCITLDirectorEndorsement.cITLDirectorId > CITLDirector.id
+
+Ref: IMERCCITLDirectorEndorsement.iMERCIDDCoordinatorEndorsementId - IMERCIDDCoordinatorEndorsement.id [delete: Cascade]
+
+Ref: ContentSpecialist.facultyId - Faculty.id
+
+Ref: ActiveContentSpecialist.contentSpecialistId - ContentSpecialist.id
+
+Ref: Event.userId > User.id [delete: Cascade]
+
+Ref: Event.iMId > IM.id [delete: Cascade]
+
+Ref: Event.departmentReviewId > DepartmentReview.id [delete: Cascade]
+
+Ref: Event.submittedPeerSuggestionId > SubmittedPeerSuggestion.id [delete: Cascade]
+
+Ref: Event.submittedCoordinatorSuggestionId > SubmittedCoordinatorSuggestion.id [delete: Cascade]
+
+Ref: Event.submittedChairpersonSuggestionId > SubmittedChairpersonSuggestion.id [delete: Cascade]
+
+Ref: Event.departmentReviewedId > DepartmentReviewed.id [delete: Cascade]
+
+Ref: Event.departmentRevisionId > DepartmentRevision.id [delete: Cascade]
+
+Ref: Event.coordinatorEndorsementId > CoordinatorEndorsement.id [delete: Cascade]
+
+Ref: Event.deanEndorsementId > DeanEndorsement.id [delete: Cascade]
+
+Ref: Event.submittedIDDCoordinatorSuggestionId > SubmittedIDDCoordinatorSuggestion.id [delete: Cascade]
+
+Ref: Event.cITLRevisionId > CITLRevision.id [delete: Cascade]
+
+Ref: Event.iDDCoordinatorEndorsementId > IDDCoordinatorEndorsement.id [delete: Cascade]
+
+Ref: Event.cITLDirectorEndorsementId > CITLDirectorEndorsement.id [delete: Cascade]
+
+Ref: Event.qAMISRevisionId > QAMISRevision.id [delete: Cascade]
+
+Ref: Event.qAMISCoordinatorEndorsementId > QAMISCoordinatorEndorsement.id [delete: Cascade]
+
+Ref: Event.qAMISChairpersonEndorsementId > QAMISChairpersonEndorsement.id [delete: Cascade]
+
+Ref: Event.qAMISDeanEndorsementId > QAMISDeanEndorsement.id [delete: Cascade]
+
+Ref: Event.qAMISDepartmentEndorsementId > QAMISDepartmentEndorsement.id [delete: Cascade]
+
+Ref: Event.submittedContentSpecialistSuggestionId > SubmittedContentSpecialistSuggestion.id [delete: Cascade]
+
+Ref: Event.submittedContentEditorSuggestionId > SubmittedContentEditorSuggestion.id [delete: Cascade]
+
+Ref: Event.submittedIDDSpecialistSuggestionId > SubmittedIDDSpecialistSuggestion.id [delete: Cascade]
+
+Ref: Event.iMERCCITLReviewedId > IMERCCITLReviewed.id [delete: Cascade]
+
+Ref: Event.iMERCCITLRevisionId > IMERCCITLRevision.id [delete: Cascade]
+
+Ref: Event.iMERCIDDCoordinatorEndorsementId > IMERCIDDCoordinatorEndorsement.id [delete: Cascade]
+
+Ref: Event.iMERCCITLDirectorEndorsementId > IMERCCITLDirectorEndorsement.id [delete: Cascade]
+
+Ref: Event.submittedReturnedDepartmentRevisionId > SubmittedReturnedDepartmentRevision.id [delete: Cascade]
+
+Ref: Event.submittedReturnedCITLRevisionId > SubmittedReturnedCITLRevision.id [delete: Cascade]
+
+Ref: Event.submittedReturnedIMERCCITLRevisionId > SubmittedReturnedIMERCCITLRevision.id [delete: Cascade]
+
+Ref: NotificationRead.userId > User.id
+
+Ref: NotificationRead.eventId > Event.id [delete: Cascade]
+
+Ref: ProfilePictureFile.userId > User.id
+
+Ref: PlagiarismFile.iMERCCITLReviewedId - IMERCCITLReviewed.id [delete: Cascade]
+
+Ref: ReturnedDepartmentRevision.departmentRevisionId - DepartmentRevision.id [delete: Cascade]
+
+Ref: ReturnedDepartmentRevision.coordinatorId > Coordinator.id
+
+Ref: ReturnedDepartmentRevisionSuggestionItem.returnedDepartmentRevisionId > ReturnedDepartmentRevision.id [delete: Cascade]
+
+Ref: SubmittedReturnedDepartmentRevision.returnedDepartmentRevisionId - ReturnedDepartmentRevision.id [delete: Cascade]
+
+Ref: ReturnedCITLRevision.cITLRevisionId - CITLRevision.id [delete: Cascade]
+
+Ref: ReturnedCITLRevision.iDDCoordinatorId > IDDCoordinator.id
+
+Ref: ReturnedCITLRevisionSuggestionItem.returnedCITLRevisionId > ReturnedCITLRevision.id [delete: Cascade]
+
+Ref: SubmittedReturnedCITLRevision.returnedCITLRevisionId - ReturnedCITLRevision.id [delete: Cascade]
+
+Ref: ReturnedIMERCCITLRevision.iMERCCITLRevisionId - IMERCCITLRevision.id [delete: Cascade]
+
+Ref: ReturnedIMERCCITLRevision.iDDCoordinatorId > IDDCoordinator.id
+
+Ref: ReturnedIMERCCITLRevisionSuggestionItem.returnedIMERCCITLRevisionId > ReturnedIMERCCITLRevision.id [delete: Cascade]
+
+Ref: SubmittedReturnedIMERCCITLRevision.returnedIMERCCITLRevisionId - ReturnedIMERCCITLRevision.id [delete: Cascade]
+
+Ref: PeerSuggestionItemActionTaken.peerSuggestionItemId - PeerSuggestionItem.id [delete: Cascade]
+
+Ref: ChairpersonSuggestionItemActionTaken.chairpersonSuggestionItemId - ChairpersonSuggestionItem.id [delete: Cascade]
+
+Ref: CoordinatorSuggestionItemActionTaken.coordinatorSuggestionItemId - CoordinatorSuggestionItem.id [delete: Cascade]
+
+Ref: ReturnedDepartmentRevisionSuggestionItemActionTaken.returnedDepartmentRevisionSuggestionItemId - ReturnedDepartmentRevisionSuggestionItem.id [delete: Cascade]
+
+Ref: IDDCoordinatorSuggestionItemActionTaken.iDDCoordinatorSuggestionItemId - IDDCoordinatorSuggestionItem.id [delete: Cascade]
+
+Ref: ReturnedCITLRevisionSuggestionItemActionTaken.returnedCITLRevisionSuggestionItemId - ReturnedCITLRevisionSuggestionItem.id [delete: Cascade]
+
+Ref: ContentSpecialistSuggestionItemActionTaken.contentSpecialistSuggestionItemId - ContentSpecialistSuggestionItem.id [delete: Cascade]
+
+Ref: ContentEditorSuggestionItemActionTaken.contentEditorSuggestionItemId - ContentEditorSuggestionItem.id [delete: Cascade]
+
+Ref: IDDSpecialistSuggestionItemActionTaken.iDDSpecialistSuggestionItemId - IDDSpecialistSuggestionItem.id [delete: Cascade]
+
+Ref: ReturnedIMERCCITLRevisionSuggestionItemActionTaken.returnedIMERCCITLRevisionSuggestionItemId - ReturnedIMERCCITLRevisionSuggestionItem.id [delete: Cascade]
+
+Ref: SerialNumber.iMERCCITLDirectorEndorsementId - IMERCCITLDirectorEndorsement.id [delete: Cascade]
+
+Ref: CoAuthor.iMId > IM.id [delete: Cascade]
+
+Ref: CoAuthor.facultyId > Faculty.id

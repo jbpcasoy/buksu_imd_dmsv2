@@ -1,7 +1,6 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
+import { readIMF012 } from "@/services/iMService";
 import logger from "@/services/logger";
-import { F012Props } from "@/types/forms";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -19,184 +18,12 @@ export default async function handler(
   }
 
   const getHandler = async () => {
-    const iMTypeMap = {
-      MODULE: "Module",
-      COURSE_FILE: "Course File",
-      WORKTEXT: "Worktext",
-      TEXTBOOK: "Textbook",
-    };
-
-    const { id } = req.query;
+    const id = req.query.id as string;
 
     try {
-      const iM = await prisma.iM.findUniqueOrThrow({
-        where: {
-          id: id as string,
-        },
-      });
+      const response = await readIMF012({ id });
 
-      const iMAuthor = await prisma.user.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              IM: {
-                some: {
-                  id: {
-                    equals: id as string,
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      const coAuthors = await prisma.coAuthor.findMany({
-        where: {
-          IM: {
-            id: {
-              equals: id as string,
-            },
-          },
-        },
-      });
-      const authorNames: string[] = [];
-      authorNames.push(iMAuthor?.name ?? "");
-      for (let coAuthor of coAuthors) {
-        const coAuthorUser = await prisma.user.findFirstOrThrow({
-          where: {
-            Faculty: {
-              some: {
-                id: {
-                  equals: coAuthor.facultyId,
-                },
-              },
-            },
-          },
-        });
-
-        if (coAuthorUser?.name) {
-          authorNames.push(coAuthorUser?.name);
-        }
-      }
-
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              IM: {
-                some: {
-                  id: {
-                    equals: id as string,
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      const college = await prisma.college.findFirstOrThrow({
-        where: {
-          Department: {
-            some: {
-              id: {
-                equals: department.id,
-              },
-            },
-          },
-        },
-      });
-
-      const coordinatorUser = await prisma.user.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              Coordinator: {
-                QAMISCoordinatorEndorsement: {
-                  some: {
-                    QAMISRevision: {
-                      IMFile: {
-                        IM: {
-                          id: {
-                            equals: id as string,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      const chairpersonUser = await prisma.user.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              Chairperson: {
-                QAMISChairpersonEndorsement: {
-                  some: {
-                    QAMISRevision: {
-                      IMFile: {
-                        IM: {
-                          id: {
-                            equals: id as string,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      const deanUser = await prisma.user.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              Dean: {
-                QAMISDeanEndorsement: {
-                  some: {
-                    QAMISRevision: {
-                      IMFile: {
-                        IM: {
-                          id: {
-                            equals: id as string,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      const response: F012Props = {
-        iMTitle: iM?.title,
-        authorNames: authorNames.join(", "),
-        iMType: iMTypeMap[iM.type] as
-          | "Module"
-          | "Course File"
-          | "Worktext"
-          | "Textbook",
-        departmentName: department.name,
-        collegeName: college.name,
-        coordinatorName: coordinatorUser.name ?? "",
-        applicantName: iMAuthor.name ?? "",
-        chairpersonName: chairpersonUser.name ?? "",
-        deanName: deanUser.name ?? "",
-      };
-
-      return res.json(response);
+      return res.status(200).json(response);
     } catch (error: any) {
       logger.error(error);
       return res

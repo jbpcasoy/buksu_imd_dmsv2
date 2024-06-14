@@ -1,5 +1,5 @@
 import getServerUser from "@/services/getServerUser";
-import iMStatus from "@/services/iMStatus";
+import { readIMStatus } from "@/services/iMService";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -19,9 +19,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const { id } = req.query;
+      const id = req.query.id as string;
 
-      const status = await iMStatus(id as string);
+      const status = await readIMStatus({ id });
       return res.send(status);
     } catch (error: any) {
       logger.error(error);

@@ -77,9 +77,33 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                     CoordinatorSuggestion: {
                       SubmittedCoordinatorSuggestion: {
                         DepartmentReviewed: {
-                          DepartmentRevision: {
-                            none: {},
-                          },
+                          OR: [
+                            {
+                              DepartmentRevision: {
+                                none: {}
+                              }
+                            },
+                            {
+                              DepartmentRevision: {
+                                every: {
+                                  AND: [
+                                    {
+                                      CoordinatorEndorsement: {
+                                        is: null,
+                                      }
+                                    },
+                                    {
+                                      ReturnedDepartmentRevision: {
+                                        SubmittedReturnedDepartmentRevision: {
+                                          isNot: null,
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                            }
+                          ],
                         },
                       },
                     },
@@ -117,6 +141,26 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                 },
                               },
                             },
+                            {
+                              DepartmentRevision: {
+                                some: {
+                                  OR: [
+                                    {
+                                      ReturnedDepartmentRevision: {
+                                        is: null
+                                      }
+                                    },
+                                    {
+                                      ReturnedDepartmentRevision: {
+                                        SubmittedReturnedDepartmentRevision: {
+                                          is: null,
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
                           ],
                         },
                       },
@@ -221,9 +265,33 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                 DeanEndorsement: {
                                   IDDCoordinatorSuggestion: {
                                     SubmittedIDDCoordinatorSuggestion: {
-                                      CITLRevision: {
-                                        none: {},
-                                      },
+                                      OR: [
+                                        {
+                                          CITLRevision: {
+                                            none: {},
+                                          },
+                                        },
+                                        {
+                                          CITLRevision: {
+                                            every: {
+                                              AND: [
+                                                {
+                                                  IDDCoordinatorEndorsement: {
+                                                    is: null,
+                                                  }
+                                                },
+                                                {
+                                                  ReturnedCITLRevision: {
+                                                    SubmittedReturnedCITLRevision: {
+                                                      isNot: null,
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      ]
                                     },
                                   },
                                 },
@@ -273,6 +341,26 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                             },
                                           },
                                         },
+                                        {
+                                          CITLRevision: {
+                                            some: {
+                                              OR: [
+                                                {
+                                                  ReturnedCITLRevision: {
+                                                    is: null,
+                                                  }
+                                                },
+                                                {
+                                                  ReturnedCITLRevision: {
+                                                    SubmittedReturnedCITLRevision: {
+                                                      is: null,
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
                                       ],
                                     },
                                   },
@@ -423,9 +511,9 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                                       {
                                                         QAMISDeanEndorsement: {
                                                           QAMISDepartmentEndorsement:
-                                                            {
-                                                              is: null,
-                                                            },
+                                                          {
+                                                            is: null,
+                                                          },
                                                         },
                                                       },
                                                     ],
@@ -479,52 +567,52 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                                   QAMISRevision: {
                                                     QAMISDeanEndorsement: {
                                                       QAMISDepartmentEndorsement:
-                                                        {
-                                                          OR: [
+                                                      {
+                                                        OR: [
+                                                          {
+                                                            ContentEditorReview:
                                                             {
-                                                              ContentEditorReview:
+                                                              is: null,
+                                                            },
+                                                          },
+                                                          {
+                                                            ContentEditorReview:
+                                                            {
+                                                              ContentEditorSuggestion:
+                                                              {
+                                                                is: null,
+                                                              },
+                                                            },
+                                                          },
+                                                          {
+                                                            ContentEditorReview:
+                                                            {
+                                                              ContentEditorSuggestion:
+                                                              {
+                                                                SubmittedContentEditorSuggestion:
                                                                 {
                                                                   is: null,
                                                                 },
+                                                              },
                                                             },
+                                                          },
+                                                          {
+                                                            ContentEditorReview:
                                                             {
-                                                              ContentEditorReview:
+                                                              ContentEditorSuggestion:
+                                                              {
+                                                                SubmittedContentEditorSuggestion:
                                                                 {
-                                                                  ContentEditorSuggestion:
-                                                                    {
-                                                                      is: null,
-                                                                    },
+                                                                  IMERCCITLReviewed:
+                                                                  {
+                                                                    is: null,
+                                                                  },
                                                                 },
+                                                              },
                                                             },
-                                                            {
-                                                              ContentEditorReview:
-                                                                {
-                                                                  ContentEditorSuggestion:
-                                                                    {
-                                                                      SubmittedContentEditorSuggestion:
-                                                                        {
-                                                                          is: null,
-                                                                        },
-                                                                    },
-                                                                },
-                                                            },
-                                                            {
-                                                              ContentEditorReview:
-                                                                {
-                                                                  ContentEditorSuggestion:
-                                                                    {
-                                                                      SubmittedContentEditorSuggestion:
-                                                                        {
-                                                                          IMERCCITLReviewed:
-                                                                            {
-                                                                              is: null,
-                                                                            },
-                                                                        },
-                                                                    },
-                                                                },
-                                                            },
-                                                          ],
-                                                        },
+                                                          },
+                                                        ],
+                                                      },
                                                     },
                                                   },
                                                 },
@@ -576,23 +664,46 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                                   QAMISRevision: {
                                                     QAMISDeanEndorsement: {
                                                       QAMISDepartmentEndorsement:
-                                                        {
-                                                          ContentEditorReview: {
-                                                            ContentEditorSuggestion:
+                                                      {
+                                                        ContentEditorReview: {
+                                                          ContentEditorSuggestion:
+                                                          {
+                                                            SubmittedContentEditorSuggestion:
+                                                            {
+                                                              IMERCCITLReviewed:
                                                               {
-                                                                SubmittedContentEditorSuggestion:
+                                                                OR: [
                                                                   {
-                                                                    IMERCCITLReviewed:
-                                                                      {
-                                                                        IMERCCITLRevision:
-                                                                          {
-                                                                            none: {},
-                                                                          },
-                                                                      },
+                                                                    IMERCCITLRevision:
+                                                                    {
+                                                                      none: {},
+                                                                    },
                                                                   },
+                                                                  {
+                                                                    IMERCCITLRevision: {
+                                                                      every: {
+                                                                        AND: [
+                                                                          {
+                                                                            IMERCIDDCoordinatorEndorsement: {
+                                                                              is: null
+                                                                            }
+                                                                          },
+                                                                          {
+                                                                            ReturnedIMERCCITLRevision: {
+                                                                              SubmittedReturnedIMERCCITLRevision: {
+                                                                                isNot: null
+                                                                              }
+                                                                            }
+                                                                          }]
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                ]
                                                               },
+                                                            },
                                                           },
                                                         },
+                                                      },
                                                     },
                                                   },
                                                 },
@@ -644,38 +755,61 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                                   QAMISRevision: {
                                                     QAMISDeanEndorsement: {
                                                       QAMISDepartmentEndorsement:
-                                                        {
-                                                          ContentEditorReview: {
-                                                            ContentEditorSuggestion:
+                                                      {
+                                                        ContentEditorReview: {
+                                                          ContentEditorSuggestion:
+                                                          {
+                                                            SubmittedContentEditorSuggestion:
+                                                            {
+                                                              IMERCCITLReviewed:
                                                               {
-                                                                SubmittedContentEditorSuggestion:
+                                                                AND: [
                                                                   {
-                                                                    IMERCCITLReviewed:
-                                                                      {
-                                                                        AND: [
-                                                                          {
-                                                                            IMERCCITLRevision:
-                                                                              {
-                                                                                some: {},
-                                                                              },
-                                                                          },
-                                                                          {
-                                                                            IMERCCITLRevision:
-                                                                              {
-                                                                                none: {
-                                                                                  IMERCIDDCoordinatorEndorsement:
-                                                                                    {
-                                                                                      is: null,
-                                                                                    },
-                                                                                },
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                      },
+                                                                    IMERCCITLRevision:
+                                                                    {
+                                                                      some: {},
+                                                                    },
                                                                   },
+                                                                  {
+                                                                    IMERCCITLRevision:
+                                                                    {
+                                                                      none: {
+                                                                        IMERCIDDCoordinatorEndorsement:
+                                                                        {
+                                                                          isNot: null,
+                                                                        },
+                                                                      },
+                                                                    },
+                                                                  },
+
+                                                                  {
+                                                                    IMERCCITLRevision:
+                                                                    {
+                                                                      some: {
+                                                                        OR: [
+                                                                          {
+                                                                            ReturnedIMERCCITLRevision:
+                                                                            {
+                                                                              is: null,
+                                                                            },
+                                                                          },
+                                                                          {
+                                                                            ReturnedIMERCCITLRevision: {
+                                                                              SubmittedReturnedIMERCCITLRevision: {
+                                                                                is: null,
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                        ]
+                                                                      },
+                                                                    },
+                                                                  },
+                                                                ],
                                                               },
+                                                            },
                                                           },
                                                         },
+                                                      },
                                                     },
                                                   },
                                                 },
@@ -727,31 +861,31 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                                   QAMISRevision: {
                                                     QAMISDeanEndorsement: {
                                                       QAMISDepartmentEndorsement:
-                                                        {
-                                                          ContentEditorReview: {
-                                                            ContentEditorSuggestion:
+                                                      {
+                                                        ContentEditorReview: {
+                                                          ContentEditorSuggestion:
+                                                          {
+                                                            SubmittedContentEditorSuggestion:
+                                                            {
+                                                              IMERCCITLReviewed:
                                                               {
-                                                                SubmittedContentEditorSuggestion:
-                                                                  {
-                                                                    IMERCCITLReviewed:
+                                                                IMERCCITLRevision:
+                                                                {
+                                                                  some: {
+                                                                    IMERCIDDCoordinatorEndorsement:
+                                                                    {
+                                                                      IMERCCITLDirectorEndorsement:
                                                                       {
-                                                                        IMERCCITLRevision:
-                                                                          {
-                                                                            some: {
-                                                                              IMERCIDDCoordinatorEndorsement:
-                                                                                {
-                                                                                  IMERCCITLDirectorEndorsement:
-                                                                                    {
-                                                                                      is: null,
-                                                                                    },
-                                                                                },
-                                                                            },
-                                                                          },
+                                                                        is: null,
                                                                       },
+                                                                    },
                                                                   },
+                                                                },
                                                               },
+                                                            },
                                                           },
                                                         },
+                                                      },
                                                     },
                                                   },
                                                 },
@@ -803,32 +937,32 @@ export default function iMStatusQueryBuilder(filterStatus?: string) {
                                                   QAMISRevision: {
                                                     QAMISDeanEndorsement: {
                                                       QAMISDepartmentEndorsement:
-                                                        {
-                                                          ContentEditorReview: {
-                                                            ContentEditorSuggestion:
+                                                      {
+                                                        ContentEditorReview: {
+                                                          ContentEditorSuggestion:
+                                                          {
+                                                            SubmittedContentEditorSuggestion:
+                                                            {
+                                                              IMERCCITLReviewed:
                                                               {
-                                                                SubmittedContentEditorSuggestion:
-                                                                  {
-                                                                    IMERCCITLReviewed:
+                                                                IMERCCITLRevision:
+                                                                {
+                                                                  some: {
+                                                                    IMERCIDDCoordinatorEndorsement:
+                                                                    {
+                                                                      IMERCCITLDirectorEndorsement:
                                                                       {
-                                                                        IMERCCITLRevision:
-                                                                          {
-                                                                            some: {
-                                                                              IMERCIDDCoordinatorEndorsement:
-                                                                                {
-                                                                                  IMERCCITLDirectorEndorsement:
-                                                                                    {
-                                                                                      isNot:
-                                                                                        null,
-                                                                                    },
-                                                                                },
-                                                                            },
-                                                                          },
+                                                                        isNot:
+                                                                          null,
                                                                       },
+                                                                    },
                                                                   },
+                                                                },
                                                               },
+                                                            },
                                                           },
                                                         },
+                                                      },
                                                     },
                                                   },
                                                 },

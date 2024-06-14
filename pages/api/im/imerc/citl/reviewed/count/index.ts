@@ -1,5 +1,5 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
+import { countIMERCCITLReviewedIMs } from "@/services/iMService";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -19,7 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const count = await iMERCReviewedByCITLCount(user);
+      const count = await countIMERCCITLReviewedIMs({ user });
 
       return res.json({ count });
     } catch (error: any) {
@@ -36,76 +36,4 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
-}
-
-export async function iMERCReviewedByCITLCount(user: User) {
-  const count = await prisma.iM.count({
-    where: {
-      AND: [
-        {
-          OR: [
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        ContentEditorReview: {
-                          ContentEditorSuggestion: {
-                            SubmittedContentEditorSuggestion: {
-                              ContentEditorSuggestion: {
-                                ContentEditorReview: {
-                                  CITLDirector: {
-                                    User: {
-                                      id: {
-                                        equals: user.id,
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  QAMISRevision: {
-                    QAMISChairpersonEndorsement: {
-                      QAMISDepartmentEndorsement: {
-                        IDDSpecialistReview: {
-                          IDDSpecialistSuggestion: {
-                            SubmittedIDDSpecialistSuggestion: {
-                              IDDSpecialistSuggestion: {
-                                IDDSpecialistReview: {
-                                  IDDCoordinator: {
-                                    User: {
-                                      id: {
-                                        equals: user.id,
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      ],
-    },
-  });
-  return count;
 }

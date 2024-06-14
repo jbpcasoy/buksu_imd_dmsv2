@@ -1,4 +1,5 @@
 import prisma from "@/prisma/client";
+import { readDepartment, updateDepartment } from "@/services/departmentService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
@@ -20,25 +21,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      const id = req.query.id as string;
 
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
-
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          AND: [
-            {
-              id: {
-                equals: id,
-              },
-            },
-          ],
-        },
-      });
+      const department = await readDepartment({ id });
 
       return res.json(department);
     } catch (error: any) {
@@ -51,19 +36,13 @@ export default async function handler(
 
   const deleteHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
-
-      await validator.validate(req.query);
+      const id = req.query.id as string;
 
       if (!user.isAdmin) {
         return res.status(403).json({
           error: { message: "You are not allowed to delete this department" },
         });
       }
-
-      const { id } = validator.cast(req.query);
 
       const department = await prisma.department.delete({
         where: {
@@ -85,48 +64,10 @@ export default async function handler(
       const validator = Yup.object({
         name: Yup.string().required(),
       });
-
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: { message: "You are not allowed to update this department" },
-        });
-      }
-
-      const { id } = req.query;
+      const id = req.query.id as string;
       const { name } = validator.cast(req.body);
-
-      const existingDepartment = await prisma.department.findFirst({
-        where: {
-          AND: [
-            {
-              name: {
-                equals: name,
-              },
-            },
-            {
-              id: {
-                not: id as string,
-              },
-            },
-          ],
-        },
-      });
-      if (existingDepartment) {
-        return res
-          .status(409)
-          .json({ error: { message: "Department name is already used" } });
-      }
-
-      const department = await prisma.department.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          name,
-        },
-      });
+      const department = await updateDepartment({ id, name, user });
 
       return res.json(department);
     } catch (error: any) {

@@ -1,4 +1,4 @@
-import { countIMs } from "@/services/im_count";
+import { countIMs } from "@/services/iMService";
 import logger from "@/services/logger";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
@@ -39,7 +39,6 @@ export default async function handler(
         "filter[end]": Yup.date().optional(),
       });
       await validator.validate(req.query);
-
       const {
         "filter[collegeId]": filterCollegeId,
         "filter[departmentId]": filterDepartmentId,

@@ -1,4 +1,7 @@
-import prisma from "@/prisma/client";
+import {
+  createActiveContentSpecialist,
+  readActiveContentSpecialists,
+} from "@/services/activeContentSpecialistService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
@@ -24,99 +27,12 @@ export default async function handler(
         activeFacultyId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to set an active content specialist",
-          },
-        });
-      }
-
       const { activeFacultyId } = validator.cast(req.body);
-      const contentSpecialist = await prisma.contentSpecialist.findFirstOrThrow(
-        {
-          where: {
-            Faculty: {
-              ActiveFaculty: {
-                id: {
-                  equals: activeFacultyId,
-                },
-              },
-            },
-          },
-        }
-      );
 
-      const userActiveContentSpecialistCount =
-        await prisma.activeContentSpecialist.count({
-          where: {
-            ContentSpecialist: {
-              Faculty: {
-                id: {
-                  equals: contentSpecialist.facultyId,
-                },
-              },
-            },
-          },
-        });
-
-      if (userActiveContentSpecialistCount > 0) {
-        return res.status(409).json({
-          error: {
-            message:
-              "Faculty can only be an active content specialist on one department",
-          },
-        });
-      }
-
-      const department = await prisma.department.findFirstOrThrow({
-        where: {
-          Faculty: {
-            some: {
-              ContentSpecialist: {
-                id: {
-                  equals: contentSpecialist.id,
-                },
-              },
-            },
-          },
-        },
+      const activeContentSpecialist = await createActiveContentSpecialist({
+        activeFacultyId,
+        user,
       });
-
-      const departmentActiveContentSpecialistCount =
-        await prisma.activeContentSpecialist.count({
-          where: {
-            ContentSpecialist: {
-              Faculty: {
-                Department: {
-                  id: {
-                    equals: department.id,
-                  },
-                },
-              },
-            },
-          },
-        });
-
-      if (departmentActiveContentSpecialistCount > 0) {
-        return res.status(409).json({
-          error: {
-            message: "Department can only have one active content specialist",
-          },
-        });
-      }
-
-      const activeContentSpecialist =
-        await prisma.activeContentSpecialist.create({
-          data: {
-            ContentSpecialist: {
-              connect: {
-                id: contentSpecialist.id,
-              },
-            },
-          },
-        });
 
       return res.json(activeContentSpecialist);
     } catch (error: any) {
@@ -134,56 +50,15 @@ export default async function handler(
         skip: Yup.number().required(),
         "filter[name]": Yup.string().optional(),
       });
-
       await validator.validate(req.query);
-
       const {
         skip,
         take,
         "filter[name]": filterName,
       } = validator.cast(req.query);
-      const activeContentSpecialists =
-        await prisma.activeContentSpecialist.findMany({
-          skip,
-          take,
-          where: {
-            AND: [
-              {
-                ContentSpecialist: {
-                  Faculty: {
-                    User: {
-                      name: {
-                        contains: filterName,
-                        mode: "insensitive",
-                      },
-                    },
-                  },
-                },
-              },
-            ],
-          },
-          orderBy: {
-            updatedAt: "desc",
-          },
-        });
-      const count = await prisma.activeContentSpecialist.count({
-        where: {
-          AND: [
-            {
-              ContentSpecialist: {
-                Faculty: {
-                  User: {
-                    name: {
-                      contains: filterName,
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+
+      const { activeContentSpecialists, count } =
+        await readActiveContentSpecialists({ skip, take, filterName });
 
       return res.json({ activeContentSpecialists, count });
     } catch (error: any) {

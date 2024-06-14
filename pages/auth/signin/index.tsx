@@ -74,7 +74,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // Note: Make sure not to redirect to the same page
   // To avoid an infinite loop!
   if (session) {
-    return { redirect: { destination: "/" } };
+    return {
+      redirect: {
+        destination: session.user?.isAdmin ? "/admin" : "/non_active", //it wil redirect the user if they're an active faculty
+      },
+    };
   }
 
   const providers = await getProviders();

@@ -1,10 +1,12 @@
-import prisma from "@/prisma/client";
+import {
+  deleteActiveCoordinator,
+  readActiveCoordinator,
+} from "@/services/activeCoordinatorService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,27 +22,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      const id = req.query.id as string;
 
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
-
-      const activeCoordinator = await prisma.activeCoordinator.findFirstOrThrow(
-        {
-          where: {
-            AND: [
-              {
-                id: {
-                  equals: id,
-                },
-              },
-            ],
-          },
-        }
-      );
+      const activeCoordinator = await readActiveCoordinator({ id });
 
       return res.json(activeCoordinator);
     } catch (error: any) {
@@ -53,27 +37,9 @@ export default async function handler(
 
   const deleteHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      const id = req.query.id as string;
 
-      await validator.validate(req.query);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: {
-            message: "You are not allowed to remove an active coordinator",
-          },
-        });
-      }
-
-      const { id } = validator.cast(req.query);
-
-      const activeCoordinator = await prisma.activeCoordinator.delete({
-        where: {
-          id,
-        },
-      });
+      const activeCoordinator = await deleteActiveCoordinator({ user, id });
 
       return res.json(activeCoordinator);
     } catch (error: any) {

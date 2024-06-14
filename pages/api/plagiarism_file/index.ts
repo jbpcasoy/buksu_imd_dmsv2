@@ -4,6 +4,8 @@ import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import { Fields, Formidable } from "formidable";
 import { NextApiRequest, NextApiResponse } from "next";
+import path from "path";
+import fs from "fs";
 import * as Yup from "yup";
 
 //set bodyParser
@@ -54,57 +56,21 @@ export default async function handler(
           where: {
             IMFile: {
               some: {
-                DepartmentReview: {
-                  CoordinatorReview: {
-                    CoordinatorSuggestion: {
-                      SubmittedCoordinatorSuggestion: {
-                        DepartmentReviewed: {
-                          DepartmentRevision: {
-                            some: {
-                              CoordinatorEndorsement: {
-                                DeanEndorsement: {
-                                  IDDCoordinatorSuggestion: {
-                                    SubmittedIDDCoordinatorSuggestion: {
-                                      CITLRevision: {
-                                        some: {
-                                          IDDCoordinatorEndorsement: {
-                                            CITLDirectorEndorsement: {
-                                              QAMISSuggestion: {
-                                                SubmittedQAMISSuggestion: {
-                                                  IMFile: {
-                                                    QAMISRevision: {
-                                                      QAMISDeanEndorsement: {
-                                                        QAMISDepartmentEndorsement:
-                                                          {
-                                                            ContentEditorReview:
-                                                              {
-                                                                ContentEditorSuggestion:
-                                                                  {
-                                                                    SubmittedContentEditorSuggestion:
-                                                                      {
-                                                                        IMERCCITLReviewed:
-                                                                          {
-                                                                            id: {
-                                                                              equals:
-                                                                                iMERCCITLReviewedId,
-                                                                            },
-                                                                          },
-                                                                      },
-                                                                  },
-                                                              },
-                                                          },
-                                                      },
-                                                    },
-                                                  },
-                                                },
-                                              },
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
+                QAMISRevision: {
+                  QAMISDeanEndorsement: {
+                    QAMISDepartmentEndorsement:
+                    {
+                      ContentEditorReview:
+                      {
+                        ContentEditorSuggestion:
+                        {
+                          SubmittedContentEditorSuggestion:
+                          {
+                            IMERCCITLReviewed:
+                            {
+                              id: {
+                                equals:
+                                  iMERCCITLReviewedId,
                               },
                             },
                           },
@@ -114,7 +80,7 @@ export default async function handler(
                   },
                 },
               },
-            },
+            }
           },
         });
 
@@ -150,6 +116,12 @@ export default async function handler(
       // Save file to server
       const file = data.files.file[0];
       const filename = `${file.newFilename}.pdf`;
+      const filePath = file.filepath;
+      const destination = path.join(process.cwd(), `/files/plagiarism/${filename}`);
+      fs.copyFile(filePath, destination, (err) => {
+        if (err) throw err;
+      });
+      
       // const filePath = file.filepath;
       // const destination = path.join(
       //   process.cwd(),

@@ -1,5 +1,5 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
+import { countIMERCCITLToReviewIMs } from "@/services/iMService";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -19,7 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const count = await iMERCCITLToReviewCount(user);
+      const count = await countIMERCCITLToReviewIMs({ user });
 
       return res.json({ count });
     } catch (error: any) {
@@ -36,172 +36,4 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
-}
-
-export async function iMERCCITLToReviewCount(user: User) {
-  const count = await prisma.iM.count({
-    where: {
-      AND: [
-        {
-          IMFile: {
-            some: {
-              QAMISRevision: {
-                QAMISChairpersonEndorsement: {
-                  QAMISDepartmentEndorsement: {
-                    isNot: null,
-                  },
-                },
-                QAMISCoordinatorEndorsement: {
-                  QAMISDepartmentEndorsement: {
-                    isNot: null,
-                  },
-                },
-                QAMISDeanEndorsement: {
-                  QAMISDepartmentEndorsement: {
-                    isNot: null,
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
-          OR: [
-            {
-              NOT: {
-                IMFile: {
-                  some: {
-                    QAMISRevision: {
-                      QAMISChairpersonEndorsement: {
-                        QAMISDepartmentEndorsement: {
-                          ContentEditorReview: {
-                            ContentEditorSuggestion: {
-                              SubmittedContentEditorSuggestion: {
-                                isNot: null,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              NOT: {
-                IMFile: {
-                  some: {
-                    QAMISRevision: {
-                      QAMISChairpersonEndorsement: {
-                        QAMISDepartmentEndorsement: {
-                          IDDSpecialistReview: {
-                            IDDSpecialistSuggestion: {
-                              SubmittedIDDSpecialistSuggestion: {
-                                isNot: null,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-        {
-          IMFile: {
-            none: {
-              QAMISRevision: {
-                QAMISDeanEndorsement: {
-                  QAMISDepartmentEndorsement: {
-                    ContentSpecialistReview: {
-                      ContentSpecialistSuggestion: {
-                        SubmittedContentSpecialistSuggestion: {
-                          ContentSpecialistSuggestion: {
-                            ContentSpecialistReview: {
-                              ContentSpecialist: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
-          IMFile: {
-            none: {
-              QAMISRevision: {
-                QAMISDeanEndorsement: {
-                  QAMISDepartmentEndorsement: {
-                    IDDSpecialistReview: {
-                      IDDSpecialistSuggestion: {
-                        SubmittedIDDSpecialistSuggestion: {
-                          IDDSpecialistSuggestion: {
-                            IDDSpecialistReview: {
-                              IDDCoordinator: {
-                                User: {
-                                  id: {
-                                    equals: user.id,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
-          IMFile: {
-            none: {
-              QAMISRevision: {
-                QAMISDeanEndorsement: {
-                  QAMISDepartmentEndorsement: {
-                    ContentEditorReview: {
-                      ContentEditorSuggestion: {
-                        SubmittedContentEditorSuggestion: {
-                          ContentEditorSuggestion: {
-                            ContentEditorReview: {
-                              CITLDirector: {
-                                User: {
-                                  id: {
-                                    equals: user.id,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      ],
-    },
-  });
-  return count;
 }

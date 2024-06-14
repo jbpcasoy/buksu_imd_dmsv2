@@ -1,7 +1,7 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
+import { countDepartmentReviewedIMs } from "@/services/iMService";
 import logger from "@/services/logger";
-import { ActiveFaculty, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -19,7 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const count = await reviewedCount(user);
+      const count = await countDepartmentReviewedIMs({ user });
 
       return res.json({ count });
     } catch (error: any) {
@@ -36,108 +36,4 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
-}
-
-export async function reviewedCount(user: User) {
-  let userActiveFaculty: ActiveFaculty;
-  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-    where: {
-      Faculty: {
-        userId: {
-          equals: user.id,
-        },
-      },
-    },
-  });
-
-  const count = await prisma.iM.count({
-    where: {
-      AND: [
-        {
-          OR: [
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    CoordinatorReview: {
-                      CoordinatorSuggestion: {
-                        SubmittedCoordinatorSuggestion: {
-                          CoordinatorSuggestion: {
-                            CoordinatorReview: {
-                              Coordinator: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    ChairpersonReview: {
-                      ChairpersonSuggestion: {
-                        SubmittedChairpersonSuggestion: {
-                          ChairpersonSuggestion: {
-                            ChairpersonReview: {
-                              Chairperson: {
-                                Faculty: {
-                                  User: {
-                                    id: {
-                                      equals: user.id,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            {
-              IMFile: {
-                some: {
-                  DepartmentReview: {
-                    PeerReview: {
-                      PeerSuggestion: {
-                        SubmittedPeerSuggestion: {
-                          PeerSuggestion: {
-                            PeerReview: {
-                              Faculty: {
-                                User: {
-                                  id: {
-                                    equals: user.id,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      ],
-    },
-  });
-  return count;
 }

@@ -1,8 +1,7 @@
-import prisma from "@/prisma/client";
-import { AppAbility } from "@/services/ability/abilityBuilder";
 import getServerUser from "@/services/getServerUser";
+import { countCollegeIMs } from "@/services/iMService";
 import logger from "@/services/logger";
-import { ActiveFaculty, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -20,7 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const count = await collegeIMsCount(user);
+      const count = await countCollegeIMs({ user });
 
       return res.json({ count });
     } catch (error: any) {
@@ -37,63 +36,4 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
-}
-
-export async function collegeIMsCount(user: User) {
-  let ability: AppAbility;
-  let userActiveFaculty: ActiveFaculty;
-  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-    where: {
-      Faculty: {
-        userId: {
-          equals: user.id,
-        },
-      },
-    },
-  });
-  const userActiveDean = await prisma.activeDean.findFirstOrThrow({
-    where: {
-      Dean: {
-        Faculty: {
-          ActiveFaculty: {
-            id: {
-              equals: userActiveFaculty.id,
-            },
-          },
-        },
-      },
-    },
-    include: {
-      Dean: {
-        include: {
-          Faculty: {
-            include: {
-              Department: {
-                include: {
-                  College: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-
-  const count = await prisma.iM.count({
-    where: {
-      AND: [
-        {
-          Faculty: {
-            Department: {
-              College: {
-                id: userActiveDean.Dean.Faculty.Department.College.id,
-              },
-            },
-          },
-        },
-      ],
-    },
-  });
-  return count;
 }

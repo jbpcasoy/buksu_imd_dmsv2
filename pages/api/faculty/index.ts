@@ -1,7 +1,7 @@
-import prisma from "@/prisma/client";
+import { createFaculty, readFaculties } from "@/services/facultyService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -25,45 +25,9 @@ export default async function handler(
         departmentId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: { message: "You are not allowed to create a faculty" },
-        });
-      }
-
       const { userId, departmentId } = validator.cast(req.body);
 
-      const existingFaculty = await prisma.faculty.findFirst({
-        where: {
-          userId: {
-            equals: userId,
-          },
-          departmentId: {
-            equals: departmentId,
-          },
-        },
-      });
-      if (existingFaculty) {
-        return res
-          .status(409)
-          .json({ error: { message: "Faculty already exists" } });
-      }
-
-      const faculty = await prisma.faculty.create({
-        data: {
-          User: {
-            connect: {
-              id: userId,
-            },
-          },
-          Department: {
-            connect: {
-              id: departmentId,
-            },
-          },
-        },
-      });
+      const faculty = await createFaculty({ departmentId, user, userId });
 
       return res.json(faculty);
     } catch (error: any) {
@@ -97,95 +61,15 @@ export default async function handler(
         "sort[field]": sortField,
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
-      const faculties = await prisma.faculty.findMany({
+
+      const { count, faculties } = await readFaculties({
         skip,
         take,
-        where: {
-          AND: [
-            {
-              User: {
-                name: {
-                  contains: filterName,
-                  mode: "insensitive",
-                },
-              },
-            },
-            {
-              Department: {
-                name: {
-                  contains: filterDepartmentName,
-                  mode: "insensitive",
-                },
-              },
-            },
-            {
-              Department: {
-                College: {
-                  name: {
-                    contains: filterCollegeName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          ],
-        },
-        orderBy:
-          sortField === "name"
-            ? ({
-                User: {
-                  name: sortDirection ?? "asc",
-                },
-              } as Prisma.FacultyOrderByWithRelationInput)
-            : sortField === "departmentName"
-            ? ({
-                Department: {
-                  name: sortDirection ?? "asc",
-                },
-              } as Prisma.FacultyOrderByWithRelationInput)
-            : sortField === "collegeName"
-            ? ({
-                Department: {
-                  College: {
-                    name: sortDirection ?? "asc",
-                  },
-                },
-              } as Prisma.FacultyOrderByWithRelationInput)
-            : ({
-                updatedAt: "desc",
-              } as Prisma.FacultyOrderByWithRelationInput),
-      });
-      const count = await prisma.faculty.count({
-        where: {
-          AND: [
-            {
-              User: {
-                name: {
-                  contains: filterName,
-                  mode: "insensitive",
-                },
-              },
-            },
-            {
-              Department: {
-                name: {
-                  contains: filterDepartmentName,
-                  mode: "insensitive",
-                },
-              },
-            },
-            {
-              Department: {
-                College: {
-                  name: {
-                    contains: filterCollegeName,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          ],
-        },
+        filterCollegeName,
+        filterDepartmentName,
+        filterName,
+        sortDirection,
+        sortField,
       });
 
       return res.json({ faculties, count });

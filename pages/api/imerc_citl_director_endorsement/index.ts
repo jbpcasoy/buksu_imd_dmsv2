@@ -131,7 +131,7 @@ export default async function handler(
         mailTransporter.sendMail(
           {
             subject: "IM Endorsed to IPTTU",
-            text: `We are pleased to inform you that your IM titled "${iM?.title}" has been endorsed by the CITL to IPPTU for copyright application process.`,
+            text: `We are pleased to inform you that your IM titled "${iM?.title}" has been endorsed by the CITL to VPAAA for review.`,
             to: iMOwner.email,
           },
           (err) => {

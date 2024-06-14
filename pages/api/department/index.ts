@@ -1,7 +1,10 @@
-import prisma from "@/prisma/client";
+import {
+  createDepartment,
+  readDepartments,
+} from "@/services/departmentService";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -25,47 +28,9 @@ export default async function handler(
         collegeId: Yup.string().required(),
       });
       await validator.validate(req.body);
-
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: { message: "You are not allowed to create a department" },
-        });
-      }
-
       const { name, collegeId } = validator.cast(req.body);
 
-      const existingDepartment = await prisma.department.findFirst({
-        where: {
-          name: {
-            equals: name,
-          },
-        },
-      });
-      if (existingDepartment) {
-        return res.status(409).json({
-          error: {
-            message: "Department name is already used",
-          },
-        });
-      }
-
-      const college = await prisma.college.findFirstOrThrow({
-        where: {
-          id: {
-            equals: collegeId,
-          },
-        },
-      });
-      const department = await prisma.department.create({
-        data: {
-          name,
-          College: {
-            connect: {
-              id: college.id,
-            },
-          },
-        },
-      });
+      const department = await createDepartment({ collegeId, name, user });
 
       return res.json(department);
     } catch (error: any) {
@@ -100,75 +65,14 @@ export default async function handler(
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
 
-      const departments = await prisma.department.findMany({
+      const { count, departments } = await readDepartments({
         skip,
         take,
-        where: {
-          AND: [
-            {
-              name: {
-                contains: filterName,
-                mode: "insensitive",
-              },
-            },
-            {
-              College: {
-                id: {
-                  contains: filterCollegeId,
-                },
-              },
-            },
-            {
-              College: {
-                name: {
-                  contains: filterCollegeName,
-                  mode: "insensitive",
-                },
-              },
-            },
-          ],
-        },
-        orderBy:
-          sortField === "name"
-            ? ({
-                name: sortDirection ?? "asc",
-              } as Prisma.DepartmentOrderByWithRelationInput)
-            : sortField === "collegeName"
-            ? ({
-                College: {
-                  name: sortDirection ?? "asc",
-                },
-              } as Prisma.DepartmentOrderByWithRelationInput)
-            : ({
-                name: sortDirection ?? "asc",
-              } as Prisma.DepartmentOrderByWithRelationInput),
-      });
-      const count = await prisma.department.count({
-        where: {
-          AND: [
-            {
-              name: {
-                contains: filterName,
-                mode: "insensitive",
-              },
-            },
-            {
-              College: {
-                id: {
-                  contains: filterCollegeId,
-                },
-              },
-            },
-            {
-              College: {
-                name: {
-                  contains: filterCollegeName,
-                  mode: "insensitive",
-                },
-              },
-            },
-          ],
-        },
+        filterCollegeId,
+        filterCollegeName,
+        filterName,
+        sortDirection,
+        sortField,
       });
 
       return res.json({ departments, count });

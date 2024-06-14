@@ -1,8 +1,7 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
-import iMStatusQueryBuilder from "@/services/iMStatusQueryBuilder";
+import { createIM, readIMs } from "@/services/iMService";
 import logger from "@/services/logger";
-import { Faculty, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as Yup from "yup";
 
@@ -28,51 +27,9 @@ export default async function handler(
           .required(),
       });
       await validator.validate(req.body);
-
       const { activeFacultyId, title, type } = validator.cast(req.body);
 
-      let faculty: Faculty;
-      faculty = await prisma.faculty.findFirstOrThrow({
-        where: {
-          ActiveFaculty: {
-            id: {
-              equals: activeFacultyId,
-            },
-          },
-        },
-      });
-
-      if (!user.isAdmin) {
-        if (faculty.userId !== user.id) {
-          return res.status(403).json({
-            error: {
-              message: "You are not allowed to create an IM for this user",
-            },
-          });
-        }
-      }
-
-      const iM = await prisma.iM.create({
-        data: {
-          title,
-          Faculty: {
-            connect: {
-              id: faculty.id,
-            },
-          },
-          type,
-          Event: {
-            create: {
-              User: {
-                connect: {
-                  id: user.id,
-                },
-              },
-              type: "IM_CREATED",
-            },
-          },
-        },
-      });
+      const iM = await createIM({ activeFacultyId, title, type, user });
 
       return res.json(iM);
     } catch (error: any) {
@@ -109,103 +66,19 @@ export default async function handler(
         "sort[field]": sortField,
         "sort[direction]": sortDirection,
       } = validator.cast(req.query);
-      let statusQuery = iMStatusQueryBuilder(filterStatus);
 
-      const iMs = await prisma.iM.findMany({
+      const { iMs, count } = await readIMs({
         skip,
         take,
-        where: {
-          AND: [
-            statusQuery,
-            {
-              Faculty: {
-                User: {
-                  name: {
-                    contains: filterUserName ?? "",
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              title: {
-                contains: filterTitle ?? "",
-                mode: "insensitive",
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  name: {
-                    contains: filterDepartmentName ?? "",
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  College: {
-                    name: {
-                      contains: filterCollegeName ?? "",
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-        orderBy: {
-          [sortField || "updatedAt"]: sortDirection || "desc",
-        },
+        filterCollegeName,
+        filterDepartmentName,
+        filterStatus,
+        filterTitle,
+        filterUserName,
+        sortDirection,
+        sortField,
       });
-      const count = await prisma.iM.count({
-        where: {
-          AND: [
-            statusQuery,
-            {
-              Faculty: {
-                User: {
-                  name: {
-                    contains: filterUserName ?? "",
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              title: {
-                contains: filterTitle ?? "",
-                mode: "insensitive",
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  name: {
-                    contains: filterDepartmentName ?? "",
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-            {
-              Faculty: {
-                Department: {
-                  College: {
-                    name: {
-                      contains: filterCollegeName ?? "",
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      });
+
       return res.json({ iMs, count });
     } catch (error: any) {
       logger.error(error);

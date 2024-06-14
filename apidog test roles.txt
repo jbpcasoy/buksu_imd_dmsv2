@@ -1,0 +1,10 @@
+Role			User (set1)		User (set2)
+
+Author			Faculty1		Faculty2
+Peer			Faculty2		Chairperson
+Chairperson		Chairperson		Coordinator
+Coordinator		Coordinator		Dean
+Dean			Dean			ContentSpecialist
+ContentSpecialist	ContentSpecialist	IDDCoordinator
+IDDCoordinator		IDDCoordinator		CITLDirector
+CITLDirector		CITLDirector		Faculty1

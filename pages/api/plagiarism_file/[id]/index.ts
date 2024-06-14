@@ -65,59 +65,23 @@ export default async function handler(
           where: {
             IMFile: {
               some: {
-                DepartmentReview: {
-                  CoordinatorReview: {
-                    CoordinatorSuggestion: {
-                      SubmittedCoordinatorSuggestion: {
-                        DepartmentReviewed: {
-                          DepartmentRevision: {
-                            some: {
-                              CoordinatorEndorsement: {
-                                DeanEndorsement: {
-                                  IDDCoordinatorSuggestion: {
-                                    SubmittedIDDCoordinatorSuggestion: {
-                                      CITLRevision: {
-                                        some: {
-                                          IDDCoordinatorEndorsement: {
-                                            CITLDirectorEndorsement: {
-                                              QAMISSuggestion: {
-                                                SubmittedQAMISSuggestion: {
-                                                  IMFile: {
-                                                    QAMISRevision: {
-                                                      QAMISDeanEndorsement: {
-                                                        QAMISDepartmentEndorsement:
-                                                          {
-                                                            ContentEditorReview:
-                                                              {
-                                                                ContentEditorSuggestion:
-                                                                  {
-                                                                    SubmittedContentEditorSuggestion:
-                                                                      {
-                                                                        IMERCCITLReviewed:
-                                                                          {
-                                                                            PlagiarismFile:
-                                                                              {
-                                                                                id: {
-                                                                                  equals:
-                                                                                    id as string,
-                                                                                },
-                                                                              },
-                                                                          },
-                                                                      },
-                                                                  },
-                                                              },
-                                                          },
-                                                      },
-                                                    },
-                                                  },
-                                                },
-                                              },
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
+                QAMISRevision: {
+                  QAMISDeanEndorsement: {
+                    QAMISDepartmentEndorsement:
+                    {
+                      ContentEditorReview:
+                      {
+                        ContentEditorSuggestion:
+                        {
+                          SubmittedContentEditorSuggestion:
+                          {
+                            IMERCCITLReviewed:
+                            {
+                              PlagiarismFile:
+                              {
+                                id: {
+                                  equals:
+                                    id as string,
                                 },
                               },
                             },

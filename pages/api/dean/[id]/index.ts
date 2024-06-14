@@ -1,9 +1,8 @@
-import prisma from "@/prisma/client";
+import { deleteDean, readDean } from "@/services/deanService.tst";
 import getServerUser from "@/services/getServerUser";
 import logger from "@/services/logger";
 import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as Yup from "yup";
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,25 +18,9 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      const id = req.query.id as string;
 
-      await validator.validate(req.query);
-
-      const { id } = validator.cast(req.query);
-
-      const dean = await prisma.dean.findFirstOrThrow({
-        where: {
-          AND: [
-            {
-              id: {
-                equals: id,
-              },
-            },
-          ],
-        },
-      });
+      const dean = await readDean({ id });
 
       return res.json(dean);
     } catch (error: any) {
@@ -50,25 +33,11 @@ export default async function handler(
 
   const deleteHandler = async () => {
     try {
-      const validator = Yup.object({
-        id: Yup.string().required(),
-      });
+      // TODO: Remove 'const { id } = validator.cast(req.query);' on all api files for querying by id
 
-      await validator.validate(req.query);
+      const id = req.query.id as string;
 
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: { message: "You are not allowed to delete this dean" },
-        });
-      }
-
-      const { id } = validator.cast(req.query);
-
-      const dean = await prisma.dean.delete({
-        where: {
-          id,
-        },
-      });
+      const dean = await deleteDean({ id, user });
 
       return res.json(dean);
     } catch (error: any) {

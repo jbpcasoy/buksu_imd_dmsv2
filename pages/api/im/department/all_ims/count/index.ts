@@ -1,7 +1,7 @@
-import prisma from "@/prisma/client";
 import getServerUser from "@/services/getServerUser";
+import { countDepartmentIMs } from "@/services/iMService";
 import logger from "@/services/logger";
-import { ActiveFaculty, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -19,7 +19,7 @@ export default async function handler(
 
   const getHandler = async () => {
     try {
-      const count = await departmentIMsCount(user);
+      const count = await countDepartmentIMs({ user });
 
       return res.json({ count });
     } catch (error: any) {
@@ -36,43 +36,4 @@ export default async function handler(
     default:
       return res.status(405).send(`${req.method} Not Allowed`);
   }
-}
-
-export async function departmentIMsCount(user: User) {
-  let userActiveFaculty: ActiveFaculty;
-  userActiveFaculty = await prisma.activeFaculty.findFirstOrThrow({
-    where: {
-      Faculty: {
-        userId: {
-          equals: user.id,
-        },
-      },
-    },
-  });
-  const department = await prisma.department.findFirstOrThrow({
-    where: {
-      Faculty: {
-        some: {
-          id: userActiveFaculty.facultyId,
-        },
-      },
-    },
-  });
-
-  const count = await prisma.iM.count({
-    where: {
-      AND: [
-        {
-          Faculty: {
-            Department: {
-              id: {
-                equals: department.id,
-              },
-            },
-          },
-        },
-      ],
-    },
-  });
-  return count;
 }
