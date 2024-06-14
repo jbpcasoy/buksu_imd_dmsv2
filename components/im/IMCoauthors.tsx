@@ -85,7 +85,7 @@ export default function IMCoAuthors({ iMId }: IMCoAuthorsProps) {
           <input
             type="text"
             placeholder="Name"
-            className="w-44 my-1 rounded border border-palette_orange focus:rounded-b-none focus:border-gray-500 focus:bg-white focus:ring-0"
+            className="w-52 my-1 rounded border border-palette_orange focus:rounded-b-none focus:border-gray-500 focus:bg-white focus:ring-0"
             onChange={(e) => {
               setState((prev) => ({
                 ...prev,

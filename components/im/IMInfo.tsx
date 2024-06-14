@@ -84,7 +84,7 @@ export default function IMInfo({ iMId, onRefresh, refreshFlag }: IMInfoProps) {
           </p>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row md:space-x-4">
+      <div className="flex flex-col md:flex-row justify-between">
         <div className="space-y-2">
           <div className="space-y-2">
             <p className="text-xs">DATE/TIME</p>
@@ -125,31 +125,31 @@ export default function IMInfo({ iMId, onRefresh, refreshFlag }: IMInfoProps) {
           {(iMStatus === "IMPLEMENTATION_DRAFT" ||
             iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" ||
             iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED") && (
-            <DepartmentReviewStatus iMId={iMId} />
-          )}
+              <DepartmentReviewStatus iMId={iMId} />
+            )}
           {(iMStatus === "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED" ||
             iMStatus === "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" ||
             iMStatus === "IMPLEMENTATION_CITL_REVIEWED" ||
             iMStatus === "IMPLEMENTATION_CITL_RETURNED_REVISION" ||
             iMStatus === "IMPLEMENTATION_CITL_REVISED" ||
             iMStatus === "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED") && (
-            <CITLSuggestionStatus iMId={iMId} />
-          )}
+              <CITLSuggestionStatus iMId={iMId} />
+            )}
           {(iMStatus === "IMERC_QAMIS_DEPARTMENT_ENDORSED" ||
             iMStatus === "IMERC_CITL_REVIEWED" ||
             iMStatus === "IMERC_CITL_RETURNED_REVISION") && (
-            <IMERCReviewStatus iMId={iMId} />
-          )}
+              <IMERCReviewStatus iMId={iMId} />
+            )}
         </div>
         {(iMStatus === "IMPLEMENTATION_DRAFT" ||
           iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEW" ||
           iMStatus === "IMPLEMENTATION_DEPARTMENT_REVIEWED") && (
-          <DepartmentSuggestionStatus iMId={iMId} />
-        )}
+            <DepartmentSuggestionStatus iMId={iMId} />
+          )}
         {(iMStatus === "IMPLEMENTATION_DEPARTMENT_REVISED" ||
           iMStatus === "IMPLEMENTATION_DEPARTMENT_COORDINATOR_ENDORSED") && (
-          <DepartmentEndorsementStatus iMId={iMId} />
-        )}
+            <DepartmentEndorsementStatus iMId={iMId} />
+          )}
 
         {(iMStatus === "IMPLEMENTATION_DEPARTMENT_DEAN_ENDORSED" ||
           iMStatus === "IMPLEMENTATION_CITL_IDD_COORDINATOR_ENDORSED" ||
@@ -157,21 +157,21 @@ export default function IMInfo({ iMId, onRefresh, refreshFlag }: IMInfoProps) {
           iMStatus === "IMPLEMENTATION_CITL_RETURNED_REVISION" ||
           iMStatus === "IMPLEMENTATION_CITL_REVISED" ||
           iMStatus === "IMPLEMENTATION_CITL_DIRECTOR_ENDORSED") && (
-          <CITLEndorsementStatus iMId={iMId} />
-        )}
+            <CITLEndorsementStatus iMId={iMId} />
+          )}
         {iMStatus === "IMERC_QAMIS_REVISED" && (
           <QAMISEndorsementStatus iMId={iMId} />
         )}
         {(iMStatus === "IMERC_QAMIS_DEPARTMENT_ENDORSED" ||
           iMStatus === "IMERC_CITL_REVIEWED" ||
           iMStatus === "IMERC_CITL_RETURNED_REVISION") && (
-          <IMERCSuggestionStatus iMId={iMId} />
-        )}
+            <IMERCSuggestionStatus iMId={iMId} />
+          )}
         {(iMStatus === "IMERC_CITL_REVISED" ||
           iMStatus === "IMERC_CITL_IDD_COORDINATOR_ENDORSED" ||
           iMStatus === "IMERC_CITL_DIRECTOR_ENDORSED") && (
-          <IMERCEndorsementStatus iMId={iMId} />
-        )}
+            <IMERCEndorsementStatus iMId={iMId} />
+          )}
       </div>
     </div>
   );
@@ -193,7 +193,7 @@ function DepartmentReviewStatus({ iMId }: DepartmentReviewStatusProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs">REVIEWS</p>
-      <div className="inline-flex flex-col space-y-2">
+      <div className="inline-flex flex-col space-y-2 w-full">
         {!peerReview && (
           <p className="bg-palette_light_grey inline p-2 rounded-lg">
             Peer Review
