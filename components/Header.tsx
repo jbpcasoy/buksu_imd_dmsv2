@@ -61,37 +61,26 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             onClick={() => {
               setState((prev) => ({ ...prev, openSidebar: !prev.openSidebar }));
             }}
+            title={state.openSidebar ? "Hide Sidebar" : "Open Sidebar"}
           >
-            {!state.openSidebar && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="16"
-                width="14"
-                viewBox="0 0 448 512"
-                className="fill-inherit"
-              >
-                <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
-              </svg>
-            )}
-            {state.openSidebar && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="16"
-                width="10"
-                viewBox="0 0 320 512"
-                className="fill-inherit"
-              >
-                <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
-              </svg>
-            )}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              width="14"
+              viewBox="0 0 448 512"
+              className="fill-inherit"
+            >
+              <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
+            </svg>
+
           </button>
           <Link
             href={
               activeCoordinator ||
-              activeChairperson ||
-              activeDean ||
-              activeIDDCoordinator ||
-              activeCITLDirector
+                activeChairperson ||
+                activeDean ||
+                activeIDDCoordinator ||
+                activeCITLDirector
                 ? "/"
                 : "/department/my_ims"
             }
