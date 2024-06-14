@@ -186,39 +186,39 @@ export default function IMTable({
         </table>
       </div>
 
-      <div className="flex justify-end items-center space-x-1 p-1">
+      <div className="flex justify-between items-center space-x-1 p-1">
         <p className="">
-          {state.skip} - {state.skip + state.take} of {count}
+          {state.skip} to {state.skip + state.take} of {count} results
         </p>
-        <button
-          disabled={state.skip - state.take < 0}
-          className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
-          onClick={previousHandler}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="1em"
-            viewBox="0 0 448 512"
+        <div className="flex justify-center items-center space-x-1">
+          <button
+            disabled={state.skip - state.take < 0}
+            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-3 py-2 hover:bg-opacity-90 disabled:bg-opacity-50 enabled:bg-transparent enabled:fill-palette_blue enabled:border enabled:border-palette_blue enabled:hover:border-opacity-50"
+            onClick={previousHandler}
           >
-            <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-          </svg>
-          <span>Previous</span>
-        </button>
-        <button
-          disabled={state.skip + state.take >= count}
-          className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-1 hover:bg-opacity-90 disabled:bg-opacity-50"
-          onClick={nextHandler}
-        >
-          <span>Next</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="1em"
-            viewBox="0 0 448 512"
-            className="fill-inherit"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 448 512"
+            >
+              <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
+          </button>
+          <button
+            disabled={state.skip + state.take >= count}
+            className="rounded bg-palette_blue text-palette_white fill-palette_white flex space-x-1 items-center px-3 py-2 hover:bg-opacity-90 disabled:bg-opacity-50"
+            onClick={nextHandler}
           >
-            <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 448 512"
+              className="fill-inherit"
+            >
+              <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -456,7 +456,7 @@ function AddIM() {
         <span className="whitespace-nowrap">Add IM</span>
       </button>
       {state.addIMOpen && (
-        <Modal title="ADD IM" onClose={() => setState({ addIMOpen: false })}>
+        <Modal title="Add IM" onClose={() => setState({ addIMOpen: false })}>
           <form onSubmit={formik.handleSubmit} noValidate>
             <div className="flex flex-col space-y-1">
               <input
@@ -480,16 +480,6 @@ function AddIM() {
                 className="bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90"
               >
                 <span>Submit</span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    viewBox="0 0 448 512"
-                    className="fill-palette_white"
-                  >
-                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                  </svg>
-                </span>
               </button>
             </div>
           </form>
@@ -503,10 +493,10 @@ interface StatusSelectorProps {
   onStatusChange: (status: string) => void;
 }
 function StatusSelector({ onStatusChange }: StatusSelectorProps) {
-  const [state, setState] = useState<{status: undefined | string}>({status: undefined});
+  const [state, setState] = useState<{ status: undefined | string }>({ status: undefined });
 
   useEffect(() => {
-    if(!state?.status) return;
+    if (!state?.status) return;
 
     onStatusChange(state.status);
   }, [state.status])
@@ -548,7 +538,7 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
       </svg>
       <select
         onChange={(e) => {
-          setState({status: e.target.value as string});
+          setState({ status: e.target.value as string });
         }}
         className="py-1 rounded-r-lg bg-inherit focus:border-none focus:outline-none focus:ring-0  border-0 w-full"
       >
