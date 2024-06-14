@@ -503,6 +503,14 @@ interface StatusSelectorProps {
   onStatusChange: (status: string) => void;
 }
 function StatusSelector({ onStatusChange }: StatusSelectorProps) {
+  const [state, setState] = useState<{status: undefined | string}>({status: undefined});
+
+  useEffect(() => {
+    if(!state?.status) return;
+
+    onStatusChange(state.status);
+  }, [state.status])
+
   const statuses = [
     "IMPLEMENTATION_DRAFT",
     "IMPLEMENTATION_DEPARTMENT_REVIEW",
@@ -522,7 +530,7 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
     "IMERC_CITL_DIRECTOR_ENDORSED",
   ];
   return (
-    <div className="flex items-center justify-center border border-current rounded-lg space-x-2 p-1 w-40 ">
+    <div className="flex items-center justify-center border border-current rounded-lg space-x-2 pl-4 p-1 w-40 " title={iMStatusNormalizer(state.status)}>
       <svg
         width="18"
         height="18"
@@ -539,7 +547,9 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
         />
       </svg>
       <select
-        onChange={(e) => onStatusChange(e.target.value)}
+        onChange={(e) => {
+          setState({status: e.target.value as string});
+        }}
         className="py-1 rounded-r-lg bg-inherit focus:border-none focus:outline-none focus:ring-0  border-0 w-full"
       >
         <option value="">Status</option>
