@@ -35,10 +35,14 @@ const config: Config = {
         "1/8": "12.5%",
       },
       fontFamily: {
-        sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
+        sans: ['Inter var',
+          { fontFeatureSettings: '"cv02", "cv03", "cv04", "cv11"' } as any, ...defaultTheme.fontFamily.sans],
       },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [
+    require("@tailwindcss/forms"),
+    require('@tailwindcss/typography'),
+  ],
 };
 export default config;
