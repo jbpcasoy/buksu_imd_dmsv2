@@ -18,7 +18,7 @@ interface IMImplementationDraftProps {
 }
 export default function IMImplementationDraft({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMImplementationDraftProps) {
   const [loading, setLoading] = useState(false);
@@ -162,20 +162,27 @@ export default function IMImplementationDraft({
             />
           </div>
 
-          <div className="space-y-2 flex-1 md:overflow-auto">
+          <div className="space-y-2 flex-1 md:overflow-auto flex flex-col justify-between w-full">
             <IMInfo
               iMId={iMId}
               onRefresh={onRefresh}
               refreshFlag={refreshFlag}
             />
             {iM.facultyId === activeFaculty?.facultyId && (
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 w-full justify-end">
                 <button
-                  className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-full"
+                  className="rounded text-palette_blue border border-palette_blue p-2 disabled:opacity-50 space-x-2 w-1/4"
+                  disabled={Boolean(!state?.iMFile) || loading}
+                  onClick={handleFileReset}
+                >
+                  Replace
+                </button>
+                <button
+                  className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-1/4"
                   disabled={Boolean(!state?.iMFile) || loading}
                   onClick={openConfirmation}
                 >
-                  Submit for Review
+                  Submit
                 </button>
                 {state.openConfirmation && (
                   <Confirmation
@@ -183,13 +190,6 @@ export default function IMImplementationDraft({
                     onConfirm={submitForReviewHandler}
                   />
                 )}
-                <button
-                  className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-1/4"
-                  disabled={Boolean(!state?.iMFile) || loading}
-                  onClick={handleFileReset}
-                >
-                  Replace
-                </button>
               </div>
             )}
           </div>
@@ -243,7 +243,7 @@ export default function IMImplementationDraft({
               <iframe
                 loading="lazy"
                 src={state.filePreview}
-                className="w-full h-full rounded-2xl"
+                className="w-full h-full"
               />
             )}
           </div>
