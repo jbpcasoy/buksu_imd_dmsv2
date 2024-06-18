@@ -19,7 +19,7 @@ interface IMImplementationDepartmentRevisedProps {
 }
 export default function IMImplementationDepartmentRevised({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMImplementationDepartmentRevisedProps) {
   const activeCoordinator = useActiveCoordinatorMe();
@@ -54,6 +54,7 @@ export default function IMImplementationDepartmentRevised({
       openConfirmation: true,
     }));
   };
+
 
   axios.interceptors.request.use(
     function (config) {
@@ -129,33 +130,31 @@ export default function IMImplementationDepartmentRevised({
           />
         </div>
 
-        <div className="space-y-2 flex-1 md:overflow-auto ">
+        <div className="space-y-2 flex-1 flex flex-col md:overflow-auto ">
           <IMInfo iMId={iMId} onRefresh={onRefresh} refreshFlag={refreshFlag} />
-          <div className="flex-1 md:overflow-auto space-y-2">
+          <div className="flex-1 md:overflow-auto space-y-2 flex flex-col justify-end">
             {activeCoordinator && (
-              <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row">
-                <>
-                  <button
-                    disabled={loading}
-                    className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
-                    onClick={openConfirmation}
-                  >
-                    Endorse IM
-                  </button>
-                  {state.openConfirmation && (
-                    <Confirmation
-                      onClose={closeConfirmation}
-                      onConfirm={coordinatorEndorsementHandler}
-                    />
-                  )}
-                </>
+              <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row justify-end">
                 <button
                   disabled={loading}
-                  className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                  className="text-palette_white bg-palette_error p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90 rounded-md px-4 py-2 text-sm font-semibold"
                   onClick={returnCoordinatorEndorsementHandler}
                 >
-                  Return Revision
+                  Return
                 </button>
+                <button
+                  disabled={loading}
+                  className="text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90 rounded-md px-4 py-2 text-sm font-semibold"
+                  onClick={openConfirmation}
+                >
+                  Endorse
+                </button>
+                {state.openConfirmation && (
+                  <Confirmation
+                    onClose={closeConfirmation}
+                    onConfirm={coordinatorEndorsementHandler}
+                  />
+                )}
               </div>
             )}
           </div>
@@ -168,7 +167,7 @@ export default function IMImplementationDepartmentRevised({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}

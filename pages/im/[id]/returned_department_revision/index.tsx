@@ -193,7 +193,7 @@ export default function ReturnedDepartmentRevisionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex items-center space-x-2 hover:bg-opacity-90"
+          className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md font-semibold text-sm px-2 py-1"
         >
           <span>Add</span>
           <span>
@@ -288,7 +288,7 @@ export default function ReturnedDepartmentRevisionPage() {
           <IMHeader iM={iM} phase="Implementation Phase" role="Coordinator" />
 
           <div className="flex-1 h-full md:overflow-auto space-y-2">
-            <div className="border border-palette_orange rounded text-sm">
+            <div className="border border-palette_light_grey rounded text-sm">
               <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between">
                 <p className="text-left font-bold">
                   RETURNED DEPARTMENT REVISION
@@ -330,7 +330,7 @@ export default function ReturnedDepartmentRevisionPage() {
                 editable={false}
               />
             </div>
-            <>
+            <div className="flex justify-end">
               <button
                 className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
                 disabled={!Boolean(returnedDepartmentRevision) || loading}
@@ -344,14 +344,14 @@ export default function ReturnedDepartmentRevisionPage() {
                   onConfirm={handleSubmitSuggestions}
                 />
               )}
-            </>
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded-2xl"
+            className="w-full h-full"
           />
         </div>
       </div>
@@ -428,7 +428,7 @@ export function Item({
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded-md text-sm px-2 py-1"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -552,7 +552,7 @@ function EditSuggestionItem({
     <div>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded-md text-sm px-2 py-1"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
