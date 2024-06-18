@@ -139,7 +139,7 @@ export default function ContentEditorSuggestionPage() {
             .catch((error) => {
               addSnackbar(
                 error.response.data?.error?.message ??
-                  "Suggestion has been added successfully",
+                "Suggestion has been added successfully",
                 "error"
               );
             })
@@ -292,7 +292,7 @@ export default function ContentEditorSuggestionPage() {
                   }
                 )}
                 {contentEditorSuggestionItems.count < 1 && (
-                  <p className="text-center text-xs text-palette_error w-full">
+                  <p className="text-center text-xs text-palette_error w-full p-4">
                     Suggestions are required
                   </p>
                 )}
@@ -512,7 +512,7 @@ function EditSuggestionItem({
         .catch((error) => {
           addSnackbar(
             error.response.data?.error?.message ??
-              "Suggestion has been updated successfully",
+            "Suggestion has been updated successfully",
             "error"
           );
         })

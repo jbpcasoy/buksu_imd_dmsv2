@@ -271,7 +271,7 @@ export default function PeerSuggestionPage() {
                   }
                 )}
                 {peerSuggestionItems.count < 1 && (
-                  <p className="text-center text-xs text-palette_error w-full">
+                  <p className="text-center text-xs text-palette_error w-full p-4">
                     Suggestions are required
                   </p>
                 )}

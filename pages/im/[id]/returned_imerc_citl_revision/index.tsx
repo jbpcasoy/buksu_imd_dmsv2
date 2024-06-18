@@ -146,7 +146,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
             .catch((error) => {
               addSnackbar(
                 error.response.data?.error?.message ??
-                  "Failed to add suggestion",
+                "Failed to add suggestion",
                 "error"
               );
             })
@@ -190,16 +190,6 @@ export default function ReturnedIMERCCITLRevisionPage() {
           className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex items-center space-x-2 hover:bg-opacity-90"
         >
           <span>Add</span>
-          <span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="1em"
-              viewBox="0 0 448 512"
-              className="fill-palette_white"
-            >
-              <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-            </svg>
-          </span>
         </button>
         {openAdd && (
           <Modal title="Add Suggestion" onClose={() => setOpenAdd(false)}>
@@ -305,7 +295,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
                   }
                 )}
                 {returnedIMERCCITLRevisionSuggestionItems.count < 1 && (
-                  <p className="text-center text-xs text-palette_error w-full">
+                  <p className="text-center text-xs text-palette_error w-full p-4">
                     Suggestions are required
                   </p>
                 )}
@@ -537,7 +527,7 @@ function EditSuggestionItem({
         .catch((error) => {
           addSnackbar(
             error.response.data?.error?.message ??
-              "Failed to update suggestion",
+            "Failed to update suggestion",
             "error"
           );
         })

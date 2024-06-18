@@ -181,7 +181,7 @@ export default function QAMISSuggestionPage() {
             .catch((error) => {
               addSnackbar(
                 error.response.data?.error?.message ??
-                  "Failed to add suggestion",
+                "Failed to add suggestion",
                 "error"
               );
             })
@@ -336,7 +336,7 @@ export default function QAMISSuggestionPage() {
                 )}
 
                 {qAMISSuggestionItems.count < 1 && (
-                  <p className="text-center text-xs text-palette_error w-full">
+                  <p className="text-center text-xs text-palette_error w-full p-4">
                     Suggestions are required
                   </p>
                 )}
@@ -579,7 +579,7 @@ function EditSuggestionItem({
         .catch((error) => {
           addSnackbar(
             error.response.data?.error?.message ??
-              "Failed to update suggestion",
+            "Failed to update suggestion",
             "error"
           );
         })
