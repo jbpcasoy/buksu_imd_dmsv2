@@ -5,24 +5,22 @@
 /* scrollbar.css */
 /* Set the width and color of the scrollbar */
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 3px;
-    border-radius: 5px;
+    width: 18px;
     /* Change this to gray */
 }
 
 /* Style the scrollbar thumb */
 ::-webkit-scrollbar-thumb {
-    background: #888;
+    background-color: #888;
     /* Change this to gray */
-    border-radius: 5px;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
 }
 
 /* Style the scrollbar track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f100;
-    border-radius: 5px;
-    width: 0;
+    background-color: transparent;
     /* You can keep the track light gray */
 }
 
@@ -32,8 +30,8 @@ scrollbar-color: #888 #f1f1f1; */
 /* Change the colors accordingly */
 
 /* Firefox specific scrollbar styles */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
-    /* Change the colors accordingly */
-}
+/* * { */
+/* scrollbar-width: thin; */
+/* scrollbar-color: #888 #f1f1f1; */
+/* Change the colors accordingly */
+/* } */
