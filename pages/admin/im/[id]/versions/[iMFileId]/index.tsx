@@ -151,7 +151,7 @@ export default function VersionsPage() {
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iMFile.filename}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         </div>

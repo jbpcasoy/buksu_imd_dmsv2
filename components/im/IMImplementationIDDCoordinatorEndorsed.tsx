@@ -19,7 +19,7 @@ interface IMImplementationIDDCoordinatorEndorsedProps {
 }
 export default function IMImplementationIDDCoordinatorEndorsed({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMImplementationIDDCoordinatorEndorsedProps) {
   const activeCITLDirector = useActiveCITLDirectorMe();
@@ -157,7 +157,7 @@ export default function IMImplementationIDDCoordinatorEndorsed({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}

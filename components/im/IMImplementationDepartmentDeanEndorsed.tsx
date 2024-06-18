@@ -14,7 +14,7 @@ interface IMImplementationDepartmentDeanEndorsedProps {
 }
 export default function IMImplementationDepartmentDeanEndorsed({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMImplementationDepartmentDeanEndorsedProps) {
   const iM = useIM({
@@ -77,7 +77,7 @@ export default function IMImplementationDepartmentDeanEndorsed({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}

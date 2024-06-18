@@ -19,7 +19,7 @@ interface IMQAMISDepartmentEndorsedProps {
 }
 export default function IMQAMISDepartmentEndorsed({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMQAMISDepartmentEndorsedProps) {
   const iM = useIM({
@@ -145,7 +145,7 @@ export default function IMQAMISDepartmentEndorsed({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}

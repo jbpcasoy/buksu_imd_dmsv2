@@ -93,7 +93,7 @@ export default function FileManagerQAMISPage() {
               loading="lazy"
               src={`/api/file_manager/qamis/${fileManagerQAMISFile.filename}/pdf`}
               title={fileManagerQAMISFile.filename}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
 

@@ -25,7 +25,7 @@ interface IMQAMISRevisedProps {
 }
 export default function IMQAMISRevised({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMQAMISRevisedProps) {
   const [state, setState] = useState<{
@@ -267,7 +267,7 @@ export default function IMQAMISRevised({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}

@@ -13,7 +13,7 @@ interface IMIMERCCITLDirectorEndorsedProps {
 }
 export default function IMIMERCCITLDirectorEndorsed({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMIMERCCITLDirectorEndorsedProps) {
   const iM = useIM({
@@ -68,7 +68,7 @@ export default function IMIMERCCITLDirectorEndorsed({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}

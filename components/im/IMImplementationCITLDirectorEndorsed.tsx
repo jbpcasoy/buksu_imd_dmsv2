@@ -14,7 +14,7 @@ interface IMImplementationCITLDirectorEndorsedProps {
 }
 export default function IMImplementationCITLDirectorEndorsed({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMImplementationCITLDirectorEndorsedProps) {
   const iM = useIM({
@@ -76,7 +76,7 @@ export default function IMImplementationCITLDirectorEndorsed({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}

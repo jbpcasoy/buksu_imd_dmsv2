@@ -19,7 +19,7 @@ interface IMImplementationDepartmentCoordinatorEndorsedProps {
 }
 export default function IMImplementationDepartmentCoordinatorEndorsed({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMImplementationDepartmentCoordinatorEndorsedProps) {
   const activeDean = useActiveDeanMe();
@@ -157,7 +157,7 @@ export default function IMImplementationDepartmentCoordinatorEndorsed({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}

@@ -93,7 +93,7 @@ export default function FileManagerIMPage() {
               loading="lazy"
               src={`/api/file_manager/im/${fileManagerIMFile.filename}/pdf`}
               title={fileManagerIMFile.filename}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
 

@@ -143,8 +143,8 @@ export default function TrackPage() {
               secondaryLabel={
                 iM
                   ? DateTime.fromJSDate(new Date(iM.createdAt)).toFormat(
-                      "D | t"
-                    )
+                    "D | t"
+                  )
                   : undefined
               }
             />
@@ -154,8 +154,8 @@ export default function TrackPage() {
               secondaryLabel={
                 departmentReviewed
                   ? DateTime.fromJSDate(
-                      new Date(departmentReviewed.createdAt)
-                    ).toFormat("D | t")
+                    new Date(departmentReviewed.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             >
@@ -166,8 +166,8 @@ export default function TrackPage() {
                 secondaryLabel={
                   submittedPeerSuggestion
                     ? DateTime.fromJSDate(
-                        new Date(submittedPeerSuggestion.createdAt)
-                      ).toFormat("D | t")
+                      new Date(submittedPeerSuggestion.createdAt)
+                    ).toFormat("D | t")
                     : undefined
                 }
               />
@@ -178,8 +178,8 @@ export default function TrackPage() {
                 secondaryLabel={
                   submittedChairpersonSuggestion
                     ? DateTime.fromJSDate(
-                        new Date(submittedChairpersonSuggestion.createdAt)
-                      ).toFormat("D | t")
+                      new Date(submittedChairpersonSuggestion.createdAt)
+                    ).toFormat("D | t")
                     : undefined
                 }
               />
@@ -190,8 +190,8 @@ export default function TrackPage() {
                 secondaryLabel={
                   submittedCoordinatorSuggestion
                     ? DateTime.fromJSDate(
-                        new Date(submittedCoordinatorSuggestion.createdAt)
-                      ).toFormat("D | t")
+                      new Date(submittedCoordinatorSuggestion.createdAt)
+                    ).toFormat("D | t")
                     : undefined
                 }
               />
@@ -202,8 +202,8 @@ export default function TrackPage() {
               secondaryLabel={
                 departmentRevision
                   ? DateTime.fromJSDate(
-                      new Date(departmentRevision.createdAt)
-                    ).toFormat("D | t")
+                    new Date(departmentRevision.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -213,8 +213,8 @@ export default function TrackPage() {
               secondaryLabel={
                 coordinatorEndorsement
                   ? DateTime.fromJSDate(
-                      new Date(coordinatorEndorsement.createdAt)
-                    ).toFormat("D | t")
+                    new Date(coordinatorEndorsement.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -224,8 +224,8 @@ export default function TrackPage() {
               secondaryLabel={
                 deanEndorsement
                   ? DateTime.fromJSDate(
-                      new Date(deanEndorsement.createdAt)
-                    ).toFormat("D | t")
+                    new Date(deanEndorsement.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -235,8 +235,8 @@ export default function TrackPage() {
               secondaryLabel={
                 submittedIDDCoordinatorSuggestion
                   ? DateTime.fromJSDate(
-                      new Date(submittedIDDCoordinatorSuggestion.createdAt)
-                    ).toFormat("D | t")
+                    new Date(submittedIDDCoordinatorSuggestion.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -246,8 +246,8 @@ export default function TrackPage() {
               secondaryLabel={
                 cITLRevision
                   ? DateTime.fromJSDate(
-                      new Date(cITLRevision.createdAt)
-                    ).toFormat("D | t")
+                    new Date(cITLRevision.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -257,8 +257,8 @@ export default function TrackPage() {
               secondaryLabel={
                 iDDCoordinatorEndorsement
                   ? DateTime.fromJSDate(
-                      new Date(iDDCoordinatorEndorsement.createdAt)
-                    ).toFormat("D | t")
+                    new Date(iDDCoordinatorEndorsement.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -268,8 +268,8 @@ export default function TrackPage() {
               secondaryLabel={
                 cITLDirectorEndorsement
                   ? DateTime.fromJSDate(
-                      new Date(cITLDirectorEndorsement.createdAt)
-                    ).toFormat("D | t")
+                    new Date(cITLDirectorEndorsement.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -284,8 +284,8 @@ export default function TrackPage() {
               secondaryLabel={
                 qAMISRevision
                   ? DateTime.fromJSDate(
-                      new Date(qAMISRevision.createdAt)
-                    ).toFormat("D | t")
+                    new Date(qAMISRevision.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -295,8 +295,8 @@ export default function TrackPage() {
               secondaryLabel={
                 qAMISDepartmentEndorsed
                   ? DateTime.fromJSDate(
-                      new Date(qAMISDepartmentEndorsed.createdAt)
-                    ).toFormat("D | t")
+                    new Date(qAMISDepartmentEndorsed.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             >
@@ -307,8 +307,8 @@ export default function TrackPage() {
                 secondaryLabel={
                   qAMISChairpersonEndorsement
                     ? DateTime.fromJSDate(
-                        new Date(qAMISChairpersonEndorsement.createdAt)
-                      ).toFormat("D | t")
+                      new Date(qAMISChairpersonEndorsement.createdAt)
+                    ).toFormat("D | t")
                     : undefined
                 }
               />
@@ -319,8 +319,8 @@ export default function TrackPage() {
                 secondaryLabel={
                   qAMISCoordinatorEndorsement
                     ? DateTime.fromJSDate(
-                        new Date(qAMISCoordinatorEndorsement.createdAt)
-                      ).toFormat("D | t")
+                      new Date(qAMISCoordinatorEndorsement.createdAt)
+                    ).toFormat("D | t")
                     : undefined
                 }
               />
@@ -331,8 +331,8 @@ export default function TrackPage() {
                 secondaryLabel={
                   qAMISDeanEndorsement
                     ? DateTime.fromJSDate(
-                        new Date(qAMISDeanEndorsement.createdAt)
-                      ).toFormat("D | t")
+                      new Date(qAMISDeanEndorsement.createdAt)
+                    ).toFormat("D | t")
                     : undefined
                 }
               />
@@ -343,8 +343,8 @@ export default function TrackPage() {
               secondaryLabel={
                 iMERCCITLReviewed
                   ? DateTime.fromJSDate(
-                      new Date(iMERCCITLReviewed.createdAt)
-                    ).toFormat("D | t")
+                    new Date(iMERCCITLReviewed.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             >
@@ -357,8 +357,8 @@ export default function TrackPage() {
                 secondaryLabel={
                   submittedContentSpecialistSuggestion
                     ? DateTime.fromJSDate(
-                        new Date(submittedContentSpecialistSuggestion.createdAt)
-                      ).toFormat("D | t")
+                      new Date(submittedContentSpecialistSuggestion.createdAt)
+                    ).toFormat("D | t")
                     : undefined
                 }
               />
@@ -369,8 +369,8 @@ export default function TrackPage() {
                 secondaryLabel={
                   submittedIDDSpecialistSuggestion
                     ? DateTime.fromJSDate(
-                        new Date(submittedIDDSpecialistSuggestion.createdAt)
-                      ).toFormat("D | t")
+                      new Date(submittedIDDSpecialistSuggestion.createdAt)
+                    ).toFormat("D | t")
                     : undefined
                 }
               />
@@ -381,8 +381,8 @@ export default function TrackPage() {
                 secondaryLabel={
                   submittedContentEditorSuggestion
                     ? DateTime.fromJSDate(
-                        new Date(submittedContentEditorSuggestion.createdAt)
-                      ).toFormat("D | t")
+                      new Date(submittedContentEditorSuggestion.createdAt)
+                    ).toFormat("D | t")
                     : undefined
                 }
               />
@@ -393,8 +393,8 @@ export default function TrackPage() {
               secondaryLabel={
                 iMERCCITLRevision
                   ? DateTime.fromJSDate(
-                      new Date(iMERCCITLRevision.createdAt)
-                    ).toFormat("D | t")
+                    new Date(iMERCCITLRevision.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -404,8 +404,8 @@ export default function TrackPage() {
               secondaryLabel={
                 iMERCIDDCoordinatorEndorsement
                   ? DateTime.fromJSDate(
-                      new Date(iMERCIDDCoordinatorEndorsement.createdAt)
-                    ).toFormat("D | t")
+                    new Date(iMERCIDDCoordinatorEndorsement.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -416,8 +416,8 @@ export default function TrackPage() {
               secondaryLabel={
                 iMERCCITLDirectorEndorsement
                   ? DateTime.fromJSDate(
-                      new Date(iMERCCITLDirectorEndorsement.createdAt)
-                    ).toFormat("D | t")
+                    new Date(iMERCCITLDirectorEndorsement.createdAt)
+                  ).toFormat("D | t")
                   : undefined
               }
             />
@@ -427,7 +427,7 @@ export default function TrackPage() {
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded-2xl"
+            className="w-full h-full"
           />
         </div>
       </div>
@@ -451,9 +451,8 @@ function TimelineSegment({
 }: TimelineSegmentProps) {
   return (
     <div
-      className={`${end ? "" : "border-l border-l-palette_light_grey"} ${
-        children || end ? "" : "pb-10"
-      } flex space-x-4 ml-5`}
+      className={`${end ? "" : "border-l border-l-palette_light_grey"} ${children || end ? "" : "pb-10"
+        } flex space-x-4 ml-5`}
     >
       <div className="-ml-5 bg-palette_white rounded-full w-10 h-10 flex items-center justify-center">
         <svg
@@ -462,9 +461,8 @@ function TimelineSegment({
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className={`w-7 h-7 ${
-            mode === "success" ? "bg-palette_timeline_green" : "bg-palette_grey"
-          } text-palette_white rounded-full p-2`}
+          className={`w-7 h-7 ${mode === "success" ? "bg-palette_timeline_green" : "bg-palette_grey"
+            } text-palette_white rounded-full p-2`}
         >
           <path
             strokeLinecap="round"

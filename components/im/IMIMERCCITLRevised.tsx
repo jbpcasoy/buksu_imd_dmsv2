@@ -26,7 +26,7 @@ interface IMIMERCCITLRevisedProps {
 }
 export default function IMIMERCCITLRevised({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMIMERCCITLRevisedProps) {
   const [state, setState] = useState<{
@@ -195,7 +195,7 @@ export default function IMIMERCCITLRevised({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}

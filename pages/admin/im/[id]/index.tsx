@@ -158,7 +158,7 @@ export default function IMPage() {
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           )}
         </div>
@@ -425,7 +425,7 @@ function EditSerialNumber({
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Failed to update serial number",
+              "Failed to update serial number",
               "error"
             );
           })
@@ -441,7 +441,7 @@ function EditSerialNumber({
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Failed to update serial number",
+              "Failed to update serial number",
               "error"
             );
           })

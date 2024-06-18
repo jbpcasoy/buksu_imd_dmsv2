@@ -93,7 +93,7 @@ export default function FileManagerPlagiarismPage() {
               loading="lazy"
               src={`/api/file_manager/plagiarism/${fileManagerPlagiarismFile.filename}/pdf`}
               title={fileManagerPlagiarismFile.filename}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
 

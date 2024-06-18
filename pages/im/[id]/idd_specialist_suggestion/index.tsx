@@ -324,7 +324,7 @@ export default function IDDSpecialistSuggestionPage() {
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded-2xl"
+            className="w-full h-full"
           />
         </div>
       </div>

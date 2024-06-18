@@ -24,7 +24,7 @@ interface IMImplementationCITLReviewedProps {
 }
 export default function IMImplementationCITLReviewed({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMImplementationCITLReviewedProps) {
   const iM = useIM({
@@ -105,7 +105,7 @@ export default function IMImplementationCITLReviewed({
       .catch((error) => {
         addSnackbar(
           error.response.data?.error?.message ??
-            "Failed to submit IM for endorsement",
+          "Failed to submit IM for endorsement",
           "error"
         );
       })
@@ -312,7 +312,7 @@ export default function IMImplementationCITLReviewed({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}
