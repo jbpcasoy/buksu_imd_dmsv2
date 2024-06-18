@@ -309,7 +309,7 @@ export default function ChairpersonSuggestionPage() {
                 editable={false}
               />
             </div>
-            <>
+            <div className="flex justify-end">
               <button
                 className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md font-semibold text-sm px-4 py-2"
                 disabled={!Boolean(chairpersonSuggestion) || loading}
@@ -323,14 +323,14 @@ export default function ChairpersonSuggestionPage() {
                   onConfirm={handleSubmitReview}
                 />
               )}
-            </>
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded-2xl"
+            className="w-full h-full"
           />
         </div>
       </div>
