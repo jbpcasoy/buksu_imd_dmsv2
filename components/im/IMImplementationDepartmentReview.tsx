@@ -22,7 +22,7 @@ interface IMImplementationDepartmentReviewProps {
 }
 export default function IMImplementationDepartmentReview({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMImplementationDepartmentReviewProps) {
   const iM = useIM({
@@ -84,13 +84,15 @@ export default function IMImplementationDepartmentReview({
             />
           </div>
 
-          <div className="md:overflow-auto flex-1">
-            <IMInfo
-              iMId={iMId}
-              onRefresh={onRefresh}
-              refreshFlag={refreshFlag}
-            />
-            <div className="space-x-2 my-2">
+          <div className="md:overflow-auto flex-1 flex flex-col h-full">
+            <div className="flex-1">
+              <IMInfo
+                iMId={iMId}
+                onRefresh={onRefresh}
+                refreshFlag={refreshFlag}
+              />
+            </div>
+            <div className="space-x-2 my-2 flex justify-end">
               {iM.facultyId !== activeFaculty?.facultyId &&
                 !submittedPeerSuggestion && (
                   <>
@@ -98,47 +100,27 @@ export default function IMImplementationDepartmentReview({
                       (peerReview &&
                         activeFaculty &&
                         peerReview?.facultyId ===
-                          activeFaculty?.facultyId)) && (
-                      <>
-                        {coAuthorsCount < 1 && (
-                          <Link
-                            href={`/im/${iM.id}/peer_review`}
-                            className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
-                          >
-                            <span>Peer Review</span>
-                            <span>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                height="1em"
-                                viewBox="0 0 576 512"
-                                className="fill-palette_white"
-                              >
-                                <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
-                              </svg>
-                            </span>
-                          </Link>
-                        )}
-                        {coAuthorsCount > 0 && (
-                          <button
-                            disabled={true}
-                            title="Cannot review co-authored IM"
-                            className="bg-palette_grey text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2"
-                          >
-                            <span>Peer Review</span>
-                            <span>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                height="1em"
-                                viewBox="0 0 576 512"
-                                className="fill-palette_white"
-                              >
-                                <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
-                              </svg>
-                            </span>
-                          </button>
-                        )}
-                      </>
-                    )}
+                        activeFaculty?.facultyId)) && (
+                        <>
+                          {coAuthorsCount < 1 && (
+                            <Link
+                              href={`/im/${iM.id}/peer_review`}
+                              className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                            >
+                              <span>Peer Review</span>
+                            </Link>
+                          )}
+                          {coAuthorsCount > 0 && (
+                            <button
+                              disabled={true}
+                              title="Cannot review co-authored IM"
+                              className="bg-palette_grey text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2"
+                            >
+                              <span>Peer Review</span>
+                            </button>
+                          )}
+                        </>
+                      )}
                     {peerReview &&
                       peerReview?.facultyId !== activeFaculty?.facultyId && (
                         <button
@@ -147,16 +129,6 @@ export default function IMImplementationDepartmentReview({
                           className="bg-palette_grey text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2"
                         >
                           <span>Peer Review</span>
-                          <span>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              height="1em"
-                              viewBox="0 0 576 512"
-                              className="fill-palette_white"
-                            >
-                              <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
-                            </svg>
-                          </span>
                         </button>
                       )}
                   </>
@@ -168,16 +140,6 @@ export default function IMImplementationDepartmentReview({
                   className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
                 >
                   <span>Coordinator Review</span>
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="1em"
-                      viewBox="0 0 576 512"
-                      className="fill-palette_white"
-                    >
-                      <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
-                    </svg>
-                  </span>
                 </Link>
               )}
 
@@ -187,16 +149,6 @@ export default function IMImplementationDepartmentReview({
                   className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
                 >
                   <span>Chairperson Review</span>
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="1em"
-                      viewBox="0 0 576 512"
-                      className="fill-palette_white"
-                    >
-                      <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
-                    </svg>
-                  </span>
                 </Link>
               )}
             </div>
@@ -210,7 +162,7 @@ export default function IMImplementationDepartmentReview({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}
