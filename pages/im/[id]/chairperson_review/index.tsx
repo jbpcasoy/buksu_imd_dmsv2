@@ -351,19 +351,9 @@ export default function AddChairpersonReviewPage() {
                       disabled={
                         formik.isSubmitting || !formik.isValid || loading
                       }
-                      className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-2 py-1 rounded cursor-pointer inline-flex items-center space-x-2 hover:bg-opacity-90"
+                      className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-4 py-2 rounded-md font-semibold cursor-pointer inline-flex items-center space-x-2 hover:bg-opacity-90"
                     >
                       <span>Next</span>
-                      <span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          height="1em"
-                          viewBox="0 0 448 512"
-                          className="fill-palette_white"
-                        >
-                          <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
-                        </svg>
-                      </span>
                     </button>
                   </div>
                 </form>
@@ -373,12 +363,12 @@ export default function AddChairpersonReviewPage() {
               <iframe
                 loading="lazy"
                 src={`/api/im_file/im/${iMId}/pdf`}
-                className="w-full h-full rounded-2xl"
+                className="w-full h-full"
               />
             </div>
           </div>
         </div>
-      </div>
-    </MainLayout>
+      </div >
+    </MainLayout >
   );
 }
