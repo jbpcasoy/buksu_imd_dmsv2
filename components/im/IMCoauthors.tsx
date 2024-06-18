@@ -85,7 +85,7 @@ export default function IMCoAuthors({ iMId }: IMCoAuthorsProps) {
           <input
             type="text"
             placeholder="Name"
-            className="w-52 my-1 rounded border border-palette_orange focus:rounded-b-none focus:border-gray-500 focus:bg-white focus:ring-0"
+            className="w-52 mb-1 rounded-lg border border-palette_orange focus:rounded-b-none focus:border-gray-500 focus:bg-white focus:ring-0"
             onChange={(e) => {
               setState((prev) => ({
                 ...prev,
@@ -133,6 +133,11 @@ export default function IMCoAuthors({ iMId }: IMCoAuthorsProps) {
             />
           );
         })}
+        {coAuthors.length < 1 && (
+          <div className="bg-palette_light_grey_2 rounded-lg p-2 flex items-center">
+            <p>N/A</p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -196,7 +201,7 @@ function CoAuthorChip({
   }
 
   return (
-    <div className="bg-palette_orange rounded-lg p-2 text-xs flex items-center justify-between space-x-1">
+    <div className="bg-palette_orange rounded-lg p-2 flex items-center justify-between space-x-1">
       <p>{user.name}</p>
       {allowDelete && (
         <button
