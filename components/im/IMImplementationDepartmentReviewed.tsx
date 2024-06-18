@@ -284,7 +284,7 @@ export default function IMImplementationDepartmentReviewed({
                             <iframe
                               loading="lazy"
                               src={state.filePreview}
-                              className="w-full h-full rounded-lg"
+                              className="w-full h-full"
                             />
                           )}
                         </div>
@@ -292,16 +292,16 @@ export default function IMImplementationDepartmentReviewed({
                     )}
 
                     {iM.facultyId === activeFaculty?.facultyId && (
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 justify-end">
                         <button
-                          className="rounded text-palette_blue border border-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-1/4"
+                          className="text-palette_blue border border-palette_blue p-2 disabled:bg-opacity-50 space-x-2 rounded-md font-semibold text-sm px-4 py-2"
                           disabled={Boolean(!state?.iMFile) || loading}
                           onClick={handleFileReset}
                         >
                           Replace
                         </button>
                         <button
-                          className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-1/4"
+                          className="text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 rounded-md font-semibold text-sm px-4 py-2"
                           disabled={Boolean(!state?.iMFile) || loading}
                           onClick={openConfirmation}
                         >
@@ -329,7 +329,7 @@ export default function IMImplementationDepartmentReviewed({
               loading="lazy"
               src={`/api/im_file/${iMFile.id}/pdf`}
               title={iM.title}
-              className="w-full h-full rounded-2xl"
+              className="w-full h-full"
             />
           </div>
         )}
