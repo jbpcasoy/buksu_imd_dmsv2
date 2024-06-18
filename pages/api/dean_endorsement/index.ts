@@ -118,7 +118,7 @@ export default async function handler(
           return res.status(403).json({
             error: {
               message:
-                "You are not allowed to endorse IM's from another college",
+                "You are not allowed to endorse IMs from another college",
             },
           });
         }

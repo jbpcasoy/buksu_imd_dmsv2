@@ -28,7 +28,7 @@ export default function CollegeIMsPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.COLLEGE_IMS} />}
         count={count}
         iMs={iMs}
-        title="College IM's"
+        title="College IMs"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

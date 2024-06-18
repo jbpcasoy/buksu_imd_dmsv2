@@ -28,7 +28,7 @@ export default function DepartmentIMsPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.DEPARTMENT_IMS} />}
         count={count}
         iMs={iMs}
-        title="Department IM's"
+        title="Department IMs"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

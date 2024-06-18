@@ -28,7 +28,7 @@ export default function CoAuthoredIMsPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.CO_AUTHORED} />}
         count={count}
         iMs={iMs}
-        title="Co-authored IM's"
+        title="Co-authored IMs"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>

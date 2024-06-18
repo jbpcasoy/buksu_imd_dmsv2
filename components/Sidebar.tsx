@@ -92,7 +92,7 @@ export default function Sidebar() {
               {activeFaculty && (
                 <MenuItem
                   count={myIMsCount}
-                  label="My IM's"
+                  label="My IMs"
                   link="/department/my_ims"
                   icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.MY_IMS} />}
                 />
@@ -100,7 +100,7 @@ export default function Sidebar() {
               {activeFaculty && (
                 <MenuItem
                   count={coAuthoredIMsCount}
-                  label="Co-authored IM's"
+                  label="Co-authored IMs"
                   link="/department/co_authored"
                   icon={
                     <SidebarIcons label={SIDEBAR_ICON_LABELS.CO_AUTHORED} />
@@ -121,7 +121,7 @@ export default function Sidebar() {
               {activeDean && (
                 <MenuItem
                   count={collegeIMsCount}
-                  label="College IM's"
+                  label="College IMs"
                   link="/college/all_ims"
                   icon={
                     <SidebarIcons label={SIDEBAR_ICON_LABELS.COLLEGE_IMS} />
@@ -131,7 +131,7 @@ export default function Sidebar() {
               {(activeCITLDirector || activeIDDCoordinator) && (
                 <MenuItem
                   count={cITLIMsCount}
-                  label="All IM's"
+                  label="All IMs"
                   link="/citl/all_ims"
                   icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ALL_IMS} />}
                 />

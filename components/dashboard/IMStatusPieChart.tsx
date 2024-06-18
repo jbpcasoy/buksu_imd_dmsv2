@@ -64,7 +64,7 @@ export function IMStatusPieChart({
     labels: labels.map((label) => iMStatusNormalizer(label)),
     datasets: [
       {
-        label: `${filter?.departmentId ? department?.name : ""} IM's`,
+        label: `${filter?.departmentId ? department?.name : ""} IMs`,
         data: labels.map((label) => {
           return state?.[label];
         }),

@@ -28,7 +28,7 @@ export default function CITLIMsPage() {
         icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.ALL_IMS} />}
         count={count}
         iMs={iMs}
-        title="All IM's"
+        title="All IMs"
         onChangeState={(state) => setState(state)}
       />
     </MainLayout>
