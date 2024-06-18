@@ -146,7 +146,7 @@ export default function ChairpersonSuggestionPage() {
             .catch((error) => {
               addSnackbar(
                 error.response.data?.error?.message ??
-                  "Failed to add suggestion",
+                "Failed to add suggestion",
                 "error"
               );
             })
@@ -182,7 +182,7 @@ export default function ChairpersonSuggestionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90"
+          className="rounded-md bg-palette_blue text-palette_white px-2 py-1 test-sm font-semibold inline-flex space-x-2 items-center hover:bg-opacity-90"
         >
           <span>Add</span>
           <span>
@@ -219,19 +219,9 @@ export default function ChairpersonSuggestionPage() {
                 <button
                   type="submit"
                   disabled={formik.isSubmitting || !formik.isValid || loading}
-                  className="bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90"
+                  className="bg-palette_blue text-palette_white px-4 py-2 font-semibold rounded-md text-sm flex items-center space-x-2 justify-center hover:bg-opacity-90"
                 >
                   <span>Submit</span>
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="1em"
-                      viewBox="0 0 448 512"
-                      className="fill-palette_white"
-                    >
-                      <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                    </svg>
-                  </span>
                 </button>
               </div>
             </form>
@@ -288,7 +278,7 @@ export default function ChairpersonSuggestionPage() {
 
           <div className="flex-1 h-full overflow-auto space-y-1">
             <div className="overflow-auto">
-              <div className="border border-palette_orange rounded-lg text-sm">
+              <div className="border border-palette_light_grey rounded-lg text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
                   <p className="text-left font-bold">CHAIRPERSON SUGGESTIONS</p>
                   <AddSuggestionItem />
@@ -306,7 +296,7 @@ export default function ChairpersonSuggestionPage() {
                   }
                 )}
                 {chairpersonSuggestionItems.count < 1 && (
-                  <p className="text-center text-xs text-palette_error w-full">
+                  <p className="text-center text-xs text-palette_error w-full p-4">
                     Suggestions are required
                   </p>
                 )}
@@ -321,21 +311,11 @@ export default function ChairpersonSuggestionPage() {
             </div>
             <>
               <button
-                className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
+                className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md font-semibold text-sm px-4 py-2"
                 disabled={!Boolean(chairpersonSuggestion) || loading}
                 onClick={() => setOpenConfirmation(true)}
               >
-                <span>Submit Review</span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    viewBox="0 0 448 512"
-                    className="fill-palette_white"
-                  >
-                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                  </svg>
-                </span>
+                <span>Submit</span>
               </button>
               {openConfirmation && (
                 <Confirmation
@@ -564,19 +544,9 @@ function EditSuggestionItem({
               <button
                 disabled={loading}
                 type="submit"
-                className="bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90"
+                className="bg-palette_blue text-white  inline-flex items-center justify-center space-x-2 hover:bg-opacity-90 rounded-md font-semibold text-sm px-4 py-2"
               >
                 <span>Submit</span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    viewBox="0 0 448 512"
-                    className="fill-palette_white"
-                  >
-                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                  </svg>
-                </span>
               </button>
             </div>
           </form>

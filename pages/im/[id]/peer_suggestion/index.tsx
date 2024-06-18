@@ -206,7 +206,7 @@ export default function PeerSuggestionPage() {
                 <button
                   disabled={loading}
                   type="submit"
-                  className="bg-palette_blue text-palette_white px-4 py-2 rounded-md font-semibold flex items-center space-x-2 justify-center hover:bg-opacity-90"
+                  className="bg-palette_blue text-palette_white flex items-center space-x-2 justify-center hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
                 >
                   <span>Submit</span>
                 </button>
@@ -289,7 +289,7 @@ export default function PeerSuggestionPage() {
             </div>
             <div className="flex justify-end pt-1">
               <button
-                className="bg-palette_blue text-palette_white px-4 py-2 font-semibold rounded-md text-sm inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
+                className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
                 disabled={!Boolean(peerSuggestion) || loading}
                 onClick={() => setOpenConfirmation(true)}
               >
@@ -524,7 +524,7 @@ function EditSuggestionItem({
               <button
                 disabled={loading}
                 type="submit"
-                className="bg-palette_blue text-white inline-flex items-center justify-center py-2 px-4 font-semibold rounded-md space-x-2 hover:bg-opacity-90"
+                className="bg-palette_blue text-white inline-flex items-center justify-center space-x-2 hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
               >
                 <span>Submit</span>
               </button>
