@@ -137,12 +137,12 @@ export default function Sidebar() {
                 />
               )}
             </div>
-            <p className=" text-palette_grey py-2 font-light">
+            <p className=" text-palette_grey py-2 font-light text-sm">
               IMPLEMENTATION PHASE
             </p>
             {activeFaculty && (
               <div className="flex flex-col">
-                <p className=" text-palette_grey py-2 font-light">
+                <p className=" text-palette_grey py-2 font-light text-sm">
                   DEPARTMENT
                 </p>
                 {activeFaculty && (
@@ -195,7 +195,7 @@ export default function Sidebar() {
             )}
             {activeDean && (
               <div className="flex flex-col">
-                <p className=" text-palette_grey py-2 font-light">COLLEGE</p>
+                <p className=" text-palette_grey py-2 font-light text-sm">COLLEGE</p>
 
                 {activeDean && (
                   <MenuItem
@@ -219,7 +219,7 @@ export default function Sidebar() {
             )}
             {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
               <div className="flex flex-col">
-                <p className=" text-palette_grey py-2 font-light">CITL</p>
+                <p className=" text-palette_grey py-2 font-light text-sm">CITL</p>
 
                 {activeFaculty && (
                   <MenuItem
@@ -233,7 +233,7 @@ export default function Sidebar() {
                 )}
                 {activeIDDCoordinator && (
                   <div className="flex flex-col">
-                    <p className=" text-palette_grey py-2 font-light">
+                    <p className=" text-palette_grey py-2 font-light text-sm">
                       IDD COORDINATOR
                     </p>
 
@@ -275,7 +275,7 @@ export default function Sidebar() {
                 )}
                 {activeCITLDirector && (
                   <div className="flex flex-col">
-                    <p className=" text-palette_grey py-2 font-light">
+                    <p className=" text-palette_grey py-2 font-light text-sm">
                       CITL DIRECTOR
                     </p>
                     <MenuItem
@@ -300,10 +300,10 @@ export default function Sidebar() {
             )}
             <hr />
 
-            <p className=" text-palette_grey py-2 font-light">IMERC</p>
+            <p className=" text-palette_grey py-2 font-light text-sm">IMERC</p>
             {activeFaculty && (
               <div className="flex flex-col">
-                <p className=" text-palette_grey py-2 font-light">
+                <p className=" text-palette_grey py-2 font-light text-sm">
                   DEPARTMENT
                 </p>
                 {activeFaculty && (
@@ -356,7 +356,7 @@ export default function Sidebar() {
             )}
             {activeDean && (
               <div className="flex flex-col">
-                <p className=" text-palette_grey py-2 font-light">COLLEGE</p>
+                <p className=" text-palette_grey py-2 font-light text-sm">COLLEGE</p>
                 <MenuItem
                   count={iMERCCollegeToEndorseCount}
                   label="To Endorse"
@@ -374,7 +374,7 @@ export default function Sidebar() {
 
             {(activeFaculty || activeIDDCoordinator || activeCITLDirector) && (
               <div className="flex flex-col">
-                <p className=" text-palette_grey py-2 font-light">CITL</p>
+                <p className=" text-palette_grey py-2 font-light text-sm">CITL</p>
 
                 {activeFaculty && (
                   <MenuItem
@@ -406,7 +406,7 @@ export default function Sidebar() {
                 )}
                 {activeIDDCoordinator && (
                   <div className="flex flex-col">
-                    <p className=" text-palette_grey py-2 font-light">
+                    <p className=" text-palette_grey py-2 font-light text-sm">
                       IDD Coordinator
                     </p>
                     <MenuItem
@@ -429,7 +429,7 @@ export default function Sidebar() {
                 )}
                 {activeCITLDirector && (
                   <div className="flex flex-col">
-                    <p className=" text-palette_grey py-2 font-light">
+                    <p className=" text-palette_grey py-2 font-light text-sm">
                       CITL Director
                     </p>
                     <MenuItem
