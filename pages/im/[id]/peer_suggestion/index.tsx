@@ -133,7 +133,7 @@ export default function PeerSuggestionPage() {
             .catch((error) => {
               addSnackbar(
                 error.response.data?.error?.message ??
-                  "Failed to add suggestion",
+                "Failed to add suggestion",
                 "error"
               );
             })
@@ -169,7 +169,7 @@ export default function PeerSuggestionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex items-center space-x-2 hover:bg-opacity-90"
+          className="rounded-md font-semibold text-sm bg-palette_blue text-palette_white px-2 py-1 inline-flex items-center space-x-2 hover:bg-opacity-90"
         >
           <span>Add</span>
           <span>
@@ -206,19 +206,9 @@ export default function PeerSuggestionPage() {
                 <button
                   disabled={loading}
                   type="submit"
-                  className="bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90"
+                  className="bg-palette_blue text-palette_white px-4 py-2 rounded-md font-semibold flex items-center space-x-2 justify-center hover:bg-opacity-90"
                 >
                   <span>Submit</span>
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="1em"
-                      viewBox="0 0 448 512"
-                      className="fill-palette_white"
-                    >
-                      <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                    </svg>
-                  </span>
                 </button>
               </div>
             </form>
@@ -262,7 +252,7 @@ export default function PeerSuggestionPage() {
 
           <div className="flex-1 h-full overflow-auto space-y-1">
             <div className="overflow-auto">
-              <div className="border border-palette_orange rounded-lg text-sm">
+              <div className="border border-palette_light_grey rounded-lg text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex items-center justify-between">
                   <p className="text-left font-bold">PEER SUGGESTIONS</p>
 
@@ -297,23 +287,13 @@ export default function PeerSuggestionPage() {
                 editable={false}
               />
             </div>
-            <>
+            <div className="flex justify-end pt-1">
               <button
-                className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
+                className="bg-palette_blue text-palette_white px-4 py-2 font-semibold rounded-md text-sm inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
                 disabled={!Boolean(peerSuggestion) || loading}
                 onClick={() => setOpenConfirmation(true)}
               >
-                <span>Submit Review</span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    viewBox="0 0 448 512"
-                    className="fill-palette_white"
-                  >
-                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                  </svg>
-                </span>
+                <span>Submit</span>
               </button>
               {openConfirmation && (
                 <Confirmation
@@ -321,14 +301,14 @@ export default function PeerSuggestionPage() {
                   onConfirm={handleSubmitReview}
                 />
               )}
-            </>
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
           <iframe
             loading="lazy"
             src={`/api/im_file/im/${iMId}/pdf`}
-            className="w-full h-full rounded-2xl"
+            className="w-full h-full"
           />
         </div>
       </div>
@@ -340,7 +320,7 @@ export interface ItemProps {
   peerSuggestionItem: PeerSuggestionItem;
   refresh?: () => any;
 }
-export function Item({ peerSuggestionItem, refresh = () => {} }: ItemProps) {
+export function Item({ peerSuggestionItem, refresh = () => { } }: ItemProps) {
   const [loading, setLoading] = useState(false);
 
   axios.interceptors.request.use(
@@ -395,7 +375,7 @@ export function Item({ peerSuggestionItem, refresh = () => {} }: ItemProps) {
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white px-2 py-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -442,7 +422,7 @@ interface EditSuggestionItemProps {
 }
 function EditSuggestionItem({
   peerSuggestionItem,
-  refresh = () => {},
+  refresh = () => { },
 }: EditSuggestionItemProps) {
   const [loading, setLoading] = useState(false);
 
@@ -491,7 +471,7 @@ function EditSuggestionItem({
         .catch((error) => {
           addSnackbar(
             error.response.data?.error?.message ??
-              "Failed to update suggestion",
+            "Failed to update suggestion",
             "error"
           );
         })
@@ -516,7 +496,7 @@ function EditSuggestionItem({
     <>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white py-1 px-2 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
@@ -544,19 +524,9 @@ function EditSuggestionItem({
               <button
                 disabled={loading}
                 type="submit"
-                className="bg-palette_blue text-white rounded inline-flex items-center justify-center py-1 space-x-2 hover:bg-opacity-90"
+                className="bg-palette_blue text-white inline-flex items-center justify-center py-2 px-4 font-semibold rounded-md space-x-2 hover:bg-opacity-90"
               >
                 <span>Submit</span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    viewBox="0 0 448 512"
-                    className="fill-palette_white"
-                  >
-                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                  </svg>
-                </span>
               </button>
             </div>
           </form>
