@@ -38,7 +38,7 @@ export default function Modal({
       >
         <div className="flex justify-between p-6 pb-2 bg-palette_light_grey_2">
           <div className="">
-            <h1 className="font-bold">{title}</h1>
+            <h1 className="font-semibold text-base">{title}</h1>
             {shortDescription && <p>{shortDescription}</p>}
           </div>
           <div>
