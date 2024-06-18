@@ -22,7 +22,7 @@ const config: Config = {
         palette_error: "#f44336",
         palette_warning: "#ffa726",
         palette_info: "#29b6f6",
-        palette_success: "#66bb6a",
+        palette_success: "#22bb33",
         palette_timeline_green: "#14B8A6",
       },
       height: {
