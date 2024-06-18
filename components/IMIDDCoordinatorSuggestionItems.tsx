@@ -47,7 +47,7 @@ export default function IMIDDCoordinatorSuggestionItems({
   }, [id]);
 
   return (
-    <div className="border border-palette_orange rounded-lg text-sm">
+    <div className="border border-palette_light_grey rounded-lg text-sm">
       <div className="p-2 bg-palette_grey bg-opacity-10">
         <p className="text-left font-bold">IDD COORDINATOR SUGGESTIONS</p>
         {submittedIDDCoordinatorSuggestion && session?.user?.isAdmin && (
@@ -242,7 +242,7 @@ function EditSuggestionItemActionTaken({
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Suggestion has been updated successfully",
+              "Suggestion has been updated successfully",
               "error"
             );
           })
@@ -262,7 +262,7 @@ function EditSuggestionItemActionTaken({
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Suggestion has been updated successfully",
+              "Suggestion has been updated successfully",
               "error"
             );
           })

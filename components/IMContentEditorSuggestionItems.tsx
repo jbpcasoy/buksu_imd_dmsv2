@@ -46,7 +46,7 @@ export default function IMContentEditorSuggestionItems({
     setState((prev) => ({ ...prev, id }));
   }, [id]);
   return (
-    <div className="border border-palette_orange rounded-lg text-sm">
+    <div className="border border-palette_light_grey rounded-lg text-sm">
       <div className="p-2 bg-palette_grey bg-opacity-10">
         <p className="text-left font-bold">CONTENT EDITOR SUGGESTIONS</p>
         {submittedContentEditorSuggestion && session?.user?.isAdmin && (
@@ -241,7 +241,7 @@ function EditSuggestionItemActionTaken({
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Failed to update suggestion",
+              "Failed to update suggestion",
               "error"
             );
           })
@@ -261,7 +261,7 @@ function EditSuggestionItemActionTaken({
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Failed to update suggestion",
+              "Failed to update suggestion",
               "error"
             );
           })

@@ -39,7 +39,7 @@ export default function IMQAMISSuggestionItems({
   });
 
   return (
-    <div className="border border-palette_orange rounded-lg text-sm">
+    <div className="border border-palette_light_grey rounded-lg text-sm">
       <div className="p-2 bg-palette_grey bg-opacity-10">
         <p className="text-left font-bold">QAMIS SUGGESTIONS</p>
         {submittedQAMISSuggestion && session?.user?.isAdmin && (

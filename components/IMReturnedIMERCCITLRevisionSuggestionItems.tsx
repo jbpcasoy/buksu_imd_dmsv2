@@ -47,7 +47,7 @@ export default function IMReturnedIMERCCITLRevisionSuggestionItems({
   }, [id]);
 
   return (
-    <div className="border border-palette_orange rounded-lg text-sm">
+    <div className="border border-palette_light_grey rounded-lg text-sm">
       <div className="p-2 bg-palette_grey bg-opacity-10">
         <p className="text-left font-bold">RETURNED IMERC CITL REVISION</p>
         {submittedReturnedIMERCCITLRevision && session?.user?.isAdmin && (
@@ -248,7 +248,7 @@ function EditSuggestionItemActionTaken({
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Failed to update suggestion",
+              "Failed to update suggestion",
               "error"
             );
           })
@@ -272,7 +272,7 @@ function EditSuggestionItemActionTaken({
           .catch((error) => {
             addSnackbar(
               error.response.data?.error?.message ??
-                "Failed to update suggestion",
+              "Failed to update suggestion",
               "error"
             );
           })
