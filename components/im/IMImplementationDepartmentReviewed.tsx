@@ -26,7 +26,7 @@ interface IMImplementationDepartmentReviewedProps {
 }
 export default function IMImplementationDepartmentReviewed({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMImplementationDepartmentReviewedProps) {
   const iM = useIM({
@@ -107,7 +107,7 @@ export default function IMImplementationDepartmentReviewed({
       .catch((error) => {
         addSnackbar(
           error.response.data?.error?.message ??
-            "Failed to submit IM for endorsement",
+          "Failed to submit IM for endorsement",
           "error"
         );
       })
@@ -233,7 +233,7 @@ export default function IMImplementationDepartmentReviewed({
                     />
                     <IMReturnedDepartmentRevisionSuggestionItems id={iM.id} />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 flex-1 md:overflow-auto flex flex-col justify-between">
                     {iM.facultyId === activeFaculty?.facultyId && (
                       <div className="h-screen-3/4">
                         <div className="w-full h-full">
@@ -294,11 +294,18 @@ export default function IMImplementationDepartmentReviewed({
                     {iM.facultyId === activeFaculty?.facultyId && (
                       <div className="flex space-x-2">
                         <button
-                          className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-full hover:bg-opacity-90"
+                          className="rounded text-palette_blue border border-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-1/4"
+                          disabled={Boolean(!state?.iMFile) || loading}
+                          onClick={handleFileReset}
+                        >
+                          Replace
+                        </button>
+                        <button
+                          className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-1/4"
                           disabled={Boolean(!state?.iMFile) || loading}
                           onClick={openConfirmation}
                         >
-                          Submit for endorsement
+                          Submit
                         </button>
                         {state.openConfirmation && (
                           <Confirmation
@@ -306,13 +313,6 @@ export default function IMImplementationDepartmentReviewed({
                             onConfirm={submitForEndorsementHandler}
                           />
                         )}
-                        <button
-                          className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-1/4 hover:bg-opacity-90"
-                          disabled={Boolean(!state?.iMFile) || loading}
-                          onClick={handleFileReset}
-                        >
-                          Replace
-                        </button>
                       </div>
                     )}
                   </div>
