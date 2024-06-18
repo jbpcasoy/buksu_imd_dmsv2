@@ -105,7 +105,7 @@ export default function IMImplementationDepartmentReview({
                           {coAuthorsCount < 1 && (
                             <Link
                               href={`/im/${iM.id}/peer_review`}
-                              className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                              className="bg-palette_blue text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2 hover:bg-opacity-90"
                             >
                               <span>Peer Review</span>
                             </Link>
@@ -114,7 +114,7 @@ export default function IMImplementationDepartmentReview({
                             <button
                               disabled={true}
                               title="Cannot review co-authored IM"
-                              className="bg-palette_grey text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2"
+                              className="bg-palette_grey text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2"
                             >
                               <span>Peer Review</span>
                             </button>
@@ -126,7 +126,7 @@ export default function IMImplementationDepartmentReview({
                         <button
                           disabled={true}
                           title="A peer review without suggestions already exists."
-                          className="bg-palette_grey text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2"
+                          className="bg-palette_grey text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2"
                         >
                           <span>Peer Review</span>
                         </button>
@@ -137,7 +137,7 @@ export default function IMImplementationDepartmentReview({
               {activeCoordinator && !submittedCoordinatorSuggestion && (
                 <Link
                   href={`/im/${iM.id}/coordinator_review`}
-                  className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                  className="bg-palette_blue text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2 hover:bg-opacity-90"
                 >
                   <span>Coordinator Review</span>
                 </Link>
@@ -146,7 +146,7 @@ export default function IMImplementationDepartmentReview({
               {activeChairperson && !submittedChairpersonSuggestion && (
                 <Link
                   href={`/im/${iM.id}/chairperson_review`}
-                  className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                  className="bg-palette_blue text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2 hover:bg-opacity-90"
                 >
                   <span>Chairperson Review</span>
                 </Link>
