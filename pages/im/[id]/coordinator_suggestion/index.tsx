@@ -202,7 +202,7 @@ export default function CoordinatorSuggestionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90"
+          className="rounded-md font-semibold text-sm bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90"
         >
           <span>Add</span>
           <span>
@@ -284,7 +284,7 @@ export default function CoordinatorSuggestionPage() {
 
           <div className="flex-1 h-full overflow-auto space-y-1">
             <div className="overflow-auto">
-              <div className="border border-palette_orange rounded-lg text-sm">
+              <div className="border border-palette_light_grey rounded-lg text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between">
                   <p className="text-left font-bold">COORDINATOR SUGGESTIONS</p>
                   <AddSuggestionItem />
@@ -315,23 +315,13 @@ export default function CoordinatorSuggestionPage() {
                 editable={false}
               />
             </div>
-            <>
+            <div className="flex justify-end pt-1">
               <button
-                className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
+                className="bg-palette_blue text-palette_white px-4 py-2 font-semibold inline-flex rounded text-sm space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey"
                 disabled={!Boolean(coordinatorSuggestion) || loading}
                 onClick={() => setOpenConfirmation(true)}
               >
                 <span>Submit Review</span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    viewBox="0 0 448 512"
-                    className="fill-palette_white"
-                  >
-                    <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                  </svg>
-                </span>
               </button>
               {openConfirmation && (
                 <Confirmation
@@ -339,7 +329,7 @@ export default function CoordinatorSuggestionPage() {
                   onConfirm={handleSubmitReview}
                 />
               )}
-            </>
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
@@ -413,7 +403,7 @@ function Item({ coordinatorSuggestionItem, refresh }: ItemProps) {
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white py-1 px-2 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -532,7 +522,7 @@ function EditSuggestionItem({
     <div>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white py-1 px-2 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
