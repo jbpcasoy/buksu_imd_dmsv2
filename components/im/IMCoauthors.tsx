@@ -134,7 +134,7 @@ export default function IMCoAuthors({ iMId }: IMCoAuthorsProps) {
           );
         })}
         {coAuthors.length < 1 && (
-          <div className="bg-palette_light_grey_2 rounded-lg p-2 flex items-center min-w-52">
+          <div className="bg-palette_light_grey_2 rounded-lg p-2 flex items-center min-w-52 text-sm">
             <p>N/A</p>
           </div>
         )}
@@ -201,7 +201,7 @@ function CoAuthorChip({
   }
 
   return (
-    <div className="bg-palette_orange rounded-lg p-2 flex items-center justify-between space-x-1 min-w-52 text-ellipsis overflow-hidden">
+    <div className="bg-palette_orange rounded-lg p-2 flex items-center justify-between space-x-1 min-w-52 text-ellipsis overflow-hidden text-sm">
       <p>{user.name}</p>
       {allowDelete && (
         <button
