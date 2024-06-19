@@ -23,7 +23,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Error from "next/error";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function QAMISSuggestionPage() {
@@ -84,6 +84,8 @@ export default function QAMISSuggestionPage() {
   useEffect(() => {
     console.log({ files });
   }, [files]);
+
+  const [stepperState, setStepperState] = useState({ step: 1 });
 
   const uploadFiles = async (submittedQAMISSuggestionId: string) => {
     console.log({ state });
@@ -218,7 +220,7 @@ export default function QAMISSuggestionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex items-center space-x-2 hover:bg-opacity-90"
+          className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md px-2 py-1 font-semibold text-sm"
         >
           <span>Add</span>
           <span>
@@ -307,7 +309,7 @@ export default function QAMISSuggestionPage() {
 
           <div className="flex-1 h-full overflow-auto space-y-2">
             <div className="overflow-auto">
-              <div className="border border-palette_orange rounded text-sm">
+              <div className="border border-palette_light_grey rounded text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
                   <p className="text-left font-bold">QAMIS SUGGESTIONS</p>
                   <AddSuggestionItem />
@@ -333,60 +335,62 @@ export default function QAMISSuggestionPage() {
               </div>
             </div>
 
-            <div className="flex flex-col space-y-2 flex-1">
-              <FileUpload
-                label="UPLOAD QAMIS FILE"
-                onFileChange={(file) => {
-                  setFiles((prev) => ({
-                    ...prev,
-                    qAMISFile: file,
-                  }));
-                }}
-                onFileReset={() => {
-                  setState((prev) => ({
-                    ...prev,
-                    qAMISFile: undefined,
-                  }));
-                }}
-                loading={loading}
-              />
-              <FileUpload
-                label="UPLOAD IM FILE"
-                onFileChange={(file) => {
-                  setFiles((prev) => ({
-                    ...prev,
-                    iMFile: file,
-                  }));
-                }}
-                onFileReset={() => {
-                  setState((prev) => ({
-                    ...prev,
-                    iMFile: undefined,
-                  }));
-                }}
-                loading={loading}
-              />
-            </div>
-            <>
-              <button
-                className="bg-palette_blue text-palette_white w-full space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
-                disabled={
-                  !Boolean(qAMISSuggestion) ||
-                  !Boolean(files.iMFile) ||
-                  !Boolean(files.qAMISFile) ||
-                  loading
-                }
-                onClick={() => setOpenConfirmation(true)}
-              >
-                Submit
-              </button>
-              {openConfirmation && (
-                <Confirmation
-                  onClose={() => setOpenConfirmation(false)}
-                  onConfirm={handleSubmitSuggestions}
+            <UploadStepper state={stepperState} setState={setStepperState} hasQAMISFile={Boolean(files.qAMISFile)} hasIMFile={Boolean(files.iMFile)} />
+            <div className="flex flex-col flex-1">
+
+              <div className={stepperState.step === 1 ? "visible" : "hidden"}>
+                <FileUpload
+                  label=""
+                  onFileChange={(file) => {
+                    setFiles((prev) => ({
+                      ...prev,
+                      qAMISFile: file,
+                    }));
+                    setStepperState(prev => ({ ...prev, step: 2 }));
+                  }}
+                  onFileReset={() => {
+                    setFiles((prev) => ({
+                      ...prev,
+                      qAMISFile: undefined,
+                    }));
+                  }}
+                  loading={loading}
+                  onSubmit={handleSubmitSuggestions}
+                  submitDisabled={
+                    !Boolean(qAMISSuggestion) ||
+                    !Boolean(files.iMFile) ||
+                    !Boolean(files.qAMISFile) ||
+                    loading
+                  }
                 />
-              )}
-            </>
+              </div>
+              <div className={stepperState.step === 2 ? "visible" : "hidden"}>
+                <FileUpload
+                  label=""
+                  onFileChange={(file) => {
+                    setFiles((prev) => ({
+                      ...prev,
+                      iMFile: file,
+                    }));
+                  }}
+                  onFileReset={() => {
+                    setFiles((prev) => ({
+                      ...prev,
+                      iMFile: undefined,
+                    }));
+                  }}
+                  loading={loading}
+                  onSubmit={handleSubmitSuggestions}
+                  submitDisabled={
+                    !Boolean(qAMISSuggestion) ||
+                    !Boolean(files.iMFile) ||
+                    !Boolean(files.qAMISFile) ||
+                    loading
+                  }
+                />
+              </div>
+
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
@@ -465,7 +469,7 @@ export function Item({
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded px-2 py-1 text-sm"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -595,7 +599,7 @@ function EditSuggestionItem({
     <div>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded px-2 py-1 text-sm"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
@@ -639,4 +643,35 @@ function EditSuggestionItem({
       )}
     </div>
   );
+}
+
+function UploadStepper({ state, setState, hasQAMISFile, hasIMFile }: {
+  setState: Dispatch<SetStateAction<{
+    step: number;
+  }>>
+  , state: { step: number },
+  hasQAMISFile: boolean, hasIMFile: boolean
+}) {
+
+  return <div className="flex justify-left items-center space-x-4 border py-2 px-4 rounded-md bg-palette_grey bg-opacity-5">
+    <p className={`cursor-pointer flex justify-center items-center space-x-1  ${state.step >= 1 && hasQAMISFile ? "text-palette_blue" : "text-palette_grey"}`} onClick={() => {
+      setState(prev => ({ ...prev, step: 1 }))
+    }}>
+      <span className={`inline-flex h-5 w-5 border rounded-full justify-center items-center ${state.step >= 1 ? "border-palette_blue" : "border-palette_grey"}`}>
+        <span className="text-xs">1</span>
+      </span>
+      <span className="text-sm font-medium">Upload QAMIS File</span>
+    </p>
+    <svg className={`w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180 ${state.step === 2 || hasQAMISFile || hasIMFile ? "stroke-palette_blue" : "stroke-palette_grey"}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
+      <path stroke="" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="m7 9 4-4-4-4M1 9l4-4-4-4" />
+    </svg>
+    <p className={`cursor-pointer flex justify-center items-center space-x-1  ${state.step < 2 && !hasIMFile ? "text-palette_grey" : "text-palette_blue"}`} onClick={() => {
+      setState(prev => ({ ...prev, step: 2 }))
+    }}>
+      <span className={`inline-flex h-5 w-5 border rounded-full justify-center items-center ${state.step < 2 && !hasIMFile ? "border-palette_grey" : "border-palette_blue"}`}>
+        <span className="text-xs">2</span>
+      </span>
+      <span className="text-sm font-medium">Upload IM File</span>
+    </p>
+  </div >
 }
