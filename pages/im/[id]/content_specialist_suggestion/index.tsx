@@ -187,7 +187,7 @@ export default function ContentSpecialistSuggestionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90"
+          className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 rounded-md font-semibold text-sm px-2 py-1"
         >
           <span>Add</span>
           <span>
@@ -284,8 +284,8 @@ export default function ContentSpecialistSuggestionPage() {
         <div className="md:flex-1 flex flex-col md:h-full overflow-auto bg-palette_white p-4 rounded-2xl space-y-4">
           <IMHeader iM={iM} phase="IMERC Phase" role="Content Specialist" />
 
-          <div className="flex-1 h-full overflow-auto space-y-1">
-            <div className="border border-palette_orange rounded text-sm">
+          <div className="flex-1 h-full overflow-auto space-y-1 flex flex-col">
+            <div className="border border-palette_light_grey rounded text-sm">
               <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
                 <p className="text-left font-bold">
                   CONTENT SPECIALIST SUGGESTIONS
@@ -324,21 +324,23 @@ export default function ContentSpecialistSuggestionPage() {
                 editable={false}
               />
             </div>
-            <>
-              <button
-                className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
-                disabled={!Boolean(contentSpecialistSuggestion) || loading}
-                onClick={() => setOpenConfirmation(true)}
-              >
-                <span>Submit</span>
-              </button>
-              {openConfirmation && (
-                <Confirmation
-                  onClose={() => setOpenConfirmation(false)}
-                  onConfirm={handleSubmitReview}
-                />
-              )}
-            </>
+            <div className="flex flex-col justify-end flex-1">
+              <div className="flex justify-end">
+                <button
+                  className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
+                  disabled={!Boolean(contentSpecialistSuggestion) || loading}
+                  onClick={() => setOpenConfirmation(true)}
+                >
+                  <span>Submit</span>
+                </button>
+                {openConfirmation && (
+                  <Confirmation
+                    onClose={() => setOpenConfirmation(false)}
+                    onConfirm={handleSubmitReview}
+                  />
+                )}
+              </div>
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
@@ -416,7 +418,7 @@ export function Item({ contentSpecialistSuggestionItem, refresh }: ItemProps) {
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded px-2 py-1 text-sm"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -541,7 +543,7 @@ function EditSuggestionItem({
     <div>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded px-2 py-1 text-sm"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
