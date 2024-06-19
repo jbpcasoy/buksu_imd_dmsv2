@@ -125,18 +125,18 @@ export default function IMImplementationDepartmentCoordinatorEndorsed({
           />
         </div>
 
-        <div className="space-y-2 flex-1 md:overflow-auto ">
+        <div className="space-y-2 flex-1 md:overflow-auto h-full flex flex-col">
           <IMInfo iMId={iMId} onRefresh={onRefresh} refreshFlag={refreshFlag} />
-          <div className="flex-1 md:overflow-auto space-y-2">
+          <div className=" flex-1 md:overflow-auto space-y-2 flex flex-col justify-end">
             {activeDean && (
               <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row">
-                <>
+                <div className="flex justify-end w-full">
                   <button
                     disabled={loading}
-                    className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                    className="text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
                     onClick={openConfirmation}
                   >
-                    <span>Endorse IM</span>
+                    <span>Endorse</span>
                   </button>
                   {state.openConfirmation && (
                     <Confirmation
@@ -144,7 +144,7 @@ export default function IMImplementationDepartmentCoordinatorEndorsed({
                       onConfirm={deanEndorsementHandler}
                     />
                   )}
-                </>
+                </div>
               </div>
             )}
           </div>
