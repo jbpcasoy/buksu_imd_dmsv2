@@ -137,7 +137,7 @@ export default function IMImplementationDepartmentRevised({
               <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row justify-end">
                 <button
                   disabled={loading}
-                  className="text-palette_white bg-palette_error p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90 rounded-md px-4 py-2 text-sm font-semibold"
+                  className="text-palette_white bg-palette_error p-2 disabled:border-opacity-50 flex items-center justify-center space-x-2 hover:border-opacity-90 rounded-md px-4 py-2 text-sm font-semibold"
                   onClick={returnCoordinatorEndorsementHandler}
                 >
                   Return
