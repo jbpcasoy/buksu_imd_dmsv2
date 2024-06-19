@@ -6,6 +6,7 @@
 /* Set the width and color of the scrollbar */
 ::-webkit-scrollbar {
     width: 18px;
+    height: 18px;
     /* Change this to gray */
 }
 
