@@ -267,7 +267,7 @@ export default function IMImplementationCITLReviewed({
                             <iframe
                               loading="lazy"
                               src={state.filePreview}
-                              className="w-full h-full rounded-lg"
+                              className="w-full h-full"
                             />
                           )}
                         </div>
@@ -275,13 +275,20 @@ export default function IMImplementationCITLReviewed({
                     )}
 
                     {iM.facultyId === activeFaculty?.facultyId && (
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 justify-end">
                         <button
-                          className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-full hover:bg-opacity-90"
+                          className="text-palette_blue border border-palette_blue p-2  space-x-2 hover:border-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
+                          disabled={Boolean(!state?.iMFile) || loading}
+                          onClick={handleFileReset}
+                        >
+                          Replace
+                        </button>
+                        <button
+                          className="text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
                           disabled={Boolean(!state?.iMFile) || loading}
                           onClick={openConfirmation}
                         >
-                          Submit for endorsement
+                          Submit
                         </button>
                         {state.openConfirmation && (
                           <Confirmation
@@ -289,13 +296,6 @@ export default function IMImplementationCITLReviewed({
                             onConfirm={submitForCITLEndorsementHandler}
                           />
                         )}
-                        <button
-                          className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 space-x-2 w-1/4 hover:bg-opacity-90"
-                          disabled={Boolean(!state?.iMFile) || loading}
-                          onClick={handleFileReset}
-                        >
-                          Replace
-                        </button>
                       </div>
                     )}
                   </div>
