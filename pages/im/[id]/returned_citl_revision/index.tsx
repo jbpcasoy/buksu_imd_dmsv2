@@ -183,7 +183,7 @@ export default function ReturnedCITLRevisionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex items-center space-x-2 hover:bg-opacity-90"
+          className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md text-sm font-semibold px-2 py-1"
         >
           <span>Add</span>
           <span>
@@ -274,7 +274,7 @@ export default function ReturnedCITLRevisionPage() {
 
           <div className="flex-1 h-full overflow-auto space-y-1">
             <div className="overflow-auto">
-              <div className="border border-palette_orange rounded-lg text-sm">
+              <div className="border border-palette_light_grey rounded-lg text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
                   <p className="text-left font-bold">RETURNED CITL REVISION</p>
                   <AddSuggestion />
@@ -316,7 +316,7 @@ export default function ReturnedCITLRevisionPage() {
               />
             </div>
 
-            <>
+            <div className="flex justify-end pt-1">
               <button
                 className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
                 disabled={!Boolean(returnedCITLRevision) || loading}
@@ -330,7 +330,7 @@ export default function ReturnedCITLRevisionPage() {
                   onConfirm={handleSubmitSuggestions}
                 />
               )}
-            </>
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
@@ -413,7 +413,7 @@ export function Item({
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded text-sm px-2 py-1"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -537,7 +537,7 @@ function EditSuggestionItem({
     <div>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded text-sm px-2 py-1"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
