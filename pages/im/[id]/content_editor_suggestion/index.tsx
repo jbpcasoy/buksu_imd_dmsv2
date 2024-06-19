@@ -176,7 +176,7 @@ export default function ContentEditorSuggestionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90"
+          className=" bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 rounded-md text-sm font-semibold px-2 py-1"
         >
           <span>Add</span>
           <span>
@@ -258,9 +258,9 @@ export default function ContentEditorSuggestionPage() {
         <div className="md:flex-1 flex flex-col md:h-full overflow-auto bg-palette_white p-4 rounded-2xl space-y-4">
           <IMHeader iM={iM} phase="IMERC Phase" role="Content Editor" />
 
-          <div className="flex-1 h-full overflow-auto space-y-1">
+          <div className="flex-1 h-full overflow-auto space-y-1 flex flex-col">
             <div className="overflow-auto">
-              <div className="border border-palette_orange rounded text-sm">
+              <div className="border border-palette_light_grey rounded text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
                   <p className="text-left font-bold">
                     CONTENT EDITOR SUGGESTIONS
@@ -299,21 +299,24 @@ export default function ContentEditorSuggestionPage() {
                 editable={false}
               />
             </div>
-            <>
-              <button
-                className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
-                disabled={!Boolean(contentEditorSuggestion) || loading}
-                onClick={() => setOpenConfirmation(true)}
-              >
-                <span>Submit</span>
-              </button>
-              {openConfirmation && (
-                <Confirmation
-                  onClose={() => setOpenConfirmation(false)}
-                  onConfirm={handleSubmitReview}
-                />
-              )}
-            </>
+            <div className="flex flex-col justify-end pt-1">
+
+              <div className="flex justify-end">
+                <button
+                  className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
+                  disabled={!Boolean(contentEditorSuggestion) || loading}
+                  onClick={() => setOpenConfirmation(true)}
+                >
+                  <span>Submit</span>
+                </button>
+                {openConfirmation && (
+                  <Confirmation
+                    onClose={() => setOpenConfirmation(false)}
+                    onConfirm={handleSubmitReview}
+                  />
+                )}
+              </div>
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
@@ -392,7 +395,7 @@ export function Item({
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded text-sm px-2 py-1"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -517,7 +520,7 @@ function EditSuggestionItem({
     <div>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded text-sm px-2 py-1"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
