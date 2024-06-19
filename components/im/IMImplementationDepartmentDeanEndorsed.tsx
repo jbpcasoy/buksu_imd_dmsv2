@@ -49,22 +49,22 @@ export default function IMImplementationDepartmentDeanEndorsed({
             />
           </div>
 
-          <div className="md:overflow-auto flex-1">
+          <div className="md:overflow-auto flex-1 h-full flex flex-col">
             <IMInfo
               iMId={iMId}
               onRefresh={onRefresh}
               refreshFlag={refreshFlag}
             />
-            <div className="space-x-2 my-2">
+            <div className="space-x-2 my-2 flex-1 flex flex-row justify-end">
               {activeIDDCoordinator && (
-                <>
+                <div className="flex flex-col justify-end">
                   <Link
                     href={`/im/${iM.id}/idd_coordinator_suggestion`}
-                    className="bg-palette_blue text-palette_white p-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                    className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md font-semibold text-sm px-4 py-2"
                   >
-                    <span>IDD Coordinator Suggestion</span>
+                    <span>Review</span>
                   </Link>
-                </>
+                </div>
               )}
             </div>
           </div>
