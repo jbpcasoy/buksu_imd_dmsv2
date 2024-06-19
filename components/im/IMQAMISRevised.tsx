@@ -181,81 +181,62 @@ export default function IMQAMISRevised({
             />
             <div className="my-2">
               <IMQAMISSuggestionItems id={iM.id} editable={false} />
-              {activeCoordinator && !coordinatorEndorsement && (
-                <>
-                  <button
-                    disabled={loading}
-                    className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 m-2"
-                    onClick={openConfirmation}
-                  >
-                    <span>Coordinator Endorsement</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="1em"
-                      viewBox="0 0 448 512"
-                      className="fill-palette_white"
+              <div className="flex justify-end space-x-2">
+                {activeCoordinator && !coordinatorEndorsement && (
+                  <>
+                    <button
+                      disabled={loading}
+                      className="text-palette_white bg-palette_blue disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 m-2 rounded-md text-sm font-semibold px-4 py-2"
+                      onClick={openConfirmation}
+                      title="Coordinator Endorsement"
                     >
-                      <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                    </svg>
-                  </button>
-                  {state.openConfirmation && (
-                    <Confirmation
-                      onClose={closeConfirmation}
-                      onConfirm={onQAMISCoordinatorEndorsement}
-                    />
-                  )}
-                </>
-              )}
-              {activeChairperson && !chairpersonEndorsement && (
-                <>
-                  <button
-                    disabled={loading}
-                    className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 m-2"
-                    onClick={openConfirmation}
-                  >
-                    <span>Chairperson Endorsement</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="1em"
-                      viewBox="0 0 448 512"
-                      className="fill-palette_white"
+                      <span>Endorse</span>
+                    </button>
+                    {state.openConfirmation && (
+                      <Confirmation
+                        onClose={closeConfirmation}
+                        onConfirm={onQAMISCoordinatorEndorsement}
+                      />
+                    )}
+                  </>
+                )}
+                {activeChairperson && !chairpersonEndorsement && (
+                  <>
+                    <button
+                      disabled={loading}
+                      className="text-palette_white bg-palette_blue disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 m-2 rounded-md text-sm font-semibold px-4 py-2"
+                      onClick={openConfirmation}
+                      title="Chairperson Endorsement"
                     >
-                      <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                    </svg>
-                  </button>
-                  {state.openConfirmation && (
-                    <Confirmation
-                      onClose={closeConfirmation}
-                      onConfirm={onQAMISChairpersonEndorsement}
-                    />
-                  )}
-                </>
-              )}
-              {activeDean && !deanEndorsement && (
-                <>
-                  <button
-                    disabled={loading}
-                    className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 m-2"
-                    onClick={openConfirmation}
-                  >
-                    <span>Dean Endorsement</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="1em"
-                      viewBox="0 0 448 512"
-                      className="fill-palette_white"
+                      <span>Endorse</span>
+                    </button>
+                    {state.openConfirmation && (
+                      <Confirmation
+                        onClose={closeConfirmation}
+                        onConfirm={onQAMISChairpersonEndorsement}
+                      />
+                    )}
+                  </>
+                )}
+                {activeDean && !deanEndorsement && (
+                  <>
+                    <button
+                      disabled={loading}
+                      className="text-palette_white bg-palette_blue disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 m-2 rounded-md text-sm font-semibold px-4 py-2"
+                      onClick={openConfirmation}
+                      title="Dean Endorsement"
                     >
-                      <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                    </svg>
-                  </button>
-                  {state.openConfirmation && (
-                    <Confirmation
-                      onClose={closeConfirmation}
-                      onConfirm={onQAMISDeanEndorsement}
-                    />
-                  )}
-                </>
-              )}
+                      <span>Endorse</span>
+                    </button>
+                    {state.openConfirmation && (
+                      <Confirmation
+                        onClose={closeConfirmation}
+                        onConfirm={onQAMISDeanEndorsement}
+                      />
+                    )}
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
