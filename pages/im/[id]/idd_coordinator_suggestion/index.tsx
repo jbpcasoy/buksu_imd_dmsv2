@@ -183,7 +183,7 @@ export default function IDDCoordinatorSuggestionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex space-x-2 items-center hover:bg-opacity-90"
+          className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 rounded-md px-2 py-1 font-semibold text-sm"
         >
           <span>Add</span>
           <span>
@@ -313,7 +313,7 @@ export default function IDDCoordinatorSuggestionPage() {
                 editable={false}
               />
             </div>
-            <>
+            <div className="flex justify-end pt-1">
               <button
                 className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
                 disabled={!Boolean(iDDCoordinatorSuggestion) || loading}
@@ -327,7 +327,7 @@ export default function IDDCoordinatorSuggestionPage() {
                   onConfirm={handleSubmitReview}
                 />
               )}
-            </>
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
@@ -404,7 +404,7 @@ export function Item({ iDDCoordinatorSuggestionItem, refresh }: ItemProps) {
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded-md text-sm px-2 py-1"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -525,7 +525,7 @@ function EditSuggestionItem({
     <div>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded text-sm px-2 py-1"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
