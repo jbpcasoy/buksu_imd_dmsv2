@@ -21,6 +21,20 @@ export default function CollegeSelector({
     filter: state,
   });
 
+  const findCollegeName = (collegeId?: string) => {
+    if (!collegeId) return "";
+    let name = "";
+
+    colleges?.forEach((college) => {
+      if (college.id === collegeId) {
+        name = college.name;
+        return;
+      }
+    })
+
+    return name;
+  }
+
   const onSearch: ChangeEventHandler<HTMLInputElement> = (e) => {
     console.log(e.target.value);
     setState((prev) => {
@@ -37,7 +51,7 @@ export default function CollegeSelector({
         disabled={disabled}
         className='rounded-t p-1'
       /> */}
-      <select {...props} disabled={disabled} className="rounded p-3">
+      <select {...props} disabled={disabled} className="rounded p-3 pr-7 text-ellipsis overflow-hidden" title={findCollegeName(props?.value)}>
         <option value="">College</option>
         {colleges.map((college) => {
           return (

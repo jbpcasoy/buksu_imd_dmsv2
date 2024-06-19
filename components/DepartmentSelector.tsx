@@ -25,6 +25,21 @@ export default function DepartmentSelector({
     filter: state,
   });
 
+
+  const findDepartmentName = (departmentId?: string) => {
+    if (!departmentId) return "";
+    let name = "";
+
+    departments?.forEach((department) => {
+      if (department.id === departmentId) {
+        name = department.name;
+        return;
+      }
+    })
+
+    return name;
+  }
+
   useEffect(() => {
     setState((prev) => ({
       ...prev,
@@ -51,7 +66,8 @@ export default function DepartmentSelector({
       <select
         {...props}
         disabled={disabled}
-        className={`rounded ${compact ? "" : "p-3"}`}
+        className={`rounded text-ellipsis overflow-hidden ${compact ? "" : "p-3 pr-7"}`}
+        title={findDepartmentName(props?.value)}
       >
         <option value="">Department</option>
         {departments.map((department) => {
