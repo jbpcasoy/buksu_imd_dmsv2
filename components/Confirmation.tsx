@@ -85,13 +85,13 @@ export default function Confirmation({
         )}
         <div className="flex justify-end space-x-2 py-4 pr-4">
           <button
-            className="px-4 py-1 bg-palette_error text-palette_white rounded hover:bg-opacity-90"
+            className="border border-palette_blue text-palette_blue hover:border-opacity-90 hover:text-opacity-90 rounded-md px-4 py-2 font-semibold text-sm"
             onClick={onClose}
           >
             No
           </button>
           <button
-            className="px-4 py-1 bg-palette_success hover:bg-opacity-90 text-palette_white rounded disabled:bg-palette_grey"
+            className=" bg-palette_blue hover:bg-opacity-90 text-palette_white  disabled:bg-palette_grey rounded-md px-4 py-2 font-semibold text-sm"
             onClick={confirmHandler}
             disabled={Boolean(matchText) && matchText !== state.typedText}
           >
