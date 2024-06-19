@@ -36,7 +36,7 @@ export default function Modal({
         className="w-full max-w-sm bg-palette_white rounded-2xl max-h-96 overflow-auto flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between p-6 pb-2 bg-palette_light_grey_2">
+        <div className="flex justify-between p-4 pb-2 bg-palette_light_grey_2">
           <div className="">
             <h1 className="font-semibold text-base">{title}</h1>
             {shortDescription && <p>{shortDescription}</p>}
@@ -61,7 +61,7 @@ export default function Modal({
           <hr />
         </div> */}
 
-        <div className="p-6 overflow-auto flex-1">{children}</div>
+        <div className="p-4 pt-2 overflow-auto flex-1">{children}</div>
       </div>
     </div>
   );
