@@ -84,7 +84,7 @@ export default function IMInfo({ iMId, onRefresh, refreshFlag }: IMInfoProps) {
           </p>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row justify-between">
+      <div className="flex flex-col md:flex-row justify-between md:space-x-2 space-y-2 md:space-y-0">
         <div className="space-y-2">
           <div className="space-y-2">
             <p className="text-xs">DATE/TIME</p>
