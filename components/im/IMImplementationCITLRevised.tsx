@@ -129,33 +129,31 @@ export default function IMImplementationCITLRevised({
           />
         </div>
 
-        <div className="space-y-2 flex-1 md:overflow-auto ">
+        <div className="space-y-2 flex-1 md:overflow-auto h-full flex flex-col">
           <IMInfo iMId={iMId} onRefresh={onRefresh} refreshFlag={refreshFlag} />
-          <div className="flex-1 md:overflow-auto space-y-2">
+          <div className="flex-1 md:overflow-auto space-y-2 flex flex-col justify-end">
             {activeIDDCoordinator && (
-              <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row">
-                <>
-                  <button
-                    disabled={loading}
-                    className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
-                    onClick={openConfirmation}
-                  >
-                    Endorse IM
-                  </button>
-                  {state.openConfirmation && (
-                    <Confirmation
-                      onClose={closeConfirmation}
-                      onConfirm={iDDCoordinatorEndorsementHandler}
-                    />
-                  )}
-                </>
+              <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row justify-end">
+                <button
+                  disabled={loading}
+                  className="p-2 disabled:border-opacity-50 flex items-center justify-center space-x-2 hover:border-opacity-90 rounded-md border border-palette_blue text-palette_blue"
+                  onClick={returnCoordinatorEndorsementHandler}
+                >
+                  Return
+                </button>
                 <button
                   disabled={loading}
                   className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
-                  onClick={returnCoordinatorEndorsementHandler}
+                  onClick={openConfirmation}
                 >
-                  Return Revision
+                  Endorse
                 </button>
+                {state.openConfirmation && (
+                  <Confirmation
+                    onClose={closeConfirmation}
+                    onConfirm={iDDCoordinatorEndorsementHandler}
+                  />
+                )}
               </div>
             )}
           </div>
