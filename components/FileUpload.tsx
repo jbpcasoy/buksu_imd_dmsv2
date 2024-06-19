@@ -1,19 +1,30 @@
-import { ChangeEvent, DragEvent, useState } from "react";
+import { ChangeEvent, DragEvent, useMemo, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import Confirmation from "./Confirmation";
 
 function FileUpload({
   onFileChange,
   onFileReset,
   label = "UPLOAD FILE",
   loading = false,
+  onSubmit,
+  submitDisabled: submitEnabled = true
 }: {
   onFileChange: (file: File) => any;
   onFileReset: () => any;
   label?: string;
   loading?: boolean;
+  onSubmit?: () => any,
+  submitDisabled?: boolean
 }) {
   const [state, setState] = useState<{
     filePreview?: string;
-  }>({});
+    openConfirmation: boolean,
+  }>({
+    openConfirmation: false
+  });
+
+  const inputId = useMemo(() => uuidv4(), [])
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -57,13 +68,13 @@ function FileUpload({
         <div className="h-full">
           <input
             hidden={true}
-            id="implementation_draft_upload"
+            id={inputId}
             type="file"
             onChange={handleFileChange}
             accept=".pdf"
           />
           <label
-            htmlFor="implementation_draft_upload"
+            htmlFor={inputId}
             className="border-2 border-dashed rounded-2xl h-full flex justify-center items-center cursor-pointer"
             onDrop={handleFileDrop}
             onDragOver={(e) => {
@@ -89,8 +100,8 @@ function FileUpload({
                 <span className="font-semibold text-palette_grey">{label}</span>
               )}
 
-              <span className="text-palette_grey">
-                <span className="font-bold">Click to upload</span> or drag and{" "}
+              <span className="text-palette_grey text-sm">
+                <span className="font-semibold">Click to upload</span> or drag and{" "}
                 <br />
                 drop PDF only (MAX 100MB)
               </span>
@@ -105,17 +116,32 @@ function FileUpload({
             src={state.filePreview}
             className="w-full h-full rounded"
           />
-          <div className="flex justify-center p-2">
-            <button
-              className="bg-palette_blue text-palette_white rounded flex items-center space-x-2 px-20 py-2 disabled:bg-palette_grey"
-              onClick={handleFileReset}
-              disabled={loading}
-            >
-              <span>Replace</span>
-            </button>
-          </div>
         </div>
       )}
+      <div className="flex justify-end p-2 space-x-2">
+        <button
+          className="flex items-center space-x-2 rounded-md font-semibold text-sm px-4 py-2 border border-palette_blue hover:border-opacity-90 disabled:border-opacity-50 disabled:text-palette_grey"
+          onClick={handleFileReset}
+          disabled={loading || !Boolean(state?.filePreview)}
+        >Replace
+        </button>
+        {onSubmit && <>
+          <button
+            className="bg-palette_blue text-palette_white space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
+            disabled={submitEnabled
+            }
+            onClick={() => setState(prev => ({ ...prev, openConfirmation: true }))}
+          >
+            Submit
+          </button>
+          {state.openConfirmation && (
+            <Confirmation
+              onClose={() => setState(prev => ({ ...prev, openConfirmation: false }))}
+              onConfirm={onSubmit}
+            />
+          )}
+        </>}
+      </div>
     </div>
   );
 }
