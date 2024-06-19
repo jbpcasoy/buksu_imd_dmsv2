@@ -277,7 +277,7 @@ export default function IMImplementationCITLReviewed({
                     {iM.facultyId === activeFaculty?.facultyId && (
                       <div className="flex space-x-2 justify-end">
                         <button
-                          className="text-palette_blue border border-palette_blue p-2  space-x-2 hover:border-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
+                          className="text-palette_blue border border-palette_blue p-2  space-x-2 hover:border-opacity-90 disabled::border-opacity-50 rounded-md text-sm font-semibold px-4 py-2"
                           disabled={Boolean(!state?.iMFile) || loading}
                           onClick={handleFileReset}
                         >
