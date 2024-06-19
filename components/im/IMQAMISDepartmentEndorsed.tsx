@@ -68,69 +68,42 @@ export default function IMQAMISDepartmentEndorsed({
             />
           </div>
 
-          <div className="md:overflow-auto flex-1">
+          <div className="md:overflow-auto flex-1 flex flex-col justify-between">
             <IMInfo
               iMId={iMId}
               onRefresh={onRefresh}
               refreshFlag={refreshFlag}
             />
             <div className="space-x-2 my-2">
-              <div className="space-x-2">
+              <div className="space-x-2 flex justify-end">
                 {activeContentSpecialist &&
                   !submittedContentSpecialistSuggestion && (
                     <Link
                       href={`/im/${iM.id}/content_specialist_review`}
-                      className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                      className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md px-4 py-2 font-semibold text-sm"
+                      title="Content Specialist Review"
                     >
-                      <span>Content Specialist Review</span>
-                      <span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          height="1em"
-                          viewBox="0 0 576 512"
-                          className="fill-palette_white"
-                        >
-                          <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
-                        </svg>
-                      </span>
+                      <span>Review</span>
                     </Link>
                   )}
 
                 {activeCITLDirector && !submittedContentEditorSuggestion && (
                   <Link
                     href={`/im/${iM.id}/content_editor_review`}
-                    className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                    className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md px-4 py-2 font-semibold text-sm"
+                    title="Content Editor Review"
                   >
-                    <span>Content Editor Review</span>
-                    <span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="1em"
-                        viewBox="0 0 576 512"
-                        className="fill-palette_white"
-                      >
-                        <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
-                      </svg>
-                    </span>
+                    <span>Review</span>
                   </Link>
                 )}
 
                 {activeIDDCoordinator && !submittedIDDSpecialistSuggestion && (
                   <Link
                     href={`/im/${iM.id}/idd_specialist_review`}
-                    className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90"
+                    className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md px-4 py-2 font-semibold text-sm"
+                    title="IDD Specialist Review"
                   >
-                    <span>IDD Specialist Review</span>
-                    <span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="1em"
-                        viewBox="0 0 576 512"
-                        className="fill-palette_white"
-                      >
-                        <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
-                      </svg>
-                    </span>
+                    <span>Review</span>
                   </Link>
                 )}
               </div>
