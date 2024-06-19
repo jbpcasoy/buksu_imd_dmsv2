@@ -193,34 +193,34 @@ function DepartmentReviewStatus({ iMId }: DepartmentReviewStatusProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs">REVIEWS</p>
-      <div className="inline-flex flex-col space-y-2 w-full">
+      <div className="flex flex-col space-y-2 w-full">
         {!peerReview && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Peer Review
           </p>
         )}
         {peerReview && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Peer Review
           </p>
         )}
         {!chairpersonReview && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Chairperson Review
           </p>
         )}
         {chairpersonReview && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Chairperson Review
           </p>
         )}
         {!coordinatorReview && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Coordinator Review
           </p>
         )}
         {coordinatorReview && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Coordinator Review
           </p>
         )}
@@ -246,34 +246,34 @@ function DepartmentSuggestionStatus({ iMId }: DepartmentSuggestionStatusProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs ">SUGGESTIONS</p>
-      <div className="inline-flex flex-col space-y-2">
+      <div className="flex flex-col space-y-2">
         {!submittedPeerSuggestion && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Peer Suggestion
           </p>
         )}
         {submittedPeerSuggestion && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Peer Suggestion
           </p>
         )}
         {!submittedChairpersonSuggestion && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Chairperson Suggestion
           </p>
         )}
         {submittedChairpersonSuggestion && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Chairperson Suggestion
           </p>
         )}
         {!submittedCoordinatorSuggestion && (
-          <p className="bg-palette_light_grey  inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey  inline p-2 rounded-lg w-full text-sm">
             Coordinator Suggestion
           </p>
         )}
         {submittedCoordinatorSuggestion && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Coordinator Suggestion
           </p>
         )}
@@ -297,24 +297,24 @@ function DepartmentEndorsementStatus({
   return (
     <div className="space-y-2">
       <p className="text-xs ">ENDORSEMENTS</p>
-      <div className="inline-flex flex-col space-y-2">
+      <div className="flex flex-col space-y-2">
         {!coordinatorEndorsement && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Coordinator Endorsement
           </p>
         )}
         {coordinatorEndorsement && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Coordinator Endorsement
           </p>
         )}
         {!deanEndorsement && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Dean Endorsement
           </p>
         )}
         {deanEndorsement && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Dean Endorsement
           </p>
         )}
@@ -334,14 +334,14 @@ function CITLSuggestionStatus({ iMId }: CITLSuggestionStatusProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs ">SUGGESTIONS</p>
-      <div className="inline-flex flex-col space-y-2">
+      <div className="flex flex-col space-y-2">
         {!submittedIDDCoordinatorSuggestion && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             IDD Coordinator Suggestion
           </p>
         )}
         {submittedIDDCoordinatorSuggestion && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             IDD Coordinator Suggestion
           </p>
         )}
@@ -363,24 +363,24 @@ function CITLEndorsementStatus({ iMId }: CITLEndorsementStatusProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs ">ENDORSEMENTS</p>
-      <div className="inline-flex flex-col space-y-2">
+      <div className="flex flex-col space-y-2">
         {!iDDCoordinatorEndorsement && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             IDD Coordinator Endorsement
           </p>
         )}
         {iDDCoordinatorEndorsement && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             IDD Coordinator Endorsement
           </p>
         )}
         {!cITLDirectorEndorsement && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             CITL Director Endorsement
           </p>
         )}
         {cITLDirectorEndorsement && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             CITL Director Endorsement
           </p>
         )}
@@ -407,34 +407,34 @@ function QAMISEndorsementStatus({ iMId }: QAMISEndorsementStatusProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs ">ENDORSEMENTS</p>
-      <div className="inline-flex flex-col space-y-2">
+      <div className="flex flex-col space-y-2">
         {!chairpersonEndorsement && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Chairperson Endorsement
           </p>
         )}
         {chairpersonEndorsement && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Chairperson Endorsement
           </p>
         )}
         {!coordinatorEndorsement && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Coordinator Endorsement
           </p>
         )}
         {coordinatorEndorsement && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Coordinator Endorsement
           </p>
         )}
         {!deanEndorsement && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Dean Endorsement
           </p>
         )}
         {deanEndorsement && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Dean Endorsement
           </p>
         )}
@@ -461,34 +461,34 @@ function IMERCReviewStatus({ iMId }: IMERCReviewStatusProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs">REVIEWS</p>
-      <div className="inline-flex flex-col space-y-2">
+      <div className="flex flex-col space-y-2">
         {!contentSpecialistReview && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Content Specialist Review
           </p>
         )}
         {contentSpecialistReview && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Content Specialist Review
           </p>
         )}
         {!iDDSpecialistReview && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             IDD Specialist Review
           </p>
         )}
         {iDDSpecialistReview && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             IDD Specialist Review
           </p>
         )}
         {!contentEditorReview && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Content Editor Review
           </p>
         )}
         {contentEditorReview && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Content Editor Review
           </p>
         )}
@@ -517,34 +517,34 @@ function IMERCSuggestionStatus({ iMId }: IMERCSuggestionStatusProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs">SUGGESTIONS</p>
-      <div className="inline-flex flex-col space-y-2">
+      <div className="flex flex-col space-y-2">
         {!submittedContentSpecialistSuggestion && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Content Specialist Suggestion
           </p>
         )}
         {submittedContentSpecialistSuggestion && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Content Specialist Suggestion
           </p>
         )}
         {!submittedIDDSpecialistSuggestion && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             IDD Specialist Suggestion
           </p>
         )}
         {submittedIDDSpecialistSuggestion && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             IDD Specialist Suggestion
           </p>
         )}
         {!submittedContentEditorSuggestion && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             Content Editor Suggestion
           </p>
         )}
         {submittedContentEditorSuggestion && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             Content Editor Suggestion
           </p>
         )}
@@ -568,24 +568,24 @@ function IMERCEndorsementStatus({ iMId }: IMERCEndorsementStatusProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs ">ENDORSEMENTS</p>
-      <div className="inline-flex flex-col space-y-2">
+      <div className="flex flex-col space-y-2">
         {!iMERCIDDCoordinatorEndorsement && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             IDD Coordinator Endorsement
           </p>
         )}
         {iMERCIDDCoordinatorEndorsement && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             IDD Coordinator Endorsement
           </p>
         )}
         {!iMERCCITLDirectorEndorsement && (
-          <p className="bg-palette_light_grey inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_light_grey inline p-2 rounded-lg w-full text-sm">
             CITL Director Endorsement
           </p>
         )}
         {iMERCCITLDirectorEndorsement && (
-          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg text-sm">
+          <p className="bg-palette_success text-palette_white inline p-2 rounded-lg w-full text-sm">
             CITL Director Endorsement
           </p>
         )}
