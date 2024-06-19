@@ -201,7 +201,7 @@ function CoAuthorChip({
   }
 
   return (
-    <div className="bg-palette_orange rounded-lg p-2 flex items-center justify-between space-x-1 min-w-52">
+    <div className="bg-palette_orange rounded-lg p-2 flex items-center justify-between space-x-1 min-w-52 text-ellipsis overflow-hidden">
       <p>{user.name}</p>
       {allowDelete && (
         <button
