@@ -21,6 +21,7 @@ import {
 } from "@prisma/client";
 import Error from "next/error";
 import { useRouter } from "next/router";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export default function AllReviewsPage() {
   const router = useRouter();
@@ -32,6 +33,7 @@ export default function AllReviewsPage() {
   const contentEditorReview = useContentEditorReviewIM({ id: iMId });
   const iDDSpecialistReview = useIDDSpecialistReviewIM({ id: iMId });
   const iM = useIM({ id: iMId as string });
+  const [state, setState] = useState({ tab: 1 });
 
   if (iM === null) {
     return (
@@ -51,11 +53,11 @@ export default function AllReviewsPage() {
   return (
     <MainLayout>
       <div className="bg-palette_white rounded-2xl p-4 overflow-auto flex flex-col h-full w-full">
-        <div className="pb-4">
-          <div className="border border-palette_orange p-4 rounded-lg inline-flex space-x-2">
+        <div className="pb-4 overflow-auto">
+          <div className="border border-palette_orange p-2 rounded-lg inline-flex space-x-2 text-sm font-semibold">
             <svg
-              width="18"
-              height="22"
+              width="16"
+              height="20"
               viewBox="0 0 18 22"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -68,51 +70,52 @@ export default function AllReviewsPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <h2 className="font-bold ">All Reviews</h2>
+            <h2 className="inline whitespace-nowrap font-semibold text-sm ">All Reviews</h2>
           </div>
+          <Tab state={state} setState={setState} />
         </div>
         <div className="overflow-auto">
-          {peerReview && <PeerReviewView peerReview={peerReview} />}
-          {chairpersonReview && (
+          {(peerReview && state.tab === 1) && <PeerReviewView peerReview={peerReview} />}
+          {(!peerReview && state.tab === 1) && <NoReview />}
+          {(chairpersonReview && state.tab === 2) && (
             <ChairpersonReviewView chairpersonReview={chairpersonReview} />
           )}
-          {coordinatorReview && (
+          {(!chairpersonReview && state.tab === 2) && <NoReview />}
+          {(coordinatorReview && state.tab === 3) && (
             <CoordinatorReviewView coordinatorReview={coordinatorReview} />
           )}
-          {contentSpecialistReview && (
+          {(!coordinatorReview && state.tab === 3) && <NoReview />}
+          {(contentSpecialistReview && state.tab === 4) && (
             <ContentSpecialistReviewView
               contentSpecialistReview={contentSpecialistReview}
             />
           )}
-          {iDDSpecialistReview && (
+          {(!contentSpecialistReview && state.tab === 4) && <NoReview />}
+          {(iDDSpecialistReview && state.tab === 5) && (
             <IDDSpecialistReviewView
               iDDSpecialistReview={iDDSpecialistReview}
             />
           )}
-          {contentEditorReview && (
+          {(!iDDSpecialistReview && state.tab === 5) && <NoReview />}
+          {(contentEditorReview && state.tab === 6) && (
             <ContentEditorReviewView
               contentEditorReview={contentEditorReview}
             />
           )}
+          {(!contentEditorReview && state.tab === 6) && <NoReview />}
         </div>
       </div>
     </MainLayout>
   );
 }
 
+function NoReview() {
+  return <p className="text-center text-palette_grey">No review yet</p>
+}
+
 function PeerReviewView({ peerReview }: { peerReview: PeerReview }) {
   return (
     <div>
-      <div>
-        <h2 className="inline  font-bold">
-          Instructional Material Review{" "}
-          <span className="bg-palette_orange text-palette_white p-1 rounded">
-            Peer
-          </span>
-        </h2>
-        <p className="text-sm">Implementation Phase</p>
-      </div>
-
       <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
@@ -266,7 +269,7 @@ function PeerReviewView({ peerReview }: { peerReview: PeerReview }) {
           />
         </ReviewSection>
       </div>
-    </div>
+    </div >
   );
 }
 
@@ -277,16 +280,6 @@ function CoordinatorReviewView({
 }) {
   return (
     <div>
-      <div>
-        <h2 className="inline  font-bold">
-          Instructional Material Review{" "}
-          <span className="bg-palette_orange text-palette_white p-1 rounded">
-            Coordinator
-          </span>
-        </h2>
-        <p className="text-sm">Implementation Phase</p>
-      </div>
-
       <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
@@ -451,16 +444,6 @@ function ChairpersonReviewView({
 }) {
   return (
     <div>
-      <div>
-        <h2 className="inline  font-bold">
-          Instructional Material Review{" "}
-          <span className="bg-palette_orange text-palette_white p-1 rounded">
-            Chairperson
-          </span>
-        </h2>
-        <p className="text-sm">Implementation Phase</p>
-      </div>
-
       <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
@@ -625,16 +608,6 @@ function ContentSpecialistReviewView({
 }) {
   return (
     <div>
-      <div>
-        <h2 className="inline  font-bold">
-          Instructional Material Review{" "}
-          <span className="bg-palette_orange text-palette_white p-1 rounded">
-            Content Specialist
-          </span>
-        </h2>
-        <p className="text-sm">IMERC Phase</p>
-      </div>
-
       <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
@@ -804,15 +777,6 @@ function ContentEditorReviewView({
 }) {
   return (
     <div>
-      <div>
-        <h2 className="inline  font-bold">
-          Instructional Material Review{" "}
-          <span className="bg-palette_orange text-palette_white p-1 rounded">
-            Content Editor
-          </span>
-        </h2>
-        <p className="text-sm">IMERC Phase</p>
-      </div>
       <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
@@ -982,15 +946,6 @@ function IDDSpecialistReviewView({
 }) {
   return (
     <div>
-      <div>
-        <h2 className="inline  font-bold">
-          Instructional Material Review{" "}
-          <span className="bg-palette_orange text-palette_white p-1 rounded">
-            IDD Specialist
-          </span>
-        </h2>
-        <p className="text-sm">IMERC Phase</p>
-      </div>
       <div className="flex flex-col space-y-2 p-1">
         <ReviewSection title={ReviewSections.s1}>
           <ReviewItem
@@ -1151,4 +1106,27 @@ function IDDSpecialistReviewView({
       </div>
     </div>
   );
+}
+
+function Tab({ state, setState }: {
+  state: { tab: number; }, setState: Dispatch<SetStateAction<{
+    tab: number;
+  }>>
+}) {
+  const Tab = ({ label, value }: { label: string, value: number }) => {
+    return <p className={`border-b-2 hover:border-palette_grey cursor-pointer px-4 text-sm font-medium ${value === state.tab ? "border-palette_blue text-palette_blue" : "border-transparent text-palette_grey"}`} onClick={() => { setState(prev => ({ ...prev, tab: value })) }}>{label}</p>
+  }
+
+  return (
+    <div className="flex p-2 overflow-auto">
+      <div className="inline-flex justify-center space-x-4 border-b">
+        <Tab value={1} label="Peer Review" />
+        <Tab value={2} label="Chairperson Review" />
+        <Tab value={3} label="Coordinator Review" />
+        <Tab value={4} label="Content Specialist Review" />
+        <Tab value={5} label="IDD Specialist Review" />
+        <Tab value={6} label="Content Editor Review" />
+      </div>
+    </div>
+  )
 }
