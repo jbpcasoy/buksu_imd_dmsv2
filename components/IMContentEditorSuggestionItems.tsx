@@ -48,7 +48,7 @@ export default function IMContentEditorSuggestionItems({
   return (
     <div className="border border-palette_light_grey rounded-lg text-sm">
       <div className="p-2 bg-palette_grey bg-opacity-10">
-        <p className="text-left font-bold">CONTENT EDITOR SUGGESTIONS</p>
+        <p className="text-left font-medium text-palette_blue">Content Editor Suggestions</p>
         {submittedContentEditorSuggestion && session?.user?.isAdmin && (
           <UserInformation
             submittedContentEditorSuggestion={submittedContentEditorSuggestion}
@@ -67,7 +67,7 @@ export default function IMContentEditorSuggestionItems({
       })}
       {count < 1 && (
         <p className="text-center  font-bold p-5 text-palette_grey">
-          NO SUGGESTIONS TO DISPLAY
+          No suggestions to display
         </p>
       )}
     </div>
@@ -140,26 +140,26 @@ function Item({
           />
         </div>
       )}
-      <div className="grid grid-cols-5">
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
+      <div className="grid text-palette_grey grid-cols-5">
+        <p className="px-5 py-1 border-r border-palette_light_grey col-span-2 md:col-span-1">
           Page No.
         </p>
         <p className="px-5 flex-1 col-span-2 md:col-span-4">
           {contentEditorSuggestionItem.pageNumber}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_light_grey col-span-2 md:col-span-1">
           Suggestion
         </p>
         <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {contentEditorSuggestionItem.suggestion}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_light_grey col-span-2 md:col-span-1">
           Remarks
         </p>
         <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {contentEditorSuggestionItem.remarks}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_light_grey col-span-2 md:col-span-1">
           Action Taken
         </p>
         <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">

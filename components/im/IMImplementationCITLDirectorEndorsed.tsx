@@ -37,8 +37,8 @@ export default function IMImplementationCITLDirectorEndorsed({
       <div className="flex-1 h-full md:overflow-auto">
         <div className="bg-palette_white h-full rounded-2xl p-4 overflow-auto flex flex-col space-y-2">
           <div className="w-full flex space-between">
-            <p className="uppercase font-semibold flex-1">
-              DOCUMENT INFORMATION
+            <p className="font-semibold flex-1">
+              Document Information
             </p>
 
             <IMActionMenu

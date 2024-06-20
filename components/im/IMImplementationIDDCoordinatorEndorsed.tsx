@@ -116,7 +116,7 @@ export default function IMImplementationIDDCoordinatorEndorsed({
     <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4 space-y-4 md:space-y-0">
       <div className="flex-1 h-full md:overflow-auto bg-palette_white p-4 rounded-2xl flex flex-col space-y-2">
         <div className="w-full flex space-between">
-          <p className="uppercase font-semibold flex-1">DOCUMENT INFORMATION</p>
+          <p className="font-semibold flex-1">Document Information</p>
 
           <IMActionMenu
             iMId={iMId}
