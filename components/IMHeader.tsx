@@ -19,20 +19,20 @@ export default function IMHeader({ iM, phase, role }: IMHeaderProps) {
     <div className="grid md:grid-cols-4 space-y-2 md:space-y-0">
       <div>
         <p className="font-semibold text-sm">{phase}</p>
-        <p className="px-1 border border-palette_orange inline-block rounded-md text-palette_orange font-semibold text-xs">
+        <p className="px-1 border border-palette_orange inline-block rounded-md text-palette_orange font-medium text-xs">
           {role}
         </p>
       </div>
       <div>
-        <p className="text-xs text-palette_grey">IM Title:</p>
+        <p className="text-xs text-palette_grey">IM Title</p>
         <p className="text-sm font-semibold">{iM.title}</p>
       </div>
       <div>
-        <p className="text-xs text-palette_grey">Author:</p>
+        <p className="text-xs text-palette_grey">Author</p>
         <p className="text-sm font-semibold">{author?.name}</p>
       </div>
       <div>
-        <p className="text-xs text-palette_grey">College:</p>
+        <p className="text-xs text-palette_grey">College</p>
         <p className="text-sm font-semibold">{college?.name}</p>
       </div>
     </div>

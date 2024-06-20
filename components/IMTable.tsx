@@ -123,7 +123,7 @@ export default function IMTable({
   return (
     <div className="bg-palette_white rounded-2xl h-full flex flex-col overflow-auto p-4">
       <div className="pb-4 overflow-auto">
-        <div className="flex space-x-1">
+        <div className="flex space-x-1 ">
           <div className="flex-1 flex items-center space-x-8">
             <div className="flex space-x-2 items-center justify-center border border-palette_orange rounded-lg p-2 ">
               {icon && <div className="stroke-palette_grey">{icon}</div>}
@@ -143,31 +143,31 @@ export default function IMTable({
         <table className="table-auto lg:table-fixed w-full overflow-auto ">
           <thead className="p-1 border-b">
             <tr>
-              <th className="font-normal text-left truncate" title="TITLE">
-                TITLE
+              <th className="font-normal text-left truncate text-sm text-palette_grey" title="Title">
+                Title
               </th>
-              <th className="font-normal text-left truncate" title="SERIAL">
-                SERIAL NO.
+              <th className="font-normal text-left truncate text-sm text-palette_grey" title="Serial No.">
+                Serial No.
               </th>
-              <th className="font-normal text-left truncate" title="TYPE">
-                TYPE
+              <th className="font-normal text-left truncate text-sm text-palette_grey" title="Type">
+                Type
               </th>
-              <th className="font-normal text-left truncate" title="AUTHOR">
-                AUTHOR
+              <th className="font-normal text-left truncate text-sm text-palette_grey" title="Author">
+                Author
               </th>
-              <th className="font-normal text-left truncate" title="DEPARTMENT">
-                DEPARTMENT
+              <th className="font-normal text-left truncate text-sm text-palette_grey" title="Department">
+                Department
               </th>
-              <th className="font-normal text-left truncate" title="COLLEGE">
-                COLLEGE
+              <th className="font-normal text-left truncate text-sm text-palette_grey" title="College">
+                College
               </th>
-              <th className="font-normal text-left truncate" title="STATUS">
-                STATUS
+              <th className="font-normal text-left truncate text-sm text-palette_grey" title="Status">
+                Status
               </th>
-              <th className="font-normal text-left truncate" title="DATE">
-                DATE CREATED
+              <th className="font-normal text-left truncate text-sm text-palette_grey" title="Date Created">
+                Date Created
               </th>
-              <th className="font-normal text-center">ACTIONS</th>
+              <th className="font-normal text-center text-palette_grey">Actions</th>
             </tr>
           </thead>
           <tbody className="py-1 h-full overflow-auto">
@@ -176,9 +176,9 @@ export default function IMTable({
             })}
 
             {count < 1 && (
-              <tr className="border-b uppercase  text-center">
-                <td colSpan={9} className="font-bold p-5 text-palette_grey">
-                  NO IMS TO DISPLAY
+              <tr className="border-b text-center">
+                <td colSpan={9} className="p-5 text-palette_grey">
+                  No IMs to display
                 </td>
               </tr>
             )}
@@ -236,7 +236,7 @@ function IMItem({ iM }: { iM: IM }) {
   const iMStatus = useIMStatus({ id: iM.id });
 
   return (
-    <tr key={iM.id} className="border-b uppercase">
+    <tr key={iM.id} className="border-b">
       <td className="p-1 text-nowrap truncate text-sm" title={iM.title}>
         {iM.title}
       </td>
@@ -270,10 +270,10 @@ function IMItem({ iM }: { iM: IM }) {
       >
         {DateTime.fromJSDate(new Date(iM.createdAt)).toFormat("D | t")}
       </td>
-      <td className="p-1 flex justify-center items-center">
+      <td className="p-1 flex justify-center items-center text-sm">
         <Link
           href={`/im/${iM.id}`}
-          className="group rounded bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
+          className="group bg-palette_blue text-palette_white flex justify-center items-center space-x-1 rounded text-sm px-2 py-1 hover:bg-opacity-90"
         >
           <span>View</span>
         </Link>
@@ -315,7 +315,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
     <div className="flex">
       <select
         onChange={handleFieldChange}
-        className="py-1 rounded-l-lg bg-inherit border-r-0 focus:border-palette_grey focus:outline-0 focus:ring-0"
+        className="py-1 rounded-l-lg bg-inherit border-r-0 border-palette_light_grey focus:border-palette_light_grey focus:outline-0 focus:ring-0 text-sm"
       >
         <option value="">Select field</option>
         <option value="title">Title</option>
@@ -327,7 +327,7 @@ function FilterSelector({ onFilterChange }: FilterSelectorProps) {
         type="text"
         placeholder="Search"
         value={filterValue}
-        className="bg-inherit border-b py-1 rounded-r-lg focus:border-palette_grey focus:outline-0 focus:ring-0 "
+        className="bg-inherit border-b border-palette_light_grey py-1 rounded-r-lg focus:border-palette_light_grey focus:outline-0 focus:ring-0 text-sm"
         onChange={handleValueChange}
       />
     </div>
@@ -359,7 +359,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
       <select
         onChange={handleFieldChange}
         value={selectedField}
-        className="py-1 rounded-l-lg bg-inherit border-r-0 focus:border-palette_grey focus:outline-0 focus:ring-0"
+        className="py-1 rounded-l-lg bg-inherit border-r-0 border-palette_light_grey focus:border-palette_light_grey focus:outline-0 focus:ring-0 text-sm"
       >
         <option value="title">Title</option>
         <option value="createdAt">Date Created</option>
@@ -370,7 +370,7 @@ function SortSelector({ onSortChange }: SortSelectorProps) {
       <select
         onChange={handleDirectionChange}
         value={sortDirection}
-        className="py-1 rounded-r-lg bg-inherit focus:border-palette_grey focus:outline-0 focus:ring-0"
+        className="py-1 rounded-r-lg bg-inherit border-palette_light_grey focus:border-palette_light_grey focus:outline-0 focus:ring-0 text-sm"
       >
         <option value="asc">↑</option>
         <option value="desc">↓</option>
@@ -442,7 +442,7 @@ function AddIM() {
     <>
       <button
         disabled={loading}
-        className="rounded-lg bg-palette_blue text-palette_white py-1 px-2 flex justify-center items-center space-x-1"
+        className="bg-palette_blue text-palette_white flex justify-center items-center space-x-1 rounded-md text-sm px-4 py-2 font-semibold hover:bg-opacity-90"
         onClick={() => setState({ addIMOpen: true })}
       >
         <svg
@@ -477,7 +477,7 @@ function AddIM() {
               <button
                 disabled={loading}
                 type="submit"
-                className="bg-palette_blue text-palette_white rounded px-2 py-1 flex items-center space-x-2 justify-center hover:bg-opacity-90"
+                className="bg-palette_blue text-palette_white flex items-center space-x-2 justify-center hover:bg-opacity-90 rounded-md text-sm px-4 py-2 font-semibold"
               >
                 <span>Submit</span>
               </button>
@@ -520,17 +520,17 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
     "IMERC_CITL_DIRECTOR_ENDORSED",
   ];
   return (
-    <div className="flex items-center justify-center border border-current rounded-lg space-x-2 pl-4 p-1 w-40 " title={iMStatusNormalizer(state.status)}>
+    <div className="flex items-center justify-center border border-palette_light_grey rounded-lg space-x-2 pl-4 p-1 w-40 " title={iMStatusNormalizer(state.status)}>
       <svg
         width="18"
         height="18"
         viewBox="0 0 18 18"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="stroke-palette_grey"
       >
         <path
           d="M7.5 3H17.25M7.5 3C7.5 3.39782 7.34196 3.77936 7.06066 4.06066C6.77936 4.34196 6.39782 4.5 6 4.5C5.60218 4.5 5.22064 4.34196 4.93934 4.06066C4.65804 3.77936 4.5 3.39782 4.5 3M7.5 3C7.5 2.60218 7.34196 2.22064 7.06066 1.93934C6.77936 1.65804 6.39782 1.5 6 1.5C5.60218 1.5 5.22064 1.65804 4.93934 1.93934C4.65804 2.22064 4.5 2.60218 4.5 3M4.5 3H0.75M7.5 15H17.25M7.5 15C7.5 15.3978 7.34196 15.7794 7.06066 16.0607C6.77936 16.342 6.39782 16.5 6 16.5C5.60218 16.5 5.22064 16.342 4.93934 16.0607C4.65804 15.7794 4.5 15.3978 4.5 15M7.5 15C7.5 14.6022 7.34196 14.2206 7.06066 13.9393C6.77936 13.658 6.39782 13.5 6 13.5C5.60218 13.5 5.22064 13.658 4.93934 13.9393C4.65804 14.2206 4.5 14.6022 4.5 15M4.5 15H0.75M13.5 9H17.25M13.5 9C13.5 9.39782 13.342 9.77936 13.0607 10.0607C12.7794 10.342 12.3978 10.5 12 10.5C11.6022 10.5 11.2206 10.342 10.9393 10.0607C10.658 9.77936 10.5 9.39782 10.5 9M13.5 9C13.5 8.60218 13.342 8.22064 13.0607 7.93934C12.7794 7.65804 12.3978 7.5 12 7.5C11.6022 7.5 11.2206 7.65804 10.9393 7.93934C10.658 8.22064 10.5 8.60218 10.5 9M10.5 9H0.75"
-          stroke="black"
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -540,7 +540,7 @@ function StatusSelector({ onStatusChange }: StatusSelectorProps) {
         onChange={(e) => {
           setState({ status: e.target.value as string });
         }}
-        className="py-1 rounded-r-lg bg-inherit focus:border-none focus:outline-none focus:ring-0  border-0 w-full"
+        className="py-1 rounded-r-lg bg-inherit focus:border-none focus:outline-none focus:ring-0  border-0 w-full text-sm"
       >
         <option value="">Status</option>
         {statuses.map((status) => {
