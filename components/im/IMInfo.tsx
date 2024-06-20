@@ -71,7 +71,7 @@ export default function IMInfo({ iMId, onRefresh, refreshFlag }: IMInfoProps) {
             {iM.title}
           </p>
         </div>
-        <div>
+        <div className="space-y-2">
           <p className="text-xs">Serial Number</p>
           <p className="border bg-palette_grey bg-opacity-5 text-palette_grey p-2 rounded-lg text-sm">
             {serialNumber?.value ?? "N/A"}

@@ -277,7 +277,7 @@ export default function IDDCoordinatorSuggestionPage() {
               <div className="border border-palette_light_grey rounded-lg text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
                   <p className="text-left font-medium">
-                    Idd Coordinator Suggestions
+                    IDD Coordinator Suggestions
                   </p>
                   <AddSuggestionItem />
                 </div>

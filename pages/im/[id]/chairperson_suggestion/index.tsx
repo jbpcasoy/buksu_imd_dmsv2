@@ -309,7 +309,7 @@ export default function ChairpersonSuggestionPage() {
                 editable={false}
               />
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-1">
               <button
                 className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md font-semibold text-sm px-4 py-2"
                 disabled={!Boolean(chairpersonSuggestion) || loading}
@@ -396,7 +396,7 @@ function Item({ chairpersonSuggestionItem, refresh }: ItemProps) {
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded text-sm px-2 py-1"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -413,7 +413,7 @@ function Item({ chairpersonSuggestionItem, refresh }: ItemProps) {
           )}
         </>
       </div>
-      <div className="grid grid-cols-5">
+      <div className="grid grid-cols-5 text-palette_grey">
         <p className="px-5 py-1 border-r border-palette_light_grey col-span-2 md:col-span-1">
           Page No.
         </p>
@@ -516,7 +516,7 @@ function EditSuggestionItem({
     <div>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded text-sm px-2 py-1"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
