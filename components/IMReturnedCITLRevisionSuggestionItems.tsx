@@ -70,7 +70,7 @@ export default function IMReturnedCITLRevisionSuggestionItems({
         }
       )}
       {count < 1 && (
-        <p className="text-center  font-bold p-5 text-palette_grey">
+        <p className="text-center p-5 text-palette_grey">
           No suggestions to display
         </p>
       )}
