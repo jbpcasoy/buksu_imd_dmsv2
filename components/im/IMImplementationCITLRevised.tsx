@@ -136,7 +136,7 @@ export default function IMImplementationCITLRevised({
               <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row justify-end">
                 <button
                   disabled={loading}
-                  className="p-2 disabled:border-opacity-50 flex items-center justify-center space-x-2 hover:border-opacity-90 rounded-md border border-palette_blue text-palette_blue"
+                  className="p-2 flex items-center justify-center space-x-2 hover:border-opacity-90 rounded-md border border-palette_blue text-palette_blue disabled:border-opacity-50 disabled:text-palette_grey"
                   onClick={returnCoordinatorEndorsementHandler}
                 >
                   Return

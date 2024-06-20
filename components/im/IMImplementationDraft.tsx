@@ -171,7 +171,7 @@ export default function IMImplementationDraft({
             {iM.facultyId === activeFaculty?.facultyId && (
               <div className="flex space-x-2 w-full justify-end">
                 <button
-                  className="rounded-md text-palette_blue border border-palette_blue py-2 px-4 disabled:opacity-50 space-x-2 font-semibold"
+                  className="rounded-md text-palette_blue border border-palette_blue py-2 px-4 space-x-2 font-semibold disabled:border-opacity-50 disabled:text-palette_grey"
                   disabled={Boolean(!state?.iMFile) || loading}
                   onClick={handleFileReset}
                 >

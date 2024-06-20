@@ -162,7 +162,7 @@ export default function IMIMERCCITLRevised({
                 <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row justify-end">
                   <button
                     disabled={loading}
-                    className="flex items-center justify-center space-x-2 rounded-md text-sm font-semibold px-4 py-2 border border-palette_blue hover:border-opacity-90 disabled:border-opacity-50 text-palette_blue disabled:text-opacity-50 hover:text-opacity-90"
+                    className="flex items-center justify-center space-x-2 rounded-md text-sm font-semibold px-4 py-2 border border-palette_blue hover:border-opacity-90 text-palette_blue disabled:text-opacity-50 hover:text-opacity-90 disabled:border-opacity-50 disabled:text-palette_grey"
                     onClick={returnIMERCIDDCoordinatorEndorsementHandler}
                   >
                     Return
