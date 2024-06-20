@@ -127,7 +127,7 @@ export default function IMTable({
           <div className="flex-1 flex items-center space-x-8">
             <div className="flex space-x-2 items-center justify-center border border-palette_orange rounded-lg p-2 ">
               {icon && <div className="stroke-palette_grey">{icon}</div>}
-              <h2 className="inline whitespace-nowrap font-bold">{title}</h2>
+              <h2 className="inline whitespace-nowrap font-semibold text-sm">{title}</h2>
             </div>
             <div className="flex flex-row space-x-4">
               <FilterSelector onFilterChange={handleFilterChange} />
@@ -187,7 +187,7 @@ export default function IMTable({
       </div>
 
       <div className="flex justify-between items-center space-x-1 p-1">
-        <p className="">
+        <p className="text-sm">
           {state.skip} to {state.skip + state.take} of {count} results
         </p>
         <div className="flex justify-center items-center space-x-1">

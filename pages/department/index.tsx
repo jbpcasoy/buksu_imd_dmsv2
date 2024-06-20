@@ -62,7 +62,7 @@ export default function DepartmentPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <h2 className="flex-1 uppercase  whitespace-nowrap">
+            <h2 className="flex-1 text-sm font-semibold  whitespace-nowrap">
               {department?.name}
             </h2>
           </div>
