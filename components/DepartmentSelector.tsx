@@ -66,7 +66,7 @@ export default function DepartmentSelector({
       <select
         {...props}
         disabled={disabled}
-        className={`rounded text-ellipsis overflow-hidden ${compact ? "" : "p-3 pr-7"}`}
+        className={`text-ellipsis overflow-hidden rounded-lg border border-palette_light_grey disabled:border-opacity-80 text-sm focus:border-palette_light_grey focus:outline-0 focus:ring-0 ${compact ? "" : "p-2 pr-7"}`}
         title={findDepartmentName(props?.value)}
       >
         <option value="">Department</option>

@@ -34,7 +34,7 @@ export default function StatusSelector(props?: FieldInputProps<any>) {
 
   return (
     <div className="flex">
-      <select {...props} className="rounded p-3 pr-7 text-ellipsis overflow-hidden w-44 " title={iMStatusNormalizer(props?.value)}>
+      <select {...props} className="rounded p-2 pr-7 text-ellipsis overflow-hidden w-44 rounded-lg border border-palette_light_grey disabled:border-opacity-80 text-sm focus:border-palette_light_grey focus:outline-0 focus:ring-0 " title={iMStatusNormalizer(props?.value)}>
         <option value="">Select Status</option>
         {state?.map((status) => (
           <option key={status} value={status}>

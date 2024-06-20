@@ -51,7 +51,7 @@ export default function CollegeSelector({
         disabled={disabled}
         className='rounded-t p-1'
       /> */}
-      <select {...props} disabled={disabled} className="rounded p-3 pr-7 text-ellipsis overflow-hidden" title={findCollegeName(props?.value)}>
+      <select {...props} disabled={disabled} className="p-2 pr-7 text-ellipsis overflow-hidden rounded-lg border border-palette_light_grey disabled:border-opacity-80 text-sm focus:border-palette_light_grey focus:outline-0 focus:ring-0 " title={findCollegeName(props?.value)}>
         <option value="">College</option>
         {colleges.map((college) => {
           return (
