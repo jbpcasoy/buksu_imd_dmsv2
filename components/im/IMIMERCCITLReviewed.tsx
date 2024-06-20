@@ -10,8 +10,7 @@ import useSubmittedReturnedIMERCCITLRevisionIM from "@/hooks/useSubmittedReturne
 import axios from "axios";
 import Error from "next/error";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
-import Confirmation from "../Confirmation";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import FileUpload from "../FileUpload";
 import IMContentEditorSuggestionItems from "../IMContentEditorSuggestionItems";
 import IMContentSpecialistSuggestionItems from "../IMContentSpecialistSuggestionItems";
@@ -49,6 +48,8 @@ export default function IMIMERCCITLReviewed({
     id: iMId,
   });
 
+  const [stepperState, setStepperState] = useState({ step: 1 });
+
   const [loading, setLoading] = useState(false);
 
   axios.interceptors.request.use(
@@ -73,6 +74,12 @@ export default function IMIMERCCITLReviewed({
       return Promise.reject(error);
     }
   );
+
+  useEffect(() => {
+    if (plagiarismFile) {
+      setStepperState(prev => ({ ...prev, step: 2 }));
+    }
+  }, [plagiarismFile])
 
   const closeConfirmation = () => {
     setState((prev) => ({
@@ -212,14 +219,50 @@ export default function IMIMERCCITLReviewed({
                   editable={iMStatus !== "IMERC_CITL_RETURNED_REVISION"}
                 />
                 <IMReturnedIMERCCITLRevisionSuggestionItems id={iM.id} />
+
+                <UploadStepper state={stepperState} setState={setStepperState} hasPlagiarismFile={Boolean(state.plagiarismFile) || Boolean(plagiarismFile)} hasIMFile={Boolean(state.iMFile)} />
                 <div className="space-y-2">
-                  {!plagiarismFile && (
+                  <div className={stepperState.step === 1 ? "visible" : "hidden"}>
+                    {!plagiarismFile && (
+                      <FileUpload
+                        label=""
+                        onFileChange={(file) => {
+                          setState((prev) => ({
+                            ...prev,
+                            plagiarismFile: file,
+                          }));
+                          setStepperState(prev => ({ ...prev, step: 2 }));
+                        }}
+                        onFileReset={() => {
+                          setState((prev) => ({
+                            ...prev,
+                            plagiarismFile: undefined,
+                          }));
+                        }}
+                        loading={loading}
+                        onSubmit={submitForIMERCCITLEndorsementHandler}
+                        submitDisabled={
+                          !Boolean(state.iMFile) || loading || (!plagiarismFile && !Boolean(state.plagiarismFile))
+                        }
+                      />
+                    )}
+                    {plagiarismFile &&
+                      <div className="flex flex-col w-full h-screen-3/4">
+                        <iframe
+                          loading="lazy"
+                          src={`/api/plagiarism_file/${plagiarismFile.id}/pdf`}
+                          title={iM.title}
+                          className="w-full h-full"
+                        />
+                      </div>}
+                  </div>
+                  <div className={stepperState.step === 2 ? "visible" : "hidden"}>
                     <FileUpload
-                      label="UPLOAD PLAGIARISM FILE"
+                      label=""
                       onFileChange={(file) => {
                         setState((prev) => ({
                           ...prev,
-                          plagiarismFile: file,
+                          iMFile: file,
                         }));
                       }}
                       onFileReset={() => {
@@ -229,26 +272,14 @@ export default function IMIMERCCITLReviewed({
                         }));
                       }}
                       loading={loading}
+                      onSubmit={submitForIMERCCITLEndorsementHandler}
+                      submitDisabled={
+                        !Boolean(state.iMFile) || loading || (!plagiarismFile && !Boolean(state.plagiarismFile))
+                      }
                     />
-                  )}
-                  <FileUpload
-                    label="UPLOAD IM FILE"
-                    onFileChange={(file) => {
-                      setState((prev) => ({
-                        ...prev,
-                        iMFile: file,
-                      }));
-                    }}
-                    onFileReset={() => {
-                      setState((prev) => ({
-                        ...prev,
-                        qAMISFile: undefined,
-                      }));
-                    }}
-                    loading={loading}
-                  />
+                  </div>
                 </div>
-                <div>
+                {/* <div>
                   <button
                     className="rounded text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90 w-full"
                     onClick={openConfirmation}
@@ -262,7 +293,7 @@ export default function IMIMERCCITLReviewed({
                       onConfirm={submitForIMERCCITLEndorsementHandler}
                     />
                   )}
-                </div>
+                </div> */}
               </>
             )}
           </div>
@@ -280,6 +311,37 @@ export default function IMIMERCCITLReviewed({
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
+}
+
+function UploadStepper({ state, setState, hasPlagiarismFile, hasIMFile }: {
+  setState: Dispatch<SetStateAction<{
+    step: number;
+  }>>
+  , state: { step: number },
+  hasPlagiarismFile: boolean, hasIMFile: boolean
+}) {
+
+  return <div className="flex justify-left items-center space-x-4 border py-2 px-4 rounded-md bg-palette_grey bg-opacity-5">
+    <p className={`cursor-pointer flex justify-center items-center space-x-1  ${state.step >= 1 && hasPlagiarismFile ? "text-palette_blue" : "text-palette_grey"}`} onClick={() => {
+      setState(prev => ({ ...prev, step: 1 }))
+    }}>
+      <span className={`inline-flex h-5 w-5 border rounded-full justify-center items-center ${state.step >= 1 ? "border-palette_blue" : "border-palette_grey"}`}>
+        <span className="text-xs">1</span>
+      </span>
+      <span className="text-sm font-medium">Upload Plagiarism File</span>
+    </p>
+    <svg className={`w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180 ${state.step === 2 || hasPlagiarismFile || hasIMFile ? "stroke-palette_blue" : "stroke-palette_grey"}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
+      <path stroke="" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="m7 9 4-4-4-4M1 9l4-4-4-4" />
+    </svg>
+    <p className={`cursor-pointer flex justify-center items-center space-x-1  ${state.step < 2 && !hasIMFile ? "text-palette_grey" : "text-palette_blue"}`} onClick={() => {
+      setState(prev => ({ ...prev, step: 2 }))
+    }}>
+      <span className={`inline-flex h-5 w-5 border rounded-full justify-center items-center ${state.step < 2 && !hasIMFile ? "border-palette_grey" : "border-palette_blue"}`}>
+        <span className="text-xs">2</span>
+      </span>
+      <span className="text-sm font-medium">Upload IM File</span>
+    </p>
+  </div >
 }
