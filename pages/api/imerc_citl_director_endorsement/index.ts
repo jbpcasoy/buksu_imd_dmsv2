@@ -130,7 +130,7 @@ export default async function handler(
       if (iMOwner?.email) {
         mailTransporter.sendMail(
           {
-            subject: "IM Endorsed to IPTTU",
+            subject: "IM Endorsed to VPAA",
             text: `We are pleased to inform you that your IM titled "${iM?.title}" has been endorsed by the CITL to VPAAA for review.`,
             to: iMOwner.email,
           },

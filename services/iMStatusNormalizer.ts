@@ -39,7 +39,7 @@ export default function iMStatusNormalizer(
     case "IMERC_CITL_IDD_COORDINATOR_ENDORSED":
       return "IMDB Approved";
     case "IMERC_CITL_DIRECTOR_ENDORSED":
-      return "Endorsed to IPTTU";
+      return "Endorsed to VPAA";
     default:
       return "";
   }
