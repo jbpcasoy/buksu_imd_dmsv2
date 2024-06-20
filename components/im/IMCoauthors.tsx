@@ -85,7 +85,7 @@ export default function IMCoAuthors({ iMId }: IMCoAuthorsProps) {
           <input
             type="text"
             placeholder="Name"
-            className="w-52 mb-1 rounded-lg border border-palette_orange focus:rounded-b-none focus:border-gray-500 focus:bg-white focus:ring-0"
+            className="w-52 mb-1 rounded-lg border border-palette_orange focus:rounded-b-none focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
             onChange={(e) => {
               setState((prev) => ({
                 ...prev,
@@ -134,7 +134,7 @@ export default function IMCoAuthors({ iMId }: IMCoAuthorsProps) {
           );
         })}
         {coAuthors.length < 1 && (
-          <div className="bg-palette_light_grey_2 rounded-lg p-2 flex items-center min-w-52 text-sm">
+          <div className="bg-palette_light_grey bg-opacity-70 text-palette_grey border rounded-lg p-2 flex items-center min-w-52 text-sm">
             <p>N/A</p>
           </div>
         )}
