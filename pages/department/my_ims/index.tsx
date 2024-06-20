@@ -25,7 +25,7 @@ export default function MyIMsPage() {
   return (
     <MainLayout>
       <IMTable
-        icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.DEPARTMENT_IMS} />}
+        icon={<SidebarIcons label={SIDEBAR_ICON_LABELS.MY_IMS} />}
         count={count}
         iMs={iMs}
         title="My IMs"
