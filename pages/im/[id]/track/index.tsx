@@ -116,14 +116,15 @@ export default function TrackPage() {
       <div className="flex h-full md:space-x-4 md:overflow-auto">
         <div className="bg-palette_white p-4 rounded-2xl md:flex-1 h-screen-3/4 md:h-auto md:overflow-auto flex flex-col">
           <div className="pb-2">
-            <div className="border inline-block p-4 border-palette_orange rounded-lg">
+            <div className="border inline-block p-2 border-palette_orange rounded-lg">
               <div className="flex space-x-2 items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  className="w-6 h-6 stroke-palette_grey"
+                  strokeWidth="1.5"
+                  className="w-5 h-5 stroke-palette_grey"
                 >
                   <path
                     strokeLinecap="round"
@@ -132,211 +133,45 @@ export default function TrackPage() {
                   />
                 </svg>
 
-                <span className="font-semibold">Track</span>
+                <span className="font-semibold text-sm">Track</span>
               </div>
             </div>
           </div>
           <div className="bg-palette_white flex-1 md:overflow-auto">
             <TimelineSegment
-              label="Draft"
-              mode={iM ? "success" : "pending"}
+              label="IMERC CITL Director Endorsement"
+              end={true}
+              mode={iMERCCITLDirectorEndorsement ? "success" : "pending"}
               secondaryLabel={
-                iM
-                  ? DateTime.fromJSDate(new Date(iM.createdAt)).toFormat(
-                    "D | t"
-                  )
-                  : undefined
-              }
-            />
-            <TimelineSegment
-              label="Department Review"
-              mode={departmentReviewed ? "success" : "pending"}
-              secondaryLabel={
-                departmentReviewed
+                iMERCCITLDirectorEndorsement
                   ? DateTime.fromJSDate(
-                    new Date(departmentReviewed.createdAt)
-                  ).toFormat("D | t")
-                  : undefined
-              }
-            >
-              <TimelineSegment
-                label="Peer Review"
-                end={true}
-                mode={submittedPeerSuggestion ? "success" : "pending"}
-                secondaryLabel={
-                  submittedPeerSuggestion
-                    ? DateTime.fromJSDate(
-                      new Date(submittedPeerSuggestion.createdAt)
-                    ).toFormat("D | t")
-                    : undefined
-                }
-              />
-              <TimelineSegment
-                label="Chairperson Review"
-                end={true}
-                mode={submittedChairpersonSuggestion ? "success" : "pending"}
-                secondaryLabel={
-                  submittedChairpersonSuggestion
-                    ? DateTime.fromJSDate(
-                      new Date(submittedChairpersonSuggestion.createdAt)
-                    ).toFormat("D | t")
-                    : undefined
-                }
-              />
-              <TimelineSegment
-                label="Coordinator Review"
-                end={true}
-                mode={submittedCoordinatorSuggestion ? "success" : "pending"}
-                secondaryLabel={
-                  submittedCoordinatorSuggestion
-                    ? DateTime.fromJSDate(
-                      new Date(submittedCoordinatorSuggestion.createdAt)
-                    ).toFormat("D | t")
-                    : undefined
-                }
-              />
-            </TimelineSegment>
-            <TimelineSegment
-              label="Department Revision"
-              mode={departmentRevision ? "success" : "pending"}
-              secondaryLabel={
-                departmentRevision
-                  ? DateTime.fromJSDate(
-                    new Date(departmentRevision.createdAt)
+                    new Date(iMERCCITLDirectorEndorsement.createdAt)
                   ).toFormat("D | t")
                   : undefined
               }
             />
             <TimelineSegment
-              label="Coordinator Endorsement"
-              mode={coordinatorEndorsement ? "success" : "pending"}
+              label="IMERC IDD Coordinator Endorsement"
+              mode={iMERCIDDCoordinatorEndorsement ? "success" : "pending"}
               secondaryLabel={
-                coordinatorEndorsement
+                iMERCIDDCoordinatorEndorsement
                   ? DateTime.fromJSDate(
-                    new Date(coordinatorEndorsement.createdAt)
+                    new Date(iMERCIDDCoordinatorEndorsement.createdAt)
                   ).toFormat("D | t")
                   : undefined
               }
             />
             <TimelineSegment
-              label="Dean Endorsement"
-              mode={deanEndorsement ? "success" : "pending"}
+              label="IMERC Revision"
+              mode={iMERCCITLRevision ? "success" : "pending"}
               secondaryLabel={
-                deanEndorsement
+                iMERCCITLRevision
                   ? DateTime.fromJSDate(
-                    new Date(deanEndorsement.createdAt)
+                    new Date(iMERCCITLRevision.createdAt)
                   ).toFormat("D | t")
                   : undefined
               }
             />
-            <TimelineSegment
-              label="IDD Coordinator Review"
-              mode={submittedIDDCoordinatorSuggestion ? "success" : "pending"}
-              secondaryLabel={
-                submittedIDDCoordinatorSuggestion
-                  ? DateTime.fromJSDate(
-                    new Date(submittedIDDCoordinatorSuggestion.createdAt)
-                  ).toFormat("D | t")
-                  : undefined
-              }
-            />
-            <TimelineSegment
-              label="CITL Revision"
-              mode={cITLRevision ? "success" : "pending"}
-              secondaryLabel={
-                cITLRevision
-                  ? DateTime.fromJSDate(
-                    new Date(cITLRevision.createdAt)
-                  ).toFormat("D | t")
-                  : undefined
-              }
-            />
-            <TimelineSegment
-              label="IDD Coordinator Endorsement"
-              mode={iDDCoordinatorEndorsement ? "success" : "pending"}
-              secondaryLabel={
-                iDDCoordinatorEndorsement
-                  ? DateTime.fromJSDate(
-                    new Date(iDDCoordinatorEndorsement.createdAt)
-                  ).toFormat("D | t")
-                  : undefined
-              }
-            />
-            <TimelineSegment
-              label="CITL Director Endorsement"
-              mode={cITLDirectorEndorsement ? "success" : "pending"}
-              secondaryLabel={
-                cITLDirectorEndorsement
-                  ? DateTime.fromJSDate(
-                    new Date(cITLDirectorEndorsement.createdAt)
-                  ).toFormat("D | t")
-                  : undefined
-              }
-            />
-            <TimelineSegment
-              label="Try-out"
-              mode={cITLDirectorEndorsement ? "success" : "pending"}
-              secondaryLabel="IM will be utilized for 1 semester."
-            />
-            <TimelineSegment
-              label="QAMIS Revision"
-              mode={qAMISRevision ? "success" : "pending"}
-              secondaryLabel={
-                qAMISRevision
-                  ? DateTime.fromJSDate(
-                    new Date(qAMISRevision.createdAt)
-                  ).toFormat("D | t")
-                  : undefined
-              }
-            />
-            <TimelineSegment
-              label="QAMIS Department Endorsement"
-              mode={qAMISDepartmentEndorsed ? "success" : "pending"}
-              secondaryLabel={
-                qAMISDepartmentEndorsed
-                  ? DateTime.fromJSDate(
-                    new Date(qAMISDepartmentEndorsed.createdAt)
-                  ).toFormat("D | t")
-                  : undefined
-              }
-            >
-              <TimelineSegment
-                label="QAMIS Chairperson Endorsement"
-                end={true}
-                mode={qAMISChairpersonEndorsement ? "success" : "pending"}
-                secondaryLabel={
-                  qAMISChairpersonEndorsement
-                    ? DateTime.fromJSDate(
-                      new Date(qAMISChairpersonEndorsement.createdAt)
-                    ).toFormat("D | t")
-                    : undefined
-                }
-              />
-              <TimelineSegment
-                label="QAMIS Coordinator Endorsement"
-                end={true}
-                mode={qAMISCoordinatorEndorsement ? "success" : "pending"}
-                secondaryLabel={
-                  qAMISCoordinatorEndorsement
-                    ? DateTime.fromJSDate(
-                      new Date(qAMISCoordinatorEndorsement.createdAt)
-                    ).toFormat("D | t")
-                    : undefined
-                }
-              />
-              <TimelineSegment
-                label="QAMIS Dean Endorsement"
-                end={true}
-                mode={qAMISDeanEndorsement ? "success" : "pending"}
-                secondaryLabel={
-                  qAMISDeanEndorsement
-                    ? DateTime.fromJSDate(
-                      new Date(qAMISDeanEndorsement.createdAt)
-                    ).toFormat("D | t")
-                    : undefined
-                }
-              />
-            </TimelineSegment>
             <TimelineSegment
               label="IMERC Review"
               mode={iMERCCITLReviewed ? "success" : "pending"}
@@ -349,15 +184,13 @@ export default function TrackPage() {
               }
             >
               <TimelineSegment
-                label="Content Specialist Review"
+                label="Content Editor Review"
                 end={true}
-                mode={
-                  submittedContentSpecialistSuggestion ? "success" : "pending"
-                }
+                mode={submittedContentEditorSuggestion ? "success" : "pending"}
                 secondaryLabel={
-                  submittedContentSpecialistSuggestion
+                  submittedContentEditorSuggestion
                     ? DateTime.fromJSDate(
-                      new Date(submittedContentSpecialistSuggestion.createdAt)
+                      new Date(submittedContentEditorSuggestion.createdAt)
                     ).toFormat("D | t")
                     : undefined
                 }
@@ -375,49 +208,217 @@ export default function TrackPage() {
                 }
               />
               <TimelineSegment
-                label="Content Editor Review"
+                label="Content Specialist Review"
                 end={true}
-                mode={submittedContentEditorSuggestion ? "success" : "pending"}
+                mode={
+                  submittedContentSpecialistSuggestion ? "success" : "pending"
+                }
                 secondaryLabel={
-                  submittedContentEditorSuggestion
+                  submittedContentSpecialistSuggestion
                     ? DateTime.fromJSDate(
-                      new Date(submittedContentEditorSuggestion.createdAt)
+                      new Date(submittedContentSpecialistSuggestion.createdAt)
                     ).toFormat("D | t")
                     : undefined
                 }
               />
             </TimelineSegment>
             <TimelineSegment
-              label="IMERC Revision"
-              mode={iMERCCITLRevision ? "success" : "pending"}
+              label="QAMIS Department Endorsement"
+              mode={qAMISDepartmentEndorsed ? "success" : "pending"}
               secondaryLabel={
-                iMERCCITLRevision
+                qAMISDepartmentEndorsed
                   ? DateTime.fromJSDate(
-                    new Date(iMERCCITLRevision.createdAt)
+                    new Date(qAMISDepartmentEndorsed.createdAt)
+                  ).toFormat("D | t")
+                  : undefined
+              }
+            >
+              <TimelineSegment
+                label="QAMIS Dean Endorsement"
+                end={true}
+                mode={qAMISDeanEndorsement ? "success" : "pending"}
+                secondaryLabel={
+                  qAMISDeanEndorsement
+                    ? DateTime.fromJSDate(
+                      new Date(qAMISDeanEndorsement.createdAt)
+                    ).toFormat("D | t")
+                    : undefined
+                }
+              />
+              <TimelineSegment
+                label="QAMIS Coordinator Endorsement"
+                end={true}
+                mode={qAMISCoordinatorEndorsement ? "success" : "pending"}
+                secondaryLabel={
+                  qAMISCoordinatorEndorsement
+                    ? DateTime.fromJSDate(
+                      new Date(qAMISCoordinatorEndorsement.createdAt)
+                    ).toFormat("D | t")
+                    : undefined
+                }
+              />
+              <TimelineSegment
+                label="QAMIS Chairperson Endorsement"
+                end={true}
+                mode={qAMISChairpersonEndorsement ? "success" : "pending"}
+                secondaryLabel={
+                  qAMISChairpersonEndorsement
+                    ? DateTime.fromJSDate(
+                      new Date(qAMISChairpersonEndorsement.createdAt)
+                    ).toFormat("D | t")
+                    : undefined
+                }
+              />
+            </TimelineSegment>
+            <TimelineSegment
+              label="QAMIS Revision"
+              mode={qAMISRevision ? "success" : "pending"}
+              secondaryLabel={
+                qAMISRevision
+                  ? DateTime.fromJSDate(
+                    new Date(qAMISRevision.createdAt)
                   ).toFormat("D | t")
                   : undefined
               }
             />
             <TimelineSegment
-              label="IMERC IDD Coordinator Endorsement"
-              mode={iMERCIDDCoordinatorEndorsement ? "success" : "pending"}
+              label="Try-out"
+              mode={cITLDirectorEndorsement ? "success" : "pending"}
+              secondaryLabel="IM will be utilized for 1 semester."
+            />
+            <TimelineSegment
+              label="CITL Director Endorsement"
+              mode={cITLDirectorEndorsement ? "success" : "pending"}
               secondaryLabel={
-                iMERCIDDCoordinatorEndorsement
+                cITLDirectorEndorsement
                   ? DateTime.fromJSDate(
-                    new Date(iMERCIDDCoordinatorEndorsement.createdAt)
+                    new Date(cITLDirectorEndorsement.createdAt)
                   ).toFormat("D | t")
                   : undefined
               }
             />
             <TimelineSegment
-              label="IMERC CITL Director Endorsement"
-              end={true}
-              mode={iMERCCITLDirectorEndorsement ? "success" : "pending"}
+              label="IDD Coordinator Endorsement"
+              mode={iDDCoordinatorEndorsement ? "success" : "pending"}
               secondaryLabel={
-                iMERCCITLDirectorEndorsement
+                iDDCoordinatorEndorsement
                   ? DateTime.fromJSDate(
-                    new Date(iMERCCITLDirectorEndorsement.createdAt)
+                    new Date(iDDCoordinatorEndorsement.createdAt)
                   ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              label="CITL Revision"
+              mode={cITLRevision ? "success" : "pending"}
+              secondaryLabel={
+                cITLRevision
+                  ? DateTime.fromJSDate(
+                    new Date(cITLRevision.createdAt)
+                  ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              label="IDD Coordinator Review"
+              mode={submittedIDDCoordinatorSuggestion ? "success" : "pending"}
+              secondaryLabel={
+                submittedIDDCoordinatorSuggestion
+                  ? DateTime.fromJSDate(
+                    new Date(submittedIDDCoordinatorSuggestion.createdAt)
+                  ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              label="Dean Endorsement"
+              mode={deanEndorsement ? "success" : "pending"}
+              secondaryLabel={
+                deanEndorsement
+                  ? DateTime.fromJSDate(
+                    new Date(deanEndorsement.createdAt)
+                  ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              label="Coordinator Endorsement"
+              mode={coordinatorEndorsement ? "success" : "pending"}
+              secondaryLabel={
+                coordinatorEndorsement
+                  ? DateTime.fromJSDate(
+                    new Date(coordinatorEndorsement.createdAt)
+                  ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              label="Department Revision"
+              mode={departmentRevision ? "success" : "pending"}
+              secondaryLabel={
+                departmentRevision
+                  ? DateTime.fromJSDate(
+                    new Date(departmentRevision.createdAt)
+                  ).toFormat("D | t")
+                  : undefined
+              }
+            />
+            <TimelineSegment
+              label="Department Review"
+              mode={departmentReviewed ? "success" : "pending"}
+              secondaryLabel={
+                departmentReviewed
+                  ? DateTime.fromJSDate(
+                    new Date(departmentReviewed.createdAt)
+                  ).toFormat("D | t")
+                  : undefined
+              }
+            >
+              <TimelineSegment
+                label="Coordinator Review"
+                end={true}
+                mode={submittedCoordinatorSuggestion ? "success" : "pending"}
+                secondaryLabel={
+                  submittedCoordinatorSuggestion
+                    ? DateTime.fromJSDate(
+                      new Date(submittedCoordinatorSuggestion.createdAt)
+                    ).toFormat("D | t")
+                    : undefined
+                }
+              />
+              <TimelineSegment
+                label="Chairperson Review"
+                end={true}
+                mode={submittedChairpersonSuggestion ? "success" : "pending"}
+                secondaryLabel={
+                  submittedChairpersonSuggestion
+                    ? DateTime.fromJSDate(
+                      new Date(submittedChairpersonSuggestion.createdAt)
+                    ).toFormat("D | t")
+                    : undefined
+                }
+              />
+              <TimelineSegment
+                label="Peer Review"
+                end={true}
+                mode={submittedPeerSuggestion ? "success" : "pending"}
+                secondaryLabel={
+                  submittedPeerSuggestion
+                    ? DateTime.fromJSDate(
+                      new Date(submittedPeerSuggestion.createdAt)
+                    ).toFormat("D | t")
+                    : undefined
+                }
+              />
+            </TimelineSegment>
+            <TimelineSegment
+              label="Draft"
+              mode={iM ? "success" : "pending"}
+              secondaryLabel={
+                iM
+                  ? DateTime.fromJSDate(new Date(iM.createdAt)).toFormat(
+                    "D | t"
+                  )
                   : undefined
               }
             />
@@ -451,18 +452,18 @@ function TimelineSegment({
 }: TimelineSegmentProps) {
   return (
     <div
-      className={`${end ? "" : "border-l border-l-palette_light_grey"} ${children || end ? "" : "pb-10"
-        } flex space-x-4 ml-5`}
+      className={`${end ? "" : "border-l border-l-palette_light_grey"} ${children || end ? "" : "pb-5"
+        } flex space-x-4 ml-4`}
     >
-      <div className="-ml-5 bg-palette_white rounded-full w-10 h-10 flex items-center justify-center">
+      <div className="-ml-4 bg-palette_white rounded-full w-8 h-8 flex items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className={`w-7 h-7 ${mode === "success" ? "bg-palette_timeline_green" : "bg-palette_grey"
-            } text-palette_white rounded-full p-2`}
+          className={`w-6 h-6 ${mode === "success" ? "bg-palette_timeline_green" : "bg-palette_grey"
+            } text-palette_white rounded-full p-1`}
         >
           <path
             strokeLinecap="round"
@@ -472,8 +473,8 @@ function TimelineSegment({
         </svg>
       </div>
       <div className="flex flex-col">
-        <span className="pt-1">{label}</span>
-        {secondaryLabel && <span className="text-xs">{secondaryLabel}</span>}
+        <span className="pt-1 text-sm font-medium">{label}</span>
+        {secondaryLabel && <span className="text-xs text-palette_grey">{secondaryLabel}</span>}
         <div>{children}</div>
       </div>
     </div>

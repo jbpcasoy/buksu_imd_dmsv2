@@ -23,7 +23,7 @@ const config: Config = {
         palette_warning: "#ffa726",
         palette_info: "#29b6f6",
         palette_success: "#22bb33",
-        palette_timeline_green: "#14B8A6",
+        palette_timeline_green: "#77dd77",
       },
       height: {
         "screen-3/4": "75vh",
