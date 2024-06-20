@@ -159,29 +159,27 @@ export default function IMIMERCCITLRevised({
                   id={iM.id}
                   editable={false}
                 />
-                <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row">
-                  <>
-                    <button
-                      disabled={loading}
-                      className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
-                      onClick={openConfirmation}
-                    >
-                      Endorse IM
-                    </button>
-                    {state.openConfirmation && (
-                      <Confirmation
-                        onClose={closeConfirmation}
-                        onConfirm={iMERCIDDCoordinatorEndorsementHandler}
-                      />
-                    )}
-                  </>
+                <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row justify-end">
                   <button
                     disabled={loading}
-                    className="rounded text-palette_white bg-palette_blue px-2 py-1 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90"
+                    className="flex items-center justify-center space-x-2 rounded-md text-sm font-semibold px-4 py-2 border border-palette_blue hover:border-opacity-90 disabled:border-opacity-50 text-palette_blue disabled:text-opacity-50 hover:text-opacity-90"
                     onClick={returnIMERCIDDCoordinatorEndorsementHandler}
                   >
-                    Return Revision
+                    Return
                   </button>
+                  <button
+                    disabled={loading}
+                    className="text-palette_white bg-palette_blue disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
+                    onClick={openConfirmation}
+                  >
+                    Endorse
+                  </button>
+                  {state.openConfirmation && (
+                    <Confirmation
+                      onClose={closeConfirmation}
+                      onConfirm={iMERCIDDCoordinatorEndorsementHandler}
+                    />
+                  )}
                 </div>
               </div>
             )}

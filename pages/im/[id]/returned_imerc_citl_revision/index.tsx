@@ -187,9 +187,19 @@ export default function ReturnedIMERCCITLRevisionPage() {
         <button
           disabled={loading}
           onClick={() => setOpenAdd(true)}
-          className="rounded bg-palette_blue text-palette_white px-2 py-1 inline-flex items-center space-x-2 hover:bg-opacity-90"
+          className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md font-semibold text-sm px-2 py-1"
         >
           <span>Add</span>
+          <span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 448 512"
+              className="fill-palette_white"
+            >
+              <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+            </svg>
+          </span>
         </button>
         {openAdd && (
           <Modal title="Add Suggestion" onClose={() => setOpenAdd(false)}>
@@ -263,7 +273,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
           <IMHeader iM={iM} phase="IMERC Phase" role="Content Editor" />
           <div className="flex-1 h-full overflow-auto space-y-2">
             <div className="overflow-auto">
-              <div className="border border-palette_orange rounded text-sm">
+              <div className="border border-palette_light_grey rounded text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
                   <p className="text-left font-bold">
                     RETURNED IMERC CITL REVISION
@@ -310,7 +320,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
                 editable={false}
               />
             </div>
-            <>
+            <div className="flex justify-end">
               <button
                 className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
                 disabled={!Boolean(returnedIMERCCITLRevision) || loading}
@@ -324,7 +334,7 @@ export default function ReturnedIMERCCITLRevisionPage() {
                   onConfirm={handleSubmitSuggestions}
                 />
               )}
-            </>
+            </div>
           </div>
         </div>
         <div className="md:flex-1 h-screen-3/4 md:h-auto">
@@ -407,7 +417,7 @@ export function Item({
         <>
           <button
             disabled={loading}
-            className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+            className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded text-sm px-2 py-1"
             onClick={() =>
               setState((prev) => ({ ...prev, openConfirmation: true }))
             }
@@ -532,7 +542,7 @@ function EditSuggestionItem({
     <>
       <button
         disabled={loading}
-        className="bg-palette_blue text-palette_white px-1 rounded text-sm inline-flex items-center space-x-1 justify-center hover:bg-opacity-90"
+        className="bg-palette_blue text-palette_white inline-flex items-center space-x-1 justify-center hover:bg-opacity-90 rounded text-sm px-2 py-1"
         onClick={() => setOpenEdit(true)}
       >
         <span>Edit</span>
