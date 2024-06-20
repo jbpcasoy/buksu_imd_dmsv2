@@ -46,7 +46,7 @@ export default function Confirmation({
         className="w-full max-w-sm bg-palette_white rounded-2xl flex flex-col overflow-clip"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between px-5 py-2 bg-palette_light_grey_2 space-y-1">
+        <div className="flex justify-between p-4 space-y-1 border-b">
           <div className="">
             <h1 className=" font-semibold">{title}</h1>
           </div>
@@ -68,7 +68,7 @@ export default function Confirmation({
         </div>
 
         {shortDescription && (
-          <p className="text-palette_grey p-5">{shortDescription}</p>
+          <p className="text-palette_grey p-4">{shortDescription}</p>
         )}
         {matchText && (
           <div className="flex flex-col space-y-1 px-2">

@@ -33,10 +33,10 @@ export default function Modal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm bg-palette_white rounded-2xl max-h-96 overflow-auto flex flex-col"
+        className="w-full max-w-sm bg-palette_white rounded-lg max-h-96 overflow-auto flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between p-4 pb-2 bg-palette_light_grey_2">
+        <div className="flex justify-between p-4 pb-2 border-b">
           <div className="">
             <h1 className="font-semibold text-base">{title}</h1>
             {shortDescription && <p>{shortDescription}</p>}
