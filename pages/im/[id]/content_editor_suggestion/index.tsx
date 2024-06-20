@@ -262,8 +262,8 @@ export default function ContentEditorSuggestionPage() {
             <div className="overflow-auto">
               <div className="border border-palette_light_grey rounded text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
-                  <p className="text-left font-bold">
-                    CONTENT EDITOR SUGGESTIONS
+                  <p className="text-left font-medium">
+                    Content Editor Suggestions
                   </p>
                   <AddSuggestionItem />
                 </div>
@@ -412,20 +412,20 @@ export function Item({
           )}
         </>
       </div>
-      <div className="grid grid-cols-5">
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
+      <div className="grid grid-cols-5 text-palette_grey">
+        <p className="px-5 py-1 border-r border-palette_light_grey col-span-2 md:col-span-1">
           Page No.
         </p>
         <p className="px-5 flex-1 col-span-2 md:col-span-4">
           {contentEditorSuggestionItem.pageNumber}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_light_grey col-span-2 md:col-span-1">
           Suggestion
         </p>
         <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
           {contentEditorSuggestionItem.suggestion}
         </p>
-        <p className="px-5 py-1 border-r border-palette_grey col-span-2 md:col-span-1">
+        <p className="px-5 py-1 border-r border-palette_light_grey col-span-2 md:col-span-1">
           Remarks
         </p>
         <p className="px-5 flex-1 col-span-2 md:col-span-4 whitespace-pre-wrap">
