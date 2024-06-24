@@ -214,14 +214,15 @@ function DropDown({ count, events = [] }: { count: number; events: Event[] }) {
 
       {state.openNotifications && (
         <div
-          className="absolute right-0 z-10 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          className="absolute right-0 z-10 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          <div className="py-1" role="none">
+          <div className="" role="none">
             {/* <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" --> */}
+            <p className="p-4 font-semibold text-sm">Notification</p>
             {events.map((event) => {
               return <Notification event={event} key={event.id} />;
             })}
@@ -232,9 +233,9 @@ function DropDown({ count, events = [] }: { count: number; events: Event[] }) {
             )}
             <Link
               href="/notification"
-              className="text-center block hover:text-palette_light_blue underline"
+              className="text-center block hover:text-palette_light_blue p-4  text-sm"
             >
-              See all
+              View all
             </Link>
           </div>
         </div>
