@@ -456,13 +456,13 @@ export default async function handler(
               },
               activeIDDCoordinator
                 ? {
-                    type: "DEAN_ENDORSEMENT_CREATED",
-                  }
+                  type: "DEAN_ENDORSEMENT_CREATED",
+                }
                 : {
-                    NOT: {
-                      type: "DEAN_ENDORSEMENT_CREATED",
-                    },
+                  NOT: {
+                    type: "DEAN_ENDORSEMENT_CREATED",
                   },
+                },
             ],
           },
           {
@@ -494,13 +494,13 @@ export default async function handler(
             OR: [
               activeIDDCoordinator
                 ? {
-                    type: "CITL_REVISION_CREATED",
-                  }
+                  type: "CITL_REVISION_CREATED",
+                }
                 : {
-                    NOT: {
-                      type: "CITL_REVISION_CREATED",
-                    },
+                  NOT: {
+                    type: "CITL_REVISION_CREATED",
                   },
+                },
             ],
           },
           {
@@ -545,13 +545,13 @@ export default async function handler(
               },
               activeCITLDirector
                 ? {
-                    type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
-                  }
+                  type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
+                }
                 : {
-                    NOT: {
-                      type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
-                    },
+                  NOT: {
+                    type: "IDD_COORDINATOR_ENDORSEMENT_CREATED",
                   },
+                },
             ],
           },
           {
@@ -819,13 +819,13 @@ export default async function handler(
               },
               activeCITLDirector || activeIDDCoordinator
                 ? {
-                    type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED",
-                  }
+                  type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED",
+                }
                 : {
-                    NOT: {
-                      type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED",
-                    },
+                  NOT: {
+                    type: "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED",
                   },
+                },
             ],
           },
           {
@@ -1213,13 +1213,13 @@ export default async function handler(
             OR: [
               activeIDDCoordinator
                 ? {
-                    type: "IMERC_CITL_REVISION_CREATED",
-                  }
+                  type: "IMERC_CITL_REVISION_CREATED",
+                }
                 : {
-                    NOT: {
-                      type: "IMERC_CITL_REVISION_CREATED",
-                    },
+                  NOT: {
+                    type: "IMERC_CITL_REVISION_CREATED",
                   },
+                },
             ],
           },
           {
@@ -1262,13 +1262,13 @@ export default async function handler(
               },
               activeCITLDirector
                 ? {
-                    type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
-                  }
+                  type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
+                }
                 : {
-                    NOT: {
-                      type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
-                    },
+                  NOT: {
+                    type: "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED",
                   },
+                },
             ],
           },
           {
@@ -1409,7 +1409,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${departmentReview.IMFile.iMId}`;
-            event.message = "An IM has been submitted for review.";
+            event.message = "An IM has been submitted for review";
             break;
           case "SUBMITTED_PEER_SUGGESTION_CREATED":
             const submittedPeerSuggestion =
@@ -1434,7 +1434,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedPeerSuggestion?.PeerSuggestion.PeerReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by a Peer.";
+            event.message = "An IM has been reviewed by a Peer";
             break;
           case "SUBMITTED_COORDINATOR_SUGGESTION_CREATED":
             const submittedCoordinatorSuggestion =
@@ -1459,7 +1459,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedCoordinatorSuggestion.CoordinatorSuggestion.CoordinatorReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the coordinator.";
+            event.message = "An IM has been reviewed by the coordinator";
             break;
           case "SUBMITTED_CHAIRPERSON_SUGGESTION_CREATED":
             const submittedChairpersonSuggestion =
@@ -1484,7 +1484,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedChairpersonSuggestion.ChairpersonSuggestion.ChairpersonReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the chairperson.";
+            event.message = "An IM has been reviewed by the chairperson";
             break;
           case "DEPARTMENT_REVIEWED_CREATED":
             const departmentReviewed =
@@ -1513,7 +1513,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${departmentReviewed.SubmittedCoordinatorSuggestion.CoordinatorSuggestion.CoordinatorReview.DepartmentReview.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the department.";
+            event.message = "An IM has been reviewed by the department";
             break;
           case "DEPARTMENT_REVISION_CREATED":
             const departmentRevision =
@@ -1526,7 +1526,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${departmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been revised.";
+            event.message = "An IM has been revised";
             break;
           case "SUBMITTED_RETURNED_DEPARTMENT_REVISION_CREATED":
             const submittedReturnedDepartmentRevision =
@@ -1549,7 +1549,7 @@ export default async function handler(
                 }
               );
             event.url = `/im/${submittedReturnedDepartmentRevision.ReturnedDepartmentRevision.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been returned from department review.";
+            event.message = "An IM has been returned from department review";
             break;
           case "COORDINATOR_ENDORSEMENT_CREATED":
             const coordinatorEndorsement =
@@ -1566,7 +1566,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${coordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been endorsed by the coordinator.";
+            event.message = "An IM has been endorsed by the coordinator";
             break;
           case "DEAN_ENDORSEMENT_CREATED":
             const deanEndorsement =
@@ -1587,7 +1587,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${deanEndorsement.CoordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been endorsed by the dean.";
+            event.message = "An IM has been endorsed by the dean";
             break;
           case "SUBMITTED_IDD_COORDINATOR_SUGGESTION_CREATED":
             const submittedIDDCoordinatorSuggestion =
@@ -1616,7 +1616,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedIDDCoordinatorSuggestion.IDDCoordinatorSuggestion.DeanEndorsement.CoordinatorEndorsement.DepartmentRevision.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the IDD coordinator.";
+            event.message = "An IM has been reviewed by the IDD coordinator";
             break;
           case "CITL_REVISION_CREATED":
             const cITLRevision = await prisma.cITLRevision.findUniqueOrThrow({
@@ -1628,7 +1628,7 @@ export default async function handler(
               },
             });
             event.url = `/im/${cITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been revised.";
+            event.message = "An IM has been revised";
             break;
           case "SUBMITTED_RETURNED_CITL_REVISION_CREATED":
             const submittedReturnedCITLRevision =
@@ -1649,7 +1649,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedReturnedCITLRevision.ReturnedCITLRevision.CITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been returned from CITL review.";
+            event.message = "An IM has been returned from CITL review";
             break;
           case "IDD_COORDINATOR_ENDORSEMENT_CREATED":
             const iDDCoordinatorEndorsement =
@@ -1666,7 +1666,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${iDDCoordinatorEndorsement.CITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the IDD coordinator.";
+            event.message = "An IM has been reviewed by the IDD coordinator";
             break;
           case "CITL_DIRECTOR_ENDORSEMENT_CREATED":
             const cITLDirectorEndorsement =
@@ -1687,7 +1687,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${cITLDirectorEndorsement.IDDCoordinatorEndorsement.CITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been endorsed by the CITL director.";
+            event.message = "An IM has been endorsed by the CITL director";
             break;
           case "QAMIS_REVISION_CREATED":
             const qAMISRevision = await prisma.qAMISRevision.findUniqueOrThrow({
@@ -1699,7 +1699,7 @@ export default async function handler(
               },
             });
             event.url = `/im/${qAMISRevision.IMFile.iMId}`;
-            event.message = "An IM has been submitted for IMERC endorsement.";
+            event.message = "An IM has been submitted for IMERC endorsement";
             break;
           case "QAMIS_COORDINATOR_ENDORSEMENT_CREATED":
             const qAMISCoordinatorEndorsement =
@@ -1717,7 +1717,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISCoordinatorEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the coordinator for IMERC review.";
+              "An IM has been endorsed by the coordinator for IMERC review";
             break;
           case "QAMIS_CHAIRPERSON_ENDORSEMENT_CREATED":
             const qAMISChairpersonEndorsement =
@@ -1735,7 +1735,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISChairpersonEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the chairperson for IMERC review.";
+              "An IM has been endorsed by the chairperson for IMERC review";
             break;
           case "QAMIS_DEAN_ENDORSEMENT_CREATED":
             const qAMISDeanEndorsement =
@@ -1753,7 +1753,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the dean for IMERC review.";
+              "An IM has been endorsed by the dean for IMERC review";
             break;
           case "QAMIS_DEPARTMENT_ENDORSEMENT_CREATED":
             const qAMISDepartmentEndorsement =
@@ -1775,7 +1775,7 @@ export default async function handler(
               });
             event.url = `/im/${qAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the Department for IMERC review.";
+              "An IM has been endorsed by the Department for IMERC review";
             break;
           case "SUBMITTED_CONTENT_SPECIALIST_SUGGESTION_CREATED":
             const submittedContentSpecialist =
@@ -1810,7 +1810,7 @@ export default async function handler(
                 }
               );
             event.url = `/im/${submittedContentSpecialist.ContentSpecialistSuggestion.ContentSpecialistReview.QAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
-            event.message = "Yor IM has been reviewed by a Content specialist.";
+            event.message = "Your IM has been reviewed by a Content specialist";
             break;
           case "SUBMITTED_IDD_SPECIALIST_SUGGESTION_CREATED":
             const submittedIDDSpecialistSuggestion =
@@ -1843,7 +1843,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedIDDSpecialistSuggestion.IDDSpecialistSuggestion.IDDSpecialistReview.QAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the IDD Specialist.";
+            event.message = "An IM has been reviewed by the IDD Specialist";
             break;
           case "SUBMITTED_CONTENT_EDITOR_SUGGESTION_CREATED":
             const submittedContentEditorSuggestion =
@@ -1876,7 +1876,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${submittedContentEditorSuggestion.ContentEditorSuggestion.ContentEditorReview.QAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
-            event.message = "An IM has been reviewed by the Content Editor.";
+            event.message = "An IM has been reviewed by the Content Editor";
             break;
           case "IMERC_CITL_REVIEWED_CREATED":
             const iMERCCITLReviewed =
@@ -1913,7 +1913,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${iMERCCITLReviewed.SubmittedContentEditorSuggestion.ContentEditorSuggestion.ContentEditorReview.QAMISDepartmentEndorsement.QAMISDeanEndorsement.QAMISRevision.IMFile.iMId}`;
-            event.message = "An IM had finished IMERC review.";
+            event.message = "An IM had finished IMERC review";
             break;
           case "IMERC_CITL_REVISION_CREATED":
             const iMERCCITLRevision =
@@ -1926,7 +1926,7 @@ export default async function handler(
                 },
               });
             event.url = `/im/${iMERCCITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been revised.";
+            event.message = "An IM has been revised";
             break;
 
           case "SUBMITTED_RETURNED_IMERC_CITL_REVISION_CREATED":
@@ -1950,7 +1950,7 @@ export default async function handler(
                 }
               );
             event.url = `/im/${submittedReturnedIMERCCITLRevision.ReturnedIMERCCITLRevision.IMERCCITLRevision.IMFile.iMId}`;
-            event.message = "An IM has been returned from IMERC review.";
+            event.message = "An IM has been returned from IMERC review";
             break;
           case "IMERC_IDD_COORDINATOR_ENDORSEMENT_CREATED":
             const iMERCIDDCoordinatorEndorsement =
@@ -1968,7 +1968,7 @@ export default async function handler(
               });
             event.url = `/im/${iMERCIDDCoordinatorEndorsement.IMERCCITLRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the IDD coordinator. (IMERC review)";
+              "An IM has been endorsed by the IDD coordinator (IMERC review)";
             break;
           case "IMERC_CITL_DIRECTOR_ENDORSEMENT_CREATED":
             const iMERCCITLDirectorEndorsement =
@@ -1990,7 +1990,7 @@ export default async function handler(
               });
             event.url = `/im/${iMERCCITLDirectorEndorsement.IMERCIDDCoordinatorEndorsement.IMERCCITLRevision.IMFile.iMId}`;
             event.message =
-              "An IM has been endorsed by the CITL director. (IMERC review)";
+              "An IM has been endorsed by the CITL director (IMERC review)";
             break;
         }
       }
