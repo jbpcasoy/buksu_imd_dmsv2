@@ -53,11 +53,6 @@ export default function IMIMERCCITLDirectorEndorsed({
               onRefresh={onRefresh}
               refreshFlag={refreshFlag}
             />
-            <div className="space-x-2 my-2">
-              <p className=" text-center font-semibold p-10">
-                ENDORSED TO VPAA
-              </p>
-            </div>
           </div>
         </div>
       </div>

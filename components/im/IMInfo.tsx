@@ -100,9 +100,12 @@ export default function IMInfo({ iMId, onRefresh, refreshFlag }: IMInfoProps) {
           </div>
           <div className="space-y-2">
             <p className="text-xs">Status</p>
-            <p className="border bg-palette_grey bg-opacity-5 text-palette_grey p-2 rounded-lg text-sm ">
+            {iMStatus !== "IMERC_CITL_DIRECTOR_ENDORSED" && <p className="border bg-palette_grey bg-opacity-5 text-palette_grey p-2 rounded-lg text-sm ">
               {iMStatusNormalizer(iMStatus)}
-            </p>
+            </p>}
+            {iMStatus === "IMERC_CITL_DIRECTOR_ENDORSED" && <p className="border border-palette_success bg-palette_success text-palette_white p-2 rounded-lg text-sm ">
+              {iMStatusNormalizer(iMStatus)}
+            </p>}
           </div>
           <div className="space-y-2">
             <p className="text-xs">Department</p>
