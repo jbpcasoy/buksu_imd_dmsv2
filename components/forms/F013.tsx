@@ -26,6 +26,7 @@ import {
 } from "docx";
 import saveAs from "file-saver";
 import { useEffect, useState } from "react";
+import { FormButton } from "./FormButton";
 
 export default function F013({
   chairpersonName,
@@ -430,12 +431,12 @@ export default function F013({
                 children:
                   rating === "VM"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
               new TableCell({
@@ -443,12 +444,12 @@ export default function F013({
                 children:
                   rating === "M"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
               new TableCell({
@@ -456,12 +457,12 @@ export default function F013({
                 children:
                   rating === "JE"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
               new TableCell({
@@ -469,12 +470,12 @@ export default function F013({
                 children:
                   rating === "NM"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
               new TableCell({
@@ -482,12 +483,12 @@ export default function F013({
                 children:
                   rating === "NAA"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
             ],
@@ -573,12 +574,12 @@ export default function F013({
                 children:
                   rating === "VM"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
               new TableCell({
@@ -586,12 +587,12 @@ export default function F013({
                 children:
                   rating === "M"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
               new TableCell({
@@ -599,12 +600,12 @@ export default function F013({
                 children:
                   rating === "JE"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
               new TableCell({
@@ -612,12 +613,12 @@ export default function F013({
                 children:
                   rating === "NM"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
               new TableCell({
@@ -625,12 +626,12 @@ export default function F013({
                 children:
                   rating === "NAA"
                     ? [
-                        new Paragraph({
-                          text: "✓",
-                          alignment: AlignmentType.CENTER,
-                          style: "tableFont",
-                        }),
-                      ]
+                      new Paragraph({
+                        text: "✓",
+                        alignment: AlignmentType.CENTER,
+                        style: "tableFont",
+                      }),
+                    ]
                     : [],
               }),
             ],
@@ -1284,9 +1285,7 @@ export default function F013({
 
   return (
     <div>
-      <button onClick={download} className="underline">
-        F013 - Instructional Materials Review Form (Implementation Phase)
-      </button>
+      <FormButton label="F013" secondaryLabel="Instructional Materials Review Form (Implementation Phase)" onClick={download} />
     </div>
   );
 }

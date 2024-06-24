@@ -26,6 +26,7 @@ import {
 } from "docx";
 import saveAs from "file-saver";
 import { useEffect, useState } from "react";
+import { FormButton } from "./FormButton";
 
 export default function F014({
   iMTitle,
@@ -1200,9 +1201,7 @@ export default function F014({
 
   return (
     <div>
-      <button onClick={download} className="underline">
-        F014 - Instructional Materials Review Form (IMERC)
-      </button>
+      <FormButton label="F014" secondaryLabel="Instructional Materials Review Form (IMERC)" onClick={download} />
     </div>
   );
 }

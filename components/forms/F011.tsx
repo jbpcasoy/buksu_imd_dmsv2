@@ -27,6 +27,7 @@ import {
 } from "docx";
 import saveAs from "file-saver";
 import { useEffect, useState } from "react";
+import { FormButton } from "./FormButton";
 
 export default function F011({
   authorName,
@@ -1212,9 +1213,7 @@ export default function F011({
 
   return (
     <div>
-      <button onClick={download} className="underline">
-        F011 - Endorsement of the Instructional Material (Implementation Phase)
-      </button>
+      <FormButton label="F011" secondaryLabel="Endorsement of the Instructional Material (Implementation Phase)" onClick={download} />
     </div>
   );
 }

@@ -25,6 +25,7 @@ import {
 } from "docx";
 import saveAs from "file-saver";
 import { useEffect, useState } from "react";
+import { FormButton } from "./FormButton";
 
 export default function F012({
   chairpersonName,
@@ -1580,10 +1581,8 @@ export default function F012({
 
   return (
     <div>
-      <button onClick={download} className="underline">
-        F012 - Endorsement of Request for Instructional Material Evaluation and
-        Publication (for IPTTU Endorsement and Publication)
-      </button>
+      <FormButton label="F012" secondaryLabel="Endorsement of Request for Instructional Material Evaluation and
+        Publication (for IPTTU Endorsement and Publication)" onClick={download} />
     </div>
   );
 }

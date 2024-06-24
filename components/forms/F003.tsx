@@ -23,6 +23,7 @@ import {
 } from "docx";
 import saveAs from "file-saver";
 import { useEffect, useState } from "react";
+import { FormButton } from "./FormButton";
 
 export default function F003({
   iMTitle,
@@ -591,9 +592,7 @@ export default function F003({
 
   return (
     <div>
-      <button onClick={download} className="underline">
-        F003 - Suggestions and Action Taken
-      </button>
+      <FormButton label="F003" secondaryLabel="Suggestions and Action Taken" onClick={download} />
     </div>
   );
 }

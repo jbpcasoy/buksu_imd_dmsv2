@@ -27,6 +27,7 @@ import {
 } from "docx";
 import saveAs from "file-saver";
 import { useEffect, useState } from "react";
+import { FormButton } from "./FormButton";
 
 export default function F005({ iMTitle }: F005Props) {
   const [buksuLogo, setBuksuLogo] = useState<ArrayBuffer>();
@@ -843,9 +844,7 @@ export default function F005({ iMTitle }: F005Props) {
 
   return (
     <div>
-      <button onClick={download} className="underline">
-        F005 - Teacher-User Evaluation
-      </button>
+      <FormButton label="F005" secondaryLabel="Teacher-User Evaluation" onClick={download} />
     </div>
   );
 }
