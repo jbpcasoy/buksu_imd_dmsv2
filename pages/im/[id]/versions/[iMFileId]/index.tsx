@@ -47,6 +47,37 @@ export default function VersionsPage() {
           {iMFile && (
             <div className="flex-1 overflow-auto flex flex-col bg-palette_white p-4 rounded-2xl space-y-4">
               <div className="">
+                {!iMFile?.departmentReviewedId &&
+                  !iMFile?.submittedReturnedDepartmentRevisionId &&
+                  !iMFile?.submittedIDDCoordinatorSuggestionId &&
+                  !iMFile?.submittedReturnedCITLRevisionId &&
+                  !iMFile?.submittedQAMISSuggestionId &&
+                  !iMFile?.iMERCCITLReviewedId &&
+                  !iMFile?.submittedReturnedIMERCCITLRevisionId && (
+                    <p className="font-bold">Draft</p>
+                  )
+                }
+                {iMFile?.departmentReviewedId && (
+                  <p className="font-bold">Department Revision</p>
+                )}
+                {iMFile?.submittedReturnedDepartmentRevisionId && (
+                  <p className="font-bold">Returned Department Revision</p>
+                )}
+                {iMFile?.submittedIDDCoordinatorSuggestionId && (
+                  <p className="font-bold">CITL Revision</p>
+                )}
+                {iMFile?.submittedReturnedCITLRevisionId && (
+                  <p className="font-bold">Returned CITL Revision</p>
+                )}
+                {iMFile?.submittedQAMISSuggestionId && (
+                  <p className="font-bold">QAMIS Revision</p>
+                )}
+                {iMFile?.iMERCCITLReviewedId && (
+                  <p className="font-bold">IMERC CITL Revision</p>
+                )}
+                {iMFile?.submittedReturnedIMERCCITLRevisionId && (
+                  <p className="font-bold">Returned IMERC CITL Revision</p>
+                )}
                 <p className="text-palette_grey">{iMFile?.filename}</p>
                 <p className="text-palette_grey text-xs">
                   {DateTime.fromJSDate(
@@ -63,7 +94,6 @@ export default function VersionsPage() {
                   !iMFile?.iMERCCITLReviewedId &&
                   !iMFile?.submittedReturnedIMERCCITLRevisionId && (
                     <div className="space-y-1">
-                      <p className="font-bold">Draft</p>
                       <p className="text-palette_grey text-center">
                         NO REVIEWS YET
                       </p>
@@ -71,7 +101,6 @@ export default function VersionsPage() {
                   )}
                 {iMFile?.departmentReviewedId && (
                   <div className="space-y-1">
-                    <p className="font-bold">Department Revision</p>
                     <IMPeerSuggestionItems
                       id={iMId as string}
                       editable={false}
@@ -88,7 +117,6 @@ export default function VersionsPage() {
                 )}
                 {iMFile?.submittedReturnedDepartmentRevisionId && (
                   <div className="space-y-1">
-                    <p className="font-bold">Returned Department Revision</p>
                     <IMReturnedDepartmentRevisionSuggestionItems
                       id={iMId as string}
                       editable={false}
@@ -97,7 +125,6 @@ export default function VersionsPage() {
                 )}
                 {iMFile?.submittedIDDCoordinatorSuggestionId && (
                   <div className="space-y-1">
-                    <p className="font-bold">CITL Revision</p>
                     <IMIDDCoordinatorSuggestionItems
                       id={iMId as string}
                       editable={false}
@@ -106,7 +133,6 @@ export default function VersionsPage() {
                 )}
                 {iMFile?.submittedReturnedCITLRevisionId && (
                   <div className="space-y-1">
-                    <p className="font-bold">Returned CITL Revision</p>
                     <IMReturnedCITLRevisionSuggestionItems
                       id={iMId as string}
                       editable={false}
@@ -115,7 +141,6 @@ export default function VersionsPage() {
                 )}
                 {iMFile?.submittedQAMISSuggestionId && (
                   <div className="space-y-1">
-                    <p className="font-bold">QAMIS Revision</p>
                     <IMQAMISSuggestionItems
                       id={iMId as string}
                       editable={false}
@@ -124,7 +149,6 @@ export default function VersionsPage() {
                 )}
                 {iMFile?.iMERCCITLReviewedId && (
                   <div className="space-y-1">
-                    <p className="font-bold">IMERC CITL Revision</p>
                     <IMIDDSpecialistSuggestionItems
                       id={iMId as string}
                       editable={false}
@@ -141,7 +165,6 @@ export default function VersionsPage() {
                 )}
                 {iMFile?.submittedReturnedIMERCCITLRevisionId && (
                   <div className="space-y-1">
-                    <p className="font-bold">Returned IMERC CITL Revision</p>
                     <IMReturnedIMERCCITLRevisionSuggestionItems
                       id={iMId as string}
                       editable={false}
