@@ -5,7 +5,7 @@ import useDepartmentMe from "@/hooks/useDepartmentMe";
 import { ProfilePictureFile } from "@prisma/client";
 import axios from "axios";
 import { useFormik } from "formik";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ChangeEventHandler, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -90,10 +90,6 @@ export default function ProfilePage() {
     },
   });
 
-  const onLogout = () => {
-    return signOut();
-  };
-
   const showProfilePreview: ChangeEventHandler<HTMLInputElement> = (e) => {
     const file = e.target.files?.item(0);
     if (!file) return;
@@ -114,66 +110,71 @@ export default function ProfilePage() {
   return (
     <MainLayout>
       <div className="h-full flex flex-col space-y-1 bg-palette_white p-4 rounded-2xl">
-        <div className="flex justify-end">
-          <button
-            disabled={loading}
-            onClick={onLogout}
-            className="bg-palette_blue text-white px-2 py-1 rounded"
-          >
-            LOGOUT
-          </button>
-        </div>
 
         <div className="h-full">
           <form noValidate onSubmit={formik.handleSubmit} className="h-full">
             <div className="h-full flex justify-center items-center">
-              <div className="space-x-1 flex flex-col justify-center items-center space-y-1 mx-auto border p-4 sm:p-9 rounded-lg shadow">
-                <input
-                  id="profile-picture"
-                  type="file"
-                  accept="image/*"
-                  hidden={true}
-                  onChange={showProfilePreview}
-                />
-                <label
-                  htmlFor="profile-picture"
-                  className="cursor-pointer hover:opacity-95"
-                >
-                  <picture>
-                    <img
-                      src={
-                        state?.previewUrl ??
-                        session?.user?.image ??
-                        "/images/buksu-logo-min-512x512.png"
-                      }
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          "/images/buksu-logo-min-512x512.png";
-                      }}
-                      className="h-32 w-32 rounded-full object-cover"
-                      alt="User avatar"
+              <div className="space-x-1 flex flex-row justify-center items-stretch space-y-1 mx-auto border rounded-lg shadow overflow-hidden">
+                <div>
+                  <input
+                    id="profile-picture"
+                    type="file"
+                    accept="image/*"
+                    hidden={true}
+                    onChange={showProfilePreview}
+                  />
+                  <div className="h-64 w-64 object-cover rounded-l-lg bg-palette_white flex justify-center items-center">
+                    <label
+                      htmlFor="profile-picture"
+                      className="cursor-pointer hover:opacity-95"
+                    >
+                      <picture>
+                        <img
+                          src={
+                            state?.previewUrl ??
+                            session?.user?.image ??
+                            "/images/buksu-logo-min-512x512.png"
+                          }
+                          onError={(e) => {
+                            e.currentTarget.src =
+                              "/images/buksu-logo-min-512x512.png";
+                          }}
+                          className="h-48 w-48 object-cover rounded-full"
+                          alt="User avatar"
+                        />
+                      </picture>
+
+                    </label>
+                  </div>
+                </div>
+                <div className="flex flex-col space-y-1 justify-between p-9">
+                  <div className="flex-1 flex flex-col justify-center items-center space-y-2">
+                    <input
+                      type="text"
+                      required
+                      placeholder="Name"
+                      {...formik.getFieldProps("name")}
+                      className="w-full border-0 border-b focus:border-b focus:border-b-current focus:ring-0 p-0 font-medium text-center"
                     />
-                  </picture>
-                </label>
-                {department && college && (
-                  <p className="text-sm">
-                    {department?.name} | {college?.name}
-                  </p>
-                )}
-                <p className="text-sm">{session?.user?.email}</p>
-                <input
-                  type="text"
-                  required
-                  placeholder="Name"
-                  {...formik.getFieldProps("name")}
-                  className="rounded w-full"
-                />
-                <input
-                  type="submit"
-                  value="Save"
-                  disabled={loading}
-                  className="bg-palette_blue text-palette_white w-full py-1 rounded cursor-pointer"
-                />
+                    <div className="text-center">
+                      {department && college && (
+                        <p className="text-sm">
+                          {department?.name} | {college?.name}
+                        </p>
+                      )}
+                      <p className="text-xs text-palette_grey">{session?.user?.email}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <input
+                      type="submit"
+                      value="Save"
+                      disabled={loading}
+                      className="bg-palette_blue text-palette_white w-full py-1 rounded cursor-pointer"
+                    />
+                  </div>
+                </div>
+
               </div>
             </div>
           </form>
