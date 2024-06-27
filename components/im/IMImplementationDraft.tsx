@@ -147,7 +147,7 @@ export default function IMImplementationDraft({
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4 space-y-4 md:space-y-0">
+    <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4 ">
       <div className="flex-1 h-full md:overflow-auto">
         <div className="bg-palette_white h-full sm:rounded-2xl p-4 md:overflow-auto flex flex-col space-y-2">
           <div className="w-full flex space-between">
@@ -199,7 +199,7 @@ export default function IMImplementationDraft({
         {iM.facultyId === activeFaculty?.facultyId && (
           <div className="w-full h-full">
             {!state?.filePreview && (
-              <div className="h-full">
+              <div className="h-full p-4 sm:p-4">
                 <input
                   hidden={true}
                   id="implementation_draft_upload"
@@ -209,13 +209,13 @@ export default function IMImplementationDraft({
                 />
                 <label
                   htmlFor="implementation_draft_upload"
-                  className="border-2 border-dashed rounded-2xl h-full flex justify-center items-center cursor-pointer"
+                  className="border-2 border-dashed rounded-2xl h-full flex justify-center items-center cursor-pointer bg-palette_white"
                   onDrop={handleFileDrop}
                   onDragOver={(e) => {
                     e.preventDefault();
                   }}
                 >
-                  <div className="flex flex-col justify-center items-center space-y-4">
+                  <div className="flex flex-col justify-center items-center sm:space-y-4">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"

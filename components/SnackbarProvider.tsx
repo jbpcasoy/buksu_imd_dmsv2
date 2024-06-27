@@ -80,7 +80,7 @@ export default function SnackbarContextProvider({
         addSnackbar,
       }}
     >
-      <div className="h-full w-full md:w-auto">
+      <div className="h-full w-full md:w-auto overflow-auto">
         <div className="h-full overflow-auto">{children}</div>
         <div className="absolute bottom-0 right-0 p-2 w-full md:w-auto">
           {state.snackbars.map((snackbar) => {

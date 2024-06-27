@@ -79,7 +79,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         >
           <Sidebar />
         </div>
-        <div className="md:flex-1 flex flex-col lg:h-full md:overflow-auto bg-palette_dirty_white">
+        <div className="md:flex-1 flex flex-col lg:h-full md:overflow-auto sm:bg-palette_dirty_white">
           {/* {announcements?.length > 0 &&
             !router.pathname.startsWith("/im/[id]") && (
               <div className="flex justify-between items-center m-2 rounded py-5 px-2 bg-gradient-to-r from-palette_orange shadow">

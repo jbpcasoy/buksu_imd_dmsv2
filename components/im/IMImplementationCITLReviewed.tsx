@@ -221,7 +221,7 @@ export default function IMImplementationCITLReviewed({
                       <div className="h-screen-3/4">
                         <div className="w-full h-full">
                           {!state?.filePreview && (
-                            <div className="h-full">
+                            <div className="h-full p-4 sm:p-4">
                               <input
                                 hidden={true}
                                 id="implementation_draft_upload"
@@ -231,7 +231,7 @@ export default function IMImplementationCITLReviewed({
                               />
                               <label
                                 htmlFor="implementation_draft_upload"
-                                className="border-2 border-dashed rounded-2xl h-full flex justify-center items-center cursor-pointer"
+                                className="border-2 border-dashed rounded-2xl h-full flex justify-center items-center cursor-pointer bg-palette_white"
                                 onDrop={handleFileDrop}
                                 onDragOver={(e) => {
                                   e.preventDefault();

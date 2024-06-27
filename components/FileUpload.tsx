@@ -75,7 +75,7 @@ function FileUpload({
           />
           <label
             htmlFor={inputId}
-            className="border-2 border-dashed rounded-2xl h-full flex justify-center items-center cursor-pointer h-screen-3/4"
+            className="border-2 border-dashed rounded-2xl flex justify-center items-center cursor-pointer bg-palette_white h-screen-3/4"
             onDrop={handleFileDrop}
             onDragOver={(e) => {
               e.preventDefault();
