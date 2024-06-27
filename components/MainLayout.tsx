@@ -74,9 +74,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <Header onToggleSidebar={setOpenSidebar} />
       <div className="flex-1 flex md:flex-row flex-col md:h-full md:overflow-auto">
         <div
-          className={`w-full lg:w-1/5 flex-none ${
-            openSidebar ? "block" : "block md:hidden"
-          }`}
+          className={`w-full lg:w-1/5 flex-none ${openSidebar ? "block" : "block md:hidden"
+            }`}
         >
           <Sidebar />
         </div>
@@ -139,7 +138,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </button>
               </div>
             )} */}
-          <div className="flex-1 overflow-auto md:h-full p-4">{children}</div>
+          <div className="flex-1 md:overflow-auto md:h-full sm:p-4">{children}</div>
         </div>
       </div>
     </div>

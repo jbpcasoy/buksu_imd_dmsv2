@@ -40,7 +40,7 @@ export default function AllSuggestionsPage() {
   return (
     <MainLayout>
       <div className="space-y-1 bg-palette_white rounded-2xl p-4 h-full flex flex-col overflow-auto">
-        <div className="pb-4 overflow-auto">
+        <div className="pb-4">
           <div className="border border-palette_orange p-2 rounded-lg inline-flex space-x-2">
             <svg
               width="16"

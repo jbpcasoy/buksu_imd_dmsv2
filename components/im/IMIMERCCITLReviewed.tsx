@@ -186,7 +186,7 @@ export default function IMIMERCCITLReviewed({
   return (
     <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4 space-y-4 md:space-y-0">
       <div className="flex-1 h-full md:overflow-auto">
-        <div className="bg-palette_white h-full rounded-2xl p-4 overflow-auto flex flex-col space-y-2">
+        <div className="bg-palette_white h-full sm:rounded-2xl p-4 md:overflow-auto flex flex-col space-y-2">
           <div className="w-full flex space-between">
             <p className="font-semibold flex-1">
               Document Information
@@ -247,7 +247,7 @@ export default function IMIMERCCITLReviewed({
                       />
                     )}
                     {plagiarismFile &&
-                      <div className="flex flex-col w-full h-screen-3/4">
+                      <div className="flex flex-col w-full sm:h-screen-3/4">
                         <iframe
                           loading="lazy"
                           src={`/api/plagiarism_file/${plagiarismFile.id}/pdf`}

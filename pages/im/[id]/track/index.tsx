@@ -3,7 +3,6 @@ import useCITLDirectorEndorsementIM from "@/hooks/useCITLDirectorEndorsementIM";
 import useCITLRevisionIM from "@/hooks/useCITLRevisionIM";
 import useCoordinatorEndorsementIM from "@/hooks/useCoordinatorEndorsementIM";
 import useDeanEndorsementIM from "@/hooks/useDeanEndorsementIM";
-import useDepartmentReviewIM from "@/hooks/useDepartmentReviewIM";
 import useDepartmentReviewedIM from "@/hooks/useDepartmentReviewedIM";
 import useDepartmentRevisionIM from "@/hooks/useDepartmentRevisionIM";
 import useIDDCoordinatorEndorsementIM from "@/hooks/useIDDCoordinatorEndorsementIM";
@@ -33,9 +32,6 @@ export default function TrackPage() {
   const iMId = router.query.id as string;
   const iM = useIM({
     id: iMId,
-  });
-  const departmentReview = useDepartmentReviewIM({
-    id: iM?.id,
   });
   const submittedPeerSuggestion = useSubmittedPeerSuggestionIM({
     id: iM?.id,
@@ -113,8 +109,8 @@ export default function TrackPage() {
 
   return (
     <MainLayout>
-      <div className="flex h-full md:space-x-4 md:overflow-auto">
-        <div className="bg-palette_white p-4 rounded-2xl md:flex-1 h-screen-3/4 md:h-auto md:overflow-auto flex flex-col">
+      <div className="flex flex-col sm:flex-row h-full md:space-x-4 md:overflow-auto">
+        <div className="bg-palette_white p-4 rounded-2xl md:flex-1 md:h-auto md:overflow-auto flex flex-col">
           <div className="pb-2">
             <div className="border inline-block p-2 border-palette_orange rounded-lg">
               <div className="flex space-x-2 items-center justify-center">

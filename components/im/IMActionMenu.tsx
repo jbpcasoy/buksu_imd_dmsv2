@@ -19,7 +19,7 @@ interface IMActionMenuProps {
 }
 export default function IMActionMenu({
   iMId,
-  onRefresh = () => {},
+  onRefresh = () => { },
   refreshFlag,
 }: IMActionMenuProps) {
   const [state, setState] = useState({
@@ -111,7 +111,7 @@ export default function IMActionMenu({
     <div className="relative inline-block text-left" ref={menuRef}>
       <button
         type="button"
-        className="inline-flex justify-center items-center space-x-2 w-full rounded-md border border-gray-300 shadow-sm p-2 bg-palette_blue text-sm font-medium text-palette_white hover:bg-opacity-95"
+        className="inline-flex justify-center items-center sm:space-x-2 w-full rounded-md sm:border border-gray-300 shadow-sm sm:p-2 sm:bg-palette_blue text-sm font-medium text-palette_white hover:bg-opacity-95"
         id="options-menu"
         aria-haspopup="true"
         aria-expanded="true"
@@ -119,13 +119,13 @@ export default function IMActionMenu({
           setState((prev) => ({ ...prev, openMenu: !prev.openMenu }))
         }
       >
-        <span>Actions</span>
+        <span className="hidden sm:block">Actions</span>
         {!state.openMenu && (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="1em"
             viewBox="0 0 320 512"
-            className="fill-palette_white"
+            className="sm:fill-palette_white"
           >
             <path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z" />
           </svg>
@@ -135,7 +135,7 @@ export default function IMActionMenu({
             xmlns="http://www.w3.org/2000/svg"
             height="1em"
             viewBox="0 0 320 512"
-            className="fill-palette_white"
+            className="sm:fill-palette_white"
           >
             <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z" />
           </svg>
