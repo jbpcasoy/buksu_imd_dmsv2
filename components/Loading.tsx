@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
     <div className="flex items-center justify-center h-full">
-      <img src="/favicon.ico" className="animate-pulse" alt="CITL logo" />
+      <img src="/images/logo.png" className="animate-pulse w-28" alt="CITL logo" />
     </div>
   );
 }
