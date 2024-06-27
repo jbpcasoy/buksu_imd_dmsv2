@@ -63,7 +63,7 @@ function FileUpload({
   };
 
   return (
-    <div className="w-full h-screen-3/4">
+    <div className="w-full">
       {!state?.filePreview && (
         <div className="h-full">
           <input
@@ -75,7 +75,7 @@ function FileUpload({
           />
           <label
             htmlFor={inputId}
-            className="border-2 border-dashed rounded-2xl h-full flex justify-center items-center cursor-pointer"
+            className="border-2 border-dashed rounded-2xl h-full flex justify-center items-center cursor-pointer h-screen-3/4"
             onDrop={handleFileDrop}
             onDragOver={(e) => {
               e.preventDefault();
