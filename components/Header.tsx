@@ -56,10 +56,10 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center h-20 space-x-2 bg-palette_white px-2">
-        <div className="w-1/2 md:w-1/4 md:1/5 flex space-x-2 justify-left items-center">
+      <div className="flex justify-between items-center space-x-2 bg-palette_white p-2 pl-0">
+        <div className="w-1/2 md:w-1/4 md:1/5 flex items-stretch space-x-2 justify-left">
           <button
-            className="hidden md:flex h-6 w-6 rounded-full fill-palette_blue hover:fill-palette_grey justify-center items-center"
+            className={`hidden md:flex px-4 rounded-r-lg fill-palette_blue hover:fill-palette_grey justify-center items-center  hover:opacity-50 ${state.openSidebar ? "border border-palette_blue" : "bg-palette_blue fill-palette_white"}`}
             onClick={() => {
               setState((prev) => ({ ...prev, openSidebar: !prev.openSidebar }));
             }}
@@ -86,12 +86,12 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
                 ? "/"
                 : "/department/my_ims"
             }
-            className="flex-1  flex justify-left"
+            className="flex justify-left"
           >
             <img
               src="/images/logo.png"
               alt="BukSU IMD DMS Logo"
-              className="h-9 md:h-11 lg:h-14"
+              className="h-6 md:h-12"
             />
           </Link>
         </div>
@@ -115,7 +115,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                className="w-5 h-5 md:w-8 md:h-8"
+                className="w-8 h-8"
               >
                 <path
                   strokeLinecap="round"
@@ -168,7 +168,7 @@ function ProfileDropdown({ session }: { session: Session | null }) {
 
   return <div className="relative inline-block text-left" ref={dropdownRef}>
     <div>
-      <button type="button" className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true" onClick={() => { setState(prev => ({ ...prev, open: !prev.open })) }}>
+      <button type="button" className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md bg-white sm:px-3 sm:py-2 text-sm font-semibold text-gray-900 shadow-sm sm:ring-1 sm:ring-inset sm:ring-gray-300 hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true" onClick={() => { setState(prev => ({ ...prev, open: !prev.open })) }}>
         <img
           src={
             session?.user?.image ?? "/images/buksu-logo-min-512x512.png"
@@ -177,9 +177,9 @@ function ProfileDropdown({ session }: { session: Session | null }) {
             e.currentTarget.src = "/images/buksu-logo-min-512x512.png";
           }}
           alt={session?.user?.name ?? "Profile"}
-          className="h-5 w-5 md:h-8 md:w-8 rounded-full group-hover:opacity-90 object-cover"
+          className="h-8 w-8 rounded-full group-hover:opacity-90 object-cover"
         />
-        <p className="text-sm xl:text-base font-semibold">
+        <p className="text-sm xl:text-base font-semibold hidden sm:block">
           {session?.user?.name ?? ""}
         </p>
       </button>
@@ -197,7 +197,7 @@ function ProfileDropdown({ session }: { session: Session | null }) {
     To: "transform opacity-0 scale-95"
   --> */}
 
-    {<div className={`absolute right-0 z-10 mt-2 w-72 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${state.open ? "transition ease-out duration-100 transform opacity-100 scale-100" : "transition ease-in duration-75 transform opacity-0 scale-95"}`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex={-1}>
+    {state.open && <div className={`absolute right-0 z-10 mt-2 w-72 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex={-1}>
       <div className="flex flex-row space-x-2 p-4">
         <div className="flex-none flex justify-center items-center">
           <img
@@ -218,8 +218,8 @@ function ProfileDropdown({ session }: { session: Session | null }) {
       </div>
       <hr />
       <div className="" role="none">
-        <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-palette_light_grey hover:bg-opacity-50 active:bg-opacity-100" role="menuitem" tabIndex={-1} id="menu-item-0">Manage Account</Link>
-        <button className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-palette_light_grey hover:bg-opacity-50 active:bg-opacity-100" role="menuitem" tabIndex={-1} id="menu-item-3" onClick={() => signOut()}>Sign out</button>
+        <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-palette_light_grey hover:bg-opacity-50 active:bg-opacity-100" role="menuitem" tabIndex={-1} id="manage-account">Manage Account</Link>
+        <button className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-palette_light_grey hover:bg-opacity-50 active:bg-opacity-100" role="menuitem" tabIndex={-1} id="sign-out" onClick={() => signOut()}>Sign out</button>
       </div>
     </div>}
   </div>
@@ -289,9 +289,9 @@ function DropDown({ count, events = [] }: { count: number; events: Event[] }) {
         </svg>
       </div>
 
-      {(
+      {state.openNotifications && (
         <div
-          className={`absolute right-0 z-10 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden ${state.openNotifications ? "transition ease-out duration-100 transform opacity-100 scale-100" : "transition ease-in duration-75 transform opacity-0 scale-95"}`}
+          className={`absolute right-0 z-10 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden`}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
