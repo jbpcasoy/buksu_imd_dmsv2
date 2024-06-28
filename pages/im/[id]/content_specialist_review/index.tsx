@@ -351,11 +351,11 @@ export default function AddContentSpecialistReviewPage() {
                   />
                 </ReviewSection>
               </div>
-              <div className="flex justify-end p-1 pt-2">
+              <div className="flex flex-col sm:flex-row justify-end p-1 pt-2">
                 <button
                   type="submit"
                   disabled={formik.isSubmitting || !formik.isValid || loading}
-                  className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border cursor-pointer inline-flex space-x-2 items-center hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
+                  className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border cursor-pointer hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
                 >
                   <span>Next</span>
                 </button>

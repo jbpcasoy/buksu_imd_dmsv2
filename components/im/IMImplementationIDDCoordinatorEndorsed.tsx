@@ -130,7 +130,7 @@ export default function IMImplementationIDDCoordinatorEndorsed({
           <div className="flex-1 md:overflow-auto space-y-2 flex flex-col justify-end">
             {activeCITLDirector && (
               <div className="space-y-1 md:space-y-0 md:space-x-1 flex flex-col md:flex-row justify-end">
-                <div>
+                <div className="flex justify-end flex-col md:flex-row">
                   <button
                     disabled={loading}
                     className="text-palette_white bg-palette_blue p-2 disabled:bg-opacity-50 flex items-center justify-center space-x-2 hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"

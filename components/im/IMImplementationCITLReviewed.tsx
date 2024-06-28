@@ -221,7 +221,7 @@ export default function IMImplementationCITLReviewed({
                       <div className="h-screen-3/4">
                         <div className="w-full h-full">
                           {!state?.filePreview && (
-                            <div className="h-full p-4 sm:p-4">
+                            <div className="h-full sm:p-4">
                               <input
                                 hidden={true}
                                 id="implementation_draft_upload"
@@ -275,7 +275,7 @@ export default function IMImplementationCITLReviewed({
                     )}
 
                     {iM.facultyId === activeFaculty?.facultyId && (
-                      <div className="flex space-x-2 justify-end">
+                      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 justify-end">
                         <button
                           className="text-palette_blue border border-palette_blue p-2  space-x-2 hover:border-opacity-90 rounded-md text-sm font-semibold px-4 py-2 disabled:border-opacity-50 disabled:text-palette_grey"
                           disabled={Boolean(!state?.iMFile) || loading}

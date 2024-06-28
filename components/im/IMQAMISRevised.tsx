@@ -181,12 +181,12 @@ export default function IMQAMISRevised({
             />
             <div className="my-2">
               <IMQAMISSuggestionItems id={iM.id} editable={false} />
-              <div className="flex justify-end space-x-2">
+              <div className="flex justify-end md:space-x-2 flex-col md:flex-row">
                 {activeCoordinator && !coordinatorEndorsement && (
                   <>
                     <button
                       disabled={loading}
-                      className="text-palette_white bg-palette_blue disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 m-2 rounded-md text-sm font-semibold px-4 py-2"
+                      className="text-palette_white bg-palette_blue disabled:bg-opacity-50 space-x-2 hover:bg-opacity-90 m-2 rounded-md text-sm font-semibold px-4 py-2"
                       onClick={openConfirmation}
                       title="Coordinator Endorsement"
                     >
@@ -204,7 +204,7 @@ export default function IMQAMISRevised({
                   <>
                     <button
                       disabled={loading}
-                      className="text-palette_white bg-palette_blue disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 m-2 rounded-md text-sm font-semibold px-4 py-2"
+                      className="text-palette_white bg-palette_blue disabled:bg-opacity-50 space-x-2 hover:bg-opacity-90 m-2 rounded-md text-sm font-semibold px-4 py-2"
                       onClick={openConfirmation}
                       title="Chairperson Endorsement"
                     >
@@ -222,7 +222,7 @@ export default function IMQAMISRevised({
                   <>
                     <button
                       disabled={loading}
-                      className="text-palette_white bg-palette_blue disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 m-2 rounded-md text-sm font-semibold px-4 py-2"
+                      className="text-palette_white bg-palette_blue disabled:bg-opacity-50 space-x-2 hover:bg-opacity-90 m-2 rounded-md text-sm font-semibold px-4 py-2"
                       onClick={openConfirmation}
                       title="Dean Endorsement"
                     >

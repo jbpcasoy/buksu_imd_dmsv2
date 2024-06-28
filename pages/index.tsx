@@ -193,7 +193,7 @@ export default function Home() {
             </div>
             <div className="flex-1 flex h-full">
               <div className="flex-1 relative h-full  space-y-4 w-3/4">
-                <div className="flex-1 relative bg-palette_white rounded-3xl p-4">
+                <div className="w- sm:flex-1 relative bg-palette_white rounded-3xl p-4">
                   <IMStatusDepartmentLineChart filter={state} />
                 </div>
               </div>

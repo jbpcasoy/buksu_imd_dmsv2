@@ -247,7 +247,7 @@ export default function IMIMERCCITLReviewed({
                       />
                     )}
                     {plagiarismFile &&
-                      <div className="flex flex-col w-full sm:h-screen-3/4">
+                      <div className="flex flex-col w-full h-screen-3/4">
                         <iframe
                           loading="lazy"
                           src={`/api/plagiarism_file/${plagiarismFile.id}/pdf`}

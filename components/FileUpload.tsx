@@ -63,7 +63,7 @@ function FileUpload({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       {!state?.filePreview && (
         <div className="h-full">
           <input
@@ -110,17 +110,15 @@ function FileUpload({
         </div>
       )}
       {state?.filePreview && (
-        <div className="flex flex-col w-full h-full">
-          <iframe
-            loading="lazy"
-            src={state.filePreview}
-            className="w-full h-full rounded"
-          />
-        </div>
+        <iframe
+          loading="lazy"
+          src={state.filePreview}
+          className="w-full h-screen-3/4 rounded"
+        />
       )}
-      <div className="flex justify-end p-2 space-x-2">
+      <div className="flex flex-col sm:flex-row justify-end p-2 space-y-2 sm:space-y-0 sm:space-x-2">
         <button
-          className="flex items-center space-x-2 rounded-md font-semibold text-sm px-4 py-2 border border-palette_blue hover:border-opacity-90 disabled:border-opacity-50 disabled:text-palette_grey"
+          className="rounded-md font-semibold text-sm px-4 py-2 border border-palette_blue hover:border-opacity-90 disabled:border-opacity-50 disabled:text-palette_grey"
           onClick={handleFileReset}
           disabled={loading || !Boolean(state?.filePreview)}
         >Replace

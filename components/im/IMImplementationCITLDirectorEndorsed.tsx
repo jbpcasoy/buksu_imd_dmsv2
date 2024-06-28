@@ -56,12 +56,12 @@ export default function IMImplementationCITLDirectorEndorsed({
             />
             <div className="space-x-2 my-2">
               {iM.facultyId === activeFaculty?.facultyId && (
-                <div className="flex justify-end">
+                <div className="flex flex-col sm:flex-row justify-end">
                   <Link
                     href={`/im/${iM.id}/qamis_suggestion`}
-                    className="bg-palette_blue text-palette_white p-2 inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md font-semibold text-sm px-4 py-2"
+                    className="bg-palette_blue text-palette_white p-2 text-center hover:bg-opacity-90 rounded-md font-semibold text-sm px-4 py-2"
                   >
-                    <span>Input Action Taken</span>
+                    Input Action Taken
                   </Link>
                 </div>
               )}

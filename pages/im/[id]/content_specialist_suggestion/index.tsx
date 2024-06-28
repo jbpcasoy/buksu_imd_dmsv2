@@ -325,9 +325,9 @@ export default function ContentSpecialistSuggestionPage() {
               />
             </div>
             <div className="flex flex-col justify-end flex-1">
-              <div className="flex justify-end">
+              <div className="flex flex-col sm:flex-row justify-end">
                 <button
-                  className="bg-palette_blue text-palette_white inline-flex space-x-2 items-center hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
+                  className="bg-palette_blue text-palette_white hover:bg-opacity-90 disabled:bg-palette_grey rounded-md text-sm font-semibold px-4 py-2"
                   disabled={!Boolean(contentSpecialistSuggestion) || loading}
                   onClick={() => setOpenConfirmation(true)}
                 >

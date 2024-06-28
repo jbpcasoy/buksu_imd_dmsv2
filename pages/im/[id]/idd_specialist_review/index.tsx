@@ -336,11 +336,11 @@ export default function AddIDDSpecialistReviewPage() {
                   />
                 </ReviewSection>
               </div>
-              <div className="flex justify-end p-1">
+              <div className="flex flex-col sm:flex-row justify-end p-1">
                 <button
                   type="submit"
                   disabled={formik.isSubmitting || !formik.isValid || loading}
-                  className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
+                  className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
                 >
                   <span>Next</span>
 

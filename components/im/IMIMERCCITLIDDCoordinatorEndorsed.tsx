@@ -160,24 +160,23 @@ export default function IMIMERCCITLIDDCoordinatorEndorsed({
 
         <div className="space-y-2 flex-1 md:overflow-auto flex flex-col">
           <IMInfo iMId={iMId} onRefresh={onRefresh} refreshFlag={refreshFlag} />
-          <div className="flex-1 md:overflow-auto space-y-2 flex w-full">
+          <div className="flex-1 md:overflow-auto space-y-2 flex flex-col w-full justify-end">
             {activeCITLDirector && (
-              <div className="flex flex-col justify-end w-full">
-                <div className="flex justify-end">
-                  <button
-                    disabled={loading}
-                    className="text-palette_white bg-palette_blue disabled:bg-opacity-50 flex items-center space-x-2 hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2"
-                    onClick={openConfirmation}
-                  >
-                    <span>Endorse</span>
-                  </button>
-                  {state.openConfirmation && (
-                    <Confirmation
-                      onClose={closeConfirmation}
-                      onConfirm={iMERCCITLDirectorEndorsementHandler}
-                    />
-                  )}
-                </div></div>
+              <div className="w-full flex flex-col md:flex-row justify-end items-end">
+                <button
+                  disabled={loading}
+                  className="text-palette_white bg-palette_blue disabled:bg-opacity-50 space-x-2 hover:bg-opacity-90 rounded-md text-sm font-semibold px-4 py-2 w-full sm:w-auto"
+                  onClick={openConfirmation}
+                >
+                  <span>Endorse</span>
+                </button>
+                {state.openConfirmation && (
+                  <Confirmation
+                    onClose={closeConfirmation}
+                    onConfirm={iMERCCITLDirectorEndorsementHandler}
+                  />
+                )}
+              </div>
             )}
           </div>
         </div>

@@ -55,14 +55,14 @@ export default function IMImplementationDepartmentDeanEndorsed({
               onRefresh={onRefresh}
               refreshFlag={refreshFlag}
             />
-            <div className="space-x-2 my-2 flex-1 flex flex-row justify-end">
+            <div className="space-x-2 my-2 flex-1 flex flex-col justify-end w-full">
               {activeIDDCoordinator && (
-                <div className="flex flex-col justify-end">
+                <div className="flex flex-col sm:flex-row justify-end w-full">
                   <Link
                     href={`/im/${iM.id}/idd_coordinator_suggestion`}
-                    className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md font-semibold text-sm px-4 py-2"
+                    className="bg-palette_blue text-palette_white hover:bg-opacity-90 rounded-md font-semibold text-sm px-4 py-2 text-center"
                   >
-                    <span>Review</span>
+                    Review
                   </Link>
                 </div>
               )}

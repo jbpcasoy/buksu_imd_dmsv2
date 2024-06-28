@@ -75,12 +75,12 @@ export default function IMQAMISDepartmentEndorsed({
               refreshFlag={refreshFlag}
             />
             <div className="space-x-2 my-2">
-              <div className="space-x-2 flex justify-end">
+              <div className="sm:space-x-2 flex flex-col space-y-2 sm:space-y-0 sm:flex-row justify-end">
                 {activeContentSpecialist &&
                   !submittedContentSpecialistSuggestion && (
                     <Link
                       href={`/im/${iM.id}/content_specialist_review`}
-                      className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md px-4 py-2 font-semibold text-sm"
+                      className="bg-palette_blue text-palette_white hover:bg-opacity-90 rounded-md px-4 py-2 font-semibold text-sm text-center"
                       title="Content Specialist Review"
                     >
                       <span>Review</span>
@@ -90,7 +90,7 @@ export default function IMQAMISDepartmentEndorsed({
                 {activeCITLDirector && !submittedContentEditorSuggestion && (
                   <Link
                     href={`/im/${iM.id}/content_editor_review`}
-                    className="bg-palette_blue text-palette_white inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md px-4 py-2 font-semibold text-sm"
+                    className="bg-palette_blue text-palette_white hover:bg-opacity-90 rounded-md px-4 py-2 font-semibold text-sm text-center"
                     title="Content Editor Review"
                   >
                     <span>Review</span>
@@ -100,7 +100,7 @@ export default function IMQAMISDepartmentEndorsed({
                 {activeIDDCoordinator && !submittedIDDSpecialistSuggestion && (
                   <Link
                     href={`/im/${iM.id}/idd_specialist_review`}
-                    className="bg-palette_blue text-palette_white py-1 px-2 rounded inline-flex items-center space-x-2 hover:bg-opacity-90 rounded-md px-4 py-2 font-semibold text-sm"
+                    className="bg-palette_blue text-palette_white hover:bg-opacity-90 rounded-md px-4 py-2 font-semibold text-sm text-center"
                     title="IDD Specialist Review"
                   >
                     <span>Review</span>

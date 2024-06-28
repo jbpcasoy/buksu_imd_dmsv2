@@ -92,7 +92,7 @@ export default function IMImplementationDepartmentReview({
                 refreshFlag={refreshFlag}
               />
             </div>
-            <div className="space-x-2 my-2 flex justify-end">
+            <div className="my-2 flex justify-end flex-col space-y-2 sm:space-y-0 sm:flex-row sm:space-x-2 ">
               {iM.facultyId !== activeFaculty?.facultyId &&
                 !submittedPeerSuggestion && (
                   <>
@@ -105,18 +105,18 @@ export default function IMImplementationDepartmentReview({
                           {coAuthorsCount < 1 && (
                             <Link
                               href={`/im/${iM.id}/peer_review`}
-                              className="bg-palette_blue text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2 hover:bg-opacity-90"
+                              className="bg-palette_blue text-palette_white py-2 px-4 font-semibold rounded-md text-sm  hover:bg-opacity-90 text-center"
                             >
-                              <span>Peer Review</span>
+                              Peer Review
                             </Link>
                           )}
                           {coAuthorsCount > 0 && (
                             <button
                               disabled={true}
                               title="Cannot review co-authored IM"
-                              className="bg-palette_grey text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2"
+                              className="bg-palette_grey text-palette_white py-2 px-4 font-semibold rounded-md text-sm text-center"
                             >
-                              <span>Peer Review</span>
+                              Peer Review
                             </button>
                           )}
                         </>
@@ -126,9 +126,9 @@ export default function IMImplementationDepartmentReview({
                         <button
                           disabled={true}
                           title="A peer review without suggestions already exists."
-                          className="bg-palette_grey text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2"
+                          className="bg-palette_grey text-palette_white py-2 px-4 font-semibold rounded-md text-sm text-center"
                         >
-                          <span>Peer Review</span>
+                          Peer Review
                         </button>
                       )}
                   </>
@@ -137,18 +137,18 @@ export default function IMImplementationDepartmentReview({
               {activeCoordinator && !submittedCoordinatorSuggestion && (
                 <Link
                   href={`/im/${iM.id}/coordinator_review`}
-                  className="bg-palette_blue text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2 hover:bg-opacity-90"
+                  className="bg-palette_blue text-palette_white py-2 px-4 font-semibold rounded-md text-sm text-center hover:bg-opacity-90"
                 >
-                  <span>Coordinator Review</span>
+                  Coordinator Review
                 </Link>
               )}
 
               {activeChairperson && !submittedChairpersonSuggestion && (
                 <Link
                   href={`/im/${iM.id}/chairperson_review`}
-                  className="bg-palette_blue text-palette_white py-2 px-4 font-semibold rounded-md text-sm inline-flex items-center space-x-2 hover:bg-opacity-90"
+                  className="bg-palette_blue text-palette_white py-2 px-4 font-semibold rounded-md text-sm text-center hover:bg-opacity-90"
                 >
-                  <span>Chairperson Review</span>
+                  Chairperson Review
                 </Link>
               )}
             </div>

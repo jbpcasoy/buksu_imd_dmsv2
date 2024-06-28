@@ -332,13 +332,12 @@ export default function AddContentEditorReviewPage() {
                   />
                 </ReviewSection>
               </div>
-              <div className="flex justify-end p-1">
+              <div className="flex flex-col sm:flex-row justify-end p-1">
                 <button
                   disabled={formik.isSubmitting || !formik.isValid || loading}
-                  className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border cursor-pointer inline-flex space-x-2 items-center hover:bg-opacity-90 rounded-md text-sm px-4 py-2 font-semibold"
+                  className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border cursor-pointer hover:bg-opacity-90 rounded-md text-sm px-4 py-2 font-semibold"
                 >
-                  <span>Next</span>
-
+                  Next
                 </button>
               </div>
             </form>

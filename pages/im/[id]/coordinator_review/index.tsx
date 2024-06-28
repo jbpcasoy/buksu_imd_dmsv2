@@ -207,7 +207,7 @@ export default function AddCoordinatorReviewPage() {
             <IMHeader iM={iM} phase="Implementation Phase" role="Coordinator" />
             <div className="flex-1 overflow-auto">
               <form onSubmit={formik.handleSubmit} className="">
-                <div className="space-y-2 mx-1">
+                <div className="space-y-2 sm:mx-1">
                   <ReviewSection title={ReviewSections.s1}>
                     <ReviewItem
                       question={ReviewQuestions.q1_1}
@@ -336,13 +336,13 @@ export default function AddCoordinatorReviewPage() {
                     />
                   </ReviewSection>
                 </div>
-                <div className="flex justify-end p-1">
+                <div className="flex flex-col sm:flex-row justify-end p-1">
                   <button
                     type="submit"
                     disabled={formik.isSubmitting || !formik.isValid || loading}
-                    className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-4 py-2 rounded-md font-semibold cursor-pointer inline-flex space-x-2 items-center hover:bg-opacity-90"
+                    className="bg-palette_blue disabled:bg-opacity-10 text-palette_white border px-4 py-2 rounded-md font-semibold cursor-pointer hover:bg-opacity-90"
                   >
-                    <span>Next</span>
+                    Next
                   </button>
                 </div>
               </form>

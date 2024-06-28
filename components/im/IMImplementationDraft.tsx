@@ -169,7 +169,7 @@ export default function IMImplementationDraft({
               refreshFlag={refreshFlag}
             />
             {iM.facultyId === activeFaculty?.facultyId && (
-              <div className="flex space-x-2 w-full justify-end">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full justify-end">
                 <button
                   className="rounded-md text-palette_blue border border-palette_blue py-2 px-4 space-x-2 font-semibold disabled:border-opacity-50 disabled:text-palette_grey"
                   disabled={Boolean(!state?.iMFile) || loading}
@@ -199,7 +199,7 @@ export default function IMImplementationDraft({
         {iM.facultyId === activeFaculty?.facultyId && (
           <div className="w-full h-full">
             {!state?.filePreview && (
-              <div className="h-full p-4 sm:p-4">
+              <div className="h-full sm:p-4">
                 <input
                   hidden={true}
                   id="implementation_draft_upload"

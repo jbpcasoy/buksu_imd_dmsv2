@@ -303,12 +303,12 @@ export default function QAMISSuggestionPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col md:flex-row h-full overflow-auto md:space-x-4">
-        <div className="md:flex-1 flex flex-col md:h-full overflow-auto p-4 bg-palette_white rounded-2xl space-y-4">
+      <div className="flex flex-col md:flex-row h-full sm:overflow-auto md:space-x-4">
+        <div className="md:flex-1 flex flex-col md:h-full sm:overflow-auto p-4 bg-palette_white rounded-2xl space-y-4">
           <IMHeader iM={iM} phase="IMERC Phase" role="Author" />
 
-          <div className="flex-1 h-full overflow-auto space-y-2">
-            <div className="overflow-auto">
+          <div className="flex-1 h-full sm:overflow-auto space-y-2">
+            <div className="sm:overflow-auto">
               <div className="border border-palette_light_grey rounded text-sm">
                 <div className="p-2 bg-palette_grey bg-opacity-10 flex justify-between items-center">
                   <p className="text-left font-medium">QAMIS Suggestions</p>
@@ -336,9 +336,8 @@ export default function QAMISSuggestionPage() {
             </div>
 
             <UploadStepper state={stepperState} setState={setStepperState} hasQAMISFile={Boolean(files.qAMISFile)} hasIMFile={Boolean(files.iMFile)} />
-            <div className="flex flex-col flex-1">
-
-              <div className={stepperState.step === 1 ? "visible" : "hidden"}>
+            <div className="flex flex-col flex-1 min-h-screen-3/4">
+              <div className={`h-full ${stepperState.step === 1 ? "visible" : "hidden"}`}>
                 <FileUpload
                   label=""
                   onFileChange={(file) => {
@@ -364,7 +363,7 @@ export default function QAMISSuggestionPage() {
                   }
                 />
               </div>
-              <div className={stepperState.step === 2 ? "visible" : "hidden"}>
+              <div className={`h-full ${stepperState.step === 2 ? "visible" : "hidden"}`}>
                 <FileUpload
                   label=""
                   onFileChange={(file) => {
