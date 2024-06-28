@@ -4,7 +4,7 @@ import useActiveIDDCoordinatorMe from "@/hooks/useActiveIDDCoordinatorMe";
 import useAnnouncements from "@/hooks/useAnnouncements";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import Loading from "./Loading";
 import Sidebar from "./Sidebar";
@@ -61,6 +61,63 @@ export default function MainLayout({ children }: MainLayoutProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
+
+  const [sidebarWidth, setSidebarWidth] = useState({ width: 320, initial: true }); // initial width of 256px
+
+
+  useEffect(() => {
+    // Calculate initial width based on screen width
+    const sidebarWidth = Number(localStorage.getItem("sidebar_width"));
+    const deviceWidth = window.innerWidth;
+    const width = deviceWidth < sidebarWidth ? deviceWidth : sidebarWidth;
+
+    if (sidebarWidth) {
+      setSidebarWidth(prev => ({ ...prev, width: width }));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (sidebarWidth.initial) {
+      return;
+    }
+    localStorage.setItem("sidebar_width", String(sidebarWidth.width))
+  }, [sidebarWidth])
+
+  const isResizing = useRef(false);
+
+  const handleMouseDown = () => {
+    isResizing.current = true;
+  };
+
+  const handleMouseUp = () => {
+    isResizing.current = false;
+  };
+
+  const handleMouseMove = (event: MouseEvent) => {
+    if (isResizing.current) {
+      let newWidth = event.clientX;
+      const maxSidebarWidth = window.innerWidth * 0.90;
+      if (newWidth > maxSidebarWidth) {
+        newWidth = maxSidebarWidth;
+      }
+
+      setSidebarWidth(prev => ({ ...prev, width: newWidth, initial: false }));
+    }
+  };
+
+  const handleDoubleClick = () => {
+    setSidebarWidth(prev => ({ ...prev, width: window.innerWidth * 0.20, initial: false }));
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
   if (status === "loading") {
     return (
       <div className="w-full h-screen flex flex-col justify-center items-center">
@@ -72,13 +129,19 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="flex flex-col h-screen text-sm xl:text-base">
       <Header onToggleSidebar={setOpenSidebar} />
-      <div className="flex-1 flex md:flex-row flex-col md:h-full md:overflow-auto">
+      <div className="flex-1 flex md:flex-row flex-col md:h-full md:overflow-auto scroll-p-0">
         <div
-          className={`w-full lg:w-1/5 flex-none ${openSidebar ? "block" : "block md:hidden"
+          style={{ width: sidebarWidth.width }}
+          className={`flex-none below-sm:w-full ${openSidebar ? "block" : "block md:hidden"
             }`}
         >
           <Sidebar />
         </div>
+        <div
+          onMouseDown={handleMouseDown}
+          onDoubleClick={handleDoubleClick}
+          className="bg-palette_light_grey w-1 cursor-col-resize select-none"
+        ></div>
         <div className="md:flex-1 flex flex-col lg:h-full md:overflow-auto sm:bg-palette_dirty_white">
           {/* {announcements?.length > 0 &&
             !router.pathname.startsWith("/im/[id]") && (
