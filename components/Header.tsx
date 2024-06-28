@@ -22,60 +22,16 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
   const activeCoordinator = useActiveCoordinatorMe();
   const activeChairperson = useActiveChairpersonMe();
   const activeDean = useActiveDeanMe();
-  const [state, setState] = useState({
-    initialized: false,
-    openSidebar: true,
-  });
+
   const { count, events } = useEventsMe({
     skip: 0,
     take: 5,
   });
 
-  useEffect(() => {
-    if (!state.initialized) {
-      return;
-    }
-
-    localStorage.setItem("openSidebar", JSON.stringify(state.openSidebar));
-    onToggleSidebar(state.openSidebar);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
-
-  useEffect(() => {
-    const rawOpenSidebar = localStorage.getItem("openSidebar");
-    if (rawOpenSidebar) {
-      setState((prev) => ({
-        ...prev,
-        openSidebar: JSON.parse(rawOpenSidebar),
-        initialized: true,
-      }));
-    } else {
-      setState((prev) => ({ ...prev, initialized: true }));
-    }
-  }, []);
-
   return (
     <div className="">
       <div className="flex justify-between items-center space-x-2 bg-palette_white p-2 pl-0">
         <div className="w-1/2 md:w-1/4 md:1/5 flex items-stretch space-x-2 justify-left">
-          <button
-            className={`hidden md:flex px-4 rounded-r-lg fill-palette_blue hover:fill-palette_grey justify-center items-center  hover:opacity-50 ${state.openSidebar ? "border border-palette_blue" : "bg-palette_blue fill-palette_white"}`}
-            onClick={() => {
-              setState((prev) => ({ ...prev, openSidebar: !prev.openSidebar }));
-            }}
-            title={state.openSidebar ? "Hide Sidebar" : "Open Sidebar"}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="16"
-              width="14"
-              viewBox="0 0 448 512"
-              className="fill-inherit"
-            >
-              <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
-            </svg>
-
-          </button>
           <Link
             href={
               activeCoordinator ||
@@ -320,3 +276,4 @@ function DropDown({ count, events = [] }: { count: number; events: Event[] }) {
     </div>
   );
 }
+

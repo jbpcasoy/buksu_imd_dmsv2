@@ -11,9 +11,8 @@ import {
   LinearScale,
   PointElement,
   Title,
-  Tooltip,
+  Tooltip
 } from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
@@ -25,9 +24,16 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  autocolors
+  // autocolors
 );
 
+
+// CategoryScale,
+// LinearScale,
+// BarElement,
+// Title,
+// Tooltip,
+// Legend
 interface IMStatusDepartmentLineChartProps {
   filter?: {
     status?: string;
@@ -107,7 +113,6 @@ export function IMStatusDepartmentLineChart({
     datasets: departments.map((department) => {
       return {
         label: department.name,
-        fill: true,
         data: labels.map((label) => {
           return state?.[department.name]?.[label];
         }),
@@ -137,6 +142,7 @@ export function IMStatusDepartmentLineChart({
             },
           },
         },
+        maintainAspectRatio: false
       }}
       data={data}
     />

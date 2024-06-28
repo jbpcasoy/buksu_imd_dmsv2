@@ -101,8 +101,8 @@ export default function Home() {
         activeCoordinator ||
         activeChairperson) && (
           <div className="space-y-4">
-            <div className="flex items-center">
-              <div className="bg-palette_white p-2 rounded-lg flex space-x-2 items-center justify-center border border-palette_orange">
+            <div className="flex flex-col space-y-2 p-2 sm:p-0">
+              <div className="bg-palette_white p-2 rounded-lg flex space-x-2 items-center justify-center border border-palette_orange w-min">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -120,8 +120,8 @@ export default function Home() {
                 <h1 className="font-semibold text-sm">Dashboard</h1>
               </div>
               <form noValidate onSubmit={formik.handleSubmit} className="flex-1">
-                <div className="flex items-center justify-between">
-                  <div className="space-x-4 flex-1 flex items-center justify-center">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 sm:space-x-2">
+                  <div className="sm:space-x-4 flex-1 flex flex-col sm:flex-row sm:items-center justify-center space-y-2 sm:space-y-0">
                     <CollegeSelector
                       {...formik.getFieldProps("collegeId")}
                       disabled={!(activeCITLDirector || activeIDDCoordinator)}
@@ -137,7 +137,7 @@ export default function Home() {
                         )
                       }
                     />
-                    <div className="flex flex-row space-x-2">
+                    <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
                       <div className="text-sm">
                         {/* <label htmlFor="start">FROM </label> */}
                         {/* <br /> */}
@@ -161,24 +161,25 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                    <div>
+                    <div className="">
                       <StatusSelector {...formik.getFieldProps("status")} />
                     </div>
                   </div>
 
-                  <div className="space-x-1">
+                  <div className="space-x-1 w-full">
                     <button
                       type="submit"
-                      className="bg-palette_white p-2 rounded-lg active:bg-palette_light_grey"
+                      className="bg-palette_white p-2 rounded-lg active:bg-palette_light_grey inline-flex justify-between items-center space-x-2 border w-full sm:w-min text-sm"
                       title="Refresh Charts"
                     >
+                      <span>Refresh</span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth="1.5"
                         stroke="currentColor"
-                        className="w-5 h-5"
+                        className="w-4 h-4"
                       >
                         <path
                           strokeLinecap="round"
@@ -191,13 +192,13 @@ export default function Home() {
                 </div>
               </form>
             </div>
-            <div className="flex-1 flex h-full">
-              <div className="flex-1 relative h-full  space-y-4 w-3/4">
-                <div className="w- sm:flex-1 relative bg-palette_white rounded-3xl p-4">
+            <div className="flex-1 flex flex-col sm:flex-row h-full w-full">
+              <div className="flex-1 relative h-full  space-y-4 w-full sm:w-3/4">
+                <div className="sm:flex-1 relative bg-palette_white rounded-3xl p-4 h-96 w-full">
                   <IMStatusDepartmentLineChart filter={state} />
                 </div>
               </div>
-              <div className="flex flex-col items-center space-y-2 w-1/4">
+              <div className="flex flex-col items-center space-y-2 w-full sm:w-1/4">
                 <div className="h-60 relative">
                   <IMStatusPieChart filter={state} />
                 </div>

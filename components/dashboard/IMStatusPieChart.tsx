@@ -89,6 +89,7 @@ export function IMStatusPieChart({
             mode: "data",
           },
         },
+        maintainAspectRatio: false
       }}
       data={data}
     />

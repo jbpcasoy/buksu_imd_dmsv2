@@ -55,7 +55,7 @@ export default function DepartmentSelector({
   };
 
   return (
-    <div className={`flex flex-col ${compact ? "w-full" : "w-44"}`}>
+    <div className={`flex flex-col ${compact ? "w-full" : "w-full sm:w-44"}`}>
       {/* <input
         type='text'
         onChange={onSearch}

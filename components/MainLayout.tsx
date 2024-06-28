@@ -8,6 +8,7 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import Loading from "./Loading";
 import Sidebar from "./Sidebar";
+import SidebarToggle from "./SidebarToggle";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -129,10 +130,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="flex flex-col h-screen text-sm xl:text-base">
       <Header onToggleSidebar={setOpenSidebar} />
-      <div className="flex-1 flex md:flex-row flex-col md:h-full md:overflow-auto scroll-p-0">
+      <div className="flex-1 flex flex-row md:h-full overflow-auto">
         <div
           style={{ width: sidebarWidth.width }}
-          className={`flex-none below-sm:w-full ${openSidebar ? "block" : "block md:hidden"
+          className={`flex-none below-sm:w-full ${openSidebar ? "block" : "hidden"
             }`}
         >
           <Sidebar />
@@ -140,9 +141,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <div
           onMouseDown={handleMouseDown}
           onDoubleClick={handleDoubleClick}
-          className="bg-palette_light_grey w-1 cursor-col-resize select-none"
-        ></div>
-        <div className="md:flex-1 flex flex-col lg:h-full md:overflow-auto sm:bg-palette_dirty_white">
+          className="bg-palette_light_grey w-1 cursor-col-resize select-none flex justify-center items-center z-10"
+        >
+          <div className={`${openSidebar ? "-ml-8 sm:-ml-16" : ""}`}>
+            <SidebarToggle onToggleSidebar={setOpenSidebar} />
+          </div>
+        </div>
+        <div className={`md:flex-1  flex-col lg:h-full md:overflow-auto sm:bg-palette_dirty_white w-full ${openSidebar ? "hidden" : "flex"}`}>
           {/* {announcements?.length > 0 &&
             !router.pathname.startsWith("/im/[id]") && (
               <div className="flex justify-between items-center m-2 rounded py-5 px-2 bg-gradient-to-r from-palette_orange shadow">
